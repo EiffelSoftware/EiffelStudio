@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		References to objects containing reference to object
@@ -22,7 +22,7 @@ feature -- Access
 	item: POINTER
 			-- Pointer value
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := item.to_integer_32.hash_code
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	frozen set_item (p: POINTER) is
+	frozen set_item (p: POINTER)
 			-- Make `p' the `item' value.
 		do
 			item := p
@@ -38,7 +38,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Operations
 
-	plus alias "+" (offset: INTEGER): POINTER is
+	plus alias "+" (offset: INTEGER): POINTER
 			-- Pointer moved by an offset of `offset' bytes.
 		do
 			Result := c_offset_pointer (item, offset)
@@ -55,7 +55,7 @@ feature -- Operations
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: POINTER_REF) is
+	make_from_reference (v: POINTER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: POINTER_REF is
+	to_reference: POINTER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -78,7 +78,7 @@ feature -- Conversion
 
 feature -- Memory copy
 
-	memory_copy (a_source: POINTER; a_size: INTEGER) is
+	memory_copy (a_source: POINTER; a_size: INTEGER)
 			-- Copy `a_size' bytes from `a_source' to `Current'.
 			-- `a_source' and `Current' should not overlap.
 		require
@@ -88,7 +88,7 @@ feature -- Memory copy
 			c_memcpy (item, a_source, a_size)
 		end
 
-	memory_move (a_source: POINTER; a_size: INTEGER) is
+	memory_move (a_source: POINTER; a_size: INTEGER)
 			-- Copy `a_size' bytes from `a_source' to `Current'.
 			-- `a_source' and `Current' can overlap.
 		require
@@ -98,7 +98,7 @@ feature -- Memory copy
 			c_memmove (item, a_source, a_size)
 		end
 
-	memory_set (val, n: INTEGER) is
+	memory_set (val, n: INTEGER)
 			-- Fill first `n' bytes of the memory pointed by `Current'
 			-- with constant `val'.
 		require
@@ -110,7 +110,7 @@ feature -- Memory copy
 
 feature -- Allocation/free
 
-	memory_alloc (a_size: INTEGER): POINTER is
+	memory_alloc (a_size: INTEGER): POINTER
 			-- Allocated `size' bytes using `malloc'.
 		require
 			valid_size: a_size > 0
@@ -118,7 +118,7 @@ feature -- Allocation/free
 			Result := c_malloc (a_size)
 		end
 
-	memory_calloc (a_count, a_element_size: INTEGER): POINTER is
+	memory_calloc (a_count, a_element_size: INTEGER): POINTER
 			-- Allocate `a_count' elements of size `a_element_size' bytes using `calloc.
 		require
 			valid_element_count: a_count > 0
@@ -127,7 +127,7 @@ feature -- Allocation/free
 			Result := c_calloc (a_count, a_element_size)
 		end
 
-	memory_realloc (a_size: INTEGER): POINTER is
+	memory_realloc (a_size: INTEGER): POINTER
 			-- Realloc `Current'.
 		require
 			valid_size: a_size >= 0
@@ -135,7 +135,7 @@ feature -- Allocation/free
 			Result := c_realloc (item, a_size)
 		end
 
-	memory_free is
+	memory_free
 			-- Free allocated memory with `malloc'.
 		do
 			c_free (item)
@@ -144,7 +144,7 @@ feature -- Allocation/free
 
 feature -- Comparison
 
-	memory_compare (other: POINTER; a_size: INTEGER): BOOLEAN is
+	memory_compare (other: POINTER; a_size: INTEGER): BOOLEAN
 			-- True if `Current' and `other' are identical on `a_size' bytes.
 		require
 			valid_size: a_size > 0
@@ -155,7 +155,7 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of pointer value
 		do
 			if {MARSHAL}.size_of_object (item) = 4 then
@@ -167,13 +167,13 @@ feature -- Output
 
 feature -- Conversion
 
-	to_integer_32: INTEGER is
+	to_integer_32: INTEGER
 			-- Convert `p' to an integer.
 		do
 			Result := item.to_integer_32
 		end
 	
-	to_integer_64: INTEGER_64 is
+	to_integer_64: INTEGER_64
 			-- Convert `p' to an INTEGER_64.
 		do
 			Result := item.to_integer_64
@@ -181,7 +181,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	c_offset_pointer (p: POINTER; o: INTEGER): POINTER is
+	c_offset_pointer (p: POINTER; o: INTEGER): POINTER
 			-- Pointer moved by an offset of `o' bytes from `p'.
 		external
 			"C [macro %"eif_macros.h%"]"
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			"RTPOF"
 		end
 
-	c_memcpy (destination, source: POINTER; count: INTEGER) is
+	c_memcpy (destination, source: POINTER; count: INTEGER)
 			-- C memcpy
 		external
 			"C (void *, const void *, size_t) | <string.h>"
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			"memcpy"
 		end
 	
-	c_memmove (destination, source: POINTER; count: INTEGER) is
+	c_memmove (destination, source: POINTER; count: INTEGER)
 			-- C memmove
 		external
 			"C (void *, const void *, size_t) | <string.h>"
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			"memmove"
 		end
 
-	c_memset (source: POINTER; val: INTEGER; count: INTEGER) is
+	c_memset (source: POINTER; val: INTEGER; count: INTEGER)
 			-- C memset
 		external
 			"C (void *, int, size_t) | <string.h>"
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"memset"
 		end
 
-	c_memcmp (source, other: POINTER; count: INTEGER): INTEGER is
+	c_memcmp (source, other: POINTER; count: INTEGER): INTEGER
 			-- C memcmp
 		external
 			"C (void *, void *, size_t): EIF_INTEGER | <string.h>"
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			"memcmp"
 		end
 
-	c_malloc (size: INTEGER): POINTER is
+	c_malloc (size: INTEGER): POINTER
 			-- C malloc
 		external
 			"C (size_t): EIF_POINTER | <stdlib.h>"
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			"malloc"
 		end
 
-	c_calloc (nmemb, size: INTEGER): POINTER is
+	c_calloc (nmemb, size: INTEGER): POINTER
 			-- C calloc
 		external
 			"C (size_t, size_t): EIF_POINTER | <stdlib.h>"
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			"calloc"
 		end
 
-	c_realloc (source: POINTER; size: INTEGER): POINTER is
+	c_realloc (source: POINTER; size: INTEGER): POINTER
 			-- C realloc
 		external
 			"C (void *, size_t): EIF_POINTER | <stdlib.h>"
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			"realloc"
 		end
 
-	c_free (p: POINTER) is
+	c_free (p: POINTER)
 			-- C free
 		external
 			"C (void *) | <stdlib.h>"
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			"free"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

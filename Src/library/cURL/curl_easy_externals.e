@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					cURL easy externals.
 					For more informaton see:
@@ -14,7 +14,7 @@ class
 
 feature -- Command
 
-	init: POINTER is
+	init: POINTER
 			-- Declared as curl_easy_init().
 		require
 			dynamic_library_exists: is_dynamic_library_exists
@@ -29,7 +29,7 @@ feature -- Command
 			exists: Result /= default_pointer
 		end
 
-	setopt_string (a_curl_handle: POINTER; a_opt: INTEGER; a_string: STRING_GENERAL) is
+	setopt_string (a_curl_handle: POINTER; a_opt: INTEGER; a_string: STRING_GENERAL)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -46,7 +46,7 @@ feature -- Command
 			end
 		end
 
-	setopt_form (a_curl_handle: POINTER; a_opt: INTEGER; a_form: CURL_FORM) is
+	setopt_form (a_curl_handle: POINTER; a_opt: INTEGER; a_form: CURL_FORM)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -56,7 +56,7 @@ feature -- Command
 			setopt_void_star (a_curl_handle, a_opt, a_form.item)
 		end
 
-	setopt_slist (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_slist: POINTER) is
+	setopt_slist (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_slist: POINTER)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -66,7 +66,7 @@ feature -- Command
 			setopt_void_star (a_curl_handle, a_opt, a_curl_slist)
 		end
 
-	setopt_curl_string (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_string: CURL_STRING) is
+	setopt_curl_string (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_string: CURL_STRING)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -81,7 +81,7 @@ feature -- Command
 			end
 		end
 
-	setopt_integer (a_curl_handle: POINTER; a_opt: INTEGER; a_integer: INTEGER) is
+	setopt_integer (a_curl_handle: POINTER; a_opt: INTEGER; a_integer: INTEGER)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -95,7 +95,7 @@ feature -- Command
 			end
 		end
 
-	perform (a_curl_handle: POINTER): INTEGER is
+	perform (a_curl_handle: POINTER): INTEGER
 			-- Declared as curl_easy_perform().
 			-- Result is one value from {CURL_CODES}
 		require
@@ -111,7 +111,7 @@ feature -- Command
 			valid:
 		end
 
-	cleanup (a_curl_handle: POINTER) is
+	cleanup (a_curl_handle: POINTER)
 			-- Declared as curl_easy_cleanup().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -126,7 +126,7 @@ feature -- Command
 
 feature -- Query
 
-	is_dynamic_library_exists: BOOLEAN is
+	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
 		do
 			Result := (api_loader.module_pointer (module_name) /= default_pointer)
@@ -134,7 +134,7 @@ feature -- Query
 		
 feature -- Special setting
 
-	set_curl_function (a_curl_function: CURL_FUNCTION) is
+	set_curl_function (a_curl_function: CURL_FUNCTION)
 			-- Set `curl_function' with `a_curl_function'
 		do
 			internal_curl_function := a_curl_function
@@ -142,7 +142,7 @@ feature -- Special setting
 			set: a_curl_function /= Void implies curl_function = a_curl_function
 		end
 
-	curl_function: CURL_FUNCTION is
+	curl_function: CURL_FUNCTION
 			-- cURL functions in curl_easy_setopt.
 		do
 			Result := internal_curl_function
@@ -154,7 +154,7 @@ feature -- Special setting
 			not_void: Result /= Void
 		end
 
-	set_write_function (a_curl_handle: POINTER) is
+	set_write_function (a_curl_handle: POINTER)
 				-- Set cURL write function
 				-- Set cURL write function with Eiffel default write function.
 				-- So we can use CURL_STRING as parameter in {CURL_EASY_EXTERNALS}.setopt_curl_string when the option is {CURL_OPT_CONSTANTS}.curlopt_writedata
@@ -169,7 +169,7 @@ feature -- Special setting
 			end
 		end
 
-	set_progress_function (a_curl_handle: POINTER) is
+	set_progress_function (a_curl_handle: POINTER)
 				-- Set cURL progress function for upload/download progress.
 		require
 			exists: a_curl_handle /= default_pointer
@@ -182,7 +182,7 @@ feature -- Special setting
 			end
 		end
 
-	set_debug_function (a_curl_handle: POINTER) is
+	set_debug_function (a_curl_handle: POINTER)
 				-- Set cURL debug function
 		require
 			exists: a_curl_handle /= default_pointer
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 	internal_curl_function: CURL_FUNCTION
 			-- cURL functions.
 
-	api_loader: API_LOADER is
+	api_loader: API_LOADER
 			-- API dynamic loader
 		once
 			create Result
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	module_name: STRING is
+	module_name: STRING
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			Result := l_utility.module_name
 		end
 
-	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER) is
+	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER)
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_init (a_api: POINTER): POINTER is
+	c_init (a_api: POINTER): POINTER
 			-- Declared curl_easy_init ().
 		require
 			exists: a_api /= default_pointer
@@ -245,7 +245,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_cleanup (a_api: POINTER; a_curl_handle: POINTER) is
+	c_cleanup (a_api: POINTER; a_curl_handle: POINTER)
 			-- Decalred as curl_easy_cleanup ().
 		require
 			exists: a_api /= default_pointer
@@ -258,7 +258,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_perform (a_api: POINTER; a_curl_handle: POINTER): INTEGER is
+	c_perform (a_api: POINTER; a_curl_handle: POINTER): INTEGER
 			-- Declared as curl_easy_perform().
 		require
 			exists: a_api /= default_pointer
@@ -272,7 +272,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_setopt_int (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: INTEGER) is
+	c_setopt_int (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: INTEGER)
 			-- Same as `c_setopt' except we can pass `a_data' as integer.
 		require
 			exists: a_api /= default_pointer
@@ -291,7 +291,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_setopt (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER) is
+	c_setopt (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER)
 			-- C implementation of `setopt_void_star'.
 			-- Declared as curl_easy_setopt ().
 		require
@@ -311,7 +311,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

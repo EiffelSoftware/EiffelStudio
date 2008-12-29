@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constructs to be parsed by lexical analysis classes"
@@ -25,33 +25,33 @@ feature -- Access
 
 feature -- Status report
 
-	token_type: INTEGER is
+	token_type: INTEGER
 			-- Token code associated with terminal
 		deferred 
 		end 
 
 feature {NONE} -- Implementation
 
-	production: LINKED_LIST [CONSTRUCT] is
+	production: LINKED_LIST [CONSTRUCT]
 			-- Void
 			-- (Meaningless for terminal constructs)
 		once 
 		end
 
-	left_recursion: BOOLEAN is False;
+	left_recursion: BOOLEAN = False;
 
-	check_recursion is
+	check_recursion
 			-- Do nothing.
 			-- (Meaningless for terminal constructs)
 		do
 		end
 
-	expand is
+	expand
 			-- Do nothing.
 		do
 		end
 
-	parse_body is
+	parse_body
 			-- Parse a terminal construct.
 		do
 			-- From Kim Walden if token_correct or is_optional then
@@ -64,23 +64,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	token_correct: BOOLEAN is
+	token_correct: BOOLEAN
 			-- Is token recognized?
 		do  
 			Result := document.token.type = token_type
 		end 
 
-   action is
+   action
 			-- To be redefined in descendants.
 		do
 		end 
 
-	in_action is
+	in_action
 			-- Do nothing.
 		do
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

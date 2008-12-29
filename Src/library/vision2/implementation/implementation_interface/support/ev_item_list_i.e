@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision item list. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 		
 feature -- Access
 
-	item_by_data (data: ANY): like item is
+	item_by_data (data: ANY): like item
 			-- First item with `data'.
 		require
 			data_not_void: data /= Void
@@ -47,7 +47,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

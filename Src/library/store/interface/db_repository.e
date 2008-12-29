@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -34,7 +34,7 @@ feature -- Status report
 	repository_name: STRING
 			-- Name of repository
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does repository `repository_name' exist?
 		require
 			is_ok: is_ok
@@ -43,7 +43,7 @@ feature -- Status report
 			Result := implementation.exists
 		end
 
-	conforms (object: ANY): BOOLEAN is
+	conforms (object: ANY): BOOLEAN
 			-- Do `object' attributes match the data description
 			-- accessed through `repository_name' ?
 		require
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Initialization
 
-	make (name: STRING) is
+	make (name: STRING)
 			-- Create repository with `name'.
 		require
 			name_exists: name /= Void
@@ -71,7 +71,7 @@ feature -- Initialization
 
 feature -- Access
 
-	column_i_th(i: INTEGER): COLUMNS[DATABASE] is
+	column_i_th(i: INTEGER): COLUMNS[DATABASE]
 			-- Column corresponding to indice 'i'
 		require
 			indice_valid: i>=1 and i<=column_number
@@ -81,7 +81,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	column_number: INTEGER is
+	column_number: INTEGER
 			-- Column number
 		do
 			Result := implementation.column_number
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	load is
+	load
 			-- Load persistent data description accessible through
 			-- `repository_name'.
 		require
@@ -108,7 +108,7 @@ feature -- Basic operations
 			loaded
 		end
 
-	generate_class (f: FILE) is
+	generate_class (f: FILE)
 			-- Generate an Eiffel class template mapping
 			-- the loaded data description.
 		require
@@ -119,7 +119,7 @@ feature -- Basic operations
 			implementation.generate_class (f)
 		end
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Change repository name with `new_name'.
 		require
 			is_ok: is_ok
@@ -132,7 +132,7 @@ feature -- Basic operations
 			ensure_name (new_name)
 		end
 
-	allocate (object: ANY) is
+	allocate (object: ANY)
 			-- Generate a database repository according to the
 			-- data representation of Eiffel object `object'.
 		require
@@ -152,7 +152,7 @@ feature {DB_STORE} -- Implementation
 	implementation: DATABASE_REPOSITORY [DATABASE]
 			-- Handle reference to specific database implementation
 
-	ensure_name (new_name: STRING): BOOLEAN is
+	ensure_name (new_name: STRING): BOOLEAN
 		require
 			not_void: new_name /= Void
 		local
@@ -164,7 +164,7 @@ feature {DB_STORE} -- Implementation
 			Result := Result or repository_name.is_equal (tmp_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

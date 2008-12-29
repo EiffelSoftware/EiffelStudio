@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Ancestors of user commands for a history based on a linear list. %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	history: HISTORY_LIST is
+	history: HISTORY_LIST
 			-- Trace of previously executed commands
 		once
 			create Result.make
@@ -27,7 +27,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

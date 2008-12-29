@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Frame for building example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- drawing
 
-	process is
+	process
 			-- Create, build and save an image
 			-- under the PNG fromat.
 		do
@@ -20,14 +20,14 @@ feature -- drawing
 			save
 		end
 
-	create_image is
+	create_image
 			-- Create the image.
 		do
 			Create drawable.make(400,400)
 			drawable.set_background_color(0,255,0)
 		end
 
-	save is
+	save
 			-- Save the image.
 		local
 			fi: FILE_NAME
@@ -36,7 +36,7 @@ feature -- drawing
 			drawable.save_to_file(fi)
 		end
 
-	build is deferred end
+	build deferred end
 		-- Build the image.
 
 feature -- Access
@@ -44,10 +44,10 @@ feature -- Access
 	drawable: EIFFEL2PNG
 		-- Drawable area.
 
-	suffix: STRING is deferred end
+	suffix: STRING deferred end
 		-- Suffix corresponding to current example
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for SD_DOCKING_ZONE_UPPER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Redefine
 
-	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE) is
+	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE)
 			-- Redefine, draw tab recangle on top.
 		local
 			l_shared: like internal_shared
@@ -60,7 +60,7 @@ feature {NONE} -- Redefine
 --			internal_rectangle_title_area := internal_zone.title_area
 --		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

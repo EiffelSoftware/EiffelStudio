@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision pixmap container. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Give a copy of pixmap used by `Current'.
 		do
 			if private_pixmap /= Void then
@@ -23,7 +23,7 @@ feature -- Access
 			end
 		end
 
-	pixmap_imp: EV_PIXMAP_IMP_STATE is
+	pixmap_imp: EV_PIXMAP_IMP_STATE
 			-- Implementation of pixmap in `Current'.
 		do
 			if private_pixmap /= Void then
@@ -33,13 +33,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_pixmap (pix: EV_PIXMAP) is
+	set_pixmap (pix: EV_PIXMAP)
 			-- Make `pix' the new pixmap of `Current'.
 		do
 			private_pixmap := pix.twin
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove the pixmap from `Current'.
 		do
 			private_pixmap := Void
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 	private_pixmap: EV_PIXMAP;
 			-- Pixmap of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -19,12 +19,12 @@ inherit
 
 feature -- Basic operations
 
-	project is
+	project
 			-- Make a standard projection of the world on the device.
 		deferred
 		end
 
-	draw_grid is
+	draw_grid
 			-- Draw the grid on the canvas.
 		deferred
 		end
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PRINT_PROJECTOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

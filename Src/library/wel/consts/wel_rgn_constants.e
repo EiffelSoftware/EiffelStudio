@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Regions (RGN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	frozen Rgn_and: INTEGER is
+	frozen Rgn_and: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_AND"
 		end
 
-	frozen Rgn_or: INTEGER is
+	frozen Rgn_or: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_OR"
 		end
 
-	frozen Rgn_xor: INTEGER is
+	frozen Rgn_xor: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_XOR"
 		end
 
-	frozen Rgn_diff: INTEGER is
+	frozen Rgn_diff: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"RGN_DIFF"
 		end
 
-	frozen Rgn_copy: INTEGER is
+	frozen Rgn_copy: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_region_constant (c: INTEGER): BOOLEAN is
+	valid_region_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid region constant?
 		do
 			Result := c = Rgn_and or else
@@ -57,7 +57,7 @@ feature -- Status report
 				c = Rgn_copy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

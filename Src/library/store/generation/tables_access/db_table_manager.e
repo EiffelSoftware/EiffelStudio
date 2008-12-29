@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Database Manager using database structure description."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (dbm: DATABASE_MANAGER [DATABASE]) is
+	make (dbm: DATABASE_MANAGER [DATABASE])
 			-- Set `dbm' to manage database
 			-- interactions.
 		require
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Connection
 
-	set_connection_information (user_name, password, data_source: STRING) is
+	set_connection_information (user_name, password, data_source: STRING)
 			-- Set database connection information: `user_name', `password'
 			-- and `data_source'.
 		require
@@ -39,7 +39,7 @@ feature -- Connection
 			database_manager.set_connection_information (user_name, password, data_source)
 		end
 
-	establish_connection is
+	establish_connection
 			-- Establish connection to database.
 		do
 			database_manager.establish_connection
@@ -47,7 +47,7 @@ feature -- Connection
 			not_void: session_control /= Void
 		end
 
-	disconnect is
+	disconnect
 			-- Disconnect from database.
 		require
 			is_connected: is_connected
@@ -57,7 +57,7 @@ feature -- Connection
 
 feature -- Status report
 
-	is_connected: BOOLEAN is
+	is_connected: BOOLEAN
 			-- Is the application connected to a database?
 		do
 			Result := session_control /= Void and then session_control.is_connected
@@ -76,13 +76,13 @@ feature -- Status report
 	is_id_selection: BOOLEAN
 			-- Is prepared select query qualified with ID?
 
-	like_type (type: INTEGER): BOOLEAN is
+	like_type (type: INTEGER): BOOLEAN
 			-- Does `type' require a SQL query using 'like'?
 		do
 			Result := type >= Prefix_type and then type <= Max_type
 		end
 
-	has_id (tablerow: DB_TABLE): BOOLEAN is
+	has_id (tablerow: DB_TABLE): BOOLEAN
 			-- Does `tablerow' have an ID and can it be found?
 		local
 			td: DB_TABLE_DESCRIPTION
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Access
 
-	select_query: STRING is
+	select_query: STRING
 			-- Select query to execute. Execute with `load_result_list'.
 		require
 			select_query_prepared: select_query_prepared
@@ -108,13 +108,13 @@ feature -- Access
 	select_qualifiers: STRING
 			-- Qualifying clause of current SQL query.
 
-	database_result_list: ARRAYED_LIST [DB_TABLE] is
+	database_result_list: ARRAYED_LIST [DB_TABLE]
 			-- Database result list.
 		do
 			Result := result_list
 		end
 
-	database_result: DB_TABLE is
+	database_result: DB_TABLE
 			-- Database unique result. Selection should
 			-- have been qualified with ID.
 		require
@@ -131,14 +131,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	load_result is
+	load_result
 			-- Load result. Set `has_error'. Result is available in
 			-- `database_result' if result is unique, `database_result_list' otherwise.
 		do
 			result_list := load_list_with_query_and_tablecode (select_query, select_table_descr.Table_code)
 		end
 
-	prepare_select_with_table (tablecode: INTEGER) is
+	prepare_select_with_table (tablecode: INTEGER)
 			-- Prepare a simple select query on table with code `tablecode'.
 			-- Execute it with `load_result_list'.
 		do
@@ -149,7 +149,7 @@ feature -- Basic operations
 			remove_order_by
 		end
 
-	set_table (tablecode: INTEGER) is
+	set_table (tablecode: INTEGER)
 			-- Set table with code `tablecode' as result table of prepared select query.
 			-- Don't change other select query parameters.
 		require
@@ -159,7 +159,7 @@ feature -- Basic operations
 			select_table_descr := tables.obj (tablecode).table_description
 		end
 
-	set_all_columns is
+	set_all_columns
 			-- Select all columns for prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -167,7 +167,7 @@ feature -- Basic operations
 			select_columns := All_columns
 		end
 
-	set_columns (cols: ARRAYED_LIST [INTEGER]) is
+	set_columns (cols: ARRAYED_LIST [INTEGER])
 			-- Set `cols' as result columns of prepared select query.
 			-- Don't change other select query parameters.
 		require
@@ -185,7 +185,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_value_qualifier (column: INTEGER; value: STRING) is
+	add_value_qualifier (column: INTEGER; value: STRING)
 			-- Add qualifier `column' = `value' to prepared select query.
 		local
 			q: STRING
@@ -196,7 +196,7 @@ feature -- Basic operations
 			add_qualifier (q)
 		end
 
-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN) is
+	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN)
 			-- Add qualifier `column' related to `value' with `type' and `case'.
 			-- 'LIKE' predicates are implemented by both Oracle and ODBC with '%' and '_' wild
 			-- card characters.
@@ -256,7 +256,7 @@ feature -- Basic operations
 			add_qualifier (q)
 		end
 
-	set_id_qualifier (id_value: STRING) is
+	set_id_qualifier (id_value: STRING)
 			-- Prepared select query will select table row with id `id_value'.
 		require
 			has_id: select_table_descr.id_code /= select_table_descr.No_id
@@ -268,7 +268,7 @@ feature -- Basic operations
 			is_id_selection: is_id_selection
 		end
 
-	add_qualifier (value: STRING) is
+	add_qualifier (value: STRING)
 			-- Add qualifier `value' to prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -281,7 +281,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_qualifiers is
+	remove_qualifiers
 			-- Remove all qualifiers of prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -292,7 +292,7 @@ feature -- Basic operations
 			is_not_id_selection: not is_id_selection
 		end
 
-	set_order_by (column: INTEGER) is
+	set_order_by (column: INTEGER)
 			-- Order result by attribute of code `column'.
 		require
 			select_query_prepared: select_query_prepared
@@ -300,7 +300,7 @@ feature -- Basic operations
 			order_by := Space + Order_by_clause + Space + select_table_descr.description_list.i_th (column)
 		end
 
-	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER]) is
+	set_multiple_order_by (column_list: ARRAYED_LIST [INTEGER])
 			-- Order result by attribute of code `column'.
 		require
 			select_query_prepared: select_query_prepared
@@ -325,7 +325,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_order_by is
+	remove_order_by
 			-- Remove order by from current prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -335,7 +335,7 @@ feature -- Basic operations
 
 feature -- Queries
 
-	load_data_with_select (s: STRING): ANY is
+	load_data_with_select (s: STRING): ANY
 			-- Load directly an integer value from the database.
 		require
 			meaningful_select: s /= Void
@@ -348,7 +348,7 @@ feature -- Queries
 			end
 		end
 
-	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): ARRAYED_LIST [DB_TABLE] is
+	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): ARRAYED_LIST [DB_TABLE]
 			-- Load list of table rows from `query'. Table rows type is
 			-- table of code `tablecode'.
 		require
@@ -367,7 +367,7 @@ feature -- Queries
 
 feature -- General command
 
-	execute_query (query: STRING) is
+	execute_query (query: STRING)
 			-- Execute SQL `query' and commit changes.
 		require
 			not_void: query /= Void
@@ -381,7 +381,7 @@ feature -- General command
 
 feature -- Update
 
-	update_tablerow (tablerow: DB_TABLE) is
+	update_tablerow (tablerow: DB_TABLE)
 			-- Update item with `description' in database.
 		local
 			table_descr: DB_TABLE_DESCRIPTION
@@ -417,7 +417,7 @@ feature -- Update
 
 feature -- Creation
 
-	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): ANY is
+	new_id_for_tablerow (table_descr: DB_TABLE_DESCRIPTION): ANY
 			-- Next available ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
@@ -454,7 +454,7 @@ feature -- Creation
 			end
 		end
 
-	set_id_and_create_tablerow, create_item_with_id (an_obj: DB_TABLE) is
+	set_id_and_create_tablerow, create_item_with_id (an_obj: DB_TABLE)
 			-- Store in the DB object `an_obj' after giving it
 			-- a valid ID.
 		local
@@ -465,7 +465,7 @@ feature -- Creation
 			create_item_with_tablecode (an_obj, table_descr.table_code)
 		end
 
-	create_item (an_obj: DB_TABLE) is
+	create_item (an_obj: DB_TABLE)
 			-- Store in the DB object `an_obj'.
 		do
 			create_item_with_tablecode (an_obj, an_obj.table_description.table_code)
@@ -473,7 +473,7 @@ feature -- Creation
 
 feature -- Deletion
 
-	delete_item (an_obj: DB_TABLE) is
+	delete_item (an_obj: DB_TABLE)
 			-- Delete `an_obj' in the database, i.e.
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
@@ -483,7 +483,7 @@ feature -- Deletion
 			delete_item_with_description (table_descr)
 		end 
 
-	delete_tablerow (an_obj: DB_TABLE) is
+	delete_tablerow (an_obj: DB_TABLE)
 			-- Delete `an_obj' in the database,
 			-- i.e. the table row of `an_obj' table with `an_obj' ID.
 			--| Warning: delete all dependent table rows.
@@ -513,7 +513,7 @@ feature -- Deletion
 
 feature -- Commitment
 
-	commit is
+	commit
 			-- Commit changes in the database.
 		do
 			database_manager.commit
@@ -521,7 +521,7 @@ feature -- Commitment
 
 feature {NONE} -- Update implementation
 
-	map_parameters (updater: DB_CHANGE; table_descr: DB_TABLE_DESCRIPTION) is
+	map_parameters (updater: DB_CHANGE; table_descr: DB_TABLE_DESCRIPTION)
 			-- Parameters of the procedure call.
 		require
 			updater_not_void: updater /= Void
@@ -541,7 +541,7 @@ feature {NONE} -- Update implementation
 			end
 		end
 
-	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING is
+	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING
 			-- SQL query corresponding to a database update.
 		require
 			not_void: td /= Void
@@ -581,7 +581,7 @@ feature {NONE} -- Update implementation
 			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
 		end
 
-	update_parameters (code: INTEGER): ARRAYED_LIST [STRING] is
+	update_parameters (code: INTEGER): ARRAYED_LIST [STRING]
 			-- Parameters names for an update on table with `code'.
 			-- Parameters contain the required ':' prefix to tell
 			-- EiffelCommerce it is a parameter.
@@ -596,7 +596,7 @@ feature {NONE} -- Update implementation
 			end
 		end
 
-	parameter (s: STRING): STRING is
+	parameter (s: STRING): STRING
 			-- Prepend "N_" to `s'.
 		do
 			Result := "N_" + s
@@ -604,7 +604,7 @@ feature {NONE} -- Update implementation
 
 feature {NONE} -- Creation implementation
 
-	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER) is
+	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER)
 			--Store in the DB object `an_obj'.
 		local
 			rep: DB_REPOSITORY
@@ -628,7 +628,7 @@ feature {NONE} -- Creation implementation
 			end
 		end
 
-	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING is
+	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING
 			-- Query to find maximum ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
@@ -638,7 +638,7 @@ feature {NONE} -- Creation implementation
 					+ ") from " + table_descr.table_name
 		end
 
-	repository (code: INTEGER): DB_REPOSITORY is
+	repository (code: INTEGER): DB_REPOSITORY
 			-- Repository corresponding to the database table with `code'.
 			-- Note: loaded repository are cached in `repository_table'.
 		require
@@ -664,7 +664,7 @@ feature {NONE} -- Creation implementation
 
 feature {NONE} -- Deletion implementation
 
-	delete_item_with_description (description: DB_TABLE_DESCRIPTION) is
+	delete_item_with_description (description: DB_TABLE_DESCRIPTION)
 			-- Delete `an_obj' in the database, i.e.
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
@@ -679,7 +679,7 @@ feature {NONE} -- Deletion implementation
 			end
 		end 
 
-	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY) is
+	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY)
 			-- Load and delete rows of table with `tablecode' where foreign key with `fkey_code'
 			-- equals `fkey_value'.
 		local
@@ -705,13 +705,13 @@ feature {NONE} -- Deletion implementation
 
 feature {NONE} -- Implementation
 
-	session_control: DB_CONTROL is
+	session_control: DB_CONTROL
 			-- Session control.
 		once
 			Result := database_manager.session_control
 		end
 
-	database_handle_name: STRING is
+	database_handle_name: STRING
 			-- Database handle name.
 		do
 			if db_handle_name = Void then
@@ -723,13 +723,13 @@ feature {NONE} -- Implementation
 	db_handle_name: STRING
 			-- Database handle name.
 
-	Oracle_handle_name: STRING is "ORACLE"
+	Oracle_handle_name: STRING = "ORACLE"
 			-- Oracle handle name.
 
-	Odbc_handle_name: STRING is "ODBC"
+	Odbc_handle_name: STRING = "ODBC"
 			-- ODBC handle name.
 
-	string_format (s: STRING): STRING is
+	string_format (s: STRING): STRING
 			-- String representation in SQL of `s'.
 		do
 			Result := database_manager.string_format (s)
@@ -761,71 +761,71 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- SQL query construction
 
-	Only_one_wildcard: STRING is "_"
+	Only_one_wildcard: STRING = "_"
 			-- SQL representation of a wild card matching any character.
 
-	Any_wildcard: STRING is "%%"
+	Any_wildcard: STRING = "%%"
 			-- SQL representation of a wild card matching any number of characters,
 			-- including none.
 
-	Space: STRING is " "
+	Space: STRING = " "
 			-- Space separator in SQL queries.
 
-	to_lower (attribute: STRING): STRING is
+	to_lower (attribute: STRING): STRING
 			-- Oracle SQL representation of the value in lower case for `attribute'.
 		do
 			Result := "lower (" + attribute + ")"
 		end
 
-	Like_predicate: STRING is "like"
+	Like_predicate: STRING = "like"
 			-- SQL 'like' predicate (used to match expressions using wildcards).
 
-	Order_by_clause: STRING is "order by"
+	Order_by_clause: STRING = "order by"
 			-- SQL 'order by' clause.
 
-	Values_separator: STRING is ", "
+	Values_separator: STRING = ", "
 			-- SQL value separator: for 'order by' clauses and columns to select.
 
-	All_columns: STRING is "*"
+	All_columns: STRING = "*"
 			-- SQL all columns sign.
 
-	And_operator: STRING is "and"
+	And_operator: STRING = "and"
 			-- SQL 'and' operator.
 
 feature {NONE} -- Error messages
 
-	selection_failed (query: STRING): STRING is
+	selection_failed (query: STRING): STRING
 			-- Database selection failed.
 		do
 			Result := "Database selection failed:%NSQL query was: "
 					+ query + "%NDatabase message is: "
 		end
 
-	Command_failed: STRING is
+	Command_failed: STRING
 			-- Database command failed.
 		do
 			Result := "Database command failed:%N"
 		end
 
-	Update_failed: STRING is
+	Update_failed: STRING
 			-- Database update failed.
 		do
 			Result := "Database update failed:%N"
 		end
 
-	Creation_failed: STRING is
+	Creation_failed: STRING
 			-- Database creation failed.
 		do
 			Result := "Table row creation failed:%N"
 		end
 
-	Deletion_failed: STRING is
+	Deletion_failed: STRING
 			-- Database deletion failed.
 		do
 			Result := "Table row deletion failed:%N"
 		end
 
-	id_creation_failed (name: STRING): STRING is
+	id_creation_failed (name: STRING): STRING
 			-- ID creation failed on table with `name'.
 		require
 			not_void: name /= Void
@@ -834,7 +834,7 @@ feature {NONE} -- Error messages
 				+ name + "%N"
 		end
 
-	repository_failed (name: STRING): STRING is
+	repository_failed (name: STRING): STRING
 			-- Description on table with `name' cannot be retrieved.
 		require
 			not_void: name /= Void
@@ -843,19 +843,19 @@ feature {NONE} -- Error messages
 				+ name + " :%N"
 		end
 
-	No_repository: STRING is
+	No_repository: STRING
 			-- Reposioty does not exist.
 		do
 			Result := "Repository does not exist.%N"
 		end
 
-	Unexpected_error: STRING is
+	Unexpected_error: STRING
 			-- Unexpected error.
 		do
 			Result := "Unexpected error."
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

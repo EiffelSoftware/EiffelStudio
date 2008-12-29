@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,61 +33,61 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cb_size: INTEGER is
+	cb_size: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_cb_size (item)
 		end
 
-	sz_extra_info: STRING is
+	sz_extra_info: STRING
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_sz_extra_info (item)
 		end
 
-	grf_bind_info_f: INTEGER is
+	grf_bind_info_f: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_grf_bind_info_f (item)
 		end
 
-	dw_bind_verb: INTEGER is
+	dw_bind_verb: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_dw_bind_verb (item)
 		end
 
-	sz_custom_verb: STRING is
+	sz_custom_verb: STRING
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_sz_custom_verb (item)
 		end
 
-	cbstgmed_data: INTEGER is
+	cbstgmed_data: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_cbstgmed_data (item)
 		end
 
-	dw_options: INTEGER is
+	dw_options: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_dw_options (item)
 		end
 
-	dw_options_flags: INTEGER is
+	dw_options_flags: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_dw_options_flags (item)
 		end
 
-	dw_code_page: INTEGER is
+	dw_code_page: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_dw_code_page (item)
 		end
 
-	security_attributes: X_REMSECURITY_ATTRIBUTES_RECORD is
+	security_attributes: X_REMSECURITY_ATTRIBUTES_RECORD
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_security_attributes (item)
@@ -95,7 +95,7 @@ feature -- Access
 			valid_security_attributes: Result.item /= default_pointer
 		end
 
-	iid: ECOM_GUID is
+	iid: ECOM_GUID
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_iid (item)
@@ -103,13 +103,13 @@ feature -- Access
 			valid_iid: Result.item /= default_pointer
 		end
 
-	punk: ECOM_INTERFACE is
+	punk: ECOM_INTERFACE
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_punk (item)
 		end
 
-	dw_reserved: INTEGER is
+	dw_reserved: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_rem_bindinfo_dw_reserved (item)
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_tag_rem_bindinfo
@@ -125,61 +125,61 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cb_size (a_cb_size: INTEGER) is
+	set_cb_size (a_cb_size: INTEGER)
 			-- Set `cb_size' with `a_cb_size'.
 		do
 			ccom_x_tag_rem_bindinfo_set_cb_size (item, a_cb_size)
 		end
 
-	set_sz_extra_info (a_sz_extra_info: STRING) is
+	set_sz_extra_info (a_sz_extra_info: STRING)
 			-- Set `sz_extra_info' with `a_sz_extra_info'.
 		do
 			ccom_x_tag_rem_bindinfo_set_sz_extra_info (item, a_sz_extra_info)
 		end
 
-	set_grf_bind_info_f (a_grf_bind_info_f: INTEGER) is
+	set_grf_bind_info_f (a_grf_bind_info_f: INTEGER)
 			-- Set `grf_bind_info_f' with `a_grf_bind_info_f'.
 		do
 			ccom_x_tag_rem_bindinfo_set_grf_bind_info_f (item, a_grf_bind_info_f)
 		end
 
-	set_dw_bind_verb (a_dw_bind_verb: INTEGER) is
+	set_dw_bind_verb (a_dw_bind_verb: INTEGER)
 			-- Set `dw_bind_verb' with `a_dw_bind_verb'.
 		do
 			ccom_x_tag_rem_bindinfo_set_dw_bind_verb (item, a_dw_bind_verb)
 		end
 
-	set_sz_custom_verb (a_sz_custom_verb: STRING) is
+	set_sz_custom_verb (a_sz_custom_verb: STRING)
 			-- Set `sz_custom_verb' with `a_sz_custom_verb'.
 		do
 			ccom_x_tag_rem_bindinfo_set_sz_custom_verb (item, a_sz_custom_verb)
 		end
 
-	set_cbstgmed_data (a_cbstgmed_data: INTEGER) is
+	set_cbstgmed_data (a_cbstgmed_data: INTEGER)
 			-- Set `cbstgmed_data' with `a_cbstgmed_data'.
 		do
 			ccom_x_tag_rem_bindinfo_set_cbstgmed_data (item, a_cbstgmed_data)
 		end
 
-	set_dw_options (a_dw_options: INTEGER) is
+	set_dw_options (a_dw_options: INTEGER)
 			-- Set `dw_options' with `a_dw_options'.
 		do
 			ccom_x_tag_rem_bindinfo_set_dw_options (item, a_dw_options)
 		end
 
-	set_dw_options_flags (a_dw_options_flags: INTEGER) is
+	set_dw_options_flags (a_dw_options_flags: INTEGER)
 			-- Set `dw_options_flags' with `a_dw_options_flags'.
 		do
 			ccom_x_tag_rem_bindinfo_set_dw_options_flags (item, a_dw_options_flags)
 		end
 
-	set_dw_code_page (a_dw_code_page: INTEGER) is
+	set_dw_code_page (a_dw_code_page: INTEGER)
 			-- Set `dw_code_page' with `a_dw_code_page'.
 		do
 			ccom_x_tag_rem_bindinfo_set_dw_code_page (item, a_dw_code_page)
 		end
 
-	set_security_attributes (a_security_attributes: X_REMSECURITY_ATTRIBUTES_RECORD) is
+	set_security_attributes (a_security_attributes: X_REMSECURITY_ATTRIBUTES_RECORD)
 			-- Set `security_attributes' with `a_security_attributes'.
 		require
 			non_void_a_security_attributes: a_security_attributes /= Void
@@ -188,7 +188,7 @@ feature -- Basic Operations
 			ccom_x_tag_rem_bindinfo_set_security_attributes (item, a_security_attributes.item)
 		end
 
-	set_iid (a_iid: ECOM_GUID) is
+	set_iid (a_iid: ECOM_GUID)
 			-- Set `iid' with `a_iid'.
 		require
 			non_void_a_iid: a_iid /= Void
@@ -197,13 +197,13 @@ feature -- Basic Operations
 			ccom_x_tag_rem_bindinfo_set_iid (item, a_iid.item)
 		end
 
-	set_punk (a_punk: ECOM_INTERFACE) is
+	set_punk (a_punk: ECOM_INTERFACE)
 			-- Set `punk' with `a_punk'.
 		do
 			ccom_x_tag_rem_bindinfo_set_punk (item, a_punk.item)
 		end
 
-	set_dw_reserved (a_dw_reserved: INTEGER) is
+	set_dw_reserved (a_dw_reserved: INTEGER)
 			-- Set `dw_reserved' with `a_dw_reserved'.
 		do
 			ccom_x_tag_rem_bindinfo_set_dw_reserved (item, a_dw_reserved)
@@ -211,7 +211,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_tag_rem_bindinfo: INTEGER is
+	c_size_of_x_tag_rem_bindinfo: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__tagRemBINDINFO_s.h%"]"
@@ -219,163 +219,163 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_tagRemBINDINFO)"
 		end
 
-	ccom_x_tag_rem_bindinfo_cb_size (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_cb_size (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_cb_size (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_cb_size (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_sz_extra_info (a_pointer: POINTER): STRING is
+	ccom_x_tag_rem_bindinfo_sz_extra_info (a_pointer: POINTER): STRING
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_sz_extra_info (a_pointer: POINTER; arg2: STRING) is
+	ccom_x_tag_rem_bindinfo_set_sz_extra_info (a_pointer: POINTER; arg2: STRING)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, EIF_OBJECT)"
 		end
 
-	ccom_x_tag_rem_bindinfo_grf_bind_info_f (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_grf_bind_info_f (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_grf_bind_info_f (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_grf_bind_info_f (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_dw_bind_verb (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_dw_bind_verb (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_dw_bind_verb (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_dw_bind_verb (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_sz_custom_verb (a_pointer: POINTER): STRING is
+	ccom_x_tag_rem_bindinfo_sz_custom_verb (a_pointer: POINTER): STRING
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_sz_custom_verb (a_pointer: POINTER; arg2: STRING) is
+	ccom_x_tag_rem_bindinfo_set_sz_custom_verb (a_pointer: POINTER; arg2: STRING)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, EIF_OBJECT)"
 		end
 
-	ccom_x_tag_rem_bindinfo_cbstgmed_data (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_cbstgmed_data (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_cbstgmed_data (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_cbstgmed_data (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_dw_options (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_dw_options (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_dw_options (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_dw_options (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_dw_options_flags (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_dw_options_flags (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_dw_options_flags (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_dw_options_flags (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_dw_code_page (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_dw_code_page (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_dw_code_page (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_dw_code_page (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-	ccom_x_tag_rem_bindinfo_security_attributes (a_pointer: POINTER): X_REMSECURITY_ATTRIBUTES_RECORD is
+	ccom_x_tag_rem_bindinfo_security_attributes (a_pointer: POINTER): X_REMSECURITY_ATTRIBUTES_RECORD
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_security_attributes (a_pointer: POINTER; arg2: POINTER) is
+	ccom_x_tag_rem_bindinfo_set_security_attributes (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ecom_control_library::_REMSECURITY_ATTRIBUTES *)"
 		end
 
-	ccom_x_tag_rem_bindinfo_iid (a_pointer: POINTER): ECOM_GUID is
+	ccom_x_tag_rem_bindinfo_iid (a_pointer: POINTER): ECOM_GUID
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_iid (a_pointer: POINTER; arg2: POINTER) is
+	ccom_x_tag_rem_bindinfo_set_iid (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, GUID *)"
 		end
 
-	ccom_x_tag_rem_bindinfo_punk (a_pointer: POINTER): ECOM_INTERFACE is
+	ccom_x_tag_rem_bindinfo_punk (a_pointer: POINTER): ECOM_INTERFACE
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_punk (a_pointer: POINTER; arg2: POINTER) is
+	ccom_x_tag_rem_bindinfo_set_punk (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, IUnknown *)"
 		end
 
-	ccom_x_tag_rem_bindinfo_dw_reserved (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_rem_bindinfo_dw_reserved (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_rem_bindinfo_set_dw_reserved (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_rem_bindinfo_set_dw_reserved (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagRemBINDINFO_s_impl.h%"](ecom_control_library::_tagRemBINDINFO *, ULONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

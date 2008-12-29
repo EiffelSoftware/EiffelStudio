@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Widget item on SD_TOOL_BAR.
 						Actually it's a place holder for a EV_WIDGET object.
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_widget: EV_WIDGET) is
+	make (a_widget: EV_WIDGET)
 			-- Creation method.
 		require
 			not_void: a_widget /= Void
@@ -39,13 +39,13 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN is
+	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN
 			-- Redefine
 		do
 			Result := a_rect.intersects (rectangle)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Redefine
 		do
 			Result := widget.minimum_width
@@ -56,7 +56,7 @@ feature -- Query
 
 feature -- Command
 
-	replace_widget (a_widget: EV_WIDGET) is
+	replace_widget (a_widget: EV_WIDGET)
 			-- Replace `widget' with `a_widget'.
 			-- Updated parent container if possible
 			-- In this way, we can fix mini tool bar resize problem.
@@ -82,7 +82,7 @@ feature -- Command
 			set: widget = a_widget
 		end
 
-	update_parent_tool_bar_size is
+	update_parent_tool_bar_size
 			-- If `widget' size changed, client programmers should call this feature
 			-- to update parent tool bar's size.
 		local
@@ -96,39 +96,39 @@ feature -- Command
 
 feature -- Agents
 
-	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- Do nothing.
 		do
 		end
 
-	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
 			-- Do nothing.
 		do
 		end
 
-	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
 			-- Do nothing.
 		do
 		end
 
-	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
 			-- Do nothing.
 		do
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Do nothing.
 		do
 		end
 
-	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Do nothing.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
 			-- Do nothing.
 		do
 		end
@@ -137,7 +137,7 @@ invariant
 
 	widget_not_void: widget /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

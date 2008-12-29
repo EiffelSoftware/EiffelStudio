@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Resources for frame chilren."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	XmNchildType: POINTER is
+	XmNchildType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Access
 			"XmNchildType"
 		end;
 
-	XmNchildHorizontalAlignment: POINTER is
+	XmNchildHorizontalAlignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Access
 			"XmNchildHorizontalAlignment"
 		end;
 
-	XmNchildHorizontalSpacing: POINTER is
+	XmNchildHorizontalSpacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Access
 			"XmNchildHorizontalSpacing"
 		end;
 
-	XmNchildVerticalAlignment: POINTER is
+	XmNchildVerticalAlignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Access
 			"XmNchildVerticalAlignment"
 		end;
 
-	XmFRAME_TITLE_CHILD: INTEGER is
+	XmFRAME_TITLE_CHILD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -52,7 +52,7 @@ feature -- Access
 			"XmFRAME_TITLE_CHILD"
 		end;
 
-	XmFRAME_WORKAREA_CHILD: INTEGER is
+	XmFRAME_WORKAREA_CHILD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -60,7 +60,7 @@ feature -- Access
 			"XmFRAME_WORKAREA_CHILD"
 		end;
 
-	XmFRAME_GENERIC_CHILD: INTEGER is
+	XmFRAME_GENERIC_CHILD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -68,7 +68,7 @@ feature -- Access
 			"XmFRAME_GENERIC_CHILD"
 		end;
 
-	XmCHILD_ALIGNMENT_BEGINNING: INTEGER is
+	XmCHILD_ALIGNMENT_BEGINNING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -76,7 +76,7 @@ feature -- Access
 			"XmALIGNMENT_BEGINNING"
 		end;
 
-	XmCHILD_ALIGNMENT_END: INTEGER is
+	XmCHILD_ALIGNMENT_END: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -84,7 +84,7 @@ feature -- Access
 			"XmALIGNMENT_END"
 		end;
 
-	XmCHILD_ALIGNMENT_BASELINE_BOTTOM: INTEGER is
+	XmCHILD_ALIGNMENT_BASELINE_BOTTOM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -92,7 +92,7 @@ feature -- Access
 			"XmALIGNMENT_BASELINE_BOTTOM"
 		end;
 
-	XmCHILD_ALIGNMENT_BASELINE_TOP: INTEGER is
+	XmCHILD_ALIGNMENT_BASELINE_TOP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -100,7 +100,7 @@ feature -- Access
 			"XmALIGNMENT_BASELINE_TOP"
 		end;
 
-	XmCHILD_ALIGNMENT_WIDGET_TOP: INTEGER is
+	XmCHILD_ALIGNMENT_WIDGET_TOP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -108,7 +108,7 @@ feature -- Access
 			"XmALIGNMENT_WIDGET_TOP"
 		end;
 
-	XmCHILD_ALIGNMENT_CENTER: INTEGER is
+	XmCHILD_ALIGNMENT_CENTER: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -116,7 +116,7 @@ feature -- Access
 			"XmALIGNMENT_CENTER"
 		end;
 
-	XmCHILD_ALIGNMENT_WIDGET_BOTTOM: INTEGER is
+	XmCHILD_ALIGNMENT_WIDGET_BOTTOM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -124,7 +124,7 @@ feature -- Access
 			"XmALIGNMENT_WIDGET_BOTTOM"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Case-sensitive string equality testers
 		]"
@@ -25,14 +25,14 @@ feature -- Status report
 
 feature -- Query
 
-	test (v, u: !G): BOOLEAN is
+	test (v, u: !G): BOOLEAN
 			-- <Precursor>
 		do
 			check is_case_sensitive: is_case_sensitive end
 			Result := v.same_string (u)
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

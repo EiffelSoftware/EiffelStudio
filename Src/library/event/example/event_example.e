@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A simple example of using class ACTION_SEQUENCE %
 		% Tests pause, block and resume (not completely) %
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create birthday_actions
 			create sweet_sixteen_actions.make (birthday_actions)
@@ -75,12 +75,12 @@ feature -- Nesting test
 
 	loopy_actions:  ACTION_SEQUENCE [TUPLE [INTEGER]]
 
-	loopy_wrapper (i: INTEGER; p: PROCEDURE [ANY, TUPLE]) is
+	loopy_wrapper (i: INTEGER; p: PROCEDURE [ANY, TUPLE])
 		do
 			p.call ([i])
 		end 
 
-	loopy_action (i: INTEGER) is
+	loopy_action (i: INTEGER)
 		do
 			if i < 10 then
 				loopy_actions.call ([i+1])
@@ -90,14 +90,14 @@ feature -- Nesting test
 
 feature -- Brown-nosing
 
-	send_card (age: INTEGER; name, from_who: STRING) is
+	send_card (age: INTEGER; name, from_who: STRING)
 			-- Send `name' a `age'th birthday card from `from_who'. 
 		do
 			print ("Dear "+name+", happy "+age.out+"th birthday.%NRegards "+from_who+".%N")
 			increase_karma
 		end
 
-	buy_gift (age: INTEGER; name, gift, from_who: STRING) is
+	buy_gift (age: INTEGER; name, gift, from_who: STRING)
 			-- Buy `gift' for `name' for thier `age'th birthday from `from_who'. 
 		do
 			print ("Ordering "+gift+" for "+name+", billing "+from_who+".%N")
@@ -108,7 +108,7 @@ feature -- Brown-nosing
 			end
 		end
 
-	buy_car (lucky, broke: STRING) is
+	buy_car (lucky, broke: STRING)
 			-- Buy car for `lucky' from `broke'. 
 		do
 			print ("T-bird for "+lucky+" from "+broke+", vrrrrmmmm!%N")
@@ -116,7 +116,7 @@ feature -- Brown-nosing
 
 feature -- Virtue
 
-	increase_karma is
+	increase_karma
 		do
 			karma := karma + 1
 			print ("karma is "+karma.out+"%N")
@@ -125,7 +125,7 @@ feature -- Virtue
 			end
 		end
 
-	decrease_karma is
+	decrease_karma
 		do
 			print ("Oops...%N")
 			karma := karma - 100
@@ -134,7 +134,7 @@ feature -- Virtue
 
 feature -- Reward
 
-	bliss_out is
+	bliss_out
 		do
 			print ("Peace, love and mung beans baby!%N")
 		end
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 
 	karma: REAL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

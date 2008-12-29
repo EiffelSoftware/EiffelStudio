@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for SD_TAB_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_tab_zone: SD_TAB_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
+	make (a_tab_zone: SD_TAB_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR)
 			-- Creation method
 		require
 			not_void: a_tab_zone /= Void
@@ -38,7 +38,7 @@ feature {NONE}  -- Initlization
 
 feature -- Redefine
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		local
 			l_tab_zone: SD_TAB_ZONE
@@ -85,7 +85,7 @@ feature -- Redefine
 			internal_shared.feedback.reset_feedback_clearing
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine.
 		local
 
@@ -111,7 +111,7 @@ feature -- Redefine
 			end
 		end
 
-	set_rectangle (a_rect: EV_RECTANGLE) is
+	set_rectangle (a_rect: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

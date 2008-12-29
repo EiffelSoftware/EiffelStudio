@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Definition of the sixteen standard pens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	white_pen: WEL_PEN is
+	white_pen: WEL_PEN
 			-- White pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -32,7 +32,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	black_pen: WEL_PEN is
+	black_pen: WEL_PEN
 			-- Black pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -41,7 +41,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	grey_pen: WEL_PEN is
+	grey_pen: WEL_PEN
 			-- Grey pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -50,7 +50,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_grey_pen: WEL_PEN is
+	dark_grey_pen: WEL_PEN
 			-- Dark grey pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -59,7 +59,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	blue_pen: WEL_PEN is
+	blue_pen: WEL_PEN
 			-- Blue pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -68,7 +68,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_blue_pen: WEL_PEN is
+	dark_blue_pen: WEL_PEN
 			-- Dark blue pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -77,7 +77,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	cyan_pen: WEL_PEN is
+	cyan_pen: WEL_PEN
 			-- Cyan pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -86,7 +86,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_cyan_pen: WEL_PEN is
+	dark_cyan_pen: WEL_PEN
 			-- Dark cyan pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -95,7 +95,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	green_pen: WEL_PEN is
+	green_pen: WEL_PEN
 			-- Green pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -104,7 +104,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_green_pen: WEL_PEN is
+	dark_green_pen: WEL_PEN
 			-- Dark green pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -113,7 +113,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	yellow_pen: WEL_PEN is
+	yellow_pen: WEL_PEN
 			-- Yellow pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -122,7 +122,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_yellow_pen: WEL_PEN is
+	dark_yellow_pen: WEL_PEN
 			-- Dark yellow pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -131,7 +131,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	red_pen: WEL_PEN is
+	red_pen: WEL_PEN
 			-- Red pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -140,7 +140,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_red_pen: WEL_PEN is
+	dark_red_pen: WEL_PEN
 			-- Dark red pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -149,7 +149,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	magenta_pen: WEL_PEN is
+	magenta_pen: WEL_PEN
 			-- Magenta pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -158,7 +158,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	dark_magenta_pen: WEL_PEN is
+	dark_magenta_pen: WEL_PEN
 			-- Dark magenta pen
 		once
 			create Result.make (default_pen_style, default_pen_width,
@@ -169,7 +169,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	default_pen_width: INTEGER is
+	default_pen_width: INTEGER
 			-- Default pen width used to create the pens.
 		once
 			Result := 1
@@ -177,13 +177,13 @@ feature {NONE} -- Access
 			positive_result: Result >= 0
 		end
 
-	default_pen_style: INTEGER is
+	default_pen_style: INTEGER
 			-- Default pen style used to create the pens.
 		once
 			Result := Ps_solid
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

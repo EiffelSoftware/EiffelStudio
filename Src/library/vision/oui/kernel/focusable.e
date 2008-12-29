@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of the ability for widget to show the explanation%
@@ -13,7 +13,7 @@ deferred class FOCUSABLE
 
 feature -- Initialization
 
-	initialize_focus is
+	initialize_focus
 			-- Add the focusable behavior to Current.
 		require
 			valid_focus_string: valid_focus_string
@@ -25,24 +25,24 @@ feature -- Properties
 
 	focus_string: STRING
 
-	focus_label: FOCUS_LABEL_I is
+	focus_label: FOCUS_LABEL_I
 		deferred
 		end
 
 feature -- Access
 
-	valid_focus_string: BOOLEAN is
+	valid_focus_string: BOOLEAN
 		do
 			Result := focus_string /= Void	
 		end;
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		deferred
 		end
 
 feature -- Setting
 
-	set_focus_string (s: STRING) is
+	set_focus_string (s: STRING)
 			--set explanation text for current widget
 		do
 			focus_string := s
@@ -50,7 +50,7 @@ feature -- Setting
 
 feature {FOCUS_LABEL} -- Implementation
 
-	set_tool_info (a_tool_info: ANY) is
+	set_tool_info (a_tool_info: ANY)
 			-- Set `tool_info'.
 		do
 			tool_info := a_tool_info
@@ -60,7 +60,7 @@ feature {FOCUS_LABEL} -- Implementation
 			-- Tool info for Current
 			-- Used only in Windows implementation of FOCUS_LABEL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

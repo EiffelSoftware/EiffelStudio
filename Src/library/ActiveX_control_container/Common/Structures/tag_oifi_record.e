@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			The OLEINPLACEFRAMEINFO structure contains information 
 			about the accelerators supported by a container during 
@@ -26,13 +26,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -40,31 +40,31 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cb: INTEGER is
+	cb: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_oifi_cb (item)
 		end
 
-	f_mdiapp: INTEGER is
+	f_mdiapp: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_oifi_f_mdiapp (item)
 		end
 
-	hwnd_frame: POINTER is
+	hwnd_frame: POINTER
 			-- No description available.
 		do
 			Result := ccom_tag_oifi_hwnd_frame (item)
 		end
 
-	h_accel: POINTER is
+	h_accel: POINTER
 			-- No description available.
 		do
 			Result := ccom_tag_oifi_h_accel (item)
 		end
 
-	c_accel_entries: INTEGER is
+	c_accel_entries: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_oifi_c_accel_entries (item)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_oifi
@@ -80,31 +80,31 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cb (a_cb: INTEGER) is
+	set_cb (a_cb: INTEGER)
 			-- Set `cb' with `a_cb'.
 		do
 			ccom_tag_oifi_set_cb (item, a_cb)
 		end
 
-	set_f_mdiapp (a_f_mdiapp: INTEGER) is
+	set_f_mdiapp (a_f_mdiapp: INTEGER)
 			-- Set `f_mdiapp' with `a_f_mdiapp'.
 		do
 			ccom_tag_oifi_set_f_mdiapp (item, a_f_mdiapp)
 		end
 
-	set_hwnd_frame (a_hwnd_frame: POINTER) is
+	set_hwnd_frame (a_hwnd_frame: POINTER)
 			-- Set `hwnd_frame' with `a_hwnd_frame'.
 		do
 			ccom_tag_oifi_set_hwnd_frame (item, a_hwnd_frame)
 		end
 
-	set_h_accel (a_h_accel: POINTER) is
+	set_h_accel (a_h_accel: POINTER)
 			-- Set `h_accel' with `a_h_accel'.
 		do
 			ccom_tag_oifi_set_h_accel (item, a_h_accel)
 		end
 
-	set_c_accel_entries (a_c_accel_entries: INTEGER) is
+	set_c_accel_entries (a_c_accel_entries: INTEGER)
 			-- Set `c_accel_entries' with `a_c_accel_entries'.
 		do
 			ccom_tag_oifi_set_c_accel_entries (item, a_c_accel_entries)
@@ -112,7 +112,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_oifi: INTEGER is
+	c_size_of_tag_oifi: INTEGER
 			-- Size of structure
 		external
 			"C [macro <oleidl.h>]"
@@ -120,67 +120,67 @@ feature {NONE}  -- Externals
 			"sizeof(OLEINPLACEFRAMEINFO)"
 		end
 
-	ccom_tag_oifi_cb (a_pointer: POINTER): INTEGER is
+	ccom_tag_oifi_cb (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *):EIF_INTEGER"
 		end
 
-	ccom_tag_oifi_set_cb (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_oifi_set_cb (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *, UINT)"
 		end
 
-	ccom_tag_oifi_f_mdiapp (a_pointer: POINTER): INTEGER is
+	ccom_tag_oifi_f_mdiapp (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *):EIF_INTEGER"
 		end
 
-	ccom_tag_oifi_set_f_mdiapp (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_oifi_set_f_mdiapp (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *, LONG)"
 		end
 
-	ccom_tag_oifi_hwnd_frame (a_pointer: POINTER): POINTER is
+	ccom_tag_oifi_hwnd_frame (a_pointer: POINTER): POINTER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *):EIF_POINTER"
 		end
 
-	ccom_tag_oifi_set_hwnd_frame (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_oifi_set_hwnd_frame (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *, HWND)"
 		end
 
-	ccom_tag_oifi_h_accel (a_pointer: POINTER): POINTER is
+	ccom_tag_oifi_h_accel (a_pointer: POINTER): POINTER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *):EIF_POINTER"
 		end
 
-	ccom_tag_oifi_set_h_accel (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_oifi_set_h_accel (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *, HACCEL)"
 		end
 
-	ccom_tag_oifi_c_accel_entries (a_pointer: POINTER): INTEGER is
+	ccom_tag_oifi_c_accel_entries (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *):EIF_INTEGER"
 		end
 
-	ccom_tag_oifi_set_c_accel_entries (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_oifi_set_c_accel_entries (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOIFI_s_impl.h%"](OLEINPLACEFRAMEINFO *, UINT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General definitions for drawable elments"
 	legal: "See notice at end of class.";
@@ -12,14 +12,14 @@ deferred class
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is current dash destroyed?
 		deferred
 		end;
 
 feature -- Status setting
 
-	clear is
+	clear
 			-- Clear the entire area.
 		require
 			exists: not destroyed
@@ -29,14 +29,14 @@ feature -- Status setting
 
 feature -- Access
 
-	implementation: DRAWING_I is
+	implementation: DRAWING_I
 			-- Implementation
 		deferred
 		end;
 
 feature -- Comparison
 
-	same (other: like Current): BOOLEAN is
+	same (other: like Current): BOOLEAN
 			-- Does the current drawing and `other' share the same object
 			-- on screen ?
 		require
@@ -46,7 +46,7 @@ feature -- Comparison
 
 feature -- Status setting
 
-	set_clip (a_clip: CLIP) is
+	set_clip (a_clip: CLIP)
 			-- Set a clip area.
 		require
 			exists: not destroyed;
@@ -55,7 +55,7 @@ feature -- Status setting
 			implementation.set_clip (a_clip)
 		end;
 
-	set_no_clip is
+	set_no_clip
 			-- Remove all clip area.
 		require
 			exists: not destroyed
@@ -65,7 +65,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
+	add_expose_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		require
@@ -77,7 +77,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
+	remove_expose_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		require
@@ -87,7 +87,7 @@ feature -- Removal
 			implementation.remove_expose_action (a_command, argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

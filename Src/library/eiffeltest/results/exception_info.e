@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Records that store information about thrown exceptions"
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Status report
 
-	complete: BOOLEAN is
+	complete: BOOLEAN
 			-- Is exception information complete?
 		do
 			Result := (type /= Void and then not type.is_empty) and
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_type (s: STRING) is
+	set_type (s: STRING)
 			-- Set exception type to `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -48,7 +48,7 @@ feature -- Status setting
 			type_set: type = s
 		end
 
-	set_origin_class (s: STRING) is
+	set_origin_class (s: STRING)
 			-- Set class where exception was thrown to `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -58,7 +58,7 @@ feature -- Status setting
 			origin_class_set: origin_class = s
 		end
 
-	set_origin_feature (s: STRING) is
+	set_origin_feature (s: STRING)
 			-- Set feature where exception was thrown to `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -68,7 +68,7 @@ feature -- Status setting
 			origin_feature_set: origin_feature = s
 		end
 
-	set_tag_name (s: STRING) is
+	set_tag_name (s: STRING)
 			-- Set tag name of violated assertion to `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -78,7 +78,7 @@ feature -- Status setting
 			tag_name_set: tag_name = s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

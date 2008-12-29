@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	is_dirty_user_precondition: BOOLEAN is
+	is_dirty_user_precondition: BOOLEAN
 			-- User-defined preconditions for `is_dirty'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	load_user_precondition (pstm: ECOM_STREAM): BOOLEAN is
+	load_user_precondition (pstm: ECOM_STREAM): BOOLEAN
 			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_user_precondition (pstm: ECOM_STREAM; f_clear_dirty: INTEGER): BOOLEAN is
+	save_user_precondition (pstm: ECOM_STREAM; f_clear_dirty: INTEGER): BOOLEAN
 			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_size_max_user_precondition (pcb_size: ECOM_ULARGE_INTEGER): BOOLEAN is
+	get_size_max_user_precondition (pcb_size: ECOM_ULARGE_INTEGER): BOOLEAN
 			-- User-defined preconditions for `get_size_max'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	is_dirty is
+	is_dirty
 			-- No description available.
 		require
 			is_dirty_user_precondition: is_dirty_user_precondition
@@ -50,7 +50,7 @@ feature -- Basic Operations
 
 		end
 
-	load (pstm: ECOM_STREAM) is
+	load (pstm: ECOM_STREAM)
 			-- No description available.
 			-- `pstm' [in].  
 		require
@@ -59,7 +59,7 @@ feature -- Basic Operations
 
 		end
 
-	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER) is
+	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER)
 			-- No description available.
 			-- `pstm' [in].  
 			-- `f_clear_dirty' [in].  
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 		end
 
-	get_size_max (pcb_size: ECOM_ULARGE_INTEGER) is
+	get_size_max (pcb_size: ECOM_ULARGE_INTEGER)
 			-- No description available.
 			-- `pcb_size' [out].  
 		require
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

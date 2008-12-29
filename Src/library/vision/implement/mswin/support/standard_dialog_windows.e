@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_WINDOWS standard dialog"
 	legal: "See notice at end of class.";
@@ -51,7 +51,7 @@ inherit
 
 feature -- Initialization
 
-	realize_current is
+	realize_current
 			-- Realize the dialog.
 		require else
 			parent_not_void: parent /= Void
@@ -67,7 +67,7 @@ feature -- Initialization
 			set_default_button
 		end
 
-	realize is
+	realize
 			-- Realize the dialog and its children
 		do
 			if not realized then
@@ -81,13 +81,13 @@ feature -- Initialization
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position of dialog
 		do
 			Result := private_attributes.x
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y position of dialog
 		do
 			Result := private_attributes.y
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	popup is
+	popup
 			-- Popup the dialog.
 		do
 			if not is_popped_up then
@@ -111,7 +111,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Set `x' to `new_x'.
 		do
 			private_attributes.set_x (new_x)
@@ -120,7 +120,7 @@ feature -- Status setting
 			end
 		end
 
-	set_x_y (new_x, new_y: INTEGER) is
+	set_x_y (new_x, new_y: INTEGER)
 			-- Set `x' to `new_x', `y' to `new_y'.
 		do
 			private_attributes.set_y (new_y)
@@ -130,7 +130,7 @@ feature -- Status setting
 			end
 		end
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Set `y' to `new_y'.
 		do
 			private_attributes.set_y (new_y)
@@ -139,7 +139,7 @@ feature -- Status setting
 			end
 		end
 
-	set_left_alignment is
+	set_left_alignment
 			-- Align message to the left side of the dialog.
 		do
 			alignment := Left_alignment
@@ -148,7 +148,7 @@ feature -- Status setting
 			alignment_set: alignment = Left_alignment
 		end
 
-	set_center_alignment is
+	set_center_alignment
 			-- Align message to the center of the dialog.
 		do
 			alignment := Center_alignment
@@ -157,7 +157,7 @@ feature -- Status setting
 			alignment_set: alignment = Center_alignment
 		end
 
-	set_right_alignment is
+	set_right_alignment
 			-- Align message to the right side of the dialog.
 		do
 			alignment := Right_alignment
@@ -166,7 +166,7 @@ feature -- Status setting
 			alignment_set: alignment = Right_alignment
 		end
 
-	hide_ok_button is
+	hide_ok_button
 			-- Hide the `ok_button'.
 		do
 			if exists and then not ok_button_hidden then
@@ -181,7 +181,7 @@ feature -- Status setting
 			exists_implies_hidden: exists implies not ok_button.shown
 		end
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Hide the `cancel_button'.
 		do
 			if exists and then not cancel_button_hidden then
@@ -196,7 +196,7 @@ feature -- Status setting
 			exists_implies_hidden: exists implies not cancel_button.shown
 		end
 
-	hide_help_button is
+	hide_help_button
 			-- Hide the `help_button'.
 		do
 			if exists and then not help_button_hidden then
@@ -211,7 +211,7 @@ feature -- Status setting
 			exists_implies_hidden: exists implies not help_button.shown
 		end
 
-	show_ok_button is
+	show_ok_button
 			-- Show the `ok_button'.
 		do
 			if exists and then ok_button_hidden then
@@ -226,7 +226,7 @@ feature -- Status setting
 			exists_implies_shown: exists implies ok_button.shown
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Show the `cancel_button'.
 		do
 			if exists and then cancel_button_hidden then
@@ -241,7 +241,7 @@ feature -- Status setting
 			exists_implies_shown: exists implies cancel_button.shown
 		end
 
-	show_help_button is
+	show_help_button
 			-- Show the `help_button'.
 		do
 			if exists and then help_button_hidden then
@@ -256,7 +256,7 @@ feature -- Status setting
 			exists_implies_shown: exists implies help_button.shown
 		end
 
-	set_text_font (a_font: FONT) is
+	set_text_font (a_font: FONT)
 			-- Change the font of the message.
 		do
 			text_font := a_font
@@ -266,7 +266,7 @@ feature -- Status setting
 			end
 		end
 
-	set_button_font (a_font: FONT) is
+	set_button_font (a_font: FONT)
 			-- Change the font of the buttons.
 		do
 			button_font := a_font
@@ -280,7 +280,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_help_label (s: STRING) is
+	set_help_label (s: STRING)
 			-- Replace the text on the `help_button' with `s'
 		require
 			s_not_void: s /= Void
@@ -296,7 +296,7 @@ feature -- Element change
 			help_label_is_equal_to_s: help_label.is_equal (s)
 		end
 
-	set_cancel_label (s: STRING) is
+	set_cancel_label (s: STRING)
 			-- Replace the text on the `cancel_button' with `s'
 		require
 			s_not_void: s /= Void
@@ -312,7 +312,7 @@ feature -- Element change
 			cancel_label_is_equal_to_s: cancel_label.is_equal (s)
 		end
 
-	set_ok_label (s: STRING) is
+	set_ok_label (s: STRING)
 			-- Replace the text on the `ok_button' with `s'
 		require
 			s_not_void: s /= Void
@@ -328,7 +328,7 @@ feature -- Element change
 			ok_label_is_equal_to_s: ok_label.is_equal (s)
 		end
 
-	add_ok_action (c: COMMAND; arg: ANY) is
+	add_ok_action (c: COMMAND; arg: ANY)
 			-- Add an action to the `ok_button'.
 		require
 			command_not_void: c /= Void
@@ -336,7 +336,7 @@ feature -- Element change
 			ok_actions.add (Current, c, arg)
 		end
 
-	add_cancel_action (c: COMMAND; arg: ANY) is
+	add_cancel_action (c: COMMAND; arg: ANY)
 			-- Add an action to the `cancel_button'.
 		require
 			command_not_void: c /= Void
@@ -344,7 +344,7 @@ feature -- Element change
 			cancel_actions.add (Current, c, arg)
 		end
 
-	add_help_action (c: COMMAND; arg: ANY) is
+	add_help_action (c: COMMAND; arg: ANY)
 			-- Add an action to the `help_button'.
 		require
 			command_not_void: c /= Void
@@ -354,7 +354,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_ok_action (c: COMMAND; arg: ANY) is
+	remove_ok_action (c: COMMAND; arg: ANY)
 			-- Remove the action from the `ok_button'.
 		require
 			command_not_void: c /= Void
@@ -362,7 +362,7 @@ feature -- Removal
 			ok_actions.remove (Current, c, arg)
 		end
 
-	remove_cancel_action (c: COMMAND; arg: ANY) is
+	remove_cancel_action (c: COMMAND; arg: ANY)
 			-- Remove the action from the `cancel_button'.
 		require
 			command_not_void: c /= Void
@@ -370,7 +370,7 @@ feature -- Removal
 			cancel_actions.remove (Current, c, arg)
 		end
 
-	remove_help_action (c: COMMAND; arg: ANY) is
+	remove_help_action (c: COMMAND; arg: ANY)
 			-- Remove the action from the `help_button'.
 		require
 			command_not_void: c /= Void
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 	button_font: FONT
 			-- Font used for the buttons.
 
-	dialog_unit: INTEGER is 6
+	dialog_unit: INTEGER = 6
 			-- Number of pixels for one `dialog_unit'
 
 	ok_button_hidden: BOOLEAN
@@ -419,28 +419,28 @@ feature {NONE} -- Implementation
 	alignment : INTEGER
 			-- Type of alignment for text
 
-	Left_alignment: INTEGER is 1
+	Left_alignment: INTEGER = 1
 			-- Text is left aligned
 
-	Center_alignment: INTEGER is 2
+	Center_alignment: INTEGER = 2
 			-- Text is centered
 
-	Right_alignment: INTEGER is 3
+	Right_alignment: INTEGER = 3
 			-- Text is right aligned
 
-	ok_id: INTEGER is 1
+	ok_id: INTEGER = 1
 			-- Id for the `ok_button'
 
-	cancel_id: INTEGER is 2
+	cancel_id: INTEGER = 2
 			-- Id for the `cancel_button'
 
-	help_id: INTEGER is 3
+	help_id: INTEGER = 3
 			-- Id for the `help_button'
 
 	default_button_id: INTEGER
 			-- Indicates the button which has the default button style.
 
-	set_modality is
+	set_modality
 			-- Simulate a modal dialog if necessary
 		do
 			if grab_style = Modal then
@@ -448,44 +448,44 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_controls is
+	create_controls
 			-- Create the controls for the dialog.
 		deferred
 		end
 
-	set_fonts is
+	set_fonts
 			-- Set the font on the controls.
 		deferred
 		end
 
-	set_font_on_text is
+	set_font_on_text
 			-- Set the font on the text.
 		deferred
 		end
 
-	set_default_button is
+	set_default_button
 			-- Set default_button
 		deferred
 		end
 
-	resize_children is
+	resize_children
 			-- Resize the children if necessary.
 		require
 			resize_allowed: not fixed_size_flag
 		deferred
 		end
 
-	reposition_children is
+	reposition_children
 			-- Move the children if necessary.
 		deferred
 		end
 
-	reposition_buttons is
+	reposition_buttons
 			-- Move the buttons if necessary.
 		deferred
 		end
 
-	total_buttons_width: INTEGER is
+	total_buttons_width: INTEGER
 			-- The width of the visible buttons plus
 			-- the offset to the sides of the dialog
 			-- plus the possible offset between the buttons.
@@ -494,17 +494,17 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0
 		end
 
-	dialog_width: INTEGER is
+	dialog_width: INTEGER
 			-- Width of the dialog
 		deferred
 		end
 
-	dialog_height: INTEGER is
+	dialog_height: INTEGER
 			-- Height of the dialog
 		deferred
 		end
 
-	resize_buttons is
+	resize_buttons
 			-- Resize the buttons according to the button
 			-- which is visible and has the largest label.
 		require
@@ -512,17 +512,17 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	determine_focus is
+	determine_focus
 			-- Focus on default
 		deferred
 		end
 
-	icon: WEL_ICON is
+	icon: WEL_ICON
 			-- The icon
 		do
 		end
 
-	set_font_on_buttons is
+	set_font_on_buttons
 			-- Set the font on the buttons.
 		require
 			button_font_not_void: button_font /= Void
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			help_button.set_font (windows_font.wel_font)
 		end
 
-	set_text_on_control (s: STRING; c: WEL_CONTROL) is
+	set_text_on_control (s: STRING; c: WEL_CONTROL)
 			-- Set the text on the control according to
 			-- the alingment.
 		require
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_height (a_text: STRING; a_font: FONT): INTEGER is
+	text_height (a_text: STRING; a_font: FONT): INTEGER
 			-- The height of the font of the message
 		require
 			a_text_not_void: a_text /= Void
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			Result := a_font_windows.string_height (Current, a_text)
 		end
 
-	create_buttons is
+	create_buttons
 			-- Create the buttons and hide them if necessary.
 		do
 			create ok_button.make (Current, ok_label, 0, 0, 0, 0, ok_id)
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 			update_visibility
 		end
 
-	update_visibility is
+	update_visibility
 			-- Show or hide buttons on state of dialog.
 		do
 			if ok_button_hidden then
@@ -607,13 +607,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	number_of_lines (a_message: STRING): INTEGER is
+	number_of_lines (a_message: STRING): INTEGER
 			-- Number of lines in the message
 		do
 			Result := a_message.occurrences ('%N') + 1
 		end
 
-	on_size (size_type: INTEGER; new_w, new_h: INTEGER) is
+	on_size (size_type: INTEGER; new_w, new_h: INTEGER)
 			-- When dialog is resized, the children need to be
 			-- resized, if allowed, and repositioned.
 		do
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 			reposition_children
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Redraw the icon if it exists.
 		do
 			if icon /= Void then
@@ -631,25 +631,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_set_focus is
+	on_set_focus
 			-- Focus on default.
 		do
 			determine_focus
 		end
 
-	button_width (a_label: STRING): INTEGER is
+	button_width (a_label: STRING): INTEGER
 			-- The width of a button in pixels with label `a_label'
 		do
 			Result := text_width (a_label, button_font) + 7 * Dialog_unit
 		end
 
-	button_height: INTEGER is
+	button_height: INTEGER
 			-- The width of a button in pixels with label `a_label'
 		do
 			Result := text_height ("Y", button_font) + 2 * Dialog_unit
 		end
 
-	text_width (a_text: STRING; a_font: FONT): INTEGER is
+	text_width (a_text: STRING; a_font: FONT): INTEGER
 			-- Width of a text using font `a_font' on control `a_control'.
 		local
 			a_font_windows: FONT_IMP
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			Result := a_font_windows.string_width (Current, a_text)
 		end
 
-	adjust_dialog is
+	adjust_dialog
 			-- Adjust the dialog to reflect the changes.
 		local
 			valid_height: INTEGER
@@ -677,21 +677,21 @@ feature {NONE} -- Implementation
 			set_default_button
 		end
 
-	unset_default_button_style (a_button: WEL_PUSH_BUTTON) is
+	unset_default_button_style (a_button: WEL_PUSH_BUTTON)
 			-- Unset the default button style for `a_button'.
 		do
 			cwin_send_message (a_button.item, Bm_setstyle,
 				to_wparam (Bs_pushbutton), cwin_make_long (1, 0))
 		end
 
-	set_default_button_style (a_button: WEL_PUSH_BUTTON) is
+	set_default_button_style (a_button: WEL_PUSH_BUTTON)
 			-- Set the default button style for `a_button'.
 		do
 			cwin_send_message (a_button.item, Bm_setstyle,
 				to_wparam (Bs_defpushbutton), cwin_make_long (1, 0))
 		end
 
-	set_position is
+	set_position
 			-- set `x' and `y' according to
 			-- it's parent or default.
 		require
@@ -708,51 +708,51 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Maximum_window_width: INTEGER is
+	Maximum_window_width: INTEGER
 			-- Width of the client area for a full-screen window
 		once
 			Result := full_screen_client_area_width
 		end
 
-	Maximum_window_height: INTEGER is
+	Maximum_window_height: INTEGER
 			-- Height of the client area for a full-screen window
 		once
 			Result := full_screen_client_area_height
 		end
 
-	Minimum_window_width: INTEGER is
+	Minimum_window_width: INTEGER
 			-- Minimum width of a window
 		once
 			Result := window_minimum_width
 		end
 
-	Minimum_window_height: INTEGER is
+	Minimum_window_height: INTEGER
 			-- Minimum height of a window
 		once
 			Result := window_minimum_height
 		end
 
-	Default_button_style: INTEGER is
+	Default_button_style: INTEGER
 			-- Style of a default button
 		once
 			Result := Ws_visible + Ws_child +
 				Ws_group + Ws_tabstop + Bs_defpushbutton
 		end
 
-	Button_style: INTEGER is
+	Button_style: INTEGER
 			-- Style of a regular button
 		once
 			Result := Ws_visible + Ws_child +
 				Ws_group + Ws_tabstop + Bs_pushbutton
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of a dialog
 		do
 			Result := Ws_caption + Ws_popup
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Default extended style of a dialog
 		do
 			Result := Ws_ex_dlgmodalframe
@@ -760,11 +760,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	build is
+	build
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

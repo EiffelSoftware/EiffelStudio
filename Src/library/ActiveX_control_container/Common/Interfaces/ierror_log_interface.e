@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	add_error_user_precondition (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO): BOOLEAN is
+	add_error_user_precondition (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO): BOOLEAN
 			-- User-defined preconditions for `add_error'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	add_error (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO) is
+	add_error (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_excep_info' [in].  
@@ -33,7 +33,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

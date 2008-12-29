@@ -1,4 +1,4 @@
-indexing	
+note	
 	description: 
 		"[
 			Item for use with EV_TREE.
@@ -28,7 +28,7 @@ create
 
 feature -- Contract support
 
-	is_expandable: BOOLEAN is
+	is_expandable: BOOLEAN
 			-- Is `Current' able to expand or collapse.
 		do
 			Result := parent_tree /= Void and count > 0
@@ -36,7 +36,7 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TREE_NODE}
@@ -49,13 +49,13 @@ feature {EV_ANY, EV_ANY_I}-- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TREE_ITEM_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

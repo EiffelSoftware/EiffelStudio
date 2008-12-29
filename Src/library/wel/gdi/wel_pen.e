@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Drawing object used to draw lines and borders."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
+	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF)
 			-- Make a pen using `a_style', `a_width' and `a_color'.
 			-- See class WEL_PS_CONSTANTS for `a_style' values.
 		require
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			pen_created: item /= default_pointer
 		end
 
-	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF) is
+	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF)
 			-- Make a solid pen using `a_width' and `a_color'.
 		require
 			positive_width: a_width >= 0
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			color_set: exists implies color.item = a_color.item
 		end
 
-	make_indirect (a_log_pen: WEL_LOG_PEN) is
+	make_indirect (a_log_pen: WEL_LOG_PEN)
 			-- Make a pen using `a_log_pen'.
 		require
 			a_log_pen_not_void: a_log_pen /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Pen style
 		require
 			exists: exists
@@ -84,7 +84,7 @@ feature -- Access
 			valid_result: valid_pen_style_constant (Result)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Pen width
 		require
 			exists: exists
@@ -94,7 +94,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	color: WEL_COLOR_REF is
+	color: WEL_COLOR_REF
 			-- Pen color
 		require
 			exists: exists
@@ -104,7 +104,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	log_pen: WEL_LOG_PEN is
+	log_pen: WEL_LOG_PEN
 			-- Log pen structure associated to `Current'
 		require
 			exists: exists
@@ -116,7 +116,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_pen (a_style, a_width: INTEGER; a_color: INTEGER): POINTER is
+	cwin_create_pen (a_style, a_width: INTEGER; a_color: INTEGER): POINTER
 			-- SDK CreatePen
 		external
 			"C [macro <windows.h>] (int, int, COLORREF): EIF_POINTER"
@@ -124,7 +124,7 @@ feature {NONE} -- Externals
 			"CreatePen"
 		end
 
-	cwin_create_pen_indirect (a_log_pen: POINTER): POINTER is
+	cwin_create_pen_indirect (a_log_pen: POINTER): POINTER
 			-- SDK CreatePenIndirect
 		external
 			"C [macro <windows.h>] (LOGPEN *): EIF_POINTER"
@@ -132,7 +132,7 @@ feature {NONE} -- Externals
 			"CreatePenIndirect"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

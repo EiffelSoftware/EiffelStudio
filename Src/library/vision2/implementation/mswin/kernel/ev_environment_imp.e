@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Environment. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -22,13 +22,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Initialize `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- No extra initialization needed.
 		do
 			set_is_initialized (True)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	supported_image_formats: LINEAR [STRING_32] is
+	supported_image_formats: LINEAR [STRING_32]
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, XPM, ICO
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			Result := res
 		end
 
-	font_families: LINEAR [STRING_32] is
+	font_families: LINEAR [STRING_32]
 			-- All font families available on current platform.
 		local
 			res: ARRAYED_LIST [STRING_32]
@@ -70,14 +70,14 @@ feature {NONE} -- Implementation
 			Result ?= res
 		end
 
-	mouse_wheel_scroll_lines: INTEGER is
+	mouse_wheel_scroll_lines: INTEGER
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
 		do
 			Result := get_wheel_scroll_lines
 		end
 
-	default_pointer_style_width: INTEGER is
+	default_pointer_style_width: INTEGER
 			-- Default pointer style width.
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			Result := l_metrics.cursor_width
 		end
 
-	default_pointer_style_height: INTEGER is
+	default_pointer_style_height: INTEGER
 			-- Default pointer style height.
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			Result := l_metrics.cursor_height
 		end
 
-	has_printer: BOOLEAN is
+	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		local
@@ -105,13 +105,13 @@ feature {NONE} -- Implementation
 			Result := default_printer.exists
 		end
 
-	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP is
+	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP
 			-- Enumerate Installed fonts
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

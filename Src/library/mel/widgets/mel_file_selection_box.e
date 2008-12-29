@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Widget for selecting files."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create file selection box with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dir_list: MEL_SCROLLED_LIST is
+	dir_list: MEL_SCROLLED_LIST
 			-- Directory list
 		local
 			w: POINTER
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end;
 
-	dir_list_label: MEL_LABEL_GADGET is
+	dir_list_label: MEL_LABEL_GADGET
 			-- Label of `dir_list'
 		local
 			w: POINTER
@@ -72,7 +72,7 @@ feature -- Access
 			end
 		end;
 
-	filter_label: MEL_LABEL_GADGET is
+	filter_label: MEL_LABEL_GADGET
 			-- Label of `filter_text'
 		local
 			w: POINTER
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end;
 
-	filter_text: MEL_TEXT_FIELD is
+	filter_text: MEL_TEXT_FIELD
 			-- Filter text field
 		local
 			w: POINTER
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	directory: MEL_STRING is
+	directory: MEL_STRING
 			-- The base directory that, in combination with `pattern', forms the directory mask.
 			-- The directory mask determines which files and directories to display.
 		require
@@ -113,7 +113,7 @@ feature -- Status report
 			directory_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	directory_valid: BOOLEAN is
+	directory_valid: BOOLEAN
 			-- Is the directory passed to `dir_search_proc' valid?
 		require
 			exists: not is_destroyed
@@ -121,7 +121,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNdirectoryValid)
 		end;
 
-	dir_list_items: MEL_STRING_TABLE is
+	dir_list_items: MEL_STRING_TABLE
 			-- Items from `dir_list'
 		require
 			exists: not is_destroyed
@@ -132,7 +132,7 @@ feature -- Status report
 			dir_list_items_not_void: Result /= Void
 		end;
 
-	dir_list_item_count: INTEGER is
+	dir_list_item_count: INTEGER
 			-- Number of items in `dir_list_items'
 		require
 			exists: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Status report
 			dir_list_item_count_large_enough: Result >= 0
 		end;
 
-	dir_list_label_string: MEL_STRING is
+	dir_list_label_string: MEL_STRING
 			-- Label of the `dir_list'
 		require
 			exists: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 			dir_list_label_string_not_void: Result /= Void
 		end;
 
-	dir_mask: MEL_STRING is
+	dir_mask: MEL_STRING
 			-- Directory mask that determines which files and
 			-- directories to display
 		require
@@ -163,7 +163,7 @@ feature -- Status report
 			dir_mask_created: Result /= void
 		end;
 
-	dir_search_proc is
+	dir_search_proc
 			-- Procedure that performs directory searches.
 			-- (Does nothing by default.)
 		require
@@ -171,7 +171,7 @@ feature -- Status report
 		do
 		end;
 
-	dir_spec: MEL_STRING is
+	dir_spec: MEL_STRING
 			-- Complete specification of the file path
 		require
 			exists: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Status report
 			dir_spec_not_void: Result /= Void and then not Result.is_destroyed
 		end;
 
-	file_list_items: MEL_STRING_TABLE is
+	file_list_items: MEL_STRING_TABLE
 			-- Items in the file list
 		require
 			exists: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status report
 			file_list_items_not_void: Result /= Void
 		end;
 
-	file_list_item_count: INTEGER is
+	file_list_item_count: INTEGER
 			-- Number of items in `file_list_items'
 		require
 			exists: not is_destroyed
@@ -202,7 +202,7 @@ feature -- Status report
 			file_list_item_count_large_enough: Result >= 0
 		end;
 
-	file_list_label_string: MEL_STRING is
+	file_list_label_string: MEL_STRING
 			-- Label of the file list
 		require
 			exists: not is_destroyed
@@ -212,7 +212,7 @@ feature -- Status report
 			file_list_label_string_not_void: Result /= Void
 		end;
 
-	is_file_directory_mask_used: BOOLEAN is
+	is_file_directory_mask_used: BOOLEAN
 			-- Does the file list display only directories?
 		require
 			exists: not is_destroyed
@@ -220,7 +220,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNfileTypeMask) = XmFILE_DIRECTORY
 		end;
 
-	is_file_regular_mask_used: BOOLEAN is
+	is_file_regular_mask_used: BOOLEAN
 			-- Does the file list display only regular files?
 		require
 			exists: not is_destroyed
@@ -228,7 +228,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNfileTypeMask) = XmFILE_REGULAR
 		end;
 
-	is_file_any_type_mask_used: BOOLEAN is
+	is_file_any_type_mask_used: BOOLEAN
 			-- Does the file list display all files?
 		require
 			exists: not is_destroyed
@@ -236,7 +236,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNfileTypeMask) = XmFILE_ANY_TYPE
 		end;
 
-	filter_label_string: MEL_STRING is
+	filter_label_string: MEL_STRING
 			-- Label of the field in which the directory mask is typed by the user.
 		require
 			exists: not is_destroyed
@@ -246,7 +246,7 @@ feature -- Status report
 			filter_label_string_not_void: Result /= Void
 		end;
 
-	is_list_updated: BOOLEAN is
+	is_list_updated: BOOLEAN
 			-- Was the directory or file list updated after the last search?
 		require
 			exists: not is_destroyed
@@ -254,7 +254,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNlistUpdated)
 		end;
 
-	no_match_string: MEL_STRING is
+	no_match_string: MEL_STRING
 			-- String that is to be displayed in the file list when there
 			-- are no filenames to display.
 		require
@@ -265,7 +265,7 @@ feature -- Status report
 			no_match_string_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	pattern: MEL_STRING is
+	pattern: MEL_STRING
 			-- File search pattern that, in combination with `directory', forms `dir_mask'.
 		require
 			exists: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Status report
 			pattern_not_void: Result /= Void
 		end;
 
-	qualify_search_data_proc is
+	qualify_search_data_proc
 			-- Procedure that generates a valid `dir_mask', `directory', and `pattern'
 			-- to be used by the search feature.
 			-- (Does nothing by default.)
@@ -287,7 +287,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_directory (a_compound_string: MEL_STRING) is
+	set_directory (a_compound_string: MEL_STRING)
 			-- Set `directory' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -298,7 +298,7 @@ feature -- Status setting
 			-- directory_set: directory.is_equal (a_compound_string)
 		end;
 
-	validate_directory is
+	validate_directory
 			-- Set `directory_valid' according to the result of `dir_search_proc'.
 		require
 			exists: not is_destroyed
@@ -311,7 +311,7 @@ feature -- Status setting
 			directory_validated: directory_valid
 		end;
 
-	set_dir_list_items (a_list: MEL_STRING_TABLE) is
+	set_dir_list_items (a_list: MEL_STRING_TABLE)
 			-- Set `dir_list_items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -322,7 +322,7 @@ feature -- Status setting
 			dir_list_items_set: dir_list_items.is_equal (a_list)
 		end;
 
-	set_dir_list_item_count (a_count: INTEGER) is
+	set_dir_list_item_count (a_count: INTEGER)
 			-- Set `dir_list_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -333,7 +333,7 @@ feature -- Status setting
 			dir_list_item_count_set: dir_list_item_count = a_count
 		end;
 
-	set_dir_list_label_string (a_compound_string: MEL_STRING) is
+	set_dir_list_label_string (a_compound_string: MEL_STRING)
 			-- Set `dir_list_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -345,7 +345,7 @@ feature -- Status setting
 			dir_list_label_string_set: dir_list_label_string.is_equal (a_compound_string)
 		end;
 
-	set_dir_mask (a_compound_string: MEL_STRING) is
+	set_dir_mask (a_compound_string: MEL_STRING)
 			-- Set `dir_mask' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -357,14 +357,14 @@ feature -- Status setting
 			-- dir_mask_set: dir_mask.is_equal (a_compound_string)
 		end;
 
-	set_dir_search_proc is
+	set_dir_search_proc
 			-- Set `dir_search_proc'.
 		require
 			exists: not is_destroyed
 		do
 		end;
 
-	set_dir_spec (a_compound_string: MEL_STRING) is
+	set_dir_spec (a_compound_string: MEL_STRING)
 			-- Set `dir_spec' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -376,7 +376,7 @@ feature -- Status setting
 			dir_spec_set: dir_spec.is_equal (a_compound_string)
 		end;
 
-	set_file_list_items (a_list: MEL_STRING_TABLE) is
+	set_file_list_items (a_list: MEL_STRING_TABLE)
 			-- Set `file_list_items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -387,7 +387,7 @@ feature -- Status setting
 			file_list_items_set: file_list_items.is_equal (a_list)
 		end;
 
-	set_file_list_item_count (a_count: INTEGER) is
+	set_file_list_item_count (a_count: INTEGER)
 			-- Set `file_list_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -398,7 +398,7 @@ feature -- Status setting
 			file_list_item_count_set: file_list_item_count = a_count
 		end;
 
-	set_file_list_label_string (a_compound_string: MEL_STRING) is
+	set_file_list_label_string (a_compound_string: MEL_STRING)
 			-- Set `file_list_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -410,7 +410,7 @@ feature -- Status setting
 			file_list_label_string_set: file_list_label_string.is_equal (a_compound_string)
 		end;
 
-	use_file_directory_mask is
+	use_file_directory_mask
 			-- The list file will display only directories.
 		require
 			exists: not is_destroyed
@@ -420,7 +420,7 @@ feature -- Status setting
 			file_directory_mask_used: is_file_directory_mask_used
 		end;
 
-	use_file_regular_mask is
+	use_file_regular_mask
 			-- The list file will display only regular files.
 		require
 			exists: not is_destroyed
@@ -430,7 +430,7 @@ feature -- Status setting
 			file_regular_mask_used: is_file_regular_mask_used
 		end;
 
-	use_file_any_type_mask is
+	use_file_any_type_mask
 			-- The list file will display all files.
 		require
 			exists: not is_destroyed
@@ -440,7 +440,7 @@ feature -- Status setting
 			file_any_type_mask_used: is_file_any_type_mask_used
 		end;
 
-	set_filter_label_string (a_compound_string: MEL_STRING) is
+	set_filter_label_string (a_compound_string: MEL_STRING)
 			-- Set `filter_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -452,7 +452,7 @@ feature -- Status setting
 			filter_label_string_set: filter_label_string.is_equal (a_compound_string)
 		end;
 
-	set_list_updated is
+	set_list_updated
 			-- Set `list_updated' to True.
 		require
 			exists: not is_destroyed
@@ -462,7 +462,7 @@ feature -- Status setting
 			list_is_updated: is_list_updated 
 		end;
 
-	unset_list_updated is
+	unset_list_updated
 			-- Set `list_updated' to False.
 		require
 			exists: not is_destroyed
@@ -472,7 +472,7 @@ feature -- Status setting
 			list_is_not_updated: not is_list_updated 
 		end;
 
-	set_no_match_string (a_compound_string: MEL_STRING) is
+	set_no_match_string (a_compound_string: MEL_STRING)
 			-- Set `no_match_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -483,7 +483,7 @@ feature -- Status setting
 			no_match_string_set: no_match_string.is_equal (a_compound_string)
 		end;
 
-	set_pattern (a_compound_string: MEL_STRING) is
+	set_pattern (a_compound_string: MEL_STRING)
 			-- Set `pattern' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -494,7 +494,7 @@ feature -- Status setting
 			pattern_set: pattern.is_equal (a_compound_string)
 		end;
 
-	set_qualify_search_data_proc is
+	set_qualify_search_data_proc
 			-- Set `qualify_search_data_proc'.
 			-- (Does nothing by default.)
 		require
@@ -505,7 +505,7 @@ feature -- Status setting
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr, 
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -522,21 +522,21 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature -- Implementation
 
-	xm_create_file_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_file_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/FileSB.h>"
 		alias
 			"XmCreateFileSelectionBox"
 		end;
 
-	xm_file_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
+	xm_file_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER
 		external
 			"C (Widget, unsigned char): EIF_POINTER | <Xm/FileSB.h>"
 		alias
 			"XmFileSelectionBoxGetChild"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

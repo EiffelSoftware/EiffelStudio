@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ create
 
 feature -- Initialization
 
-	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			managed := man
 			parent ?= oui_parent.implementation
@@ -45,12 +45,12 @@ feature -- Initialization
 			set_form_height (100)
 		end
 
-	build is
+	build
 		do
 			set_pattern ("*.*")
 		end
 
-	realize_children is
+	realize_children
 		do
 			create ok_button.make (Current, "Ok", 160, 20, 20, 5, idok)
 			create cancel_button.make (Current, "Cancel", 160, 40, 20, 5, idcancel)
@@ -94,12 +94,12 @@ feature -- Status report
 	filter: STRING
 			-- Current filter value
 
-	is_list_updated: BOOLEAN is
+	is_list_updated: BOOLEAN
 			-- Is file or directory list updated during last search?
 		do
 		end
 
-	is_dir_valid: BOOLEAN is
+	is_dir_valid: BOOLEAN
 			-- Is current search directory valid?
 		do
 		end
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 			-- Always visible
 		do
@@ -126,23 +126,23 @@ feature -- Status setting
 			end
 		end
 
-	hide_file_selection_label is
+	hide_file_selection_label
 			-- Always visible
 		do
 		end
 
-	hide_file_selection_list is
+	hide_file_selection_list
 			-- Always visible
 		do
 		end
 
-	hide_filter_button is
+	hide_filter_button
 			-- Make filter button invisible.
 			-- Always invisible
 		do
 		end
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 			-- Always invisible
 		do
@@ -152,7 +152,7 @@ feature -- Status setting
 			end
 		end
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 			-- Always visible
 		do
@@ -162,73 +162,73 @@ feature -- Status setting
 			end
 		end
 
-	set_all_selection is
+	set_all_selection
 			-- Sets selection to files and directories.
 		do
 			directory_only := False
 		end
 
-	set_directory (a_directory: STRING) is
+	set_directory (a_directory: STRING)
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		do
 			base_directory := a_directory.twin
 		end
 
-	set_directory_selection is
+	set_directory_selection
 			-- Sets selection to directories only.
 		do
 			directory_only := True
 		end
 
-	set_dir_list_label (a_label: STRING) is
+	set_dir_list_label (a_label: STRING)
 			-- Set `a_label' as dir list label,
 			-- by default this label is `Directories'.
 		do
 		end
 
-	set_file_list_label (a_label: STRING) is
+	set_file_list_label (a_label: STRING)
 			-- Set `a_label' as file list label,
 			-- by default this label is `Files'.
 		do
 		end
 
-	set_file_list_width (new_width: INTEGER) is
+	set_file_list_width (new_width: INTEGER)
 			-- Always the same
 		do
 		end
 
-	set_file_selection is
+	set_file_selection
 			-- Select the files only
 		do
 			directory_only := False
 		end
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING)
 			-- Set current filter to `a_filter'.
 		do
 			base_filter := a_filter.twin
 		end
 
-	set_filter_label (label: STRING) is
+	set_filter_label (label: STRING)
 			-- Set `a_label' as filter label,
 			-- by default this label is `Filter'.
 		do
 		end
 
-	set_pattern (a_pattern: STRING) is
+	set_pattern (a_pattern: STRING)
 			-- Set pattern to `a_pattern'.
 		do
 			pattern := a_pattern
 		end
 
-	set_pattern_name (a_pattern_name: STRING) is
+	set_pattern_name (a_pattern_name: STRING)
 			-- Set pattern_name to `a_pattern'.
 		do
 			pattern_name := a_pattern_name
 		end
 
-	set_form_height (a_height: INTEGER) is
+	set_form_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if form_height /= a_height then
@@ -240,7 +240,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_width (a_width: INTEGER) is
+	set_form_width (a_width: INTEGER)
 			-- Set the width for form.
 		do
 			if form_width /= a_width then
@@ -252,7 +252,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			private_attributes.set_height (a_height)
@@ -265,7 +265,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
@@ -281,7 +281,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			private_attributes.set_width (new_width)
@@ -294,7 +294,7 @@ feature -- Status setting
 			end
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 			-- Always visible
 		do
@@ -304,7 +304,7 @@ feature -- Status setting
 			end
 		end
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 			-- Always invisible
 		do
@@ -314,7 +314,7 @@ feature -- Status setting
 			end
 		end
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 			-- Always visible
 		do
@@ -324,17 +324,17 @@ feature -- Status setting
 			end
 		end
 
-	show_file_selection_label is
+	show_file_selection_label
 			-- Always visible
 		do
 		end
 
-	show_file_selection_list is
+	show_file_selection_list
 			-- Always visible
 		do
 		end
 
-	show_filter_button is
+	show_filter_button
 			-- Make filter button visible.
 			-- Always invisible
 		do
@@ -342,28 +342,28 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_cancel_action (a_command: COMMAND; arg: ANY) is
+	add_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.add (Current, a_command, arg)
 		end
 
-	add_help_action (a_command: COMMAND; arg: ANY) is
+	add_help_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		do
 			help_actions.add (Current, a_command, arg)
 		end
 
-	add_ok_action (a_command: COMMAND; arg: ANY) is
+	add_ok_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	add_filter_action (a_command: COMMAND; arg: ANY) is
+	add_filter_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- filter button is activated.
 		do
@@ -372,28 +372,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; arg: ANY) is
+	remove_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.remove (Current, a_command, arg)
 		end
 
-	remove_filter_action (a_command: COMMAND; arg: ANY) is
+	remove_filter_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- filter button is activated.
 		do
 			filter_actions.remove (Current, a_command, arg)
 		end
 
-	remove_help_action (a_command: COMMAND; arg: ANY) is
+	remove_help_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		do
 			help_actions.remove (Current, a_command, arg)
 		end
 
- 	remove_ok_action (a_command: COMMAND; arg: ANY) is
+ 	remove_ok_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 	help_button_hidden: BOOLEAN
 			-- Is the `help_button' hidden?
 
-	fill is
+	fill
 			-- Fill the `directories_list'.
 		local
 			dir: STRING
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			directories_list.add_files (attr, dir)
 		end
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- Process notification messages
 		do
 			if control = ok_button then
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_file (selected: STRING) is
+	select_file (selected: STRING)
 			-- Select the file
 		local
 			ls : STRING
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 			fill
 		end
 
-	button_count: INTEGER is
+	button_count: INTEGER
 		do
 			if ok_button /= Void and then not ok_button_hidden then
 				Result := Result + 1
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_controls_width is
+	adjust_controls_width
 			-- Set the control width based on the width of the
 			-- file_selection
 		local
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_height: INTEGER is
+	button_height: INTEGER
 		local
 			wel_dc: WEL_SCREEN_DC
 			wel_ft: WEL_SYSTEM_FONT
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 			wel_dc.release
 		end
 
-	adjust_controls_height is
+	adjust_controls_height
 			-- Set the control height based on the width of the
 			-- file_selection
 		local
@@ -595,13 +595,13 @@ feature {NONE} -- Implementation
 
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionFileSelection"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

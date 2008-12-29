@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "ComboBox notification message (CBN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,40 +13,40 @@ obsolete
 
 feature -- Access
 
-	Cbn_errspace: INTEGER is -1
+	Cbn_errspace: INTEGER = -1
 			-- Declared in Windows as CBN_ERRSPACE
 
-	Cbn_selchange: INTEGER is 1
+	Cbn_selchange: INTEGER = 1
 			-- Declared in Windows as CBN_SELCHANGE
 
-	Cbn_dblclk: INTEGER is 2
+	Cbn_dblclk: INTEGER = 2
 			-- Declared in Windows as CBN_DBLCLK
 
-	Cbn_setfocus: INTEGER is 3
+	Cbn_setfocus: INTEGER = 3
 			-- Declared in Windows as CBN_SETFOCUS
 
-	Cbn_killfocus: INTEGER is 4
+	Cbn_killfocus: INTEGER = 4
 			-- Declared in Windows as CBN_KILLFOCUS
 
-	Cbn_editchange: INTEGER is 5
+	Cbn_editchange: INTEGER = 5
 			-- Declared in Windows as CBN_EDITCHANGE
 
-	Cbn_editupdate: INTEGER is 6
+	Cbn_editupdate: INTEGER = 6
 			-- Declared in Windows as CBN_EDITUPDATE
 
-	Cbn_dropdown: INTEGER is 7
+	Cbn_dropdown: INTEGER = 7
 			-- Declared in Windows as CBN_DROPDOWN
 
-	Cbn_closeup: INTEGER is 8
+	Cbn_closeup: INTEGER = 8
 			-- Declared in Windows as CBN_CLOSEUP
 
-	Cbn_selendok: INTEGER is 9
+	Cbn_selendok: INTEGER = 9
 			-- Declared in Windows as CBN_SELENDOK
 
-	Cbn_selendcancel: INTEGER is 10;
+	Cbn_selendcancel: INTEGER = 10;
 			-- Declared in Windows as CBN_SELENDCANCEL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

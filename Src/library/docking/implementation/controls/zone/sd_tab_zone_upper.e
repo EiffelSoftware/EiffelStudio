@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_ZONE which tab is at top side without SD_TITLE_BAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make (a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			Precursor {SD_TAB_ZONE} (a_content)
@@ -51,13 +51,13 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Redefine
 		do
 			Result := internal_notebook.is_maximized
 		end
 
-	title_area: EV_RECTANGLE is
+	title_area: EV_RECTANGLE
 			-- Redefine
 		do
 			Result := internal_notebook.tab_area
@@ -65,13 +65,13 @@ feature -- Query
 
 feature -- Command
 
-	set_max (a_max: BOOLEAN) is
+	set_max (a_max: BOOLEAN)
 			-- Redefine.
 		do
 			 internal_notebook.set_show_maximized (a_max)
 		end
 
-	show_notebook_contents (a_is_show: BOOLEAN) is
+	show_notebook_contents (a_is_show: BOOLEAN)
 			-- Redefine
 		do
 			Precursor {SD_UPPER_ZONE}(a_is_show)
@@ -84,7 +84,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	on_select_tab is
+	on_select_tab
 			-- Redefine
 		local
 			l_content: SD_CONTENT
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 --			end
 		end
 
-	on_normal_max_window is
+	on_normal_max_window
 			-- Redefine. (Just copy from SD_ZONE version)
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			internal_docking_manager.command.unlock_update
 		end
 
-	recover_to_normal_state is
+	recover_to_normal_state
 			-- Redefine.
 		do
 --			internal_notebook.set_show_maximized (False)
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	internal_notebook: SD_NOTEBOOK_UPPER;
 			-- Notebook which tabs at top.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

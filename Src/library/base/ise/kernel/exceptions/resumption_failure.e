@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception raised when retry did not succeed
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.resumption_failed
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Resumption attempt failed."
+	frozen internal_meaning: STRING = "Resumption attempt failed."
 
 end

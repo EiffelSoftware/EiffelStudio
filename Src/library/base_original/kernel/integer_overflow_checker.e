@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String - Integer/Natural conversion overflow checker"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create integer_overflow_state1.make (1, type_count * 2)
@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 
 feature -- Overflow checking
 
-	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN is
+	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN
 			-- Will `part1' * 10 + `part2' with `sign' overflow
 			-- if we convert it to an number of `type'?			
 		require
@@ -98,7 +98,7 @@ feature{NONE} -- Implementation
 	natural_overflow_state2: ARRAY [like max_natural_type];
 			-- Arrays to check conversion overflow
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

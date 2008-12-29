@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of EV_WEL_CONTAINER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,13 +34,13 @@ create
 		
 feature -- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Window containing `item'.
 		do
 			Result := Current
 		end
 		
-	item: WEL_WINDOW is
+	item: WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		do
 			Result ?= internal_child_window
@@ -48,7 +48,7 @@ feature -- Access
 		
 feature -- Status setting
 		
-	replace (a_window: WEL_WINDOW) is
+	replace (a_window: WEL_WINDOW)
 			-- Replace `item' with `a_window'
 		do
 			if item /= Void then
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	internal_child_window: WEL_WINDOW
 		-- WEL_WINDOW contained in `Current'.
 
-	connect_window (a_window: WEL_WINDOW) is
+	connect_window (a_window: WEL_WINDOW)
 			-- Parent `a_window' to `Current' and
 			-- force resize of new child.
 		do
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		end
 		
 	compute_minimum_width, compute_minimum_height,
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute the minimum dimensions of `Current'.
 		do
 			-- There is nothing to be done here. The minimum size
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			-- for the child to take into account here.
 		end
 		
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		local
 			t: like resize_actions_internal
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Apply new size to `Current'.
 		do
 			if internal_child_window /= Void then
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Process messages sent by Windows to `Current'.
 		local
 			called: BOOLEAN
@@ -168,7 +168,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: EV_WEL_CONTAINER;
 		-- Interface of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

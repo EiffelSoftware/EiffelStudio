@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Undo command for comment and indent."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_lines: like lines; symbl: STRING_GENERAL; txt: EDITABLE_TEXT) is
+	make (a_lines: like lines; symbl: STRING_GENERAL; txt: EDITABLE_TEXT)
 		require
 			a_lines_not_void: a_lines /= Void
 			symbl_not_void: symbl /= Void
@@ -41,13 +41,13 @@ feature -- Access
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- undo the command
 		do
 			do_selection (False)
 		end
 
-	redo is
+	redo
 			-- redo the command
 		do
 			do_selection (True)
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 	text : EDITABLE_TEXT
 
-	do_selection (a_symbol: BOOLEAN) is
+	do_selection (a_symbol: BOOLEAN)
 			-- Symbol or unsymbol the section.
 		local
 			b, e: EDITOR_CURSOR
@@ -86,7 +86,7 @@ invariant
 	symbol_not_void: symbol /= Void
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

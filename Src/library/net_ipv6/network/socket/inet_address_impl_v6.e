@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	local_host_name: STRING is
+	local_host_name: STRING
 		local
 			data: MANAGED_POINTER
 		do
@@ -23,13 +23,13 @@ feature -- Access
 			create Result.make_from_c (data.item)
 		end
 
-	any_local_address: INET_ADDRESS is
+	any_local_address: INET_ADDRESS
 		once
 			create {INET6_ADDRESS} Result.make_from_host_and_address("::",
 			<<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>);
 		end
 
-	loopback_address: INET_ADDRESS is
+	loopback_address: INET_ADDRESS
 		do
 			create {INET6_ADDRESS} Result.make_from_host_and_address("localhost",
 			<<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01>>)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	get_local_host_name (data: POINTER) is
+	get_local_host_name (data: POINTER)
 		external
 			"C"
 		alias

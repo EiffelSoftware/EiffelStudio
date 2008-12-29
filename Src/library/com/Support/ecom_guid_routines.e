@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM GUID routines"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status report
 
-	is_valid_guid_string (s: STRING): BOOLEAN is
+	is_valid_guid_string (s: STRING): BOOLEAN
 			-- Is `s' a valid GUID?
 		require
 			valid_string: s /= Void
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	is_hexas (s: STRING): BOOLEAN is
+	is_hexas (s: STRING): BOOLEAN
 			-- Is `s' hexadecimal?
 		require
 			valid_string: s /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

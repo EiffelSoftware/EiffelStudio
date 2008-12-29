@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A WEL control holding the EiffelVision Tool Bar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_toolbar
-		(a_parent: WEL_COMPOSITE_WINDOW; a_toolbar_imp: EV_TOOL_BAR_IMP) is
+		(a_parent: WEL_COMPOSITE_WINDOW; a_toolbar_imp: EV_TOOL_BAR_IMP)
 			-- Create the internal toolbar for toolbar `a_toolbar_imp'.
 		do
 			make (a_parent, "EV_INTERNAL_TOOL_BAR_IMP")
@@ -47,13 +47,13 @@ feature {NONE} -- WEL Implementation
 	toolbar: EV_TOOL_BAR_IMP
 			-- Child toolbar of `Current'.
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 			-- A command has been received from `control_id'.
 		do
 			toolbar.on_button_clicked (control_id)
 		end
 
-	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
 			tt1: WEL_TOOLTIP_TEXT
 			tooltip_text: STRING_32
@@ -89,7 +89,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 		local
 			bk_brush: WEL_BRUSH
@@ -117,26 +117,26 @@ feature {NONE} -- WEL Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
 			toolbar.on_size (size_type, a_width, a_height)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := generator
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- We redefine the default style.
 		do
 			Result := Ws_child | Ws_clipsiblings
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

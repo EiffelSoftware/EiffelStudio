@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Event handler for mouse button click events."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an event handler for `widget_oui' triggered by the
 			-- call-back specified by `resource'.
 		local
@@ -68,12 +68,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_multi_click_time (time: INTEGER) is
+	set_multi_click_time (time: INTEGER)
 		do
 			multi_click_time := time
 		end;
 
-	set_callback_added is
+	set_callback_added
 			-- Set `callback_added' to True
 		do
 			callback_added := True
@@ -83,7 +83,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions.
 		require
 			number_in_range: number >= 1 and number <= 5
@@ -96,7 +96,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions.
 		require
 			number_in_range: number >= 1 and number <= 5
@@ -115,7 +115,7 @@ feature -- Removal
 
 feature {NONE} -- Execution
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Callback routine to be called from
 			-- C when a mouse button event occurs,
 		local
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	click_time: INTEGER;;
 			-- Last recorded button press time
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

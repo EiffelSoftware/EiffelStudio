@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window activation (WA) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,16 +10,16 @@ class
 
 feature -- Access
 
-	Wa_active: INTEGER is 1
+	Wa_active: INTEGER = 1
 			-- Window gains activation via alt-tab
 
-	Wa_clickactive: INTEGER is 2
+	Wa_clickactive: INTEGER = 2
 			-- Window gains activation via mouse click
 
-	Wa_inactivate: INTEGER is 0;
+	Wa_inactivate: INTEGER = 0;
 			-- Window loses activation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

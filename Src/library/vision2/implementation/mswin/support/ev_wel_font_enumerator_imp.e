@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Facilities to find supported font for the current system.
 
@@ -24,7 +24,7 @@ create
 
 feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 
-	is_font_face_supported (a_face_name: STRING_GENERAL): BOOLEAN is
+	is_font_face_supported (a_face_name: STRING_GENERAL): BOOLEAN
 			-- Is `a_font_face' supported on the current system?
 		require
 			a_face_name_valid:
@@ -38,7 +38,7 @@ feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 			Result := font_faces.has (a_face_name)
 		end
 
-	font_faces: ARRAYED_LIST [STRING_32] is
+	font_faces: ARRAYED_LIST [STRING_32]
 			-- List of all installed fonts on the system.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -71,7 +71,7 @@ feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
+	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
 			-- `elf', `tm' and `font_type' contain informations
 			-- about the font.
@@ -91,7 +91,7 @@ feature {NONE} -- Basic operations
 	internal_font_faces: ARRAYED_LIST [STRING_32];
 			-- Font faces found on the current system.		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

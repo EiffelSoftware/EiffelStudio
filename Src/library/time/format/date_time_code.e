@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code used by the DATE/TIME to STRING conversion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Creation
 	
-	make (v: STRING) is
+	make (v: STRING)
 			-- Create code.
 		require
 			v_exists: v /= Void
@@ -28,7 +28,7 @@ feature -- Creation
 
 feature -- Change
 
-	set_value (v: STRING) is
+	set_value (v: STRING)
 			-- Set all the attributes such as
 			-- Value, count_max, etc.
 		require
@@ -274,7 +274,7 @@ feature -- Status report
 	is_numeric: BOOLEAN;
 			-- Has the code a numeric value?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

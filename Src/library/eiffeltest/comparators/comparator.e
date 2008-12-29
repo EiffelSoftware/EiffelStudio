@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Boolean comparators"
 	legal: "See notice at end of class."
@@ -13,12 +13,12 @@ deferred class COMPARATOR inherit
 
 feature -- Status report
 
-	is_true (n: INTEGER): BOOLEAN is
+	is_true (n: INTEGER): BOOLEAN
 			-- Is condition true for item `n'?
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[ 
 					Mediator of
 					 analyze the memory , include: show statistics of garbage
@@ -19,7 +19,7 @@ create
 
 feature {NONE} --Intialization
 
-	make is
+	make
 			-- Creation method.
 		do
 			eiffel_mem_info := system_util.memory.memory_statistics ({MEM_CONST}.eiffel_memory)
@@ -34,7 +34,7 @@ feature {NONE} --Intialization
 		
 feature -- Command
 
-	show_statistics is
+	show_statistics
 			-- show garbage collection datas to the window
 			-- Update `output_text' with current memory usage.
 		do			-- show GC_INFO's content which is used by show_mem_info
@@ -96,13 +96,13 @@ feature -- Command
 
 feature -- Implementation for agents	
 	
-	resize (a_x, a_y, a_width, a_height: INTEGER) is
+	resize (a_x, a_y, a_width, a_height: INTEGER)
 			-- Things when EV_DRAWABLE resize.
 		do
 			histogram_graph.set_height (a_height)
 		end
 			
-	resize_history (a_x, a_y, a_width, a_height: INTEGER) is
+	resize_history (a_x, a_y, a_width, a_height: INTEGER)
 			-- Things when EV_DRAWABLE resize.
 		do
 			history_graph_eiffel.set_height (a_height)
@@ -113,14 +113,14 @@ feature -- Implementation for agents
 			history_graph_total.set_width (a_width)
 		end
 		
-	update_gc_info is
+	update_gc_info
 			-- Automatically update the statistics.
 		do
 			draw_graph
 			show_statistics
 		end
 		
-	redraw_histogram is
+	redraw_histogram
 			-- Redraw histogram (left side graph).
 		do
 			draw_eiffel_histogram
@@ -128,7 +128,7 @@ feature -- Implementation for agents
 			draw_total_histogram			
 		end
 		
-	redraw_history is
+	redraw_history
 			-- Redraw history (right side graph).
 		do
 			main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
@@ -139,7 +139,7 @@ feature -- Implementation for agents
 			main_window.total_history.draw_pixmap (0, 0, history_graph_total.pixmap)			
 		end
 	
-	redraw is
+	redraw
 			-- Redraw statistic graph.
 		do			
 			redraw_histogram 
@@ -147,7 +147,7 @@ feature -- Implementation for agents
 			show_statistics 
 		end		
 		
-	redraw_for_resize is
+	redraw_for_resize
 			-- First update the figure because window size may changed, then redraw it.
 		do
 			history_graph_eiffel.update_graph
@@ -159,7 +159,7 @@ feature -- Implementation for agents
 
 feature {NONE} -- Implementaion for draw graphics
 	
-	draw_eiffel_histogram is
+	draw_eiffel_histogram
 			-- Draw eiffel historam.
 		do
 			histogram_graph.draw_graph (eiffel_mem_info.used / eiffel_mem_info.total, eiffel_mem_info.overhead / eiffel_mem_info.total)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementaion for draw graphics
 			main_window.eiffel_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)			
 		end
 		
-	draw_c_histogram is
+	draw_c_histogram
 			-- Draw c histogram.
 		do
 			histogram_graph.draw_graph (c_mem_info.used / c_mem_info.total,c_mem_info.overhead / c_mem_info.total)
@@ -175,7 +175,7 @@ feature {NONE} -- Implementaion for draw graphics
 			main_window.c_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)			
 		end
 		
-	draw_total_histogram is
+	draw_total_histogram
 			-- Draw histogram.
 		do
 			histogram_graph.draw_graph (total_mem_info.used / total_mem_info.total,total_mem_info.overhead / total_mem_info.total)
@@ -184,7 +184,7 @@ feature {NONE} -- Implementaion for draw graphics
 		end
 		
 
-	draw_graph is
+	draw_graph
 			-- Draw the statistic graph when time out.
 		do
 			eiffel_mem_info := memory.memory_statistics ({MEM_CONST}.eiffel_memory)
@@ -249,7 +249,7 @@ invariant
 	eiffel_memory_info_not_void: eiffel_mem_info /= Void
 	c_memory_info_not_void: c_mem_info /= Void
 	total_memory_info_not_void: total_mem_info /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

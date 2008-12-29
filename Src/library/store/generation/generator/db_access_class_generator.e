@@ -1,4 +1,4 @@
-indexing
+note
 	Description: "Objects that enable to create a class related%
 			%to a specific database table from a template and%
 			%a class description (class DB_REPOSITORY)."
@@ -17,7 +17,7 @@ inherit
 	
 feature -- Status report
 
-	description_set: BOOLEAN is
+	description_set: BOOLEAN
 			-- Are table names set?
 		do
 			Result := table_name_list /= Void
@@ -25,7 +25,7 @@ feature -- Status report
 	
 feature -- Basic operations
 
-	set_table_names (table_names: ARRAYED_LIST [DB_REPOSITORY]) is
+	set_table_names (table_names: ARRAYED_LIST [DB_REPOSITORY])
 			-- Set table names to map template to the database tables.
 		require
 			not_void: table_names /= Void
@@ -37,7 +37,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	append_block (template_block: STRING; column_number: INTEGER) is
+	append_block (template_block: STRING; column_number: INTEGER)
 			-- Replace tags in `attribute_block' with values of attribute in
 			-- `column' (which is at `column_number').
 			-- Append result to `result_block'.
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			result_block.append (mapped_item)
 		end
 		
-	description_count: INTEGER is
+	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
 		do
 			Result := table_name_list.count
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	table_name_list: ARRAYED_LIST [DB_REPOSITORY];
 			-- Database table name list.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

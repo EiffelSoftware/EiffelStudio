@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A client for a socket."
@@ -20,24 +20,24 @@ feature -- Access
 	received : ANY;
 			-- message received on `in'
 
-	cleanup is
+	cleanup
 			-- Cleanup client.
 		deferred
 		end;
 
-	send (msg : ANY) is
+	send (msg : ANY)
 			-- Send `msg'.
 		do
 			in_out.independent_store (msg)
 		end;
 
-	receive is
+	receive
 			-- Receive message.
 		do
 			received ?= in_out.retrieved
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the XPM Pixmap format."
@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make_from_file (a_drawable: MEL_DRAWABLE; path: STRING; 
-			attr: MEL_XPM_ATTRIBUTES) is
+			attr: MEL_XPM_ATTRIBUTES)
 			-- Create color `pixmap' from file `path' and if `attr' is
 			-- not void then it will use the attribtes `colormap', `depth',
 			-- and then set the `width', `height' and if possible `x_hotspot'
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 	write_to_file (a_display: MEL_DISPLAY; path: STRING;
 			a_pixmap: MEL_PIXMAP;
 			a_shape_mask: MEL_PIXMAP; 
-			attr: MEL_XPM_ATTRIBUTES) is
+			attr: MEL_XPM_ATTRIBUTES)
 			-- Write an XPM format file from `a_pixmap' using the shape mask
 			-- pixmap from `a_shape_mask'. If `attr' is not Void then it
 			-- will use the height and width. Otheriwize, the width and
@@ -110,7 +110,7 @@ feature -- Access
 			-- XpmSuccess, XpmOpenFailed, XpmFileInvalid,	
 			-- XpmNoMemory, XpmColorFailed)
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the XPM `pixmap' valid after retrieving
 			-- it from file?
 		do
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 	xpm_read_file_to_pixmap (display_ptr: POINTER; 
 			root, path: POINTER; 
 			pixmap_return, shapemask_return: POINTER; 
-			atts: POINTER): INTEGER is
+			atts: POINTER): INTEGER
 		external
 			"C (Display *, Drawable, char *, %
 				%Pixmap *, Pixmap *, XpmAttributes *): EIF_INTEGER | %"xpm.h%""
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 
 	xpm_write_file_from_pixmap (display_ptr: POINTER; 
 			path: POINTER; pixmap_return, shapemask_return: POINTER; 
-			atts: POINTER): INTEGER is
+			atts: POINTER): INTEGER
 		external
 			"C (Display *, char *, %
 				%Pixmap, Pixmap, XpmAttributes *): EIF_INTEGER | %"xpm.h%""
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			"XpmWriteFileFromPixmap"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

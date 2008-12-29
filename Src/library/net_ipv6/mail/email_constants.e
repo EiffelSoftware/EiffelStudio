@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,60 +11,60 @@ class
 
 feature -- Constants for SMTP Protocol
 
-	Helo: STRING is "HELO "
+	Helo: STRING = "HELO "
 
-	Ehlo: STRING is "EHLO "
+	Ehlo: STRING = "EHLO "
 
-	Data: STRING is "DATA"
+	Data: STRING = "DATA"
 
-	Mail_from: STRING is "MAIL FROM: "
+	Mail_from: STRING = "MAIL FROM: "
 
-	Mail_to: STRING is "RCPT TO: "
+	Mail_to: STRING = "RCPT TO: "
 
-	Mail_cc: STRING is "RCPT CC:"
+	Mail_cc: STRING = "RCPT CC:"
 
-	Mail_bcc: STRING is "RCPT BCC:"
+	Mail_bcc: STRING = "RCPT BCC:"
 
-	Mail_reply_to: STRING is "RCPT REPLY TO:"
+	Mail_reply_to: STRING = "RCPT REPLY TO:"
 
-	Quit: STRING is "QUIT"
+	Quit: STRING = "QUIT"
 
-	Ack_begin_connection: INTEGER is 220
+	Ack_begin_connection: INTEGER = 220
 
-	Ok: INTEGER is 250
+	Ok: INTEGER = 250
 
-	Ack_end_connection: INTEGER is 221
+	Ack_end_connection: INTEGER = 221
 
-	Remote_error: INTEGER is 550
+	Remote_error: INTEGER = 550
 
-	Data_code: INTEGER is 354
+	Data_code: INTEGER = 354
 
-	Struct_error: INTEGER is 552
+	Struct_error: INTEGER = 552
 
-	Size_error: INTEGER is 500
+	Size_error: INTEGER = 500
 
-	No_valid_recipient: INTEGER is 554
+	No_valid_recipient: INTEGER = 554
 
 feature -- Constants for email headers (Authorized keys for the Hashtables)
 
-	H_to: STRING is "To"
+	H_to: STRING = "To"
 
-	H_from: STRING is "From"
+	H_from: STRING = "From"
 
-	H_cc: STRING is "Cc"
+	H_cc: STRING = "Cc"
 
-	H_bcc: STRING is "Bcc"
+	H_bcc: STRING = "Bcc"
 
-	H_subject: STRING is "Subject"
+	H_subject: STRING = "Subject"
 
-	H_reply_to: STRING is "Reply-to"
+	H_reply_to: STRING = "Reply-to"
 
-	Default_headers: ARRAY [STRING] is 
+	Default_headers: ARRAY [STRING] 
 		once
 			create Result.make_from_array (<<H_to, H_from, H_cc, H_bcc, H_reply_to>>)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System Parameters and configuration settings informations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Status
 
-	has_flat_menu: BOOLEAN is
+	has_flat_menu: BOOLEAN
 			-- Determines whether native User menus have flat menu appearance
 		local
 			res: INTEGER
@@ -37,7 +37,7 @@ feature -- Status
 			end
 		end
 
-	has_drag_full_windows: BOOLEAN is
+	has_drag_full_windows: BOOLEAN
 			-- Determines whether dragging of full windows is enabled.
 			-- The pvParam parameter must point to a BOOL variable that
 			-- receives TRUE if enabled, or FALSE otherwise.
@@ -56,7 +56,7 @@ feature -- Status
 			end
 		end
 
-	has_windows95_plus: BOOLEAN is
+	has_windows95_plus: BOOLEAN
 			-- Windows 95 only: Indicates whether the Windows extension,
 			-- Windows Plus!, is installed. Set the uiParam parameter to 1.
 			-- The pvParam parameter is not used. The function returns TRUE
@@ -73,7 +73,7 @@ feature -- Status
 			end
 		end
 
-	get_non_client_metrics: WEL_NON_CLIENT_METRICS is
+	get_non_client_metrics: WEL_NON_CLIENT_METRICS
 			-- Retrieves the metrics associated with the nonclient area of
 			-- nonminimized windows. 
 			--
@@ -92,7 +92,7 @@ feature -- Status
 			end
 		end
 		
-	get_wheel_scroll_lines: INTEGER is
+	get_wheel_scroll_lines: INTEGER
 			-- Retrieves the number of lines that will be scrolled when the mouse wheel is rotated.
 		local
 			success: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Status
 
 feature -- Obsolete
 
-	has_windows_plus: BOOLEAN is
+	has_windows_plus: BOOLEAN
 			-- Windows 95 only: Indicates whether the Windows extension,
 			-- Windows Plus!, is installed. Set the uiParam parameter to 1.
 			-- The pvParam parameter is not used. The function returns TRUE
@@ -114,14 +114,14 @@ feature -- Obsolete
 
 feature {NONE} -- Externals
 
-	c_system_parameters_info (action, param: INTEGER; p_param: POINTER; win_ini: INTEGER): BOOLEAN is
+	c_system_parameters_info (action, param: INTEGER; p_param: POINTER; win_ini: INTEGER): BOOLEAN
 		external
 			"C [macro <windows.h>]"
 		alias
 			"SystemParametersInfo"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

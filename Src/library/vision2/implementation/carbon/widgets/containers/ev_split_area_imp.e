@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision Split Area. Carbon implementation."
 	legal: "See notice at end of class."
@@ -50,7 +50,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		local
 			control_ptr : POINTER
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			set_c_object (control_ptr)
 		end
 
-	initialize is
+	initialize
 		local
 			event_array : EVENT_TYPE_SPEC_ARRAY
 			target, h_ret : POINTER
@@ -109,13 +109,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Position from the left/top of the splitter from `Current'.
 		do
 
 		end
 
-	set_first (an_item: like item) is
+	set_first (an_item: like item)
 			-- Make `an_item' `first'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -140,7 +140,7 @@ feature -- Access
 			set_item_resize(first, False)
 		end
 
-	set_second (an_item: like item) is
+	set_second (an_item: like item)
 			-- Make `an_item' `second'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -164,7 +164,7 @@ feature -- Access
 			set_item_resize (second, True)
 		end
 
-	prune (an_item: like item) is
+	prune (an_item: like item)
 			-- Remove `an_item' if present from `Current'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -192,19 +192,19 @@ feature -- Access
 			end
 		end
 
-	enable_item_expand (an_item: like item) is
+	enable_item_expand (an_item: like item)
 			-- Let `an_item' expand when `Current' is resized.
 		do
 			set_item_resize (an_item, True)
 		end
 
-	disable_item_expand (an_item: like item) is
+	disable_item_expand (an_item: like item)
 			-- Make `an_item' non-expandable on `Current' resize.
 		do
 			set_item_resize (an_item, False)
 		end
 
-	set_split_position (a_split_position: INTEGER) is
+	set_split_position (a_split_position: INTEGER)
 			-- Set the position of the splitter.
 		do
 
@@ -216,11 +216,11 @@ feature {NONE} -- Implementation
 
 	ridges_image: EV_CARBON_CGIMAGE
 
-	splitter_width: INTEGER is 8
+	splitter_width: INTEGER = 8
 
 	split_ratio : REAL_32
 
-	set_item_resize (an_item: like item; a_resizable: BOOLEAN) is
+	set_item_resize (an_item: like item; a_resizable: BOOLEAN)
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.
 		do
 			if an_item = first then
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_subviews is
+	adjust_subviews
 			-- Set the subview sizes according to the rects
 		local
 			err : INTEGER
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	qdglobal_to_hiview_local ( a_global_point : POINT_STRUCT; dest_view : POINTER ) : CGPOINT_STRUCT is
+	qdglobal_to_hiview_local ( a_global_point : POINT_STRUCT; dest_view : POINTER ) : CGPOINT_STRUCT
 			-- Convert a global Quickdraw point to a local HIView Point
 		local
 			view_point : CGPOINT_STRUCT
@@ -272,13 +272,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation constants
 
-	kSubViewA : INTEGER_16 is unique
+	kSubViewA : INTEGER_16 = unique
 
-	kSubViewB : INTEGER_16 is unique
+	kSubViewB : INTEGER_16 = unique
 
-	kSubViewSplitter : INTEGER_16 is unique
+	kSubViewSplitter : INTEGER_16 = unique
 
-	kControlNoPart : INTEGER_16 is
+	kControlNoPart : INTEGER_16
 		once
 			Result := ( {CONTROLS_ANON_ENUMS}.kcontrolnopart ).to_integer_16
 		end
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-		child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32) is
+		child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32)
 			-- propagate it to the top and recalculate minimumsizes
 		local
 			old_min_height, old_min_width: INTEGER
@@ -318,12 +318,12 @@ feature {NONE} -- Implementation
 
 		end
 
-	calculate_rects is
+	calculate_rects
 			-- Calculate the CGRECTS rect_a, rect_b and splitter_rect
 		deferred
 		end
 
-	setup_layout is
+	setup_layout
 			local
 				w: EV_CONTAINER_IMP
 			do
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			end
 
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER_32
@@ -382,14 +382,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT ) is
+	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT )
 			-- Handler for the bounds changed event
 		do
 			calculate_rects
 			adjust_subviews
 		end
 
-	draw ( limit_rgn, context : POINTER ) is
+	draw ( limit_rgn, context : POINTER )
 			-- Draw the splitter
 		local
 			ret: INTEGER
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			ret := hiview_draw_cgimage_external (context, ridges_rect.item, ridges_image.item)
 		end
 
-	hit_test ( where : CGPOINT_STRUCT ) : INTEGER_16 is
+	hit_test ( where : CGPOINT_STRUCT ) : INTEGER_16
 			-- Check to see if a point hits the view
 		do
 			calculate_rects
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	track ( event :POINTER ) : TUPLE[INTEGER, INTEGER_16] is
+	track ( event :POINTER ) : TUPLE[INTEGER, INTEGER_16]
 			-- Tracking event handler
 		deferred
 		end
@@ -433,7 +433,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPLIT_AREA;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_SPLIT_AREA_IMP
 

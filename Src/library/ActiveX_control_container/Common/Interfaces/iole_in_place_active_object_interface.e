@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD): BOOLEAN is
+	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD): BOOLEAN
 			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_frame_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN is
+	on_frame_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_frame_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_doc_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN is
+	on_doc_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_doc_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	resize_border_user_precondition (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER): BOOLEAN is
+	resize_border_user_precondition (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER): BOOLEAN
 			-- User-defined preconditions for `resize_border'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN is
+	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN
 			-- User-defined preconditions for `enable_modeless'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	translate_accelerator (lpmsg: TAG_MSG_RECORD)is
+	translate_accelerator (lpmsg: TAG_MSG_RECORD)
 			-- Processes menu accelerator-key messages 
 			-- from the container's message queue. 
 			-- This method should only be used for 
@@ -63,7 +63,7 @@ feature -- Basic Operations
 
 		end
 
-	on_frame_window_activate (f_activate: INTEGER) is
+	on_frame_window_activate (f_activate: INTEGER)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 		end
 
-	on_doc_window_activate (f_activate: INTEGER) is
+	on_doc_window_activate (f_activate: INTEGER)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -81,7 +81,7 @@ feature -- Basic Operations
 
 		end
 
-	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER) is
+	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER)
 			-- No description available.
 			-- `prc_border' [in].  
 			-- `p_uiwindow' [in].  
@@ -94,7 +94,7 @@ feature -- Basic Operations
 
 		end
 
-	enable_modeless (f_enable: INTEGER) is
+	enable_modeless (f_enable: INTEGER)
 			-- No description available.
 			-- `f_enable' [in].  
 		require
@@ -103,7 +103,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

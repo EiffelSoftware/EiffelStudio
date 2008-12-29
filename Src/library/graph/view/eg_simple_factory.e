@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for the simple figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,25 +13,25 @@ inherit
 	
 feature -- Basic operations
 
-	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE is
+	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
 			-- Create a node figure for `a_node'.
 		do
 			Result := create {EG_SIMPLE_NODE}.make_with_model (a_node)
 		end
 		
-	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE is
+	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		do
 			Result := create {EG_SIMPLE_CLUSTER}.make_with_model (a_cluster)
 		end
 		
-	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE is
+	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		do
 			Result := create {EG_SIMPLE_LINK}.make_with_model (a_link)
 		end
 		
-	model_from_xml (node: XM_ELEMENT): EG_ITEM is
+	model_from_xml (node: XM_ELEMENT): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
 			node_name, source_name, target_name: STRING
@@ -58,7 +58,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

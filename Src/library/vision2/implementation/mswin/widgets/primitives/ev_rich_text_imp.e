@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision2 rich text. Windows implementation.
 		]"
@@ -209,7 +209,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -247,14 +247,14 @@ feature {NONE} -- Initialization
 			clear_structures
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_border + Ws_vscroll + Es_savesel +
 				Es_disablenoscroll + Es_multiline + es_autovscroll + Es_Wantreturn + ws_tabstop + es_nohidesel
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Extended windows style used to create `Current'.
 		do
 			Result := Ws_ex_clientedge
@@ -262,14 +262,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	text: STRING_32 is
+	text: STRING_32
 			-- text of `Current'.
 		do
 			Result := wel_text
 			Result.prune_all ('%R')
 		end
 
-	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT
 			-- `Result' is character format at caret position `caret_index'
 		local
 			already_set: BOOLEAN
@@ -288,7 +288,7 @@ feature -- Status report
 			end
 		end
 
-	selected_character_format: EV_CHARACTER_FORMAT is
+	selected_character_format: EV_CHARACTER_FORMAT
 			-- `Result' is character format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -296,7 +296,7 @@ feature -- Status report
 			Result := internal_selected_character_format
 		end
 
-	internal_selected_character_format: EV_CHARACTER_FORMAT is
+	internal_selected_character_format: EV_CHARACTER_FORMAT
 			-- Implementation for `selected_character_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
 			-- features.
@@ -310,7 +310,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	internal_selected_character_format_i: EV_CHARACTER_FORMAT_IMP is
+	internal_selected_character_format_i: EV_CHARACTER_FORMAT_IMP
 			-- Implementation for `selected_character_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
 			-- features.
@@ -324,7 +324,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		local
 			already_set: BOOLEAN
@@ -343,14 +343,14 @@ feature -- Status report
 			end
 		end
 
-	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		do
 			set_selection (caret_index - 1, caret_index - 1)
 			Result := internal_selected_paragraph_format
 		end
 
-	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -358,7 +358,7 @@ feature -- Status report
 			Result := internal_selected_paragraph_format
 		end
 
-	internal_selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	internal_selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- Implementation for `selected_paragraph_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
 			-- features.
@@ -372,7 +372,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		local
 			mask: INTEGER
@@ -401,7 +401,7 @@ feature -- Status report
 			enable_redraw
 		end
 
-	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection
 			-- does not need to be restored.
@@ -416,7 +416,7 @@ feature -- Status report
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 		end
 
-	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I is
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
@@ -425,7 +425,7 @@ feature -- Status report
 			Result := internal_selected_character_format_i
 		end
 
-	initialize_for_saving is
+	initialize_for_saving
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -442,7 +442,7 @@ feature -- Status report
 			end
 		end
 
-	complete_saving is
+	complete_saving
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
 		do
@@ -457,7 +457,7 @@ feature -- Status report
 			enable_redraw
 		end
 
-	initialize_for_loading is
+	initialize_for_loading
 			-- Initialize `Current' for load operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -472,7 +472,7 @@ feature -- Status report
 			end
 		end
 
-	complete_loading is
+	complete_loading
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_loading'.
 		do
@@ -486,7 +486,7 @@ feature -- Status report
 			enable_redraw
 		end
 
-	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		local
 			current_selection: WEL_CHARACTER_RANGE
@@ -515,7 +515,7 @@ feature -- Status report
 			enable_redraw
 		end
 
-	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		local
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
@@ -528,7 +528,7 @@ feature -- Status report
 			Result := flag_set (mask, Pfm_alignment | pfm_startindent| pfm_rightindent | pfm_spacebefore | pfm_spaceafter)
 		end
 
-	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -585,7 +585,7 @@ feature -- Status report
 			end
 		end
 
-	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_position' to `end_position'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
 			--`end_position' and `False' otherwise.
@@ -634,19 +634,19 @@ feature -- Status report
 			end
 		end
 
-	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		do
 			Result := (character_index_from_position (an_x_position, a_y_position) + 1).min (text_length)
 		end
 
-	position_from_index (an_index: INTEGER): EV_COORDINATE is
+	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		do
 			Result := internal_position_from_index (an_index)
 		end
 
-	character_displayed (an_index: INTEGER): BOOLEAN is
+	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		local
 			pos: EV_COORDINATE
@@ -659,13 +659,13 @@ feature -- Status report
 	tab_width: INTEGER
 			-- Default width in pixels of each tab in `Current'.
 
-	first_position_from_line_number (a_line: INTEGER): INTEGER is
+	first_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the first character on the `i'-th line.
 		do
 			Result := wel_line_index (a_line - 1) + 1
 		end
 
-	last_position_from_line_number (a_line: INTEGER): INTEGER is
+	last_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the last character on the `i'-th line.
 		do
 			if
@@ -677,7 +677,7 @@ feature -- Status report
 			end
 		end
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		do
 			Result := wel_line_number_from_position (i) + 1
@@ -693,32 +693,32 @@ feature -- Status report
 			end
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of caret.
 		do
 			Result := (internal_caret_position + 1).min (text_length + 1)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
 			internal_set_caret_position (pos - 1)
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of first character selected.
 		do
 			Result := (wel_selection_start + 1).min (text_length)
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of last character selected.
 		do
 			Result := wel_selection_end.min (text_length)
 		end
 
-	wel_text_length, text_length: INTEGER is
+	wel_text_length, text_length: INTEGER
 			-- Number of characters comprising `text'. This is an optimized
 			-- version, which only recomputes the length if not `text_up_to_date'.
 		local
@@ -740,7 +740,7 @@ feature -- Status report
 			end
 		end
 
-	selected_text: STRING_32 is
+	selected_text: STRING_32
 			-- Text currently selected in `Current'.
 		local
 			i, nb: INTEGER
@@ -763,7 +763,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
@@ -779,7 +779,7 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
+	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately.
 		local
@@ -795,7 +795,7 @@ feature -- Status setting
 			safe_restore_caret
 		end
 
-	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on.
@@ -803,7 +803,7 @@ feature -- Status setting
 			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
@@ -851,7 +851,7 @@ feature -- Status setting
 			enable_redraw
 		end
 
-	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
@@ -876,7 +876,7 @@ feature -- Status setting
 			format_paragraph_internal (start_position, end_position, format, mask)
 		end
 
-	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
+	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_buffer' to apply buffered contents to `Current'.
 			-- `format' is not cloned internally and when buffer is flushed, its reference is
@@ -905,7 +905,7 @@ feature -- Status setting
 			end_formats.put (format_out, end_pos)
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
 			-- or `flush_buffer_to' which inserts the formatted text.
@@ -924,7 +924,7 @@ feature -- Status setting
 			append_text_for_rtf (a_text, format.implementation)
 		end
 
-	flush_buffer_to (start_position, end_position: INTEGER) is
+	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
@@ -961,7 +961,7 @@ feature -- Status setting
 			set_caret_position (original_position.min (text_length + 1))
 		end
 
-	flush_buffer is
+	flush_buffer
 			-- Flush any buffered operations.
 		local
 			last_end_value, counter, format_index, original_position, vertical_offset: INTEGER
@@ -1131,19 +1131,19 @@ feature -- Status setting
 			set_caret_position (original_position.min (text_length + 1))
 		end
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Ensure `has_word_wrap' is True.
 		do
 			internal_change_word_wrapping (True)
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Ensure `has_word_wrap' is False.
 		do
 			internal_change_word_wrapping (False)
 		end
 
-	internal_change_word_wrapping (word_wrapping: BOOLEAN) is
+	internal_change_word_wrapping (word_wrapping: BOOLEAN)
 			-- Enable word wrapping if `word_wrapping', otherwise disable.
 		local
 			stream_in: WEL_RICH_EDIT_BUFFER_LOADER
@@ -1209,7 +1209,7 @@ feature -- Status setting
 		end
 
 
-	set_tab_width (a_width: INTEGER) is
+	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' in pixels to `tab_width'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -1233,7 +1233,7 @@ feature -- Status setting
 			safe_restore_caret
 		end
 
-	update_tab_positions (value: INTEGER) is
+	update_tab_positions (value: INTEGER)
 			-- Update tab widths based on contents of `tab_positions'.
 			-- `value' is the index of the changed value when called directly by `tab_positions', as
 			-- the result of a list modification, and is not used.
@@ -1284,28 +1284,28 @@ feature -- Status setting
 			end
 		end
 
-	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a text stream in operation with `stream'.
 		do
 			Precursor {WEL_RICH_EDIT} (stream)
 			update_tab_positions (1)
 		end
 
-	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a rtf stream in operation with `stream'.
 		do
 			Precursor {WEL_RICH_EDIT} (stream)
 			update_tab_positions (1)
 		end
 
-	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a rtf stream in operation with `stream'.
 		do
 			Precursor {WEL_RICH_EDIT} (stream)
 			update_tab_positions (1)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) text between
 			-- 'start_pos' and 'end_pos'
 		local
@@ -1321,7 +1321,7 @@ feature -- Status setting
 			set_selection (actual_start, actual_end)
 		end
 
-	set_current_format (format: EV_CHARACTER_FORMAT) is
+	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		local
@@ -1336,7 +1336,7 @@ feature -- Status setting
 			safe_restore_caret
 		end
 
-	safe_store_caret is
+	safe_store_caret
 			-- Store caret position, and block caret change events from occuring.
 		do
 			must_restore_selection := False
@@ -1349,7 +1349,7 @@ feature -- Status setting
 			end
 		end
 
-	safe_restore_caret is
+	safe_restore_caret
 			-- Restore caret position stored by last call to `safe_store_caret' and restore
 			-- change events.
 		do
@@ -1391,7 +1391,7 @@ feature -- Status setting
 	original_selection_start, original_selection_end: INTEGER
 		-- Original selection when `safe_store_caret' called.
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -1402,7 +1402,7 @@ feature -- Status setting
 			end
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll to end.
 		local
 			l_line: INTEGER
@@ -1418,7 +1418,7 @@ feature -- Status setting
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
-	on_en_selchange (selection_type: INTEGER; character_range: WEL_CHARACTER_RANGE) is
+	on_en_selchange (selection_type: INTEGER; character_range: WEL_CHARACTER_RANGE)
 			-- En_selchange received by `parent'. See WEL_EN_SELCHANGE_CONSTANTS for
 			-- `selection_type' values. `character_range' contains lower and upper selection,
 			-- equal when caret is moved with no selection.
@@ -1472,7 +1472,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 
-	font_char_set (a_font: EV_FONT): INTEGER is
+	font_char_set (a_font: EV_FONT): INTEGER
 			-- `Result' is char set of font `a_font'.
 		local
 			font_imp: EV_FONT_IMP
@@ -1486,7 +1486,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 
 feature {NONE} -- Implementation
 
-	internal_position_from_index (an_index: INTEGER): EV_COORDINATE is
+	internal_position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 			-- Internal version which has no precondition, as we implement `character_displayed'
 			-- using the result of this call. Using `position_from_index' directly is not
@@ -1502,7 +1502,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
+	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER)
 			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive, only
 			-- modifying attributes specified in `mask'. Formatting applies to complete lines as seperated by new line
 			-- characters that `start_position' and `end_position' fall on.
@@ -1522,7 +1522,7 @@ feature {NONE} -- Implementation
 			enable_redraw
 		end
 
-	generate_font_heading (a_font: EV_FONT; index: INTEGER): STRING_32 is
+	generate_font_heading (a_font: EV_FONT; index: INTEGER): STRING_32
 			-- `Result' is a generated font descriptions for `a_font' with index `index'
 			-- within the document.
 		require
@@ -1569,20 +1569,20 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wel_destroy
 			set_is_destroyed (True)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.make_by_pointer (class_name_pointer)).string
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 		do
 			-- Do nothing here. Redefined version from WEL_WINDOW as
@@ -1590,14 +1590,14 @@ feature {NONE} -- Implementation
 			-- nothing, as Windows does this for us.
 		end
 
-	enable_redraw is
+	enable_redraw
 			-- Ensure `Current' is redrawn as required.
 		do
 			{WEL_API}.send_message (wel_item, wm_setredraw, to_wparam (1), to_lparam (0))
 			invalidate_without_background
 		end
 
-	on_en_change is
+	on_en_change
 			-- `Text' has been modified.
 			--| We call the change_actions.
 		do
@@ -1624,7 +1624,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RICH_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "External C functions used by the POSIX implementation of I18N_HOST_LOCALE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {I18N_LOCALE} -- Initialization
 
-	unix_set_locale (a_locale: STRING) is
+	unix_set_locale (a_locale: STRING)
 			-- set the locale to the locale
 			-- represented by the string pointed by `a_pointer'
 			-- to get default locale, give pointer to ""
@@ -32,7 +32,7 @@ feature {I18N_LOCALE} -- Initialization
 
 feature -- nl_langinfo
 
-	unix_get_locale_info (a_int: INTEGER): POINTER is
+	unix_get_locale_info (a_int: INTEGER): POINTER
 			--
 		external
 			"C inline use <eif_langinfo.h>, <iconv.h>"
@@ -104,7 +104,7 @@ feature -- nl_langinfo
 
 feature -- Available locales
 
-	unix_is_available (a_locale: STRING): BOOLEAN is
+	unix_is_available (a_locale: STRING): BOOLEAN
 			-- see: `is_available'
 		require
 			a_locale_not_void: a_locale /= Void
@@ -121,7 +121,7 @@ feature -- Available locales
 
 feature {NONE} -- Implementation: C externals
 
-	c_current_codeset: POINTER is
+	c_current_codeset: POINTER
 			-- Current codeset name.
 		external
 			"C inline use <eif_langinfo.h>"
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation: C externals
 			]"
 		end
 
-	unix_locale_name: STRING is
+	unix_locale_name: STRING
 			-- see: `locale_name'
 		do
 			Result := unix_locale_name_cell.item
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation: C externals
 			locale_name_buffer_not_void: Result /= Void
 		end
 
-	unix_locale_name_cell: CELL [STRING] is
+	unix_locale_name_cell: CELL [STRING]
 		once
 			create Result.put ("POSIX")
 		ensure
@@ -151,14 +151,14 @@ feature {NONE} -- Implementation: C externals
 			content_not_void: Result.item /= Void
 		end
 
-	c_setlocale (a_cat: INTEGER; a_locale: POINTER): POINTER is
+	c_setlocale (a_cat: INTEGER; a_locale: POINTER): POINTER
 		external
 			"C inline use <locale.h>"
 		alias
 			"return setlocale((int) $a_cat, (const char *) $a_locale);"
 		end
 
-	c_lc_all: INTEGER is
+	c_lc_all: INTEGER
 			--
 		external
 			"C inline use <locale.h>"
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation: C externals
 			"return LC_ALL;"
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

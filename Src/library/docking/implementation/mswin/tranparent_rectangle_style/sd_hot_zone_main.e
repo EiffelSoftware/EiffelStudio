@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE that represent SD_MULTI_DOCK_AREA's hot zone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER)  is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docker_mediator_not_void: a_docker_mediator /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Initlization
 
 feature  -- Command
 
-	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		local
 			l_floating_zone: SD_FLOATING_ZONE
@@ -113,7 +113,7 @@ feature  -- Command
 			must_process: Result = True
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine.
 		local
 			l_rect: EV_RECTANGLE
@@ -155,7 +155,7 @@ feature  -- Command
 			must_process:
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) or internal_shared.show_all_feedback_indicator then
@@ -187,7 +187,7 @@ feature  -- Command
 			must_process: True
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 			if not internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y)  then
@@ -197,7 +197,7 @@ feature  -- Command
 			end
 		end
 
-	show_indicator is
+	show_indicator
 			-- Show indicators if possible.
 		do
 			if not top_indicator.exists then
@@ -205,7 +205,7 @@ feature  -- Command
 			end
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Redefine
 		do
 			if top_indicator.exists then
@@ -222,7 +222,7 @@ feature  -- Command
 			end
 		end
 
-	build_indicator is
+	build_indicator
 			-- Redeifne
 		do
 			create top_indicator.make (internal_shared.icons.arrow_indicator_up, internal_shared.feedback.feedback_rect)
@@ -243,7 +243,7 @@ feature  -- Command
 
 feature -- Query
 
-	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		do
 			Result := True
@@ -253,7 +253,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	left_position (a_pointer_screen_x: INTEGER; a_feedback_screen_left: INTEGER; a_feedback_width: INTEGER): INTEGER is
+	left_position (a_pointer_screen_x: INTEGER; a_feedback_screen_left: INTEGER; a_feedback_width: INTEGER): INTEGER
 			-- If pointer dragging position out of feedback rect right side, we recalculate left position.
 		do
 			if a_pointer_screen_x > a_feedback_screen_left + a_feedback_width then
@@ -289,7 +289,7 @@ invariant
 	right_rectangle_not_void: right_rectangle /= Void
 	not_void: top_indicator /= Void and bottom_indicator /= Void and left_indicator /= Void and right_indicator /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

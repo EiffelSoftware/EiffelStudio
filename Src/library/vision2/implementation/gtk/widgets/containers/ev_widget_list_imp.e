@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision widget list. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_CONTAINER_IMP}
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			on_new_item (v_imp)
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	list_widget: POINTER is
+	list_widget: POINTER
 			-- Pointer to the actual widget list container.
 		do
 			Result := container_widget
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

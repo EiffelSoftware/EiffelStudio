@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"MEL Implementation of string data being sent between application.%
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 				time: INTEGER;
 				a_string: STRING;
 				lose_cmd: MEL_COMMAND; lose_arg: ANY;
-				done_cmd: MEL_COMMAND; done_arg: ANY) is
+				done_cmd: MEL_COMMAND; done_arg: ANY)
 			-- Initialize Current to initiate the sending of data 
 			-- through the selection mechanism.
 			-- `time' specifies the the selection should commence (should
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 	make_get_selection_value (a_widget: MEL_WIDGET;
 				target_atom: MEL_ATOM;
 				time: INTEGER;
-				requestor_cmd: MEL_COMMAND) is
+				requestor_cmd: MEL_COMMAND)
 			-- Initialize Current to obtain data though the 
 			-- selection mechanism.
 			-- `time' specifies the the selection should commence (should
@@ -102,19 +102,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	lose_command: MEL_COMMAND_EXEC is
+	lose_command: MEL_COMMAND_EXEC
 			-- Lose selection command
 		do
 			Result := Mel_dispatcher.lose_command
 		end;
 
-	done_command: MEL_COMMAND_EXEC is
+	done_command: MEL_COMMAND_EXEC
 			-- Done selection command
 		do
 			Result := Mel_dispatcher.done_command
 		end;
 
-	requestor_command: MEL_COMMAND_EXEC is
+	requestor_command: MEL_COMMAND_EXEC
 			-- Requestor command
 		do
 			Result := Mel_dispatcher.requestor_command
@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Element change
 
-	disown_selection (a_widget: MEL_WIDGET; time: INTEGER) is
+	disown_selection (a_widget: MEL_WIDGET; time: INTEGER)
 			-- Make the selection data no longer available.
 		require
 			valid_widget: a_widget /= Void and then not a_widget.is_destroyed
@@ -135,14 +135,14 @@ feature -- Element change
 
 feature {NONE} -- External
 
-	xt_disown_selection (a_widget, an_atom: POINTER; time: INTEGER) is
+	xt_disown_selection (a_widget, an_atom: POINTER; time: INTEGER)
 		external
 			"C (Widget, Atom, Time) | <X11/Intrinsic.h>"
 		alias
 			"XtDisownSelection"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature {EV_DIALOG_I} -- Implementation
 			
 feature {NONE} -- Implementation
 
-	common_dialog_imp: EV_DIALOG_IMP_MODAL is
+	common_dialog_imp: EV_DIALOG_IMP_MODAL
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -50,7 +50,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: EV_UNTITLED_DIALOG;
 			-- Interface for `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel Vision Progress bar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the progress bar.
 		do
 			Precursor {EV_GAUGE_IMP} (an_interface)
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN
 			-- Is display segmented?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_progress_bar_struct_bar_style (gtk_progress_bar) =
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_segmentation is
+	enable_segmentation
 			-- Display bar divided into segments.
 		do
 			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
@@ -51,7 +51,7 @@ feature -- Status setting
 			)
 		end
 
-	disable_segmentation is
+	disable_segmentation
 			-- Display bar without segments.
 		do
 			{EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
@@ -62,14 +62,14 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	gtk_progress_discrete_enum: INTEGER is
+	gtk_progress_discrete_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GTK_PROGRESS_DISCRETE"
 		end
 
-	gtk_progress_continuous_enum: INTEGER is
+	gtk_progress_continuous_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

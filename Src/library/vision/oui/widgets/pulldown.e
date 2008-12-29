@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Menu which is part of a menu system. % 
@@ -22,14 +22,14 @@ inherit
 	
 feature 
 
-	button: BUTTON is
+	button: BUTTON
 			-- button 
 		deferred
 		end;
 	
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Label of menu button
 		require
 			exists: not destroyed
@@ -39,14 +39,14 @@ feature -- Access
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 		require
 			exists: not destroyed
 		do
 			implementation.allow_recompute_size;
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 		require
 			exists: not destroyed
 		do
@@ -55,7 +55,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button label to `a_text'.
 		require
 			exists: not destroyed
@@ -68,7 +68,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: PULLDOWN_I;;
 			-- Implementation of pulldown menu
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

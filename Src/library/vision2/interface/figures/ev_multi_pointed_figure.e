@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures consisting of zero or more points."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	point_count: INTEGER is
+	point_count: INTEGER
 			-- Dynamic number of points in `Current'.
 		do
 			if points /= Void then
@@ -22,7 +22,7 @@ feature -- Access
 			correct: points /= Void implies Result = points.count
 		end
 
-	i_th_point (i: INTEGER): EV_RELATIVE_POINT is
+	i_th_point (i: INTEGER): EV_RELATIVE_POINT
 			-- `i'-th point of `Current'.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_i_th_point (i: INTEGER; a_point: EV_RELATIVE_POINT) is
+	set_i_th_point (i: INTEGER; a_point: EV_RELATIVE_POINT)
 			-- Assign `a_point' to `i'-th point.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -45,7 +45,7 @@ feature -- Status setting
 			assigned: points.i_th (i) = a_point
 		end
 
-	set_point_count (a_count: INTEGER) is
+	set_point_count (a_count: INTEGER)
 			-- Assign `a_count' to `point_count'.
 		require
 			a_count_non_negative: a_count >= 0
@@ -64,7 +64,7 @@ feature -- Status setting
 			point_count_assigned: point_count = a_count
 		end
 
-	extend_point (a_point: EV_RELATIVE_POINT) is
+	extend_point (a_point: EV_RELATIVE_POINT)
 			-- Add `a_point' to end of `Current'.
 		require
 			a_point_not_void: a_point /= Void
@@ -77,12 +77,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 	
-	points: ARRAYED_LIST [EV_RELATIVE_POINT] is
+	points: ARRAYED_LIST [EV_RELATIVE_POINT]
 			-- Relative points `Current' consists of.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

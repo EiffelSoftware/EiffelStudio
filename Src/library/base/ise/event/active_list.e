@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequential, one-way linked lists that call an action
 		sequence when an item is removed or added.
@@ -29,7 +29,7 @@ create {ACTIVE_LIST}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize
 		do
 			create add_actions
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			Precursor {INTERACTIVE_LIST}
 		end
 
-	make_filled (n: INTEGER) is
+	make_filled (n: INTEGER)
 			-- <Precursor>
 		do
 			create add_actions
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Miscellaneous
 
-	on_item_added_at (an_item: like item; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been added at index `item_index'.
 		local
 			a_cursor: CURSOR
@@ -65,7 +65,7 @@ feature -- Miscellaneous
 			go_to (a_cursor)
 		end
 
-	on_item_removed_at (an_item: like item; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been removed at index `item_index'.
 		local
 			a_cursor: CURSOR
@@ -77,7 +77,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -87,7 +87,7 @@ invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision standard dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show the window and wait until the user closed it.
 			--| A window is required for the gtk implementation.
 		local
@@ -55,7 +55,7 @@ feature -- Status setting
 			end
 		end
 
-	set_blocking_window (a_window: EV_WINDOW) is
+	set_blocking_window (a_window: EV_WINDOW)
 			-- Set as transient for `a_window'.
 		do
 			blocking_window := a_window
@@ -68,18 +68,18 @@ feature -- Status report
 
 feature -- Deferred
 
-	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+	activate (a_parent: WEL_COMPOSITE_WINDOW)
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		deferred
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

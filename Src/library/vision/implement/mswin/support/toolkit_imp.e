@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (application_class: STRING) is
+	make (application_class: STRING)
 			-- Create the toolkit.
 			-- `application_class' is used for the resource specifications.
 		do
@@ -51,37 +51,37 @@ feature
 	app_class: STRING;
 			-- Application class name of the application
 
-	color (a_color: COLOR): COLOR_IMP is
+	color (a_color: COLOR): COLOR_IMP
                         -- MS-Windows implementation of `a_color'
 		do
 			create Result.make (a_color)
 		end;
 
-	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_IMP is
+	color_for_screen (a_color: COLOR; a_screen: SCREEN): COLOR_IMP
 			-- Toolkit implementation of `a_color' for `a_screen'
 		do
 			create Result.make (a_color)
 		end;
 
-	exit is
+	exit
 			-- Exit from the application.
 		do
 			application_main_window.destroy
 		end;
 
-	font (a_font: FONT): FONT_IMP is
+	font (a_font: FONT): FONT_IMP
                         -- MS-Windows implementation of `a_font'
 		do
 			create Result.make (a_font)
 		end;
 
-	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_IMP is
+	font_for_screen (a_font: FONT; a_screen: SCREEN): FONT_IMP
 			-- Toolkit implementation of `a_font' for `a_screen'
 		do
 			create Result.make (a_font)
 		end;
 
-	iterate is
+	iterate
 			-- Loop the application.
 		do
 			if application_main_window.exists then
@@ -89,40 +89,40 @@ feature
 			end
 		end;
 
-	name: STRING is "MS_WINDOWS"
+	name: STRING = "MS_WINDOWS"
 			-- MS-Windows implementation name
 
-	pixmap (a_pixmap: PIXMAP): PIXMAP_IMP is
+	pixmap (a_pixmap: PIXMAP): PIXMAP_IMP
                         -- MS-Windows implementation of `a_pixmap'
 		do
 			create Result.make (a_pixmap)
 		end;
 
-	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_IMP is
+	pixmap_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN): PIXMAP_IMP
 			-- Toolkit implementation of `a_pixmap' for `a_screen'
 		do
 			create Result.make (a_pixmap)
 		end;
 
-	screen (a_screen: SCREEN): SCREEN_IMP is
+	screen (a_screen: SCREEN): SCREEN_IMP
                         -- MS-Windows implementation of `a_screen'
 		do
 			create Result.make (a_screen)
 		end;
 
-	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_IMP is
+	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_IMP
                         -- MS-Windows implementation of `a_cursor'
 		do
 			create Result.make (a_cursor)
 		end;
 
-	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_IMP is
+	screen_cursor_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN): SCREEN_CURSOR_IMP
 			-- Toolkit implementation of `a_cursor'
 		do
 			create Result.make (a_cursor)
 		end;
 
-	set_default_resources (a_list : ARRAY[WIDGET_RESOURCE]) is
+	set_default_resources (a_list : ARRAY[WIDGET_RESOURCE])
 			-- Resources for an application
 			-- not used under Windows
 		do
@@ -141,14 +141,14 @@ feature
 -- 			!! Result.make (a_timer)
 -- 		end;
 
-	widget_resource: WIDGET_RESOURCE_I is
+	widget_resource: WIDGET_RESOURCE_I
 			-- Resource not used under Windows
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	idle_action is
+	idle_action
 			-- Action to perform when the system is idle
 		do
 			from
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	message_loop is
+	message_loop
 			-- Windows message loop
 		local
 			msg: WEL_MSG
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

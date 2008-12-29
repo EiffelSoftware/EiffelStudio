@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision box, deferred class, parent of vertical and
 		horizontal boxes. Mswindows implementation.
@@ -53,7 +53,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)is
+	make (an_interface: like interface)
 				-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	initialize is
+	initialize
 
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 		end
 feature -- Access
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of `Current'.
 		do
 			if is_show_requested then
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of `Current'.
 		do
 			if is_show_requested then
@@ -104,7 +104,7 @@ feature -- Access
 	border_width: INTEGER
 			-- Border width around inside edge of `Current'.
 
-	total_spacing: INTEGER is
+	total_spacing: INTEGER
 			-- Total spacing. One spacing between two consecutive children.
 		do
 			Result := padding * ((childvisible_nb - 1).max (0))
@@ -113,7 +113,7 @@ feature -- Access
 	childvisible_nb: INTEGER
 			-- Number of visible children.
 
-	compute_childexpand_nb is
+	compute_childexpand_nb
 			-- Compute number of visible children which are expanded
 			-- and assign to `child_expand_number'.
 		local
@@ -144,7 +144,7 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I}-- Status report
 
-	is_item_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is the `child' expandable. ie: does it
 			-- allow the parent to resize or move it.
 		local
@@ -164,7 +164,7 @@ feature {EV_ANY, EV_ANY_I}-- Status report
 
 feature {EV_ANY, EV_ANY_I}-- Status setting
 
-	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Make `child' expandable if `flag',
 			-- not expandable otherwise.
 		local
@@ -222,7 +222,7 @@ feature {EV_ANY, EV_ANY_I}-- Status setting
 
 feature -- Contract support
 
-  	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN is
+  	child_add_successful (new_child: EV_WIDGET_I): BOOLEAN
 			-- `Result' True if `new_child' contained in `ev_children'.
   			-- Used in the postcondition of 'add_child'.
    		local
@@ -234,7 +234,7 @@ feature -- Contract support
 
 feature {NONE} -- Basic operation
 
-	removed_so_update_non_expandable_children (wid: EV_WIDGET) is
+	removed_so_update_non_expandable_children (wid: EV_WIDGET)
 			-- Adjust `non_expandable_children' accordingly
 			-- when a child is removed.
 		local
@@ -265,7 +265,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	added_so_update_non_expandable_children (wid: EV_WIDGET) is
+	added_so_update_non_expandable_children (wid: EV_WIDGET)
 			-- Adjust `non_expandable_children' accordingly
 			-- when a child is added.
 		local
@@ -291,7 +291,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	rest (total_rest: INTEGER): INTEGER is
+	rest (total_rest: INTEGER): INTEGER
 				-- `Result' is rest we must add to the current child of
 				-- `ev_children' when the size of the parent is not a
 				-- multiple of the number of children.
@@ -314,7 +314,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- If `flag' then make `Current' insensitive. Else
 			-- make `Current' sensitive.
 		local
@@ -346,21 +346,21 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make `Current' sensitive to user input.
 		do
 			set_insensitive (False)
 			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make `Current' insensitive to user input.
 		do
 			set_insensitive (True)
 			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -380,7 +380,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			end
 		end
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of `Current'?
 		do
 			Result := ev_children.has (a_child)
@@ -390,7 +390,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: EV_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

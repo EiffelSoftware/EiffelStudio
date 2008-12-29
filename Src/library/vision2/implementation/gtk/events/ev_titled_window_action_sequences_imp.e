@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_WINDOW_IMP."
 	legal: "See notice at end of class."
@@ -15,25 +15,25 @@ inherit
 
 feature -- Event handling
 
-	create_maximize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_maximize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a maximize action sequence.
 		do
 			create Result
 		end
 
-	create_minimize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a maximize action sequence.
 		do
 			create Result
 		end
 		
-	create_restore_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_restore_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a restored action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision text area, Carbon implementation."
@@ -56,7 +56,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a carbon text view.
 		local
 			ret: INTEGER
@@ -88,13 +88,13 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id (current)  --getting an id from the application
 		end
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Hook up the change actions for the text widget
 		do
 			create Result.default_create
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			enable_word_wrapping
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
-	initialize_buffer_events is
+	initialize_buffer_events
 			-- Initialize events for `Current'
 		do
 
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		local
 			ret: INTEGER
@@ -124,19 +124,19 @@ feature -- Status report
 
 feature -- Access
 
-	line (a_line: INTEGER): STRING_32 is
+	line (a_line: INTEGER): STRING_32
 			-- Returns the content of line `a_line'.
 		do
 
 		end
 
-	first_position_from_line_number (a_line: INTEGER): INTEGER is
+	first_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the first character on line `a_line'.
 		do
 
 		end
 
-	last_position_from_line_number (a_line: INTEGER): INTEGER is
+	last_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the last character on line `a_line'.
 		do
 
@@ -144,20 +144,20 @@ feature -- Access
 
 feature -- Status report
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Number of characters in `Current'
 		do
 			Result := get_text_length (entry_widget, kTXNStartOffset, kTXNEndOffset)
 
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of display lines present in widget.
 		do
 			Result := line_number_from_position (kTXNEndOffset+1)
 		end
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- Returns the number of the display line the cursor currently
 			-- is on.
 		do
@@ -171,24 +171,24 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	scroll_to_line (i: INTEGER) is
+	scroll_to_line (i: INTEGER)
 			-- Scroll `Current' to line number `i'
 		do
 
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll to the last line position of `Current'.
 		do
 		end
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Enable word wrapping for `Current'
 		do
 			has_word_wrapping := true
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Disable word wrapping for `Current'
 		do
 			has_word_wrapping := False
@@ -196,13 +196,13 @@ feature -- Basic operation
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		do
 			Result := 1 -- Hardcoded, TODO calculate a meaningful height depending on the content
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := 40 -- Hardcoded, TODO calculate a meaningful width depending on the content
@@ -210,25 +210,25 @@ feature -- Minimum size
 
 feature {NONE} -- Implementation
 
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN
 			--	Does `a_key' require default key processing to be blocked?
 		do
 
 		end
 
-	dispose is
+	dispose
 			-- Clean up `Current'
 		do
 			precursor {EV_CARBON_TXN}
 		end
 
-	on_change_actions is
+	on_change_actions
 			-- The text within the widget has changed.
 		do
 
 		end
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			do
 				Result := entry_widget
 			end
@@ -246,7 +246,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_TEXT_IMP
 

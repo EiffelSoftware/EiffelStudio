@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain all the singletons in Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	icons: SD_ICONS_SINGLETON is
+	icons: SD_ICONS_SINGLETON
 			-- SD_ICONS_SINGLETON instance.
 		do
 			Result := internal_icons_cell.item
@@ -25,7 +25,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	interface_names: SD_INTERFACE_NAMES is
+	interface_names: SD_INTERFACE_NAMES
 			-- All interface names
 		do
 			Result := internal_interface_names_cell.item
@@ -37,7 +37,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	feedback: SD_FEEDBACK_DRAWER is
+	feedback: SD_FEEDBACK_DRAWER
 			-- SD_DRAW_FEEDBACK instance which is draw things on the desktop.
 		once
 			create Result.make
@@ -45,7 +45,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
+	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- Factory for different style hot zones.
 		do
 			Result := hot_zone_factory_cell.item
@@ -53,9 +53,9 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	widget_factory: SD_WIDGET_FACTORY is
+	widget_factory: SD_WIDGET_FACTORY
 			-- SD_WIDGET_FACTORY instance.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
@@ -63,7 +63,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	tool_bar_docker_mediator_cell: CELL [SD_TOOL_BAR_DOCKER_MEDIATOR] is
+	tool_bar_docker_mediator_cell: CELL [SD_TOOL_BAR_DOCKER_MEDIATOR]
 			-- Tool bar docker mediator when user dragging a SD_TOOL_BAR_ZONE.
 		once
 			create Result.put (Void)
@@ -71,7 +71,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	auto_hide_tab_slide_timer_interval: INTEGER is
+	auto_hide_tab_slide_timer_interval: INTEGER
 			-- Auto hide tab slide timer interval
 			-- 0 means no animation.
 		local
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	tool_bar_font: EV_FONT is
+	tool_bar_font: EV_FONT
 			-- Tool bar font
 		do
 			Result := sizes.tool_bar_font_cell.item
@@ -93,31 +93,31 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
+	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I
 			-- Drawer for notebook tabs.
 		once
 			create {SD_NOTEBOOK_TAB_DRAWER_IMP} Result.make
 		end
 
-	tool_bar_drawer: SD_TOOL_BAR_DRAWER is
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER
 			-- Drawer for tool bars.
 		once
 			create {SD_TOOL_BAR_DRAWER} Result.make
 		end
 
-	default_screen_x: INTEGER is
+	default_screen_x: INTEGER
 			-- Default floating screen x/y position for the zone's float feature first time be called.
 		do
 			Result := default_screen_x_cell.item
 		end
 
-	default_screen_y: INTEGER is
+	default_screen_y: INTEGER
 			-- Default floating screen x/y position for the zone's float feature first time be called.
 		do
 			Result := default_screen_y_cell.item
 		end
 
-	zone_navigation_accelerator_key: INTEGER is
+	zone_navigation_accelerator_key: INTEGER
 			-- Accelerator key setting for zone navigation dialog.
 			-- On Windows by default is Ctlr + Tab.
 		do
@@ -126,7 +126,7 @@ feature -- Access
 
 feature -- Right click menu items
 
-	set_notebook_tab_area_menu_items_agent (a_agent: like notebook_tab_area_menu_items_agent) is
+	set_notebook_tab_area_menu_items_agent (a_agent: like notebook_tab_area_menu_items_agent)
 			-- Set `notebook_tab_area_menu_items_agent' with `a_gent'
 		do
 			notebook_tab_area_menu_items_agent_cell.put (a_agent)
@@ -134,7 +134,7 @@ feature -- Right click menu items
 			set: notebook_tab_area_menu_items_agent = a_agent
 		end
 
-	notebook_tab_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]] is
+	notebook_tab_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
 			-- Menu items shown at notebook tab area.
 			-- Client programmers can customize the menu items here.
 			-- Same as `notebook_tab_area_menu_items' but has higer priority than `notebook_tab_area_menu_items'
@@ -142,7 +142,7 @@ feature -- Right click menu items
 			Result := notebook_tab_area_menu_items_agent_cell.item
 		end
 
-	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
+	notebook_tab_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Menu items shown at notebook tab area.
 			-- Client programmers can customize the menu items here.
 		do
@@ -151,7 +151,7 @@ feature -- Right click menu items
 			not_void: Result /= Void
 		end
 
-	set_title_bar_area_menu_items_agent (a_agent: like title_bar_area_menu_items_agent) is
+	set_title_bar_area_menu_items_agent (a_agent: like title_bar_area_menu_items_agent)
 			-- Set `title_bar_area_menu_items_agent_cell' with `a_agent'
 		do
 			title_bar_area_menu_items_agent_cell.put (a_agent)
@@ -159,7 +159,7 @@ feature -- Right click menu items
 			set: title_bar_area_menu_items_agent = a_agent
 		end
 
-	title_bar_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]] is
+	title_bar_area_menu_items_agent: FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
 			-- Menu items shown at {SD_CONTENT}'s title bar.
 			-- Client programmers can customize the menu items here.	
 			-- Same as `title_bar_area_menu_items' but has higer priority than `title_bar_area_menu_items
@@ -168,7 +168,7 @@ feature -- Right click menu items
 			Result := title_bar_area_menu_items_agent_cell.item
 		end
 
-	title_bar_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM] is
+	title_bar_area_menu_items: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Menu items shown at {SD_CONTENT}'s title bar.
 			-- Client programmers can customize the menu items here.
 		do
@@ -179,46 +179,46 @@ feature -- Right click menu items
 
 feature -- Status report
 
-	allow_window_to_back: BOOLEAN is
+	allow_window_to_back: BOOLEAN
 			-- Does allow SD_FLOATING_ZONE or SD_FLOATING_TOOL_BAR_ZONE to go to back of main window?
 		do
 			Result := allow_window_to_back_cell.item
 		end
 
-	show_all_feedback_indicator: BOOLEAN is
+	show_all_feedback_indicator: BOOLEAN
 			-- If show all indicators same time when use transparent rectangle style feedback?
 		do
 			Result := show_all_feedback_indicator_cell.item
 		end
 
-	show_all_tab_stub_text: BOOLEAN is
+	show_all_tab_stub_text: BOOLEAN
 			-- When more than one tab stubs stay together at side of main window, show inactive tab stub text?
 		do
 			Result := show_tab_stub_text_cell.item
 		end
 
-	zone_navigation_accelerator_ctrl: BOOLEAN is
+	zone_navigation_accelerator_ctrl: BOOLEAN
 			-- Accelerator ctrl setting for zone navigation dialog.
 			-- On Windows by default is Ctlr + Tab.
 		do
 			Result := zone_navigation_accelerator_ctrl_cell.item
 		end
 
-	zone_navigation_accelerator_alt: BOOLEAN is
+	zone_navigation_accelerator_alt: BOOLEAN
 			-- Accelerator alt setting for zone navigation dialog.
 			-- On Windows by default is Ctlr + Tab.
 		do
 			Result := zone_navigation_accelerator_alt_cell.item
 		end
 
-	zone_navigation_accelerator_shift: BOOLEAN is
+	zone_navigation_accelerator_shift: BOOLEAN
 			-- Accelerator shift setting for zone navigation dialog.
 			-- On Windows by default is Ctlr + Tab.
 		do
 			Result := zone_navigation_accelerator_shift_cell.item
 		end
 
-	icons_set: BOOLEAN is
+	icons_set: BOOLEAN
 			-- Is `icons' setted?
 		do
 			Result := internal_icons_cell.item /= Void
@@ -226,7 +226,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_icons (a_icons: like icons) is
+	set_icons (a_icons: like icons)
 			-- Set the SD_ICONS_SINGLETON instance.
 			-- Client programmers don't have to call this feature since SD_DEFAULT_ICONS will be used by default.
 		require
@@ -237,7 +237,7 @@ feature -- Status setting
 			set: internal_icons_cell.item = a_icons
 		end
 
-	set_interface_names (a_names: like interface_names) is
+	set_interface_names (a_names: like interface_names)
 			-- Set `internal_interface_names' with `a_names'
 		require
 			not_void: a_names /= Void
@@ -247,7 +247,7 @@ feature -- Status setting
 			set: internal_interface_names_cell.item = a_names
 		end
 
-	set_hot_zone_factory (a_factory: like hot_zone_factory) is
+	set_hot_zone_factory (a_factory: like hot_zone_factory)
 			-- Set `hot_zone_factory'.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -257,7 +257,7 @@ feature -- Status setting
 			set: hot_zone_factory = a_factory
 		end
 
-	set_show_all_feedback_indicator (a_bool: BOOLEAN) is
+	set_show_all_feedback_indicator (a_bool: BOOLEAN)
 			-- Set `show_all_feedback_indicator'.
 		do
 			show_all_feedback_indicator_cell.put (a_bool)
@@ -266,7 +266,7 @@ feature -- Status setting
 			set: show_all_feedback_indicator = a_bool
 		end
 
-	set_auto_hide_tab_slide_timer_interval (a_int: INTEGER) is
+	set_auto_hide_tab_slide_timer_interval (a_int: INTEGER)
 			-- Set `auto_hide_tab_slide_timer_interval' with `a_int'.
 		do
 			auto_hide_tab_slide_timer_interval_cell.put (a_int)
@@ -274,7 +274,7 @@ feature -- Status setting
 			set: auto_hide_tab_slide_timer_interval_cell.item = a_int
 		end
 
-	set_show_tab_stub_text (a_bool: BOOLEAN) is
+	set_show_tab_stub_text (a_bool: BOOLEAN)
 			-- Set `show_tab_stub_text_cell' with `a_bool'
 		do
 			show_tab_stub_text_cell.put (a_bool)
@@ -283,7 +283,7 @@ feature -- Status setting
 			set: show_all_tab_stub_text =  a_bool
 		end
 
-	set_default_screen_x (a_x: INTEGER) is
+	set_default_screen_x (a_x: INTEGER)
 			-- Set `default_screen_x'
 		require
 			valid: default_screen_x >= 0
@@ -293,7 +293,7 @@ feature -- Status setting
 			set: default_screen_x = a_x
 		end
 
-	set_default_screen_y (a_y: INTEGER) is
+	set_default_screen_y (a_y: INTEGER)
 			-- Set `default_screen_y'
 		require
 			valid: default_screen_y >= 0
@@ -303,7 +303,7 @@ feature -- Status setting
 			set: default_screen_y = a_y
 		end
 
-	set_zone_navigation_accelerator_key (a_key: INTEGER) is
+	set_zone_navigation_accelerator_key (a_key: INTEGER)
 			-- Set `zone_navigation_accelerator_key' with `a_key'.
 		do
 			zone_navigation_accelerator_key_cell.put (a_key)
@@ -311,7 +311,7 @@ feature -- Status setting
 			set: zone_navigation_accelerator_key = a_key
 		end
 
-	set_zone_navigation_accelerator_ctrl (a_bool: BOOLEAN) is
+	set_zone_navigation_accelerator_ctrl (a_bool: BOOLEAN)
 			-- Set `zone_navigation_accelerator_ctrl' with `a_bool'.
 		do
 			zone_navigation_accelerator_ctrl_cell.put (a_bool)
@@ -319,7 +319,7 @@ feature -- Status setting
 			set: zone_navigation_accelerator_ctrl = a_bool
 		end
 
-	set_zone_navigation_accelerator_alt (a_bool: BOOLEAN) is
+	set_zone_navigation_accelerator_alt (a_bool: BOOLEAN)
 			-- Set `zone_navigation_accelerator_alt' with `a_bool'.
 		do
 			zone_navigation_accelerator_alt_cell.put (a_bool)
@@ -327,7 +327,7 @@ feature -- Status setting
 			set: zone_navigation_accelerator_alt = a_bool
 		end
 
-	set_zone_navigation_accelerator_shift (a_bool: BOOLEAN) is
+	set_zone_navigation_accelerator_shift (a_bool: BOOLEAN)
 			-- Set `zone_navigation_accelerator_shift' with `a_bool'.
 		do
 			zone_navigation_accelerator_shift_cell.put (a_bool)
@@ -337,7 +337,7 @@ feature -- Status setting
 
 feature  -- Colors
 
-	non_focused_color: EV_COLOR is
+	non_focused_color: EV_COLOR
 			-- Non focuse color. Used by SD_TITLE_BAR...
 		do
 			Result := color.non_focused_color
@@ -345,7 +345,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	non_focused_title_color: EV_COLOR is
+	non_focused_title_color: EV_COLOR
 			-- Non focused color of window title bar.
 		do
 			Result := color.non_focused_title_color
@@ -353,7 +353,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	non_focused_title_text_color: EV_COLOR is
+	non_focused_title_text_color: EV_COLOR
 			-- Non focused title text color
 		do
 			Result := color.non_focused_title_text_color
@@ -361,13 +361,13 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	non_focused_color_lightness: EV_COLOR is
+	non_focused_color_lightness: EV_COLOR
 			-- Lighter `non_focused_color'.
 		do
 			Result := color.non_focused_color_lightness
 		end
 
-	focused_color: EV_COLOR is
+	focused_color: EV_COLOR
 			-- Focused color. Used by SD_TITLE_BAR...
 		do
 			Result := color.focused_color
@@ -375,7 +375,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	focused_title_text_color: EV_COLOR is
+	focused_title_text_color: EV_COLOR
 			-- Focused title bar text color. Used bt SD_TITLE_BAR.
 		do
 			Result := color.focused_title_text_color
@@ -383,7 +383,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	border_color: EV_COLOR is
+	border_color: EV_COLOR
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
 		do
 			Result := color.border_color
@@ -391,7 +391,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	tab_text_color: EV_COLOR is
+	tab_text_color: EV_COLOR
 			-- Text color
 		do
 			Result := color.tab_text_color
@@ -399,7 +399,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	tool_tip_color: EV_COLOR is
+	tool_tip_color: EV_COLOR
 			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
 		do
 			Result := color.tool_tip_color
@@ -407,7 +407,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	tool_bar_title_bar_color: EV_COLOR is
+	tool_bar_title_bar_color: EV_COLOR
 			-- Tool bar tilte bar color when tool bar floating.
 		do
 			Result := color.tool_bar_title_bar_color
@@ -415,7 +415,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	feedback_indicator_region_window_discard_color: EV_COLOR is
+	feedback_indicator_region_window_discard_color: EV_COLOR
 			-- Feedback indicator window region discard color.
 		do
 			Result := color.feedback_indicator_region_window_discard_color
@@ -423,7 +423,7 @@ feature  -- Colors
 			not_void: Result /= Void
 		end
 
-	default_background_color: EV_COLOR is
+	default_background_color: EV_COLOR
 			-- Default background color.
 			-- Changed when theme changed
 		do
@@ -432,65 +432,65 @@ feature  -- Colors
 
 feature -- Constants
 
-	Border_width: INTEGER is 1
+	Border_width: INTEGER = 1
 			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
 
-	Auto_hide_panel_lightness: REAL is 0.5
+	Auto_hide_panel_lightness: REAL = 0.5
 			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
 
-	Auto_hide_panel_size: INTEGER is
+	Auto_hide_panel_size: INTEGER
 			-- Width of auto hide panel.
 		do
 			Result := sizes.auto_hide_panel_size_cell.item
 		end
 
-	Auto_hide_panel_gap_size: INTEGER is 4
+	Auto_hide_panel_gap_size: INTEGER = 4
 			-- Auto hide panel's Gap size.
 
-	Line_width: INTEGER is 4
+	Line_width: INTEGER = 4
 			-- Width of feedback line.
 
-	Resize_bar_width_height: INTEGER is 5
+	Resize_bar_width_height: INTEGER = 5
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
 
-	title_bar_height: INTEGER is
+	title_bar_height: INTEGER
 			-- Size of zone's title bar.
 		do
 			Result := sizes.title_bar_height_cell.item
 		end
 
-	Notebook_tab_height: INTEGER is
+	Notebook_tab_height: INTEGER
 			-- Notebook tab height.
 		do
 			Result := sizes.notebook_tab_height_cell.item
 		end
 
-	Notebook_tab_maximum_size: INTEGER is
+	Notebook_tab_maximum_size: INTEGER
 			-- Maximum size of a notebook tab.
 			-- If the title on the tab would exceed this size, it is cropped.
 		do
 			Result := sizes.notebook_tab_maximum_size_cell.item
 		end
 
-	tab_zone_upper_minimum_height: INTEGER is
+	tab_zone_upper_minimum_height: INTEGER
 			-- SD_TAB_ZONE_UPPER and SD_DOCKING_ZONE_UPPER's minimum height.
 		do
 			Result := notebook_tab_height + 5
 		end
 
-	zone_minimum_width: INTEGER is
+	zone_minimum_width: INTEGER
 			-- Minimum width of a zone.
 		do
 			Result := sizes.zone_minimum_width_cell.item
 		end
 
-	zone_minimum_height: INTEGER is
+	zone_minimum_height: INTEGER
 			-- Minimum height of a zone.
 		do
 			Result := sizes.zone_minimum_height_cell.item
 		end
 
-	Tool_bar_size: INTEGER is
+	Tool_bar_size: INTEGER
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
 			-- Note: SD_WIDGET_TOOL_BAR's size may bigger than this size when font size is very small.
 			-- For example, on Linux Desktop when using font Scans 8.
@@ -498,73 +498,73 @@ feature -- Constants
 			Result := sizes.tool_bar_size_cell.item
 		end
 
-	Tool_bar_border_width: INTEGER is
+	Tool_bar_border_width: INTEGER
 			-- Tool bar border width
 		do
 			Result := sizes.tool_bar_border_width_cell.item
 		end
 
-	Tool_bar_hidden_item_dialog_max_width: INTEGER is 400
+	Tool_bar_hidden_item_dialog_max_width: INTEGER = 400
 			-- Tool bar hidden item dialog maximum allowed width.
 
-	Tool_bar_customize_dialog_default_width: INTEGER is 560
+	Tool_bar_customize_dialog_default_width: INTEGER = 560
 			-- Tool bar customize dialog default width.
 
-	Tool_bar_customize_dialog_default_height: INTEGER is 360
+	Tool_bar_customize_dialog_default_height: INTEGER = 360
 			-- Tool bar customize dialog default height.
 
-	Default_floating_window_width: INTEGER is 470
+	Default_floating_window_width: INTEGER = 470
 			-- Default floating window width.
 
-	Default_floating_window_height: INTEGER is 280
+	Default_floating_window_height: INTEGER = 280
 			-- Default floating window height.
 
-	Default_docking_height_rate: REAL is 0.25
+	Default_docking_height_rate: REAL = 0.25
 			-- When change from floating to docking, height := main container height * `default_docking_height_rate'.
 
-	Default_docking_width_rate: REAL is 0.2
+	Default_docking_width_rate: REAL = 0.2
 			-- When change from floating to docking, width := main container width * `default_docking_width_rate'.
 
-	Auto_hide_delay: INTEGER is 2000
+	Auto_hide_delay: INTEGER = 2000
 			-- When SD_AUTO_HIDE_ZONE show but no focused, time to hide SD_AUTO_HIDE_ZONE.
 
-	Focuse_border_width: INTEGER is 1
+	Focuse_border_width: INTEGER = 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
-	Highlight_before_width: INTEGER is 4
+	Highlight_before_width: INTEGER = 4
 			-- Title highlight area width before drawn title texts.
 
-	Highlight_tail_width: INTEGER is 30
+	Highlight_tail_width: INTEGER = 30
 			-- Tilte highlight area width which shown color chang gradually.
 
-	Hide_tab_indicator_size: INTEGER is 20
+	Hide_tab_indicator_size: INTEGER = 20
 			-- Hide tab indicator size. Hide tabs are tabs in SD_NOTEBOOK_TAB_AREA.
 
-	title_bar_text_start_x: INTEGER is 0
+	title_bar_text_start_x: INTEGER = 0
 			-- When title bar drawing text, start x position.
 
-	title_bar_text_start_y: INTEGER is
+	title_bar_text_start_y: INTEGER
 			-- When title bar drawing text, start y position.
 		do
 			Result := sizes.title_bar_text_start_y_cell.item
 		end
 
-	Padding_width: INTEGER is 4
+	Padding_width: INTEGER = 4
 			-- Padding width used by whold system.
 
-	Feedback_tab_width: INTEGER is 60
+	Feedback_tab_width: INTEGER = 60
 			-- When user dragging, the width of feedback rectangle for tab.
 
-	Notebook_minimum_width: INTEGER is 77
+	Notebook_minimum_width: INTEGER = 77
 			-- Minimumu width for SD_NOTEBOOK, it's useful when a zone is minimized.	
 
-	Zone_navigation_column_count: INTEGER is 8
+	Zone_navigation_column_count: INTEGER = 8
 			-- How many items per column in zone navigation dialog which is normally activated by Ctrl + Tab.
 
-	Auto_hide_tab_stub_show_delay: INTEGER is 1000
+	Auto_hide_tab_stub_show_delay: INTEGER = 1000
 			-- Auto hide tab stub delay time in milliseconds.
 
-	Editor_place_holder_content_name: STRING_32 is
+	Editor_place_holder_content_name: STRING_32
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
 		once
 			Result := "docking manager editor place holder"
@@ -575,7 +575,7 @@ feature -- Constants
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
 		SD_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY} -- Implementation
 
-	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR) is
+	set_tool_bar_docker_mediator (a_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR)
 			-- Set tool bar docker mediator singleton.
 		do
 			tool_bar_docker_mediator_cell.put (a_mediator)
@@ -583,7 +583,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			set: tool_bar_docker_mediator_cell.item = a_mediator
 		end
 
-	add_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+	add_docking_manager (a_manager: SD_DOCKING_MANAGER)
 			-- Set `internal_docking_manager'.
 		require
 			a_manager_not_void: a_manager /= Void
@@ -593,7 +593,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			added: docking_manager_list.has (a_manager)
 		end
 
-	docking_manager_list: ARRAYED_LIST [SD_DOCKING_MANAGER] is
+	docking_manager_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
 			-- All docking managers.
 		once
 			create Result.make (1)
@@ -601,7 +601,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	is_set_show_all_feedback_indicator_called: CELL [BOOLEAN] is
+	is_set_show_all_feedback_indicator_called: CELL [BOOLEAN]
 			-- If `set_show_all_feedback_indicator' has been called?
 		once
 			create Result.put (False)
@@ -609,7 +609,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	is_set_show_tab_stub_text_called: CELL [BOOLEAN] is
+	is_set_show_tab_stub_text_called: CELL [BOOLEAN]
 			-- If `set_show_tab_stub_text' has been called?
 		once
 			create Result.put (False)
@@ -617,7 +617,7 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 			not_void: Result /= Void
 		end
 
-	widgets: SD_WIDGETS_LISTS is
+	widgets: SD_WIDGETS_LISTS
 			-- Widget lists.
 		once
 			create Result
@@ -627,13 +627,13 @@ feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MED
 
 feature {NONE} -- Implementation
 
-	color: SD_COLORS is
+	color: SD_COLORS
 			-- Colors query class.
 		once
 			create Result.make
 		end
 
-	sizes: SD_SIZES is
+	sizes: SD_SIZES
 			-- Sizes query class.
 		once
 			create Result.make
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	Show_all_feedback_indicator_cell: CELL [BOOLEAN] is
+	Show_all_feedback_indicator_cell: CELL [BOOLEAN]
 			-- Singleton cell for show_all_feedback_indicator.
 		once
 			create Result.put (False)
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	Auto_hide_tab_slide_timer_interval_cell: CELL [INTEGER] is
+	Auto_hide_tab_slide_timer_interval_cell: CELL [INTEGER]
 			-- Singleton cell for `Auto_hide_tab_slide_timer_interval'.
 		once
 			create Result.put (0)
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY] is
+	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY]
 			-- Hot zone factory cell.
 		once
 			create Result.put (Void)
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	allow_window_to_back_cell: CELL [BOOLEAN] is
+	allow_window_to_back_cell: CELL [BOOLEAN]
 			-- Cell hold `allow_window_to_back'.
 		once
 			create Result.put (False)
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	show_tab_stub_text_cell: CELL [BOOLEAN] is
+	show_tab_stub_text_cell: CELL [BOOLEAN]
 			-- Cell hold `show_tab_stub_text'.
 		once
 			create Result.put (False)
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	default_screen_x_cell: CELL [INTEGER] is
+	default_screen_x_cell: CELL [INTEGER]
 			-- Singleton cell for `default_screen_x'
 		once
 			create Result.put (0)
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	default_screen_y_cell: CELL [INTEGER] is
+	default_screen_y_cell: CELL [INTEGER]
 			-- Singleton cell for `default_screen_y'
 		once
 			create Result.put (0)
@@ -711,43 +711,43 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	zone_navigation_accelerator_key_cell: CELL [INTEGER] is
+	zone_navigation_accelerator_key_cell: CELL [INTEGER]
 			-- Singleton cell for `zone_navigation_accelerator_key'
 		once
 			create Result.put ({EV_KEY_CONSTANTS}.key_tab)
 		end
 
-	zone_navigation_accelerator_ctrl_cell: CELL [BOOLEAN] is
+	zone_navigation_accelerator_ctrl_cell: CELL [BOOLEAN]
 			-- Singleton cell for `zone_navigation_accelerator_ctrl'
 		once
 			create Result.put (True)
 		end
 
-	zone_navigation_accelerator_alt_cell: CELL [BOOLEAN] is
+	zone_navigation_accelerator_alt_cell: CELL [BOOLEAN]
 			-- Singleton cell for `zone_navigation_accelerator_alt'
 		once
 			create Result.put (False)
 		end
 
-	zone_navigation_accelerator_shift_cell: CELL [BOOLEAN] is
+	zone_navigation_accelerator_shift_cell: CELL [BOOLEAN]
 			-- Singleton cell for `zone_navigation_accelerator_shift'
 		once
 			create Result.put (False)
 		end
 
-	title_bar_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
+	title_bar_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `title_bar_area_menu_items_agent'
 		once
 			create Result.put (Void)
 		end
 
-	notebook_tab_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]] is
+	notebook_tab_area_menu_items_agent_cell: CELL [FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `notebook_tab_area_menu_items_agent'
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

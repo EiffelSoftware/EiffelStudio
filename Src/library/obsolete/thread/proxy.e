@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Indirection proxy allowing share of objects between threads, %
 		%without having the garbage collectors intercollect each-other."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	frozen make, frozen put (obj: G) is
+	frozen make, frozen put (obj: G)
 			-- Make proxy denote `obj'.
 		require
 			not_void: obj /= Void
@@ -33,11 +33,11 @@ feature	-- Access
 
 feature {NONE} -- Disposal
 
-	dispose is
+	dispose
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

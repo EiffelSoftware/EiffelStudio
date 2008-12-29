@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Parent of any graphic application based on the Motif toolkit. %
@@ -14,7 +14,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the application.
 		do
 			set_default;
@@ -37,7 +37,7 @@ feature -- Access
 	display: MEL_DISPLAY;
 			-- Application display
 
-	application_name: STRING is
+	application_name: STRING
 			-- Application name
 		deferred
 		end;
@@ -47,13 +47,13 @@ feature -- Access
 
 feature -- Basic operations
 
-	exit is
+	exit
 			-- Exit from the application
 		do
 			application_context.exit
 		end;
 
-	main_loop is
+	main_loop
 			-- Loop the application.
 		do
 			application_context.main_loop
@@ -61,17 +61,17 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Define default parameters for the application.
 		do
 		end;
 
-	build is
+	build
 			-- Build an application.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

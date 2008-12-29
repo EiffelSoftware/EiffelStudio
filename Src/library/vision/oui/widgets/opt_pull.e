@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Pulldown menu of an option button, it is attached to an option %
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -72,13 +72,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 			-- Parent of pulldown menu
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 					-- Current Push Button selected in the option menu
 		require
 			exists: not destroyed
@@ -86,7 +86,7 @@ feature -- Access
 			Result := implementation.selected_button
 		end;
 
-	option_button: OPTION_B is
+	option_button: OPTION_B
 			-- Option button of the current opt_pull
 		require
 			exists: not destroyed
@@ -94,12 +94,12 @@ feature -- Access
 			Result := implementation.option_button
 		end;
 
-	button: BUTTON is
+	button: BUTTON
 		do
 			Result := option_button
 		end;
 
-	caption: STRING is
+	caption: STRING
 		require
 			exists: not destroyed
 		do
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Element change
 
-   	set_selected_button (a_button: BUTTON) is
+   	set_selected_button (a_button: BUTTON)
 					-- Set `selected_button' to `a_button'
 		require
 			exists: not destroyed
@@ -118,7 +118,7 @@ feature -- Element change
 			a_button.same (selected_button)
 		end;
 
-	set_caption (a_caption: STRING) is
+	set_caption (a_caption: STRING)
 		require
 			exists: not destroyed;
 			valid_caption: a_caption /= Void;
@@ -133,12 +133,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current pulldown menu.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

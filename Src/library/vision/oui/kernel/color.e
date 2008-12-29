@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a color"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a color
 		do
 			create {COLOR_IMP} implementation.make (Current)
 		end;
 
-	make_for_screen (a_screen: SCREEN) is
+	make_for_screen (a_screen: SCREEN)
 			-- Create a color for `a_screen'.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -38,19 +38,19 @@ feature -- Access
 	implementation: COLOR_I;
 			-- Implementation of color
 
-	blue_from_allocation: INTEGER is
+	blue_from_allocation: INTEGER
 			-- Allocated blue saturation level
 		do
 			Result := implementation.allocated_blue
 		end;
 
-	green_from_allocation: INTEGER is
+	green_from_allocation: INTEGER
 			-- Allocated green saturation level
 		do
 			Result := implementation.allocated_green
 		end;
 
-	red_from_allocation: INTEGER is
+	red_from_allocation: INTEGER
 			-- Allocated red saturation level
 		do
 			Result := implementation.allocated_red
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Duplication
 
-	duplicate: COLOR is
+	duplicate: COLOR
 			-- An independent copy of the color
 		do
 			create Result.make;
@@ -71,7 +71,7 @@ feature -- Duplication
 
 feature -- Status report
 
-	blue: INTEGER is
+	blue: INTEGER
 			-- Blue saturation level
 		require
 			color_not_specified_by_name: name = Void
@@ -79,7 +79,7 @@ feature -- Status report
 			Result := implementation.blue
 		end;
 
-	green: INTEGER is
+	green: INTEGER
 			-- Green saturation level
 		require
 			color_not_specified_by_name: name = Void
@@ -87,20 +87,20 @@ feature -- Status report
 			Result := implementation.green
 		end;
 
-	is_white_by_default: BOOLEAN is
+	is_white_by_default: BOOLEAN
 			-- Default color used in case of failure
 			-- to allocate desire color
 		do
 			Result := implementation.is_white_by_default
 		end;
 
-	name: STRING is
+	name: STRING
 			-- name of desired color for current
 		do
 			Result := implementation.name
 		end;
 
-	red: INTEGER is
+	red: INTEGER
 			-- Red saturation level
 		require
 			color_not_specified_by_name: name = Void
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_blue (blue_value: INTEGER) is
+	set_blue (blue_value: INTEGER)
 			-- Set blue saturation level to `blue_value'.
 		require
 			blue_value_small_enough: blue_value <= 65535;
@@ -122,7 +122,7 @@ feature -- Status setting
 			blue_set: blue = blue_value
 		end;
 
-	set_green (green_value: INTEGER) is
+	set_green (green_value: INTEGER)
 			-- Set green saturation level to `green_value'.
 		require
 			green_value_small_enough: green_value <= 65535;
@@ -134,7 +134,7 @@ feature -- Status setting
 			green_set: green = green_value
 		end;
 
-	set_red (red_value: INTEGER) is
+	set_red (red_value: INTEGER)
 			-- Set red saturation level to `red_value'.
 		require
 			red_value_small_enough: red_value <= 65535;
@@ -146,7 +146,7 @@ feature -- Status setting
 			red_set: red = red_value
 		end;
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set color name to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -157,7 +157,7 @@ feature -- Status setting
 			name_set: name.is_equal (a_name)
 		end;
 
-	set_rgb (red_value, green_value, blue_value: INTEGER) is
+	set_rgb (red_value, green_value, blue_value: INTEGER)
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		require
@@ -173,7 +173,7 @@ feature -- Status setting
 			blue_set: blue = blue_value
 		end;
 
-	set_white_default is
+	set_white_default
 			-- Set white color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
@@ -182,7 +182,7 @@ feature -- Status setting
 			white_default: is_white_by_default
 		end
 
-	set_black_default is
+	set_black_default
 			-- Set black color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
@@ -193,7 +193,7 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	allocated_blue (a_widget: WIDGET): INTEGER is
+	allocated_blue (a_widget: WIDGET): INTEGER
 			-- Allocated blue saturation level for `a_widget'
 		obsolete
 			"Use `blue_from_allocation' instead."
@@ -203,7 +203,7 @@ feature -- Obsolete
 			Result := blue_from_allocation
 		end;
 
-	allocated_green (a_widget: WIDGET): INTEGER is
+	allocated_green (a_widget: WIDGET): INTEGER
 			-- Allocated green saturation level for `a_widget'
 		obsolete
 			"Use `green_from_allocation' instead."
@@ -213,7 +213,7 @@ feature -- Obsolete
 			Result := green_from_allocation
 		end;
 
-	allocated_red (a_widget: WIDGET): INTEGER is
+	allocated_red (a_widget: WIDGET): INTEGER
 			-- Allocated red saturation level for `a_widget'
 		obsolete
 			"Use `red_from_allocation' instead."
@@ -227,7 +227,7 @@ invariant
 
 	valid_implementation: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

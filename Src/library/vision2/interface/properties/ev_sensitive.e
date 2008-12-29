@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that may ignore user input."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is object sensitive to user input.
 		require
 			not_destroyed: not is_destroyed
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature {EV_BUILDER} -- Status report
 
-	internal_non_sensitive: BOOLEAN is
+	internal_non_sensitive: BOOLEAN
 			-- Is object sensitive to user input.
 		require
 			not_destroyed: not is_destroyed
@@ -43,7 +43,7 @@ feature {EV_BUILDER} -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		require
 			not_destroyed: not is_destroyed
@@ -53,7 +53,7 @@ feature -- Status setting
 			is_sensitive: (parent = Void or parent_is_sensitive) implies is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input.
 		require
 			not_destroyed: not is_destroyed
@@ -65,13 +65,13 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CONTAINABLE} and is_sensitive
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 		local
 			sensitive_parent: EV_SENSITIVE
 		do
@@ -86,7 +86,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_SENSITIVE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

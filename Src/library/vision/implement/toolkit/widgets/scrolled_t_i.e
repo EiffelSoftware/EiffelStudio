@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	expanded_position (pos: INTEGER): INTEGER is
+	expanded_position (pos: INTEGER): INTEGER
 			-- Position in the text after tabulation expansion
 			-- (By default, it is `pos'. This is used for TABBED_TEXT)
 		require
@@ -22,7 +22,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= actual_count
 		end	
 
-	unexpanded_position (pos: INTEGER): INTEGER is
+	unexpanded_position (pos: INTEGER): INTEGER
 			-- Position in the text before tabulation expansion
 			-- (By default, it is `pos'. This is used for TABBED_TEXT)
 		require
@@ -33,7 +33,7 @@ feature -- Access
 			valid_result: Result >= 0 and then Result <= count
 		end
 
-	actual_cursor_position: INTEGER is
+	actual_cursor_position: INTEGER
 			-- Current position of text
 			-- (By default, it is `current_position'. This is used for TABBED_TEXT)
 		do
@@ -42,31 +42,31 @@ feature -- Access
 
 feature -- Status report
 
-	is_vertical_scrollbar: BOOLEAN is
+	is_vertical_scrollbar: BOOLEAN
 			-- Is vertical scrollbar visible?
 		deferred
 		end
 
-	is_horizontal_scrollbar: BOOLEAN is
+	is_horizontal_scrollbar: BOOLEAN
 			-- Is horizontal scrollbar visible?
 		deferred
 		end
 
-	actual_text: STRING is
+	actual_text: STRING
 			-- Actual text of scrolled text `text'
 			-- (By default, it is `text'. This is used for TABBED_TEXT)
 		do
 			Result := text
 		end
 
-	actual_count: INTEGER is
+	actual_count: INTEGER
 			-- Actual count of scrolled text `text'
 			-- (By default, it is `count'. This is used for TABBED_TEXT)
 		do
 			Result := count
 		end
 
-	tab_length: INTEGER is
+	tab_length: INTEGER
 			-- Size of tabulation
 		deferred
 		ensure
@@ -75,27 +75,27 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_vertical_scrollbar is
+	show_vertical_scrollbar
 			-- Make vertical scrollbar visible.
 		deferred
 		end
 
-	hide_vertical_scrollbar is
+	hide_vertical_scrollbar
 			-- Make vertical scrollbar invisible.
 		deferred
 		end
 
-	show_horizontal_scrollbar is
+	show_horizontal_scrollbar
 			-- Make horizontal scrollbar visible.
 		deferred
 		end
 
-	hide_horizontal_scrollbar is
+	hide_horizontal_scrollbar
 			-- Make horizontal scrollbar invisible.
 		deferred
 		end
 
-	set_tab_length (new_length: INTEGER) is
+	set_tab_length (new_length: INTEGER)
 			-- Set `tab_length' to `new_length'.
 		require
 			valid_new_length: new_length > 1
@@ -104,7 +104,7 @@ feature -- Status setting
 			set: tab_length = new_length
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

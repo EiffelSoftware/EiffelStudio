@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notions of a Windows data structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item'
 		local
 			a_default_pointer: POINTER
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
@@ -53,14 +53,14 @@ feature -- Basic operations
 			memory_copy (other.item, structure_size)
 		end
 		
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := item.memory_compare (other.item, structure_size)
 		end
 
-	memory_copy (source_pointer: POINTER; length: INTEGER) is
+	memory_copy (source_pointer: POINTER; length: INTEGER)
 			-- Copy `length' bytes from `source_pointer' to `item'.
 		require
 			length_small_enough: length <= structure_size
@@ -73,7 +73,7 @@ feature -- Basic operations
 			item.memory_copy (source_pointer, length)
 		end
 
-	initialize is
+	initialize
 			-- Fill Current with zeros.
 		require
 			exists: exists
@@ -81,7 +81,7 @@ feature -- Basic operations
 			initialize_with_character ('%U')
 		end
 
-	initialize_with_character (a_character: CHARACTER) is
+	initialize_with_character (a_character: CHARACTER)
 			-- Fill current with `a_character'.
 		require
 			exists: exists
@@ -91,7 +91,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		deferred
 		ensure
@@ -100,7 +100,7 @@ feature -- Measurement
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Free `item'
 		local
 			a_default_pointer: POINTER
@@ -113,7 +113,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	c_calloc (a_num, a_size: INTEGER): POINTER is
+	c_calloc (a_num, a_size: INTEGER): POINTER
 			-- C calloc
 		obsolete
 			"Use `memory_calloc' from POINTER class instead."
@@ -121,7 +121,7 @@ feature {NONE} -- Externals
 			Result := Result.memory_calloc (a_num, a_size)
 		end
 
-	c_free (ptr: POINTER) is
+	c_free (ptr: POINTER)
 			-- C free
 		obsolete
 			"Use `memory_free' from POINTER class instead."
@@ -129,7 +129,7 @@ feature {NONE} -- Externals
 			ptr.memory_free
 		end
 
-	c_memcpy (destination, source: POINTER; count: INTEGER) is
+	c_memcpy (destination, source: POINTER; count: INTEGER)
 			-- C memcpy
 		obsolete
 			"Use `memory_free' from POINTER class instead."
@@ -137,7 +137,7 @@ feature {NONE} -- Externals
 			destination.memory_copy (source, count)
 		end
 
-	c_enomem is
+	c_enomem
 			-- Raise a "No more memory" exception.
 		obsolete
 			"Use facility of EXCEPTIONS class instead to raise %"No more memory%" exception"
@@ -145,7 +145,7 @@ feature {NONE} -- Externals
 			(create {EXCEPTIONS}).raise ("No more memory")
 		end
 
-	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER) is
+	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER)
 			-- C function 
 		obsolete
 			"Use `memory_set' from POINTER class instead."
@@ -153,7 +153,7 @@ feature {NONE} -- Externals
 			destination.memory_set (filling_char.code, count)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

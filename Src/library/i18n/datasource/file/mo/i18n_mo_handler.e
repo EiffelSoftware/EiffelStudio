@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of I18N_FILE_HANDLER that knows how to handle .mo files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Interface
 
-	can_handle (a_path:STRING_32) :BOOLEAN is
+	can_handle (a_path:STRING_32) :BOOLEAN
 			-- will handle this _if_  it has a file name ending in .mo
 			-- extend later, maybe, to check the magic number.
 		do
@@ -26,7 +26,7 @@ feature -- Interface
 			end
 		end
 
-	extract_dictionary (a_path:STRING_32): I18N_DICTIONARY is
+	extract_dictionary (a_path:STRING_32): I18N_DICTIONARY
 		local
 			i: INTEGER
 			temp: I18N_DICTIONARY_ENTRY
@@ -61,7 +61,7 @@ feature -- Interface
 			end
 		end
 
-	extract_scope (a_path: STRING_32): I18N_FILE_SCOPE_INFORMATION is
+	extract_scope (a_path: STRING_32): I18N_FILE_SCOPE_INFORMATION
 			-- Not much scope information we can extract from the file itself. All we have to go on is the name.
 			-- NOTE: Void indicates unknown scope, not a bug
 		local
@@ -85,7 +85,7 @@ feature -- File
 
 		file: I18N_MO_FILE;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

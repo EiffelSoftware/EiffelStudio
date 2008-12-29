@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Meta model representing a deserialized object. %
 		%Useful for updating serialized data which might not be in sync with more recent version %
 		%of the associated base class of the serialized object."
@@ -10,7 +10,7 @@ indexing
 class
 	SED_META_MODEL
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

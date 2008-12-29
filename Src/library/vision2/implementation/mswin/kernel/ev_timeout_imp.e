@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision timeout. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -28,13 +28,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create timer.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 		do
 			Internal_timeout.add_timeout (Current)
 			set_is_initialized (True)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_interval (an_interval: INTEGER) is
+	set_interval (an_interval: INTEGER)
 			-- Assign `an_interval' in milliseconds to `interval'.
 		do
 			interval := an_interval
@@ -56,7 +56,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy actual object.
 		do
 			internal_timeout.remove_timeout (id)
@@ -65,13 +65,13 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	Internal_timeout: EV_INTERNAL_TIMEOUT_IMP is
+	Internal_timeout: EV_INTERNAL_TIMEOUT_IMP
 			-- Window that launch the timeout commands.
 		once
 			create Result.make_top ("EiffelVision timeout window")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

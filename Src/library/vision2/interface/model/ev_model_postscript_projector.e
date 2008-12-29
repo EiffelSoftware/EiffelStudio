@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to Postscript files."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_filename (a_world: EV_MODEL_WORLD; a_filename: FILE_NAME) is
+	make_with_filename (a_world: EV_MODEL_WORLD; a_filename: FILE_NAME)
 			-- Create with `a_world' and `a_filename'.
 		require
 			a_world_not_void: a_world /= Void
@@ -54,7 +54,7 @@ feature -- Access
 		
 feature -- Basic operations
 
-	project is
+	project
 			-- Make standard projection of world on device.
 		local
 			bbox: EV_RECTANGLE
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	drawable: EV_POSTSCRIPT_DRAWABLE
 			-- Drawable used to draw the figures.
 			
-	draw_grid is
+	draw_grid
 			-- Draw grid on canvas.
 		do
 			drawable.add_postscript_line ("%%Drawing PS Grid")
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			drawable.add_postscript_line ("grestore")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

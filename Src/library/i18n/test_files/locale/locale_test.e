@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure.
 		do
 			io.put_string ("%N###############%N")
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature --Tests
 
-	test_all_locales is
+	test_all_locales
 			-- test for all locales
 		local
 			l_list: LINEAR[I18N_LOCALE_ID]
@@ -54,7 +54,7 @@ feature --Tests
 		end
 
 
-	interactive is
+	interactive
 			-- Test with interaction
 		local
 			t : I18N_LOCALE_MANAGER
@@ -94,7 +94,7 @@ feature --Tests
 		end
 
 
-	list_locales is
+	list_locales
 			--
 		local
 			l: I18N_LOCALE_MANAGER
@@ -112,7 +112,7 @@ feature --Tests
 			end
 		end
 
-	test_currency_formatter (a_value: DOUBLE;locale: I18N_LOCALE_INFO) is
+	test_currency_formatter (a_value: DOUBLE;locale: I18N_LOCALE_INFO)
 			-- test the currency formatter with `a_value'
 		local
 			currency_formatter: I18N_CURRENCY_FORMATTER
@@ -124,7 +124,7 @@ feature --Tests
 			io.new_line
 		end
 
-	test_value_formatter (a_value: DOUBLE;locale: I18N_LOCALE_INFO) is
+	test_value_formatter (a_value: DOUBLE;locale: I18N_LOCALE_INFO)
 			-- test the currency formatter with `a_value'
 		local
 			value_formatter: I18N_VALUE_FORMATTER
@@ -136,7 +136,7 @@ feature --Tests
 			io.new_line
 		end
 
-	test_date_time_formatter (a_format_string: STRING_32;locale: I18N_LOCALE_INFO) is
+	test_date_time_formatter (a_format_string: STRING_32;locale: I18N_LOCALE_INFO)
 			-- test date/time formatter with the format string  `a_format_string'
 			-- and the current time
 		local
@@ -153,7 +153,7 @@ feature --Tests
 		end
 
 
-	test_day_months_names (locale : I18N_LOCALE) is
+	test_day_months_names (locale : I18N_LOCALE)
 			-- print to `io' all day/month names
 		do
 			io.put_string ("DAY/MONTH NAMES TEST%N")
@@ -167,7 +167,7 @@ feature --Tests
 			locale.info.month_names.do_all (agent print_string (?))
 		end
 
-	test_value_info  (locale : I18N_LOCALE) is
+	test_value_info  (locale : I18N_LOCALE)
 			-- print to `io' all value related fields
 		do
 			io.put_string ("VALUE INFO TEST%N")
@@ -180,7 +180,7 @@ feature --Tests
 			io.put_new_line
 		end
 
-	test_currency_info (locale : I18N_LOCALE) is
+	test_currency_info (locale : I18N_LOCALE)
 			-- print to `io' all currency related fields
 		do
 			io.put_string ("CURRENCY INFO TEST%N")
@@ -209,13 +209,13 @@ feature --Tests
 
 feature {NONE} -- Help function
 
-	print_string (a_string: STRING_32) is
+	print_string (a_string: STRING_32)
 			--
 		do
 			io.put_string ("  "+a_string+"%N")
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

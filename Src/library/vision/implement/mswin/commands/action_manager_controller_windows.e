@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of actions managers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class ACTIONS_MANAGER_CONTROLLER_WINDOWS
 
 feature -- Removal
 
-	actions_manager_list: ACTIONS_MANAGER_LIST_WINDOWS is
+	actions_manager_list: ACTIONS_MANAGER_LIST_WINDOWS
 			-- List of actions managers
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

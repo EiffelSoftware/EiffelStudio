@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			An argument parser's source of arguments.
 		]"
@@ -43,7 +43,7 @@ feature -- Status report
 			not_arguments_is_empty: not Result implies not arguments.is_empty
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

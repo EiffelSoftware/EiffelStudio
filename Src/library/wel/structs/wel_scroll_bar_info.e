@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The TV_DISPINFO structure retrieves and sets%
 				% information about a scroll bar item."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create SCROLLINFO struct
 		do
 			structure_make
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_scroll_info_size
@@ -45,7 +45,7 @@ feature -- Measurement
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- `fmask' associated with Current
 		require
 			exists: exists
@@ -55,7 +55,7 @@ feature -- Access
 			valid_mask: valid_sif_mask (Result)
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- `nPos' associated with Current
 		require
 			exists: exists
@@ -63,7 +63,7 @@ feature -- Access
 			Result := cwel_get_npos (item)
 		end
 
-	track_position: INTEGER is
+	track_position: INTEGER
 			-- `nTrackPos' associated with Current
 		require
 			exists: exists
@@ -71,7 +71,7 @@ feature -- Access
 			Result := cwel_get_ntrackpos (item)
 		end
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- `nMin' associated with Current
 		require
 			exists: exists
@@ -79,7 +79,7 @@ feature -- Access
 			Result := cwel_get_nmin (item)
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- `nMax' associated with Current
 		require
 			exists: exists
@@ -87,7 +87,7 @@ feature -- Access
 			Result := cwel_get_nmax (item)
 		end
 
-	page: INTEGER is
+	page: INTEGER
 			-- `nMax' associated with Current
 		require
 			exists: exists
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Setting
 		
-	set_mask (i: INTEGER) is
+	set_mask (i: INTEGER)
 			-- Assign `i' to `fmask' field of Current.
 		require
 			exists: exists
@@ -106,7 +106,7 @@ feature -- Setting
 			cwel_set_fmask (item, i) 
 		end
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- `nPos' associated with Current
 		require
 			exists: exists
@@ -114,7 +114,7 @@ feature -- Setting
 			cwel_set_npos (item, i)
 		end
 
-	set_track_position (i: INTEGER) is
+	set_track_position (i: INTEGER)
 			-- `nTrackPos' associated with Current
 		require
 			exists: exists
@@ -122,7 +122,7 @@ feature -- Setting
 			cwel_set_ntrackpos (item, i)
 		end
 
-	set_minimum (i: INTEGER) is
+	set_minimum (i: INTEGER)
 			-- `nMin' associated with Current
 		require
 			exists: exists
@@ -130,7 +130,7 @@ feature -- Setting
 			cwel_set_nmin (item, i)
 		end
 
-	set_maximum (i: INTEGER) is
+	set_maximum (i: INTEGER)
 			-- `nMax' associated with Current
 		require
 			exists: exists
@@ -138,7 +138,7 @@ feature -- Setting
 			cwel_set_nmax (item, i)
 		end
 
-	set_page (i: INTEGER) is
+	set_page (i: INTEGER)
 			-- `npage' associated with Current
 		require
 			exists: exists
@@ -148,7 +148,7 @@ feature -- Setting
 
 feature {NONE} -- Externals
 
-	c_scroll_info_size: INTEGER is
+	c_scroll_info_size: INTEGER
 			-- Size of SCROLLINFO struct
 		external
 			"C [macro <windows.h>]"
@@ -156,7 +156,7 @@ feature {NONE} -- Externals
 			"sizeof(SCROLLINFO)"
 		end
 
-	cwel_set_cb_size (p: POINTER; v: INTEGER) is
+	cwel_set_cb_size (p: POINTER; v: INTEGER)
 			-- Set `cbSize' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, UINT)"
@@ -164,7 +164,7 @@ feature {NONE} -- Externals
 			"cbSize"
 		end
 
-	cwel_set_fmask (p: POINTER; v: INTEGER) is
+	cwel_set_fmask (p: POINTER; v: INTEGER)
 			-- Set `fMask' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, UINT)"
@@ -172,7 +172,7 @@ feature {NONE} -- Externals
 			"fMask"
 		end
 
-	cwel_set_nmin (p: POINTER; v: INTEGER) is
+	cwel_set_nmin (p: POINTER; v: INTEGER)
 			-- Set `nMin' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, int)"
@@ -180,7 +180,7 @@ feature {NONE} -- Externals
 			"nMin"
 		end
 
-	cwel_set_nmax (p: POINTER; v: INTEGER) is
+	cwel_set_nmax (p: POINTER; v: INTEGER)
 			-- Set `nMax' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, int)"
@@ -188,7 +188,7 @@ feature {NONE} -- Externals
 			"nMax"
 		end
 
-	cwel_set_npage (p: POINTER; v: INTEGER) is
+	cwel_set_npage (p: POINTER; v: INTEGER)
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, UINT)"
@@ -196,7 +196,7 @@ feature {NONE} -- Externals
 			"nPage"
 		end
 
-	cwel_set_npos (p: POINTER; v: INTEGER) is
+	cwel_set_npos (p: POINTER; v: INTEGER)
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, int)"
@@ -204,7 +204,7 @@ feature {NONE} -- Externals
 			"nPos"
 		end
 
-	cwel_set_nTrackPos (p: POINTER; v: INTEGER) is
+	cwel_set_nTrackPos (p: POINTER; v: INTEGER)
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO, int)"
@@ -212,7 +212,7 @@ feature {NONE} -- Externals
 			"nTrackPos"
 		end
 
-	cwel_get_cb_size (p: POINTER): INTEGER is
+	cwel_get_cb_size (p: POINTER): INTEGER
 			-- Get `cbSize' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -220,7 +220,7 @@ feature {NONE} -- Externals
 			"cbSize"
 		end
 
-	cwel_get_fmask (p: POINTER): INTEGER is
+	cwel_get_fmask (p: POINTER): INTEGER
 			-- Set `fMask' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -228,7 +228,7 @@ feature {NONE} -- Externals
 			"fMask"
 		end
 
-	cwel_get_nmin (p: POINTER): INTEGER is
+	cwel_get_nmin (p: POINTER): INTEGER
 			-- Set `nMin' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -236,7 +236,7 @@ feature {NONE} -- Externals
 			"nMin"
 		end
 
-	cwel_get_nmax (p: POINTER): INTEGER is
+	cwel_get_nmax (p: POINTER): INTEGER
 			-- Set `nMax' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -244,7 +244,7 @@ feature {NONE} -- Externals
 			"nMax"
 		end
 
-	cwel_get_npage (p: POINTER): INTEGER is
+	cwel_get_npage (p: POINTER): INTEGER
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -252,7 +252,7 @@ feature {NONE} -- Externals
 			"nPage"
 		end
 
-	cwel_get_npos (p: POINTER): INTEGER is
+	cwel_get_npos (p: POINTER): INTEGER
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -260,7 +260,7 @@ feature {NONE} -- Externals
 			"nPos"
 		end
 
-	cwel_get_nTrackPos (p: POINTER): INTEGER is
+	cwel_get_nTrackPos (p: POINTER): INTEGER
 			-- Set `nPage' field of SCROLLINFO
 		external
 			"C [struct <windows.h>] (SCROLLINFO): EIF_INTEGER"
@@ -268,7 +268,7 @@ feature {NONE} -- Externals
 			"nTrackPos"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

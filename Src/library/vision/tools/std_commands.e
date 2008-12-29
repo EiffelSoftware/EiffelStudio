@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Set of onces to create models of commands"
 	legal: "See notice at end of class.";
@@ -12,31 +12,31 @@ class
 
 feature {NONE} -- Access
 
-	draw_figure_command: DRAW_FIG_COM is
+	draw_figure_command: DRAW_FIG_COM
 			-- Command to draw a figure or a world
 		once
 			create Result
 		end;
 
-	popdown_command: POPDOWN_COM is
+	popdown_command: POPDOWN_COM
 			-- Command to popdown a shell
 		once
 			create Result
 		end;
 
-	popup_command: POPUP_COM is
+	popup_command: POPUP_COM
 			-- Command to popup a shell
 		once
 			create Result
 		end;
 
-	quit_now_command: QUIT_NOW_COM is
+	quit_now_command: QUIT_NOW_COM
 			-- Command to quit the application incondionnally
 		once
 			create Result
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

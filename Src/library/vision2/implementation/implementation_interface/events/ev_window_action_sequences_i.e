@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_WINDOW_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is requested to be closed.
 		do
 			if close_request_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a close_request action sequence.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	move_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when window moves.
 		do
 			if move_actions_internal = Void then
@@ -52,7 +52,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_move_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	create_move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Create a move action sequence.
 		deferred
 		end
@@ -63,7 +63,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	show_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is shown.
 		do
 			if show_actions_internal = Void then
@@ -77,7 +77,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_show_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a show action sequence.
 		deferred
 		end
@@ -87,7 +87,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	hide_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is hiden.
 		do
 			if hide_actions_internal = Void then
@@ -101,7 +101,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_hide_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_hide_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a hide action sequence.
 		deferred
 		end
@@ -110,7 +110,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Implementation of once per object `hide_actions'.
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

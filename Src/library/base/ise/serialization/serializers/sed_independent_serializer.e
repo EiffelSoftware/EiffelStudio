@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encoding of arbitrary objects graphs between sessions %
 		%of programs containing the same types."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Implementation
 
-	write_header (a_list: ARRAYED_LIST [ANY]) is
+	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Write header of storable.
 		local
 			l_dtype_table, l_attr_dtype_table: like type_table
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			write_object_table (a_list)
 		end
 	
-	attributes_dynamic_types (a_type_table: like type_table): like type_table is
+	attributes_dynamic_types (a_type_table: like type_table): like type_table
 			-- Table of dynamic types of attributes appearing in `a_type_table'.
 		require
 			a_type_table_not_void: a_type_table /= Void
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			attributes_dynamic_types_not_void: Result /= Void
 		end
 
-	write_attributes (a_dtype: INTEGER) is
+	write_attributes (a_dtype: INTEGER)
 			-- Write attribute description for type whose dynamic type id is `a_dtype'.
 		require
 			a_dtype_non_negative: a_dtype >= 0
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

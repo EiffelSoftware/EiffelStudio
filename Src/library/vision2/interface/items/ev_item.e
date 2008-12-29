@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Base class for all items that may be held in EV_ITEM_LISTs.
@@ -42,7 +42,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_ITEM_LIST [EV_ITEM] is
+	parent: EV_ITEM_LIST [EV_ITEM]
 			-- Item list containing `Current'.
 		do
 			Result := implementation.parent
@@ -52,7 +52,7 @@ feature -- Access
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CONTAINABLE} and Precursor {EV_PIXMAPABLE} and
@@ -64,7 +64,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_ITEM_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

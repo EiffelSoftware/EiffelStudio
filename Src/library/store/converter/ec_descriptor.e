@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -17,7 +17,7 @@ create -- Creation procedure
 
 feature  -- Initilization
 
-	make is
+	make
 		do
 			create ecd_fields.make (1, 10);
 			ecd_clear
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_field_separator (fs: CHARACTER) is
+	set_field_separator (fs: CHARACTER)
 			-- Set field separator with `fs'.
 		do
 			field_separator := fs
@@ -56,7 +56,7 @@ feature -- Status setting
 			field_separator = fs
 		end;
 
-	ecd_clear is
+	ecd_clear
 		do
 			ecd_fields.clear_all;
 			ecd_index := 0;
@@ -66,7 +66,7 @@ feature -- Status setting
 			field_separator := ';'
 		end;
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `ecd_index' with `i'.
 		do
 			ecd_index := i-1
@@ -74,7 +74,7 @@ feature -- Status setting
 			ecd_index = i-1
 		end;
 
-	set_field (n: STRING; type: INTEGER) is
+	set_field (n: STRING; type: INTEGER)
 			-- Set `ecd_index'-th field with type `type' and name `n'.
 		local
 			f: EC_FIELD
@@ -92,7 +92,7 @@ feature -- Status setting
 			ecd_fields.force (f, ecd_index)
 		end;
 
-	set_delimiters (ld, rd: CHARACTER) is
+	set_delimiters (ld, rd: CHARACTER)
 			-- Set field value delimiters with `ld' and `rd'.
 		require
 			current_field_exists: ecd_fields.item(ecd_index) /= Void
@@ -100,7 +100,7 @@ feature -- Status setting
 			ecd_fields.item (ecd_index).set_value_delimiters (ld, rd)
 		end;
 
-	set_label_separator (ls: CHARACTER) is
+	set_label_separator (ls: CHARACTER)
 			-- Set label separator with `ls'.
 		require
 			current_field_exists: ecd_fields.item(ecd_index) /= Void
@@ -108,7 +108,7 @@ feature -- Status setting
 			ecd_fields.item(ecd_index).set_label_separator(ls)
 		end;
 
-	set_use_label (b: BOOLEAN) is
+	set_use_label (b: BOOLEAN)
 			-- Set `use_label' with `b'.
 		require
 			current_field_exists: ecd_fields.item(ecd_index) /= Void
@@ -116,7 +116,7 @@ feature -- Status setting
 			ecd_fields.item (ecd_index).set_use_label (b)
 		end;
 
-	check_conformity (ref: ANY) is
+	check_conformity (ref: ANY)
 			-- Check if current desciptor conforms to `ref'.
 			-- The conformity is true if and only if for each
 			-- field of the current descriptor, there is a 
@@ -216,7 +216,7 @@ feature -- Status setting
 			end
 		end;
 
-	make_conform (ref: ANY) is
+	make_conform (ref: ANY)
 			-- Make current description conform to `ref'.
 			-- (Using eiffel Standards).
 		require
@@ -265,7 +265,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	set_ecd_error (s: STRING) is
+	set_ecd_error (s: STRING)
 			-- Set error flag and error message with `s'.
 		require
 			s_not_void: s /= Void
@@ -274,7 +274,7 @@ feature {NONE} -- Status setting
 			ecd_message := s.twin
 		end;
 
-	field_conforms (i: INTEGER; o: ANY; f: EC_FIELD): BOOLEAN is
+	field_conforms (i: INTEGER; o: ANY; f: EC_FIELD): BOOLEAN
 			-- Checks for fields confomity.
 			-- (names and types)
 		require 
@@ -317,7 +317,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

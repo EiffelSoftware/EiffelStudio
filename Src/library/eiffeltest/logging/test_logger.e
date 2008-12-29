@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Logging interface for tests"
 	legal: "See notice at end of class."
@@ -13,14 +13,14 @@ deferred class TEST_LOGGER inherit
 
 feature -- Status report
 
-	is_log_writable: BOOLEAN is
+	is_log_writable: BOOLEAN
 			-- Is log ready for writing?
 		deferred
 		end
 	
 feature -- Output
 
-	put_evaluation (d: TEST_DRIVER) is
+	put_evaluation (d: TEST_DRIVER)
 			-- Output evaluation from driver `d'.
 		require
 			driver_exists: d /= Void
@@ -29,7 +29,7 @@ feature -- Output
 		deferred
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Output `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -37,7 +37,7 @@ feature -- Output
 		deferred
 		end
 
-	put_summary (t: TESTABLE) is
+	put_summary (t: TESTABLE)
 			-- Output result summary for `t'.
 		require
 			test_exists: t /= Void
@@ -46,7 +46,7 @@ feature -- Output
 		deferred
 		end
 	 
-	put_container_results (t: TEST_CONTAINER) is
+	put_container_results (t: TEST_CONTAINER)
 			-- Output statistic information about tests contained in `t'.
 		require
 			container_exists: t /= Void
@@ -54,7 +54,7 @@ feature -- Output
 		deferred
 		end
 	 
-	put_failure_information (t: SINGLE_TEST; run: INTEGER) is
+	put_failure_information (t: SINGLE_TEST; run: INTEGER)
 			-- Output failure information of `run' for `t'.
 		require
 			test_exists: t /= Void
@@ -65,7 +65,7 @@ feature -- Output
 		deferred
 		end
 	 
-	put_timing_information (t: SINGLE_TEST; run: INTEGER) is
+	put_timing_information (t: SINGLE_TEST; run: INTEGER)
 			-- Output timing information for `run' of test `t'.
 		require
 			test_exists: t /= Void
@@ -75,14 +75,14 @@ feature -- Output
 		deferred
 		end
 	 
-	put_new_line is
+	put_new_line
 			-- Output new line.
 		require
 			writable: is_log_writable
 		deferred
 		end
 	 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

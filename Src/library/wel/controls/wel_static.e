@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control with a text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a static control
 		require
 			a_parent_not_void: a_parent /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- foreground color used for the text of the
 			-- control
 			-- Can be redefined by the user
@@ -56,7 +56,7 @@ feature -- Access
 			create Result.make_system (Color_windowtext)
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	clear is
+	clear
 			-- Clear the text
 		require
 			exists: exists
@@ -78,20 +78,20 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "Static"
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Ss_left
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

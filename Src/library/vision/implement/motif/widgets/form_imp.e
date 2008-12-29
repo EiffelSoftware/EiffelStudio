@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif form."
@@ -63,7 +63,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif form.
 		local
 			mc: MEL_COMPOSITE
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	attach_right (a_child: WIDGET_I; r_offset: INTEGER) is
+	attach_right (a_child: WIDGET_I; r_offset: INTEGER)
 			-- Attach right side of `a_child' to the left side of current form
 			-- with `r_offset' spaces between each other.
 		local
@@ -86,7 +86,7 @@ feature -- Element change
 			w.set_right_offset (r_offset)
 		end;
 
-	attach_left (a_child: WIDGET_I; l_offset: INTEGER) is
+	attach_left (a_child: WIDGET_I; l_offset: INTEGER)
 			-- Attach left side of `a_child' to the left side of current form
 			-- with `l_offset' spaces between each other.
 		local
@@ -97,7 +97,7 @@ feature -- Element change
 			w.set_left_offset (l_offset)
 		end;
 
-	attach_bottom (a_child: WIDGET_I; b_offset: INTEGER) is
+	attach_bottom (a_child: WIDGET_I; b_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the bottom side of current form
 			-- with `b_offset' spaces between each other.
 		local
@@ -108,7 +108,7 @@ feature -- Element change
 			w.set_bottom_offset (b_offset)
 		end;
 
-	attach_top (a_child: WIDGET_I; t_offset: INTEGER) is
+	attach_top (a_child: WIDGET_I; t_offset: INTEGER)
 			-- Attach top side of `a_child' to the top side of current form
 			-- with `t_offset' spaces between each other.
 		local
@@ -119,7 +119,7 @@ feature -- Element change
 			w.set_top_offset (t_offset)
 		end;
 
-	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; r_offset: INTEGER) is
+	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; r_offset: INTEGER)
 			-- Attach right side of `a_child' to the left side of
 			-- `a_widget' with `r_offset' spaces between each other.
 		local
@@ -131,7 +131,7 @@ feature -- Element change
 			w.set_right_offset (r_offset);
 		end;
 
-	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; l_offset: INTEGER) is
+	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; l_offset: INTEGER)
 			-- Attach left side of `a_child' to the right side of
 			-- `a_widget' with `l_offset' spaces between each other.
 		local
@@ -143,7 +143,7 @@ feature -- Element change
 			w.set_left_offset (l_offset);
 		end;
 
-	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; b_offset: INTEGER) is
+	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; b_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the top side of
 			-- `a_widget' with `b_offset' spaces between each other.
 		local
@@ -155,7 +155,7 @@ feature -- Element change
 			w.set_bottom_offset (b_offset);
 		end;
 
-	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; t_offset: INTEGER) is
+	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; t_offset: INTEGER)
 			-- Attach top side of `a_child' to the bottom side of
 			-- `a_widget' with `t_offset' spaces between each other.
 		local
@@ -167,7 +167,7 @@ feature -- Element change
 			w.set_top_offset (t_offset);
 		end;
 
-	attach_left_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_left_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach left side of `a_child' to a position that is
 			-- relative to left side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -180,7 +180,7 @@ feature -- Element change
 			w.set_left_offset (0)
 		end;
 
-	attach_right_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_right_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach right side of `a_child' to a position that is
 			-- relative to right side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -193,7 +193,7 @@ feature -- Element change
 			w.set_right_offset (0)
 		end;
 
-	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach bottom side of `a_child' to a position that is
 			-- relative to bottom side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
@@ -206,7 +206,7 @@ feature -- Element change
 			w.set_bottom_offset (0);
 		end;
 
-	attach_top_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_top_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach top side of `a_child' to a position that is
 			-- relative to top side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
@@ -219,7 +219,7 @@ feature -- Element change
 			w.set_top_offset (0);
 		end;
 
-	detach_right (a_child: WIDGET_I) is
+	detach_right (a_child: WIDGET_I)
 			-- Detach right side of `a_child'.
 		local
 			w: MEL_RECT_OBJ
@@ -228,7 +228,7 @@ feature -- Element change
 			w.detach_right;
 		end;
 
-	detach_left (a_child: WIDGET_I) is
+	detach_left (a_child: WIDGET_I)
 			-- Detach left side of `a_child'.
 		local
 			w: MEL_RECT_OBJ
@@ -237,7 +237,7 @@ feature -- Element change
 			w.detach_left;
 		end;
 
-	detach_bottom (a_child: WIDGET_I) is
+	detach_bottom (a_child: WIDGET_I)
 			-- Detach bottom side of `a_child'.
 		local
 			w: MEL_RECT_OBJ
@@ -246,7 +246,7 @@ feature -- Element change
 			w.detach_bottom;
 		end;
 
-	detach_top (a_child: WIDGET_I) is
+	detach_top (a_child: WIDGET_I)
 			-- Detach top side of `a_child'.
 		local
 			w: MEL_RECT_OBJ
@@ -257,7 +257,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	real_child (a_child: WIDGET_I): MEL_RECT_OBJ is
+	real_child (a_child: WIDGET_I): MEL_RECT_OBJ
 			-- Get the real mel child of the `a_child'
 		do
 			Result ?= a_child;
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

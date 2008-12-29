@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog display preferences as tree/grid view."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- New view.
 		do
 			make_with_hidden (a_preferences, False)
 		end
 
-	make_with_hidden (a_preferences: PREFERENCES; a_show_hidden_flag: BOOLEAN) is
+	make_with_hidden (a_preferences: PREFERENCES; a_show_hidden_flag: BOOLEAN)
 		do
 			default_create
 			create pref_control.make_with_hidden (a_preferences, a_show_hidden_flag)
@@ -37,20 +37,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	set_show_hidden_preferences	(b: BOOLEAN) is
+	set_show_hidden_preferences	(b: BOOLEAN)
 		do
 			pref_control.set_show_hidden_preferences (b)
 		end
 
 feature -- Status Setting
 
-	set_show_full_preference_name (a_flag: BOOLEAN) is
+	set_show_full_preference_name (a_flag: BOOLEAN)
 			-- Set 'show_full_preference_name'
 		do
 			pref_control.set_show_full_preference_name (a_flag)
 		end
 
-	set_root_icon (a_icon: EV_PIXMAP) is
+	set_root_icon (a_icon: EV_PIXMAP)
 			-- Set the root node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -58,7 +58,7 @@ feature -- Status Setting
 			pref_control.set_root_icon (a_icon)
 		end
 
-	set_folder_icon (a_icon: EV_PIXMAP) is
+	set_folder_icon (a_icon: EV_PIXMAP)
 			-- Set the folder node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -66,7 +66,7 @@ feature -- Status Setting
 			pref_control.set_folder_icon (a_icon)
 		end
 
-	set_filter_icon_up (a_icon: EV_PIXMAP) is
+	set_filter_icon_up (a_icon: EV_PIXMAP)
 			-- Set the grid's header arrow up icon
 		require
 			icon_not_void: a_icon /= Void
@@ -74,7 +74,7 @@ feature -- Status Setting
 			pref_control.set_filter_icon_up (a_icon)
 		end
 
-	set_filter_icon_down (a_icon: EV_PIXMAP) is
+	set_filter_icon_down (a_icon: EV_PIXMAP)
 			-- Set the grid's header arrow down icon
 		require
 			icon_not_void: a_icon /= Void
@@ -88,12 +88,12 @@ feature {NONE} -- Implementation
 			-- Preferences grid control.
 
 
-	on_close is
+	on_close
 		do
 			destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

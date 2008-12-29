@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision widget, implementation interface.%N%
 		%See bridge pattern notes in ev_any.e"
@@ -42,33 +42,33 @@ inherit
 
 feature -- Basic operations
 
-	refresh_now is
+	refresh_now
 			-- Force an immediate redraw of `Current'.
 		deferred
 		end
 
 feature -- Access
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		deferred
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
             -- Position of the screen pointer relative to `Current'.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over current widget.
 			-- Void if none has been set using `set_pointer_position'.
 		deferred
 		end
 
-	internal_pointer_style: EV_POINTER_STYLE is
+	internal_pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over current widget,
 			-- as seen from interface.
 		local
@@ -101,31 +101,31 @@ feature -- Access
 
 feature -- Status Report
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		deferred
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 			-- False if `Current' is entirely obscured by another window.
 		deferred
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		deferred
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does widget have capture?
 		deferred
 		end
 
 feature -- Status setting
 
-	hide is
+	hide
 			-- Request that `Current' not be displayed when its parent is.
 		deferred
 		ensure
@@ -134,7 +134,7 @@ feature -- Status setting
 			--| Current widget as this action sequence might call `show'.
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 		deferred
 		ensure
@@ -143,7 +143,7 @@ feature -- Status setting
 			--| Current widget as this action sequence might call `hide'.
 		end
 
-	set_focus is
+	set_focus
 			-- Grab keyboard focus.
 		deferred
 		ensure
@@ -151,7 +151,7 @@ feature -- Status setting
 			--| FIXME IEK Does not hold for non focus widgets such as box.
 		end
 
-	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is
+	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent)
 			-- Assign `an_agent' to `actual_drop_target_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -165,7 +165,7 @@ feature -- Status setting
 			assigned: actual_drop_target_agent = an_agent
 		end
 
-	set_real_target (a_target: EV_DOCKABLE_TARGET) is
+	set_real_target (a_target: EV_DOCKABLE_TARGET)
 			-- Assign `a_target' to `real_target'.
 		require
 			target_not_void: a_target /= Void
@@ -175,7 +175,7 @@ feature -- Status setting
 			assigned: real_target = a_target
 		end
 
-	remove_real_target is
+	remove_real_target
 			-- Ensure `real_target' is `Void'.
 		do
 			real_target := Void
@@ -183,13 +183,13 @@ feature -- Status setting
 			real_target_void: real_target = Void
 		end
 
-	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler)
 			-- Assign `default_key_processing_handler' to `a_handler'.
 		do
 			default_key_processing_handler := a_handler
 		end
 
-	remove_default_key_processing_handler is
+	remove_default_key_processing_handler
 			-- Ensure `default_key_processing_handler' is Void.
 		do
 			default_key_processing_handler := Void
@@ -199,7 +199,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_minimum_width (a_minimum_width: INTEGER) is
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		require
 			a_minimum_width_positive: a_minimum_width >= 0
@@ -209,7 +209,7 @@ feature -- Element change
 				((a_minimum_width > 0 implies interface.minimum_width = a_minimum_width) or (a_minimum_width = 0 implies (interface.minimum_width <= 1)))
 		end
 
-	set_minimum_height (a_minimum_height: INTEGER) is
+	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		require
 			a_minimum_height_positive: a_minimum_height >= 0
@@ -219,7 +219,7 @@ feature -- Element change
 				((a_minimum_height > 0 implies interface.minimum_height = a_minimum_height) or (a_minimum_height = 0 implies (interface.minimum_height <= 1)))
 		end
 
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		require
@@ -235,12 +235,12 @@ feature -- Element change
 
 feature -- Measurement
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		deferred
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		deferred
 		end
@@ -258,7 +258,7 @@ feature {EV_ANY_I} -- Implementation
 		-- implemented by `Current'.
 		-- (See bridge pattern notes in ev_any.e)
 
-	on_parented is
+	on_parented
 			-- `Current' is about to be put into a container.
 		require
 			parent_void: parent = Void
@@ -267,7 +267,7 @@ feature {EV_ANY_I} -- Implementation
 			parent_void: parent = Void
 		end
 
-	on_orphaned is
+	on_orphaned
 			-- `Current' has just been removed from its container.
 		require
 			parent_void: parent = Void
@@ -276,7 +276,7 @@ feature {EV_ANY_I} -- Implementation
 			parent_void: parent = Void
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		deferred
@@ -284,7 +284,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_help_context_changed is
+	on_help_context_changed
 			-- Connect help accelerators if not done already
 		local
 			top_window: EV_TITLED_WINDOW_I
@@ -313,7 +313,7 @@ invariant
 	--|parent_contains_current:
 		--|is_usable and parent /= Void implies parent.has (interface)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

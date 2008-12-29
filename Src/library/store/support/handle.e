@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -26,7 +26,7 @@ feature -- Status report
 	login: LOGIN [DATABASE]
 		-- Session login
 
-	all_types: DB_ALL_TYPES is
+	all_types: DB_ALL_TYPES
 			-- All data types available in active database
 		once
 			create Result.make
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {GENERAL_APPL} -- Status setting
 
-	set_database (other: DB [DATABASE]) is
+	set_database (other: DB [DATABASE])
 			-- Set current database with `other'.
   		require
 			database_exists: other /= Void
@@ -46,7 +46,7 @@ feature {GENERAL_APPL} -- Status setting
 			database = other
 		end
 
-	set_process (other: POINTER_REF) is
+	set_process (other: POINTER_REF)
 			-- Set current process with `other'.
 		do
 			process := other
@@ -54,7 +54,7 @@ feature {GENERAL_APPL} -- Status setting
 			process = other
 		end
 
-	set_status (other: DB_STATUS) is
+	set_status (other: DB_STATUS)
 			-- Set current status with `other'.
 		require
 			db_status_exists: other /= Void
@@ -64,7 +64,7 @@ feature {GENERAL_APPL} -- Status setting
 			status = other
 		end
 
-	set_execution_type (other: DB_EXEC) is
+	set_execution_type (other: DB_EXEC)
 			-- Set current execution_type with `other'.
 		require
 			db_status_exists: other /= Void
@@ -74,7 +74,7 @@ feature {GENERAL_APPL} -- Status setting
 			execution_type = other
 		end
 
-	set_login (other: LOGIN [DATABASE]) is
+	set_login (other: LOGIN [DATABASE])
 		-- Get `other' login for handle
 		require
 			login_not_void: other /= Void
@@ -84,7 +84,7 @@ feature {GENERAL_APPL} -- Status setting
 			login = other
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

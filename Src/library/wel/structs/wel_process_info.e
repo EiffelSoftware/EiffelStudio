@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about a process."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,25 +16,25 @@ create
 
 feature -- Access
 
-	process_handle: POINTER is
+	process_handle: POINTER
 			-- Handle to process
 		do
 			Result := cwel_process_info_get_process_handle (item)
 		end
 
-	thread_handle: POINTER is
+	thread_handle: POINTER
 			-- Handle to thread
 		do
 			Result := cwel_process_info_get_thread_handle (item)
 		end
 	
-	process_id: INTEGER is
+	process_id: INTEGER
 			-- Process identifier
 		do
 			Result := cwel_process_info_get_process_id (item)
 		end
 	
-	thread_id: INTEGER is
+	thread_id: INTEGER
 			-- Thread identifier
 		do
 			Result := cwel_process_info_get_thread_id (item)
@@ -42,7 +42,7 @@ feature -- Access
 	
 feature -- Element Settings
 
-	set_process_handle (a_handle: like process_handle) is
+	set_process_handle (a_handle: like process_handle)
 			-- Set `process_handle' with `a_handle'.
 		require
 			valid_handle: a_handle /= default_pointer
@@ -52,7 +52,7 @@ feature -- Element Settings
 			handle_set: process_handle = a_handle
 		end
 
-	set_thread_handle (a_handle: like thread_handle) is
+	set_thread_handle (a_handle: like thread_handle)
 			-- Set `thread_handle' with `a_handle'.
 		require
 			valid_handle: a_handle /= default_pointer
@@ -62,7 +62,7 @@ feature -- Element Settings
 			handle_set: thread_handle = a_handle
 		end
 
-	set_process_id (a_id: like process_id) is
+	set_process_id (a_id: like process_id)
 			-- Set `process_id' with `a_id'.
 		require
 			valid_id: a_id > 0
@@ -72,7 +72,7 @@ feature -- Element Settings
 			id_set: process_id = a_id
 		end
 
-	set_thread_id (a_id: like thread_id) is
+	set_thread_id (a_id: like thread_id)
 			-- Set `thread_id' with `a_id'.
 		require
 			valid_id: a_id > 0
@@ -84,7 +84,7 @@ feature -- Element Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		do
 			Result := c_size_of_process_info
@@ -92,54 +92,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_process_info: INTEGER is
+	c_size_of_process_info: INTEGER
 		external
 			"C [macro %"wel_process_info.h%"]"
 		alias
 			"sizeof (PROCESS_INFORMATION)"
 		end
 
-	cwel_process_info_get_process_handle (ptr: POINTER): POINTER is
+	cwel_process_info_get_process_handle (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): HANDLE"
 		end
 
-	cwel_process_info_get_thread_handle (ptr: POINTER): POINTER is
+	cwel_process_info_get_thread_handle (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): HANDLE"
 		end
 
-	cwel_process_info_get_process_id (ptr: POINTER): INTEGER is
+	cwel_process_info_get_process_id (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
 
-	cwel_process_info_get_thread_id (ptr: POINTER): INTEGER is
+	cwel_process_info_get_thread_id (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
 
-	cwel_process_info_set_process_handle (ptr: POINTER; a_handle: POINTER) is
+	cwel_process_info_set_process_handle (ptr: POINTER; a_handle: POINTER)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, HANDLE)"
 		end
 
-	cwel_process_info_set_thread_handle (ptr: POINTER; a_handle: POINTER) is
+	cwel_process_info_set_thread_handle (ptr: POINTER; a_handle: POINTER)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, HANDLE)"
 		end
 
-	cwel_process_info_set_process_id (ptr: POINTER; a_id: INTEGER) is
+	cwel_process_info_set_process_id (ptr: POINTER; a_id: INTEGER)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, DWORD)"
 		end
 
-	cwel_process_info_set_thread_id (ptr: POINTER; a_id: INTEGER) is
+	cwel_process_info_set_thread_id (ptr: POINTER; a_id: INTEGER)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, DWORD)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

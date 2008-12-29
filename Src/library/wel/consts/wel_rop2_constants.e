@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Raster operation 2 (R2) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,41 +10,41 @@ class
 
 feature -- Access
 
-	R2_black: INTEGER is 1
+	R2_black: INTEGER = 1
 
-	R2_notmergepen: INTEGER is 2
+	R2_notmergepen: INTEGER = 2
 
-	R2_masknotpen: INTEGER is 3
+	R2_masknotpen: INTEGER = 3
 
-	R2_notcopypen: INTEGER is 4
+	R2_notcopypen: INTEGER = 4
 
-	R2_maskpennot: INTEGER is 5
+	R2_maskpennot: INTEGER = 5
 
-	R2_not: INTEGER is 6
+	R2_not: INTEGER = 6
 
-	R2_xorpen: INTEGER is 7
+	R2_xorpen: INTEGER = 7
 
-	R2_notmaskpen: INTEGER is 8
+	R2_notmaskpen: INTEGER = 8
 
-	R2_maskpen: INTEGER is 9
+	R2_maskpen: INTEGER = 9
 
-	R2_notxorpen: INTEGER is 10
+	R2_notxorpen: INTEGER = 10
 
-	R2_nop: INTEGER is 11
+	R2_nop: INTEGER = 11
 
-	R2_mergenotpen: INTEGER is 12
+	R2_mergenotpen: INTEGER = 12
 
-	R2_copypen: INTEGER is 13
+	R2_copypen: INTEGER = 13
 
-	R2_mergepennot: INTEGER is 14
+	R2_mergepennot: INTEGER = 14
 
-	R2_mergepen: INTEGER is 15
+	R2_mergepen: INTEGER = 15
 
-	R2_white: INTEGER is 16
+	R2_white: INTEGER = 16
 
 feature -- Status report
 
-	valid_rop2_constant (c: INTEGER): BOOLEAN is
+	valid_rop2_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid rop2 constant?
 		do
 			Result := c = R2_black or else
@@ -65,7 +65,7 @@ feature -- Status report
 				c = R2_xorpen
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

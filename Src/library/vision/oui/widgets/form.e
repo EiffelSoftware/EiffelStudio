@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Area which manages children relative to each other %
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a form with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			--default_fraction_base_is_100: fraction_base = 100
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged form with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			--default_fraction_base_is_100: fraction_base = 100
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a form with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	fraction_base: INTEGER is
+	fraction_base: INTEGER
 			-- Value used to compute child position with
 			-- position attachment
 		require
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid (other: WIDGET): BOOLEAN is
+	is_valid (other: WIDGET): BOOLEAN
 			-- Is `other' a valid child?
 		do
 			Result := true
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_fraction_base (a_value: INTEGER) is
+	set_fraction_base (a_value: INTEGER)
 			-- Set fraction_base to `a_value'.
 			-- Unsecure to set it after any position attachment,
 			-- contradictory constraints could occur.
@@ -96,7 +96,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	attach_right (a_child: WIDGET; right_offset: INTEGER) is
+	attach_right (a_child: WIDGET; right_offset: INTEGER)
 			-- Attach right side of `a_child' to the right side of current form
 			-- with `right_offset' spaces between each other.
 		require
@@ -109,7 +109,7 @@ feature -- Basic operations
 			implementation.attach_right (a_child.implementation, right_offset)
 		end;
 
-	attach_left (a_child: WIDGET; left_offset: INTEGER) is
+	attach_left (a_child: WIDGET; left_offset: INTEGER)
 			-- Attach left side of `a_child' to the left side of current form
 			-- with `left_offset' spaces between each other.
 		require
@@ -122,7 +122,7 @@ feature -- Basic operations
 			implementation.attach_left (a_child.implementation, left_offset)
 		end;
 
-	attach_bottom (a_child: WIDGET; bottom_offset: INTEGER) is
+	attach_bottom (a_child: WIDGET; bottom_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the bottom side of current form
 			-- with `bottom_offset' spaces between each other.
 		require
@@ -135,7 +135,7 @@ feature -- Basic operations
 			implementation.attach_bottom (a_child.implementation, bottom_offset)
 		end;
 
-	attach_top (a_child: WIDGET; top_offset: INTEGER) is
+	attach_top (a_child: WIDGET; top_offset: INTEGER)
 			-- Attach top side of `a_child' to the top side of current form
 			-- with `top_offset' spaces between each other.
 		require
@@ -148,7 +148,7 @@ feature -- Basic operations
 			implementation.attach_top (a_child.implementation, top_offset)
 		end;
 
-	attach_right_widget (a_widget: WIDGET; a_child: WIDGET; right_offset: INTEGER) is
+	attach_right_widget (a_widget: WIDGET; a_child: WIDGET; right_offset: INTEGER)
 			-- Attach right side of `a_child' to the left side of
 			-- `a_widget' with `right_offset' spaces between each other.
 		require
@@ -163,7 +163,7 @@ feature -- Basic operations
 			implementation.attach_right_widget (a_widget.implementation, a_child.implementation, right_offset)
 		end;
 
-	attach_left_widget (a_widget: WIDGET; a_child: WIDGET; left_offset: INTEGER) is
+	attach_left_widget (a_widget: WIDGET; a_child: WIDGET; left_offset: INTEGER)
 			-- Attach left side of `a_child' to the right side of
 			-- `a_widget' with `left_offset' spaces between each other.
 		require
@@ -178,7 +178,7 @@ feature -- Basic operations
 			implementation.attach_left_widget (a_widget.implementation, a_child.implementation, left_offset)
 		end;
 
-	attach_bottom_widget (a_widget: WIDGET; a_child: WIDGET; bottom_offset: INTEGER) is
+	attach_bottom_widget (a_widget: WIDGET; a_child: WIDGET; bottom_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the top side of
 			-- `a_widget' with `bottom_offset' spaces between each other.
 		require
@@ -193,7 +193,7 @@ feature -- Basic operations
 			implementation.attach_bottom_widget (a_widget.implementation, a_child.implementation, bottom_offset)
 		end;
 
-	attach_top_widget (a_widget: WIDGET; a_child: WIDGET; top_offset: INTEGER) is
+	attach_top_widget (a_widget: WIDGET; a_child: WIDGET; top_offset: INTEGER)
 			-- Attach top side of `a_child' to the bottom side of
 			-- `a_widget' with `top_offset' spaces between each other.
 		require
@@ -208,7 +208,7 @@ feature -- Basic operations
 			implementation.attach_top_widget (a_widget.implementation, a_child.implementation, top_offset)
 		end;
 
-	attach_left_position (a_child: WIDGET; a_position: INTEGER) is
+	attach_left_position (a_child: WIDGET; a_position: INTEGER)
 			-- Attach left side of `a_child' to a position that is
 			-- relative to left side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -224,7 +224,7 @@ feature -- Basic operations
 			implementation.attach_left_position (a_child.implementation, a_position)
 		end;
 
-	attach_right_position (a_child: WIDGET; a_position: INTEGER) is
+	attach_right_position (a_child: WIDGET; a_position: INTEGER)
 			-- Attach right side of `a_child' to a position that is
 			-- relative to right side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -240,7 +240,7 @@ feature -- Basic operations
 			implementation.attach_right_position (a_child.implementation, a_position)
 		end;
 
-	attach_bottom_position (a_child: WIDGET; a_position: INTEGER) is
+	attach_bottom_position (a_child: WIDGET; a_position: INTEGER)
 			-- Attach bottom side of `a_child' to a position that is
 			-- relative to bottom side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
@@ -256,7 +256,7 @@ feature -- Basic operations
 			implementation.attach_bottom_position (a_child.implementation, a_position)
 		end;
 
-	attach_top_position (a_child: WIDGET; a_position: INTEGER) is
+	attach_top_position (a_child: WIDGET; a_position: INTEGER)
 			-- Attach top side of `a_child' to a position that is
 			-- relative to top side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
@@ -272,7 +272,7 @@ feature -- Basic operations
 			implementation.attach_top_position (a_child.implementation, a_position)
 		end;
 
-	detach_right (a_child: WIDGET) is
+	detach_right (a_child: WIDGET)
 			-- Detach right side of `a_child'.
 		require
 			exists: not destroyed;
@@ -281,7 +281,7 @@ feature -- Basic operations
 			implementation.detach_right (a_child.implementation)
 		end;
 
-	detach_left (a_child: WIDGET) is
+	detach_left (a_child: WIDGET)
 			-- detach left side of `a_child'.
 		require
 			exists: not destroyed;
@@ -290,7 +290,7 @@ feature -- Basic operations
 			implementation.detach_left (a_child.implementation)
 		end;
 
-	detach_bottom (a_child: WIDGET) is
+	detach_bottom (a_child: WIDGET)
 			-- detach bottom side of `a_child'.
 		require
 			exists: not destroyed;
@@ -299,7 +299,7 @@ feature -- Basic operations
 			implementation.detach_bottom (a_child.implementation)
 		end;
 
-	detach_top (a_child: WIDGET) is
+	detach_top (a_child: WIDGET)
 			-- detach top side of `a_child'.
 		require
 			exists: not destroyed;
@@ -313,7 +313,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: FORM_I;;
 			-- Implementation of form
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

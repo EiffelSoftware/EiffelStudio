@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of menu."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	children_has_accelerators: BOOLEAN is
+	children_has_accelerators: BOOLEAN
 			-- Can children have accelerators
 			-- (Default is True)
 		do
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Status report
 
-	title: STRING is
+	title: STRING
 			-- Title of current menu
 		do
 			if title_label /= Void then
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set menu title to `a_title'.
 		require
 			not_title_void: a_title /= Void
@@ -52,7 +52,7 @@ feature -- Status setting
 			title_label.set_label_as_string (a_title)
 		end;
 
-	remove_title is
+	remove_title
 			-- Remove current menu title if any.
 		do
 			if title_label /= Void then
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	title_label: MEL_LABEL_GADGET;;
 			-- Title label
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

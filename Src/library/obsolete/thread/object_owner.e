@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class meant to record which thread has created a certain %
 		%object so that another thread can't call its dispose routine."
@@ -15,7 +15,7 @@ obsolete
 
 feature {NONE}
 
-	thread_owner: POINTER is
+	thread_owner: POINTER
 		obsolete
 			"Do not use it anymore, it will be removed"
 		require
@@ -27,7 +27,7 @@ feature {NONE}
 
 feature -- Access
 
-	record_owner is
+	record_owner
 			-- Record calling thread's id.
 		obsolete
 			"Do not use it anymore, it will be removed"
@@ -38,7 +38,7 @@ feature -- Access
 			Do_not_use_obsolete: False
 		end
 
-	thread_is_owner: BOOLEAN is
+	thread_is_owner: BOOLEAN
 			-- Is calling thread creator of the object?
 		obsolete
 			"Do not use it anymore, it will be removed"
@@ -49,7 +49,7 @@ feature -- Access
 			Do_not_use_obsolete: False
 		end
 
-	has_owner: BOOLEAN is
+	has_owner: BOOLEAN
 			-- Is object already associated with a thread?
 		obsolete
 			"Do not use it anymore, it will be removed"
@@ -61,7 +61,7 @@ feature -- Access
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

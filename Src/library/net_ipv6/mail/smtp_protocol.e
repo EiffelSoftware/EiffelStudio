@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of SMTP protocol."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (host:STRING; user: STRING) is
+	make (host:STRING; user: STRING)
 			-- Create an smtp protocol with 'host, 'user' and default port.
 		require
 			host_not_void: host /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Setting
 
-	enable_pipelining is
+	enable_pipelining
 			-- Set pipelining.
 		do
 			pipelining:= True
@@ -52,7 +52,7 @@ feature -- Setting
 			pipelining_set: pipelining
 		end
 
-	disable_pipelining is
+	disable_pipelining
 			-- Unset pipelining.
 		do
 			pipelining:= False
@@ -62,12 +62,12 @@ feature -- Setting
 
 feature -- Access EMAIL_PROTOCOL
 
-	default_port: INTEGER is 25
+	default_port: INTEGER = 25
 		-- Smtp default port
 
 feature -- Implementation (EMAIL_RESOURCE).
 
-	transfer (resource: MEMORY_RESOURCE) is
+	transfer (resource: MEMORY_RESOURCE)
 			-- Send the email and add a %R%N. at the end of the message.
 		do
 			if not error then
@@ -80,7 +80,7 @@ feature -- Implementation (EMAIL_RESOURCE).
 
 feature -- Basic operations.
 
-	initiate_protocol is
+	initiate_protocol
 			-- Initiate the smtp connection
 			-- It can be a helo or a ehlo connection.
 		do
@@ -95,7 +95,7 @@ feature -- Basic operations.
 			end
 		end
 
-	close_protocol is
+	close_protocol
 			-- Terminate the connection.
 		require else
 			connection_exists: is_connected
@@ -112,10 +112,10 @@ feature -- Basic operations.
 
 feature -- Implementation (EMAIL_RESOURCE)
 
-	can_receive: BOOLEAN is False
+	can_receive: BOOLEAN = False
 		-- Can the Smtp protocolreceive?
 
-	initialize is
+	initialize
 			-- Initialize the protocol to send a new email.
 		do
 
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Basic operations
 
-	decode is
+	decode
 			-- Retrieve response from server and set `smtp_code_number'.
 		local
 			response: STRING
@@ -151,7 +151,7 @@ feature {NONE} -- Basic operations
 			smtp_reply := response
 		end
 
-	send_command (s: STRING; expected_code: INTEGER) is
+	send_command (s: STRING; expected_code: INTEGER)
 			-- Send a string 's' to the server and result the code response.
 		require
 			s_not_void: s /= Void
@@ -166,7 +166,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	send_mail is
+	send_mail
 			-- Send mail using smtp protocol.
 		do
 			send_mails
@@ -177,7 +177,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	send_mails	is
+	send_mails
 		do
 			header_from:= extracted_email (memory_resource.header (H_from).unique_entry)
 			sub_header:= ""
@@ -186,7 +186,7 @@ feature {NONE} -- Basic operations
 			send_all
 		end
 
-	set_recipients is
+	set_recipients
 			-- Fill 'recipients' to know who will receive the resource,
 			-- and fill 'header_from'
 		require
@@ -224,7 +224,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	build_sub_header is
+	build_sub_header
 			-- Build the header of the message in 'sub_header'.
 		do
 			from
@@ -238,7 +238,7 @@ feature {NONE} -- Basic operations
 			sub_header.append ("%R%N")
 		end
 
-	add_sub_header (sub_header_key: STRING) is
+	add_sub_header (sub_header_key: STRING)
 			-- Add new header line 'sub_header_key',
 			-- A distinction is done in case the mail is bcc or not.
 		require
@@ -268,7 +268,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	send_all is
+	send_all
 		-- Send the mail considering the correct information.
 		do
 			mail_message := memory_resource.mail_message.twin
@@ -325,17 +325,17 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	enable_bcc_mode is
+	enable_bcc_mode
 		do
 			bcc_mode:= True
 		end
 
-	disable_bcc_mode is
+	disable_bcc_mode
 		do
 			bcc_mode:= False
 		end
 
-	extracted_email (a_text: STRING): STRING is
+	extracted_email (a_text: STRING): STRING
 			-- Extract email address from `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

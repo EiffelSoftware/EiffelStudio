@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Repeatedly executes a sequence of `actions' at a regular `interval'."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_interval (an_interval: INTEGER) is
+	make_with_interval (an_interval: INTEGER)
 			-- Create with `an_interval' in milliseconds.
 		require
 			an_interval_not_negative: an_interval >= 0
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			set_interval (an_interval)
 		end
 
-	initialize is
+	initialize
 			-- Create action sequence.
 		do
 			create actions
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	interval: INTEGER is
+	interval: INTEGER
 			-- Time between calls to `actions' in milliseconds.
 			-- If 0, then `actions' are disabled.
 		require
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of times `actions' have been called since last
 			-- call to `reset_count'.
 		require
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_interval (an_interval: INTEGER) is
+	set_interval (an_interval: INTEGER)
 			-- Assign `an_interval' in milliseconds to `interval'.
 			-- If `an_interval' is 0, `actions' are disabled.
 		require
@@ -85,7 +85,7 @@ feature -- Status setting
 			count_not_changed: count = old count
 		end
 
-	reset_count is
+	reset_count
 			-- Set `count' to 0.
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and (
@@ -113,7 +113,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of button.
 		do
 			create {EV_TIMEOUT_IMP} implementation.make (Current)
@@ -124,7 +124,7 @@ invariant
 	count_not_negative: count >= 0
 	actions_not_void: actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

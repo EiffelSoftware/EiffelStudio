@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Text-editing widget."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif text widget
 		local
 			widget_name: ANY
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_auto_show_cursor_position: BOOLEAN is
+	is_auto_show_cursor_position: BOOLEAN
 			-- Is the cursor always visible?
 		require
 			exists: not is_destroyed
@@ -53,7 +53,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNautoShowCursorPosition)
 		end;
 
-	is_single_line_edit_mode: BOOLEAN is
+	is_single_line_edit_mode: BOOLEAN
 			-- Is single line editing enabled?
 		require
 			exists: not is_destroyed
@@ -61,7 +61,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNeditMode) = XmSINGLE_LINE_EDIT
 		end;
 
-	is_multi_line_edit_mode: BOOLEAN is
+	is_multi_line_edit_mode: BOOLEAN
 			-- Is multi line editing enabled?
 		require
 			exists: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNeditMode) = XmMULTI_LINE_EDIT
 		end;
 
-	source: MEL_TEXT_SOURCE is
+	source: MEL_TEXT_SOURCE
 			-- Text source
 		require
 			exists: not is_destroyed
@@ -79,7 +79,7 @@ feature -- Status report
 			valid_text_source: Result /= Void and then not Result.is_destroyed
 		end;
 
-	top_character: INTEGER is
+	top_character: INTEGER
 			-- Position of first displayed character
 		require
 			exists: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status report
 			top_character_large_enough: Result >=0
 		end;
 
-	is_height_resizable: BOOLEAN is
+	is_height_resizable: BOOLEAN
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -98,7 +98,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNresizeHeight)
 		end;
 
-	rows: INTEGER is
+	rows: INTEGER
 			-- Number of characters that should fit vertically
 		require
 			exists: not is_destroyed
@@ -108,7 +108,7 @@ feature -- Status report
 			rows_large_enough: Result >= 0
 		end;
 
-	is_word_wrapped: BOOLEAN is
+	is_word_wrapped: BOOLEAN
 			-- Is word wrap enabled?
 		require
 			exists: not is_destroyed
@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_auto_cursor_position is
+	show_auto_cursor_position
 			-- Set `is_auto_show_cursor_position' to True.
 		require
 			exists: not is_destroyed
@@ -128,7 +128,7 @@ feature -- Status setting
 			auto_cursor_position_shown: is_auto_show_cursor_position
 		end;
 
-	hide_auto_show_cursor_position is
+	hide_auto_show_cursor_position
 			-- Set `auto_show_cursor_position' to False.
 		require
 			exists: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status setting
 			auto_cursor_position_hidden: not is_auto_show_cursor_position
 		end;
 
-	set_single_line_edit_mode is
+	set_single_line_edit_mode
 			-- Set `is_single_line_edit_mode' to True.
 		require
 			exists: not is_destroyed
@@ -148,7 +148,7 @@ feature -- Status setting
 			is_single_line_edit_mode: is_single_line_edit_mode
 		end;
 
-	set_multi_line_edit_mode is
+	set_multi_line_edit_mode
 			-- Set `is_multi_line_edit_mode' to True.
 		require
 			exists: not is_destroyed
@@ -158,7 +158,7 @@ feature -- Status setting
 			is_multi_line_edit: is_multi_line_edit_mode
 		end;
 
-	set_top_character (a_position: INTEGER) is
+	set_top_character (a_position: INTEGER)
 			-- Set `top_character' to `a_position'.
 		require
 			exists: not is_destroyed;
@@ -170,7 +170,7 @@ feature -- Status setting
 			top_character_set: top_character = a_position
 		end;
 
-	set_source (a_text_source: MEL_TEXT_SOURCE) is
+	set_source (a_text_source: MEL_TEXT_SOURCE)
 			-- Set `source' to `a_text_source'.
 		require
 			exists: not is_destroyed;
@@ -180,7 +180,7 @@ feature -- Status setting
 			text_source_set: source.is_equal (a_text_source)
 		end;
 
-	set_rows (a_height: INTEGER) is
+	set_rows (a_height: INTEGER)
 			-- Set `rows' to `a_height'.
 	   require
 			exists: not is_destroyed;
@@ -191,7 +191,7 @@ feature -- Status setting
 			rows_set: rows = a_height
 		end;
 
-	enable_word_wrap is
+	enable_word_wrap
 			-- Set `word_wrap' to True.
 		require
 			exists: not is_destroyed
@@ -201,7 +201,7 @@ feature -- Status setting
 			word_wrap_enabled: is_word_wrapped
 		end;
 
-	disable_work_wrap is
+	disable_work_wrap
 			-- Set `word_wrap' to False.
 		require
 			exists: not is_destroyed
@@ -211,7 +211,7 @@ feature -- Status setting
 			word_wrap_disabled: is_word_wrapped
 		end;
 
-	enable_resize_height is
+	enable_resize_height
 			-- Set `is_height_resizable' to True.
 		require
 			exists: not is_destroyed
@@ -221,7 +221,7 @@ feature -- Status setting
 			resize_height_enabled: is_height_resizable
 		end;
 
-	disable_resize_height is
+	disable_resize_height
 			-- Set `is_height_resizable' to False.
 		require
 			exists: not is_destroyed
@@ -231,7 +231,7 @@ feature -- Status setting
 			resize_height_disabled: not is_height_resizable
 		end;
 
-	enable_redisplay is
+	enable_redisplay
 			-- Allow visual update.
 		require
 			exists: not is_destroyed
@@ -239,7 +239,7 @@ feature -- Status setting
 			xm_text_enable_redisplay (screen_object)
 		end;
 
-	disable_redisplay is
+	disable_redisplay
 			-- Prevent visual update.
 		require
 			exists: not is_destroyed
@@ -249,7 +249,7 @@ feature -- Status setting
 
 feature -- Extras
 
-	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Search for the string `text_to_find' in the TEXT
 			--| The commented line are not working with Motif 1.2, until all the
 			--|	platforms support Motif 1.2 we have to use another method.
@@ -282,61 +282,61 @@ feature -- Extras
 
 feature {NONE} -- Implementation
 
-	xm_create_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_text (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmCreateText"
 		end;
 
-	xm_text_enable_redisplay (w: POINTER) is
+	xm_text_enable_redisplay (w: POINTER)
 		external
 			"C (Widget) | <Xm/Text.h>"
 		alias
 			"XmTextEnableRedisplay"
 		end;
 
-	xm_text_disable_redisplay (w: POINTER) is
+	xm_text_disable_redisplay (w: POINTER)
 		external
 			"C (Widget) | <Xm/Text.h>"
 		alias
 			"XmTextDisableRedisplay"
 		end;
 
-	xm_text_get_top_character (w: POINTER): INTEGER is
+	xm_text_get_top_character (w: POINTER): INTEGER
 		external
 			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetTopCharacter"
 		end;
 
-	xm_text_set_top_character (w: POINTER; char_pos: INTEGER) is
+	xm_text_set_top_character (w: POINTER; char_pos: INTEGER)
 		external
 			"C (Widget, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetTopCharacter"
 		end;
 
-	xm_text_get_source (w: POINTER): POINTER is
+	xm_text_get_source (w: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <Xm/Text.h>"
 		alias
 			"XmTextGetSource"
 		end;
 
-	xm_text_set_source (w: POINTER; s: POINTER; top_c, cur_p: INTEGER) is
+	xm_text_set_source (w: POINTER; s: POINTER; top_c, cur_p: INTEGER)
 		external
 			"C (Widget, XmTextSource, XmTextPosition, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetSource"
 		end;
 
-	xm_text_find_string (w: POINTER; pos: INTEGER; pattern: POINTER): INTEGER is
+	xm_text_find_string (w: POINTER; pos: INTEGER; pattern: POINTER): INTEGER
 		external
 			"C (Widget, XmTextPosition, char *): EIF_INTEGER | %"xm_support.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

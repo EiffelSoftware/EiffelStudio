@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Carbon implementation for SD_SYSTEM_SETTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,22 +13,22 @@ inherit
 
 feature -- Command
 
-	before_enable_capture is
+	before_enable_capture
 			-- Redefine
 		do
 		end
 
-	after_disable_capture is
+	after_disable_capture
 			-- Redefine
 		do
 		end
 
-	is_remote_desktop: BOOLEAN is
+	is_remote_desktop: BOOLEAN
 			-- Redefine
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

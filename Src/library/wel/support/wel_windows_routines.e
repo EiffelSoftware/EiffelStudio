@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic Windows routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature -- Basic operations
 
-	output_debug_string (s: STRING_GENERAL) is
+	output_debug_string (s: STRING_GENERAL)
 			-- Send a string `s' to the system debugger.
 		require
 			s_not_void: s /= Void
@@ -45,55 +45,55 @@ feature -- Basic operations
 			cwin_output_debug_string (a_wel_string.item)
 		end
 
-	message_beep_asterisk is
+	message_beep_asterisk
 			-- Play the system asterisk waveform sound.
 		do
 			cwin_message_beep (Mb_iconasterisk)
 		end
 
-	message_beep_exclamation is
+	message_beep_exclamation
 			-- Play the system exclamation waveform sound.
 		do
 			cwin_message_beep (Mb_iconexclamation)
 		end
 
-	message_beep_hand is
+	message_beep_hand
 			-- Play the system hand waveform sound.
 		do
 			cwin_message_beep (Mb_iconhand)
 		end
 
-	message_beep_question is
+	message_beep_question
 			-- Play the system question waveform sound.
 		do
 			cwin_message_beep (Mb_iconquestion)
 		end
 
-	message_beep_ok is
+	message_beep_ok
 			-- Play the system ok waveform sound.
 		do
 			cwin_message_beep (Mb_ok)
 		end
 
-	show_cursor is
+	show_cursor
 			-- Show the cursor.
 		do
 			cwin_show_cursor (True)
 		end
 
-	hide_cursor is
+	hide_cursor
 			-- Hide the cursor.
 		do
 			cwin_show_cursor (False)
 		end
 
-	set_cursor_position_absolute (x, y: INTEGER) is
+	set_cursor_position_absolute (x, y: INTEGER)
 			-- Set the cursor position to `x', `y'.
 		do
 			cwin_set_cursor_position (x, y)
 		end
 
-	resource_string_id (an_id: INTEGER): STRING_32 is
+	resource_string_id (an_id: INTEGER): STRING_32
 			-- String identified by `an_id' in the resource file.
 		local
 			a_wel_string: WEL_STRING
@@ -110,7 +110,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	is_window (hwnd: POINTER): BOOLEAN is
+	is_window (hwnd: POINTER): BOOLEAN
 			-- Does `hwnd' point to a valid Window?
 		external
 			"C [macro <windows.h>] (HWND): EIF_BOOLEAN"
@@ -118,7 +118,7 @@ feature -- Status report
 			"IsWindow"
 		end
 
-	window_of_item (hwnd: POINTER): WEL_WINDOW is
+	window_of_item (hwnd: POINTER): WEL_WINDOW
 			-- Retrieve Eiffel object associated with `hwnd' pointer.
 		require
 			hwnd_not_null: hwnd /= default_pointer
@@ -167,24 +167,24 @@ feature -- Status report
 			retry
 		end
 
-	key_state (virtual_key: INTEGER): BOOLEAN is
+	key_state (virtual_key: INTEGER): BOOLEAN
 		obsolete "Use key_down or key_locked instead"
 		do
 		end
 
-	key_down (virtual_key: INTEGER): BOOLEAN is
+	key_down (virtual_key: INTEGER): BOOLEAN
 			--Is 'virtual' key pressed
 		do
 			Result := cwel_key_down (virtual_key)
 		end
 
-	key_locked (virtual_key: INTEGER): BOOLEAN is
+	key_locked (virtual_key: INTEGER): BOOLEAN
 			--Is 'virtual' key locked
 		do
 			Result := cwel_key_locked (virtual_key)
 		end
 
-	key_to_string (key_data: INTEGER): STRING_32 is
+	key_to_string (key_data: INTEGER): STRING_32
 			-- Give the string associated with the key given by
 			-- `virtual_key'.
 		local
@@ -199,7 +199,7 @@ feature -- Status report
 			Result := buffer.string
 		end
 
-	tick_count: INTEGER is
+	tick_count: INTEGER
 			-- Number of milliseconds that have
 			-- elapsed since Windows was started.
 		do
@@ -208,7 +208,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	system_directory: STRING_32 is
+	system_directory: STRING_32
 			-- Path of the Windows system directory
 		local
 			a_wel_string: WEL_STRING
@@ -222,7 +222,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	windows_directory: STRING_32 is
+	windows_directory: STRING_32
 			-- Path of the Windows directory
 		local
 			a_wel_string: WEL_STRING
@@ -236,7 +236,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	foreground_window: WEL_WINDOW is
+	foreground_window: WEL_WINDOW
 			-- Foreground window (window with focus)
 		local
 			p, null: POINTER
@@ -247,7 +247,7 @@ feature -- Status report
 			end
 		end
 
-	is_terminal_service: BOOLEAN is
+	is_terminal_service: BOOLEAN
 			-- If window in terminal service (Remote Desktop)?
 		require
 			after_2000: (create {WEL_WINDOWS_VERSION}).is_windows_2000_compatible
@@ -257,7 +257,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	wr_main_args: WEL_MAIN_ARGUMENTS is
+	wr_main_args: WEL_MAIN_ARGUMENTS
 		once
 			create Result
 		ensure
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_message_beep (sound_type: INTEGER) is
+	cwin_message_beep (sound_type: INTEGER)
 			-- SDK MessageBeep
 		external
 			"C [macro %"wel.h%"] (UINT)"
@@ -274,7 +274,7 @@ feature {NONE} -- Externals
 			"MessageBeep"
 		end
 
-	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER is
+	cwin_get_dlg_item (hwnd: POINTER; an_id: INTEGER): POINTER
 			-- SDK GetDlgItem
 		external
 			"C [macro <wel.h>] (HWND, int): EIF_POINTER"
@@ -282,7 +282,7 @@ feature {NONE} -- Externals
 			"GetDlgItem"
 		end
 
-	cwin_get_tick_count: INTEGER is
+	cwin_get_tick_count: INTEGER
 			-- SDK GetTickCount
 		external
 			"C [macro %"wel.h%"]"
@@ -290,7 +290,7 @@ feature {NONE} -- Externals
 			"GetTickCount ()"
 		end
 
-	cwin_show_cursor (show_flag: BOOLEAN) is
+	cwin_show_cursor (show_flag: BOOLEAN)
 			-- SDK ShowCursor
 		external
 			"C [macro %"wel.h%"] (BOOL)"
@@ -298,7 +298,7 @@ feature {NONE} -- Externals
 			"ShowCursor"
 		end
 
-	cwin_set_cursor_position (x, y: INTEGER) is
+	cwin_set_cursor_position (x, y: INTEGER)
 			-- SDK SetCursorPos
 		external
 			"C [macro %"wel.h%"] (int, int)"
@@ -307,7 +307,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_load_string (hinstance: POINTER; id: INTEGER;
-			buffer: POINTER; buffer_size: INTEGER): INTEGER is
+			buffer: POINTER; buffer_size: INTEGER): INTEGER
 			-- SDK LoadString
 		external
 			"C [macro %"wel.h%"] (HINSTANCE, UINT, LPTSTR, %
@@ -316,7 +316,7 @@ feature {NONE} -- Externals
 			"LoadString"
 		end
 
-	cwin_get_key_name_text (virtual_key: INTEGER; lptstr: POINTER; nsize: INTEGER): BOOLEAN is
+	cwin_get_key_name_text (virtual_key: INTEGER; lptstr: POINTER; nsize: INTEGER): BOOLEAN
 			-- Return the string value of the key virtual key.
 		external
 			"C [macro %"wel.h%"] (LONG, LPTSTR, int): BOOLEAN"
@@ -324,23 +324,23 @@ feature {NONE} -- Externals
 			"GetKeyNameText"
 		end
 
-	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN is
+	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN
 			-- SDK GetKeyState
 		obsolete "Use cwel_key_down or cwel_key_locked"
 		do
 		end
 
-	cwel_key_down (virtual_key: INTEGER): BOOLEAN is
+	cwel_key_down (virtual_key: INTEGER): BOOLEAN
 		external
 			"C [macro <wel_windows_routines.h>] (int): EIF_BOOLEAN"
 		end
 
-	cwel_key_locked (virtual_key: INTEGER): BOOLEAN is
+	cwel_key_locked (virtual_key: INTEGER): BOOLEAN
 		external
 			"C [macro <wel_windows_routines.h>] (int): EIF_BOOLEAN"
 		end
 
-	cwin_output_debug_string (s: POINTER) is
+	cwin_output_debug_string (s: POINTER)
 			-- SDK OutputDebugString
 		external
 			"C [macro %"wel.h%"] (LPCTSTR)"
@@ -348,7 +348,7 @@ feature {NONE} -- Externals
 			"OutputDebugString"
 		end
 
-	cwin_get_system_directory (buffer: POINTER; size: INTEGER): INTEGER is
+	cwin_get_system_directory (buffer: POINTER; size: INTEGER): INTEGER
 			-- SDK GetSystemDirectory
 		external
 			"C [macro %"wel.h%"] (LPTSTR, UINT): EIF_INTEGER"
@@ -356,7 +356,7 @@ feature {NONE} -- Externals
 			"GetSystemDirectory"
 		end
 
-	cwin_get_windows_directory (buffer: POINTER; size: INTEGER): INTEGER is
+	cwin_get_windows_directory (buffer: POINTER; size: INTEGER): INTEGER
 			-- SDK GetWindowsDirectory
 		external
 			"C [macro %"wel.h%"] (LPTSTR, UINT): EIF_INTEGER"
@@ -364,7 +364,7 @@ feature {NONE} -- Externals
 			"GetWindowsDirectory"
 		end
 
-	cwin_get_foreground_window: POINTER is
+	cwin_get_foreground_window: POINTER
 			-- SDK GetForegroundWindow
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
@@ -372,7 +372,7 @@ feature {NONE} -- Externals
 			"GetForegroundWindow()"
 		end
 
-	cwin_get_window (hwnd: POINTER; relation_flag: INTEGER): POINTER is
+	cwin_get_window (hwnd: POINTER; relation_flag: INTEGER): POINTER
 			-- SDK GetWindow
 		external
 			"C [macro <wel.h>] (HWND, UINT): EIF_POINTER"
@@ -380,7 +380,7 @@ feature {NONE} -- Externals
 			"GetWindow"
 		end
 
-	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): POINTER is
+	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): POINTER
 			-- SDK GetWindowLongPtr
 		external
 			"C [macro %"wel.h%"] (HWND, int): LONG_PTR"
@@ -388,7 +388,7 @@ feature {NONE} -- Externals
 			"GetWindowLongPtr"
 		end
 
-	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER) is
+	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER)
 			-- SDK SetWindowLongPtr
 		external
 			"C [macro %"wel.h%"] (HWND, int, LONG_PTR)"
@@ -396,7 +396,7 @@ feature {NONE} -- Externals
 			"SetWindowLongPtr"
 		end
 
-	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER) is
+	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER)
 			-- SDK RedrawWindow
 		external
 			"C [macro %"wel.h%"] (HWND, CONST RECT *, HRGN, UINT)"
@@ -404,7 +404,7 @@ feature {NONE} -- Externals
 			"RedrawWindow"
 		end
 
-	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [POINTER]): POINTER is
+	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [POINTER]): POINTER
 			--
 		external
 			"C [macro %"windows.h%"] (HWND, LPDWORD): LONG_PTR"
@@ -412,7 +412,7 @@ feature {NONE} -- Externals
 			"GetWindowThreadProcessId"
 		end
 
-	cwin_get_current_process_id: POINTER is
+	cwin_get_current_process_id: POINTER
 			--
 		external
 			"C [macro %"windows.h%"] (): DWORD"
@@ -420,7 +420,7 @@ feature {NONE} -- Externals
 			"GetCurrentProcessId()"
 		end
 
-	cwin_console_window_data: POINTER is
+	cwin_console_window_data: POINTER
 			--
 		local
 			l_hwnd: POINTER
@@ -431,7 +431,7 @@ feature {NONE} -- Externals
 			end
 		end
 
-	cwin_get_console_hwnd (a_result: TYPED_POINTER [POINTER]) is
+	cwin_get_console_hwnd (a_result: TYPED_POINTER [POINTER])
 			-- Get HWND from console window if any.
 		external
 			"C inline use <windows.h>"
@@ -450,7 +450,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cwin_is_terminal_service (a_result: TYPED_POINTER [BOOLEAN]) is
+	cwin_is_terminal_service (a_result: TYPED_POINTER [BOOLEAN])
 			-- If window in terminal service (Remote Desktop)?
 		external
 			"C inline use <Windows.h>"
@@ -464,7 +464,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

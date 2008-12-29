@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An overlapped window with a frame."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_child (a_parent: WEL_WINDOW; a_name: STRING_GENERAL) is
+	make_child (a_parent: WEL_WINDOW; a_name: STRING_GENERAL)
 			-- Make the window as a child of `a_parent' and
 			-- `a_name' as a title.
 		require
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			name_set: text.is_equal (a_name)
 		end
 
-	make_top (a_name: STRING_GENERAL) is
+	make_top (a_name: STRING_GENERAL)
 			-- Make a top window (without parent) with `a_name'
 			-- as a title.
 		do
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Standard window class values
 
-	class_icon: WEL_ICON is
+	class_icon: WEL_ICON
 			-- Standard application icon used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined icon.
@@ -85,7 +85,7 @@ feature -- Standard window class values
 			result_exists: Result.exists
 		end
 
-	class_cursor: WEL_CURSOR is
+	class_cursor: WEL_CURSOR
 			-- Standard arrow cursor used to create the window
 			-- class.
 			-- Can be redefined to return a user-defined cursor.
@@ -96,7 +96,7 @@ feature -- Standard window class values
 			result_exists: Result.exists
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard window background color used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined brush.
@@ -108,14 +108,14 @@ feature -- Standard window class values
 			result_not_void: Result /= Void
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
 			Result := Cs_hredraw + Cs_vredraw + Cs_dblclks
 		end
 
-	class_menu_name: STRING_32 is
+	class_menu_name: STRING_32
 			-- Window's menu used to create the window class.
 			-- Can be redefined to return a user-defined menu.
 			-- (None by default).
@@ -125,14 +125,14 @@ feature -- Standard window class values
 			result_not_void: Result /= Void
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
 		once
 			Result := "WELFrameWindowClass"
 		end
 
-	class_window_procedure: POINTER is
+	class_window_procedure: POINTER
 			-- Standard window procedure
 		once
 			Result := cwel_window_procedure_address
@@ -140,7 +140,7 @@ feature -- Standard window class values
 			result_not_null: Result /= default_pointer
 		end
 	
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -150,7 +150,7 @@ feature -- Standard window class values
 
 feature -- Default creation values
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Overlapped window style.
 			-- By default, a frame window is not visible
 			-- at the creation time. `show' needs to be called.
@@ -161,14 +161,14 @@ feature -- Default creation values
 			Result := Ws_overlappedwindow
 		end
 
-	default_x, default_y, default_width, default_height: INTEGER is
+	default_x, default_y, default_width, default_height: INTEGER
 			-- Default position and dimension when the window is
 			-- created.
 		once
 			Result := Cw_usedefault
 		end
 
-	default_id: INTEGER is
+	default_id: INTEGER
 			-- Default window id.
 			-- (Zero by default).
 		once
@@ -177,7 +177,7 @@ feature -- Default creation values
 
 feature {NONE} -- Implementation
 
-	register_class is
+	register_class
 			-- Register the window class if
 			-- the class is not already registered.
 			-- The routines `class_style', `class_window_procedure',
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 	wnd_class: WEL_WND_CLASS;
 			-- Associated windows class of current window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

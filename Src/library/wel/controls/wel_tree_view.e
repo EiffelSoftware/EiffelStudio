@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control that displays a hierarchical list of items.
 		
@@ -81,7 +81,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
-				an_id: INTEGER) is
+				an_id: INTEGER)
 			-- Make a tree view control.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -101,7 +101,7 @@ feature -- Access
 	last_item: POINTER
 			-- Handle of the last item inserted
 
-	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
+	get_parent_item (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM
 			-- Return the parent item of the given item.
 		local
 			handle: POINTER
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in the tree view window
 		require
 			exists: exists
@@ -130,7 +130,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	visible_count: INTEGER is
+	visible_count: INTEGER
 			-- Number of items that will fit into the tree
 			-- view window
 		require
@@ -142,7 +142,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	indent: INTEGER is
+	indent: INTEGER
 			-- Amout, in pixels, that child items are indented
 			-- relative to their parent items.
 		require
@@ -152,7 +152,7 @@ feature -- Status report
 				Tvm_getindent, to_wparam (0), to_lparam (0))
 		end
 
-	is_selected (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_selected (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' selected?
 		require
 			exists: exists
@@ -168,7 +168,7 @@ feature -- Status report
 			Result := flag_set (wel_tree_view_item.state, Tvis_selected)
 		end
 
-	is_expanded (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_expanded (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' expanded?
 		require
 			exists: exists
@@ -184,7 +184,7 @@ feature -- Status report
 			Result := flag_set (wel_tree_view_item.state, Tvis_expanded)
 		end
 
-	is_cut (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_cut (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' selected as part of a cut and paste
 			-- operation?
 		require
@@ -201,7 +201,7 @@ feature -- Status report
 			Result := flag_set (wel_tree_view_item.state, Tvis_cut)
 		end
 
-	is_bold (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_bold (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' bold?
 		require
 			exists: exists
@@ -217,7 +217,7 @@ feature -- Status report
 			Result := flag_set (wel_tree_view_item.state, Tvis_bold)
 		end
 
-	is_drophilited (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_drophilited (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' selected as a drag ans drop target?
 		require
 			exists: exists
@@ -233,7 +233,7 @@ feature -- Status report
 			Result := flag_set (wel_tree_view_item.state, Tvis_drophilited)
 		end
 
-	is_parent (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	is_parent (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Is `an_item' a parent of other items?
 		require
 			exists: exists
@@ -248,7 +248,7 @@ feature -- Status report
 			Result := wel_tree_view_item.children = 1
 		end
 
-	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN
 			-- Does `an_item' exist in the tree?
 		require
 			exists: exists
@@ -265,7 +265,7 @@ feature -- Status report
 			mask_unchanged: an_item.mask = old an_item.mask
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is an item selected?
 		require
 			exists: exists
@@ -274,7 +274,7 @@ feature -- Status report
 				to_wparam (Tvgn_caret), to_lparam (0)) /= default_pointer
 		end
 
-	selected_item: WEL_TREE_VIEW_ITEM is
+	selected_item: WEL_TREE_VIEW_ITEM
 			-- Return the currently selected item.
 		require
 			exists: exists
@@ -291,7 +291,7 @@ feature -- Status report
 			item_valid: Result.exists
 		end
 
-	get_image_list: WEL_IMAGE_LIST is
+	get_image_list: WEL_IMAGE_LIST
 			-- Get the image list associated with this treeview.
 			-- Returns Void if none.
 		local
@@ -304,7 +304,7 @@ feature -- Status report
 			end
 		end
 
-	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
+	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT
 			-- `Result' is rect of item `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
@@ -319,7 +319,7 @@ feature -- Status report
 			end
 		end
 
-	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
+	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT
 			-- `Result' is rect for text of `an_item' or `Void'
 			-- if `an_item' is not visible.
 		require
@@ -334,7 +334,7 @@ feature -- Status report
 			end
 		end
 
-	get_tooltip: WEL_TOOLTIP is
+	get_tooltip: WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
 		local
 			pointer: POINTER
@@ -345,7 +345,7 @@ feature -- Status report
 			end
 		end
 
-	get_background_color: WEL_COLOR_REF is
+	get_background_color: WEL_COLOR_REF
 			-- `Result' is background color used for control.
 		local
 			color_int: INTEGER
@@ -354,7 +354,7 @@ feature -- Status report
 			create Result.make_by_color (color_int)
 		end
 
-	get_text_color: WEL_COLOR_REF is
+	get_text_color: WEL_COLOR_REF
 			-- `Result' is color for item text.
 		local
 			color_int: INTEGER
@@ -365,7 +365,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (an_item: WEL_TREE_VIEW_ITEM) is
+	select_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Set the selection to the given `an_item'.
 		require
 			exists: exists
@@ -376,7 +376,7 @@ feature -- Status setting
 			item_selected: is_selected (an_item)
 		end
 
-	deselect_item (an_item: WEL_TREE_VIEW_ITEM) is
+	deselect_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Deselect the given item.
 		require
 			exists: exists
@@ -387,7 +387,7 @@ feature -- Status setting
 			item_deselected: not is_selected (an_item)
 		end
 
-	expand_item (an_item: WEL_TREE_VIEW_ITEM) is
+	expand_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Expand the given item.
 		require
 			exists: exists
@@ -399,7 +399,7 @@ feature -- Status setting
 			item_expanded: is_expanded (an_item)
 		end
 
-	collapse_item (an_item: WEL_TREE_VIEW_ITEM) is
+	collapse_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Collapse the given item.
 		require
 			exists: exists
@@ -411,7 +411,7 @@ feature -- Status setting
 			item_collapse: not is_expanded (an_item)
 		end
 
-	select_first_visible (an_item: WEL_TREE_VIEW_ITEM) is
+	select_first_visible (an_item: WEL_TREE_VIEW_ITEM)
 			-- Scrolls the tree view vertically so that
 			-- the given `an_item' is the first visible item.
 		require
@@ -421,7 +421,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_firstvisible), an_item.h_item)
 		end
 
-	select_drop_target (an_item: WEL_TREE_VIEW_ITEM) is
+	select_drop_target (an_item: WEL_TREE_VIEW_ITEM)
 			-- Redraw the given `an_item' in the style used to
 			-- indicate the target of a drag and drop operation.
 		require
@@ -431,7 +431,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_drophilite), an_item.h_item)
 		end
 
-	set_indent (an_indent: INTEGER) is
+	set_indent (an_indent: INTEGER)
 			-- Set `indent' with `an_indent'.
 		require
 			exists: exists
@@ -439,7 +439,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tvm_setindent, to_wparam (an_indent), to_lparam (0))
 		end
 
-	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+	set_image_list(an_imagelist: WEL_IMAGE_LIST)
 			-- Set the current image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -452,18 +452,18 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltip (tooltip: WEL_TOOLTIP) is
+	set_tooltip (tooltip: WEL_TOOLTIP)
 		do
 			treeview_settooltips (item, tooltip.item)
 		end
 
-	set_background_color (a_color: WEL_COLOR_REF) is
+	set_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background color.
 		do
 			{WEL_API}.send_message (item, Tvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
-	set_text_color (a_color: WEL_COLOR_REF) is
+	set_text_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to color of item text.
 		do
 			{WEL_API}.send_message (item, Tvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
@@ -471,7 +471,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_item (an_item: WEL_TREE_VIEW_INSERT_STRUCT) is
+	insert_item (an_item: WEL_TREE_VIEW_INSERT_STRUCT)
 			-- Insert `an_item' in the tree.
 		require
 			exists: exists
@@ -485,7 +485,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	delete_item (an_item: WEL_TREE_VIEW_ITEM) is
+	delete_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Remove `an_item' from the tree.
 		require
 			exists: exists
@@ -502,7 +502,7 @@ feature -- Element change
 			end
 		end
 
-	reset_content is
+	reset_content
 			-- Remove all `items' from `Current'.
 		require
 			exists: exists
@@ -516,7 +516,7 @@ feature -- Element change
 			end
 		end
 
-	set_tree_item (an_item: WEL_TREE_VIEW_ITEM) is
+	set_tree_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Set some or all of a tree view item's attributes.
 		require
 			exists: exists
@@ -529,7 +529,7 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_tvn_begindrag (info: WEL_NM_TREE_VIEW) is
+	on_tvn_begindrag (info: WEL_NM_TREE_VIEW)
 			-- A drag-and-drop operation involving the left mouse
 			-- button is being initiated.
 		require
@@ -537,14 +537,14 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_beginlabeledit (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_beginlabeledit (info: WEL_TREE_VIEW_ITEM)
 			-- A label editing for an item has started.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW) is
+	on_tvn_beginrdrag (info: WEL_NM_TREE_VIEW)
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		require
@@ -552,21 +552,21 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_deleteitem (info: WEL_NM_TREE_VIEW) is
+	on_tvn_deleteitem (info: WEL_NM_TREE_VIEW)
 			-- An item has been deleted.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_endlabeledit (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_endlabeledit (info: WEL_TREE_VIEW_ITEM)
 			-- A label editing for an item has ended.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_getdispinfo (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_getdispinfo (info: WEL_TREE_VIEW_ITEM)
 			-- The parent window must provide information needed
 			-- to display or sort an item.
 		require
@@ -574,7 +574,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW) is
+	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		require
@@ -582,7 +582,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_itemexpanding (info: WEL_NM_TREE_VIEW) is
+	on_tvn_itemexpanding (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items is about to
 			-- expand or collapse.
 		require
@@ -590,7 +590,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_keydown (virtual_key: INTEGER) is
+	on_tvn_keydown (virtual_key: INTEGER)
 			-- The user pressed a key and the tree-view control
 			-- has the input focus.
 		require
@@ -598,14 +598,14 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanged (info: WEL_NM_TREE_VIEW)
 			-- Selection has changed from one item to another.
 		require
 			exists: exists
 		do
 		end
 
-	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanging (info: WEL_NM_TREE_VIEW)
 			-- Selection is about to change from one item to
 			-- another.
 		require
@@ -613,7 +613,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tvn_setdispinfo (info: WEL_TREE_VIEW_ITEM) is
+	on_tvn_setdispinfo (info: WEL_TREE_VIEW_ITEM)
 			-- The parent window must update the informations
 			-- it maintains about an item.
 		require
@@ -623,7 +623,7 @@ feature -- Notifications
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -674,7 +674,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {WEL_NM_TREE_VIEW} -- Implementation
 
-	get_item_with_data (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM is
+	get_item_with_data (an_item: WEL_TREE_VIEW_ITEM): WEL_TREE_VIEW_ITEM
 			-- Get an item and return the same item with all the
 			-- data valid
 		require
@@ -700,13 +700,13 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_wc_treeview)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -714,40 +714,40 @@ feature {NONE} -- Implementation
 				Tvs_hasbuttons + Tvs_linesatroot
 		end
 
-	Buffer_size: INTEGER is 30
+	Buffer_size: INTEGER = 30
 			-- Default buffer size for retrieving data from Windows APIs
 
 feature {NONE} -- Externals
 
-	cwin_wc_treeview: POINTER is
+	cwin_wc_treeview: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"WC_TREEVIEW"
 		end
 
-	TreeView_Gettooltips (ptr: POINTER): POINTER is
+	TreeView_Gettooltips (ptr: POINTER): POINTER
 		external
 			"C [macro %"cctrl.h%"] (HWND): EIF_POINTER"
 		alias
 			"TreeView_GetToolTips"
 		end
 
-	TreeView_settooltips (hwndTV, hwndTooltip: POINTER) is
+	TreeView_settooltips (hwndTV, hwndTooltip: POINTER)
 		external
 			"C [macro %"cctrl.h%"] (HWND, HWND)"
 		alias
 			"TreeView_SetToolTips"
 		end
 
-	cwin_index_to_state_image_mask (i: INTEGER): INTEGER is
+	cwin_index_to_state_image_mask (i: INTEGER): INTEGER
 		external
 			"C [macro %"commctrl.h%"] (UINT): EIF_INTEGER"
 		alias
 			"INDEXTOSTATEIMAGEMASK"
 		end
 
-	set_item_pointer_in_rect (a_rect_item, a_tree_item: POINTER) is
+	set_item_pointer_in_rect (a_rect_item, a_tree_item: POINTER)
 			-- Place value of `a_tree_item' in structure pointed to by `a_rect_item'.
 		external
 			"C inline use <windows.h>"
@@ -755,7 +755,7 @@ feature {NONE} -- Externals
 			"*(HTREEITEM*)$a_rect_item = (HTREEITEM) $a_tree_item"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

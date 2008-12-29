@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_DOCKABLE_SOURCE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Event handling
 
-	dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `pebble' is picked up.
 		do
 			if dock_started_actions_internal = Void then
@@ -21,7 +21,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed after a dock completes from `Current'.
 			-- Either to a dockable target or a dockable dialog.
 		do
@@ -41,7 +41,7 @@ feature {EV_ANY_I} -- Implementation
 	dock_ended_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `dock_ended_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

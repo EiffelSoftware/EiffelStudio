@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IBinding' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ibinding_impl_proxy_from_pointer(cpp_obj)
@@ -27,39 +27,39 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	abort is
+	abort
 			-- No description available.
 		do
 			ccom_abort (initializer)
 		end
 
-	suspend is
+	suspend
 			-- No description available.
 		do
 			ccom_suspend (initializer)
 		end
 
-	resume is
+	resume
 			-- No description available.
 		do
 			ccom_resume (initializer)
 		end
 
-	set_priority (n_priority: INTEGER) is
+	set_priority (n_priority: INTEGER)
 			-- No description available.
 			-- `n_priority' [in].  
 		do
 			ccom_set_priority (initializer, n_priority)
 		end
 
-	get_priority (pn_priority: INTEGER_REF) is
+	get_priority (pn_priority: INTEGER_REF)
 			-- No description available.
 			-- `pn_priority' [out].  
 		do
 			ccom_get_priority (initializer, pn_priority)
 		end
 
-	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER)
 			-- No description available.
 			-- `pclsid_protocol' [out].  
 			-- `pdw_result' [out].  
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ibinding_impl_proxy(initializer)
@@ -79,61 +79,61 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_abort (cpp_obj: POINTER) is
+	ccom_abort (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"]()"
 		end
 
-	ccom_suspend (cpp_obj: POINTER) is
+	ccom_suspend (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"]()"
 		end
 
-	ccom_resume (cpp_obj: POINTER) is
+	ccom_resume (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"]()"
 		end
 
-	ccom_set_priority (cpp_obj: POINTER; n_priority: INTEGER) is
+	ccom_set_priority (cpp_obj: POINTER; n_priority: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_get_priority (cpp_obj: POINTER; pn_priority: INTEGER_REF) is
+	ccom_get_priority (cpp_obj: POINTER; pn_priority: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_get_bind_result (cpp_obj: POINTER; pclsid_protocol: POINTER; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	ccom_get_bind_result (cpp_obj: POINTER; pclsid_protocol: POINTER; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](GUID *,EIF_OBJECT,EIF_OBJECT,EIF_INTEGER)"
 		end
 
-	ccom_delete_ibinding_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ibinding_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ibinding_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ibinding_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

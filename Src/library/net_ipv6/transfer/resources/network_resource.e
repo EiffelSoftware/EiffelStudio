@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Resources accessed over a network"
 	legal: "See notice at end of class."
@@ -40,14 +40,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- Is resource open?
 		do
 			Result := main_socket /= Void and then
 				(main_socket.is_open_read or main_socket.is_open_write)
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is it possible to open in read mode currently?
 		local
 			opened: BOOLEAN
@@ -81,7 +81,7 @@ feature -- Status report
 			end
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is it possible to open in write mode currently?
 		local
 			opened: BOOLEAN
@@ -121,13 +121,13 @@ feature -- Status report
 	is_count_valid: BOOLEAN
 			-- Is value in `count' valid?
 
-	address_exists: BOOLEAN is
+	address_exists: BOOLEAN
 			-- Does address exists?
 		do
 			Result := address.is_correct
 		end
 
-	is_proxy_used: BOOLEAN is
+	is_proxy_used: BOOLEAN
 			-- Is a proxy used?
 		do
 			Result := address.is_proxy_used and is_readable
@@ -135,13 +135,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_read_buffer_size (n: INTEGER) is
+	set_read_buffer_size (n: INTEGER)
 			-- Set size of read buffer.
 		do
 			read_buffer_size := n
 		end
 
-	reuse_connection (other: DATA_RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE)
 			-- Reuse connection of `other'.
 		local
 			o: like Current
@@ -160,7 +160,7 @@ feature -- Status setting
 
 feature {NONE} -- Status setting
 
-	open_connection is
+	open_connection
 			-- Open the connection.
 		require
 			closed: not is_open
@@ -169,7 +169,7 @@ feature {NONE} -- Status setting
 
 feature -- Output
 
-	put (other: DATA_RESOURCE) is
+	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
 		do
 			from until error or else not other.is_packet_pending loop
@@ -190,7 +190,7 @@ feature -- Output
 
 feature -- Input
 
-	read is
+	read
 			-- Read packet.
 		do
 			check_socket (main_socket, Read_only)
@@ -211,7 +211,7 @@ feature -- Input
 
 feature -- Constants
 
-	Read_only, Write_only: INTEGER is unique
+	Read_only, Write_only: INTEGER = unique
 			-- Constants determinint the transfer direction for `check_socket'
 
 feature {DATA_RESOURCE} -- Implementation
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 	writable_cached: BOOLEAN
 			-- Has a value für `is_writable' been cached?
 
-	check_socket (s: NETWORK_SOCKET; transfer_mode: INTEGER) is
+	check_socket (s: NETWORK_SOCKET; transfer_mode: INTEGER)
 			-- Check, if it is possible to read from/write to `s' (depending on
 			-- `transfer_mode' within `timeout' seconds. If not, set an error.
 		require
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

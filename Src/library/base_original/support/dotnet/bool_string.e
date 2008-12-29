@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Packed boolean strings"
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate area of `n' booleans.
 		require
 			non_negative_size: n >= 0
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is
+	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put
 			-- Boolean at `i'-th position,
 			-- beginning at left, 1 origin
 		do
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (1 <= i) and then (i <= count)
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of boolean in the area.
 		do
 			Result := area.count
@@ -65,14 +65,14 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (v: like item; i: INTEGER) is
+	put (v: like item; i: INTEGER)
 			-- Put boolean `v' at `i'-th position
 			-- beginning at left, 1 origin.
 		do
 			area.put (v, i - 1)
 		end
 
-	all_true is
+	all_true
 			-- Set all booleans to true.
 		local
 			i, s: INTEGER
@@ -87,7 +87,7 @@ feature -- Element change
 			end
 		end
 
-	all_false is
+	all_false
 			-- Set all booleans to false.
 		local
 			i, s: INTEGER
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: like Current): like Current is
+	infix "and" (other: like Current): like Current
 		-- Logical and of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -127,7 +127,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "or" (other: like Current): like Current is
+	infix "or" (other: like Current): like Current
 			-- Logical or of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -150,7 +150,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "xor" (other: like Current): like Current is
+	infix "xor" (other: like Current): like Current
 		-- Logical exclusive or of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -173,7 +173,7 @@ feature -- Basic operations
 			end
 		end
 
-	prefix "not": like Current is
+	prefix "not": like Current
 			-- Negation of 'Current'
 		local
 			result_area: like area
@@ -192,7 +192,7 @@ feature -- Basic operations
 			end
 		end
 
-	right_shifted (n: INTEGER): like Current is
+	right_shifted (n: INTEGER): like Current
 			-- Right shifted 'Current' set, by `n' positions
 		require
 			non_negative_shift: n >= 0
@@ -225,7 +225,7 @@ feature -- Basic operations
 			end
 		end
 
-	left_shifted (n: INTEGER): like Current is
+	left_shifted (n: INTEGER): like Current
 			-- Left shifted 'Current' set, by `n' positions
 		require
 			non_negative_shift: n >= 0
@@ -257,7 +257,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"States of deterministic finite automata"
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (s: INTEGER) is
+	make (s: INTEGER)
 			-- Make state with 0 to `s' possibles inputs.
 		do
 			array_make (0, s)
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	append_transition (i: INTEGER; t: STATE_OF_DFA) is
+	append_transition (i: INTEGER; t: STATE_OF_DFA)
 			-- Append transition from current state to state t on input i.
 		require
 			no_other_transition: item (i) = Void;
@@ -47,7 +47,7 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	successor (i: INTEGER): STATE_OF_DFA is
+	successor (i: INTEGER): STATE_OF_DFA
 			-- Successor of current state for input `i';
 			-- Void if no successor
 		require
@@ -56,7 +56,7 @@ feature -- Cursor movement
 			Result := item (i)
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

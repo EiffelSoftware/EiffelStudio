@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base addresses for help contexts URLs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,15 +8,15 @@ class
 
 feature -- Access
 			
-	Root_index: STRING is "index.html"
+	Root_index: STRING = "index.html"
 			-- Default help file for a given base
 
-	url_extension: STRING is ".html"
+	url_extension: STRING = ".html"
 			-- URL extension
 
 feature -- Status Report
 
-	is_valid_url (a_url: STRING): BOOLEAN is
+	is_valid_url (a_url: STRING): BOOLEAN
 			-- Does `a_url' have a valid URL syntax?
 		local
 		--	i: INTEGER
@@ -34,7 +34,7 @@ feature -- Status Report
 		--	Result := Result and then (a_url.substring (a_url.count - url_extension.count + 1, a_url.count).is_equal (url_extension) or (a_url.has ('#') and a_url.substring (a_url.index_of ('#', 1) - url_extension.count, a_url.index_of ('#', 1) - 1 ).is_equal (url_extension)))
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

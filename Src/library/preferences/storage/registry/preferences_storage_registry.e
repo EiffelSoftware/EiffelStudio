@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows Registry preferences storage implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {PREFERENCES} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create preferences storage in the registry.  Registry key created base on name of application
 			-- in `HKEY_CURRENT_USER\Software\'.  So location will be `HKEY_CURRENT_USER\Software\APPLICATION_NAME_HERE'
 		local
@@ -41,7 +41,7 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Initialization
 
-	initialize_with_preferences (a_preferences: PREFERENCES) is
+	initialize_with_preferences (a_preferences: PREFERENCES)
 	   	local
 			l_keyp: POINTER
 			l_name,
@@ -76,7 +76,7 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Resource Management
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does storage exists ?
 		do
 			Result := True
@@ -85,13 +85,13 @@ feature {PREFERENCES} -- Resource Management
 				--|   `initialize_with_preferences' created it anyway
 		end
 
-	has_preference (a_name: STRING): BOOLEAN is
+	has_preference (a_name: STRING): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		do
 			Result := get_preference_value (a_name) /= Void
 		end
 
-	get_preference_value (a_name: STRING): STRING is
+	get_preference_value (a_name: STRING): STRING
 			-- Retrieve the preference string value from the underlying store.
 		local
 			l_handle: POINTER
@@ -108,7 +108,7 @@ feature {PREFERENCES} -- Resource Management
 			end
 		end
 
-	save_preference (a_preference: PREFERENCE) is
+	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to registry.
 		local
 			l_parent_key: POINTER
@@ -128,7 +128,7 @@ feature {PREFERENCES} -- Resource Management
 			end
 		end
 
-	remove_preference (a_preference: PREFERENCE) is
+	remove_preference (a_preference: PREFERENCE)
 			-- Remove `preference' from storage device.
 		local
 			l_parent_key: POINTER
@@ -149,7 +149,7 @@ feature {PREFERENCES} -- Resource Management
 invariant
 	has_session_values: session_values /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

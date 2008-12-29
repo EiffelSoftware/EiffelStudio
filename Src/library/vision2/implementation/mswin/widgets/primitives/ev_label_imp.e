@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision label widget. Displays a single line of text.%
 		%Mswindows implementation"
 	legal: "See notice at end of class.";
@@ -125,7 +125,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			align_text_center
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_angle (a_angle: REAL) is
+	set_angle (a_angle: REAL)
 			-- Set counter-clockwise rotation of text from horizontal plane.
 			-- `a_angle' is expressed in radians.
 		local
@@ -174,7 +174,7 @@ feature -- Element change
 			end
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			if not text.is_equal (a_text) then
@@ -188,7 +188,7 @@ feature -- Element change
 			end
 		end
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		local
 			l_text: like text
@@ -208,21 +208,21 @@ feature -- Element change
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Set text alignment of current label to center.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
-	align_text_right is
+	align_text_right
 			-- Set text alignment of current label to right.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
-	align_text_left is
+	align_text_left
 			-- Set text alignment of current label to left.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
@@ -231,13 +231,13 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Initialization
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Resize to a default size.
 		do
 			accomodate_text (" ")
 		end
 
-	accomodate_text (a_text: STRING_GENERAL) is
+	accomodate_text (a_text: STRING_GENERAL)
 			-- Change internal minimum size to make `a_text' fit.
 		require
 			a_text_not_void: a_text /= Void
@@ -263,7 +263,7 @@ feature {EV_ANY_I} -- Initialization
 
 feature {NONE} -- WEL Implementation
 
-   	default_style: INTEGER is
+   	default_style: INTEGER
    			-- Default style used to create `Current'.
    		do
  			Result := Ws_visible | Ws_child | Ss_notify | Ss_ownerdraw
@@ -271,7 +271,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_CONTAINER_IMP} -- WEL Implementation
 
-	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
 		local
 			l_draw_dc: WEL_CLIENT_DC
@@ -365,7 +365,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			l_bk_brush.delete
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erase_background message has been received by Windows.
 			-- We must override the default processing, as if we do not, then
 			-- Windows will draw the background for us, even though it is not needed.
@@ -397,7 +397,7 @@ feature {EV_ANY_I}
 
 	interface: EV_LABEL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

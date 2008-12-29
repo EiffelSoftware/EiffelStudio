@@ -13,7 +13,7 @@
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library.Vision2">
+		<option namespace="EiffelSoftware.Library.Vision2" syntax_level="1">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>

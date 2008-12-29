@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a structure that contains%
 					 %information used to set the size and position of%
 					 %a WEL_HEADER_CONTROL"
@@ -32,7 +32,7 @@ create
 	make_by_pointer
 
 feature {NONE} -- Initialization
-	make is
+	make
 		local
 			a_window_pos: WEL_WINDOW_POS
 		do
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	
-	rectangle: WEL_RECT is
+	rectangle: WEL_RECT
 			-- Contains the coordinates of a rectangle that the header control is to occupy
 		require
 			exists: exists
@@ -51,7 +51,7 @@ feature -- Access
 			create Result.make_by_pointer (cwel_hd_layout_get_prc (item))
 		end
 
-	window_pos: WEL_WINDOW_POS is
+	window_pos: WEL_WINDOW_POS
 			-- Object that receives information about the appropriate size 
 			-- and position of the header control. 
 		require
@@ -63,7 +63,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_rectangle (a_rect: WEL_RECT) is
+	set_rectangle (a_rect: WEL_RECT)
 			-- Contains the coordinates of a rectangle that the header control is to occupy
 		require
 			exists: exists
@@ -72,7 +72,7 @@ feature -- Element change
 			cwel_hd_layout_set_prc (item, a_rect.item)
 		end
 
-	set_window_pos (value: WEL_WINDOW_POS) is
+	set_window_pos (value: WEL_WINDOW_POS)
 			-- Filled usually by Windows
 		require
 			exists: exists
@@ -85,7 +85,7 @@ feature -- Element change
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_hd_layout
@@ -93,34 +93,34 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_hd_layout: INTEGER is
+	c_size_of_hd_layout: INTEGER
 		external
 			"C [macro %"nmtb.h%"]"
 		alias
 			"sizeof (HD_LAYOUT)"
 		end
 
-	cwel_hd_layout_get_prc (ptr: POINTER): POINTER is
+	cwel_hd_layout_get_prc (ptr: POINTER): POINTER
 		external
 			"C [macro %"hd_layout.h%"] (HD_LAYOUT*): EIF_POINTER"
 		end
 
-	cwel_hd_layout_set_prc (ptr: POINTER; value: POINTER) is
+	cwel_hd_layout_set_prc (ptr: POINTER; value: POINTER)
 		external
 			"C [macro %"hd_layout.h%"] (HD_LAYOUT*, RECT FAR*)"
 		end
 
-	cwel_hd_layout_get_pwpos (ptr: POINTER): POINTER is
+	cwel_hd_layout_get_pwpos (ptr: POINTER): POINTER
 		external
 			"C [macro %"hd_layout.h%"] (HD_LAYOUT*): EIF_POINTER"
 		end
 
-	cwel_hd_layout_set_pwpos (ptr: POINTER; value: POINTER) is
+	cwel_hd_layout_set_pwpos (ptr: POINTER; value: POINTER)
 		external
 			"C [macro %"hd_layout.h%"] (HD_LAYOUT*, WINDOWPOS FAR*)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text field. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk entry.
 		local
 			l_vbox: POINTER
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in field.
 		do
 			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -82,7 +82,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
-	append_text (txt: STRING_GENERAL) is
+	append_text (txt: STRING_GENERAL)
 			-- Append `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
@@ -94,7 +94,7 @@ feature -- Status setting
 			internal_set_caret_position (temp_caret_pos)
 		end
 
-	prepend_text (txt: STRING_GENERAL) is
+	prepend_text (txt: STRING_GENERAL)
 			-- Prepend `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
@@ -106,12 +106,12 @@ feature -- Status setting
 			internal_set_caret_position (temp_caret_pos)
 		end
 
-	set_capacity (len: INTEGER) is
+	set_capacity (len: INTEGER)
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
@@ -120,7 +120,7 @@ feature -- Status setting
 
 feature -- Status Report
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of the caret.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
@@ -135,7 +135,7 @@ feature -- Status Report
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN)
 			-- A key event has occurred
 		do
 			if a_key_press then
@@ -146,7 +146,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press, call_application_events)
 		end
 
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			create Result
 			real_signal_connect (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
@@ -154,27 +154,27 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
 			--| FIXME This should be removed when gtk1 imp is made obsolete
 			Result := (create {EV_GTK_DEPENDENT_EXTERNALS}).gtk_editable_get_editable (entry_widget)
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position of the caret.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is something selected?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /=
 				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		local
 			a_start: INTEGER
@@ -183,7 +183,7 @@ feature -- Status report
 			Result := a_start.min ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		local
 			a_start: INTEGER
@@ -192,7 +192,7 @@ feature -- Status report
 			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -200,20 +200,20 @@ feature -- Status report
 
 feature -- status settings
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
 		end
 
-	set_position (pos: INTEGER) is
+	set_position (pos: INTEGER)
 			-- Set current insertion position.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 			internal_set_caret_position (pos)
@@ -221,7 +221,7 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING)
 			-- Insert `txt' at the current position.
 		local
 			pos: INTEGER
@@ -237,7 +237,7 @@ feature -- Basic operation
 			)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
@@ -249,7 +249,7 @@ feature -- Basic operation
 			end
 		end
 
-	select_from_start_pos (start_pos, end_pos: INTEGER) is
+	select_from_start_pos (start_pos, end_pos: INTEGER)
 			-- Hack to select region from change actions
 		local
 			a_start, a_end, text_count: INTEGER
@@ -265,19 +265,19 @@ feature -- Basic operation
 			end
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard
 			-- to paste it later.
@@ -287,7 +287,7 @@ feature -- Basic operation
 			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the `selected_region' in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
@@ -296,7 +296,7 @@ feature -- Basic operation
 			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
@@ -312,13 +312,13 @@ feature -- Basic operation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	internal_set_caret_position (pos: INTEGER) is
+	internal_set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			create Result
 			real_signal_connect (entry_widget, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
@@ -331,7 +331,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_change_action: BOOLEAN
 			-- Is Current being changed?
 
-	on_change_actions is
+	on_change_actions
 			-- A change action has occurred.
 		local
 			new_text: STRING_32
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 	entry_widget: POINTER
 		-- A pointer on the text field
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to the widget shown on screen.
 		do
 			Result := entry_widget
@@ -369,7 +369,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 invariant
 	entry_widget_set: entry_widget /= NULL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

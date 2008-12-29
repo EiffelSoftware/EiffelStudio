@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Rectangle (with or without scrollbars) which contains a list of %
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will attempt to resize if entries
@@ -51,7 +51,7 @@ feature {NONE} -- Creation
 			managed: managed
 		end;
 
-	make_fixed_size (a_name: STRING; a_parent: COMPOSITE) is
+	make_fixed_size (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will not resize if entries
@@ -67,7 +67,7 @@ feature {NONE} -- Creation
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will attempt to resize if entries
@@ -83,7 +83,7 @@ feature {NONE} -- Creation
 			not_managed: not managed
 		end;
 
-	make_fixed_size_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_fixed_size_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will not resize if entries
@@ -100,7 +100,7 @@ feature {NONE} -- Creation
 		end;
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; 
-			man: BOOLEAN; is_fixed: BOOLEAN) is
+			man: BOOLEAN; is_fixed: BOOLEAN)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		local
@@ -125,17 +125,17 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 feature {G_ANY, G_ANY_I, WIDGET_I}
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN = true;
 			-- Is current widget an heir of FONTABLE?
 
 feature {NONE}
 
-	set_default is
+	set_default
 			-- Set default values to current scroll list.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

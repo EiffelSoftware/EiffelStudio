@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Flags defining search in a list view.
 		Used in WEL_LIST_VIEW_SEARCH_INFO.
@@ -16,34 +16,34 @@ obsolete
 
 feature -- Acess
 
-	Lvfi_param: INTEGER is 1
+	Lvfi_param: INTEGER = 1
 			-- Search item with corresponding lparam attribute
 			--
 			-- Declared in Windows as LVFI_PARAM
 
-	Lvfi_partial: INTEGER is 8
+	Lvfi_partial: INTEGER = 8
 			-- Search item including given string
 			--
 			-- Declared in Windows as LVFI_PARTIAL
 
-	Lvfi_string: INTEGER is 2
+	Lvfi_string: INTEGER = 2
 			-- Search item with exact corresponding string
 			--
 			-- Declared in Windows as LVFI_STRING
 
-	Lvfi_wrap: INTEGER is 32
+	Lvfi_wrap: INTEGER = 32
 			-- Start search from start when end of list view is reached
 			--
 			-- Declared in Windows as LVFI_WRAP
 
-	Lvfi_nearestxy: INTEGER is 64
+	Lvfi_nearestxy: INTEGER = 64
 			-- Search item nearest specified position in specified direction
 			--
 			-- Declared in Windows as LVFI_NEARESTXY
 
 feature -- Validation
 
-	is_valid_list_view_flag (a_flag: INTEGER): BOOLEAN is
+	is_valid_list_view_flag (a_flag: INTEGER): BOOLEAN
 			-- Is `a_flag' a valid list view search flag?
 		do
 			Result := a_flag = Lvfi_param or a_flag = Lvfi_partial
@@ -51,7 +51,7 @@ feature -- Validation
 						or a_flag = Lvfi_nearestxy
 		end
 						
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

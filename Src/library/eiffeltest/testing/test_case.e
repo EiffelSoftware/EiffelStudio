@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test cases that consist of a complete test and produce a result"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ deferred class TEST_CASE inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create test.
 		do
 			create test_results.make
@@ -27,17 +27,17 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	Is_complete_test: BOOLEAN is True
+	Is_complete_test: BOOLEAN = True
 			-- Is test a complete test? (Answer: yes)
 
-	Produces_result: BOOLEAN is True
+	Produces_result: BOOLEAN = True
 			-- Does test produce result? (Answer: yes)
 
-	Top_level_allowed: BOOLEAN is True
+	Top_level_allowed: BOOLEAN = True
 			-- Can test be inserted in the top level of test hierarchy?
 			-- (Answer: Yes)
 
-	has_current_passed: BOOLEAN is
+	has_current_passed: BOOLEAN
 			-- Has currently ongoing test passed (so far)?
 		require
 			results_available: has_current_result
@@ -45,7 +45,7 @@ feature -- Status report
 			Result := test_results.has_current_passed
 		end
 
-	is_current_exception: BOOLEAN is
+	is_current_exception: BOOLEAN
 			-- Did currently ongoing test throw an exception?
 		require
 			results_available: has_current_result
@@ -53,7 +53,7 @@ feature -- Status report
 			Result := test_results.is_current_exception
 		end
 
-	has_expected_result: BOOLEAN is
+	has_expected_result: BOOLEAN
 			-- Is there an expected result?
 		do
 			Result := exception_expected xor expected_result /= Void
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_expected_result (r: TEST_RUN_RESULT) is
+	set_expected_result (r: TEST_RUN_RESULT)
 			-- Set expected result to `r'.
 		do
 			exception_expected := r.is_exception
@@ -72,7 +72,7 @@ feature -- Status setting
 			result_setting_ok: has_expected_result
 		end
 
-	clear_expected_result is
+	clear_expected_result
 			-- Clear expected result
 		do
 			expected_result := Void
@@ -82,7 +82,7 @@ feature -- Status setting
 		
 feature {NONE} -- Basic operation
 
-	assert_timing (d: DOUBLE) is
+	assert_timing (d: DOUBLE)
 			-- Assert `d' seconds execution timing.
 		require
 			positive_time: d > 0
@@ -94,9 +94,9 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Constants
 
-	Expected_result_text: STRING is "Unexpected result"
+	Expected_result_text: STRING = "Unexpected result"
 	
-	No_tests_text: STRING is "No tests in this test case!"
+	No_tests_text: STRING = "No tests in this test case!"
 
 feature {NONE} -- Implementation
 
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	expected_time: DOUBLE_REF
 			-- Expected execution time
 			
-	run_without_rescue is
+	run_without_rescue
 			-- Run test without exception trapping.
 		local
 			res: BOOLEAN
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

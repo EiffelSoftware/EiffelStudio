@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Initialization
 
-	locale: I18N_LOCALE is
+	locale: I18N_LOCALE
 			-- return current locale
 			-- if void create
 		do
@@ -25,7 +25,7 @@ feature -- Initialization
 			end
 		end
 
-	set_locale (a_locale: STRING_32) is
+	set_locale (a_locale: STRING_32)
 			-- set current localeto a_locale if available
 			-- else live it unchanged
 		local
@@ -54,7 +54,7 @@ feature {NONE} -- Locale
 	current_locale: I18N_LOCALE
 	available_locales: LIST[I18N_LOCALE_ID];
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

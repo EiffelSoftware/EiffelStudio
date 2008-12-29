@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that holds common properties for EG_SPRING_ENERGY and EG_SPRING_PARTICLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_center_attraction (a_value: DOUBLE) is
+	set_center_attraction (a_value: DOUBLE)
 			-- Set `center_attraction' to `a_value'.
 		require
 			valid_value: a_value >= 0.0
@@ -38,7 +38,7 @@ feature -- Element change
 			set: center_attraction = a_value
 		end
 
-	set_stiffness (a_value: DOUBLE) is
+	set_stiffness (a_value: DOUBLE)
 			-- Set `stiffness' to `a_value'.
 		require
 			valid_value: a_value >= 0.0
@@ -48,7 +48,7 @@ feature -- Element change
 			set: stiffness = a_value
 		end
 
-	set_electrical_repulsion (a_value: DOUBLE) is
+	set_electrical_repulsion (a_value: DOUBLE)
 			-- Set `electrical_repulsion' to `a_value'.
 		require
 			valid_value: a_value >= 0.0
@@ -58,7 +58,7 @@ feature -- Element change
 			set: electrical_repulsion = a_value
 		end
 		
-	set_center (ax, ay: INTEGER) is
+	set_center (ax, ay: INTEGER)
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
 			center_x := ax
@@ -69,13 +69,13 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	link_stiffness (a_link: EG_LINK_FIGURE): DOUBLE is
+	link_stiffness (a_link: EG_LINK_FIGURE): DOUBLE
 			-- Striffness of `a_link'.
 		do
 			Result := 1.0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

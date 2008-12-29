@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fake abstraction of a .NET NATIVE_ARRAY in a non-.NET system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create {NONE}
 invariant
 	is_dotnet: {PLATFORM}.is_dotnet
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

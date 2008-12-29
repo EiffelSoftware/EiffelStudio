@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulates information about date and time formatting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ create make
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- initialize all attributes
 		do
 			set_date_time_format (Default_date_time_format)
@@ -56,7 +56,7 @@ feature	-- Access: Day and month names
 
 feature -- Element change
 
-	set_day_names (a_day_names : ARRAY[STRING_32]) is
+	set_day_names (a_day_names : ARRAY[STRING_32])
 			-- set the day names
 		require
 			a_day_names_exist: a_day_names /= Void
@@ -66,7 +66,7 @@ feature -- Element change
 			day_names_set: day_names = a_day_names
 		end
 
-	set_abbreviated_day_names (a_abbreviated_day_names : ARRAY[STRING_32]) is
+	set_abbreviated_day_names (a_abbreviated_day_names : ARRAY[STRING_32])
 			-- set abbreviated day names
 		require
 			a_abbreviated_day_names_exists: a_abbreviated_day_names /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			abbreviated_day_names_set: abbreviated_day_names = a_abbreviated_day_names
 		end
 
-	set_month_names ( a_month_names : ARRAY[STRING_32]) is
+	set_month_names ( a_month_names : ARRAY[STRING_32])
 			-- set month names
 		require
 			a_month_names_exists: a_month_names /= Void
@@ -86,7 +86,7 @@ feature -- Element change
 			minth_names_set: month_names = a_month_names
 		end
 
-	set_abbreviated_month_names (a_abbreviated_month_names : ARRAY[STRING_32]) is
+	set_abbreviated_month_names (a_abbreviated_month_names : ARRAY[STRING_32])
 			-- Set abbreviated month names
 		require
 			a_abbreviated_month_names_exists: a_abbreviated_month_names /= Void
@@ -96,7 +96,7 @@ feature -- Element change
 			abbreviated_month_names_set: abbreviated_month_names = a_abbreviated_month_names
 		end
 
-	set_date_time_format(format:STRING_GENERAL) is
+	set_date_time_format(format:STRING_GENERAL)
 			-- set the long date format string
 		require
 			argument_not_void: format /= Void
@@ -106,7 +106,7 @@ feature -- Element change
 			long_date_format_set: date_time_format.is_equal(format.as_string_32)
 		end
 
-	set_long_date_format(format:STRING_GENERAL) is
+	set_long_date_format(format:STRING_GENERAL)
 			-- set the long date format string
 		require
 			argument_not_void: format /= Void
@@ -116,7 +116,7 @@ feature -- Element change
 			long_date_format_set: long_date_format.is_equal(format.as_string_32)
 		end
 
-	set_short_date_format(format:STRING_GENERAL) is
+	set_short_date_format(format:STRING_GENERAL)
 			-- set the short date format string
 		require
 			argument_not_void: format /= Void
@@ -126,7 +126,7 @@ feature -- Element change
 			short_date_format_set: short_date_format.is_equal(format.as_string_32)
 		end
 
-	set_long_time_format(format:STRING_GENERAL) is
+	set_long_time_format(format:STRING_GENERAL)
 			-- set the long time format string
 		require
 			argument_not_void: format /= Void
@@ -136,7 +136,7 @@ feature -- Element change
 			long_time_format_set: long_time_format.is_equal(format.as_string_32)
 		end
 
-	set_short_time_format(format:STRING_GENERAL) is
+	set_short_time_format(format:STRING_GENERAL)
 			-- set the short time format string
 		require
 			argument_not_void: format /= Void
@@ -146,7 +146,7 @@ feature -- Element change
 			short_time_format_set: short_time_format.is_equal(format.as_string_32)
 		end
 
-	set_am_suffix(suffix:STRING_GENERAL) is
+	set_am_suffix(suffix:STRING_GENERAL)
 			-- set the am suffix
 		require
 			argument_not_void: suffix /= Void
@@ -156,7 +156,7 @@ feature -- Element change
 			am_suffix_set: am_suffix.is_equal(suffix.as_string_32)
 		end
 
-	set_pm_suffix(suffix:STRING_GENERAL) is
+	set_pm_suffix(suffix:STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: suffix /= Void
@@ -166,7 +166,7 @@ feature -- Element change
 			pm_suffix_set: pm_suffix.is_equal(suffix.as_string_32)
 		end
 
-	set_time_separator(sep:STRING_GENERAL) is
+	set_time_separator(sep:STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: sep /= Void
@@ -176,7 +176,7 @@ feature -- Element change
 			separator_set: time_separator.is_equal(sep.as_string_32)
 		end
 
-	set_date_separator(sep:STRING_GENERAL) is
+	set_date_separator(sep:STRING_GENERAL)
 			-- set the pm suffix
 		require
 			argument_not_void: sep /= Void
@@ -188,7 +188,7 @@ feature -- Element change
 
 feature -- Access: Default Values
 
-	Default_date_time_format: STRING_32 is
+	Default_date_time_format: STRING_32
 			-- The ISO 8601 complete date plus hours, minutes and seconds format
 			-- without timezone information
 			-- YYYY-MM-DDThh:mm:ss (eg 1997-07-16T19:20:30)
@@ -201,7 +201,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_long_date_format: STRING_32 is
+	Default_long_date_format: STRING_32
 			-- The ISO 8601 Complete date:
       		-- YYYY-MM-DD (eg 1997-07-16)
 		once
@@ -218,7 +218,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_short_date_format: STRING_32 is
+	Default_short_date_format: STRING_32
 			-- The ISO 8601 Year and month:
       		-- YYYY-MM (eg 1997-07)
 		once
@@ -232,7 +232,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_long_time_format: STRING_32 is
+	Default_long_time_format: STRING_32
 			-- hh:mm:ss (eg 19:20:30)
 		once
 			create Result.make_empty
@@ -244,7 +244,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_short_time_format: STRING_32 is
+	Default_short_time_format: STRING_32
 			-- hh:mm (eg 19:20)
 		once
 			create Result.make_empty
@@ -257,21 +257,21 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_am_suffix: STRING_32 is
+	Default_am_suffix: STRING_32
 		once
 			Result := "am"
 		ensure
 			result_exists: Result /= Void
 		end
 
-	Default_pm_suffix: STRING_32 is
+	Default_pm_suffix: STRING_32
 		once
 			Result := "pm"
 		ensure
 			result_exists: Result /= Void
 		end
 
-	Default_day_names: ARRAY[STRING_32] is
+	Default_day_names: ARRAY[STRING_32]
 		once
 			Result := <<("Monday").to_string_32,
 						("Tuesday").to_string_32,
@@ -284,7 +284,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_month_names: ARRAY[STRING_32] is
+	Default_month_names: ARRAY[STRING_32]
 		once
 			Result := <<("January").to_string_32,
 						("February").to_string_32,
@@ -302,7 +302,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_abbreviated_day_names: ARRAY[STRING_32] is
+	Default_abbreviated_day_names: ARRAY[STRING_32]
 		once
 			Result := <<("Mon").to_string_32,
 						("Tue").to_string_32,
@@ -315,7 +315,7 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_abbreviated_month_names: ARRAY[STRING_32] is
+	Default_abbreviated_month_names: ARRAY[STRING_32]
 		once
 			Result := <<("Jan").to_string_32,
 						("Feb").to_string_32,
@@ -333,21 +333,21 @@ feature -- Access: Default Values
 			result_exists: Result /= Void
 		end
 
-	Default_date_separator: STRING_32 is
+	Default_date_separator: STRING_32
 		once
 			Result := "/"
 		ensure
 			result_exists: Result /= Void
 		end
 
-	Default_time_separator: STRING_32 is
+	Default_time_separator: STRING_32
 		once
 			Result := ":"
 		ensure
 			result_exists: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

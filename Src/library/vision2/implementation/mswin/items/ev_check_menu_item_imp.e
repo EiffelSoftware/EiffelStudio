@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision check menu item. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize with state not `is_selected'.
 		do
 			Precursor
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this menu item.
 		do
 			is_selected := True
@@ -57,7 +57,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 		do
 			is_selected := False
 			if has_parent then
@@ -71,20 +71,20 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_activate is
+	on_activate
 			-- Invert the state and call `Precursor'.
 		do
 			interface.toggle
 			Precursor
 		end
 
-	check_mark_bitmap_constant: INTEGER is
+	check_mark_bitmap_constant: INTEGER
 			-- Constant coding for the check mark used in Current.
 		do
 			Result := Wel_drawing_constants.Dfcs_menucheck
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

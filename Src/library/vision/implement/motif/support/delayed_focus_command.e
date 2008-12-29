@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Delayed command to popup the label for focusables."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_command: FOCUS_COMMAND) is
+	make (a_command: FOCUS_COMMAND)
 			-- Initialize Current with `parent_command' as `a_command'.
 		require
 			non_void_command: a_command /= Void
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Execution
 
-	execute (arg: FOCUSABLE) is
+	execute (arg: FOCUSABLE)
 		do
 			if arg /= Void then
 				parent_command.popup_label (arg);
@@ -42,7 +42,7 @@ feature {NONE} -- Properties
 	parent_command: FOCUS_COMMAND;
 			-- Parent of Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Constraint widget that tiles its children vertically."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif paned window widget.
 		require
 			name_exists: a_name /= Void
@@ -52,12 +52,12 @@ feature -- Initialization
 
 feature -- Access
 
-	is_paned_window: BOOLEAN is True
+	is_paned_window: BOOLEAN = True
 			-- Is Current a paned window?
 
 feature -- Status report
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Spacing between the top or the bottom of Current's children
 			-- and Current's shadow
 		require
@@ -68,7 +68,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Spacing between the left or right of Current's children
 			-- and Current's shadow
 		require
@@ -79,7 +79,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	is_refigure_mode: BOOLEAN is
+	is_refigure_mode: BOOLEAN
 			-- Are the children set to their appropriate position after
 			-- a change in Current?
 		require
@@ -88,7 +88,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNrefigureMode)
 		end;
 
-	sash_height: INTEGER is
+	sash_height: INTEGER
 			-- Height of the sash
 		require
 			exists: not is_destroyed
@@ -98,7 +98,7 @@ feature -- Status report
 			sash_heighth_large_enough: Result >= 0
 		end;
 
-	sash_width: INTEGER is
+	sash_width: INTEGER
 			-- Width of the sash
 		require
 			exists: not is_destroyed
@@ -108,7 +108,7 @@ feature -- Status report
 			sash_width_large_enough: Result >= 0
 		end;
 
-	sash_indent: INTEGER is
+	sash_indent: INTEGER
 			-- Horizontal position of the sash along each pane
 		require
 			exists: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Status report
 			Result := get_xt_position (screen_object, XmNsashIndent)
 		end;
 
-	sash_shadow_thickness: INTEGER is
+	sash_shadow_thickness: INTEGER
 			-- The thickness of the shadow drawn on each sash
 		require
 			exists: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Status report
 			sash_shadow_thickness_large_enough: Result >= 0
 		end;
 
-	is_separator_on: BOOLEAN is
+	is_separator_on: BOOLEAN
 			-- Is a separator (gadget) placed between each pane
 		require
 			exists: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNseparatorOn)
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- The distance between each pane child
 		require
 			exists: not is_destroyed
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -157,7 +157,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -168,7 +168,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	enable_refigure_mode is
+	enable_refigure_mode
 			-- Set `is_refigure_mode' to True.
 		require
 			exists: not is_destroyed
@@ -178,7 +178,7 @@ feature -- Status setting
 			refigure_mode_enabled: is_refigure_mode 
 		end;
 
-	disable_refigure_mode is
+	disable_refigure_mode
 			-- Set `is_refigure_mode' to False.
 		require
 			exists: not is_destroyed
@@ -188,7 +188,7 @@ feature -- Status setting
 			refigure_mode_disabled: not is_refigure_mode 
 		end;
 
-	set_sash_height (a_height: INTEGER) is
+	set_sash_height (a_height: INTEGER)
 			-- Set `sash_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -199,7 +199,7 @@ feature -- Status setting
 			sash_height_set: sash_height = a_height
 		end;
 
-	set_sash_width (a_width: INTEGER) is
+	set_sash_width (a_width: INTEGER)
 			-- Set `sash_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -210,7 +210,7 @@ feature -- Status setting
 			sash_width_set: sash_width = a_width
 		end;
 
-	set_sash_indent (a_position: INTEGER) is
+	set_sash_indent (a_position: INTEGER)
 			-- Set `sash_indent' to `a_position'.
 		require
 			exists: not is_destroyed
@@ -220,7 +220,7 @@ feature -- Status setting
 			sash_indent_set: sash_indent = a_position
 		end;
 
-	set_sash_shadow_thickness (a_thickness: INTEGER) is
+	set_sash_shadow_thickness (a_thickness: INTEGER)
 			-- Set `sash_shadow_thickness' to `a_thickness'.
 		require
 			exists: not is_destroyed;
@@ -231,7 +231,7 @@ feature -- Status setting
 			sash_shadow_thickness_set: sash_shadow_thickness = a_thickness
 		end;
 
-	enable_separator is
+	enable_separator
 			-- Set `is_separator_on' to True.
 		require
 			exists: not is_destroyed
@@ -241,7 +241,7 @@ feature -- Status setting
 			separator_enabled: is_separator_on 
 		end;
 
-	disable_separator is
+	disable_separator
 			-- Set `is_separator_on' to False.
 		require
 			exists: not is_destroyed
@@ -251,7 +251,7 @@ feature -- Status setting
 			separator_disabled: not is_separator_on 
 		end;
 
-	set_spacing (a_distance: INTEGER) is
+	set_spacing (a_distance: INTEGER)
 			-- Set `spacing' to `a_distance'.
 		require
 			exists: not is_destroyed;
@@ -262,26 +262,26 @@ feature -- Status setting
 			spacing_set: spacing = a_distance
 		end;
 
-	set_vertical is
+	set_vertical
 		do
 			set_xt_unsigned_char (screen_object,XmNorientation, XmVertical)
 		end
 
-	set_horizontal is
+	set_horizontal
 		do
 			set_xt_unsigned_char (screen_object,XmNorientation, XmHorizontal)
 		end
 
 feature {NONE} -- Implementation
 
-	xm_create_paned_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_paned_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/PanedW.h>"
 		alias
 			"XmCreatePanedWindow"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

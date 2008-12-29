@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Strategy executing `n' randomly chosen tests"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ class RANDOM_ACCESS_STRATEGY inherit
 	
 feature -- Access
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 			Result := random.seed
@@ -26,20 +26,20 @@ feature -- Access
 	 
 feature -- Status report
 
-	Is_context_needed: BOOLEAN is True
+	Is_context_needed: BOOLEAN = True
 			-- Does strategy need context? (Answer: yes)
 
-	Has_random_generator: BOOLEAN is True
+	Has_random_generator: BOOLEAN = True
 			-- Does current object have access to a random number generator?
 			-- (Answer: yes)
 	 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is current test the last test?
 		do
 			Result := (tests = 0)
 		end
 		
-	is_context_ok: BOOLEAN is
+	is_context_ok: BOOLEAN
 			-- Is context value ok?
 		do
 			Result := context.item > 0
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status report
 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 			random.set_seed (s)
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		do
 			random.forth
@@ -66,14 +66,14 @@ feature -- Cursor movement
 			test_counter_decreased: tests = old tests - 1
 		end
 	
-	start is
+	start
 			-- Select first test.
 		do
 			reset
 			suite.select_test (selected_test)
 		end
 
-	reset is
+	reset
 			-- Reset strategy.
 		do
 			Precursor
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	tests: INTEGER
 			-- Number of remaining tests
 
-	selected_test: INTEGER is
+	selected_test: INTEGER
 			-- Index of selected test
 		do
 			Result := ((random.double_item * suite.test_count).floor) + 1
@@ -100,7 +100,7 @@ invariant
 
 	test_counter_not_negative: tests >= 0
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

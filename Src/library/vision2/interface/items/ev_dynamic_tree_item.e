@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Dynamically expandable tree item.
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_function (a_subtree_function: like subtree_function) is
+	make_with_function (a_subtree_function: like subtree_function)
 			-- Create with `a_subtree_function'.
 		do
 			default_create
@@ -49,7 +49,7 @@ feature -- Access
 			-- Function be be executed to fill `Current' with items of
 			-- type EV_TREE_NODE.
 
-	set_subtree_function (a_subtree_function: like subtree_function) is
+	set_subtree_function (a_subtree_function: like subtree_function)
 			-- Assign `a_subtree_function' to `subtree_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -65,7 +65,7 @@ feature -- Access
 			subtree_function := a_subtree_function
 		end
 		
-	remove_subtree_function is
+	remove_subtree_function
 			-- Assign `Void' to `subtree_function'. Ensure `Current'
 			-- is no longer expandable.
 		do
@@ -85,10 +85,10 @@ feature -- Access
 			-- one timeout period.
 			-- Default is 1 second.
 
-	default_subtree_function_timeout: INTEGER is 1000
+	default_subtree_function_timeout: INTEGER = 1000
 			-- 1000 milliseconds = 1 second.
 
-	set_subtree_function_timeout (a_timeout: like subtree_function_timeout) is
+	set_subtree_function_timeout (a_timeout: like subtree_function_timeout)
 			-- Assign `a_timeout' to `subtree_function_timeout'.
 		require
 			not_destroyed: not is_destroyed
@@ -96,7 +96,7 @@ feature -- Access
 			subtree_function_timeout := a_timeout
 		end
 
-	subtree_function_call is
+	subtree_function_call
 			-- Call `subtree_function' if it has not been called in the last
 			-- `subtree_function_timeout' milliseconds.
 		require
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Contract support
 
-	is_expandable: BOOLEAN is
+	is_expandable: BOOLEAN
 			-- Is `Current' able to expand or collapse?
 		do
 			Result := parent_tree /= Void and subtree_function /= Void
@@ -129,7 +129,7 @@ feature -- Contract support
 		
 feature {NONE} -- Contract support
 		
-	parent_of_items_is_current: BOOLEAN is
+	parent_of_items_is_current: BOOLEAN
 			-- Do all items have parent `Current'?
 		do
 			Result := True
@@ -147,7 +147,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TREE_NODE_IMP} implementation.make (Current)
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 	last_subtree_function_call_time: INTEGER
 			-- Time in milliseconds at which `subtree_function' was last called.
 
-	fill_from_subtree_function is
+	fill_from_subtree_function
 			-- Put elements from `subtree_function' into tree.
 		local
 			linear: LINEAR [EV_TREE_NODE]
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			remove_expandable
 		end
 
-	time_msec (now: TYPED_POINTER [INTEGER]) is
+	time_msec (now: TYPED_POINTER [INTEGER])
 		external
 			"C inline use <sys/types.h>, <time.h>, <sys/timeb.h>"
 		alias
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 		
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		require
 			is_empty: is_empty
@@ -216,13 +216,13 @@ feature {NONE} -- Implementation
 			is_empty: is_empty
 		end
 		
-	remove_expandable is
+	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		do
 			implementation.remove_expandable
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a path"
 	legal: "See notice at end of class.";
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization 
 
-	make is
+	make
 			-- Create a path
 		do
 			create dash_pattern.make;
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature {FIGURE} -- Element change
 
-	set_drawing_attributes (drawing: DRAWING_I) is
+	set_drawing_attributes (drawing: DRAWING_I)
 			-- Set the attributes to `a_drawing'.
 		require
 			drawing_exists: drawing /= Void
@@ -90,7 +90,7 @@ invariant
 		((fill_style = FillStippled) or (fill_style = FillOpaqueStippled)) 
 			implies stipple /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

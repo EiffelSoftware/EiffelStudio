@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that shares a I18N_PLURAL_TOOLS object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Shared object
 
-	plural_tools: I18N_PLURAL_TOOLS is
+	plural_tools: I18N_PLURAL_TOOLS
 		once
 			create Result
 		ensure
 			result_exists: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

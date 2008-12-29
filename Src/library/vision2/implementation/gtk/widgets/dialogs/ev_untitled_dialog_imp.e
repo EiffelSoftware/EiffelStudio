@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
 			Result := 0
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

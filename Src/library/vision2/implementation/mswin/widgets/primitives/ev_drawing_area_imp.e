@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawing area. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,13 +58,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' empty with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Set up action sequence connections
 			-- and `Precursor' initialization.
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dc: WEL_DC is
+	dc: WEL_DC
 			-- The device context of the control.
 		do
 			Result := internal_paint_dc
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	in_paint: BOOLEAN
 			-- Are we inside an onPaint event?
 
-	release_dc is
+	release_dc
 			-- Release the dc if not already released
 		do
 			if not in_paint then
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_dc is
+	get_dc
 			-- Get the dc if not already get.
 		do
 			if not in_paint then
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 	to_be_cleared: BOOLEAN
 			-- Should the area be cleared?
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Set the class background to NULL in order
 			-- to have full control on the WM_ERASEBKG event
 			-- (on_erase_background)
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_pointer (Default_pointer)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Process Wm_erasebkgnd message.
 		do
 			if to_be_cleared then
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	clear_and_redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
+	clear_and_redraw_rectangle (x1, y1, a_width, a_height: INTEGER)
 			-- Redraw the rectangle at (`x1',`y1') with width `a_width' and
 			-- height `a_height'.
 		do
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			invalidate_rect (wel_rect, True)
 		end
 
-	clear_and_redraw is
+	clear_and_redraw
 			-- Redraw the application screen
 		do
 				-- Set the rectangle to be cleared.
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			invalidate
 		end
 
-	redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
+	redraw_rectangle (x1, y1, a_width, a_height: INTEGER)
 			-- Redraw the rectangle at (`x1',`y1') with width
 			-- `a_width' and height and `a_height'.
 		do
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			invalidate_rect(wel_rect, False)
 		end
 
-	redraw is
+	redraw
 			-- Redraw the application screen
 		do
 				-- Ask windows to redraw the entire window
@@ -267,19 +267,19 @@ feature {NONE} -- Implementation
 			invalidate
 		end
 
-	flush is
+	flush
 			-- Update immediately the screen if needed.
 		do
 			update
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style that memories the drawings.
 		do
 			Result := Ws_child + Ws_visible + Ws_clipchildren + Ws_clipsiblings
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
    			-- Standard style used to create the window class.
    			-- Can be redefined to return a user-defined style.
    		once
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 
 feature -- Commands.
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -308,7 +308,7 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 	screen_dc: WEL_CLIENT_DC;
 			-- dc we use when painting outside a WM_PAINT message
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

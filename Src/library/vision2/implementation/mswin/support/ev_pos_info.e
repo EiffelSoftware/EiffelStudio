@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keep information about sizing information of current widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ feature -- Status
 
 feature -- Resizing
 
-	resize (a_width, a_height: INTEGER) is
+	resize (a_width, a_height: INTEGER)
 			-- Resize to `a_width' and `a_height'.
 		require
 			a_width_positive: a_width >= 0
@@ -57,7 +57,7 @@ feature -- Resizing
 			height_assigned: height >= a_height
 		end
 
-	move (a_x, a_y: INTEGER) is
+	move (a_x, a_y: INTEGER)
 			-- Move to `a_x' and `a_y'.
 		do
 			x := a_x
@@ -67,7 +67,7 @@ feature -- Resizing
 			y_assigned: y = a_y
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER)
 			-- Move to `a_x' and `a_y' and resize to `a_width' and `a_height'.
 		require
 			a_width_positive: a_width >= 0
@@ -84,7 +84,7 @@ feature -- Resizing
 
 feature -- Settings
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set 'width' to `new_width'.
 		require
 			new_width_positive: new_width >= 0
@@ -96,7 +96,7 @@ feature -- Settings
 			is_size_specified: is_size_specified
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set `height' to `new_height'.
 		require
 			new_height_positive: new_height >= 0
@@ -108,7 +108,7 @@ feature -- Settings
 			is_size_specified: is_size_specified
 		end
 
-	set_user_minimum_width (v: INTEGER) is
+	set_user_minimum_width (v: INTEGER)
 			-- Minimum width of rectangle as specified by user.
 		require
 			positive_v: v >= 0
@@ -119,7 +119,7 @@ feature -- Settings
 			minimum_width_set: minimum_width = v
 		end
 
-	set_user_minimum_height (v: INTEGER) is
+	set_user_minimum_height (v: INTEGER)
 			-- Minimum height of rectangle as specified by user.
 		require
 			positive_v: v >= 0
@@ -130,7 +130,7 @@ feature -- Settings
 			minimum_height_set: minimum_height = v
 		end
 
-	set_minimum_width (v: INTEGER) is
+	set_minimum_width (v: INTEGER)
 			-- Minimum width of rectangle.
 		require
 			positive_v: v >= 0
@@ -142,7 +142,7 @@ feature -- Settings
 			minimum_width_set: not is_user_min_width_set implies minimum_width = v
 		end
 
-	set_minimum_height (v: INTEGER) is
+	set_minimum_height (v: INTEGER)
 			-- Minimum height of rectangle.
 		require
 			positive_v: v >= 0
@@ -154,7 +154,7 @@ feature -- Settings
 			minimum_height_set: not is_user_min_height_set implies minimum_height = v
 		end
 
-	set_is_positioned is
+	set_is_positioned
 			-- Set `is_positioned' to True.
 		do
 			is_positioned := True
@@ -164,13 +164,13 @@ feature -- Settings
 		
 feature {EV_SIZEABLE_IMP} -- Status setting
 		
-	disable_user_min_width_set is
+	disable_user_min_width_set
 			-- Assign `False' to `is_user_min_width_set'.
 		do
 			is_user_min_width_set := False
 		end
 		
-	disable_user_min_height_set is
+	disable_user_min_height_set
 			-- Assign `False' to `is_user_min_height_set'.
 		do
 			is_user_min_height_set := False
@@ -180,7 +180,7 @@ invariant
 	width_positive: width >= 0
 	height_positive: height >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

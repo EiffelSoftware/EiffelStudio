@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that have a pixmap property."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Copy of image displayed on `Current'.
 			-- Void if none.
 		require
@@ -38,7 +38,7 @@ feature {EV_BUILDER} -- Access
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Display image of `a_pixmap' on `Current'.
 			-- Image of `pixmap' will be a copy of `a_pixmap'.
 			-- Image may be scaled in some descendents, i.e EV_TREE_ITEM
@@ -52,7 +52,7 @@ feature -- Element change
 			--pixmap_assigned: pixmap_equal_to (a_pixmap) and pixmap /= a_pixmap
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove image displayed on `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Element change
 
 feature {EV_BUILDER} -- Element change
 
-	set_internal_pixmap_path (a_path: STRING_GENERAL) is
+	set_internal_pixmap_path (a_path: STRING_GENERAL)
 			-- Assign `a_path' to `internal_pixmap_path'.
 		do
 			if a_path = Void then
@@ -78,13 +78,13 @@ feature {EV_BUILDER} -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and pixmap = void
 		end
 
-	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		do
 			Result := implementation.pixmap_equal_to (a_pixmap)
@@ -95,7 +95,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_PIXMAPABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

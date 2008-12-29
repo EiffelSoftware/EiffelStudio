@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Draw normal lines (include rectangles) on gtk."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_shared
@@ -23,14 +23,14 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a half-tone line on screen.
 		do
 			screen.set_invert_mode
 			screen.fill_rectangle (a_start_x, a_start_y, a_width, a_height)
 		end
 
-	draw_rectangle (left, top, width, height, line_width: INTEGER) is
+	draw_rectangle (left, top, width, height, line_width: INTEGER)
 			-- Draw a rectangle on screen which center is blank.
 		require
 			line_width_valid: line_width > 0
@@ -45,7 +45,7 @@ feature -- Command
 			screen.draw_rectangle (left, top, width, height)
 		end
 
-	reset_feedback_clearing is
+	reset_feedback_clearing
 			-- Redefine
 		do
 			if internal_last_feedback_top /= 0 and internal_last_feedback_left /=0
@@ -60,7 +60,7 @@ feature -- Command
 
 feature {SD_FEEDBACK_DRAWER} -- Implementation
 
-	clear_last_feedback is
+	clear_last_feedback
 			-- Clear last drawn rectangle.
 		do
 				screen.set_invert_mode
@@ -81,7 +81,7 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 	screen_not_void: screen /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

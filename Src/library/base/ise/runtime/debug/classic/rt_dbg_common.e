@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common routine for RT_DBG_ classes"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Query
 
-	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD] is
+	changes_between (csr1: RT_DBG_CALL_RECORD; csr2: ?RT_DBG_CALL_RECORD): ?ARRAYED_LIST [RT_DBG_VALUE_RECORD]
 			-- Return records from `r1' to -beginning-of- `r2'.
 		require
 			csr1_not_void: csr1 /= Void
@@ -55,7 +55,7 @@ feature -- Query
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

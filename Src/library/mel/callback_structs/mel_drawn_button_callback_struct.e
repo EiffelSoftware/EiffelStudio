@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the drawn button. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_ACTIVATE, XmCR_ARM, XmCR_DISARM,
@@ -32,20 +32,20 @@ feature -- Access
 			Result := <<XmCR_ACTIVATE, XmCR_ARM, XmCR_DISARM, XmCR_EXPOSE, XmCR_RESIZE>>
 		end;
 
-	window_widget (display: MEL_DISPLAY): MEL_WIDGET is
+	window_widget (display: MEL_DISPLAY): MEL_WIDGET
 			-- Mel widget from `window'
 		do
 			Result := retrieve_widget_from_window (display.handle, window)
 		end;
 
-	click_count: INTEGER is
+	click_count: INTEGER
 		do
 			Result := c_click_count (handle)
 		end
 
 feature -- Pointer access
 
-	window: POINTER is
+	window: POINTER
 			-- The widget's window
 		do
 			Result := c_window (handle)
@@ -53,17 +53,17 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_click_count (a_callback_struct_ptr: POINTER): INTEGER is
+	c_click_count (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmDrawnButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_window (a_callback_struct_ptr: POINTER): POINTER is
+	c_window (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmDrawnButtonCallbackStruct *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

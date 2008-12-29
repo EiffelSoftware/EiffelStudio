@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constructs whose specimens are specimens of constructs %
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Status report
 
-	left_recursion: BOOLEAN is
+	left_recursion: BOOLEAN
 			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature {CONSTRUCT} -- Implementation
 
-	check_recursion is
+	check_recursion
 			-- Check choice construct for left recursion.
 		do
 			if not check_recursion_list.has (production) then
@@ -75,7 +75,7 @@ feature {CONSTRUCT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	print_children is
+	print_children
 			-- Print children separated with a bar.
 		do
 			print_name;
@@ -94,13 +94,13 @@ feature {NONE} -- Implementation
 			io.new_line
 		end; 
 
-	expand is
+	expand
 			-- Create list of possible choices.
 		do
 			expand_next
 		end; 
 
-	parse_body is
+	parse_body
 			-- Try each possible expansion and keep
 			-- the one that works.
 		local
@@ -126,14 +126,14 @@ feature {NONE} -- Implementation
 		-- has only one child which is accessed through 'retained'
 		end; 
 
-	in_action is
+	in_action
 		do
 			if retained /= Void then
 				retained.semantics
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -19,21 +19,21 @@ inherit
 
 feature -- Access
 
-	first: FONT is
+	first: FONT
 			-- Item at first position
 		require
 			not_empty: not empty
 		deferred
 		end;
 
-	item: like first is
+	item: like first
 			-- Item at cursor position
 		require
 			not_off: not off
 		deferred
 		end;
 
-	i_th alias "[]" (i: INTEGER): like first is
+	i_th alias "[]" (i: INTEGER): like first
 			-- Item at `i'_th position
 		require
 			index_large_enough: i >= 1;
@@ -41,55 +41,55 @@ feature -- Access
 		deferred
 		end;
 
-	last: like first is
+	last: like first
 			-- Item at last position
 		require
 			not_empty: not empty
 		deferred
 		end;
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current cursor position, 0 if empty
 		deferred
 		end;
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in the chain
 		deferred
 		end
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is the chain empty?
 		deferred
 		end;
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off?
 		deferred
 		end;
 
-	offleft: BOOLEAN is
+	offleft: BOOLEAN
 			-- Is cursor off left edge?
 		deferred
 		end;
 
-	offright: BOOLEAN is
+	offright: BOOLEAN
 			-- Is cursor off right edge?
 		deferred
 		end;
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position in the chain?
 		deferred
 		ensure
 			Result implies (not empty)
 		end;
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position in the chain?
 		deferred
 		ensure
@@ -98,21 +98,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy current font list.
 		deferred
 		end;
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		deferred
 		ensure
 			empty or isfirst
 		end;
 
-	finish is
+	finish
 			-- Move cursor to last position
 			-- (no effect if chain is empty).
 		deferred
@@ -120,7 +120,7 @@ feature -- Cursor movement
 			empty or islast
 		end;
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		require
 			not empty and then position <= count
@@ -129,14 +129,14 @@ feature -- Cursor movement
 			position >= 1 and position <= count + 1
 		end;
 
-	back is
+	back
 			-- Move cursor backward one position.
 		require
 			not_offleft: position > 0
 		deferred
 		end;
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		require
 			stay_right: position + i >= 0;
@@ -145,7 +145,7 @@ feature -- Cursor movement
 		deferred
 		end;
 
-	go (i: INTEGER) is
+	go (i: INTEGER)
 			-- Move cursor to position `i'.
 		require
 			index_large_enough: i >= 0;
@@ -156,7 +156,7 @@ feature -- Cursor movement
 			position_set: position = i
 		end;
 
-	search_equal (v: like first) is
+	search_equal (v: like first)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where item is equal to `v' (shallow equality);
@@ -168,7 +168,7 @@ feature -- Cursor movement
 			valid: (not off) implies (v.is_equal (item))
 		end;
 
-	index_of (v: like first; i: INTEGER): INTEGER is
+	index_of (v: like first; i: INTEGER): INTEGER
 			-- Index of `i'-th item `v'; 0 if none
 		require
 			positive_occurrence: i > 0
@@ -177,7 +177,7 @@ feature -- Cursor movement
 			positive_result: Result >= 0
 		end;
 
-	has (v: like first): BOOLEAN is
+	has (v: like first): BOOLEAN
 			-- Does `v' appear in the chain ?
 		deferred
 		end
@@ -200,7 +200,7 @@ invariant
 	not_on_empty:
 		empty implies not (isfirst or islast)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

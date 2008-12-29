@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize/Deserialize data from a medium."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_medium: IO_MEDIUM) is
+	make (a_medium: IO_MEDIUM)
 			-- Initialize current to read or write from `a_medium'.
 		require
 			a_medium_not_void: a_medium /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			buffer_size_set: buffer_size = default_buffer_size
 		end
 
-	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER) is
+	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
 			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used 
 			-- when writing.
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Header/Footer
 
-	read_header is
+	read_header
 			-- Retrieve configuration of how data was stored.
 		do
 				-- Read header
@@ -71,7 +71,7 @@ feature -- Header/Footer
 			buffer_position_reset: buffer_position = 0
 		end
 
-	write_header is
+	write_header
 			-- Store configuration on how data will be stored.
 		do
 			is_little_endian_storable := is_little_endian
@@ -86,7 +86,7 @@ feature -- Header/Footer
 			buffer_position_reset: buffer_position = 0
 		end
 
-	write_footer is
+	write_footer
 			-- Store last buffered data.
 		do
 			medium.put_managed_pointer (buffer, 0, buffer_position)
@@ -94,14 +94,14 @@ feature -- Header/Footer
 
 feature -- Status report
 
-	is_ready_for_reading: BOOLEAN is
+	is_ready_for_reading: BOOLEAN
 			-- Is Current ready for future read operations?
 		do
 			Result := is_for_reading and then
 				medium.exists and then medium.is_open_read and then medium.support_storable
 		end
 
-	is_ready_for_writing: BOOLEAN is
+	is_ready_for_writing: BOOLEAN
 			-- Is Current ready for future write operations?
 		do
 			Result := not is_for_reading and then
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation: Status report
 
-	header_size: INTEGER is
+	header_size: INTEGER
 			-- Size for header storing properties of data stored in `medium'
 		do
 			Result := 
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation: Status report
 
 feature {NONE} -- Buffer update
 
-	check_buffer (n: INTEGER) is
+	check_buffer (n: INTEGER)
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
 			-- Otherwise, read/write to `medium' to free some space.
 		do
@@ -144,7 +144,7 @@ feature {NONE} -- Buffer update
 invariant
 	medium_not_void: medium /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

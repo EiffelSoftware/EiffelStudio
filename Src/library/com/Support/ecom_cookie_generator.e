@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cookie generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	next_key: INTEGER is 
+	next_key: INTEGER 
 			-- Next available key.
 		do
 			if 
@@ -43,7 +43,7 @@ feature -- Basic operations
 			valid_key: Result <= counter
 		end
 
-	add_key_to_pool (a_key: INTEGER) is
+	add_key_to_pool (a_key: INTEGER)
 			-- Add `a_key' to available key pool.
 		require
 			valid_key: a_key >= 0 and a_key <= counter
@@ -57,7 +57,7 @@ feature -- Basic operations
 			pool_extended: available_key_pool.has (a_key)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

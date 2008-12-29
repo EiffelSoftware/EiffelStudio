@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the text. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reason - XmCR_MODIFYING_TEXT_VALUE)
@@ -31,37 +31,37 @@ feature -- Access
 			Result:= <<XmCR_MODIFYING_TEXT_VALUE>>;
 		end;
 
-	do_it: BOOLEAN is
+	do_it: BOOLEAN
 			-- Do the action?
 		do
 			Result := c_doit (handle)
 		end;
 
-	current_insert: INTEGER is
+	current_insert: INTEGER
 			-- Insert cursor's current position
 		do
 			Result := c_current_insert (handle)
 		end;
 
-	new_insert: INTEGER is
+	new_insert: INTEGER
 			-- New position of insert cursor
 		do
 			Result := c_new_insert (handle)
 		end;
 
-	start_pos: INTEGER is
+	start_pos: INTEGER
 			-- Start position of text to change
 		do
 			Result := c_start_pos (handle)
 		end;
 
-	end_pos: INTEGER is
+	end_pos: INTEGER
 			-- End position of text to change
 		do
 			Result := c_end_pos (handle)
 		end;
 
-	text_string: STRING is
+	text_string: STRING
 			-- Text that is to be inserted
 		local
 			len: INTEGER
@@ -74,7 +74,7 @@ feature -- Access
 			end;
 		end;
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of the text string
 		do
 			Result := c_text_length (c_text (handle))
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	text: POINTER is
+	text: POINTER
 			-- Pointer to TextBlockWcs structure
 		do
 			Result := c_text (handle)
@@ -90,7 +90,7 @@ feature -- Pointer access
 
 feature -- Status setting
 
-	set_do_it is
+	set_do_it
 			-- Set `do_it' to True.
 		do
 			c_text_wcs_set_do_it (True, handle)
@@ -98,7 +98,7 @@ feature -- Status setting
 			do_it: do_it
 		end;
 
-	unset_do_it is
+	unset_do_it
 			-- Set `do_it' to False.
 		do
 			c_text_wcs_set_do_it (False, handle)
@@ -108,58 +108,58 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	c_doit (a_callback_struct_ptr: POINTER): BOOLEAN is
+	c_doit (a_callback_struct_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_BOOLEAN"
 		end;
 
-	c_current_insert (a_callback_struct_ptr: POINTER): INTEGER is
+	c_current_insert (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
-	c_new_insert (a_callback_struct_ptr: POINTER): INTEGER is
+	c_new_insert (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
-	c_start_pos (a_callback_struct_ptr: POINTER): INTEGER is
+	c_start_pos (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
-	c_end_pos (a_callback_struct_ptr: POINTER): INTEGER is
+	c_end_pos (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_INTEGER"
 		end;
 
-	c_text (a_callback_struct_ptr: POINTER): POINTER is
+	c_text (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextVerifyCallbackStructWcs *): EIF_POINTER"
 		end;
 
-	c_text_length (ptr: POINTER): INTEGER is
+	c_text_length (ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextBlock): EIF_INTEGER"
 		end;
 
-	c_text_wcsptr (ptr: POINTER): POINTER is
+	c_text_wcsptr (ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmTextBlockWcs): EIF_POINTER"
 		end;
 
-	makestr (ptr: POINTER; l: INTEGER): STRING is
+	makestr (ptr: POINTER; l: INTEGER): STRING
 		external
 			"C (char *, int): EIF_REFERENCE | %"eif_plug.h%""
 		end;
 
-	c_text_wcs_set_do_it (b: BOOLEAN; ptr: POINTER) is
+	c_text_wcs_set_do_it (b: BOOLEAN; ptr: POINTER)
 		external
 			"C [macro %"callback_struct.h%"] %
 					%(EIF_BOOLEAN, XmTextVerifyCallbackStruct *)"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

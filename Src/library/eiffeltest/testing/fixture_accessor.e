@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Fixture accessing facility"
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Access
 
-	fixture: ANY is
+	fixture: ANY
 			-- Fixture accessor
 		require
 			test_has_has_fixture: connected_test.has_fixture
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	connected_test: TESTABLE;
 			-- Reference to connected test
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

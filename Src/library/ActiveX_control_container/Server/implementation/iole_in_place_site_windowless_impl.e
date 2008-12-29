@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleInPlaceSiteWindowless' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,7 +56,7 @@ inherit
 	
 feature -- Basic Operations
 
-	get_window (phwnd: CELL [POINTER]) is
+	get_window (phwnd: CELL [POINTER])
 			-- Returns the window handle to one of the windows
 			-- participating in in-place activation (frame,
 			-- document, parent, or in-place object window).
@@ -65,7 +65,7 @@ feature -- Basic Operations
 			phwnd.put (wel_item)
 		end
 
-	context_sensitive_help (f_enter_mode: INTEGER) is
+	context_sensitive_help (f_enter_mode: INTEGER)
 			-- Determines whether context-sensitive help mode
 			-- should be entered during an in-place activation
 			-- session.
@@ -74,14 +74,14 @@ feature -- Basic Operations
 			trigger (E_notimpl)
 		end
 
-	can_in_place_activate is
+	can_in_place_activate
 			-- Determines whether or not the container can
 			-- activate the object in place.
 		do
 			-- No Implementation.
 		end
 
-	on_in_place_activate is
+	on_in_place_activate
 			-- Notifies the container that one of its objects is
 			-- being activated in place.
 		local
@@ -96,7 +96,7 @@ feature -- Basic Operations
 			l_ole_in_place_object := ole_in_place_object
 		end
 
-	on_uiactivate is
+	on_uiactivate
 			-- Notifies the container that the object is about
 			-- to be activated in place and that the object is
 			-- going to replace the container's main menu with
@@ -105,7 +105,7 @@ feature -- Basic Operations
 			m_ui_active := True
 		end
 
-	get_window_context (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD) is
+	get_window_context (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD)
 			-- Enables the in-place object to retrieve the
 			-- window interfaces that form the window object 
 			-- hierarchy, and the position in the parent window 
@@ -164,7 +164,7 @@ feature -- Basic Operations
 			lp_frame_info.set_c_accel_entries (1)
 		end
 
-	scroll (scroll_extant: TAG_SIZE_RECORD) is
+	scroll (scroll_extant: TAG_SIZE_RECORD)
 			-- Specifies the number of pixels by which 
 			-- the container is to scroll the object. 
 			-- `scroll_extant' [in].  
@@ -172,7 +172,7 @@ feature -- Basic Operations
 			wel_scroll (scroll_extant.cx, scroll_extant.cy)
 		end
 
-	on_uideactivate (f_undoable: INTEGER) is
+	on_uideactivate (f_undoable: INTEGER)
 			-- Notifies the container to reinstall its 
 			-- user interface and take focus. 
 			-- `f_undoable' [in].  
@@ -180,7 +180,7 @@ feature -- Basic Operations
 			m_ui_active := False
 		end
 
-	on_in_place_deactivate is
+	on_in_place_deactivate
 			-- Notifies the container that the object 
 			-- is no longer active in place. 
 		do
@@ -188,26 +188,26 @@ feature -- Basic Operations
 			m_ole_in_place_object := Void
 		end
 
-	discard_undo_state is
+	discard_undo_state
 			-- Instructs the container to discard its undo state.
 		do
 			-- No Implementation.
 		end
 
-	deactivate_and_undo is
+	deactivate_and_undo
 			-- Deactivate the object and revert to undo state.
 		do
 			-- No Implementation.
 		end
 
-	on_pos_rect_change (lprc_pos_rect: TAG_RECT_RECORD) is
+	on_pos_rect_change (lprc_pos_rect: TAG_RECT_RECORD)
 			-- Object's extents have changed.
 			-- `lprc_pos_rect' [in].  
 		do
 			-- No Implementation.
 		end
 
-	on_in_place_activate_ex (pf_no_redraw: INTEGER_REF; dw_flags: INTEGER) is
+	on_in_place_activate_ex (pf_no_redraw: INTEGER_REF; dw_flags: INTEGER)
 			-- Called by the embedded object to determine if 
 			-- it needs to redraw itself upon activation.
 			-- `pf_no_redraw' [out].  
@@ -233,7 +233,7 @@ feature -- Basic Operations
 			end
 		end
 
-	on_in_place_deactivate_ex (f_no_redraw: INTEGER) is
+	on_in_place_deactivate_ex (f_no_redraw: INTEGER)
 			-- Notifies the container of whether the object 
 			-- needs to be redrawn upon deactivation.
 			-- `f_no_redraw' [in].  
@@ -241,14 +241,14 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	request_uiactivate is
+	request_uiactivate
 			-- Notifies the container that the object is 
 			-- about to enter the UI-active state.
 		do
 			-- No Implementation.
 		end
 
-	can_windowless_activate is
+	can_windowless_activate
 			-- Informs an object if its container can support it 
 			-- as a windowless object that can be in-place activated.
 		do
@@ -257,7 +257,7 @@ feature -- Basic Operations
 			end
 		end
 
-	get_capture is
+	get_capture
 			-- Called by an in-place active, windowless object to
 			-- determine if it still has the mouse capture or not.
 		do
@@ -266,7 +266,7 @@ feature -- Basic Operations
 			end
 		end
 
-	set_capture (f_capture: INTEGER) is
+	set_capture (f_capture: INTEGER)
 			-- Enables an in-place active, windowless object 
 			-- to capture all mouse messages.
 			-- `f_capture' [in].  
@@ -280,7 +280,7 @@ feature -- Basic Operations
 			end
 		end
 
-	get_focus is
+	get_focus
 			-- Called by an in-place active, windowless object 
 			-- to determine if it still has the keyboard focus 
 			-- or not.
@@ -288,7 +288,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	set_focus (f_focus: INTEGER) is
+	set_focus (f_focus: INTEGER)
 			-- Sets the keyboard focus for a UI-active, 
 			-- windowless object.
 			-- `f_focus' [in].  
@@ -296,7 +296,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	get_dc (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER]) is
+	get_dc (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER])
 			-- Provides an object with a handle to a device context
 			-- for a screen or compatible device from its container.
 			-- `p_rect' [in].  
@@ -311,7 +311,7 @@ feature -- Basic Operations
 			ph_dc.put (m_client_dc.item)
 		end
 
-	release_dc (h_dc: POINTER) is
+	release_dc (h_dc: POINTER)
 			-- Releases the device context previously obtained 
 			-- by a call to IOleInPlaceSiteWindowless::GetDC.
 			-- `h_dc' [in].  
@@ -322,7 +322,7 @@ feature -- Basic Operations
 			end
 		end
 
-	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER) is
+	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER)
 			-- Enables an object to invalidate a specified 
 			-- rectangle of its in-place image on the screen.
 			-- 
@@ -347,7 +347,7 @@ feature -- Basic Operations
 			end
 		end
 
-	invalidate_rgn (h_rgn: POINTER; f_erase: INTEGER) is
+	invalidate_rgn (h_rgn: POINTER; f_erase: INTEGER)
 			-- Enables an object to invalidate a specified 
 			-- region of its in-place image on the screen.
 			-- `h_rgn' [in].  
@@ -359,7 +359,7 @@ feature -- Basic Operations
 			invalidate_region (wel_region, f_erase.to_boolean)
 		end
 
-	scroll_rect (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD) is
+	scroll_rect (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD)
 			-- Enables an object to scroll an area within 
 			-- its in-place active image on the screen.
 			-- `dx' [in].  
@@ -370,7 +370,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	adjust_rect (prc: TAG_RECT_RECORD) is
+	adjust_rect (prc: TAG_RECT_RECORD)
 			-- Adjusts a specified rectangle if it is entirely 
 			-- or partially covered by overlapping, opaque objects.
 			-- `prc' [in, out].  
@@ -378,7 +378,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	on_def_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF) is
+	on_def_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF)
 			-- Invokes the default processing for all messages 
 			-- passed to an object.
 			-- `msg' [in].  
@@ -389,7 +389,7 @@ feature -- Basic Operations
 			pl_result.set_item (call_default_window_procedure (msg, w_param, l_param))
 		end
 	
-	is_child (a_window: WEL_WINDOW): BOOLEAN is
+	is_child (a_window: WEL_WINDOW): BOOLEAN
 			-- Is `a_window' child of `Current'.
 		do
 			Result := cwin_is_child (wel_item, a_window.item)
@@ -397,7 +397,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Messages
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		local
@@ -434,7 +434,7 @@ feature {NONE} -- Messages
 			end
 		end
 
-	on_set_focus is
+	on_set_focus
 			-- Wm_setfocus message
 		local
 			hwnd: POINTER
@@ -461,7 +461,7 @@ feature {NONE} -- Messages
 			end
 		end
 
-	client_side: IOLE_CLIENT_SITE_IMPL_PROXY is
+	client_side: IOLE_CLIENT_SITE_IMPL_PROXY
 			-- IOleClientSite interface of `Current'.
 		local
 			retried: BOOLEAN
@@ -474,13 +474,13 @@ feature {NONE} -- Messages
 			retry
 		end
 		
-	on_kill_focus is
+	on_kill_focus
 			-- Wm_killfocus message
 		do
 			m_have_focus := False
 		end
 		
-	on_mouse_message (msg, wparam, lparam: INTEGER): INTEGER is
+	on_mouse_message (msg, wparam, lparam: INTEGER): INTEGER
 			-- On mouse message.
 		local
 			result_ref: INTEGER_REF
@@ -496,7 +496,7 @@ feature {NONE} -- Messages
 			end
 		end
 
-	on_destroy is
+	on_destroy
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
 		local
@@ -506,7 +506,7 @@ feature {NONE} -- Messages
 			release_all
 		end
 
-	reflect_notifications (msg, wparam, lparam: INTEGER): INTEGER is
+	reflect_notifications (msg, wparam, lparam: INTEGER): INTEGER
 			-- Reflect notifications.
 		local
 			child_window: WEL_WINDOW
@@ -588,7 +588,7 @@ feature {NONE} -- Messages
 			end
 		end
 
-	on_wm_paint (wparam: INTEGER) is
+	on_wm_paint (wparam: INTEGER)
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -607,7 +607,7 @@ feature {NONE} -- Messages
 			paint_dc.release
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 		local
 			a_client_rect: WEL_RECT
@@ -659,7 +659,7 @@ feature {NONE} -- Messages
 			end
 		end
 	
-	on_forward_message (lparam: INTEGER) is
+	on_forward_message (lparam: INTEGER)
 			-- Forward message to control.
 		local
 			lpmsg: TAG_MSG_RECORD
@@ -672,7 +672,7 @@ feature {NONE} -- Messages
 		
 feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 
-	process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+	process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		local
@@ -778,7 +778,7 @@ feature {NONE} -- Implementation
 	m_in_place_uiwindow: IOLE_IN_PLACE_UIWINDOW_IMPL_PROXY
 			-- Document window.
 
-	dispose is
+	dispose
 			-- Destroy window handle and free formatter.
 			--
 			-- This function should be called by the GC when the
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	ole_lock_running (an_ole_object: POINTER; 
-		a_lock, a_last_unlock_closes: BOOLEAN) is
+		a_lock, a_last_unlock_closes: BOOLEAN)
 			-- Locks an already running object into its running
 			-- state or unlocks it from its running state.
 		external
@@ -801,7 +801,7 @@ feature {NONE} -- Externals
 			"OleLockRunning"
 		end
 
-	cwin_is_child (hwnd: POINTER; child_hwnd: POINTER): BOOLEAN is
+	cwin_is_child (hwnd: POINTER; child_hwnd: POINTER): BOOLEAN
 			-- SDK IsChild
 		external
 			"C macro signature (HWND, HWND): EIF_BOOLEAN use %"wel.h%" "
@@ -809,7 +809,7 @@ feature {NONE} -- Externals
 			"IsChild"
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

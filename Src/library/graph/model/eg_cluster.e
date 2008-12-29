@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EG_CLUSTER can be connectet to other EG_LINKABLEs and contains any number of EG_LINKABLEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an empty cluster.
 		do
 			Precursor {EG_LINKABLE}
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flat_linkables: like linkables is
+	flat_linkables: like linkables
 			-- Return all linkables containing in `Current'
 			-- including all linkables containing in sub clusters.
 		local
@@ -52,7 +52,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	sub_clusters: ARRAYED_LIST [like Current] is
+	sub_clusters: ARRAYED_LIST [like Current]
 			-- Sub clusters (top level) of Current.
 		local
 			l_cluster: like Current
@@ -73,7 +73,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	sub_nodes: ARRAYED_LIST [like node_type] is
+	sub_nodes: ARRAYED_LIST [like node_type]
 			-- Nodes (top level) of Current.
 		local
 			l_node: like node_type
@@ -94,7 +94,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	sub_nodes_recursive: ARRAYED_LIST [like node_type] is
+	sub_nodes_recursive: ARRAYED_LIST [like node_type]
 			-- All nodes in current.
 		local
 			l_sub_clusters: like sub_clusters
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (a_linkable: EG_LINKABLE): BOOLEAN is
+	has (a_linkable: EG_LINKABLE): BOOLEAN
 			-- Is `a_linkable' part of the cluster (without subclusters)?
 		require
 			a_linkable_not_void: a_linkable /= Void
@@ -131,7 +131,7 @@ feature -- Status report
 
 feature -- Element change
 
-	extend (a_linkable: EG_LINKABLE) is
+	extend (a_linkable: EG_LINKABLE)
 			-- add `a_linkable' to `Current'.
 		require
 			a_linkable_not_void: a_linkable /= Void
@@ -163,7 +163,7 @@ feature -- Element change
 			a_linkable_cluster_equal_current: a_linkable.cluster = Current
 		end
 
-	prune_all (a_linkable: EG_LINKABLE) is
+	prune_all (a_linkable: EG_LINKABLE)
 			-- remove all occurrences of `a_linkable' from `Current'.
 		require
 			a_linkable_not_void: a_linkable /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Node type
 
 	node_type: EG_NODE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

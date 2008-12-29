@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI Bind Handle"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Status report
 	
 feature -- Basic operations
 
-	bind_by_name (stmt: OCI_STATEMENT; errh: OCI_ERROR_HANDLER; varname: STRING) is
+	bind_by_name (stmt: OCI_STATEMENT; errh: OCI_ERROR_HANDLER; varname: STRING)
 			-- Create association between a program variable and a placeholder in a SQL statement
 			-- or PL/SQL block
 		require
@@ -54,7 +54,7 @@ feature -- Basic operations
 			bound: is_bound
 		end
 		
-	set_value (new_value: like value) is
+	set_value (new_value: like value)
 			-- Set value of `Current' bind-variable to `new_value'
 		require
 			value_exists: value /= Void
@@ -65,7 +65,7 @@ feature -- Basic operations
 	
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_bind
@@ -76,7 +76,7 @@ feature {NONE} -- Externals
 	oci_bind_by_name(stmtp: POINTER; bindpp: POINTER; errhp: POINTER; placeholder: POINTER;
 			placeh_len: INTEGER; valuep: POINTER; value_sz: INTEGER; dty: INTEGER_16; indp: POINTER;
 			alenp: POINTER; rcodep: POINTER; maxarr_len: INTEGER; curelep: POINTER; mode: INTEGER): 
-			INTEGER_16 is
+			INTEGER_16
 		external
 			"C (void *, void **, void *, char *, int, void *, int, short, void *, short *, short *,%
 			%int, int *, int): sword | %"oci.h%""
@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 --invariant
 --	name_not_empty: name /= Void and then not name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

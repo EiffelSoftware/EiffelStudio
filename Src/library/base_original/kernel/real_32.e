@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Real values, single precision"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ convert
 	make_from_reference ({REAL_REF}),
 	to_double: {DOUBLE}
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

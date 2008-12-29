@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Xt RectObj resources.."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNancestorSensitive: POINTER is
+	XmNancestorSensitive: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNancestorSensitive"
 		end;
 
-	XmNborderWidth: POINTER is
+	XmNborderWidth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNborderWidth"
 		end;
 
-	XmNheight: POINTER is
+	XmNheight: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNheight"
 		end;
 
-	XmNsensitive: POINTER is
+	XmNsensitive: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNsensitive"
 		end;
 
-	XmNwidth: POINTER is
+	XmNwidth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNwidth"
 		end;
 
-	XmNx: POINTER is
+	XmNx: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNx"
 		end;
 
-	XmNy: POINTER is
+	XmNy: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNy"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

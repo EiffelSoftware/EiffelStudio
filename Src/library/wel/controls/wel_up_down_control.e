@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This control is a pair of arrow buttons that the user
 		can click to increment or decrement a value.
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make an up-down control.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -50,13 +50,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Udm_getpos32, to_wparam (0), to_lparam (0))
 		end
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum position
 		local
 			lower: INTEGER
@@ -66,7 +66,7 @@ feature -- Access
 			Result := lower
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum position
 		local
 			upper: INTEGER
@@ -76,7 +76,7 @@ feature -- Access
 			Result := upper
 		end
 
-	buddy_window: WEL_WINDOW is
+	buddy_window: WEL_WINDOW
 			-- Current buddy window
 		require
 			exists: exists
@@ -87,14 +87,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_position (a_position: INTEGER) is
+	set_position (a_position: INTEGER)
 			-- Set `position' with `new_position'.
 		do
 			{WEL_API}.send_message (item, udm_setpos32, to_wparam (0),
 				to_lparam (a_position))
 		end
 
-	set_range (a_minimum, a_maximum: INTEGER) is
+	set_range (a_minimum, a_maximum: INTEGER)
 			-- Set `minimum' and `maximum' with `a_minimum' and
 			-- `a_maximum'.
 		do
@@ -102,7 +102,7 @@ feature -- Element change
 				to_lparam (a_maximum))
 		end
 
-	set_buddy_window (a_window: WEL_WINDOW) is
+	set_buddy_window (a_window: WEL_WINDOW)
 			-- Set the buddy window with `a_window'.
 		require
 			exists: exists
@@ -117,7 +117,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_decimal_base is
+	set_decimal_base
 			-- Set the radix base to decimal.
 		require
 			exists: exists
@@ -127,7 +127,7 @@ feature -- Status setting
 			decimal_base: decimal_base
 		end
 
-	set_hexadecimal_base is
+	set_hexadecimal_base
 			-- Set the radix base to hexadecimal.
 		require
 			exists: exists
@@ -139,7 +139,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	decimal_base: BOOLEAN is
+	decimal_base: BOOLEAN
 			-- Is the base decimal?
 		require
 			exists: exists
@@ -148,7 +148,7 @@ feature -- Status report
 				Udm_getbase, to_wparam (0), to_lparam (0)) = 10
 		end
 
-	hexadecimal_base: BOOLEAN is
+	hexadecimal_base: BOOLEAN
 			-- Is the base hexadecimal?
 		require
 			exists: exists
@@ -159,13 +159,13 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_updown_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -174,14 +174,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_updown_class: POINTER is
+	cwin_updown_class: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"UPDOWN_CLASS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

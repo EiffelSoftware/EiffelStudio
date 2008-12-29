@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "SPI constants for SystemParametersInfo."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,525 +10,525 @@ class
 
 feature -- SystemParameter (All Windows)
 
-	Spi_getsnaptodefbutton: INTEGER is 95
+	Spi_getsnaptodefbutton: INTEGER = 95
 			-- Declared in Windows as SPI_GETSNAPTODEFBUTTON
 
-	Spi_setsnaptodefbutton: INTEGER is 96
+	Spi_setsnaptodefbutton: INTEGER = 96
 			-- Declared in Windows as SPI_SETSNAPTODEFBUTTON
 
-	Spi_getserialkeys: INTEGER is 62
+	Spi_getserialkeys: INTEGER = 62
 			-- Declared in Windows as SPI_GETSERIALKEYS
 
-	Spi_setserialkeys: INTEGER is 63
+	Spi_setserialkeys: INTEGER = 63
 			-- Declared in Windows as SPI_SETSERIALKEYS
 
-	Spi_setdragfullwindows: INTEGER is 37
+	Spi_setdragfullwindows: INTEGER = 37
 			-- Declared in Windows as SPI_SETDRAGFULLWINDOWS
 
-	Spi_getdragfullwindows: INTEGER is 38
+	Spi_getdragfullwindows: INTEGER = 38
 			-- Declared in Windows as SPI_GETDRAGFULLWINDOWS
 
-	Spi_getnonclientmetrics: INTEGER is 41
+	Spi_getnonclientmetrics: INTEGER = 41
 			-- Declared in Windows as SPI_GETNONCLIENTMETRICS
 
-	Spi_setnonclientmetrics: INTEGER is 42
+	Spi_setnonclientmetrics: INTEGER = 42
 			-- Declared in Windows as SPI_SETNONCLIENTMETRICS
 
-	Spi_getminimizedmetrics: INTEGER is 43
+	Spi_getminimizedmetrics: INTEGER = 43
 			-- Declared in Windows as SPI_GETMINIMIZEDMETRICS
 
-	Spi_setminimizedmetrics: INTEGER is 44
+	Spi_setminimizedmetrics: INTEGER = 44
 			-- Declared in Windows as SPI_SETMINIMIZEDMETRICS
 
-	Spi_geticonmetrics: INTEGER is 45
+	Spi_geticonmetrics: INTEGER = 45
 			-- Declared in Windows as SPI_GETICONMETRICS
 
-	Spi_seticonmetrics: INTEGER is 46
+	Spi_seticonmetrics: INTEGER = 46
 			-- Declared in Windows as SPI_SETICONMETRICS
 
-	Spi_setworkarea: INTEGER is 47
+	Spi_setworkarea: INTEGER = 47
 			-- Declared in Windows as SPI_SETWORKAREA
 
-	Spi_getworkarea: INTEGER is 48
+	Spi_getworkarea: INTEGER = 48
 			-- Declared in Windows as SPI_GETWORKAREA
 
-	Spi_setpenwindows: INTEGER is 49
+	Spi_setpenwindows: INTEGER = 49
 			-- Declared in Windows as SPI_SETPENWINDOWS
 
-	Spi_gethighcontrast: INTEGER is 66
+	Spi_gethighcontrast: INTEGER = 66
 			-- Declared in Windows as SPI_GETHIGHCONTRAST
 
-	Spi_sethighcontrast: INTEGER is 67
+	Spi_sethighcontrast: INTEGER = 67
 			-- Declared in Windows as SPI_SETHIGHCONTRAST
 
-	Spi_getkeyboardpref: INTEGER is 68
+	Spi_getkeyboardpref: INTEGER = 68
 			-- Declared in Windows as SPI_GETKEYBOARDPREF
 
-	Spi_setkeyboardpref: INTEGER is 69
+	Spi_setkeyboardpref: INTEGER = 69
 			-- Declared in Windows as SPI_SETKEYBOARDPREF
 
-	Spi_getscreenreader: INTEGER is 70
+	Spi_getscreenreader: INTEGER = 70
 			-- Declared in Windows as SPI_GETSCREENREADER
 
-	Spi_setscreenreader: INTEGER is 71
+	Spi_setscreenreader: INTEGER = 71
 			-- Declared in Windows as SPI_SETSCREENREADER
 
-	Spi_getanimation: INTEGER is 72
+	Spi_getanimation: INTEGER = 72
 			-- Declared in Windows as SPI_GETANIMATION
 
-	Spi_setanimation: INTEGER is 73
+	Spi_setanimation: INTEGER = 73
 			-- Declared in Windows as SPI_SETANIMATION
 
-	Spi_getfontsmoothing: INTEGER is 74
+	Spi_getfontsmoothing: INTEGER = 74
 			-- Declared in Windows as SPI_GETFONTSMOOTHING
 
-	Spi_setfontsmoothing: INTEGER is 75
+	Spi_setfontsmoothing: INTEGER = 75
 			-- Declared in Windows as SPI_SETFONTSMOOTHING
 
-	Spi_setdragwidth: INTEGER is 76
+	Spi_setdragwidth: INTEGER = 76
 			-- Declared in Windows as SPI_SETDRAGWIDTH
 
-	Spi_setdragheight: INTEGER is 77
+	Spi_setdragheight: INTEGER = 77
 			-- Declared in Windows as SPI_SETDRAGHEIGHT
 
-	Spi_sethandheld: INTEGER is 78
+	Spi_sethandheld: INTEGER = 78
 			-- Declared in Windows as SPI_SETHANDHELD
 
-	Spi_getlowpowertimeout: INTEGER is 79
+	Spi_getlowpowertimeout: INTEGER = 79
 			-- Declared in Windows as SPI_GETLOWPOWERTIMEOUT
 
-	Spi_getpowerofftimeout: INTEGER is 80
+	Spi_getpowerofftimeout: INTEGER = 80
 			-- Declared in Windows as SPI_GETPOWEROFFTIMEOUT
 
-	Spi_setlowpowertimeout: INTEGER is 81
+	Spi_setlowpowertimeout: INTEGER = 81
 			-- Declared in Windows as SPI_SETLOWPOWERTIMEOUT
 
-	Spi_setpowerofftimeout: INTEGER is 82
+	Spi_setpowerofftimeout: INTEGER = 82
 			-- Declared in Windows as SPI_SETPOWEROFFTIMEOUT
 
-	Spi_getlowpoweractive: INTEGER is 83
+	Spi_getlowpoweractive: INTEGER = 83
 			-- Declared in Windows as SPI_GETLOWPOWERACTIVE
 
-	Spi_getpoweroffactive: INTEGER is 84
+	Spi_getpoweroffactive: INTEGER = 84
 			-- Declared in Windows as SPI_GETPOWEROFFACTIVE
 
-	Spi_setlowpoweractive: INTEGER is 85
+	Spi_setlowpoweractive: INTEGER = 85
 			-- Declared in Windows as SPI_SETLOWPOWERACTIVE
 
-	Spi_setpoweroffactive: INTEGER is 86
+	Spi_setpoweroffactive: INTEGER = 86
 			-- Declared in Windows as SPI_SETPOWEROFFACTIVE
 
-	Spi_setcursors: INTEGER is 87
+	Spi_setcursors: INTEGER = 87
 			-- Declared in Windows as SPI_SETCURSORS
 
-	Spi_seticons: INTEGER is 88
+	Spi_seticons: INTEGER = 88
 			-- Declared in Windows as SPI_SETICONS
 
-	Spi_getdefaultinputlang: INTEGER is 89
+	Spi_getdefaultinputlang: INTEGER = 89
 			-- Declared in Windows as SPI_GETDEFAULTINPUTLANG
 
-	Spi_setdefaultinputlang: INTEGER is 90
+	Spi_setdefaultinputlang: INTEGER = 90
 			-- Declared in Windows as SPI_SETDEFAULTINPUTLANG
 
-	Spi_setlangtoggle: INTEGER is 91
+	Spi_setlangtoggle: INTEGER = 91
 			-- Declared in Windows as SPI_SETLANGTOGGLE
 
-	Spi_getwindowsextension: INTEGER is 92
+	Spi_getwindowsextension: INTEGER = 92
 			-- Declared in Windows as SPI_GETWINDOWSEXTENSION
 
-	Spi_setmousetrails: INTEGER is 93
+	Spi_setmousetrails: INTEGER = 93
 			-- Declared in Windows as SPI_SETMOUSETRAILS
 
-	Spi_getmousetrails: INTEGER is 94
+	Spi_getmousetrails: INTEGER = 94
 			-- Declared in Windows as SPI_GETMOUSETRAILS
 
-	Spi_setscreensaverrunning: INTEGER is 97
+	Spi_setscreensaverrunning: INTEGER = 97
 			-- Declared in Windows as SPI_SETSCREENSAVERRUNNING
 
-	Spi_screensaverrunning: INTEGER is 97
+	Spi_screensaverrunning: INTEGER = 97
 			-- Declared in Windows as SPI_SCREENSAVERRUNNING
 
-	Spi_getbeep: INTEGER is 1
+	Spi_getbeep: INTEGER = 1
 			-- Declared in Windows as SPI_GETBEEP
 
-	Spi_setbeep: INTEGER is 2
+	Spi_setbeep: INTEGER = 2
 			-- Declared in Windows as SPI_SETBEEP
 
-	Spi_getmouse: INTEGER is 3
+	Spi_getmouse: INTEGER = 3
 			-- Declared in Windows as SPI_GETMOUSE
 
-	Spi_setmouse: INTEGER is 4
+	Spi_setmouse: INTEGER = 4
 			-- Declared in Windows as SPI_SETMOUSE
 
-	Spi_getborder: INTEGER is 5
+	Spi_getborder: INTEGER = 5
 			-- Declared in Windows as SPI_GETBORDER
 
-	Spi_setborder: INTEGER is 6
+	Spi_setborder: INTEGER = 6
 			-- Declared in Windows as SPI_SETBORDER
 
-	Spi_getkeyboardspeed: INTEGER is 10
+	Spi_getkeyboardspeed: INTEGER = 10
 			-- Declared in Windows as SPI_GETKEYBOARDSPEED
 
-	Spi_setkeyboardspeed: INTEGER is 11
+	Spi_setkeyboardspeed: INTEGER = 11
 			-- Declared in Windows as SPI_SETKEYBOARDSPEED
 
-	Spi_langdriver: INTEGER is 12
+	Spi_langdriver: INTEGER = 12
 			-- Declared in Windows as SPI_LANGDRIVER
 
-	Spi_iconhorizontalspacing: INTEGER is 13
+	Spi_iconhorizontalspacing: INTEGER = 13
 			-- Declared in Windows as SPI_ICONHORIZONTALSPACING
 
-	Spi_getscreensavetimeout: INTEGER is 14
+	Spi_getscreensavetimeout: INTEGER = 14
 			-- Declared in Windows as SPI_GETSCREENSAVETIMEOUT
 
-	Spi_setscreensavetimeout: INTEGER is 15
+	Spi_setscreensavetimeout: INTEGER = 15
 			-- Declared in Windows as SPI_SETSCREENSAVETIMEOUT
 
-	Spi_getscreensaveactive: INTEGER is 16
+	Spi_getscreensaveactive: INTEGER = 16
 			-- Declared in Windows as SPI_GETSCREENSAVEACTIVE
 
-	Spi_setscreensaveactive: INTEGER is 17
+	Spi_setscreensaveactive: INTEGER = 17
 			-- Declared in Windows as SPI_SETSCREENSAVEACTIVE
 
-	Spi_getgridgranularity: INTEGER is 18
+	Spi_getgridgranularity: INTEGER = 18
 			-- Declared in Windows as SPI_GETGRIDGRANULARITY
 
-	Spi_setgridgranularity: INTEGER is 19
+	Spi_setgridgranularity: INTEGER = 19
 			-- Declared in Windows as SPI_SETGRIDGRANULARITY
 
-	Spi_setdeskwallpaper: INTEGER is 20
+	Spi_setdeskwallpaper: INTEGER = 20
 			-- Declared in Windows as SPI_SETDESKWALLPAPER
 
-	Spi_setdeskpattern: INTEGER is 21
+	Spi_setdeskpattern: INTEGER = 21
 			-- Declared in Windows as SPI_SETDESKPATTERN
 
-	Spi_getkeyboarddelay: INTEGER is 22
+	Spi_getkeyboarddelay: INTEGER = 22
 			-- Declared in Windows as SPI_GETKEYBOARDDELAY
 
-	Spi_setkeyboarddelay: INTEGER is 23
+	Spi_setkeyboarddelay: INTEGER = 23
 			-- Declared in Windows as SPI_SETKEYBOARDDELAY
 
-	Spi_iconverticalspacing: INTEGER is 24
+	Spi_iconverticalspacing: INTEGER = 24
 			-- Declared in Windows as SPI_ICONVERTICALSPACING
 
-	Spi_geticontitlewrap: INTEGER is 25
+	Spi_geticontitlewrap: INTEGER = 25
 			-- Declared in Windows as SPI_GETICONTITLEWRAP
 
-	Spi_seticontitlewrap: INTEGER is 26
+	Spi_seticontitlewrap: INTEGER = 26
 			-- Declared in Windows as SPI_SETICONTITLEWRAP
 
-	Spi_getmenudropalignment: INTEGER is 27
+	Spi_getmenudropalignment: INTEGER = 27
 			-- Declared in Windows as SPI_GETMENUDROPALIGNMENT
 
-	Spi_setmenudropalignment: INTEGER is 28
+	Spi_setmenudropalignment: INTEGER = 28
 			-- Declared in Windows as SPI_SETMENUDROPALIGNMENT
 
-	Spi_setdoubleclkwidth: INTEGER is 29
+	Spi_setdoubleclkwidth: INTEGER = 29
 			-- Declared in Windows as SPI_SETDOUBLECLKWIDTH
 
-	Spi_setdoubleclkheight: INTEGER is 30
+	Spi_setdoubleclkheight: INTEGER = 30
 			-- Declared in Windows as SPI_SETDOUBLECLKHEIGHT
 
-	Spi_geticontitlelogfont: INTEGER is 31
+	Spi_geticontitlelogfont: INTEGER = 31
 			-- Declared in Windows as SPI_GETICONTITLELOGFONT
 
-	Spi_setdoubleclicktime: INTEGER is 32
+	Spi_setdoubleclicktime: INTEGER = 32
 			-- Declared in Windows as SPI_SETDOUBLECLICKTIME
 
-	Spi_setmousebuttonswap: INTEGER is 33
+	Spi_setmousebuttonswap: INTEGER = 33
 			-- Declared in Windows as SPI_SETMOUSEBUTTONSWAP
 
-	Spi_seticontitlelogfont: INTEGER is 34
+	Spi_seticontitlelogfont: INTEGER = 34
 			-- Declared in Windows as SPI_SETICONTITLELOGFONT
 
-	Spi_getfasttaskswitch: INTEGER is 35
+	Spi_getfasttaskswitch: INTEGER = 35
 			-- Declared in Windows as SPI_GETFASTTASKSWITCH
 
-	Spi_setfasttaskswitch: INTEGER is 36
+	Spi_setfasttaskswitch: INTEGER = 36
 			-- Declared in Windows as SPI_SETFASTTASKSWITCH
 
-	Spi_getfilterkeys: INTEGER is 50
+	Spi_getfilterkeys: INTEGER = 50
 			-- Declared in Windows as SPI_GETFILTERKEYS
 
-	Spi_setfilterkeys: INTEGER is 51
+	Spi_setfilterkeys: INTEGER = 51
 			-- Declared in Windows as SPI_SETFILTERKEYS
 
-	Spi_gettogglekeys: INTEGER is 52
+	Spi_gettogglekeys: INTEGER = 52
 			-- Declared in Windows as SPI_GETTOGGLEKEYS
 
-	Spi_settogglekeys: INTEGER is 53
+	Spi_settogglekeys: INTEGER = 53
 			-- Declared in Windows as SPI_SETTOGGLEKEYS
 
-	Spi_getmousekeys: INTEGER is 54
+	Spi_getmousekeys: INTEGER = 54
 			-- Declared in Windows as SPI_GETMOUSEKEYS
 
-	Spi_setmousekeys: INTEGER is 55
+	Spi_setmousekeys: INTEGER = 55
 			-- Declared in Windows as SPI_SETMOUSEKEYS
 
-	Spi_getshowsounds: INTEGER is 56
+	Spi_getshowsounds: INTEGER = 56
 			-- Declared in Windows as SPI_GETSHOWSOUNDS
 
-	Spi_setshowsounds: INTEGER is 57
+	Spi_setshowsounds: INTEGER = 57
 			-- Declared in Windows as SPI_SETSHOWSOUNDS
 
-	Spi_getstickykeys: INTEGER is 58
+	Spi_getstickykeys: INTEGER = 58
 			-- Declared in Windows as SPI_GETSTICKYKEYS
 
-	Spi_setstickykeys: INTEGER is 59
+	Spi_setstickykeys: INTEGER = 59
 			-- Declared in Windows as SPI_SETSTICKYKEYS
 
-	Spi_getaccesstimeout: INTEGER is 60
+	Spi_getaccesstimeout: INTEGER = 60
 			-- Declared in Windows as SPI_GETACCESSTIMEOUT
 
-	Spi_setaccesstimeout: INTEGER is 61
+	Spi_setaccesstimeout: INTEGER = 61
 			-- Declared in Windows as SPI_SETACCESSTIMEOUT
 
-	Spi_getsoundsentry: INTEGER is 64
+	Spi_getsoundsentry: INTEGER = 64
 			-- Declared in Windows as SPI_GETSOUNDSENTRY
 
-	Spi_setsoundsentry: INTEGER is 65
+	Spi_setsoundsentry: INTEGER = 65
 			-- Declared in Windows as SPI_SETSOUNDSENTRY
 
 feature -- SystemParameter (Windows NT 4.0, Windows 98, Windows 2000 and above)
 
-	Spi_getmousehoverwidth: INTEGER is 98
+	Spi_getmousehoverwidth: INTEGER = 98
 			-- Declared in Windows as SPI_GETMOUSEHOVERWIDTH
 
-	Spi_setmousehoverwidth: INTEGER is 99
+	Spi_setmousehoverwidth: INTEGER = 99
 			-- Declared in Windows as SPI_SETMOUSEHOVERWIDTH
 
-	Spi_getmousehoverheight: INTEGER is 100
+	Spi_getmousehoverheight: INTEGER = 100
 			-- Declared in Windows as SPI_GETMOUSEHOVERHEIGHT
 
-	Spi_setmousehoverheight: INTEGER is 101
+	Spi_setmousehoverheight: INTEGER = 101
 			-- Declared in Windows as SPI_SETMOUSEHOVERHEIGHT
 
-	Spi_getmousehovertime: INTEGER is 102
+	Spi_getmousehovertime: INTEGER = 102
 			-- Declared in Windows as SPI_GETMOUSEHOVERTIME
 
-	Spi_setmousehovertime: INTEGER is 103
+	Spi_setmousehovertime: INTEGER = 103
 			-- Declared in Windows as SPI_SETMOUSEHOVERTIME
 
-	Spi_getwheelscrolllines: INTEGER is 104
+	Spi_getwheelscrolllines: INTEGER = 104
 			-- Declared in Windows as SPI_GETWHEELSCROLLLINES
 
-	Spi_setwheelscrolllines: INTEGER is 105
+	Spi_setwheelscrolllines: INTEGER = 105
 			-- Declared in Windows as SPI_SETWHEELSCROLLLINES
 
-	Spi_getmenushowdelay: INTEGER is 106
+	Spi_getmenushowdelay: INTEGER = 106
 			-- Declared in Windows as SPI_GETMENUSHOWDELAY
 
-	Spi_setmenushowdelay: INTEGER is 107
+	Spi_setmenushowdelay: INTEGER = 107
 			-- Declared in Windows as SPI_SETMENUSHOWDELAY
 
-	Spi_getshowimeui: INTEGER is 110
+	Spi_getshowimeui: INTEGER = 110
 			-- Declared in Windows as SPI_GETSHOWIMEUI
 
-	Spi_setshowimeui: INTEGER is 111
+	Spi_setshowimeui: INTEGER = 111
 			-- Declared in Windows as SPI_SETSHOWIMEUI
 
 feature -- SystemParameter (Windows 98, Windows 2000 and above)
 
-	Spi_getmousespeed: INTEGER is 112
+	Spi_getmousespeed: INTEGER = 112
 			-- Declared in Windows as SPI_GETMOUSESPEED
 
-	Spi_setmousespeed: INTEGER is 113
+	Spi_setmousespeed: INTEGER = 113
 			-- Declared in Windows as SPI_SETMOUSESPEED
 
-	Spi_getscreensaverrunning: INTEGER is 114
+	Spi_getscreensaverrunning: INTEGER = 114
 			-- Declared in Windows as SPI_GETSCREENSAVERRUNNING
 
-	Spi_getdeskwallpaper: INTEGER is 115
+	Spi_getdeskwallpaper: INTEGER = 115
 			-- Declared in Windows as SPI_GETDESKWALLPAPER
 
-	Spi_getactivewindowtracking: INTEGER is 4096
+	Spi_getactivewindowtracking: INTEGER = 4096
 			-- Declared in Windows as SPI_GETACTIVEWINDOWTRACKING
 
-	Spi_setactivewindowtracking: INTEGER is 4097
+	Spi_setactivewindowtracking: INTEGER = 4097
 			-- Declared in Windows as SPI_SETACTIVEWINDOWTRACKING
 
-	Spi_getmenuanimation: INTEGER is 4098
+	Spi_getmenuanimation: INTEGER = 4098
 			-- Declared in Windows as SPI_GETMENUANIMATION
 
-	Spi_setmenuanimation: INTEGER is 4099
+	Spi_setmenuanimation: INTEGER = 4099
 			-- Declared in Windows as SPI_SETMENUANIMATION
 
-	Spi_getcomboboxanimation: INTEGER is 4100
+	Spi_getcomboboxanimation: INTEGER = 4100
 			-- Declared in Windows as SPI_GETCOMBOBOXANIMATION
 
-	Spi_setcomboboxanimation: INTEGER is 4101
+	Spi_setcomboboxanimation: INTEGER = 4101
 			-- Declared in Windows as SPI_SETCOMBOBOXANIMATION
 
-	Spi_getlistboxsmoothscrolling: INTEGER is 4102
+	Spi_getlistboxsmoothscrolling: INTEGER = 4102
 			-- Declared in Windows as SPI_GETLISTBOXSMOOTHSCROLLING
 
-	Spi_setlistboxsmoothscrolling: INTEGER is 4103
+	Spi_setlistboxsmoothscrolling: INTEGER = 4103
 			-- Declared in Windows as SPI_SETLISTBOXSMOOTHSCROLLING
 
-	Spi_getgradientcaptions: INTEGER is 4104
+	Spi_getgradientcaptions: INTEGER = 4104
 			-- Declared in Windows as SPI_GETGRADIENTCAPTIONS
 
-	Spi_setgradientcaptions: INTEGER is 4105
+	Spi_setgradientcaptions: INTEGER = 4105
 			-- Declared in Windows as SPI_SETGRADIENTCAPTIONS
 
-	Spi_getkeyboardcues: INTEGER is 4106
+	Spi_getkeyboardcues: INTEGER = 4106
 			-- Declared in Windows as SPI_GETKEYBOARDCUES
 
-	Spi_setkeyboardcues: INTEGER is 4107
+	Spi_setkeyboardcues: INTEGER = 4107
 			-- Declared in Windows as SPI_SETKEYBOARDCUES
 
-	Spi_getmenuunderlines: INTEGER is 4106
+	Spi_getmenuunderlines: INTEGER = 4106
 			-- Declared in Windows as SPI_GETMENUUNDERLINES
 
-	Spi_setmenuunderlines: INTEGER is 4107
+	Spi_setmenuunderlines: INTEGER = 4107
 			-- Declared in Windows as SPI_SETMENUUNDERLINES
 
-	Spi_getactivewndtrkzorder: INTEGER is 4108
+	Spi_getactivewndtrkzorder: INTEGER = 4108
 			-- Declared in Windows as SPI_GETACTIVEWNDTRKZORDER
 
-	Spi_setactivewndtrkzorder: INTEGER is 4109
+	Spi_setactivewndtrkzorder: INTEGER = 4109
 			-- Declared in Windows as SPI_SETACTIVEWNDTRKZORDER
 
-	Spi_gethottracking: INTEGER is 4110
+	Spi_gethottracking: INTEGER = 4110
 			-- Declared in Windows as SPI_GETHOTTRACKING
 
-	Spi_sethottracking: INTEGER is 4111
+	Spi_sethottracking: INTEGER = 4111
 			-- Declared in Windows as SPI_SETHOTTRACKING
 
-	Spi_getmenufade: INTEGER is 4114
+	Spi_getmenufade: INTEGER = 4114
 			-- Declared in Windows as SPI_GETMENUFADE
 
-	Spi_setmenufade: INTEGER is 4115
+	Spi_setmenufade: INTEGER = 4115
 			-- Declared in Windows as SPI_SETMENUFADE
 
-	Spi_getselectionfade: INTEGER is 4116
+	Spi_getselectionfade: INTEGER = 4116
 			-- Declared in Windows as SPI_GETSELECTIONFADE
 
-	Spi_setselectionfade: INTEGER is 4117
+	Spi_setselectionfade: INTEGER = 4117
 			-- Declared in Windows as SPI_SETSELECTIONFADE
 
-	Spi_gettooltipanimation: INTEGER is 4118
+	Spi_gettooltipanimation: INTEGER = 4118
 			-- Declared in Windows as SPI_GETTOOLTIPANIMATION
 
-	Spi_settooltipanimation: INTEGER is 4119
+	Spi_settooltipanimation: INTEGER = 4119
 			-- Declared in Windows as SPI_SETTOOLTIPANIMATION
 
-	Spi_gettooltipfade: INTEGER is 4120
+	Spi_gettooltipfade: INTEGER = 4120
 			-- Declared in Windows as SPI_GETTOOLTIPFADE
 
-	Spi_settooltipfade: INTEGER is 4121
+	Spi_settooltipfade: INTEGER = 4121
 			-- Declared in Windows as SPI_SETTOOLTIPFADE
 
-	Spi_getcursorshadow: INTEGER is 4122
+	Spi_getcursorshadow: INTEGER = 4122
 			-- Declared in Windows as SPI_GETCURSORSHADOW
 
-	Spi_setcursorshadow: INTEGER is 4123
+	Spi_setcursorshadow: INTEGER = 4123
 			-- Declared in Windows as SPI_SETCURSORSHADOW
 
-	Spi_getuieffects: INTEGER is 4158
+	Spi_getuieffects: INTEGER = 4158
 			-- Declared in Windows as SPI_GETUIEFFECTS
 
-	Spi_setuieffects: INTEGER is 4159
+	Spi_setuieffects: INTEGER = 4159
 			-- Declared in Windows as SPI_SETUIEFFECTS
 
-	Spi_getforegroundlocktimeout: INTEGER is 8192
+	Spi_getforegroundlocktimeout: INTEGER = 8192
 			-- Declared in Windows as SPI_GETFOREGROUNDLOCKTIMEOUT
 
-	Spi_setforegroundlocktimeout: INTEGER is 8193
+	Spi_setforegroundlocktimeout: INTEGER = 8193
 			-- Declared in Windows as SPI_SETFOREGROUNDLOCKTIMEOUT
 
-	Spi_getactivewndtrktimeout: INTEGER is 8194
+	Spi_getactivewndtrktimeout: INTEGER = 8194
 			-- Declared in Windows as SPI_GETACTIVEWNDTRKTIMEOUT
 
-	Spi_setactivewndtrktimeout: INTEGER is 8195
+	Spi_setactivewndtrktimeout: INTEGER = 8195
 			-- Declared in Windows as SPI_SETACTIVEWNDTRKTIMEOUT
 
-	Spi_getforegroundflashcount: INTEGER is 8196
+	Spi_getforegroundflashcount: INTEGER = 8196
 			-- Declared in Windows as SPI_GETFOREGROUNDFLASHCOUNT
 
-	Spi_setforegroundflashcount: INTEGER is 8197
+	Spi_setforegroundflashcount: INTEGER = 8197
 			-- Declared in Windows as SPI_SETFOREGROUNDFLASHCOUNT
 
-	Spi_getcaretwidth: INTEGER is 8198
+	Spi_getcaretwidth: INTEGER = 8198
 			-- Declared in Windows as SPI_GETCARETWIDTH
 
-	Spi_setcaretwidth: INTEGER is 8199
+	Spi_setcaretwidth: INTEGER = 8199
 			-- Declared in Windows as SPI_SETCARETWIDTH
 
 feature -- SystemParameter (Windows XP and above)
 
-	Spi_getmousesonar: INTEGER is 4124
+	Spi_getmousesonar: INTEGER = 4124
 			-- Declared in Windows as SPI_GETMOUSESONAR
 
-	Spi_setmousesonar: INTEGER is 4125
+	Spi_setmousesonar: INTEGER = 4125
 			-- Declared in Windows as SPI_SETMOUSESONAR
 
-	Spi_getmouseclicklock: INTEGER is 4126
+	Spi_getmouseclicklock: INTEGER = 4126
 			-- Declared in Windows as SPI_GETMOUSECLICKLOCK
 
-	Spi_setmouseclicklock: INTEGER is 4127
+	Spi_setmouseclicklock: INTEGER = 4127
 			-- Declared in Windows as SPI_SETMOUSECLICKLOCK
 
-	Spi_getmousevanish: INTEGER is 4128
+	Spi_getmousevanish: INTEGER = 4128
 			-- Declared in Windows as SPI_GETMOUSEVANISH
 
-	Spi_setmousevanish: INTEGER is 4129
+	Spi_setmousevanish: INTEGER = 4129
 			-- Declared in Windows as SPI_SETMOUSEVANISH
 
-	Spi_getflatmenu: INTEGER is 4130
+	Spi_getflatmenu: INTEGER = 4130
 			-- Declared in Windows as SPI_GETFLATMENU
 
-	Spi_setflatmenu: INTEGER is 4131
+	Spi_setflatmenu: INTEGER = 4131
 			-- Declared in Windows as SPI_SETFLATMENU
 
-	Spi_getdropshadow: INTEGER is 4132
+	Spi_getdropshadow: INTEGER = 4132
 			-- Declared in Windows as SPI_GETDROPSHADOW
 
-	Spi_setdropshadow: INTEGER is 4133
+	Spi_setdropshadow: INTEGER = 4133
 			-- Declared in Windows as SPI_SETDROPSHADOW
 
-	Spi_getmouseclicklocktime: INTEGER is 8200
+	Spi_getmouseclicklocktime: INTEGER = 8200
 			-- Declared in Windows as SPI_GETMOUSECLICKLOCKTIME
 
-	Spi_setmouseclicklocktime: INTEGER is 8201
+	Spi_setmouseclicklocktime: INTEGER = 8201
 			-- Declared in Windows as SPI_SETMOUSECLICKLOCKTIME
 
-	Spi_getfontsmoothingtype: INTEGER is 8202
+	Spi_getfontsmoothingtype: INTEGER = 8202
 			-- Declared in Windows as SPI_GETFONTSMOOTHINGTYPE
 
-	Spi_setfontsmoothingtype: INTEGER is 8203
+	Spi_setfontsmoothingtype: INTEGER = 8203
 			-- Declared in Windows as SPI_SETFONTSMOOTHINGTYPE
 
-	Spi_getfontsmoothingcontrast: INTEGER is 8204
+	Spi_getfontsmoothingcontrast: INTEGER = 8204
 			-- Declared in Windows as SPI_GETFONTSMOOTHINGCONTRAST
 
-	Spi_setfontsmoothingcontrast: INTEGER is 8205
+	Spi_setfontsmoothingcontrast: INTEGER = 8205
 			-- Declared in Windows as SPI_SETFONTSMOOTHINGCONTRAST
 
-	Spi_getfocusborderwidth: INTEGER is 8206
+	Spi_getfocusborderwidth: INTEGER = 8206
 			-- Declared in Windows as SPI_GETFOCUSBORDERWIDTH
 
-	Spi_setfocusborderwidth: INTEGER is 8207
+	Spi_setfocusborderwidth: INTEGER = 8207
 			-- Declared in Windows as SPI_SETFOCUSBORDERWIDTH
 
-	Spi_getfocusborderheight: INTEGER is 8208
+	Spi_getfocusborderheight: INTEGER = 8208
 			-- Declared in Windows as SPI_GETFOCUSBORDERHEIGHT
 
-	Spi_setfocusborderheight: INTEGER is 8209
+	Spi_setfocusborderheight: INTEGER = 8209
 			-- Declared in Windows as SPI_SETFOCUSBORDERHEIGHT
 
 feature -- SystemParameterInfo Flags (all Windows)
 
-	Spif_updateinifile: INTEGER is 1
+	Spif_updateinifile: INTEGER = 1
 			-- Declared in Windows as SPIF_UPDATEINIFILE
 
-	Spif_sendwininichange: INTEGER is 2
+	Spif_sendwininichange: INTEGER = 2
 			-- Declared in Windows as SPIF_SENDWININICHANGE
 
-	Spif_sendchange: INTEGER is 2;
+	Spif_sendchange: INTEGER = 2;
 			-- Declared in Windows as SPIF_SENDCHANGE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

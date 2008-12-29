@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that can create different types of pipe on Unix."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature 
 
-	new_unnamed_pipe: UNIX_UNNAMED_PIPE is
+	new_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Create a new unamed pipe.
 		local
 			read_fd, write_fd: INTEGER
@@ -30,7 +30,7 @@ feature
 			pipe_created: Result /= Void
 		end
 	
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

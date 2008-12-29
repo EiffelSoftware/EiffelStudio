@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,20 +63,20 @@ inherit
 
 feature {NONE} -- Implementation
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
 			Result := Cs_dblclks
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		do
 			Result := generator
 		end
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		external
 			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			"GetNextDlgTabItem"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

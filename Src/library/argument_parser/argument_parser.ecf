@@ -4,7 +4,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
+		<option namespace="EiffelSoftware.Framework" syntax_level="1">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="arg_parser" location=".\" recursive="true">

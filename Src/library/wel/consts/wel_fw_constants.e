@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font Weight (FW) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,112 +10,112 @@ class
 
 feature -- Access
 
-	Fw_dontcare: INTEGER is
+	Fw_dontcare: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_DONTCARE"
 		end
 
-	Fw_thin: INTEGER is
+	Fw_thin: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_THIN"
 		end
 
-	Fw_extralight: INTEGER is
+	Fw_extralight: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_EXTRALIGHT"
 		end
 
-	Fw_light: INTEGER is
+	Fw_light: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_LIGHT"
 		end
 
-	Fw_normal: INTEGER is
+	Fw_normal: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_NORMAL"
 		end
 
-	Fw_medium: INTEGER is
+	Fw_medium: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_MEDIUM"
 		end
 
-	Fw_semibold: INTEGER is
+	Fw_semibold: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_SEMIBOLD"
 		end
 
-	Fw_bold: INTEGER is
+	Fw_bold: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_BOLD"
 		end
 
-	Fw_extrabold: INTEGER is
+	Fw_extrabold: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_EXTRABOLD"
 		end
 
-	Fw_heavy: INTEGER is
+	Fw_heavy: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_HEAVY"
 		end
 
-	Fw_ultralight: INTEGER is
+	Fw_ultralight: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_ULTRALIGHT"
 		end
 
-	Fw_regular: INTEGER is
+	Fw_regular: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_REGULAR"
 		end
 
-	Fw_demibold: INTEGER is
+	Fw_demibold: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_DEMIBOLD"
 		end
 
-	Fw_ultrabold: INTEGER is
+	Fw_ultrabold: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_ULTRABOLD"
 		end
 
-	Fw_black: INTEGER is
+	Fw_black: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"FW_BLACK"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

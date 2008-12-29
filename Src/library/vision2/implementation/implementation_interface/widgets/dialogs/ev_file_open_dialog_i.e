@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision file open dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 		deferred
 		end
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 		deferred
 		ensure
@@ -30,19 +30,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow multiple items to be selected.
 		deferred
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	internal_accept: STRING_32 is
+	internal_accept: STRING_32
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- See comment in EV_STANDARD_DIALOG_I.
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			Result := ev_open
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

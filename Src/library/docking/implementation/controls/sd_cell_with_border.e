@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A cell which can define which edge has a border."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		do
 			default_create
@@ -62,7 +62,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	extend (a_widget: EV_WIDGET) is
+	extend (a_widget: EV_WIDGET)
 			-- Extend a_widget at border center.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -72,25 +72,25 @@ feature -- Command
 			added: internal_cell.has (a_widget)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- How many widgets?
 		do
 			Result := internal_cell.count
 		end
 
-	has (a_widget: EV_WIDGET): BOOLEAN is
+	has (a_widget: EV_WIDGET): BOOLEAN
 			-- If has a_widget?
 		do
 			Result := internal_cell.has (a_widget)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out.
 		do
 			internal_cell.wipe_out
 		end
 
-	set_show_border (a_direction: INTEGER; a_show: BOOLEAN) is
+	set_show_border (a_direction: INTEGER; a_show: BOOLEAN)
 			-- Set show border at a_direction base on a_show. a_direction is one enumeration from SD_DOCKING_MANAGER.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -127,7 +127,7 @@ feature -- Command
 			set:
 		end
 
-	set_border_style (a_style: INTEGER) is
+	set_border_style (a_style: INTEGER)
 			--  Set border with a_sttyle, a_style is one emueration from SD_DOCKING_MANAGER.
 		require
 			a_style_valid: a_style = {SD_ENUMERATION}.top or a_style = {SD_ENUMERATION}.bottom
@@ -160,7 +160,7 @@ feature -- Command
 			set:
 		end
 
-	set_border_color (a_color: EV_COLOR) is
+	set_border_color (a_color: EV_COLOR)
 			-- Set border color.
 		require
 			a_color_not_void: a_color /= Void
@@ -174,7 +174,7 @@ feature -- Command
 				and internal_border_left.background_color.is_equal (a_color) and internal_border_right.background_color.is_equal (a_color)
 		end
 
-	set_one_border_color (a_direction: INTEGER; a_color: EV_COLOR) is
+	set_one_border_color (a_direction: INTEGER; a_color: EV_COLOR)
 			-- Set border at `a_direction''s color to `a_color'.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -194,7 +194,7 @@ feature -- Command
 			end
 		end
 
-	set_border_width (a_width: INTEGER) is
+	set_border_width (a_width: INTEGER)
 			-- Set border width.
 		require
 			a_width_valid: a_width >= 0
@@ -218,7 +218,7 @@ feature {NONE}  -- Implementation
 
 	internal_cell: EV_CELL;
 			-- User cell.
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

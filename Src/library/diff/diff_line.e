@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base class for diff line indices."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	feature make(a_src_index: INTEGER; a_dst_index: INTEGER) is
+	feature make(a_src_index: INTEGER; a_dst_index: INTEGER)
 			-- Create a match index pair.
 		do
 			src := a_src_index
@@ -26,7 +26,7 @@ feature -- Access
 	dst: INTEGER;
 			-- The index in the destination.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

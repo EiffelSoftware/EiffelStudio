@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Platform independent abstraction of a shared library routine"
@@ -19,7 +19,7 @@ inherit
 feature -- Initialization
 
 	make_by_name (lib: SHARED_LIBRARY; f_name: STRING;
-				arg_types: ARRAY [INTEGER]; ret_type: INTEGER) is
+				arg_types: ARRAY [INTEGER]; ret_type: INTEGER)
 			-- Connect to the routine `f_name' in library `lib'
 		require
 			library_exists: lib /= Void
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	call (args: ARRAY [ANY]) is
+	call (args: ARRAY [ANY])
 			-- Call the routine with actual arguments `args'
 		require
 			meaningful: meaningful
@@ -51,13 +51,13 @@ feature -- Basic operations
 
 feature -- Status report
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments required
 		do
 			Result := argument_types.count
 		end
 
-	boolean_result: BOOLEAN is
+	boolean_result: BOOLEAN
 			-- Value when the routine returns a boolean
 		require
 			routine_called: routine_called
@@ -65,7 +65,7 @@ feature -- Status report
 		deferred
 		end
 
-	character_result: CHARACTER is
+	character_result: CHARACTER
 			-- Value when the routine returns a character
 		require
 			routine_called: routine_called
@@ -73,7 +73,7 @@ feature -- Status report
 		deferred
 		end
 
-	conforms_to_signature (arguments: ARRAY [ANY]): BOOLEAN is
+	conforms_to_signature (arguments: ARRAY [ANY]): BOOLEAN
 			-- Do the actual arguments `arguments' conform to the signature?
 		require
 			valid_array: arguments /= Void
@@ -163,7 +163,7 @@ feature -- Status report
 			end
 		end
 
-	double_result: DOUBLE is
+	double_result: DOUBLE
 			-- Value when the routine returns a double
 		require
 			routine_called: routine_called
@@ -174,7 +174,7 @@ feature -- Status report
 	error_code: INTEGER
 			-- Current status of the routine
 
-	integer_result: INTEGER is
+	integer_result: INTEGER
 			-- Value when the routine returns an integer
 		require
 			routine_called: routine_called
@@ -183,13 +183,13 @@ feature -- Status report
 		deferred
 		end
 
-	meaningful: BOOLEAN is
+	meaningful: BOOLEAN
 			-- Is the routine currently callable?
 		do
 			Result := shared_library.meaningful and (error_code = No_error)
 		end
 
-	pointer_result: POINTER is
+	pointer_result: POINTER
 			-- Value when the routine returns a pointer
 		require
 			routine_called: routine_called
@@ -200,7 +200,7 @@ feature -- Status report
 	routine_called: BOOLEAN
 			-- Has the routine already been called?
 
-	real_result: REAL is
+	real_result: REAL
 			-- Value when the routine returns a real
 		require
 			routine_called: routine_called
@@ -208,7 +208,7 @@ feature -- Status report
 		deferred
 		end
 
-	reference_result: ANY is
+	reference_result: ANY
 			-- Value when the routine returns a reference
 		require
 			routine_called: routine_called
@@ -216,7 +216,7 @@ feature -- Status report
 		deferred
 		end
 
-	string_result: STRING is
+	string_result: STRING
 			-- Value when the routine returns a string
 		require
 			routine_called: routine_called
@@ -224,7 +224,7 @@ feature -- Status report
 		deferred
 		end
 
-	valid_argument_types (args: ARRAY [INTEGER]): BOOLEAN is
+	valid_argument_types (args: ARRAY [INTEGER]): BOOLEAN
 			-- Are all the argument types in `args' valid?
 		local
 			i, nb: INTEGER
@@ -244,7 +244,7 @@ feature -- Status report
 			end
 		end
 
-	valid_return_type (ret_type: INTEGER): BOOLEAN is
+	valid_return_type (ret_type: INTEGER): BOOLEAN
 			-- Is `ret_type' valid as a return type?
 		do
 				-- Returns False for T_array or wrong constant
@@ -262,7 +262,7 @@ feature -- Access
 	function_name: STRING
 			-- Name of the routine in the library
 
-	library_name: STRING is
+	library_name: STRING
 			-- Name of the associated library for the routine
 		do
 			Result := shared_library.library_name
@@ -280,7 +280,7 @@ invariant
 	meaningful_only_if_no_error: meaningful implies (error_code = No_error)
 	meaningful_library: meaningful implies shared_library.meaningful
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

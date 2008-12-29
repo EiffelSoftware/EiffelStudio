@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"[
 			Horizontal bar graph gauge for displaying progress of a process.
@@ -35,14 +35,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_PROGRESS_BAR_IMP}
 				implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

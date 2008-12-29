@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of Motif text widget."
@@ -70,7 +70,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif text.
 		local
 			mc: MEL_COMPOSITE
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			a_text.set_font_imp (Current)
 		end;
 
-	make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif text enabling word wrap.
 		do
 			make (a_text, man, oui_parent);
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_in_a_verification_callback: BOOLEAN is
+	is_in_a_verification_callback: BOOLEAN
 			-- Is the program in a `motion' or `modify' action ?
 		local
 			ts: MEL_TEXT_VERIFY_CALLBACK_STRUCT
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end;
 
-	coordinate (char_pos: INTEGER): COORD_XY is
+	coordinate (char_pos: INTEGER): COORD_XY
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		do
@@ -115,19 +115,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_multi_line_mode: BOOLEAN is
+	is_multi_line_mode: BOOLEAN
 			-- Is Current editing a multiline text?
 		do
 			Result := not is_single_line_edit_mode
 		end;
 
-	is_any_resizable: BOOLEAN is
+	is_any_resizable: BOOLEAN
 			-- Is width and height of current text resizable?
 		do
 			Result := is_height_resizable and then is_width_resizable
 		end;
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is current text in read only mode?
 		do
 			Result := not is_editable
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_cursor_position_visible (flag: BOOLEAN) is
+	set_cursor_position_visible (flag: BOOLEAN)
 			-- Set is_cursor_position_visible to flag.
 		do
 			if flag then	
@@ -145,7 +145,7 @@ feature -- Status setting
 			end
 		end
 
-	allow_action is
+	allow_action
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		local
@@ -155,7 +155,7 @@ feature -- Status setting
 			ts.set_do_it;
 		end;
 
-	forbid_action is
+	forbid_action
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		local
@@ -165,7 +165,7 @@ feature -- Status setting
 			ts.unset_do_it;
 		end;
 
-	disable_resize is
+	disable_resize
 			-- Disable that current text widget attempts to resize its width an
 			-- height to accommodate all the text contained.
 		do
@@ -173,7 +173,7 @@ feature -- Status setting
 			disable_resize_height
 		end;
 
-	enable_resize is
+	enable_resize
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		do
@@ -183,7 +183,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
 		local
@@ -197,7 +197,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
  
-	add_modify_action (a_command: COMMAND; argument: ANY) is
+	add_modify_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		local
@@ -211,7 +211,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_motion_action (a_command: COMMAND; argument: ANY) is
+	add_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute before insert
 			-- cursor is moved to a new position.
 		local
@@ -225,7 +225,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	insert (a_text: STRING; a_position: INTEGER) is
+	insert (a_text: STRING; a_position: INTEGER)
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		do
@@ -234,28 +234,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
 		do
 			remove_command (activate_command, a_command, argument)
 		end;
  
-	remove_modify_action (a_command: COMMAND; argument: ANY) is
+	remove_modify_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		do
 			remove_command (modify_verify_command, a_command, argument)
 		end;
 
-	remove_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- insert cursor is moved to a new position.
 		do
 			remove_command (motion_verify_command, a_command, argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

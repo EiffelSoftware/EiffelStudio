@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_GRID_ITEM."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			Result := implementation.pointer_motion_actions
@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			Result := implementation.pointer_button_press_actions
@@ -41,7 +41,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			Result := implementation.pointer_double_press_actions
@@ -49,7 +49,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 		do
 			Result := implementation.pointer_button_release_actions
@@ -57,7 +57,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			Result := implementation.pointer_enter_actions
@@ -65,7 +65,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			Result := implementation.pointer_leave_actions
@@ -73,7 +73,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is selected.
 		do
 			Result := implementation.select_actions
@@ -81,7 +81,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 		
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deselected.
 		do
 			Result := implementation.deselect_actions
@@ -89,7 +89,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	drop_actions: EV_PND_ACTION_SEQUENCE is
+	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble is dropped here.
 		do
 			Result := implementation.drop_actions
@@ -97,7 +97,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
 			-- Actions to be performed to override the default `activate' setup of `Current', see {EV_GRID_EDITABLE_ITEM}.activate_action.
 			-- Useful for repositioning `popup_window', which will then be shown automatically by the grid.
 			-- Arguments of TUPLE (with name for clarity):
@@ -109,7 +109,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' has been deactivated.
 		do
 			Result := implementation.deactivate_actions
@@ -117,7 +117,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

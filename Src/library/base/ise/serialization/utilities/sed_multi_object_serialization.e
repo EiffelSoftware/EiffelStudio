@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize and deserialize multiple objects into one file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	deserialize (path: STRING; a_pos: INTEGER) is
+	deserialize (path: STRING; a_pos: INTEGER)
 			-- Deserialize object previously serialized in `path' at position `a_pos'.
 		require
 			non_void_path: path /= Void
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature -- Basic Operations
 
-	serialize (a: ANY; path: STRING; is_appending: BOOLEAN) is
+	serialize (a: ANY; path: STRING; is_appending: BOOLEAN)
 			-- Serialize object `a' at the end of file `path' if `is_appending', otherwise
 			-- reset content of `path'.
 			-- Set `last_file_position' after storing.
@@ -109,12 +109,12 @@ feature -- Basic Operations
 
 feature {NONE} -- Logging
 
-	log_last_exception is
+	log_last_exception
 			-- Log last exception.
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

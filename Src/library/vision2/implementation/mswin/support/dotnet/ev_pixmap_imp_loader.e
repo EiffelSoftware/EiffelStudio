@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that provide loading facilities for pixmaps which are different
 		between dotnet and classic versions. This is the Eiffel for dotnet version.
@@ -26,21 +26,21 @@ inherit
 
 feature -- Status report
 
-	pixmap_filename: STRING is
+	pixmap_filename: STRING
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 		deferred
 		end
 
-	disable_initialized is
+	disable_initialized
 			-- Set `is_initialized' to `False'.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	effective_load_file is
+	effective_load_file
 			-- Really load the file.
 		require
 			filename_exists: pixmap_filename /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 		rgb_data		: POINTER -- Pointer on a C memory zone
 		alpha_data		: POINTER -- Pointer on a C memory zone
 		)
-		is
+		
 		deferred
 		end
 
@@ -86,12 +86,12 @@ feature {NONE} -- Externals
 	c_ev_load_pixmap(
 		file_name: POINTER;
 		update_fields_routine: EV_PIXMAP_IMP_DELEGATE
-		) is
+		)
 		external
 			"C signature (char *, void *) use %"load_pixmap.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

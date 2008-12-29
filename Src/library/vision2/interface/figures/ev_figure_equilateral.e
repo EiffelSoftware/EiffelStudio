@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures with its sides the same size."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with 8 sides.
 		do
 			side_count := 8
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_side_count (n: INTEGER) is
+	set_side_count (n: INTEGER)
 			-- Assign `n' to `side_count'.
 		require
 			n_greater_than_two: n > 2
@@ -57,7 +57,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Absolute coordinates of all corner points.
 		local
 			n: INTEGER
@@ -87,13 +87,13 @@ feature -- Implementation
 			Result_correct_size: Result.count = side_count
 		end
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_polygon (x, y, polygon_array)
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, n: INTEGER
@@ -124,7 +124,7 @@ feature -- Implementation
 invariant
 	side_count_bigger_than_two: side_count > 2
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

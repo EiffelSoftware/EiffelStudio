@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Objects that may contain pixmapable items whose image size may be adjusted uniformly.
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	pixmaps_width: INTEGER is
+	pixmaps_width: INTEGER
 			-- Width of displayed pixmaps in the list.
 		require
 			not_destroyed: not is_destroyed
@@ -31,7 +31,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pixmaps_width
 		end
 
-	pixmaps_height: INTEGER is
+	pixmaps_height: INTEGER
 			-- Height of displayed pixmaps in the list.
 		require
 			not_destroyed: not is_destroyed
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set size of pixmaps disaplyed in `Current'.
 			-- Note: Default value is 16x16
 		require
@@ -65,7 +65,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	pixmaps_size_positive: pixmaps_height > 0 and pixmaps_width > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

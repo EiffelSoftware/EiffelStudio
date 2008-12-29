@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to all buttons (check, push, etc.)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a button.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -44,14 +44,14 @@ feature {NONE} -- Initialization
 
 feature -- Color
 
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- Foreground color has no effect with SCROLL_BAR.
 			-- Cannot be Void.
 		do
 			create Result.make_system (Color_windowtext)
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -61,7 +61,7 @@ feature -- Color
 
 feature -- Notifications
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Called when the button is clicked
 		require
 			exists: exists
@@ -70,7 +70,7 @@ feature -- Notifications
 
 feature {NONE} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 		do
 			if notification_code = Bn_clicked then
 				on_bn_clicked
@@ -79,13 +79,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "Button"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

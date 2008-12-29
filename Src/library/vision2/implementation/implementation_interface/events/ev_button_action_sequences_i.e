@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_BUTTON_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed then released.
 		do
 			if select_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 		deferred
 		end
@@ -35,7 +35,7 @@ feature {EV_ANY_I} -- Implementation
 	select_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `select_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

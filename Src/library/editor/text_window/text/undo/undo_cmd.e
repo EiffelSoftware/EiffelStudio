@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic undo command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	bind_to_next is 
+	bind_to_next 
 			-- bind the excution of this command to the execution of the following command
 			-- in the undo-redo stack (i.e. set is_bound_with_next to true)
 		do
 			is_bound_to_next := True
 		end
 
-	unbind_to_next is
+	unbind_to_next
 			-- unbind the excution of this command to the execution of the following command
 			-- in the undo-redo stack (i.e. set is_bound_with_next to False)
 		do
@@ -32,15 +32,15 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	undo is
+	undo
 		deferred
 		end
 
-	redo is
+	redo
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

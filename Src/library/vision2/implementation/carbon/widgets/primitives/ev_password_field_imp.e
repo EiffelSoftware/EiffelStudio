@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision password field. Carbon implementation."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 feature {NONE} -- Initialization
 
 
-		make (an_interface: like interface) is
+		make (an_interface: like interface)
 			-- Create Textfield on a user_pane
 		local
 			ret: INTEGER
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in field.
 		local
 			ret, size: INTEGER
@@ -80,12 +80,12 @@ feature -- Access
 		end
 
 
-	initialize is
+	initialize
 			-- Create password field with `*'.
 		do
 			set_password (entry_widget)
 		end
-	set_password (obj: POINTER) is
+	set_password (obj: POINTER)
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PASSWORD_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_PASSWORD_FIELD_IMP
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for Carbon implementation (_IMP) classes. %N%
 		%Handles interaction between Eiffel objects and Carbon objects %N%
@@ -29,7 +29,7 @@ feature {EV_ANY_I, EV_ANY} -- Access
 
 feature {EV_ANY_I} -- Access
 
-	set_c_object (a_c_object: POINTER) is
+	set_c_object (a_c_object: POINTER)
 			-- Assign `a_c_object' to `c_object'.
 			--| (See note at end of class)
 		require
@@ -47,7 +47,7 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		do
@@ -58,7 +58,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 feature --dispose
 
-	dispose is
+	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		local
@@ -74,7 +74,7 @@ feature --dispose
 feature {NONE} -- Implementation
 
 
-	c_object_dispose is
+	c_object_dispose
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
-		App_implementation: EV_APPLICATION_IMP is
+		App_implementation: EV_APPLICATION_IMP
 			--
 		local
 			env: EV_ENVIRONMENT
@@ -100,25 +100,25 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 
 feature -- Measurement
 
-	frozen NULL: POINTER is
+	frozen NULL: POINTER
 		external
 			"C [macro <stdio.h>]"
 		alias
 			"NULL"
 		end
 
-	frozen sizeof ( item : POINTER ) : INTEGER_32 is
+	frozen sizeof ( item : POINTER ) : INTEGER_32
 		external
 			"C [macro <stdio.h>]"
 		alias
 			"sizeof"
 		end
 
-	frozen noErr : INTEGER is 0
+	frozen noErr : INTEGER = 0
 
 invariant
 	c_object_not_void : c_object /= null
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_ANY_IMP
 

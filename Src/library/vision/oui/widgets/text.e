@@ -1,4 +1,4 @@
-indexing
+note
 
 	desciption: "A text editor for several lines of text. "
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			is_multi_line_mode: is_multi_line_mode
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			is_multi_line_mode: is_multi_line_mode
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			set_default
 		end;
 
-	make_word_wrapped (a_name: STRING; a_parent: COMPOSITE) is
+	make_word_wrapped (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_word_wrapped_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_word_wrapped_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget_ww (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget_ww (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a text with `a_name' as identifier,
 			-- `a_parent' as parent, call `set_default'
 			-- and enable word wrap.
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	begin_of_selection: INTEGER is
+	begin_of_selection: INTEGER
 			-- Position of the beginning of the current selection highlightened
 		require
 			exists: not destroyed;
@@ -118,7 +118,7 @@ feature -- Access
 			Result < count
 		end;
 
-	coordinate (char_pos: INTEGER): COORD_XY is
+	coordinate (char_pos: INTEGER): COORD_XY
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		require
@@ -128,7 +128,7 @@ feature -- Access
 			Result := implementation.coordinate (char_pos)
 		end;
 
-	x_coordinate (char_pos: INTEGER): INTEGER is
+	x_coordinate (char_pos: INTEGER): INTEGER
 			-- X coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		require
@@ -138,7 +138,7 @@ feature -- Access
 			Result := implementation.x_coordinate (char_pos)
 		end;
 
-	y_coordinate (char_pos: INTEGER): INTEGER is
+	y_coordinate (char_pos: INTEGER): INTEGER
 			-- Y coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		require
@@ -148,7 +148,7 @@ feature -- Access
 			Result := implementation.y_coordinate (char_pos)
 		end;
 
-	character_position (x_pos, y_pos: INTEGER): INTEGER is
+	character_position (x_pos, y_pos: INTEGER): INTEGER
 			-- Character position at cursor position `x' and `y'
 		require
 			exists: not destroyed
@@ -156,7 +156,7 @@ feature -- Access
 			Result := implementation.character_position (x_pos, y_pos)
 		end;
 
-	top_character_position: INTEGER is
+	top_character_position: INTEGER
 			-- Character position of first character displayed
 		require
 			exists: not destroyed
@@ -166,7 +166,7 @@ feature -- Access
 			valid_result: Result >= 0 and then Result <= count
 		end;
 
-	cursor_position: INTEGER is
+	cursor_position: INTEGER
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
 		require
@@ -178,7 +178,7 @@ feature -- Access
 			Result <= count
 		end;
 
-	end_of_selection: INTEGER is
+	end_of_selection: INTEGER
 			-- Position of the end of the current selection highlightened
 		require
 			exists: not destroyed;
@@ -193,7 +193,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_modify_action (a_command: COMMAND; argument: ANY) is
+	add_modify_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed before
 			-- text is deleted from or inserted in current text widget.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -205,7 +205,7 @@ feature -- Element change
 			implementation.add_modify_action (a_command, argument)
 		end;
 
-	add_motion_action (a_command: COMMAND; argument: ANY) is
+	add_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed before insert
 			-- cursor is moved to a new position.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -219,7 +219,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_modify_action (a_command: COMMAND; argument: ANY) is
+	remove_modify_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed before
 			-- text is deleted from or inserted in current text widget.
 		require
@@ -229,7 +229,7 @@ feature -- Removal
 			implementation.remove_modify_action (a_command, argument)
 		end;
 
-	remove_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed before
 			-- insert cursor is moved to a new position.
 		require
@@ -241,7 +241,7 @@ feature -- Removal
 
 feature -- Status report
 
-	is_selection_active: BOOLEAN is
+	is_selection_active: BOOLEAN
 			-- Is there a selection currently active ?
 		require
 			exists: not destroyed;
@@ -251,7 +251,7 @@ feature -- Status report
 		end;
 
 
-	is_height_resizable: BOOLEAN is
+	is_height_resizable: BOOLEAN
 			-- Is height of current text resizable?
 		require
 			exists: not destroyed
@@ -259,7 +259,7 @@ feature -- Status report
 			Result := implementation.is_height_resizable
 		end;
 
-	is_width_resizable: BOOLEAN is
+	is_width_resizable: BOOLEAN
 			-- Is width of current text resizable?
 		require
 			exists: not destroyed
@@ -267,7 +267,7 @@ feature -- Status report
 			Result := implementation.is_width_resizable
 		end;
 
-	is_any_resizable: BOOLEAN is
+	is_any_resizable: BOOLEAN
 			-- Is width and height of current text resizable?
 		require
 			exists: not destroyed
@@ -275,7 +275,7 @@ feature -- Status report
 			Result := implementation.is_any_resizable
 		end;
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is current text in read only mode?
 		require
 			exists: not destroyed
@@ -283,7 +283,7 @@ feature -- Status report
 			Result := implementation.is_read_only
 		end;
 
-	is_word_wrap_mode: BOOLEAN is
+	is_word_wrap_mode: BOOLEAN
 			-- Is specified that lines are to be broken at word breaks?
 		require
 			exists: not destroyed
@@ -291,7 +291,7 @@ feature -- Status report
 			Result := implementation.is_word_wrap_mode
 		end;
 
-	is_bell_enabled: BOOLEAN is
+	is_bell_enabled: BOOLEAN
 			-- Is the bell enabled when an action is forbidden
 		require
 			exists: not destroyed
@@ -299,7 +299,7 @@ feature -- Status report
 			Result := implementation.is_bell_enabled
 		end;
 
-	is_multi_line_mode: BOOLEAN is
+	is_multi_line_mode: BOOLEAN
 			-- Is Current editing a multiline text?
 		require
 			exists: not destroyed
@@ -307,7 +307,7 @@ feature -- Status report
 			Result := implementation.is_multi_line_mode
 		end;
 
-	is_cursor_position_visible: BOOLEAN is
+	is_cursor_position_visible: BOOLEAN
 			-- Is the insert cursor position marked
 			-- by a blinking text cursor?
 		require
@@ -318,7 +318,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	disable_resize is
+	disable_resize
 			-- Disable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		require
@@ -327,7 +327,7 @@ feature -- Status setting
 			implementation.disable_resize
 		end;
 
-	disable_resize_height is
+	disable_resize_height
 			-- Disable that current text widget attempts to resize its height
 			-- to accommodate all the text contained.
 		require
@@ -336,7 +336,7 @@ feature -- Status setting
 			implementation.disable_resize_height
 		end;
 
-	disable_resize_width is
+	disable_resize_width
 			-- Disable that current text widget attempts to resize its width
 			-- to accommodate all the text contained.
 		require
@@ -345,7 +345,7 @@ feature -- Status setting
 			implementation.disable_resize_width
 		end;
 
- 	enable_resize is
+ 	enable_resize
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		require
@@ -354,7 +354,7 @@ feature -- Status setting
 			implementation.enable_resize
 		end;
 
-	enable_resize_height is
+	enable_resize_height
 			-- Enable that current text widget attempts to resize its height to
 			-- accomodate all the text contained.
 		require
@@ -363,7 +363,7 @@ feature -- Status setting
 			implementation.enable_resize_height
 		end;
 
-	enable_resize_width is
+	enable_resize_width
 			-- Enable that current text widget attempts to resize its width to
 			-- accommodate all the text contained.
 		require
@@ -372,7 +372,7 @@ feature -- Status setting
 			implementation.enable_resize_width
 		end;
 
-	allow_action is
+	allow_action
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		require
@@ -381,7 +381,7 @@ feature -- Status setting
 			implementation.allow_action
 		end;
 
-	forbid_action is
+	forbid_action
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		require
@@ -390,7 +390,7 @@ feature -- Status setting
 			implementation.forbid_action
 		end;
 
-	set_read_only is
+	set_read_only
 			-- Set current text to be read only.
 		require
 			exists: not destroyed
@@ -398,7 +398,7 @@ feature -- Status setting
 			implementation.set_read_only
 		end;
 
-	set_editable is
+	set_editable
 			-- Set current text to be editable.
 		require
 			exists: not destroyed
@@ -406,7 +406,7 @@ feature -- Status setting
 			implementation.set_editable
 		end;
 
-	disable_verify_bell is
+	disable_verify_bell
 			-- Disable the bell when an action is forbidden
 		require
 			exists: not destroyed
@@ -414,7 +414,7 @@ feature -- Status setting
 			implementation.disable_verify_bell
 		end;
 
-	enable_verify_bell is
+	enable_verify_bell
 			-- Enable the bell when an action is forbidden
 		require
 			exists: not destroyed
@@ -422,7 +422,7 @@ feature -- Status setting
 			implementation.enable_verify_bell
 		end;
 
-	set_single_line_mode is
+	set_single_line_mode
 			-- Set editing for single line text.
 		require
 			exists: not destroyed
@@ -432,7 +432,7 @@ feature -- Status setting
 			is_single_line_mode: not is_multi_line_mode
 		end;
 
-	set_multi_line_mode is
+	set_multi_line_mode
 			-- Set editing for multiline text.
 		require
 			exists: not destroyed
@@ -444,7 +444,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Distance between top edge of text window and current text,
 			-- and between bottom edge of text window and current text.
 		require
@@ -453,7 +453,7 @@ feature -- Measurement
 			Result := implementation.margin_height
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Distance between left edge of text window and current text,
 			-- and between right edge of text window and current text.
 		require
@@ -462,7 +462,7 @@ feature -- Measurement
 			Result := implementation.margin_width
 		end;
 
-	rows: INTEGER is
+	rows: INTEGER
 			-- Height of Current widget measured in character
 			-- heights.
 		require
@@ -474,7 +474,7 @@ feature -- Measurement
 
 feature -- Basic operations
 
-	clear_selection is
+	clear_selection
 			-- Clear a selection
 		require
 			exists: not destroyed;
@@ -486,7 +486,7 @@ feature -- Basic operations
 			not is_selection_active
 		end;
 
-	set_selection (first, last: INTEGER) is
+	set_selection (first, last: INTEGER)
 			-- Select the text between `first' and `last'.
 			-- This text will be physically highlightened on the screen.
 		require
@@ -503,7 +503,7 @@ feature -- Basic operations
 			end_of_selection = last
 		end
 
-	set_top_character_position (char_pos: INTEGER) is
+	set_top_character_position (char_pos: INTEGER)
 			-- Set first character displayed to `char_pos'.
 		require
 			exists: not destroyed;
@@ -514,7 +514,7 @@ feature -- Basic operations
 			valid_position: top_character_position = char_pos
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
+	set_cursor_position (a_position: INTEGER)
 			-- Set `cursor_position' to `a_position'.
 		require
 			exists: not destroyed;
@@ -526,7 +526,7 @@ feature -- Basic operations
 			cursor_position = a_position
 		end;
 
-	set_margin_height (new_height: INTEGER) is
+	set_margin_height (new_height: INTEGER)
 			-- Set `margin_height' to `new_height'.
 		require
 			exists: not destroyed;
@@ -535,7 +535,7 @@ feature -- Basic operations
 			implementation.set_margin_height (new_height)
 		end;
 
-	set_margin_width (new_width: INTEGER) is
+	set_margin_width (new_width: INTEGER)
 			-- Set `margin_width' to `new_width'.
 		require
 			exists: not destroyed;
@@ -544,7 +544,7 @@ feature -- Basic operations
 			implementation.set_margin_width (new_width)
 		end;
 
-	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Search for the string `text_to_find' in the TEXT
 			-- Return the position of the first occurrence
 		require
@@ -555,7 +555,7 @@ feature -- Basic operations
 
 feature -- Text mode
 
-	set_rows (i: INTEGER) is
+	set_rows (i: INTEGER)
 			-- Set the character height of Current widget to `i'.
 		require
 			exists: not destroyed;
@@ -565,7 +565,7 @@ feature -- Text mode
 			implementation.set_rows (i)
 		end;
 
-	set_cursor_position_visible (flag: BOOLEAN) is
+	set_cursor_position_visible (flag: BOOLEAN)
 			-- Set is_cursor_position_visible to flag.
 		require
 			exists: not destroyed
@@ -578,7 +578,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: TEXT_I;;
 			-- Implementation of current text
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

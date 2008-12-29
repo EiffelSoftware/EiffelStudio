@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Implementation toolkit"
 	legal: "See notice at end of class.";
@@ -20,19 +20,19 @@ inherit
 
 feature -- Basic operations
 
-	iterate is
+	iterate
 			-- Loop the application.
 		deferred
 		end;
 
-	exit is
+	exit
 			-- Exit from the application
 		deferred
 		end;
 	
 feature -- Access
 	
-	set_global_cursor (a_cursor: SCREEN_CURSOR) is
+	set_global_cursor (a_cursor: SCREEN_CURSOR)
 			-- Set a global cursor for the whole application.
 			-- Warning: the effect of calling `set_type' on a SCREEN_CURSOR
 			-- or `set_cursor' on a WIDGET is not defined.
@@ -45,26 +45,26 @@ feature -- Access
 			correctly_set: global_cursor = a_cursor
 		end;	
 	
-	global_cursor: SCREEN_CURSOR is
+	global_cursor: SCREEN_CURSOR
 			-- Global cursor for the whole application.
 			-- Void if no global cursor has been defined
 			-- with `set_global_cursor'.
 		deferred
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Toolkit implementation name
 		deferred
 		end
 	
-	restore_cursors is
+	restore_cursors
 			-- Restore the cursors as they were before `set_global_cursor'.
 		deferred
 		ensure
 			no_global_cursor_anymore: (global_cursor = Void)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container that contained by SD_TOOL_BAR_CONTAINER. And it contain a EV_FIXED."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set background color of gap areas.
 		require
 			not_void: a_color /= Void
@@ -50,7 +50,7 @@ feature -- Command
 			gap_area_right.set_background_color (a_color)
 		end
 
-	set_gap (a_direction: INTEGER; a_show: BOOLEAN) is
+	set_gap (a_direction: INTEGER; a_show: BOOLEAN)
 			-- Show gap at `a_direction'?
 		require
 			a_direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

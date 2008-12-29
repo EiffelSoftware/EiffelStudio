@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Toolbar button state (TB_STATE...) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,29 +10,29 @@ class
 
 feature -- Access
 
-	Tbstate_checked: INTEGER is 1
+	Tbstate_checked: INTEGER = 1
 			-- The button has the Tbstyle_checked style and is
 			-- being pressed.
 
-	Tbstate_enabled: INTEGER is 4
+	Tbstate_enabled: INTEGER = 4
 			-- The button accepts user input. A button not having
 			-- this state does not accept user input and is grayed.
 
-	Tbstate_hidden: INTEGER is 8
+	Tbstate_hidden: INTEGER = 8
 			-- The button is not visible and cannot receive user
 			-- input.
 
-	Tbstate_indeterminate: INTEGER is 16
+	Tbstate_indeterminate: INTEGER = 16
 			-- The button is grayed.
 
-	Tbstate_pressed: INTEGER is 2
+	Tbstate_pressed: INTEGER = 2
 			-- The button is being pressed.
 
-	Tbstate_wrap: INTEGER is 32;
+	Tbstate_wrap: INTEGER = 32;
 			-- A line break follows the button. The button must
 			-- also have the Tbstate_enabled state.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

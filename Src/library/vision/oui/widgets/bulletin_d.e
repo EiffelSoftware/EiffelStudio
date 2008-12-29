@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Area for free-form placement on any of its children and built %
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a bulletin dialog with `a_name' as identifier,
 			-- `a_parent' as its parent and call `set_default'.
 		require
@@ -57,7 +57,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: BULLETIN_D_I;
 			-- Implementation of bulletin dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "This class represents a Windows bar menu."
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature -- Initialization
 
-	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make a bar.
 		do
 			parent ?= oui_parent.implementation
@@ -56,7 +56,7 @@ feature -- Initialization
 			make_root
 		end
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 		do
 			managed := flag
 			if flag then
@@ -79,7 +79,7 @@ feature -- Initialization
 			end
 		end
 
-	realize is
+	realize
 		do
 			if not exists then
 				wel_make
@@ -96,7 +96,7 @@ feature -- Initialization
 			end
 		end
 
-	unrealize is
+	unrealize
 		do
 			realized := false
 			Precursor
@@ -106,7 +106,7 @@ feature -- Access
 
 	help_button: MENU_B
 
-	remove_popup (w: WIDGET_IMP) is
+	remove_popup (w: WIDGET_IMP)
 			-- Remove a popup `w' from the menu.
 		require
 			realized: realized
@@ -122,7 +122,7 @@ feature -- Measurement
  
  	width: INTEGER 
  
-	height: INTEGER is
+	height: INTEGER
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
@@ -136,14 +136,14 @@ feature -- Status report
 
 	y: INTEGER
  
- 	real_x: INTEGER is
+ 	real_x: INTEGER
  		require else
  			parent: parent /= Void
  		do
  			Result := parent.real_x
  		end
 
-	real_y: INTEGER is
+	real_y: INTEGER
 		require else
 			parent: parent /= Void
 		do
@@ -152,37 +152,37 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_form_height (new_height: INTEGER) is
+	set_form_height (new_height: INTEGER)
 		do
 			form_height := new_height
 		end
 
-	set_form_width (new_width: INTEGER) is
+	set_form_width (new_width: INTEGER)
 		do
 			form_width := new_width
 		end
 
- 	set_size (new_width, new_height: INTEGER) is
+ 	set_size (new_width, new_height: INTEGER)
  		do
  			width := new_width
  		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 		do
 			width := new_width
 		end
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 		do
 			x := new_x
 		end
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 		do
 			y := new_y
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 		local
 			i: INTEGER
 		do
@@ -198,24 +198,24 @@ feature -- Status setting
 			invalidate
 		end
 
-	invalidate is
+	invalidate
 		do
 			associated_shell.associate_bar (Current)
 		end
 feature -- Inapplicable
 
- 	set_height (new_height: INTEGER) is
+ 	set_height (new_height: INTEGER)
 		do
 		end
 
 feature -- Element change
 
-	set_help_button (button: MENU_B) is
+	set_help_button (button: MENU_B)
 		do
 			help_button := button
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

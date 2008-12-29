@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -10,7 +10,7 @@ class DB_DATA
 
 feature -- Status setting
 
-	update_metadata is
+	update_metadata
 			-- Cursor must update database metadata to
 			-- fill in properly.
 		do
@@ -23,7 +23,7 @@ feature -- Status report
 			-- Should cursor update the metadata to fill in database
 			-- values properly?
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

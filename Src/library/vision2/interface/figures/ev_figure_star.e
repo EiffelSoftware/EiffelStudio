@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"`line_count' lines emerging from `center_point'.%N%
 		%First line is from `center_point' to `corner_point."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with 6 lines.
 		do
 			line_count := 6
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_line_count (n: INTEGER) is
+	set_line_count (n: INTEGER)
 			-- Set `line_count' to `n'.
 		require
 			n_bigger_than_two: n > 2
@@ -56,7 +56,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Return all corner points.
 		local
 			n: INTEGER
@@ -86,13 +86,13 @@ feature -- Implementation
 			Result_correct_size: Result.count = line_count
 		end
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_polygon (x, y, polygon_array)
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, n: INTEGER
@@ -122,7 +122,7 @@ feature -- Implementation
 			)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

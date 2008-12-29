@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequences of characters, accessible through integer indices
 		in a contiguous range.
@@ -61,7 +61,7 @@ convert
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		require
 			non_negative_size: n >= 0
@@ -74,7 +74,7 @@ feature -- Initialization
 			area_allocated: capacity >= n
 		end
 
-	make_empty is
+	make_empty
 			-- Create empty string.
 		do
 			make (0)
@@ -83,7 +83,7 @@ feature -- Initialization
 			area_allocated: capacity >= 0
 		end
 
-	make_filled (c: WIDE_CHARACTER; n: INTEGER) is
+	make_filled (c: WIDE_CHARACTER; n: INTEGER)
 			-- Create string of length `n' filled with `c'.
 		require
 			valid_count: n >= 0
@@ -96,7 +96,7 @@ feature -- Initialization
 			filled: occurrences (c) = count
 		end
 
-	make_from_string (s: STRING_32) is
+	make_from_string (s: STRING_32)
 			-- Initialize from the characters of `s'.
 			-- (Useful in proper descendants of class STRING_32,
 			-- to initialize a string-like object from a manifest string.)
@@ -113,7 +113,7 @@ feature -- Initialization
 			initialized: same_string (s)
 		end
 
-	make_from_c (c_string: POINTER) is
+	make_from_c (c_string: POINTER)
 			-- Initialize from contents of `c_string',
 			-- a string created by some C function
 		require
@@ -133,7 +133,7 @@ feature -- Initialization
 			end
 		end
 
-	make_from_cil (a_system_string: SYSTEM_STRING) is
+	make_from_cil (a_system_string: SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -151,7 +151,7 @@ feature -- Initialization
 			end
 		end
 
-	from_c (c_string: POINTER) is
+	from_c (c_string: POINTER)
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some C function.
 		require
@@ -174,7 +174,7 @@ feature -- Initialization
 			--			 is NULL
 		end
 
-	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER) is
+	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
 			-- Reset contents of string from substring of `c_string',
 			-- a string created by some C function.
 		require
@@ -197,7 +197,7 @@ feature -- Initialization
 			--			 ASCII character at address c_string + (i - 1)
 		end
 
-	adapt (s: STRING_32): like Current is
+	adapt (s: STRING_32): like Current
 			-- Object of a type conforming to the type of `s',
 			-- initialized with attributes from `s'
 		do
@@ -208,7 +208,7 @@ feature -- Initialization
 			shared_implementation: Result.shared_with (s)
 		end
 
-	remake (n: INTEGER) is
+	remake (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		obsolete
 			"Use `make' instead"
@@ -223,19 +223,19 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): WIDE_CHARACTER assign put is
+	item, infix "@" (i: INTEGER): WIDE_CHARACTER assign put
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
 		end
 
-	code (i: INTEGER): NATURAL_32 is
+	code (i: INTEGER): NATURAL_32
 			-- Numeric code of character at position `i'
 		do
 			Result := area.item (i - 1).code.to_natural_32
 		end
 
-	item_code (i: INTEGER): INTEGER is
+	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'
 		require
 			index_small_enough: i <= count
@@ -244,7 +244,7 @@ feature -- Access
 			Result := area.item (i - 1).code
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			i, nb: INTEGER
@@ -268,19 +268,19 @@ feature -- Access
 			end
 		end
 
-	false_constant: STRING is "false"
+	false_constant: STRING = "false"
 			-- Constant string "false"
 
-	true_constant: STRING is "true"
+	true_constant: STRING = "true"
 			-- Constant string "true"
 
-	shared_with (other: STRING_32): BOOLEAN is
+	shared_with (other: STRING_32): BOOLEAN
 			-- Does string share the text of `other'?
 		do
 			Result := (other /= Void) and then (area = other.area)
 		end
 
-	index_of (c: WIDE_CHARACTER; start_index: INTEGER): INTEGER is
+	index_of (c: WIDE_CHARACTER; start_index: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
@@ -313,7 +313,7 @@ feature -- Access
 				not substring (start_index, Result - 1).has (c)
 		end
 
-	last_index_of (c: WIDE_CHARACTER; start_index_from_end: INTEGER): INTEGER is
+	last_index_of (c: WIDE_CHARACTER; start_index_from_end: INTEGER): INTEGER
 			-- Position of last occurrence of `c'.
 			-- 0 if none
 		require
@@ -339,7 +339,7 @@ feature -- Access
 			-- forall x : Result..last, item (x) /= c
 		end
 
-	substring_index_in_bounds (other: STRING_32; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index_in_bounds (other: STRING_32; start_pos, end_pos: INTEGER): INTEGER
 			-- Position of first occurrence of `other' at or after `start_pos'
 			-- and to or before `end_pos';
 			-- 0 if none.
@@ -360,7 +360,7 @@ feature -- Access
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
 
-	string: STRING_32 is
+	string: STRING_32
 			-- New STRING_32 having same character sequence as `Current'.
 		do
 			create Result.make (count)
@@ -373,7 +373,7 @@ feature -- Access
 				substring (2, count).string)
 		end
 
-	string_representation: STRING_32 is
+	string_representation: STRING_32
 			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
 		do
 			if same_type (create {STRING_32}.make_empty) then
@@ -389,7 +389,7 @@ feature -- Access
 				substring (2, count).string)
 		end
 
-	substring_index (other: STRING_32; start_index: INTEGER): INTEGER is
+	substring_index (other: STRING_32; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of other at or after start_index;
 			-- 0 if none
 		require
@@ -409,7 +409,7 @@ feature -- Access
 				not substring (start_index, Result + other.count - 2).has_substring (other)
 		end
 
-	fuzzy_index (other: STRING_32; start: INTEGER; fuzz: INTEGER): INTEGER is
+	fuzzy_index (other: STRING_32; start: INTEGER; fuzz: INTEGER): INTEGER
 			-- Position of first occurrence of `other' at or after `start'
 			-- with 0..`fuzz' mismatches between the string and `other'.
 			-- 0 if there are no fuzzy matches
@@ -426,7 +426,7 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Allocated space
 		do
 			Result := area.count - 1
@@ -435,7 +435,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Actual number of characters making up the string
 
-	occurrences (c: WIDE_CHARACTER): INTEGER is
+	occurrences (c: WIDE_CHARACTER): INTEGER
 			-- Number of times `c' appears in the string
 		local
 			i, nb: INTEGER
@@ -462,7 +462,7 @@ feature -- Measurement
 					Result = 1 + substring (2, count).occurrences (c)
 		end
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		do
 			create Result.make (1, count)
@@ -472,7 +472,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is string made of same character sequence as `other'
 			-- (possibly with a different capacity)?
 		local
@@ -488,7 +488,7 @@ feature -- Comparison
 			end
 		end
 
-	is_case_insensitive_equal (other: like Current): BOOLEAN is
+	is_case_insensitive_equal (other: like Current): BOOLEAN
 			-- Is string made of same character sequence as `other' regardless of casing
 			-- (possibly with a different capacity)?
 		require
@@ -525,7 +525,7 @@ feature -- Comparison
 			valid_result: as_lower.is_equal (other.as_lower) implies Result
 		end
 
-	same_string (other: STRING_32): BOOLEAN is
+	same_string (other: STRING_32): BOOLEAN
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
@@ -572,7 +572,7 @@ feature -- Comparison
 			definition: Result = string.is_equal (other.string)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is string lexicographically lower than `other'?
 		local
 			other_count: INTEGER
@@ -595,13 +595,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_string_8: BOOLEAN is False
+	is_string_8: BOOLEAN = False
 			-- Current is not a STRING_8 instance
 
-	is_string_32: BOOLEAN is True
+	is_string_32: BOOLEAN = True
 			-- Current is a STRING_32 instance
 
-	is_valid_as_string_8: BOOLEAN is
+	is_valid_as_string_8: BOOLEAN
 			-- Is `Current' convertible to STRING_8 without information loss?
 		local
 			i, nb: INTEGER
@@ -619,7 +619,7 @@ feature -- Status report
 			end
 		end
 
-	has (c: WIDE_CHARACTER): BOOLEAN is
+	has (c: WIDE_CHARACTER): BOOLEAN
 			-- Does string include `c'?
 		local
 			i, nb: INTEGER
@@ -643,7 +643,7 @@ feature -- Status report
 				(Result = substring (2, count).has (c))
 		end
 
-	has_substring (other: STRING_32): BOOLEAN is
+	has_substring (other: STRING_32): BOOLEAN
 			-- Does `Current' contain `other'?
 		require
 			other_not_void: other /= Void
@@ -662,30 +662,30 @@ feature -- Status report
 				(Result = substring (2, count).has_substring (other))
 		end
 
-	extendible: BOOLEAN is True
+	extendible: BOOLEAN = True
 			-- May new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of the string?
 		do
 			Result := (i > 0) and (i <= count)
 		end
 
-	valid_code (v: NATURAL_32): BOOLEAN is
+	valid_code (v: NATURAL_32): BOOLEAN
 			-- Is `v' a valid code for a CHARACTER_32?
 		do
 			Result := True
 		end
 
-	changeable_comparison_criterion: BOOLEAN is False
+	changeable_comparison_criterion: BOOLEAN = False
 
-	is_number_sequence: BOOLEAN is
+	is_number_sequence: BOOLEAN
 			-- Does `Current' represent a number sequence?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_no_limitation)
@@ -704,7 +704,7 @@ feature -- Status report
 				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 		end
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN
 			-- Does `Current' represent a REAL?
 		do
 			Result := is_double
@@ -732,7 +732,7 @@ feature -- Status report
 				--	by an instance of type REAL.
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Does `Current' represent a DOUBLE?
 		do
 			if is_valid_as_string_8 then
@@ -763,7 +763,7 @@ feature -- Status report
 				--	by an instance of type DOUBLE.
 		end
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN
 			-- Does `Current' represent a BOOLEAN?
 		local
 			nb: INTEGER
@@ -791,50 +791,50 @@ feature -- Status report
 				false_constant.same_string (as_lower.as_string_8))
 		end
 
-	is_integer_8: BOOLEAN is
+	is_integer_8: BOOLEAN
 			-- Does `Current' represent an INTEGER_8?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_8)
 		end
 
-	is_integer_16: BOOLEAN is
+	is_integer_16: BOOLEAN
 			-- Does `Current' represent an INTEGER_16?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_16)
 		end
 
-	is_integer, is_integer_32: BOOLEAN is
+	is_integer, is_integer_32: BOOLEAN
 			-- Does `Current' represent an INTEGER?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_32)
 		end
 
-	is_integer_64: BOOLEAN is
+	is_integer_64: BOOLEAN
 			-- Does `Current' represent an INTEGER_64?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_64)
 		end
 
-	is_natural_8: BOOLEAN is
+	is_natural_8: BOOLEAN
 			-- Does `Current' represent a NATURAL_8?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_8)
 		end
 
-	is_natural_16: BOOLEAN is
+	is_natural_16: BOOLEAN
 			-- Does `Current' represent a NATURAL_16?
 
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_16)
 		end
 
-	is_natural, is_natural_32: BOOLEAN is
+	is_natural, is_natural_32: BOOLEAN
 			-- Does `Current' represent a NATURAL_32?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_32)
 		end
 
-	is_natural_64: BOOLEAN is
+	is_natural_64: BOOLEAN
 			-- Does `Current' represent a NATURAL_64?
 		do
 			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_64)
@@ -842,7 +842,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set (t: like Current; n1, n2: INTEGER) is
+	set (t: like Current; n1, n2: INTEGER)
 			-- Set current string to substring of `t' from indices `n1'
 			-- to `n2', or to empty string if no such substring.
 		require
@@ -858,7 +858,7 @@ feature -- Element change
 			is_substring: is_equal (t.substring (n1, n2))
 		end
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `twin'.)
 		local
@@ -882,7 +882,7 @@ feature -- Element change
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end
 
-	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy characters of `other' within bounds `start_pos' and
 			-- `end_pos' to current string starting at index `index_pos'.
 		require
@@ -915,7 +915,7 @@ feature -- Element change
 				old substring (index_pos + (end_pos - start_pos + 1), count)))
 		end
 
-	replace_substring (s: STRING_32; start_index, end_index: INTEGER) is
+	replace_substring (s: STRING_32; start_index, end_index: INTEGER)
 			-- Replace characters from `start_index' to `end_index' with `s'.
 		require
 			string_not_void: s /= Void
@@ -955,7 +955,7 @@ feature -- Element change
 					s + substring (end_index + 1, count))))
 		end
 
-	replace_substring_all (original, new: like Current) is
+	replace_substring_all (original, new: like Current)
 			-- Replace every occurrence of `original' with `new'.
 		require
 			original_exists: original /= Void
@@ -1047,7 +1047,7 @@ feature -- Element change
 			end
 		end
 
-	replace_blank is
+	replace_blank
 			-- Replace all current characters with blanks.
 		do
 			fill_with (' ')
@@ -1056,7 +1056,7 @@ feature -- Element change
 			all_blank: elks_checking implies occurrences (' ') = count
 		end
 
-	fill_blank is
+	fill_blank
 			-- Fill with `capacity' blank characters.
 		do
 			fill_character (' ')
@@ -1066,7 +1066,7 @@ feature -- Element change
 			-- all_blank: For every `i' in `count'..`capacity', `item' (`i') = `Blank'
 		end
 
-	fill_with (c: WIDE_CHARACTER) is
+	fill_with (c: WIDE_CHARACTER)
 			-- Replace every character with `c'.
 		local
 			l_count: INTEGER
@@ -1081,7 +1081,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	replace_character (c: WIDE_CHARACTER) is
+	replace_character (c: WIDE_CHARACTER)
 			-- Replace every character with `c'.
 		obsolete
 			"ELKS 2001: use `fill_with' instead'"
@@ -1092,7 +1092,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	fill_character (c: WIDE_CHARACTER) is
+	fill_character (c: WIDE_CHARACTER)
 			-- Fill with `capacity' characters all equal to `c'.
 		local
 			l_cap: like capacity
@@ -1109,7 +1109,7 @@ feature -- Element change
 			-- all_char: For every `i' in 1..`capacity', `item' (`i') = `c'
 		end
 
-	head (n: INTEGER) is
+	head (n: INTEGER)
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
 		obsolete
@@ -1123,7 +1123,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
 		end
 
-	keep_head (n: INTEGER) is
+	keep_head (n: INTEGER)
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
 		require
@@ -1138,7 +1138,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
 		end
 
-	tail (n: INTEGER) is
+	tail (n: INTEGER)
 			-- Remove all characters except for the last `n';
 			-- do nothing if `n' >= `count'.
 		obsolete
@@ -1152,7 +1152,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
 		end
 
-	keep_tail (n: INTEGER) is
+	keep_tail (n: INTEGER)
 			-- Remove all characters except for the last `n';
 			-- do nothing if `n' >= `count'.
 		require
@@ -1171,7 +1171,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
 		end
 
-	left_adjust is
+	left_adjust
 			-- Remove leading whitespace.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1204,7 +1204,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal ((old twin).substring (old count - count + 1, old count))
 		end
 
-	right_adjust is
+	right_adjust
 			-- Remove trailing whitespace.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1240,7 +1240,7 @@ feature -- Element change
 			kept: elks_checking implies is_equal ((old twin).substring (1, count))
 		end
 
-	share (other: STRING_32) is
+	share (other: STRING_32)
 			-- Make current string share the text of `other'.
 			-- Subsequent changes to the characters of current string
 			-- will also affect `other', and conversely.
@@ -1255,7 +1255,7 @@ feature -- Element change
 			shared_area: other.area = area
 		end
 
-	put (c: WIDE_CHARACTER; i: INTEGER) is
+	put (c: WIDE_CHARACTER; i: INTEGER)
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
@@ -1266,14 +1266,14 @@ feature -- Element change
 			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
-	put_code (v: NATURAL_32; i: INTEGER) is
+	put_code (v: NATURAL_32; i: INTEGER)
 			-- Replace character at position `i' by character of code `v'.
 		do
 			area.put (v.to_character_32, i - 1)
 			internal_hash_code := 0
 		end
 
-	precede, prepend_character (c: WIDE_CHARACTER) is
+	precede, prepend_character (c: WIDE_CHARACTER)
 			-- Add `c' at front.
 		local
 			l_area: like area
@@ -1290,7 +1290,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	prepend (s: STRING_32) is
+	prepend (s: STRING_32)
 			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
@@ -1301,31 +1301,31 @@ feature -- Element change
 			inserted: elks_checking implies string.is_equal (old (s.twin) + old substring (1, count))
 		end
 
-	prepend_boolean (b: BOOLEAN) is
+	prepend_boolean (b: BOOLEAN)
 			-- Prepend the string representation of `b' at front.
 		do
 			prepend (b.out)
 		end
 
-	prepend_double (d: DOUBLE) is
+	prepend_double (d: DOUBLE)
 			-- Prepend the string representation of `d' at front.
 		do
 			prepend (d.out)
 		end
 
-	prepend_integer (i: INTEGER) is
+	prepend_integer (i: INTEGER)
 			-- Prepend the string representation of `i' at front.
 		do
 			prepend (i.out)
 		end
 
-	prepend_real (r: REAL) is
+	prepend_real (r: REAL)
 			-- Prepend the string representation of `r' at front.
 		do
 			prepend (r.out)
 		end
 
-	prepend_string (s: STRING_32) is
+	prepend_string (s: STRING_32)
 			-- Prepend a copy of `s', if not void, at front.
 		do
 			if s /= Void then
@@ -1333,7 +1333,7 @@ feature -- Element change
 			end
 		end
 
-	append_string_general (s: STRING_GENERAL) is
+	append_string_general (s: STRING_GENERAL)
 			-- Append a copy of `s' at end.
 		local
 			l_s32: STRING_32
@@ -1347,7 +1347,7 @@ feature -- Element change
 			end
 		end
 
-	append (s: STRING_32) is
+	append (s: STRING_32)
 			-- Append a copy of `s' at end.
 		require
 			argument_not_void: s /= Void
@@ -1370,7 +1370,7 @@ feature -- Element change
 			appended: elks_checking implies is_equal (old twin + old s.twin)
 		end
 
-	infix "+" (s: STRING_32): like Current is
+	infix "+" (s: STRING_32): like Current
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
@@ -1386,7 +1386,7 @@ feature -- Element change
 			final: elks_checking implies Result.substring (count + 1, count + s.count).same_string (s)
 		end
 
-	append_string (s: STRING_32) is
+	append_string (s: STRING_32)
 			-- Append a copy of `s', if not void, at end.
 		do
 			if s /= Void then
@@ -1397,7 +1397,7 @@ feature -- Element change
 				(elks_checking implies is_equal (old twin + old s.twin))
 		end
 
-	append_integer (i: INTEGER) is
+	append_integer (i: INTEGER)
 			-- Append the string representation of `i' at end.
 		local
 			l_value: INTEGER
@@ -1448,19 +1448,19 @@ feature -- Element change
 			end
 		end
 
-	append_real (r: REAL) is
+	append_real (r: REAL)
 			-- Append the string representation of `r' at end.
 		do
 			append (r.out)
 		end
 
-	append_double (d: DOUBLE) is
+	append_double (d: DOUBLE)
 			-- Append the string representation of `d' at end.
 		do
 			append (d.out)
 		end
 
-	append_character, extend (c: WIDE_CHARACTER) is
+	append_character, extend (c: WIDE_CHARACTER)
 			-- Append `c' at end.
 		local
 			current_count: INTEGER
@@ -1478,13 +1478,13 @@ feature -- Element change
 			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
 		end
 
-	append_boolean (b: BOOLEAN) is
+	append_boolean (b: BOOLEAN)
 			-- Append the string representation of `b' at end.
 		do
 			append (b.out)
 		end
 
-	insert (s: STRING_32; i: INTEGER) is
+	insert (s: STRING_32; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
 			"ELKS 2001: use `insert_string' instead"
@@ -1499,7 +1499,7 @@ feature -- Element change
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_string (s: STRING_32; i: INTEGER) is
+	insert_string (s: STRING_32; i: INTEGER)
 			-- Insert `s' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1537,7 +1537,7 @@ feature -- Element change
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_character (c: WIDE_CHARACTER; i: INTEGER) is
+	insert_character (c: WIDE_CHARACTER; i: INTEGER)
 			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1573,7 +1573,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th character.
 		local
 			l_count: INTEGER
@@ -1586,7 +1586,7 @@ feature -- Removal
 			internal_hash_code := 0
 		end
 
-	remove_head (n: INTEGER) is
+	remove_head (n: INTEGER)
 			-- Remove first `n' characters;
 			-- if `n' > `count', remove all.
 		require
@@ -1602,7 +1602,7 @@ feature -- Removal
 			removed: elks_checking implies is_equal (old substring (n.min (count) + 1, count))
 		end
 
-	remove_substring (start_index, end_index: INTEGER) is
+	remove_substring (start_index, end_index: INTEGER)
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
 		require
@@ -1623,7 +1623,7 @@ feature -- Removal
 				is_equal (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
-	remove_tail (n: INTEGER) is
+	remove_tail (n: INTEGER)
 			-- Remove last `n' characters;
 			-- if `n' > `count', remove all.
 		require
@@ -1642,7 +1642,7 @@ feature -- Removal
 			removed: elks_checking implies is_equal (old substring (1, count - n.min (count)))
 		end
 
-	prune (c: WIDE_CHARACTER) is
+	prune (c: WIDE_CHARACTER)
 			-- Remove first occurrence of `c', if any.
 		require else
 			True
@@ -1661,7 +1661,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all (c: WIDE_CHARACTER) is
+	prune_all (c: WIDE_CHARACTER)
 			-- Remove all occurrences of `c'.
 		require else
 			True
@@ -1692,7 +1692,7 @@ feature -- Removal
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end
 
-	prune_all_leading (c: WIDE_CHARACTER) is
+	prune_all_leading (c: WIDE_CHARACTER)
 			-- Remove all leading occurrences of `c'.
 		do
 			from
@@ -1703,7 +1703,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all_trailing (c: WIDE_CHARACTER) is
+	prune_all_trailing (c: WIDE_CHARACTER)
 			-- Remove all trailing occurrences of `c'.
 		do
 			from
@@ -1714,7 +1714,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all characters.
 		do
 			create area.make (1)
@@ -1725,7 +1725,7 @@ feature -- Removal
 			empty_capacity: capacity = 0
 		end
 
-	clear_all is
+	clear_all
 			-- Reset all characters.
 		do
 			count := 0
@@ -1737,13 +1737,13 @@ feature -- Removal
 
 feature -- Resizing
 
-	adapt_size is
+	adapt_size
 			-- Adapt the size to accommodate `count' characters.
 		do
 			resize (count)
 		end
 
-	resize (newsize: INTEGER) is
+	resize (newsize: INTEGER)
 			-- Rearrange string so that it can accommodate
 			-- at least `newsize' characters.
 			-- Do not lose any previously entered character.
@@ -1756,7 +1756,7 @@ feature -- Resizing
 			end
 		end
 
-	grow (newsize: INTEGER) is
+	grow (newsize: INTEGER)
 			-- Ensure that the capacity is at least `newsize'.
 		do
 			if newsize > capacity then
@@ -1766,7 +1766,7 @@ feature -- Resizing
 
 feature -- Conversion
 
-	as_lower: like Current is
+	as_lower: like Current
 			-- New object with all letters in lower case.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1780,7 +1780,7 @@ feature -- Conversion
 				is_equal (substring (2, count).as_lower)
 		end
 
-	as_upper: like Current is
+	as_upper: like Current
 			-- New object with all letters in upper case
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1794,7 +1794,7 @@ feature -- Conversion
 				is_equal (substring (2, count).as_upper)
 		end
 
-	left_justify is
+	left_justify
 			-- Left justify Current using `count' as witdth.
 		local
 			i, nb: INTEGER
@@ -1823,7 +1823,7 @@ feature -- Conversion
 			end
 		end
 
-	center_justify is
+	center_justify
 			-- Center justify Current using `count' as width.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1880,7 +1880,7 @@ feature -- Conversion
 			end
 		end
 
-	right_justify is
+	right_justify
 			-- Right justify Current using `count' as width.
 		local
 			i, nb: INTEGER
@@ -1922,7 +1922,7 @@ feature -- Conversion
 			same_count: count = old count
 		end
 
-	character_justify (pivot: WIDE_CHARACTER; position: INTEGER) is
+	character_justify (pivot: WIDE_CHARACTER; position: INTEGER)
 			-- Justify a string based on a `pivot'
 			-- and the `position' it needs to be in
 			-- the final string.
@@ -1958,7 +1958,7 @@ feature -- Conversion
 			end
 		end
 
-	to_lower is
+	to_lower
 			-- Convert to lower case.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -1980,7 +1980,7 @@ feature -- Conversion
 			length_end_content: elks_checking implies is_equal (old as_lower)
 		end
 
-	to_upper is
+	to_upper
 			-- Convert to upper case.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -2002,7 +2002,7 @@ feature -- Conversion
 			length_end_content: elks_checking implies is_equal (old as_upper)
 		end
 
-	to_integer_8: INTEGER_8 is
+	to_integer_8: INTEGER_8
 			-- 8-bit integer value
 		require
 			is_integer_8: is_integer_8
@@ -2011,7 +2011,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_integer_8
 		end
 
-	to_integer_16: INTEGER_16 is
+	to_integer_16: INTEGER_16
 			-- 16-bit integer value
 		require
 			is_integer_16: is_integer_16
@@ -2020,7 +2020,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_integer_16
 		end
 
-	to_integer, to_integer_32: INTEGER is
+	to_integer, to_integer_32: INTEGER
 			-- 32-bit integer value
 		require
 			is_integer: is_integer_32
@@ -2029,7 +2029,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_integer
 		end
 
-	to_integer_64: INTEGER_64 is
+	to_integer_64: INTEGER_64
 			-- 64-bit integer value
 		require
 			is_integer_64: is_integer_64
@@ -2038,7 +2038,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_integer_64
 		end
 
-	to_natural_8: NATURAL_8 is
+	to_natural_8: NATURAL_8
 			-- 8-bit natural value
 		require
 			is_natural_8: is_natural_8
@@ -2047,7 +2047,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_natural_8
 		end
 
-	to_natural_16: NATURAL_16 is
+	to_natural_16: NATURAL_16
 			-- 16-bit natural value
 		require
 			is_natural_16: is_natural_16
@@ -2056,7 +2056,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_natural_16
 		end
 
-	to_natural, to_natural_32: NATURAL_32 is
+	to_natural, to_natural_32: NATURAL_32
 			-- 32-bit natural value
 		require
 			is_natural: is_natural
@@ -2065,7 +2065,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_natural_32
 		end
 
-	to_natural_64: NATURAL_64 is
+	to_natural_64: NATURAL_64
 			-- 64-bit natural value
 		require
 			is_natural_64: is_natural_64
@@ -2074,7 +2074,7 @@ feature -- Conversion
 			Result := ctoi_convertor.parsed_natural_64
 		end
 
-	to_real: REAL is
+	to_real: REAL
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
 		require
@@ -2083,7 +2083,7 @@ feature -- Conversion
 			Result := to_double
 		end
 
-	to_double: DOUBLE is
+	to_double: DOUBLE
 			-- "Double" value;
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require
@@ -2093,7 +2093,7 @@ feature -- Conversion
 			Result := ctor_convertor.parsed_double
 		end
 
-	to_boolean: BOOLEAN is
+	to_boolean: BOOLEAN
 			-- Boolean value;
 			-- "True" yields `True', "False" yields `False'
 			-- (case-insensitive)
@@ -2109,7 +2109,7 @@ feature -- Conversion
 				(not Result = false_constant.same_string (as_lower.as_string_8))
 		end
 
-	linear_representation: LINEAR [WIDE_CHARACTER] is
+	linear_representation: LINEAR [WIDE_CHARACTER]
 			-- Representation as a linear structure
 		local
 			temp: ARRAYED_LIST [WIDE_CHARACTER]
@@ -2127,7 +2127,7 @@ feature -- Conversion
 			Result := temp
 		end
 
-	split (a_separator: WIDE_CHARACTER): LIST [STRING_32] is
+	split (a_separator: WIDE_CHARACTER): LIST [STRING_32]
 			-- Split on `a_separator'.
 		local
 			l_list: ARRAYED_LIST [STRING_32]
@@ -2173,7 +2173,7 @@ feature -- Conversion
 			Result /= Void
 		end
 
-	frozen to_c: ANY is
+	frozen to_c: ANY
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
 		require
@@ -2186,7 +2186,7 @@ feature -- Conversion
 			Result := l_area
 		end
 
-	mirrored: like Current is
+	mirrored: like Current
 			-- Mirror image of string;
 			-- Result for "Hello world" is "dlrow olleH".
 		do
@@ -2199,7 +2199,7 @@ feature -- Conversion
 			-- reversed: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`count'+1-`i')
 		end
 
-	mirror is
+	mirror
 			-- Reverse the order of characters.
 			-- "Hello world" -> "dlrow olleH".
 		local
@@ -2229,7 +2229,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	substring (start_index, end_index: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current
 			-- Copy of substring containing all characters at indices
 			-- between `start_index' and `end_index'
 		do
@@ -2246,7 +2246,7 @@ feature -- Duplication
 				Result.substring (2, Result.count).is_equal (substring (start_index + 1, end_index))
 		end
 
-	multiply (n: INTEGER) is
+	multiply (n: INTEGER)
 			-- Duplicate a string within itself
 			-- ("hello").multiply(3) => "hellohellohello"
 		require
@@ -2269,7 +2269,7 @@ feature -- Duplication
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation
 		do
 			create Result.make (count)
@@ -2281,7 +2281,7 @@ feature -- Output
 
 feature {STRING_HANDLER} -- Implementation
 
-	frozen set_count (number: INTEGER) is
+	frozen set_count (number: INTEGER)
 			-- Set `count' to `number' of characters.
 		do
 			count := number
@@ -2293,7 +2293,7 @@ feature {NONE} -- Empty string implementation
 	internal_hash_code: INTEGER
 			-- Computed hash-code.
 
-	frozen set_internal_hash_code (v: like internal_hash_code) is
+	frozen set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
 		do
 			internal_hash_code := v
@@ -2301,7 +2301,7 @@ feature {NONE} -- Empty string implementation
 
 feature {NONE} -- Implementation
 
-	new_string (n: INTEGER): like Current is
+	new_string (n: INTEGER): like Current
 			-- New instance of current with space for at least `n' characters.
 		require
 			n_non_negative: n >= 0
@@ -2315,7 +2315,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Transformation
 
-	correct_mismatch is
+	correct_mismatch
 			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
 		do
 			-- Nothing to be done because we only added `internal_hash_code' that will
@@ -2324,7 +2324,7 @@ feature {NONE} -- Transformation
 
 feature {NONE} -- Implementation
 
-	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN is
+	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN
 			-- Is `Current' a valid number according to given `type'?
 		do
 			Result := is_valid_as_string_8
@@ -2335,7 +2335,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is
+	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER
 			-- Compare `this' and `other' strings
 			-- for the first `nb' characters.
 			-- 0 if equal, < 0 if `this' < `other',
@@ -2368,7 +2368,7 @@ invariant
 	index_set_has_same_count: index_set.count = count
 	area_not_void: area /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

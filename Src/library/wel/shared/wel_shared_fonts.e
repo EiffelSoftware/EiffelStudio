@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared reference to predefined font object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	gui_font: WEL_DEFAULT_GUI_FONT is
+	gui_font: WEL_DEFAULT_GUI_FONT
 			-- Default screen (WEL) font.
 		once
 			create Result.make
@@ -18,7 +18,7 @@ feature -- Access
 			font_created: Result /= Void
 		end
 
-	system_font: WEL_SYSTEM_FONT is
+	system_font: WEL_SYSTEM_FONT
 			-- Default system font.
 		once
 			create Result.make
@@ -26,7 +26,7 @@ feature -- Access
 			font_created: Result /= Void
 		end
 
-	message_font: WEL_FONT is
+	message_font: WEL_FONT
 			-- Font used in message boxes
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -44,7 +44,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-	menu_font: WEL_FONT is
+	menu_font: WEL_FONT
 			-- Font used in menus
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -62,7 +62,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-	status_font: WEL_FONT is
+	status_font: WEL_FONT
 			-- Font used in status bars
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -80,7 +80,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-	caption_font: WEL_FONT is
+	caption_font: WEL_FONT
 			-- Caption font
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -98,7 +98,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-	small_caption_font: WEL_FONT is
+	small_caption_font: WEL_FONT
 			-- Small caption font
 		local
 			system_parameter_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -118,37 +118,37 @@ feature -- Access
 		
 feature {WEL_COMPOSITE_WINDOW}
 
-	message_font_cell: CELL [WEL_FONT] is
+	message_font_cell: CELL [WEL_FONT]
 			-- Container for `message_font'
 		once
 			create Result.put (Void)
 		end
 
-	menu_font_cell: CELL [WEL_FONT] is
+	menu_font_cell: CELL [WEL_FONT]
 			-- Container for `menu_font'
 		once
 			create Result.put (Void)
 		end
 
-	status_font_cell: CELL [WEL_FONT] is
+	status_font_cell: CELL [WEL_FONT]
 			-- Container for `status_font'
 		once
 			create Result.put (Void)
 		end
 
-	caption_font_cell: CELL [WEL_FONT] is
+	caption_font_cell: CELL [WEL_FONT]
 			-- Container for `caption_font'
 		once
 			create Result.put (Void)
 		end
 
-	small_caption_font_cell: CELL [WEL_FONT] is
+	small_caption_font_cell: CELL [WEL_FONT]
 			-- Container for `small_caption_font'
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that provides functions to format a number according to information in an I18N_NUMERIC_INFO"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_numeric_info: I18N_NUMERIC_INFO) is
+	make (a_numeric_info: I18N_NUMERIC_INFO)
 			-- create value formatter according to
 			-- values in `a_numeric_info'
 		require
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Integer Formatting functions
 
-	format_integer_8 (a_integer_8: INTEGER_8): STRING_32 is
+	format_integer_8 (a_integer_8: INTEGER_8): STRING_32
 		do
 			if a_integer_8 < 0 then
 				create Result.make_from_string (negative_sign + format_integer_part (a_integer_8.abs.out))
@@ -40,7 +40,7 @@ feature -- Integer Formatting functions
 			Result_exists: Result /= Void
 		end
 
-	format_integer_16 (a_integer_16: INTEGER_16): STRING_32 is
+	format_integer_16 (a_integer_16: INTEGER_16): STRING_32
 		do
 			if a_integer_16 < 0 then
 				create Result.make_from_string (negative_sign + format_integer_part (a_integer_16.abs.out))
@@ -51,7 +51,7 @@ feature -- Integer Formatting functions
 			Result_exists: Result /= Void
 		end
 
-	format_integer_32 (a_integer_32: INTEGER_32): STRING_32 is
+	format_integer_32 (a_integer_32: INTEGER_32): STRING_32
 		do
 			if a_integer_32 < 0 then
 				create Result.make_from_string (negative_sign + format_integer_part (a_integer_32.abs.out))
@@ -62,7 +62,7 @@ feature -- Integer Formatting functions
 			Result_exists: Result /= Void
 		end
 
-	format_integer_64 (a_integer_64: INTEGER_64): STRING_32 is
+	format_integer_64 (a_integer_64: INTEGER_64): STRING_32
 		do
 			if a_integer_64 < 0 then
 				create Result.make_from_string (negative_sign + format_integer_part (a_integer_64.abs.out))
@@ -75,7 +75,7 @@ feature -- Integer Formatting functions
 
 feature -- Real formatting functions		
 
-	format_real_32 (a_real_32: REAL_32): STRING_32 is
+	format_real_32 (a_real_32: REAL_32): STRING_32
 		local
 			sign: STRING_32
 			integer_part,
@@ -96,7 +96,7 @@ feature -- Real formatting functions
 			Result_exists: Result /= Void
 		end
 
-	format_real_64 (a_real_64: REAL_64): STRING_32 is
+	format_real_64 (a_real_64: REAL_64): STRING_32
 		local
 			sign: STRING_32
 			integer_part,
@@ -136,7 +136,7 @@ feature {NONE} -- Informations
 
 feature {NONE} -- Implementation
 
-	format_integer_part (a_string: STRING_32): STRING_32 is
+	format_integer_part (a_string: STRING_32): STRING_32
 			-- group the `a_string' according the rules in `grouping'
 		require
 			a_string_exists: a_string /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-	format_real_part (a_string: STRING_32): STRING_32 is
+	format_real_part (a_string: STRING_32): STRING_32
 			--
 		require
 			a_string_exists: a_string /= Void
@@ -218,7 +218,7 @@ invariant
 	group_separator_exists: group_separator  /= Void
 	valid_grouping: grouping /= Void and then grouping.count > 0
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

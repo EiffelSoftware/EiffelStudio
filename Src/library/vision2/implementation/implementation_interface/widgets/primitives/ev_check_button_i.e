@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision check button. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ feature {EV_ANY_I} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	default_alignment: INTEGER is
+	default_alignment: INTEGER
 			-- Default alignment used during
 			-- creation of real implementation
 		do
 			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left 
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- `Result is all items currently selected in `Current'.
 		local
 			original_position: INTEGER
@@ -38,29 +38,29 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_item_visible (an_item: EV_LIST_ITEM) is
+	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_item' is visible in `Current'.
 		deferred
 		end
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow multiple items to be selected.
 		deferred
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		deferred
 		end
 		
-	disable_default_key_processing is
+	disable_default_key_processing
 			-- Ensure default key processing is not performed.
 		do
 			default_key_processing_disabled := True
@@ -73,7 +73,7 @@ feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

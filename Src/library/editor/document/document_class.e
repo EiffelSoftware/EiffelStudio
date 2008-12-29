@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Document class information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Creation
 
-	make (a_name, a_filetype, a_syntax_definition_file: STRING) is
+	make (a_name, a_filetype, a_syntax_definition_file: STRING)
 	        -- Make new document class with `a_filetype'
 	   	require
 	   	    filetype_not_void: a_filetype /= Void
@@ -31,7 +31,7 @@ feature -- Creation
 
 feature -- Initialization
 
-	initialize_scanner is
+	initialize_scanner
 	        -- Initialize `scanner'.  A scanner will be built from the syntax definition file.  If this fails a simple
 	        -- default text scanner will be used.  To use a custom scanner override with `set_scanner'.
 	    local
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Query
 
-	known_filetype (a_type: STRING): BOOLEAN is
+	known_filetype (a_type: STRING): BOOLEAN
 	        --
 		do
 			Result := filetypes.has (a_type)
@@ -77,7 +77,7 @@ feature -- Query
 
 feature -- Status setting
 
-	set_scanner (a_scanner: like scanner) is
+	set_scanner (a_scanner: like scanner)
 	        -- Set `scanner'.  This can be used to override using the generic scanner.
 	    require
 	        scanner_not_void: scanner /= Void
@@ -87,7 +87,7 @@ feature -- Status setting
 	 	    scanner_set: scanner = a_scanner
 	 	end
 
-	 set_encoding_detector (a_encoding_detector: like encoding_detector) is
+	 set_encoding_detector (a_encoding_detector: like encoding_detector)
 	 		-- Set `encoding_detector' with `a_encoding_detector'.
 	 	do
 			encoding_detector := a_encoding_detector
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_file_type (a_type: STRING) is
+	add_file_type (a_type: STRING)
 	        -- Add new type to associate with this class
 	  	require
 	  	    type_not_void: a_type /= Void
@@ -108,7 +108,7 @@ feature -- Element change
 	  	    type_known: known_filetype (a_type)
 	  	end
 
-	remove_file_type (a_type: STRING) is
+	remove_file_type (a_type: STRING)
 	        -- Remove type
 	  	require
 	  	    type_not_void: a_type /= Void
@@ -121,7 +121,7 @@ feature -- Element change
 
 feature {NONE} -- Parsing
 
-	parse_syntax_file (a_syn_file: STRING): BOOLEAN is
+	parse_syntax_file (a_syn_file: STRING): BOOLEAN
 	        -- To implement.  Return True if there is an error.
 	   	local
 	   	    l_syntax: EDITOR_SYNTAX_SCANNER
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 	filetypes: ARRAYED_LIST [STRING]
 			-- Filetypes using this document class
 
-	basic_lexer: EDITOR_BASIC_SCANNER is
+	basic_lexer: EDITOR_BASIC_SCANNER
 			-- Basic default text lexer
 		once
 			create Result.make
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 invariant
 	has_at_least_one_filetype: not filetypes.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

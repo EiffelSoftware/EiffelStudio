@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception raised when $ is applied to melted feature
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.dollar_applied_to_melted_feature
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "CECIL cannot call melted code."
+	frozen internal_meaning: STRING = "CECIL cannot call melted code."
 
 end

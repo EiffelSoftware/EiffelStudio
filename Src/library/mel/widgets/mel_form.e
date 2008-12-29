@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Container widget that constrains its children."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create fom with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -45,12 +45,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_form: BOOLEAN is True;
+	is_form: BOOLEAN = True;
 			-- Is Current a form?
 
 feature -- Status report
 
-	fraction_base: INTEGER is
+	fraction_base: INTEGER
 			-- The denominator part of the fraction that describes a child's
 			-- relative position within Currentright
 		require
@@ -61,7 +61,7 @@ feature -- Status report
 			fraction_base_large_enough: Result > 0
 		end;
 
-	horizontal_spacing: INTEGER is
+	horizontal_spacing: INTEGER
 			-- The offset for right and left attachments
 		require
 			exists: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Status report
 			horizontal_spacing_large_enough: Result >= 0
 		end;
 
-	vertical_spacing: INTEGER is
+	vertical_spacing: INTEGER
 			-- The offset for top and bottom attachments
 		require
 			exists: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Status report
 			vertical_spacing_large_enough: Result >= 0
 		end;
 
-	is_rubber_positioning: BOOLEAN is
+	is_rubber_positioning: BOOLEAN
 			-- Are the child's top and left sides positioned relative to the size of Current?
 		require
 			exists: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature  -- Status setting
 
-	set_fraction_base (a_value: INTEGER) is
+	set_fraction_base (a_value: INTEGER)
 			-- Set `fraction_base' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -102,7 +102,7 @@ feature  -- Status setting
 			fraction_base_set: fraction_base = a_value
 		end;
 
-	set_horizontal_spacing (a_width: INTEGER) is
+	set_horizontal_spacing (a_width: INTEGER)
 			-- Set the offset for right and left attachments.
 		require
 			exists: not is_destroyed;
@@ -113,7 +113,7 @@ feature  -- Status setting
 			horizontal_spacing_set: horizontal_spacing = a_width
 		end;
 
-	set_vertical_spacing (a_height: INTEGER) is
+	set_vertical_spacing (a_height: INTEGER)
 			-- Set the offset for top and bottom attachments.
 		require
 			exists: not is_destroyed;
@@ -124,7 +124,7 @@ feature  -- Status setting
 			vertical_spacing_set: vertical_spacing = a_height
 		end;
 
-	enable_rubber_positioning is
+	enable_rubber_positioning
 			-- Set `is_rubber_positioning' to True.
 		require
 			exists: not is_destroyed
@@ -134,7 +134,7 @@ feature  -- Status setting
 			rubber_positioning_enabled: is_rubber_positioning 
 		end;
 
-	disable_rubber_positioning is
+	disable_rubber_positioning
 			-- Set `is_rubber_positioning' to False.
 		require
 			exists: not is_destroyed
@@ -146,14 +146,14 @@ feature  -- Status setting
 
 feature {NONE} -- External features
 
-	xm_create_form (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_form (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Form.h>"
 		alias
 			"XmCreateForm"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

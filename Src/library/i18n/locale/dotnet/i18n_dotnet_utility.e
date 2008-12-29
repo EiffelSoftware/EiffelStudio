@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object that allows convertion from a .NET
 		format string to a format supported by
@@ -14,7 +14,7 @@ class I18N_DOTNET_UTILITY
 
 feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 
-	convert_format_string (s: STRING_32): STRING_32 is
+	convert_format_string (s: STRING_32): STRING_32
 			-- convert a .NET format string
 			-- to a format string supported by
 			-- Eiffel i18n library
@@ -28,7 +28,7 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 			end
 		end
 
-	convert_format_specifier (s: STRING_32): STRING_32 is
+	convert_format_specifier (s: STRING_32): STRING_32
 			-- convert a .NET format string
 			-- to a format string supported by
 			--Eiffel i18n library
@@ -158,7 +158,7 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 			end
 		end
 
-	next_code (s: STRING_32; a_char: CHARACTER; index: INTEGER): INTEGER is
+	next_code (s: STRING_32; a_char: CHARACTER; index: INTEGER): INTEGER
 			-- find index of next format specifier
 		do
 			from
@@ -171,7 +171,7 @@ feature {I18N_HOST_LOCALE_IMP} -- Convertion functions
 				Result := Result + 1
 			end
 		end
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif scrolled text widget."
@@ -88,7 +88,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif scrolled text.
 		local
 			mc: MEL_COMPOSITE
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 		end;
 
 	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent:
-COMPOSITE) is
+COMPOSITE)
 			-- Create a motif scrolled text enabling word wrap.
 		local
 			mc: MEL_COMPOSITE
@@ -120,7 +120,7 @@ feature -- Access
 	parent: MEL_SCROLLED_WINDOW;
 			-- Scrolled window parent
 
-	main_widget: MEL_WIDGET is
+	main_widget: MEL_WIDGET
 			-- Main widget which is the scrolled window
 		do
 			Result := parent
@@ -131,13 +131,13 @@ feature -- Access
 	
 feature -- Status setting
 
-	set_tab_length (new_length: INTEGER) is
+	set_tab_length (new_length: INTEGER)
 			-- Set `tab_length' to `new_length'
 		do
 			tab_length := new_length
 		end
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
@@ -153,7 +153,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_width (new_width :INTEGER) is
+	set_width (new_width :INTEGER)
 			-- Set width to `new_width'.
 		local
 			was_unmanaged: BOOLEAN
@@ -168,7 +168,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		local
 			was_unmanaged: BOOLEAN
@@ -183,7 +183,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -197,7 +197,7 @@ feature -- Status setting
 			end
 		end;
 
-	hide_horizontal_scrollbar is
+	hide_horizontal_scrollbar
 			-- Make horizontal scrollbar invisible.
 		local
 			w: MEL_WIDGET
@@ -208,7 +208,7 @@ feature -- Status setting
 			end;
 		end;
 
-	hide_vertical_scrollbar is
+	hide_vertical_scrollbar
 			-- Make vertical scrollbar invisible.
 		local
 			w: MEL_WIDGET
@@ -219,7 +219,7 @@ feature -- Status setting
 			end;
 		end;
 
-	show_horizontal_scrollbar is
+	show_horizontal_scrollbar
 			-- Make horizontal scrollbar visible.
 		local
 			w: MEL_WIDGET
@@ -230,7 +230,7 @@ feature -- Status setting
 			end;
 		end;
 
-	show_vertical_scrollbar is
+	show_vertical_scrollbar
 			-- Make vertical scrollbar visible.
 		local
 			w: MEL_WIDGET
@@ -241,7 +241,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET
@@ -264,7 +264,7 @@ feature -- Status setting
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

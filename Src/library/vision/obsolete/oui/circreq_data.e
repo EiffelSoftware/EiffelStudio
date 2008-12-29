@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Information given by EiffelVision when a window is asked to be placed %
@@ -28,13 +28,13 @@ create
 
 feature 
 
-	make (a_widget: WIDGET; arg_is_placed_on_top: BOOLEAN) is
+	make (a_widget: WIDGET; arg_is_placed_on_top: BOOLEAN)
 			-- Create a context_data for `CirculateRequest' event.
 		do
 			circnot_data_make (a_widget, arg_is_placed_on_top)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

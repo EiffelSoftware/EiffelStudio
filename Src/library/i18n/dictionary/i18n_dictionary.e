@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a container for translations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_plural_form: INTEGER) is
+	make (a_plural_form: INTEGER)
 			-- Initialize an empty dictionary with the given plural form.
 			--
 			-- `a_plural_form': Plural form to use in the dictionary
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	extend (a_entry: I18N_DICTIONARY_ENTRY) is
+	extend (a_entry: I18N_DICTIONARY_ENTRY)
 			-- Add entry to dictinary.
 			--
 			-- `a_entry': Entry which is added to dictionary
@@ -43,14 +43,14 @@ feature -- Element change
 
 feature -- Status report
 
-	has (original: STRING_GENERAL) : BOOLEAN is
+	has (original: STRING_GENERAL) : BOOLEAN
 			-- Is there an entry with this original?
 		require
 			original_exists: original /= Void
 		deferred
 		end
 
-	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN is
+	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			-- Does the dictionary have an entry with `original_singular', `original_plural'
 			-- and does this entry have the `plural_number'-th plural translation?
 		require
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	singular (original: STRING_GENERAL): STRING_32 is
+	singular (original: STRING_GENERAL): STRING_32
 			-- Translation of `original' in singular form
 		require
 			original_exists: original /= Void
@@ -71,7 +71,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- Translation of `original_singular' in the given plural form
 		require
 			original_singular_exists: original_singular /= Void
@@ -85,7 +85,7 @@ feature -- Access
 	plural_form: INTEGER
 			-- valid constant from I18N_PLURAL_TOOLS
 
-	count: INTEGER is
+	count: INTEGER
 			-- number of entries in the dictionary
 		 deferred
 		 ensure
@@ -94,7 +94,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	reduce (quantity: INTEGER): INTEGER is
+	reduce (quantity: INTEGER): INTEGER
 			-- Reduce a given plural forms to a smallest one
 		require
 			reduction_agent_set: reduction_agent /= Void
@@ -108,9 +108,9 @@ feature {NONE} -- Implementation
 			-- Agent used to reduce plural forms
 
 	nplural_max: INTEGER
-	nplural_lower: INTEGER is 0;
+	nplural_lower: INTEGER = 0;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

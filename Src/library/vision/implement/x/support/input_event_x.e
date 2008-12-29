@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of input events: events generated from %
@@ -24,7 +24,7 @@ feature -- Access
 	identifier: MEL_IDENTIFIER
 			-- Task identifier 
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set?
 		do
 			Result := identifier /= Void
@@ -32,14 +32,14 @@ feature -- Access
 
 feature -- Status setting
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		do
 			identifier.remove;
 			identifier := Void;
 		end; 
 
-	destroy is
+	destroy
 			-- Remove identifier.
 		do
 			if identifier /= Void then
@@ -49,7 +49,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 		
-	application_context: MEL_APPLICATION_CONTEXT is
+	application_context: MEL_APPLICATION_CONTEXT
 		local
 			motif: TOOLKIT_IMP
 		do
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			Result := motif.application_context;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

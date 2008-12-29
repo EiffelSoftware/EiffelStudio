@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI Descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Status setting
 
-	allocate (parent: OCI_HANDLE) is
+	allocate (parent: OCI_HANDLE)
 			-- Allocate descriptor explicitly
 		local
 			status: INTEGER_16
@@ -35,7 +35,7 @@ feature -- Status setting
 		
 feature -- Removal
 			
-	free is
+	free
 			-- Free the descriptor
 		local
 			status: INTEGER_16
@@ -50,14 +50,14 @@ feature -- Removal
 feature {NONE} -- Externals
 
 	oci_descriptor_alloc (parenth: POINTER; descpp: POINTER; type: INTEGER; 
-		xtramem_sz: INTEGER; usrmempp: POINTER): INTEGER_16 is
+		xtramem_sz: INTEGER; usrmempp: POINTER): INTEGER_16
 		external
 			"C (void *, void **, int, int, void **): short | %"oci.h%""
 		alias
 			"OCIDescriptorAlloc"
 		end
 		
-	oci_descriptor_free (descp: POINTER; type: INTEGER): INTEGER_16 is
+	oci_descriptor_free (descp: POINTER; type: INTEGER): INTEGER_16
 		external
 			"C (void *, int): short | %"oci.h%""
 		alias
@@ -65,7 +65,7 @@ feature {NONE} -- Externals
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

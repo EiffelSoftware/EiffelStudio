@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that arrange nodes using a physical model.
 			This algorithm has runtime complexity O(n^2) and is replaced by
@@ -32,7 +32,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_FORCE_DIRECTED_LAYOUT
 		do
 			Precursor {EG_LAYOUT}
@@ -72,7 +72,7 @@ feature -- Access
 			
 feature -- Element change
 
-	set_fence (a_fence: like fence) is
+	set_fence (a_fence: like fence)
 			-- Set 'fence'.
 		do
 			fence := a_fence
@@ -80,7 +80,7 @@ feature -- Element change
 			set: fence = a_fence
 		end
 		
-	set_move_threshold (d: DOUBLE) is
+	set_move_threshold (d: DOUBLE)
 			-- Set `move_threshold' to `d'.
 		do
 			move_threshold := d
@@ -91,7 +91,7 @@ feature -- Element change
 		
 feature -- Basic operations
 
-	preset (a_level: INTEGER) is
+	preset (a_level: INTEGER)
 			-- Rest the setting accoridingly to 'a_level', which is one of:
 			-- 1: tight, 2: normal, 3: loose
 		do
@@ -113,7 +113,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_center_attraction (a_value: INTEGER) is
+	set_center_attraction (a_value: INTEGER)
 			-- Set 'center_attraction' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -123,7 +123,7 @@ feature -- Basic operations
 			set: center_attraction = a_value
 		end
 
-	set_stiffness (a_value: INTEGER) is
+	set_stiffness (a_value: INTEGER)
 			-- Set 'stiffness' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -133,7 +133,7 @@ feature -- Basic operations
 			set: stiffness = a_value
 		end
 
-	set_electrical_repulsion (a_value: INTEGER) is
+	set_electrical_repulsion (a_value: INTEGER)
 			-- Set 'electrical_repulsion' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -143,14 +143,14 @@ feature -- Basic operations
 			set: electrical_repulsion = a_value
 		end
 		
-	set_center (ax, ay: INTEGER) is
+	set_center (ax, ay: INTEGER)
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
 			center_x := ax
 			center_y := ay
 		end
 		
-	reset is
+	reset
 			-- Set `is_stopped' to False.
 		do
 			is_stopped := False
@@ -158,7 +158,7 @@ feature -- Basic operations
 			set: not is_stopped 
 		end
 		
-	stop is
+	stop
 			-- Set `is_stopped' to True, call `stop_actions'.
 		do
 			is_stopped := True
@@ -167,7 +167,7 @@ feature -- Basic operations
 			set: is_stopped
 		end
 
-	layout is
+	layout
 			-- Arrange the elements in `graph'.
 		do
 			if not is_stopped then
@@ -185,7 +185,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ground_tolerance: DOUBLE is 2.0
+	ground_tolerance: DOUBLE = 2.0
 	previous_total_energy: DOUBLE
 	total_energy: DOUBLE
 	internal_center_attraction: DOUBLE
@@ -197,17 +197,17 @@ feature {NONE} -- Implementation
 			-- Maximal move in x and y direction of a node.
 
 	
-	tolerance: DOUBLE is 0.001
-	math: DOUBLE_MATH is once create Result end
+	tolerance: DOUBLE = 0.001
+	math: DOUBLE_MATH once create Result end
 			-- For math functions
 	
-	get_link_weight (link: EG_LINK_FIGURE): DOUBLE is
+	get_link_weight (link: EG_LINK_FIGURE): DOUBLE
 			-- 
 		do
 			Result := 0.25 / world.scale_factor
 		end
 		
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			l_distance, l_force: DOUBLE
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	repulse (a_node, a_other: EG_LINKABLE_FIGURE) is
+	repulse (a_node, a_other: EG_LINKABLE_FIGURE)
 			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
 		local
 			l_distance, l_force: DOUBLE
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attract_connected (a_node: EG_LINKABLE_FIGURE; a_edge: EG_LINK_FIGURE) is
+	attract_connected (a_node: EG_LINKABLE_FIGURE; a_edge: EG_LINK_FIGURE)
 			-- Get the spring force between all of its adjacent nodes.
 		local
 			l_distance: DOUBLE
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recursive_energy (a_node: EG_LINKABLE_FIGURE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]) is
+	recursive_energy (a_node: EG_LINKABLE_FIGURE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE])
 		require
 			a_node_not_void: a_node /= Void
 			a_node_is_shown_requested: a_node.is_show_requested
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			a_node.set_dt (l_dt)
 		end
 
-	get_node_energy (a_node: EG_LINKABLE_FIGURE; a_dt: DOUBLE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]): DOUBLE is
+	get_node_energy (a_node: EG_LINKABLE_FIGURE; a_dt: DOUBLE; linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]): DOUBLE
 		require
 			a_node_not_void: a_node /= Void
 			a_node_is_shown_requested: a_node.is_show_requested
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 		end
 		
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

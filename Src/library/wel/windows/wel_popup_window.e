@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window which can be moved outside the parent window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Default creation values
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- By default, a popup window is not visible
 			-- at the creation time. `show' needs to be called.
 			-- This solution avoids a bad visual effect when
@@ -30,7 +30,7 @@ feature {NONE} -- Default creation values
 			Result := Ws_overlappedwindow + Ws_popup
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

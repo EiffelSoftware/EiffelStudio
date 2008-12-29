@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the style, color and pattern of %
 		% a physical brush. Encapsulate the C struct LOGPEN %
 		% (a WEL_LOG_BRUSH is NOT a BRUSH, this is a structure.)"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style: INTEGER; a_color: WEL_COLOR_REF; a_hatch: INTEGER) is
+	make (a_style: INTEGER; a_color: WEL_COLOR_REF; a_hatch: INTEGER)
 			-- Make a log brush using `a_style', `a_color' and
 			-- `a_hatch' type.
 			-- See class WEL_BRUSH_STYLE_CONSTANTS for `a_style'
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			hatch_set: hatch = a_hatch
 		end
 
-	make_by_brush (brush: WEL_BRUSH) is
+	make_by_brush (brush: WEL_BRUSH)
 			-- Make a log brush using the information of `brush'.
 		require
 			brush_not_void: brush /= Void
@@ -56,13 +56,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Brush style
 		do
 			Result := cwel_logbrush_get_style (item)
 		end
 
-	color: WEL_COLOR_REF is
+	color: WEL_COLOR_REF
 			-- Brush color
 		do
 			create Result.make_by_color (cwel_logbrush_get_color (item))
@@ -70,7 +70,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	hatch: INTEGER is
+	hatch: INTEGER
 			-- Brush hatch
 		do
 			Result := cwel_logbrush_get_hatch (item)
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'
 		do
 			cwel_logbrush_set_style (item, a_style)
@@ -86,7 +86,7 @@ feature -- Element change
 			style_set: style = a_style
 		end
 
-	set_color (a_color: WEL_COLOR_REF) is
+	set_color (a_color: WEL_COLOR_REF)
 			-- Set `color' with `a_color'
 		require
 			a_color_not_void: a_color /= Void
@@ -94,7 +94,7 @@ feature -- Element change
 			cwel_logbrush_set_color (item, a_color.item)
 		end
 
-	set_hatch (a_hatch: INTEGER) is
+	set_hatch (a_hatch: INTEGER)
 			-- Set `hatch' with `a_hatch'
 		do
 			cwel_logbrush_set_hatch (item, a_hatch)
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_logbrush
@@ -112,44 +112,44 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_logbrush: INTEGER is
+	c_size_of_logbrush: INTEGER
 		external
 			"C [macro <logbrush.h>]"
 		alias
 			"sizeof (LOGBRUSH)"
 		end
 
-	cwel_logbrush_get_style (ptr: POINTER): INTEGER is
+	cwel_logbrush_get_style (ptr: POINTER): INTEGER
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_get_color (ptr: POINTER): INTEGER is
+	cwel_logbrush_get_color (ptr: POINTER): INTEGER
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_get_hatch (ptr: POINTER): INTEGER is
+	cwel_logbrush_get_hatch (ptr: POINTER): INTEGER
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_set_style (ptr: POINTER; value: INTEGER) is
+	cwel_logbrush_set_style (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_set_color (ptr: POINTER; value: INTEGER) is
+	cwel_logbrush_set_color (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwel_logbrush_set_hatch (ptr: POINTER; value: INTEGER) is
+	cwel_logbrush_set_hatch (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"logbrush.h%"]"
 		end
 
-	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER; object: POINTER) is
+	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER; object: POINTER)
 		external
 			"C [macro <windows.h>] (HGDIOBJ, int, LPVOID)"
 		alias
@@ -159,7 +159,7 @@ feature {NONE} -- Externals
 invariant
 	color_not_void: color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

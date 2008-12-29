@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision gauge. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,17 +18,17 @@ inherit
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current value of the gauge.
 		deferred
 		end
 
-	step: INTEGER is
+	step: INTEGER
 			-- Value by which `value' is increased after `step_forward'.
 		deferred
 		end
 
-	leap: INTEGER is
+	leap: INTEGER
 			-- Value by which `value' is increased after `leap_forward'.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	proportion: REAL is
+	proportion: REAL
 			-- Relative position of `value' in `range'. Range: [0, 1].
 		local
 			u, l: INTEGER
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	step_forward is
+	step_forward
 			-- Increment `value' by `step' if possible.
 		deferred
 		ensure
@@ -63,7 +63,7 @@ feature -- Status setting
 				or else value = value_range.upper
 		end
 
-	step_backward is
+	step_backward
 			-- Decrement `value' by `step' if possible.
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature -- Status setting
 				or else value = value_range.lower
 		end
 
-	leap_forward is
+	leap_forward
 			-- Increment `value' by `leap' if possible.
 		deferred
 		ensure
@@ -79,7 +79,7 @@ feature -- Status setting
 				or else value = value_range.upper
 		end
 
-	leap_backward is
+	leap_backward
 			-- Decrement `value' by `leap' if possible.
 		deferred
 		ensure
@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		require
 			value_in_range: value_range.has (a_value)
@@ -98,7 +98,7 @@ feature -- Element change
 			assigned: value = a_value
 		end
 
-	set_step (a_step: INTEGER) is
+	set_step (a_step: INTEGER)
 			-- Set `step' to `a_step'.
 		require
 			a_step_positive: a_step > 0
@@ -107,7 +107,7 @@ feature -- Element change
 			assigned: step = a_step
 		end
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Set `leap' to `a_leap'.
 		require
 			a_leap_non_negative: a_leap > 0
@@ -118,7 +118,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_proportion (a_proportion: REAL) is
+	set_proportion (a_proportion: REAL)
 			-- Move `value' to `a_proportion' within `range'.
 		require
 			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
@@ -140,7 +140,7 @@ invariant
 
 	value_range_not_void: is_usable implies value_range /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

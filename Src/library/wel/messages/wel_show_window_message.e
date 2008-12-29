@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_showwindow which is when a %
 		%window is about to be hidden or shown."
 	legal: "See notice at end of class."
@@ -22,19 +22,19 @@ create
 
 feature -- Status report
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is the window being shown?
 		do
 			Result := w_param.to_integer_32 = 1
 		end
 
-	parent_opening: BOOLEAN is
+	parent_opening: BOOLEAN
 			-- Is window's owner window being restored?
 		do
 			Result := status = Sw_parentopening
 		end
 
-	parent_closing: BOOLEAN is
+	parent_closing: BOOLEAN
 			-- Is window's owner window being minimized?
 		do
 			Result := status = Sw_parentclosing
@@ -42,14 +42,14 @@ feature -- Status report
 
 feature -- Access
 
-	status: INTEGER is
+	status: INTEGER
 			-- Status of the window being shown.
 			-- See class WEL_SW_CONSTANTS for differents values.
 		do
 			Result := l_param.to_integer_32
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

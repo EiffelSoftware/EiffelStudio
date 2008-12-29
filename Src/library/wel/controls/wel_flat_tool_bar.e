@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Enhancement of the toolbar. This toolbar appears flat
 		and use imagelist to store bitmaps - when available.
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER)
 			-- Create a toolbar with `a_parent' as parent and
 			-- `an_id' as id.
 		do
@@ -56,7 +56,7 @@ feature -- Access
 	bitmaps_height: INTEGER
 			-- 15 by default
 
-	buttons_width: INTEGER is
+	buttons_width: INTEGER
 			-- Width of the buttons in the toolbar.
 		do
 			if comctl32_version >= version_470 then
@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end
 
-	buttons_height: INTEGER is
+	buttons_height: INTEGER
 			-- Height of the buttons in the toolbar.
 		do
 			if comctl32_version >= version_470 then
@@ -81,13 +81,13 @@ feature -- Access
 	use_image_list: BOOLEAN
 			-- Are we using ImageList for the toolbar?
 
-	use_disabled_image_list: BOOLEAN is
+	use_disabled_image_list: BOOLEAN
 			-- Are we using disabled ImageList for the toolbar?
 		do
 			Result := (disabled_image_list /= Void)
 		end
 
-	use_hot_image_list: BOOLEAN is
+	use_hot_image_list: BOOLEAN
 			-- Are we using hot ImageList for the toolbar?
 		do
 			Result := (hot_image_list /= Void)
@@ -112,14 +112,14 @@ feature -- Access
 
 feature -- Status report
 
-	use_image_list_supported: BOOLEAN is
+	use_image_list_supported: BOOLEAN
 			-- Are ImageList in toolbars supported in the current
 			-- version of Windows?
 		once
 			Result := comctl32_version >= version_470
 		end
 
-	find_button (a_x, a_y: INTEGER): INTEGER is
+	find_button (a_x, a_y: INTEGER): INTEGER
 			-- Determines where a point lies in a toolbar control.
 			--
 			-- Returns an integer value. If the return value is zero or a positive value,
@@ -134,7 +134,7 @@ feature -- Status report
 			Result := {WEL_API}.send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
 
-	get_max_width: INTEGER is
+	get_max_width: INTEGER
 			-- Retrieves the total width of all of the visible buttons and separators in the toolbar.
 		require
 			function_supported: comctl32_version >= version_471
@@ -142,7 +142,7 @@ feature -- Status report
 			Result := get_max_size.width
 		end
 
-	get_max_height: INTEGER is
+	get_max_height: INTEGER
 			-- Retrieves the common height of all of the visible buttons and separators in the toolbar.
 		require
 			function_supported: comctl32_version >= version_471
@@ -150,7 +150,7 @@ feature -- Status report
 			Result := get_max_size.height
 		end
 
-	get_max_size: WEL_SIZE is
+	get_max_size: WEL_SIZE
 			-- Retrieves the total size of all of the visible buttons and separators in the toolbar
 		require
 			function_supported: comctl32_version >= version_471
@@ -166,7 +166,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_use_image_list is
+	enable_use_image_list
 			-- Set the toolbar to use image lists.
 			-- Note: Require Win95+IE3 or above
 		require
@@ -178,7 +178,7 @@ feature -- Status setting
 			image_list_in_use: use_image_list
 		end
 
-	disable_use_image_list is
+	disable_use_image_list
 			-- Set the toolbar not to use image lists.
 			-- Note: This is the Default.
 		require
@@ -191,7 +191,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_icon (a_icon: WEL_GRAPHICAL_RESOURCE) is
+	add_icon (a_icon: WEL_GRAPHICAL_RESOURCE)
 			-- Add an icon to the list of currently used images.
 			--
 			-- Note: The function will work with Comctrl32.dll version less
@@ -225,7 +225,7 @@ feature -- Element change
 			end
 		end
 
-	add_disabled_icon (an_icon: WEL_GRAPHICAL_RESOURCE) is
+	add_disabled_icon (an_icon: WEL_GRAPHICAL_RESOURCE)
 			-- Add an icon to the disabled image list.
 			--
 			-- The feature is only supported under Windows95+IE3
@@ -248,7 +248,7 @@ feature -- Element change
 			end
 		end
 
-	add_hot_icon(an_icon: WEL_GRAPHICAL_RESOURCE) is
+	add_hot_icon(an_icon: WEL_GRAPHICAL_RESOURCE)
 			-- Add an icon to the hot image list.
 			--
 			-- The feature is only supported under Windows95+IE3
@@ -271,7 +271,7 @@ feature -- Element change
 			end
 		end
 
-	add_bitmap (a_bitmap: WEL_BITMAP) is
+	add_bitmap (a_bitmap: WEL_BITMAP)
 			-- Add a bitmap to the list of currently used images.
 		require
 			exists: exists
@@ -297,7 +297,7 @@ feature -- Element change
 			end
 		end
 
-	add_disabled_bitmap(a_bitmap: WEL_BITMAP) is
+	add_disabled_bitmap(a_bitmap: WEL_BITMAP)
 			-- Add a bitmap to the disabled image list.
 			--
 			-- The feature is only supported under Windows95+IE3
@@ -320,7 +320,7 @@ feature -- Element change
 			end
 		end
 
-	add_hot_bitmap(a_bitmap: WEL_BITMAP) is
+	add_hot_bitmap(a_bitmap: WEL_BITMAP)
 			-- Add a bitmap to the hot image list.
 			--
 			-- The feature is only supported under Windows95+IE3
@@ -343,7 +343,7 @@ feature -- Element change
 			end
 		end
 
-	add_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP) is
+	add_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP)
 			-- Add a masked bitmap to the list of currently used images.
 		require
 			exists: exists
@@ -373,7 +373,7 @@ feature -- Element change
 			end
 		end
 
-	add_disabled_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP) is
+	add_disabled_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP)
 			-- Add a masked bitmap to the disabled image list.
 		require
 			exists: exists
@@ -396,7 +396,7 @@ feature -- Element change
 			end
 		end
 
-	add_hot_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP) is
+	add_hot_masked_bitmap (a_bitmap: WEL_BITMAP; a_mask_bitmap: WEL_BITMAP)
 			-- Add a masked bitmap to the hot image list.
 		require
 			exists: exists
@@ -421,7 +421,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	set_bitmap_size (a_width, a_height: INTEGER) is
+	set_bitmap_size (a_width, a_height: INTEGER)
 			-- Sets the size of the bitmapped images to be added to
 			-- the toolbar.
 			-- The size can be set only before adding any
@@ -445,7 +445,7 @@ feature -- Resizing
 			end
 		end
 
-	get_button_width: INTEGER  is
+	get_button_width: INTEGER
 			-- Get the width of the buttons.
 		require
 			function_supported: comctl32_version >= version_470
@@ -454,7 +454,7 @@ feature -- Resizing
 				to_wparam (0), to_lparam (0)))
 		end
 
-	get_button_height: INTEGER  is
+	get_button_height: INTEGER
 			-- Get the height of the buttons.
 		require
 			function_supported: comctl32_version >= version_470
@@ -465,7 +465,7 @@ feature -- Resizing
 
 feature -- Obsolete
 
-	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER) is
+	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER)
 			-- Add bitmaps.
 		obsolete
 			"use add_bitmap instead"
@@ -505,7 +505,7 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	setup_image_list(overwrite: BOOLEAN) is
+	setup_image_list(overwrite: BOOLEAN)
 			-- if `overwrite' is set, create the image list only if it existed.
 			-- if `overwrite' is not set, create the image list only if it did not exist.
 		do
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_disabled_image_list(overwrite: BOOLEAN) is
+	setup_disabled_image_list(overwrite: BOOLEAN)
 			-- if `overwrite' is set, create the image list only if it existed.
 			-- if `overwrite' is not set, create the image list only if it did not exist.
 		do
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_hot_image_list(overwrite: BOOLEAN) is
+	setup_hot_image_list(overwrite: BOOLEAN)
 			-- if `overwrite' is set, create the image list only if it existed.
 			-- if `overwrite' is not set, create the image list only if it did not exist.
 		do
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Tbstyle_tooltips
@@ -551,7 +551,7 @@ invariant
 	disabled_image_list_only_when_bitmap: use_disabled_image_list implies has_bitmap
 	hot_image_list_only_when_bitmap: use_hot_image_list implies has_bitmap
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

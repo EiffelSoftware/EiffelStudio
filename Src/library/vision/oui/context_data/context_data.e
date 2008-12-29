@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Information given by EiffelVision when a callback is triggered"
 	legal: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET) is
+	make (a_widget: WIDGET)
 			-- Create a general context_data.
 		do
 			widget := a_widget
@@ -26,7 +26,7 @@ feature -- Access
 	widget: WIDGET;;
 			-- The widget who triggered the callback
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

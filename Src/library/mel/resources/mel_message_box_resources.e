@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Message Box resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNcancelLabelString: POINTER is
+	XmNcancelLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNcancelLabelString"
 		end;
 
-	XmNdefaultButtonType: POINTER is
+	XmNdefaultButtonType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNdefaultButtonType"
 		end;
 
-	XmNdialogType: POINTER is
+	XmNdialogType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNdialogType"
 		end;
 
-	XmNhelpLabelString: POINTER is
+	XmNhelpLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNhelpLabelString"
 		end;
 
-	XmNmessageAlignment: POINTER is
+	XmNmessageAlignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNmessageAlignment"
 		end;
 
-	XmNmessageString: POINTER is
+	XmNmessageString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNmessageString"
 		end;
 
-	XmNminimizeButtons: POINTER is
+	XmNminimizeButtons: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNminimizeButtons"
 		end;
 
-	XmNokLabelString: POINTER is
+	XmNokLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNokLabelString"
 		end;
 
-	XmNsymbolPixmap: POINTER is
+	XmNsymbolPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNsymbolPixmap"
 		end;
 
-	XmNcancelCallback: POINTER is
+	XmNcancelCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNcancelCallback"
 		end;
 
-	XmNokCallback: POINTER is
+	XmNokCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNokCallback"
 		end;
 
-	XmDIALOG_CANCEL_BUTTON: INTEGER is
+	XmDIALOG_CANCEL_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmDIALOG_CANCEL_BUTTON"
 		end;
 
-	XmDIALOG_OK_BUTTON: INTEGER is
+	XmDIALOG_OK_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmDIALOG_OK_BUTTON"
 		end;
 
-	XmDIALOG_HELP_BUTTON: INTEGER is
+	XmDIALOG_HELP_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmDIALOG_HELP_BUTTON"
 		end;
 
-	XmDIALOG_MESSAGE_LABEL: INTEGER is
+	XmDIALOG_MESSAGE_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmDIALOG_MESSAGE_LABEL"
 		end;
 
-	XmDIALOG_SEPARATOR: INTEGER is
+	XmDIALOG_SEPARATOR: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmDIALOG_SEPARATOR"
 		end;
 
-	XmDIALOG_SYMBOL_LABEL: INTEGER is
+	XmDIALOG_SYMBOL_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmDIALOG_SYMBOL_LABEL"
 		end;
 
-	XmDIALOG_ERROR: INTEGER is
+	XmDIALOG_ERROR: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmDIALOG_ERROR"
 		end;
 
-	XmDIALOG_INFORMATION: INTEGER is
+	XmDIALOG_INFORMATION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmDIALOG_INFORMATION"
 		end;
 
-	XmDIALOG_MESSAGE: INTEGER is
+	XmDIALOG_MESSAGE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmDIALOG_MESSAGE"
 		end;
 
-	XmDIALOG_QUESTION: INTEGER is
+	XmDIALOG_QUESTION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmDIALOG_QUESTION"
 		end;
 
-	XmDIALOG_TEMPLATE: INTEGER is
+	XmDIALOG_TEMPLATE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmDIALOG_TEMPLATE"
 		end;
 
-	XmDIALOG_WARNING: INTEGER is
+	XmDIALOG_WARNING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmDIALOG_WARNING"
 		end;
 
-	XmDIALOG_WORKING: INTEGER is
+	XmDIALOG_WORKING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmDIALOG_WORKING"
 		end;
 
-	XmALIGNMENT_BEGINNING: INTEGER is
+	XmALIGNMENT_BEGINNING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmALIGNMENT_BEGINNING"
 		end;
 
-	XmALIGNMENT_CENTER: INTEGER is
+	XmALIGNMENT_CENTER: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmALIGNMENT_CENTER"
 		end;
 
-	XmALIGNMENT_END: INTEGER is
+	XmALIGNMENT_END: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MessageB.h>]: EIF_INTEGER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"XmALIGNMENT_END"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

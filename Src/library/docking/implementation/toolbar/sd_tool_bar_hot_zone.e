@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool bar hot zone of four tool bar area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool_bar_box: EV_BOX; a_vertical: BOOLEAN; a_tool_bar_dock_mediator: like internal_dock_mediator) is
+	make (a_tool_bar_box: EV_BOX; a_vertical: BOOLEAN; a_tool_bar_dock_mediator: like internal_dock_mediator)
 			-- Creation method.
 		require
 			a_tool_bar_box_not_void: a_tool_bar_box /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	area_managed: EV_RECTANGLE is
+	area_managed: EV_RECTANGLE
 			-- Managed area. Different from `area', it's bigger.
 		local
 			l_area: EV_RECTANGLE
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Set docking manager
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -65,7 +65,7 @@ feature -- Basic operation
 			set: internal_docking_manager = a_docking_manager
 		end
 
-	on_pointer_motion (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Handle pointer motion.
 		do
 			-- It we don't compare a_screen_y_or_x with last_screen_y_or_x
@@ -84,7 +84,7 @@ feature -- Basic operation
 			end
 		end
 
-	start_drag is
+	start_drag
 			-- Start drag.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -106,7 +106,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation functions.
 
-	move_in (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	move_in (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Handle pointer move in one row/column.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
+	move_out (a_screen_y_or_x: INTEGER): BOOLEAN
 			-- Handle pointer move into SD_TOOL_BAR_ROW.
 		local
 			l_at_side: BOOLEAN
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
+	create_new_row_by_position (a_screen_y_or_x: INTEGER)
 			-- Create new row base on `a_screen_or_x'.
 			-- `a_screen_y_or_x' is y for top and bottom tool bar areas.
 			-- `a_screen_y_or_x' is x for left and right tool bar areas.
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation functions.
 			row_first_pruned_then_added:
 		end
 
-	create_new_row (a_start: BOOLEAN; a_screen_position: INTEGER) is
+	create_new_row (a_start: BOOLEAN; a_screen_position: INTEGER)
 			-- Create a new row at top if a_start is True, otherwise create a new row at bottom.
 		local
 			l_new_row: SD_TOOL_BAR_ROW
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation functions.
 			extended: old internal_box.count = internal_box.count - 1
 		end
 
-	prune_internal_caller_from_parent is
+	prune_internal_caller_from_parent
 			-- Prune `caller' from parent.
 		local
 			l_row: SD_TOOL_BAR_ROW
@@ -247,13 +247,13 @@ feature {NONE} -- Implementation functions.
 
 feature {NONE}  -- Implementation query
 
-	caller_in_single_row: BOOLEAN is
+	caller_in_single_row: BOOLEAN
 			-- If caller's SD_tool_bar_ROW only has caller?
 		do
 			Result := internal_dock_mediator.caller.row.count = 1
 		end
 
-	caller_in_current_area: BOOLEAN is
+	caller_in_current_area: BOOLEAN
 			-- If caller already in `Current'?
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -297,7 +297,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

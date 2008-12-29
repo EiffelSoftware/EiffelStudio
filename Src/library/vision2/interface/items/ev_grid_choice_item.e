@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EV_GRID Text label whose content may be interactively chosen by the user via a list.
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize is
+	initialize
 			-- Initialize current.
 		do
 			Precursor {EV_GRID_LABEL_ITEM}
@@ -43,7 +43,7 @@ feature {NONE} -- Initialize
 
 feature -- Element change
 
-	set_item_strings (a_string_array: like item_strings) is
+	set_item_strings (a_string_array: like item_strings)
 			-- Set each item in `Current' to the strings referenced in `a_string_array'.
 		require
 			a_string_array_not_void: a_string_array /= Void
@@ -66,7 +66,7 @@ feature -- Access
 	item_strings: INDEXABLE [STRING_GENERAL, INTEGER]
 		-- Item strings used to make up combo box list.
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 		do
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
-	update_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+	update_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT)
 			-- Update layout for displaying current.
 		do
 			if a_item /= Void and a_layout /= Void and pixmap /= Void then
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_strings is
+	set_strings
 			-- Update `choice_list' with `item_strings'.
 		require
 			choice_list_not_void: choice_list /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	has_user_selected_item: BOOLEAN
 		-- Did the user select an entry in the list?
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			l_vbox: EV_VERTICAL_BOX
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 				-- No selection yet.
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_move (a_x, a_y: INTEGER) is
+	on_mouse_move (a_x, a_y: INTEGER)
 			-- Handle mouse moving actions.
 		local
 			l_item: EV_GRID_ITEM
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Handle mouse actions.
 		local
 			l_item: EV_GRID_ITEM
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key (a_key: EV_KEY) is
+	on_key (a_key: EV_KEY)
 			-- Handle key action on `choice_list'
 		do
 			if a_key /= Void then
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_GRID_LABEL_ITEM}
 		end
 
-	drop_down_pixmap: EV_PIXMAP is
+	drop_down_pixmap: EV_PIXMAP
 			-- Drop drawn pixmap
 		local
 			l_mask: EV_BITMAP
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

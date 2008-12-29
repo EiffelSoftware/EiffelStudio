@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DICTIONARY using a CHARACTER_TREE to store the entries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make(a_plural_form:INTEGER) is
+	make(a_plural_form:INTEGER)
 			-- create the datastructure
 		do
 			Precursor(a_plural_form)
@@ -30,7 +30,7 @@ feature -- Initialization
 feature -- Manipulation
 		-- this should be restricted
 
-	extend (a_entry : I18N_DICTIONARY_ENTRY) is
+	extend (a_entry : I18N_DICTIONARY_ENTRY)
 			-- add a_entry in the datastructure
 		do
 			if not a_entry.has_plural then
@@ -45,7 +45,7 @@ feature -- Manipulation
 
 feature -- Access
 
-	has (original : STRING_GENERAL) : BOOLEAN is
+	has (original : STRING_GENERAL) : BOOLEAN
 			-- is there an entry with original?
 		do
 			Result := singular_char_tree.get_item_with_key (original.as_string_32) /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN is
+	has_plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			--
 		local
 			entry: I18N_DICTIONARY_ENTRY
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	singular (original: STRING_GENERAL): STRING_32 is
+	singular (original: STRING_GENERAL): STRING_32
 			-- get the translation of `original'
 			-- in the singular form
 		local
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the translation of `original_singular'
 			-- in the given plural form
 		do
@@ -100,7 +100,7 @@ feature {NONE}  -- Implementation
 	plural_char_tree: CHARACTER_TREE [I18N_DICTIONARY_ENTRY];
 			-- tree that contains all entries with plurals
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

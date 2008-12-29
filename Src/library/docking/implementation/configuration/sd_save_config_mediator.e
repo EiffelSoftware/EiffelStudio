@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that with responsibility for save all docking library config."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Save inner container data.
 
-	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
+	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
@@ -41,7 +41,7 @@ feature -- Save inner container data.
 			Result := save_config_data_to_file (l_config_data, a_file)
 		end
 
-	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN) is
+	save_config_with_name_maximized_data (a_config_data: SD_CONFIG_DATA; a_name: STRING_GENERAL; a_save_maximized_data: BOOLEAN)
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -77,7 +77,7 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_config (a_file: STRING_GENERAL): BOOLEAN is
+	save_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -85,7 +85,7 @@ feature -- Save inner container data.
 			Result := save_config_with_name (a_file, "")
 		end
 
-	save_editors_config (a_file: STRING_GENERAL): BOOLEAN is
+	save_editors_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Save main window editor config data.
 		require
 			not_void: a_file /= Void
@@ -132,7 +132,7 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_tools_config (a_file: STRING_GENERAL): BOOLEAN is
+	save_tools_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Save tools config, except all editors.
 		require
 			not_void: a_file /= Void
@@ -140,7 +140,7 @@ feature -- Save inner container data.
 			Result := save_tools_config_with_name (a_file, "")
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
 			-- Save tools config to `a_file' with `a_name'
 		require
 			not_called: top_container = Void
@@ -187,7 +187,7 @@ feature -- Save inner container data.
 
 feature {NONE} -- Implementation
 
-	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
+	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA)
 			-- Save all SD_MULTI_DOCK_AREA data, include main dock area in main window and floating zones.
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			a_config_data.set_inner_container_data (l_data)
 		end
 
-	save_inner_container_data (a_widget: EV_WIDGET; a_config_data: SD_INNER_CONTAINER_DATA) is
+	save_inner_container_data (a_widget: EV_WIDGET; a_config_data: SD_INNER_CONTAINER_DATA)
 			-- Save one inner container which is SD_MULTI_DOCK_AREA data.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_place_holder_data (a_config_data: SD_INNER_CONTAINER_DATA) is
+	save_place_holder_data (a_config_data: SD_INNER_CONTAINER_DATA)
 			-- Save a place holder data.
 		require
 			not_void: a_config_data /= Void
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			title_correct: a_config_data.titles.first.is_equal (internal_shared.editor_place_holder_content_name)
 		end
 
-	save_inner_container_data_split_area (a_split_area: SD_MIDDLE_CONTAINER; a_config_data: SD_INNER_CONTAINER_DATA) is
+	save_inner_container_data_split_area (a_split_area: SD_MIDDLE_CONTAINER; a_config_data: SD_INNER_CONTAINER_DATA)
 			-- `save_inner_container_data' save split area data part.
 		require
 			a_split_area_not_void: a_split_area /= Void
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA)is
+	save_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA)
 			-- Save auto hide zones config data.
 		require
 			a_data_not_void: a_data /= Void
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			save_one_auto_hide_panel_data (a_data, {SD_ENUMERATION}.right)
 		end
 
-	save_one_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA; a_direction: INTEGER) is
+	save_one_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA; a_direction: INTEGER)
 			-- Save one auto hide panel tab stub config data.
 		require
 			not_void: a_data /= Void
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+	save_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA])
 			-- Save four area tool bar and floating tool bar config data.
 		require
 			not_void: a_tool_bar_data /= Void
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_one_tool_bar_data (a_direction: INTEGER): SD_TOOL_BAR_DATA is
+	save_one_tool_bar_data (a_direction: INTEGER): SD_TOOL_BAR_DATA
 			-- Save one tool bar area config data.
 		require
 			a_direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	save_editor_minimized_data (a_config_data: SD_CONFIG_DATA) is
+	save_editor_minimized_data (a_config_data: SD_CONFIG_DATA)
 			-- If only one editor zone, save if it's minimized.
 		local
 			l_editor_zone: SD_UPPER_ZONE
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_maximized_tool_data (a_config_data: SD_CONFIG_DATA) is
+	save_maximized_tool_data (a_config_data: SD_CONFIG_DATA)
 			-- Save maximized data.
 		require
 			not_void: a_config_data /= Void
@@ -535,13 +535,13 @@ feature {NONE} -- Implementation
 			valid: a_config_data.maximized_tools.count = internal_docking_manager.zones.maximized_zones.count
 		end
 
-	save_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
+	save_tool_bar_item_data (a_config_data: SD_CONFIG_DATA)
 			-- Save tool bar resizable item data.
 		do
 			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end
 
-	save_config_data_to_file (a_config_data: ANY; a_file: STRING_GENERAL): BOOLEAN is
+	save_config_data_to_file (a_config_data: ANY; a_file: STRING_GENERAL): BOOLEAN
 			-- Save `a_config_data' to `a_file'
 			-- Result true means saving successed
 			-- Result false means saving failed
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation attributes
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

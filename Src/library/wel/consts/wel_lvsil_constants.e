@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List View State Image List (TVSIL) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ obsolete
 
 feature -- Access
 
-	Lvsil_normal: INTEGER is 0
+	Lvsil_normal: INTEGER = 0
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
@@ -21,7 +21,7 @@ feature -- Access
 			--
 			-- Declared in Windows as LVSIL_NORMAL
 
-	Lvsil_small: INTEGER is 1
+	Lvsil_small: INTEGER = 1
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
@@ -29,7 +29,7 @@ feature -- Access
 			--
 			-- Declared in Windows as LVSIL_SMALL
 
-	Lvsil_state: INTEGER is 2;
+	Lvsil_state: INTEGER = 2;
 			-- Indicates the state image list. You can use state 
 			-- images to indicate application-defined item states. 
 			-- A state image is displayed to the left of an item's
@@ -37,7 +37,7 @@ feature -- Access
 			--
 			-- Declared in Windows as LVSIL_STATE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

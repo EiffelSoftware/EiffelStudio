@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a toolbar notification %
 		%message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		require
 			exists: exists
@@ -39,7 +39,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	button_id: INTEGER is
+	button_id: INTEGER
 			-- Information about the command identifier of the
 			-- button associated with the notification.
 		require
@@ -48,7 +48,7 @@ feature -- Access
 			Result := cwel_nmtoolbar_get_iitem (item)
 		end
 
-	button: WEL_TOOL_BAR_BUTTON is
+	button: WEL_TOOL_BAR_BUTTON
 			-- Button associated with the notification. This
 			-- member contains valid informations only with the
 			-- Tbn_queryinsert and Tbn_querydelete notification
@@ -61,7 +61,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the button associated with the notification.
 		require
 			exists: exists
@@ -70,7 +70,7 @@ feature -- Access
 			create Result.make_empty
 		end
 
-	text_count: INTEGER is
+	text_count: INTEGER
 			-- Count of characters in the button text.
 		require
 			exists: exists
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nmtoolbar
@@ -90,39 +90,39 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nmtoolbar: INTEGER is
+	c_size_of_nmtoolbar: INTEGER
 		external
 			"C [macro %"nmtb.h%"]"
 		alias
 			"sizeof (NMTOOLBAR)"
 		end
 
-	cwel_nmtoolbar_get_hdr (ptr: POINTER): POINTER is
+	cwel_nmtoolbar_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
-	cwel_nmtoolbar_get_iitem (ptr: POINTER): INTEGER is
+	cwel_nmtoolbar_get_iitem (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmtb.h%"]"
 		end
 
-	cwel_nmtoolbar_get_tbbutton (ptr: POINTER): POINTER is
+	cwel_nmtoolbar_get_tbbutton (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
-	cwel_nmtoolbar_get_cchtext (ptr: POINTER): INTEGER is
+	cwel_nmtoolbar_get_cchtext (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmtb.h%"]"
 		end
 
-	cwel_nmtoolbar_get_psztext (ptr: POINTER): POINTER is
+	cwel_nmtoolbar_get_psztext (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmtb.h%"] (NMTOOLBAR*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

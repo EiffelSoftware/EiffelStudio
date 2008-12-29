@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract class for figure projection routines."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 feature -- Basic operations
 
 	register_figure (a_figure: EV_FIGURE;
-		a_routine: PROCEDURE [ANY, TUPLE [EV_FIGURE]]) is
+		a_routine: PROCEDURE [ANY, TUPLE [EV_FIGURE]])
 			-- Assign `a_routine' for drawing of `a_figure'.
 		do
 			draw_routines.force (a_routine, a_figure.draw_id)
@@ -26,14 +26,14 @@ feature -- Basic operations
 			-- Is a project currently being performed?
 			-- Then, do not start a new one.
 
-	project is
+	project
 			-- Make standard projection of world on device.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	project_figure_group (group: EV_FIGURE_GROUP; r: EV_RECTANGLE) is
+	project_figure_group (group: EV_FIGURE_GROUP; r: EV_RECTANGLE)
 			-- Draw all figures in `group' inside `r' to device.
 		require
 			r_not_void: r /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	project_figure (f: EV_FIGURE; rect: EV_RECTANGLE) is
+	project_figure (f: EV_FIGURE; rect: EV_RECTANGLE)
 			-- Project `f' to device if within `r'.
 		require
 			rect_not_void: rect /= Void
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	draw_routines: ARRAY [PROCEDURE [ANY, TUPLE [EV_FIGURE]]]
 			-- Routine registration.
 
-	register_basic_figures is
+	register_basic_figures
 			-- Register EiffelVision figures.
 		do
 			register_figure (create {EV_FIGURE_ARC}, agent draw_figure_arc)
@@ -108,19 +108,19 @@ feature {NONE} -- Implementation
 			register_figure (create {EV_FIGURE_TEXT}, agent draw_figure_text)
 		end
 
-	Default_colors: EV_STOCK_COLORS is
+	Default_colors: EV_STOCK_COLORS
 			-- Once access to `EV_STOCK_COLORS'.
 		once
 			create Result
 		end
 
-	Default_pixmaps: EV_STOCK_PIXMAPS is
+	Default_pixmaps: EV_STOCK_PIXMAPS
 			-- Once access to `EV_STOCK_PIXMAPS'.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

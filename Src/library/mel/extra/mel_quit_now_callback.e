@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback to quit the application immediately."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (app_cont: like application_context) is
+	make (app_cont: like application_context)
 			-- Initialize command.
 		require
 			valid_app_cont: app_cont /= Void
@@ -38,13 +38,13 @@ feature -- Access
 
 feature -- Execution
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Quit the application.
 		do
 			application_context.exit
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

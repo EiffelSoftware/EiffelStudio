@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision scrollbar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Element change
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Set `leap' to `a_leap'.
 			-- We redefine it to keep the page size the same as leap.
 		do
@@ -39,7 +39,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_set_upper is
+	internal_set_upper
 			-- Sets the upper value of the adjustment struct to take 'leap' in to account
 		do
 			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
@@ -52,7 +52,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SCROLL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

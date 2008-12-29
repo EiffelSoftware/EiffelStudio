@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Xt Object resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNdestroyCallback: POINTER is
+	XmNdestroyCallback: POINTER
 			-- Core resource
 		external
 			" C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNdestroyCallback"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

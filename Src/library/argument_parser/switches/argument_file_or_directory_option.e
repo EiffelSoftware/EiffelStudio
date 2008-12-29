@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a user passed argument file or directory path"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature -- Status report
 invariant
 	value_exists: has_value implies (create {RAW_FILE}.make (value)).exists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

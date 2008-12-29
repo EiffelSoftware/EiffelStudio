@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a database table row%
 			%set and its graphical display."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create necessary_table_list.make (0)
@@ -40,13 +40,13 @@ feature -- Access
 	table_description: DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 
-	selected_tablerows: ARRAYED_LIST [DB_TABLE] is
+	selected_tablerows: ARRAYED_LIST [DB_TABLE]
 			-- Last selected table row set.
 		do
 			Result := tablerow_set
 		end
 		
-	selected_tablerow: DB_TABLE is
+	selected_tablerow: DB_TABLE
 			-- Currently selected table row.
 		do
 			if not tablerow_set.is_empty then
@@ -56,7 +56,7 @@ feature -- Access
 		
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can component be activated?
 		do
 			Result := database_handler_set and then table_description /= Void
@@ -65,54 +65,54 @@ feature -- Status report
 	is_activated: BOOLEAN
 			-- Is component activated?
 
-	is_necessary_tablecode (code: INTEGER): BOOLEAN is
+	is_necessary_tablecode (code: INTEGER): BOOLEAN
 			-- Does `code' correspond to a necessary
 			-- table for represented table?
 		do
 			Result := table_description.to_create_fkey_from_table.has (code)
 		end
 
-	is_dependent_tablecode (code: INTEGER): BOOLEAN is
+	is_dependent_tablecode (code: INTEGER): BOOLEAN
 			-- Does `code' correspond to a dependent
 			-- table on represented table?
 		do
 			Result := table_description.to_delete_fkey_from_table.has (code)
 		end
 
-	is_writing: BOOLEAN is
+	is_writing: BOOLEAN
 			-- Can the component write the database?
 		do
 			Result := writing_control /= Void
 		end
 
-	is_refreshing: BOOLEAN is
+	is_refreshing: BOOLEAN
 			-- Can the component refresh display from the database?
 		do
 			Result := refreshing_control /= Void
 		end
 
-	is_creating: BOOLEAN is
+	is_creating: BOOLEAN
 			-- Can the component create elements
 			-- in the database?
 		do
 			Result := db_creator /= Void
 		end
 
-	is_deleting: BOOLEAN is
+	is_deleting: BOOLEAN
 			-- Can the component delete elements
 			-- in the database?
 		do
 			Result := deleting_control /= Void
 		end
 
-	is_subcomponent: BOOLEAN is
+	is_subcomponent: BOOLEAN
 			-- Is this component determined by a calling
 			-- component?
 		do
 			Result := is_dependent or else is_necessary
 		end
 
-	is_topcomponent: BOOLEAN is
+	is_topcomponent: BOOLEAN
 			-- Is this component not determined by any calling
 			-- component?
 		do
@@ -127,31 +127,31 @@ feature -- Status report
 			-- Is this subcomponent table dependent on
 			-- calling component table?
 
-	db_searcher_set: BOOLEAN is
+	db_searcher_set: BOOLEAN
 			-- Is a component to search table rows set?
 		do
 			Result := db_searcher /= Void
 		end
 
-	status_handler_set: BOOLEAN is
+	status_handler_set: BOOLEAN
 			-- Is a status information handler set?
 		do
 			Result := status_handler /= Void
 		end
 
-	warning_handler_set: BOOLEAN is
+	warning_handler_set: BOOLEAN
 			-- Is a warning handler set?
 		do
 			Result := warning_handler /= Void
 		end
 
-	confirmation_handler_set: BOOLEAN is
+	confirmation_handler_set: BOOLEAN
 			-- Is a confirmation handler set?
 		do
 			Result := confirmation_handler /= Void
 		end
 
-	table_corresponds (tr_list: ARRAYED_LIST [DB_TABLE]): BOOLEAN is
+	table_corresponds (tr_list: ARRAYED_LIST [DB_TABLE]): BOOLEAN
 			-- Does type of `tr_list' elements corresponds to represented
 			-- table?
 			--| Warning: verification is only done on first element.
@@ -167,7 +167,7 @@ feature -- Status report
 	
 feature -- Status setting
 
-	set_writing_control (writing_ctrl: DV_SENSITIVE_CONTROL) is
+	set_writing_control (writing_ctrl: DV_SENSITIVE_CONTROL)
 			-- Enable that component can
 			-- write the database.
 		require
@@ -181,7 +181,7 @@ feature -- Status setting
 			is_writing: is_writing
 		end
 
-	set_refreshing_control (refreshing_ctrl: DV_SENSITIVE_CONTROL) is
+	set_refreshing_control (refreshing_ctrl: DV_SENSITIVE_CONTROL)
 			-- Enable that component can
 			-- write the database.
 		require
@@ -195,7 +195,7 @@ feature -- Status setting
 			is_refreshing: is_refreshing
 		end
 
-	set_db_creator (creator: DV_CREATOR) is
+	set_db_creator (creator: DV_CREATOR)
 			-- Enable that component can create
 			-- elements in the database.
 		require
@@ -208,7 +208,7 @@ feature -- Status setting
 			is_creating: is_creating
 		end
 
-	set_deleting_control (deleting_ctrl: DV_SENSITIVE_CONTROL) is
+	set_deleting_control (deleting_ctrl: DV_SENSITIVE_CONTROL)
 			-- Enable that component can
 			-- write the database.
 		require
@@ -224,7 +224,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	set_warning_handler (w_handler: PROCEDURE [ANY, TUPLE [STRING]]) is
+	set_warning_handler (w_handler: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Set `w_handler' to `warning_handler'
 		require
 			not_activated: not is_activated
@@ -233,7 +233,7 @@ feature -- Basic operations
 			warning_handler := w_handler
 		end
 
-	set_status_handler (s_handler: PROCEDURE [ANY, TUPLE [STRING]]) is
+	set_status_handler (s_handler: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Set `s_handler' to `status_handler'
 		require
 			not_activated: not is_activated
@@ -242,7 +242,7 @@ feature -- Basic operations
 			status_handler := s_handler
 		end
 
-	set_confirmation_handler (c_handler: PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]]) is
+	set_confirmation_handler (c_handler: PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]])
 			-- Set `c_handler' to `confirmation_handler'
 		require
 			not_activated: not is_activated
@@ -251,7 +251,7 @@ feature -- Basic operations
 			confirmation_handler := c_handler
 		end
 
-	set_tablecode (tablecode: INTEGER) is
+	set_tablecode (tablecode: INTEGER)
 			-- Initialize with `fields_set_comp' to display
 			-- current selection.
 		require
@@ -260,7 +260,7 @@ feature -- Basic operations
 			table_description := tables.description (tablecode)
 		end
 
-	add_necessary_table (comp: DV_TABLE_COMPONENT) is
+	add_necessary_table (comp: DV_TABLE_COMPONENT)
 			-- Add a subcomponent representing a necessary
 			-- table for represented table.
 		require
@@ -283,7 +283,7 @@ feature -- Basic operations
 			comp.set_db_searcher (db_srcher)
 		end
 
-	add_dependent_table (comp: DV_TABLE_COMPONENT) is
+	add_dependent_table (comp: DV_TABLE_COMPONENT)
 			-- Add a subcomponent representing a dependent
 			-- table on represented table.
 		require
@@ -309,7 +309,7 @@ feature -- Basic operations
 			set_handlers (comp)
 		end
 
-	set_db_searcher (db_srcher: DV_SEARCHER) is
+	set_db_searcher (db_srcher: DV_SEARCHER)
 			-- Set component enabling to load table rows, eventually from
 			-- database, to `db_srcher'.
 		require
@@ -324,7 +324,7 @@ feature -- Basic operations
 			db_searcher_set: db_searcher_set
 		end
 
-	set_db_fields_component (db_fields_comp: DV_TABLEROW_FIELDS) is
+	set_db_fields_component (db_fields_comp: DV_TABLEROW_FIELDS)
 			-- Set `db_fields_comp' to component displaying selected table row
 			-- content.
 		require
@@ -334,7 +334,7 @@ feature -- Basic operations
 			db_fields_component := db_fields_comp
 		end
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			if db_fields_component /= Void then
@@ -377,7 +377,7 @@ feature -- Basic operations
 			is_activated := True
 		end
 
-	desactivate is
+	desactivate
 			-- Desactivate component to add subcomponents.
 		do
 			is_activated := False
@@ -385,7 +385,7 @@ feature -- Basic operations
 			not_activated: not is_activated
 		end
 
-	replace_selected_tablerows (tr_set: ARRAYED_LIST [DB_TABLE]) is
+	replace_selected_tablerows (tr_set: ARRAYED_LIST [DB_TABLE])
 			-- Replace current table row set with `tr_set'. Use this capability
 			-- when component is activated to switch between different
 			-- results. Database searcher set may have to afford to
@@ -415,7 +415,7 @@ feature {DV_COMPONENT} -- Access
 
 feature {DV_COMPONENT} -- Status setting
 
-	set_just_created is
+	set_just_created
 			-- Set `is_just_created' to `True'.
 		require
 			is_activated: is_activated
@@ -423,7 +423,7 @@ feature {DV_COMPONENT} -- Status setting
 			is_just_created := True
 		end
 
-	enable_dependent (par: DV_TABLE_COMPONENT) is
+	enable_dependent (par: DV_TABLE_COMPONENT)
 			-- Enable that represented table is dependent on
 			-- calling component table.
 		require
@@ -438,7 +438,7 @@ feature {DV_COMPONENT} -- Status setting
 			parent_set: parent /= Void
 		end
 
-	enable_necessary (par: DV_TABLE_COMPONENT) is
+	enable_necessary (par: DV_TABLE_COMPONENT)
 			-- Enable that represented table is necessary for
 			-- calling component table.
 		require
@@ -456,7 +456,7 @@ feature {DV_COMPONENT} -- Status setting
 
 feature {DV_COMPONENT} -- Basic operations
 
-	display (tr_set: ARRAYED_LIST [DB_TABLE]) is
+	display (tr_set: ARRAYED_LIST [DB_TABLE])
 			-- Display `tr_set' in the component.
 		require
 			is_activated: is_activated
@@ -480,7 +480,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_not_created: not is_just_created
 		end
 
-	refresh_from_database is
+	refresh_from_database
 			-- Refresh display from database.
 		require
 			is_activated: is_activated
@@ -515,7 +515,7 @@ feature {DV_COMPONENT} -- Basic operations
 			status_handler.call ([tablerows_selected (tablerow_set.count)])
 		end
 
-	clear is
+	clear
 			-- Erase component content.
 		require
 			is_not_on_top: not is_topcomponent
@@ -528,7 +528,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_cleared: is_cleared
 		end
 
-	change_selection (position: INTEGER) is
+	change_selection (position: INTEGER)
 			-- Select `tablerow_set' element at `position'.
 			-- Remove any selection if `position' = `No_selection'.
 		do
@@ -598,7 +598,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	update_controls_sensitiveness is
+	update_controls_sensitiveness
 			-- Update controls sensitiveness according to `tablerow_set'.
 		do
 			if is_cleared then
@@ -643,7 +643,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 			
-	delete_after_confirmation is
+	delete_after_confirmation
 			-- Ask for confirmation and delete currently displayed table row in the database.
 		require
 			is_activated: is_activated
@@ -651,7 +651,7 @@ feature {NONE} -- Basic operations
 			confirmation_handler.call ([deletion_confirmation (table_description.Table_name), agent delete])
 		end
 
-	delete is
+	delete
 			-- Delete currently displayed table row in the database.
 		require
 			is_activated: is_activated
@@ -665,7 +665,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	write is
+	write
 			-- Write currently displayed table row in the database.
 		require
 			is_activated: is_activated
@@ -684,7 +684,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh display from `tablerow_set'.
 		require
 			is_activated: is_activated
@@ -707,7 +707,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	other_read is
+	other_read
 			-- Refresh subcomponents from `tablerow_set.item'.
 		require
 			is_activated: is_activated
@@ -724,7 +724,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	other_clear is
+	other_clear
 			-- Clear subcomponents.
 		require
 			is_activated: is_activated
@@ -739,7 +739,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	set_handlers (comp: DV_TABLE_COMPONENT) is
+	set_handlers (comp: DV_TABLE_COMPONENT)
 			-- Set lacking handlers of `comp' with existing handlers.
 		require
 			not_activated: not is_activated
@@ -755,7 +755,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	search_or_start (item: DB_TABLE) is
+	search_or_start (item: DB_TABLE)
 			-- If `tablerow_set' contains `item', go to `item'. Otherwise,
 			-- go to first element.
 			-- Equality used is ID equality.
@@ -786,7 +786,7 @@ feature {NONE} -- Basic operations
 invariant
 	top_is_not_cleared: is_topcomponent implies not is_cleared
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

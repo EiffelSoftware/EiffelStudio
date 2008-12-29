@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General representation of a device context that %
 		%can be displayed on the screen."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	quick_release is 
+	quick_release 
 			-- Release the device context without unselecting
 			-- selected item. To Avoid memory leak, the caller
 			-- must be certain that everything is already unselected.
@@ -31,7 +31,7 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
-	cwin_get_dc (hwnd: POINTER): POINTER is
+	cwin_get_dc (hwnd: POINTER): POINTER
 			-- SDK GetDC
 		external
 			"C [macro <wel.h>] (HWND): EIF_POINTER"
@@ -39,7 +39,7 @@ feature {NONE} -- Externals
 			"GetDC"
 		end
 
-	cwin_release_dc (hwnd, hdc: POINTER) is
+	cwin_release_dc (hwnd, hdc: POINTER)
 			-- SDK ReleaseDC
 		external
 			"C [macro <wel.h>] (HWND, HDC)"
@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 			"ReleaseDC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

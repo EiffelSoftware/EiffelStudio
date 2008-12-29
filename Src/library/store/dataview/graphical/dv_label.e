@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Label."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- Text area value.
 		do
 			Result := text
@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_value (a_text: STRING) is
+	set_value (a_text: STRING)
 			-- Set display string to `a_text'.
 		do
 			set_text (a_text)
 		end
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		do
 			if not is_locked then
@@ -45,7 +45,7 @@ feature -- Basic operations
 			end
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		do
 			if not is_locked then
@@ -53,13 +53,13 @@ feature -- Basic operations
 			end
 		end
 
-	lock_sensitiveness is
+	lock_sensitiveness
 			-- Lock display string sensitiveness.
 		do
 			is_locked := True
 		end
 
-	unlock_sensitiveness is
+	unlock_sensitiveness
 			-- Unlock display string sensitiveness.
 		do
 			is_locked := False
@@ -70,7 +70,7 @@ feature -- Status report
 	is_locked: BOOLEAN;
 			-- Is label sensitiveness locked?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	x: REAL is
+	x: REAL
 			-- No description available.
 		do
 			Result := ccom_tag_pointf_x (item)
 		end
 
-	y: REAL is
+	y: REAL
 			-- No description available.
 		do
 			Result := ccom_tag_pointf_y (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_pointf
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_x (a_x: REAL) is
+	set_x (a_x: REAL)
 			-- Set `x' with `a_x'.
 		do
 			ccom_tag_pointf_set_x (item, a_x)
 		end
 
-	set_y (a_y: REAL) is
+	set_y (a_y: REAL)
 			-- Set `y' with `a_y'.
 		do
 			ccom_tag_pointf_set_y (item, a_y)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_pointf: INTEGER is
+	c_size_of_tag_pointf: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagPOINTF_s.h%"]"
@@ -77,31 +77,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagPOINTF)"
 		end
 
-	ccom_tag_pointf_x (a_pointer: POINTER): REAL is
+	ccom_tag_pointf_x (a_pointer: POINTER): REAL
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagPOINTF_s_impl.h%"](ecom_control_library::tagPOINTF *):EIF_REAL"
 		end
 
-	ccom_tag_pointf_set_x (a_pointer: POINTER; arg2: REAL) is
+	ccom_tag_pointf_set_x (a_pointer: POINTER; arg2: REAL)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagPOINTF_s_impl.h%"](ecom_control_library::tagPOINTF *, FLOAT)"
 		end
 
-	ccom_tag_pointf_y (a_pointer: POINTER): REAL is
+	ccom_tag_pointf_y (a_pointer: POINTER): REAL
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagPOINTF_s_impl.h%"](ecom_control_library::tagPOINTF *):EIF_REAL"
 		end
 
-	ccom_tag_pointf_set_y (a_pointer: POINTER; arg2: REAL) is
+	ccom_tag_pointf_set_y (a_pointer: POINTER; arg2: REAL)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagPOINTF_s_impl.h%"](ecom_control_library::tagPOINTF *, FLOAT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mswin implementation for objects that represent paragraph formatting information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,14 +35,14 @@ create
 		
 feature -- Access
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Make `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make
 		end
 		
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			wel_set_alignment (pfa_left)
@@ -51,7 +51,7 @@ feature -- Access
 		
 feature -- Status report
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Current alignment. See EV_PARAGRAPH_CONSTANTS
 			-- for possible values.
 		local
@@ -72,7 +72,7 @@ feature -- Status report
 			end
 		end
 
-	left_margin: INTEGER is
+	left_margin: INTEGER
 			-- Left margin between border and text in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -86,7 +86,7 @@ feature -- Status report
 			screen_dc.release
 		end
 		
-	right_margin: INTEGER is
+	right_margin: INTEGER
 			-- Right margin between line end and border in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -100,7 +100,7 @@ feature -- Status report
 			screen_dc.release
 		end
 		
-	top_spacing: INTEGER is
+	top_spacing: INTEGER
 			-- Spacing between top of paragraph and previous line in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -114,7 +114,7 @@ feature -- Status report
 			screen_dc.release	
 		end
 		
-	bottom_spacing: INTEGER is
+	bottom_spacing: INTEGER
 			-- Spacing between bottom of paragraph and next line in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -130,7 +130,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_alignment (an_alignment: INTEGER) is
+	set_alignment (an_alignment: INTEGER)
 			-- Assign `an_alignment' to `alignment.
 		do
 			if an_alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left then
@@ -148,7 +148,7 @@ feature -- Status setting
 			end
 		end
 
-	set_left_margin (a_margin: INTEGER) is
+	set_left_margin (a_margin: INTEGER)
 			-- Set `left_margin' to `a_margin'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -162,7 +162,7 @@ feature -- Status setting
 			screen_dc.release
 		end
 
-	set_right_margin (a_margin: INTEGER) is
+	set_right_margin (a_margin: INTEGER)
 			-- Set `right_margin' to `a_margin'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -176,7 +176,7 @@ feature -- Status setting
 			screen_dc.release
 		end
 		
-	set_top_spacing (a_spacing: INTEGER) is
+	set_top_spacing (a_spacing: INTEGER)
 			-- Set `top_spacing' to `a_spacing'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -190,7 +190,7 @@ feature -- Status setting
 			screen_dc.release
 		end
 		
-	set_bottom_spacing (a_spacing: INTEGER) is
+	set_bottom_spacing (a_spacing: INTEGER)
 			-- Set `bottom_spacing' to `a_spacing'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -203,7 +203,7 @@ feature -- Status setting
 			screen_dc.release
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

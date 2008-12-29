@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Encapsulation of an identifier for work, input and timer callbacks."
@@ -19,7 +19,7 @@ create {MEL_DISPATCHER}
 
 feature {NONE} -- Initialization
 
-	make_timer (an_id: POINTER) is
+	make_timer (an_id: POINTER)
 			-- Create an identifier representing a Motif identifier
 			-- for a timer.
 		require
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			is_timer: is_timer
 		end;
 
-	make_input (an_id: POINTER) is
+	make_input (an_id: POINTER)
 			-- Create an identifier representing a Motif identifier
 			-- for a timer.
 		require
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			is_input: is_input
 		end;
 
-	make_work_proc (an_id: POINTER) is
+	make_work_proc (an_id: POINTER)
 			-- Create an identifier representing a Motif identifier
 			-- for a timer.
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the identfier valid?
 		do	
 			Result := identifier /= default_pointer
@@ -68,19 +68,19 @@ feature -- Access
 			true_if_not_null: Result implies identifier /= default_pointer
 		end;
 
-	is_timer: BOOLEAN is
+	is_timer: BOOLEAN
 			-- Is Current a timer identifier
 		do
 			Result := type = Timer_type
 		end;
 
-	is_input: BOOLEAN is
+	is_input: BOOLEAN
 			-- Is Current an input identifier
 		do
 			Result := type = Input_type
 		end;
 
-	is_work_proc: BOOLEAN is
+	is_work_proc: BOOLEAN
 			-- Is Current a work procedure identifier
 		do
 			Result := type = Work_proc_type
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove identifer from server.
 			-- (Call XtRemoveInput if input, XtRemoveTimer if timer
 			-- or XtRemoveWorkProc if work_proc).
@@ -121,11 +121,11 @@ feature {NONE} -- Implementation
 	type: INTEGER;
 			-- Identifier type
 
-	Timer_type: INTEGER is UNIQUE;
-	Input_type: INTEGER is UNIQUE;
-	Work_proc_type: INTEGER is UNIQUE;;
+	Timer_type: INTEGER = UNIQUE;
+	Input_type: INTEGER = UNIQUE;
+	Work_proc_type: INTEGER = UNIQUE;;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

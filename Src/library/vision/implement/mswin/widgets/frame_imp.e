@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPframe"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -80,7 +80,7 @@ create
 
 feature -- Initialization
 
-	make (a_frame: FRAME; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_frame: FRAME; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make the frame.
 		local
 			wlf: WEL_LOG_FONT
@@ -92,7 +92,7 @@ feature -- Initialization
 			managed := man
 		end
 
-	realize is
+	realize
 			-- Realize current frame and set the enclosing size.
 		do
 			if not exists then
@@ -113,7 +113,7 @@ feature -- Initialization
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current frame.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -127,15 +127,15 @@ feature -- Initialization
 
 feature -- Status report
 
-	height: INTEGER is 2
+	height: INTEGER = 2
 			-- Height of frame
 
-	width: INTEGER is 2
+	width: INTEGER = 2
 			-- Width of frame
 
 feature -- Status setting
 
-	set_form_height (a_height: INTEGER) is
+	set_form_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			private_attributes.set_height (a_height)
@@ -145,7 +145,7 @@ feature -- Status setting
 			set_child_size
 		end
 
-	set_form_width (new_width: INTEGER) is
+	set_form_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			private_attributes.set_width (new_width)
@@ -155,7 +155,7 @@ feature -- Status setting
 			set_child_size
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= a_height then
@@ -170,7 +170,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -185,7 +185,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
@@ -203,7 +203,7 @@ feature -- Status setting
 			end
 		end
 
-	child_has_resized is
+	child_has_resized
 			-- Adjust size according the child size
 		do
 			if realized then
@@ -213,7 +213,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	box_text_height: INTEGER is
+	box_text_height: INTEGER
 			-- Text height of the box title
 		local
 			a_log_font: WEL_LOG_FONT
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			Result := a_log_font.height
 		end
 
-	set_child_size is
+	set_child_size
 			-- Set size of the child
 		local
 			l: LIST [WIDGET_IMP]
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the enclosing size.
 		local
 			l: LIST [WIDGET_IMP]
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_size (code, new_width, new_height: INTEGER) is
+	on_size (code, new_width, new_height: INTEGER)
 			-- Resize the frame according to parent.
 		require else
 			box_not_void: private_box /= Void
@@ -268,12 +268,12 @@ feature {NONE} -- Implementation
 			resize_actions.execute (Current, resize_data)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 		once
 			Result := "EvisionFrame"
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 		do
 			if box_text_font /= Void then
 				private_box.set_font (box_text_font)
@@ -286,10 +286,10 @@ feature {NONE} -- Implementation
 	private_box: WEL_GROUP_BOX
 			-- Frame around the window
 
-	private_box_id: INTEGER is 1;
+	private_box_id: INTEGER = 1;
 			-- Id for the private_box
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

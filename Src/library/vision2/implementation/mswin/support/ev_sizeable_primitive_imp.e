@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision sizeable primitive. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	ev_set_minimum_width (value: INTEGER) is
+	ev_set_minimum_width (value: INTEGER)
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- Should check if the user didn't set the minimum width
 			-- before setting a new value.
@@ -30,7 +30,7 @@ feature -- Access
 			end
 		end
 
-	ev_set_minimum_height (value: INTEGER) is
+	ev_set_minimum_height (value: INTEGER)
 			-- Make `value' the new `minimum_height' of `Current'.
 			-- Should check if the user didn't set the minimum width
 			-- before setting a new value.
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	ev_set_minimum_size (mw, mh: INTEGER) is
+	ev_set_minimum_size (mw, mh: INTEGER)
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
 			-- Should check if the user didn't set the minimum width
@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

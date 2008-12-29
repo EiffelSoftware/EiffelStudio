@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,42 +12,42 @@ inherit
 
 feature -- Status Report
 
-	insert_menus_user_precondition (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD): BOOLEAN is
+	insert_menus_user_precondition (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD): BOOLEAN
 			-- User-defined preconditions for `insert_menus'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_menu_user_precondition (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER): BOOLEAN is
+	set_menu_user_precondition (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER): BOOLEAN
 			-- User-defined preconditions for `set_menu'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remove_menus_user_precondition (hmenu_shared: POINTER): BOOLEAN is
+	remove_menus_user_precondition (hmenu_shared: POINTER): BOOLEAN
 			-- User-defined preconditions for `remove_menus'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_status_text_user_precondition (psz_status_text: STRING): BOOLEAN is
+	set_status_text_user_precondition (psz_status_text: STRING): BOOLEAN
 			-- User-defined preconditions for `set_status_text'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN is
+	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN
 			-- User-defined preconditions for `enable_modeless'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD; w_id: INTEGER): BOOLEAN is
+	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD; w_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
@@ -56,7 +56,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	insert_menus (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD) is
+	insert_menus (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `lp_menu_widths' [in, out].  
@@ -68,7 +68,7 @@ feature -- Basic Operations
 
 		end
 
-	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
+	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `holemenu' [in].  
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-	remove_menus (hmenu_shared: POINTER) is
+	remove_menus (hmenu_shared: POINTER)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 		require
@@ -89,7 +89,7 @@ feature -- Basic Operations
 
 		end
 
-	set_status_text (psz_status_text: STRING) is
+	set_status_text (psz_status_text: STRING)
 			-- No description available.
 			-- `psz_status_text' [in].  
 		require
@@ -98,7 +98,7 @@ feature -- Basic Operations
 
 		end
 
-	enable_modeless (f_enable: INTEGER) is
+	enable_modeless (f_enable: INTEGER)
 			-- No description available.
 			-- `f_enable' [in].  
 		require
@@ -107,7 +107,7 @@ feature -- Basic Operations
 
 		end
 
-	translate_accelerator (lpmsg: TAG_MSG_RECORD; w_id: INTEGER) is
+	translate_accelerator (lpmsg: TAG_MSG_RECORD; w_id: INTEGER)
 			-- No description available.
 			-- `lpmsg' [in].  
 			-- `w_id' [in].  
@@ -119,7 +119,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

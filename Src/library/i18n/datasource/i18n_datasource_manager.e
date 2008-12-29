@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of the interface to a data source for translations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_uri : STRING_GENERAL) is
+	make (a_uri : STRING_GENERAL)
 			-- Initialize datasource manager with given URI.
 			--
 			-- Note: Implementations should redefine this and parse URI
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
+	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY
 			-- Dictionary for locale `a_locale'
 			--
 			-- `a_locale': Locale ID to lookup dictionary
@@ -37,14 +37,14 @@ feature -- Access
 			dictionary_not_void: Result /= Void
 		end
 
-	 available_locales: LINEAR [I18N_LOCALE_ID] is
+	 available_locales: LINEAR [I18N_LOCALE_ID]
 			-- List of the available locales
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	available_languages: LINEAR [I18N_LANGUAGE_ID] is
+	available_languages: LINEAR [I18N_LANGUAGE_ID]
 			-- List of the available languages
 		deferred
 		ensure
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN
 			-- Is `a_locale_id' available?
 		require
 			a_locale_id_exists: a_locale_id /= Void
@@ -63,7 +63,7 @@ feature -- Status report
 			correct_result: Result = available_locales.has (a_locale_id)
 		end
 
-	has_language (a_language_id: I18N_LANGUAGE_ID): BOOLEAN is
+	has_language (a_language_id: I18N_LANGUAGE_ID): BOOLEAN
 			-- Is `a_language_id' available?
 		require
 			a_language_id_exists: a_language_id /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 	uri: STRING_32;
 			-- URI of data
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

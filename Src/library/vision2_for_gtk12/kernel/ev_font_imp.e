@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision font. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
- 	make (an_interface: like interface) is
+ 	make (an_interface: like interface)
  			-- Create the default font.
 		do
 			base_make (an_interface)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			update_font_face
 		end
 
-	initialize is
+	initialize
 		do
 			set_is_initialized (True)
 		end
@@ -55,7 +55,7 @@ feature -- Access
 	shape: INTEGER
 			-- Preferred font slant.
 
-	height: INTEGER is
+	height: INTEGER
 			-- Preferred font height measured in screen pixels.
 		do
 			Result := internal_height
@@ -64,7 +64,7 @@ feature -- Access
 	height_in_points: INTEGER
 			-- Preferred font height measure in points
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Charset
 		do
 			Result := 1
@@ -72,35 +72,35 @@ feature -- Access
 
 feature -- Element change
 
-	set_family (a_family: INTEGER) is
+	set_family (a_family: INTEGER)
 			-- Set `a_family' as preferred font category.
 		do
 			family := a_family
 			update_font_face
 		end
 
-	set_weight (a_weight: INTEGER) is
+	set_weight (a_weight: INTEGER)
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
 			update_font_face
 		end
 
-	set_shape (a_shape: INTEGER) is
+	set_shape (a_shape: INTEGER)
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
 			update_font_face
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `a_height' as preferred font size in screen pixels
 		do
 			internal_height := a_height
 			update_font_face
 		end
 
-	set_height_in_points (a_height: INTEGER) is
+	set_height_in_points (a_height: INTEGER)
 			-- Set `a_height_in_points' to `a_height'.
 		do
 			internal_height := a_height
@@ -109,7 +109,7 @@ feature -- Element change
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_families: like preferred_families) is
+		a_preferred_families: like preferred_families)
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
 		do
@@ -130,39 +130,39 @@ feature -- Status report
 	name: STRING_32
 			-- Face name chosen by toolkit.
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (c_object)
 		end
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent (c_object)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Character width of current fixed-width font.
 		do
 			Result := string_width ("x")
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Width of the smallest character in the font.
 		do
 			Result := string_width ("l")
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Width of the biggest character in the font.
 		do
 			Result := string_width ("W")
 		end
 
-	string_width (a_string: STRING): INTEGER is
+	string_width (a_string: STRING): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -171,19 +171,19 @@ feature -- Status report
 			Result := {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_cs.item)
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed.
 		do
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_resx).to_integer
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed.
 		do
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_resy).to_integer
 		end
 
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 			-- Can characters in the font have different sizes?
 		do
 			Result := substring_dash (full_name, Ev_gdk_font_string_index_spacing).is_equal ("p")
@@ -191,21 +191,21 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	preloaded: HASH_TABLE [EV_GDK_FONT, STRING] is
+	preloaded: HASH_TABLE [EV_GDK_FONT, STRING]
 			-- Previously cached font structures.
 		once
 			create Result.make (10)
 			Result.compare_objects
 		end
 
-	fonts_not_found: LINKED_LIST [STRING] is
+	fonts_not_found: LINKED_LIST [STRING]
 			-- List of XLFD not found on system.
 		once
 			create Result.make
 			Result.compare_objects
 		end
 
-	try_font (a_try_string: STRING; a_try_face: STRING): EV_GDK_FONT is
+	try_font (a_try_string: STRING; a_try_face: STRING): EV_GDK_FONT
 		local
 			exp_name: STRING
 		do
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 
 	match_preferred_face (
 		try_string_creator: FUNCTION[EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]
-	): EV_GDK_FONT is
+	): EV_GDK_FONT
 			-- Match the preferred face using the font
 			-- string creator `try_string_creator'
 		local
@@ -267,12 +267,12 @@ feature {NONE} -- Implementation
 			Result := temp_font
 		end
 
-	update_preferred_faces (a_face: STRING_32) is
+	update_preferred_faces (a_face: STRING_32)
 		do
 			update_font_face
 		end
 
-	update_font_face is
+	update_font_face
 			-- Look up font and if not in list, find best match.
 		local
 			temp_font: EV_GDK_FONT
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	match_name (pattern: STRING): STRING is
+	match_name (pattern: STRING): STRING
 			-- Get the expanded font name for `pattern'.
 			-- Void if no match is found.
 		require
@@ -314,22 +314,22 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 
 	--| Routine for extracting items from a X-font.
 
-	Ev_gdk_font_string_index_foundry: INTEGER is 1
-	Ev_gdk_font_string_index_family: INTEGER is 2
-	Ev_gdk_font_string_index_weight: INTEGER is 3
-	Ev_gdk_font_string_index_slant: INTEGER is 4
-	Ev_gdk_font_string_index_setwidth: INTEGER is 5
-	Ev_gdk_font_string_index_addstyle: INTEGER is 6
-	Ev_gdk_font_string_index_pixel: INTEGER is 7
-	Ev_gdk_font_string_index_point: INTEGER is 8
-	Ev_gdk_font_string_index_resx: INTEGER is 9
-	Ev_gdk_font_string_index_resy: INTEGER is 10
-	Ev_gdk_font_string_index_spacing: INTEGER is 11
-	Ev_gdk_font_string_index_width: INTEGER is 12
-	Ev_gdk_font_string_index_charset: INTEGER is 13
-	Ev_gdk_font_string_index_encoding: INTEGER is 14
+	Ev_gdk_font_string_index_foundry: INTEGER = 1
+	Ev_gdk_font_string_index_family: INTEGER = 2
+	Ev_gdk_font_string_index_weight: INTEGER = 3
+	Ev_gdk_font_string_index_slant: INTEGER = 4
+	Ev_gdk_font_string_index_setwidth: INTEGER = 5
+	Ev_gdk_font_string_index_addstyle: INTEGER = 6
+	Ev_gdk_font_string_index_pixel: INTEGER = 7
+	Ev_gdk_font_string_index_point: INTEGER = 8
+	Ev_gdk_font_string_index_resx: INTEGER = 9
+	Ev_gdk_font_string_index_resy: INTEGER = 10
+	Ev_gdk_font_string_index_spacing: INTEGER = 11
+	Ev_gdk_font_string_index_width: INTEGER = 12
+	Ev_gdk_font_string_index_charset: INTEGER = 13
+	Ev_gdk_font_string_index_encoding: INTEGER = 14
 
-	substring_dash (s: STRING; index: INTEGER): STRING is
+	substring_dash (s: STRING; index: INTEGER): STRING
 			-- Substring of `s' between the `index'-th and `index + 1'-th dash.
 			-- If last dash, returns tail.
 		require
@@ -355,7 +355,7 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 			no_dashes: Result.occurrences ('-') = 0
 		end
 
-	weight_from_string (a_string: STRING): INTEGER is
+	weight_from_string (a_string: STRING): INTEGER
 			-- Return appropriate weight code from string.
 		do
 			if equal (a_string, "bold") then
@@ -367,7 +367,7 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 			end
 		end
 
-	shape_from_string (a_string: STRING): INTEGER is
+	shape_from_string (a_string: STRING): INTEGER
 			-- Return appropriate shape code from string.
 		do
 			if equal (a_string, "o") then
@@ -381,7 +381,7 @@ feature {EV_FONT_IMP} -- Implementation
 
 	--| String-routines to facilitate in searching the best matching font.
 
-	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]] is
+	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]]
 				-- Create and setup the preferred font face mechanism
 		once
 			create Result.make (1, 6)
@@ -393,7 +393,7 @@ feature {EV_FONT_IMP} -- Implementation
 			Result.put (agent {EV_FONT_IMP}.default_font, 6)
 		end
 
-	family_string: STRING is
+	family_string: STRING
 			-- Get standard string to represent family.
 		do
 			check valid_family (family) end
@@ -413,7 +413,7 @@ feature {EV_FONT_IMP} -- Implementation
 			end
 		end
 
-	weight_string: STRING is
+	weight_string: STRING
 			-- Get standard string to represent weight.
 		do
 			check valid_weight (weight) end
@@ -431,7 +431,7 @@ feature {EV_FONT_IMP} -- Implementation
 			end
 		end
 
-	shape_string: STRING is
+	shape_string: STRING
 			-- Get standard string to represent shape.
 		do
 			check valid_shape (shape) end
@@ -445,7 +445,7 @@ feature {EV_FONT_IMP} -- Implementation
 			end
 		end
 
-	setwidth_string: STRING is
+	setwidth_string: STRING
 			-- Get standard string to represent shape.
 		do
 			if weight = Weight_thin then
@@ -455,13 +455,13 @@ feature {EV_FONT_IMP} -- Implementation
 			end
 		end
 
-	addstyle_string: STRING is
+	addstyle_string: STRING
 			-- Get standard string to represent addstyle.
 		do
 			Result := "*"
 		end
 
-	try_string (a_name: STRING): STRING is
+	try_string (a_name: STRING): STRING
 			-- Font with wildcards, trying to get the best match
 			-- for the current attributes and the font face name
 			-- `a_name'.
@@ -472,7 +472,7 @@ feature {EV_FONT_IMP} -- Implementation
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	rescue_string_one (a_name: STRING): STRING is
+	rescue_string_one (a_name: STRING): STRING
 			-- If try_string does not give any matches, use this string.
 			-- It replaces "black" with "bold" and does not use a
 			-- preferred setwidth or addstyle.
@@ -488,7 +488,7 @@ feature {EV_FONT_IMP} -- Implementation
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	rescue_string_two (a_name: STRING): STRING is
+	rescue_string_two (a_name: STRING): STRING
 			-- If rescue-string-one does not match anything, use this.
 			-- It replaces "o" with "i".
 		local
@@ -507,7 +507,7 @@ feature {EV_FONT_IMP} -- Implementation
 				+ "-*-*-*-*-*-iso8859-*"
 		end
 
-	non_optimal (a_name: STRING): STRING is
+	non_optimal (a_name: STRING): STRING
 			-- If there is no optimal match: too bad!
 			-- Try this and get at least the right size and family.
 		do
@@ -516,14 +516,14 @@ feature {EV_FONT_IMP} -- Implementation
 				+ "-*-*-*-*-*-*-*"
 		end
 
-	last_resort_match (a_font_name: STRING): STRING is
+	last_resort_match (a_font_name: STRING): STRING
 			-- This is getting painful. Try to get a font with only
 			-- the right name and you'll be OK.
 		do
 			Result := "-*-" + a_font_name + "-*-*-*-**-*-*-*-*-*-*-*"
 		end
 
-	default_font (a_font_name: STRING): STRING is
+	default_font (a_font_name: STRING): STRING
 			-- If this font does not give a match, there is not
 			-- a single font installed on the system.
 		do
@@ -537,13 +537,13 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
 feature {EV_FONTABLE_IMP} -- Implementation
 
-	set_font_object (a_c_object: POINTER) is
+	set_font_object (a_c_object: POINTER)
 			--
 		do
 			c_object := a_c_object
 		end
 
-	set_height_internal (a_height: INTEGER) is
+	set_height_internal (a_height: INTEGER)
 			--
 		do
 			internal_height := a_height
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 	internal_height: INTEGER
 			-- Height of font in screen pixels.
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	frozen c_match_font_name (pattern: POINTER): STRING is
+	frozen c_match_font_name (pattern: POINTER): STRING
 			-- Match to first in list or return NULL.
 			-- `pattern' and `Result': char *
 			-- (from EV_C_GTK)
@@ -577,16 +577,16 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Obsolete
 
-	system_name: STRING is
+	system_name: STRING
 			-- Platform dependent font name.
 		do
 			Result := full_name
 		end
 
- 	is_standard: BOOLEAN is True
+ 	is_standard: BOOLEAN = True
  			-- Is the font standard and informations available (except for name) ?
 
-	destroy is
+	destroy
 		do
 			set_is_destroyed (True)
 		end
@@ -595,7 +595,7 @@ invariant
 	c_object_not_null: is_initialized implies c_object /= default_pointer
 	full_name_not_void: is_initialized implies full_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

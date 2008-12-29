@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IDropTarget' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_idrop_target_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	drag_enter (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drag_enter (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `p_data_obj' [in].  
 			-- `grf_key_state' [in].  
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			ccom_drag_enter (initializer, p_data_obj_item, grf_key_state, pt.item, pdw_effect)
 		end
 
-	drag_over (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drag_over (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `grf_key_state' [in].  
 			-- `pt' [in].  
@@ -58,13 +58,13 @@ feature -- Basic Operations
 			ccom_drag_over (initializer, grf_key_state, pt.item, pdw_effect)
 		end
 
-	drag_leave is
+	drag_leave
 			-- No description available.
 		do
 			ccom_drag_leave (initializer)
 		end
 
-	drop (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drop (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `p_data_obj' [in].  
 			-- `grf_key_state' [in].  
@@ -88,7 +88,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_idrop_target_impl_proxy(initializer)
@@ -96,49 +96,49 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_drag_enter (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
+	ccom_drag_enter (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
 		end
 
-	ccom_drag_over (cpp_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
+	ccom_drag_over (cpp_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
 		end
 
-	ccom_drag_leave (cpp_obj: POINTER) is
+	ccom_drag_leave (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"]()"
 		end
 
-	ccom_drop (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
+	ccom_drop (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
 		end
 
-	ccom_delete_idrop_target_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_idrop_target_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_idrop_target_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_idrop_target_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

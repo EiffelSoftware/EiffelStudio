@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_STANDARD_DIALOG."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks OK.
 			-- Note: This is renamed in some descendents
 			-- i.e. in EV_PRINT_DIALOG it is renamed to print_actions
@@ -38,7 +38,7 @@ feature -- Event handling
 		end
 
 
-	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user cancels.
 		do
 			Result := implementation.cancel_actions
@@ -46,7 +46,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

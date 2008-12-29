@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory produces different feedback styles hot zone families."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Factory Methods
 
-	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE is
+	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
 			-- Facotry method
 		require
 			a_zone_not_void: a_zone /= Void
@@ -19,7 +19,7 @@ feature -- Factory Methods
 			not_void: Result /= Void
 		end
 
-	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
+	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
 			-- Hot zone for SD_MULTI_DOCK_AREA.
 		require
 			not_void: a_zone /= Void
@@ -34,7 +34,7 @@ feature -- Docker mediator.
 	docker_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator.
 
-	set_docker_mediator (a_mediator: like docker_mediator) is
+	set_docker_mediator (a_mediator: like docker_mediator)
 			-- Set `docker_mediator'.
 		require
 			a_mediator_not_void: a_mediator /= Void
@@ -44,7 +44,7 @@ feature -- Docker mediator.
 			set: docker_mediator = a_mediator
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

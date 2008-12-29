@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
 		Instance of this class is not guaranteed to be thread safe.
@@ -21,7 +21,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST [STRING]; a_working_directory: STRING) is
+	make (a_exec_name: STRING; args: LIST [STRING]; a_working_directory: STRING)
 			-- Create process object with `a_exec_name' as executable with `args'
 			-- as arguments, and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			init_succeeded: parameter_initialized
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
+	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
 			-- Create process object with `cmd_line' as command line in which executable and
 			-- arguments are included and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.		
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- IO redirection
 
-	redirect_input_to_stream is
+	redirect_input_to_stream
 			-- Redirect input stream of process to its parent's stream
 			-- so you can use `put_string' to send data into process.
 		require
@@ -71,7 +71,7 @@ feature -- IO redirection
 			input_file_name_void: input_file_name = Void
 		end
 
-	redirect_input_to_file (a_file_name: STRING) is
+	redirect_input_to_file (a_file_name: STRING)
 			-- Redirect input stream of process to a file
 			-- with name`a_file_name'.
 		require
@@ -87,7 +87,7 @@ feature -- IO redirection
 			input_file_name_set: input_file_name = a_file_name
 		end
 
-	cancel_input_redirection is
+	cancel_input_redirection
 			-- Cancel input redirection.
 		require
 			process_not_running: not is_running
@@ -100,7 +100,7 @@ feature -- IO redirection
 			input_file_name_set: input_file_name.is_equal ("")
 		end
 
-	redirect_output_to_file (a_file_name: STRING) is
+	redirect_output_to_file (a_file_name: STRING)
 			-- Redirect output stream of process to a file
 			-- with name `a_file_name'.
 		require
@@ -120,7 +120,7 @@ feature -- IO redirection
 			output_handler_void: output_handler = Void
 		end
 
-	redirect_output_to_agent (a_output_handler: PROCEDURE [ANY, TUPLE [STRING]]) is
+	redirect_output_to_agent (a_output_handler: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Redirect output stream of process to an agent
 			-- so whenever some output data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -139,7 +139,7 @@ feature -- IO redirection
 			output_file_name_void: output_file_name = Void
 		end
 
-	cancel_output_redirection is
+	cancel_output_redirection
 			-- Cancel output redirection.
 		require
 			process_not_running: not is_running
@@ -154,7 +154,7 @@ feature -- IO redirection
 			output_handler_set: output_handler = Void
 		end
 
-	redirect_error_to_file (a_file_name: STRING) is
+	redirect_error_to_file (a_file_name: STRING)
 			-- Redirect the error stream of process to a file.
 		require
 			process_not_running: not is_running
@@ -172,7 +172,7 @@ feature -- IO redirection
 			error_handler_void: error_handler = Void
 		end
 
-	redirect_error_to_agent (a_error_handler: PROCEDURE [ANY, TUPLE [STRING]]) is
+	redirect_error_to_agent (a_error_handler: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Redirect error stream of process to an agent
 			-- so whenever some error data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -191,7 +191,7 @@ feature -- IO redirection
 			error_file_name_void: error_file_name = Void
 		end
 
-	redirect_error_to_same_as_output is
+	redirect_error_to_same_as_output
 			-- Redirect output and error to the same location.
 			-- Not applicable on .NET.
 		require
@@ -210,7 +210,7 @@ feature -- IO redirection
 			error_handler_set: error_handler = Void
 		end
 
-	cancel_error_redirection is
+	cancel_error_redirection
 			-- Cancel error redirection.
 		require
 			process_not_running: not is_running
@@ -225,7 +225,7 @@ feature -- IO redirection
 			error_handler_set: error_handler = Void
 		end
 
-	enable_terminal_control is
+	enable_terminal_control
 			-- Make sure that launched process has terminal control over standard input, output and error.
 			-- Has effect only on Unix and only when `is_launched_in_new_process_group' is True.
 		require
@@ -236,7 +236,7 @@ feature -- IO redirection
 			terminal_control_enabled: is_terminal_control_enabled
 		end
 
-	disable_terminal_control is
+	disable_terminal_control
 			-- Make sure that launched process doesn't has terminal control over standard input, output and error.
 			-- Has effect only on Unix.
 		require
@@ -249,7 +249,7 @@ feature -- IO redirection
 
 feature -- Control
 
-	launch is
+	launch
 			-- Launch process.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -260,7 +260,7 @@ feature -- Control
 		deferred
 		end
 
-	terminate is
+	terminate
 			-- Terminate launched process.
 			-- Check `last_termination_successful' after to see if `terminate' succeeded.
 			-- `terminate' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
@@ -272,7 +272,7 @@ feature -- Control
 		deferred
 		end
 
-	terminate_tree is
+	terminate_tree
 			-- Terminate process tree starting from current launched process.
 			-- Check `last_termination_successful' after to see if `terminate_tree' succeeded.
 			-- `terminate_tree' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
@@ -286,7 +286,7 @@ feature -- Control
 		deferred
 		end
 
-	wait_for_exit is
+	wait_for_exit
 			-- Wait until process has exited.
 			-- Note: child processes of launched process are not guaranteed to have exited after `wait_for_exit' returns.
 		require
@@ -297,7 +297,7 @@ feature -- Control
 			process_exited: has_exited
 		end
 
-	wait_for_exit_with_timeout (a_timeout: INTEGER) is
+	wait_for_exit_with_timeout (a_timeout: INTEGER)
 			-- Wait launched process to exit for at most `a_timeout' milliseconds.
 			-- Check `has_exited' after to see if launched process has exited.
 			-- Note: child processes of launched process are not guaranteed to have exited even `wait_for_exit_with_timeout' returns
@@ -311,7 +311,7 @@ feature -- Control
 
 feature -- Interprocess data transmission
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Send `s' into launched process as its input data.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -323,7 +323,7 @@ feature -- Interprocess data transmission
 
 feature -- Status setting
 
-	set_buffer_size (size: INTEGER) is
+	set_buffer_size (size: INTEGER)
 			-- Set `buffer_size' with `size'.
 		require
 			process_not_running: not is_running
@@ -334,7 +334,7 @@ feature -- Status setting
 			buffer_size_set: buffer_size = size
 		end
 
-	set_timer (a_timer: PROCESS_TIMER) is
+	set_timer (a_timer: PROCESS_TIMER)
 			-- Set `a_timer' as timer used by this process launcher.
 			-- If no timer is set, a `PROCESS_THREAD_TIMER' will be used
 			-- when launch a process.
@@ -349,7 +349,7 @@ feature -- Status setting
 			timer_set: timer = a_timer
 		end
 
-	set_hidden (h: BOOLEAN) is
+	set_hidden (h: BOOLEAN)
 			-- Set `is_hidden' with `h'.
 			-- Has effects on Windows.
 		require
@@ -360,7 +360,7 @@ feature -- Status setting
 			hidden_flag_set: hidden = h
 		end
 
-	set_separate_console (b: BOOLEAN) is
+	set_separate_console (b: BOOLEAN)
 			-- Set `separate_console' with `b'.
 			-- Has effects on Windows.
 		require
@@ -371,7 +371,7 @@ feature -- Status setting
 			separate_console_set: separate_console = b
 		end
 
-	set_detached_console (b: BOOLEAN) is
+	set_detached_console (b: BOOLEAN)
 			-- Set `detached_console' with `b'.
 			-- Has effects on Windows.
 		require
@@ -382,7 +382,7 @@ feature -- Status setting
 			detached_console_set: detached_console = b
 		end
 
-	set_abort_termination_when_failed (b: BOOLEAN) is
+	set_abort_termination_when_failed (b: BOOLEAN)
 			-- Set `abort_termination_when_failed' with `b'.
 		require
 			process_not_running: not is_running
@@ -392,7 +392,7 @@ feature -- Status setting
 			abort_termination_when_failed_set: abort_termination_when_failed = b
 		end
 
-	set_environment_variable_table (a_table: like environment_variable_table) is
+	set_environment_variable_table (a_table: like environment_variable_table)
 			-- Set `environment_variable_table' with `a_table'.
 		require
 			process_not_running: not is_running
@@ -402,7 +402,7 @@ feature -- Status setting
 			environment_variable_table_set: environment_variable_table /= a_table
 		end
 
-	set_environment_variables (a_table: HASH_TABLE [C_STRING, STRING]) is
+	set_environment_variables (a_table: HASH_TABLE [C_STRING, STRING])
 			-- Set `environment_variable_table' with `a_table'.
 			-- `a_table' can be retrieved directly from {EXECUTION_ENVIRONMENT}.`environ'.
 		require
@@ -429,7 +429,7 @@ feature -- Status setting
 			end
 		end
 
-	set_environment_variable_use_unicode (b: BOOLEAN) is
+	set_environment_variable_use_unicode (b: BOOLEAN)
 			-- Set `is_environment_variable_unicode' with `b'.
 		require
 			process_not_running: not is_running
@@ -441,7 +441,7 @@ feature -- Status setting
 
 feature -- Actions setting
 
-	set_on_start_handler (handler: ROUTINE [ANY, TUPLE]) is
+	set_on_start_handler (handler: ROUTINE [ANY, TUPLE])
 			-- Set a `handler' which will be called when process starts.
 			-- Set with Void to disable start handler.
 		require
@@ -452,7 +452,7 @@ feature -- Actions setting
 			handler_set: on_start_handler = handler
 		end
 
-	set_on_exit_handler (handler: ROUTINE [ANY, TUPLE]) is
+	set_on_exit_handler (handler: ROUTINE [ANY, TUPLE])
 			-- Set a `handler' which will be called when process exits.
 			-- Set with Void to disable exit handler.			
 		require
@@ -463,7 +463,7 @@ feature -- Actions setting
 			handler_set: on_exit_handler = handler
 		end
 
-	set_on_terminate_handler (handler: ROUTINE [ANY, TUPLE]) is
+	set_on_terminate_handler (handler: ROUTINE [ANY, TUPLE])
 			-- Set a `handler' which will be called when process has been terminated.
 			-- Set with Void to disable terminate handler.
 		require
@@ -474,7 +474,7 @@ feature -- Actions setting
 			handler_set: on_terminate_handler = handler
 		end
 
-	set_on_fail_launch_handler (handler: ROUTINE [ANY, TUPLE]) is
+	set_on_fail_launch_handler (handler: ROUTINE [ANY, TUPLE])
 			-- Set a `handler' which will be called when process launch failed.
 			-- Set with Void to disable fail launch handler.			
 		require
@@ -485,7 +485,7 @@ feature -- Actions setting
 			handler_set: on_fail_launch_handler = handler
 		end
 
-	set_on_successful_launch_handler (handler: ROUTINE [ANY, TUPLE]) is
+	set_on_successful_launch_handler (handler: ROUTINE [ANY, TUPLE])
 			-- Set a `handler' which will be called when process launch successed.
 			-- Set with Void to disable successful launch handler.
 		require
@@ -496,7 +496,7 @@ feature -- Actions setting
 			handler_set: on_successful_launch_handler = handler
 		end
 
-	enable_launch_in_new_process_group is
+	enable_launch_in_new_process_group
 			-- Ensure new process is launched in a new process group.
 			-- Only has effect on Windows.
 			-- Note: If process is launched in new process group, then `terminate_tree' can terminate
@@ -510,7 +510,7 @@ feature -- Actions setting
 			launched_in_new_process_group_enabled: is_launched_in_new_process_group
 		end
 
-	disable_launch_in_new_process_group is
+	disable_launch_in_new_process_group
 			-- Ensure new process is launched in current process group.
 		require
 			process_not_running: not is_running
@@ -522,7 +522,7 @@ feature -- Actions setting
 
 feature {NONE} -- Actions
 
-	on_start is
+	on_start
 		-- Agent called when process launched
 		do
 			if on_start_handler /= Void then
@@ -530,7 +530,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_terminate is
+	on_terminate
 			-- Agent called when process has been terminated
 		do
 			if on_terminate_handler /= Void then
@@ -538,7 +538,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_exit is
+	on_exit
 			-- Agent called when process has exited
 		do
 			if on_exit_handler /= Void then
@@ -546,7 +546,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_launch_failed is
+	on_launch_failed
 			-- Agent called when process launch failed
 		do
 			if on_fail_launch_handler /= Void then
@@ -554,7 +554,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_launch_successed is
+	on_launch_successed
 			-- Agent called when process launch succeeded
 		do
 			if on_successful_launch_handler /= Void then
@@ -564,14 +564,14 @@ feature {NONE} -- Actions
 
 feature -- Access
 
-	id: INTEGER is
+	id: INTEGER
 			-- Process identifier of last launched process.
 		require
 			process_launched: launched
 		deferred
 		end
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 			-- Exit code of child process
 			-- Should be called after process has exited.
 		require
@@ -579,7 +579,7 @@ feature -- Access
 		deferred
 		end
 
-	platform: PLATFORM is
+	platform: PLATFORM
 			-- Facility to tell us which `platform' we are on
 		once
 			create Result
@@ -629,13 +629,13 @@ feature -- Status report
 	launched: BOOLEAN
 			-- Has the process been launched?
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 			-- Is process running?
 		do
 			Result := (launched and then not has_exited)
 		end
 
-	has_exited: BOOLEAN is
+	has_exited: BOOLEAN
 			-- Has launched process exited?
 			-- Important: When default timer which is a thread is used, and you register either terminate or exit agents,
 			-- `has_exited' is True doesn't mean those agents have finished. Use `wait_for_exit' to ensure that all registered
@@ -669,7 +669,7 @@ feature -- Status report
 			-- Will process be launched without any console ?
 			-- Has effects on Windows.
 
-	are_agents_valid (handler: PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN is
+	are_agents_valid (handler: PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
 			-- Are output redirection agent and error redirection agent valid?
 			-- If you redirect both output and error to one agent,
 			-- they are not valid. You must redirect output and error to
@@ -697,7 +697,7 @@ feature -- Status report
 
 feature -- Validation checking
 
-	is_input_redirection_valid (a_input_direction: INTEGER): BOOLEAN is
+	is_input_redirection_valid (a_input_direction: INTEGER): BOOLEAN
 			-- Can input of process be redirected to `a_input_direction'?
 		do
 			Result :=
@@ -706,7 +706,7 @@ feature -- Validation checking
 				(a_input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 		end
 
-	is_output_redirection_valid (a_output_direction: INTEGER): BOOLEAN is
+	is_output_redirection_valid (a_output_direction: INTEGER): BOOLEAN
 			-- Can output of process be redirected to `a_output_direction'?
 		do
 			Result :=
@@ -715,7 +715,7 @@ feature -- Validation checking
 				(a_output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection)
 		end
 
-	is_error_redirection_valid (a_error_direction: INTEGER): BOOLEAN is
+	is_error_redirection_valid (a_error_direction: INTEGER): BOOLEAN
 			-- Can error of process be redirected to `a_error_direction'?
 		do
 			Result :=
@@ -756,7 +756,7 @@ feature {NONE} -- Implementation
 	timer: PROCESS_TIMER
 			-- Timer used to check process termination so that some cleanups are done
 
-	initialize_working_directory (a_working_directory: STRING) is
+	initialize_working_directory (a_working_directory: STRING)
 			-- Setup `working_directory' according to `a_working_directory'.
 		do
 			if a_working_directory /= Void then
@@ -766,15 +766,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initial_buffer_size: INTEGER is 1024
+	initial_buffer_size: INTEGER = 1024
 			-- Initial size of buffer used to store interprocess data temporarily
 
-	initial_time_interval: INTEGER is 100
+	initial_time_interval: INTEGER = 100
 			-- Initial time interval in milliseconds used to check process status	
 
 feature{NONE} -- Implementation
 
-	initialize_parameter is
+	initialize_parameter
 			-- Initialize parameters.
 		do
 			cancel_input_redirection
@@ -795,7 +795,7 @@ feature{NONE} -- Implementation
 			initialized: parameter_initialized
 		end
 
-	parameter_initialized: BOOLEAN is
+	parameter_initialized: BOOLEAN
 			-- Are parameters initialized successfully?
 		do
 			Result :=
@@ -817,19 +817,19 @@ feature{NONE} -- Implementation
 				(last_termination_successful)
 		end
 
-	environment_table_as_pointer: POINTER is
+	environment_table_as_pointer: POINTER
 			-- {POINTER} representation of `environment_variable_table'
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
 		deferred
 		end
 
-	is_separator (a_char: CHARACTER): BOOLEAN is
+	is_separator (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' a separator for argument in command line?
 		do
 			Result := a_char = ' '
 		end
 
-	separated_words (a_cmd: STRING): LIST [STRING] is
+	separated_words (a_cmd: STRING): LIST [STRING]
 			-- Break shell command held in 'a_cmd' into words and
 			-- return retrieved word list.
 		require
@@ -952,7 +952,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

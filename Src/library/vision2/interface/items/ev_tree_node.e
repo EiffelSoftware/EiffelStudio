@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Node for use with EV_TREE.
@@ -65,13 +65,13 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_NODE_LIST is
+	parent: EV_TREE_NODE_LIST
 			-- Parent of `Current'.
 		do
 			Result := implementation.parent
 		end
 
-	parent_tree: EV_TREE is
+	parent_tree: EV_TREE
 			-- Contains `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Access
 			bridge_ok: Result = implementation.parent_tree
 		end
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default `identifier_name' if no specific name is set.
 		do
 			if parent = Void then
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Are items in `Current' displayed?
 		require
 			not_destroyed: not is_destroyed
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	expand is
+	expand
 			-- Set `is_expanded' `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Status setting
 			is_expanded: action_sequence_call_counter = old action_sequence_call_counter implies is_expanded
 		end
 
-	collapse is
+	collapse
 			-- Set `is_expanded' `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -129,14 +129,14 @@ feature -- Status setting
 
 feature -- Contract support
 
-	is_expandable: BOOLEAN is
+	is_expandable: BOOLEAN
 			-- Can `Current' be expanded and collapsed?
 		require
 			not_destroyed: not is_destroyed
 		deferred
 		end
 
-	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
+	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?
 		local
 			a_parent: EV_TREE_NODE
@@ -148,7 +148,7 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ITEM} and Precursor {EV_TEXTABLE} and
@@ -161,7 +161,7 @@ feature {EV_ANY, EV_ANY_I}-- Implementation
 	implementation: EV_TREE_NODE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

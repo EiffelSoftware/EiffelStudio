@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Device independent bitmap which can be created from a file.
 
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_file (file: RAW_FILE) is
+	make_by_file (file: RAW_FILE)
 			-- Create the dib by reading `file'.
 		require
 			file_not_void: file /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			file_closed: file.is_closed
 		end
 
-	make_by_stream (a_stream: IO_MEDIUM) is
+	make_by_stream (a_stream: IO_MEDIUM)
 		require
 			a_stream_not_void: a_stream /= Void
 			a_stream_exists: a_stream.exists
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			palette_exists: palette.exists
 		end
 
-	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER) is
+	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER)
 		obsolete
 			"Use `make_with_info_and_data' which is a safer way to proceed."
 		do
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			palette_exists: palette.exists
 		end
 
-	make_with_info_and_data (an_info: WEL_BITMAP_INFO; a_ptr: POINTER; a_size: INTEGER) is
+	make_with_info_and_data (an_info: WEL_BITMAP_INFO; a_ptr: POINTER; a_size: INTEGER)
 			-- Create a WEL_DIB section using data of `a_ptr' corresponding to `an_info'.
 		require
 			an_info_not_void: an_info /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	color_count: INTEGER is
+	color_count: INTEGER
 			-- How many colors in the dib?
 		require
 			exists: exists
@@ -131,7 +131,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Dib width
 		require
 			exists: exists
@@ -141,7 +141,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Dib height
 		require
 			exists: exists
@@ -152,7 +152,7 @@ feature -- Access
 		end
 
 
-	item_bits: POINTER is
+	item_bits: POINTER
 		require
 			exists: exists
 		do
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_pal_color is
+	set_pal_color
 			-- Transform the dib to be compatible with
 			-- `Dib_pal_colors' mode.
 		require
@@ -194,7 +194,7 @@ feature -- Measurement
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Free all GDI resource allocated by Current.
 			-- Should be called by the GC or by the user if i
 		local
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	object_id_palette: INTEGER
 			-- Object id of `palette'.
 
-	i_th_quad (i: INTEGER): WEL_RGB_QUAD is
+	i_th_quad (i: INTEGER): WEL_RGB_QUAD
 		require
 			exists: exists
 			positive_i: i >= 0
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	calculate_palette is
+	calculate_palette
 			-- Calculates pallete for images regardless of their colordepth
 		require
 			exists: exists
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			palette_exists: palette.exists
 		end
 
-	calculate_palette_all_but_24_bits is
+	calculate_palette_all_but_24_bits
 			-- Calculates pallete for images with all colordepths except 24 bits
 		require
 			exists: exists
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			palette_exists: palette.exists
 		end
 
-	calculate_palette_24_bits is
+	calculate_palette_24_bits
 			-- Calculates pallete for images with a colordepth of 24 bits (32bits is the same).
          -- A 24 bitcount DIB has no color table entries so, set the number of
          -- to the maximum value (max_palette).
@@ -334,23 +334,23 @@ feature {NONE} -- Implementation
 			palette_exists: palette.exists
 		end
 
-	has_24_bits: BOOLEAN is
+	has_24_bits: BOOLEAN
 		require
 			exists: exists
 		do
 			Result := info_header.bit_count = 24
 		end
 
-	has_32_bits: BOOLEAN is
+	has_32_bits: BOOLEAN
 		require
 			exists: exists
 		do
 			Result := info_header.bit_count = 32
 		end
 
-	max_palette: INTEGER is 256
+	max_palette: INTEGER = 256
 
-	rgb_quad_size: INTEGER is
+	rgb_quad_size: INTEGER
 		local
 			rgb: WEL_RGB_QUAD
 		once
@@ -364,7 +364,7 @@ feature {WEL_BITMAP}
 
 	info_header: WEL_BITMAP_INFO_HEADER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

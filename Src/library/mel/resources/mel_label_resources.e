@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Label resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNaccelerator: POINTER is
+	XmNaccelerator: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNaccelerator"
 		end;
 
-	XmNacceleratorText: POINTER is
+	XmNacceleratorText: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNacceleratorText"
 		end;
 
-	XmNalignment: POINTER is
+	XmNalignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNalignment"
 		end;
 
-	XmNlabelInsensitivePixmap: POINTER is
+	XmNlabelInsensitivePixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNlabelInsensitivePixmap"
 		end;
 
-	XmNlabelPixmap: POINTER is
+	XmNlabelPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNlabelPixmap"
 		end;
 
-	XmNlabelString: POINTER is
+	XmNlabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNlabelString"
 		end;
 
-	XmNlabelType: POINTER is
+	XmNlabelType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNlabelType"
 		end;
 
-	XmNmarginBottom: POINTER is
+	XmNmarginBottom: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNmarginBottom"
 		end;
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginLeft: POINTER is
+	XmNmarginLeft: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNmarginLeft"
 		end;
 
-	XmNmarginRight: POINTER is
+	XmNmarginRight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmarginRight"
 		end;
 
-	XmNmarginTop: POINTER is
+	XmNmarginTop: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNmarginTop"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNmnemonic: POINTER is
+	XmNmnemonic: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNmnemonic"
 		end;
 
-	XmNmnemonicCharSet: POINTER is
+	XmNmnemonicCharSet: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNmnemonicCharSet"
 		end;
 
-	XmNrecomputeSize: POINTER is
+	XmNrecomputeSize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNrecomputeSize"
 		end;
 
-	XmNstringDirection: POINTER is
+	XmNstringDirection: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Label.h>] : EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNstringDirection"
 		end;
 
-	XmALIGNMENT_BEGINNING: INTEGER is
+	XmALIGNMENT_BEGINNING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmALIGNMENT_BEGINNING"
 		end;
 
-	XmALIGNMENT_CENTER: INTEGER is
+	XmALIGNMENT_CENTER: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmALIGNMENT_CENTER"
 		end;
 
-	XmALIGNMENT_END: INTEGER is
+	XmALIGNMENT_END: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmALIGNMENT_END"
 		end;
 
-	XmPIXMAP: INTEGER is
+	XmPIXMAP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmPIXMAP"
 		end;
 
-	XmSTRING: INTEGER is
+	XmSTRING: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmSTRING"
 		end;
 
-	XmSTRING_DIRECTION_L_TO_R: INTEGER is
+	XmSTRING_DIRECTION_L_TO_R: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmSTRING_DIRECTION_L_TO_R"
 		end;
 
-	XmSTRING_DIRECTION_R_TO_L: INTEGER is
+	XmSTRING_DIRECTION_R_TO_L: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmSTRING_DIRECTION_R_TO_L"
 		end;
 
-	XmSTRING_DIRECTION_DEFAULT: INTEGER is
+	XmSTRING_DIRECTION_DEFAULT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmSTRING_DIRECTION_DEFAULT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

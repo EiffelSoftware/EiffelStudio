@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS multi-line text editor with scrollbar"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make, make_word_wrapped (a_scrolled_text: SCROLLED_T; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make, make_word_wrapped (a_scrolled_text: SCROLLED_T; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make a scrolled text
 		do
 			init_common_controls_dll
@@ -50,7 +50,7 @@ feature -- Initialization
 			set_maximum_size (256 * 1024)	-- 131072 = 128 * 1024
 		end
 
-	realize is
+	realize
 			-- Realize current widget
 		local
 			fw: FONT_IMP
@@ -135,12 +135,12 @@ feature -- Status report
 	is_vertical_scrollbar: BOOLEAN 
 			-- Is vertical scrollbar visible ?
 
-	form_height: integer is
+	form_height: integer
 		do
 			Result := height
 		end
 
-	form_width: integer is
+	form_width: integer
 		do
 			Result := width
 		end
@@ -150,7 +150,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	hide_horizontal_scrollbar is
+	hide_horizontal_scrollbar
 			-- Make horizontal scrollbar invisible.
 		do
 			if exists then
@@ -161,7 +161,7 @@ feature -- Status setting
 			no_horizontal_scrollbar: not is_horizontal_scrollbar
 		end
 
-	hide_vertical_scrollbar is
+	hide_vertical_scrollbar
 			-- Make vertical scrollbar invisible.
 		do
 			if exists then
@@ -172,21 +172,21 @@ feature -- Status setting
 			no_vertical_scrollbar: not is_vertical_scrollbar
 		end
 
-	set_multi_line_mode is
+	set_multi_line_mode
 			-- Set editing for multiline text.
 		do
 			is_multi_line_mode := true
 			show_vertical_scrollbar
 		end
 
-	set_single_line_mode is
+	set_single_line_mode
 			-- Set editing for single line text.
 		do
 			is_multi_line_mode := false
 			show_horizontal_scrollbar
 		end
 
-	show_horizontal_scrollbar is
+	show_horizontal_scrollbar
 			-- Make horizontal scrollbar visible.
 		do
 			if exists then
@@ -197,7 +197,7 @@ feature -- Status setting
 			horizontal_scrollbar: is_horizontal_scrollbar
 		end
 
-	show_vertical_scrollbar is
+	show_vertical_scrollbar
 			-- Make vertical scrollbar visible.
 		do
 			if exists then
@@ -208,7 +208,7 @@ feature -- Status setting
 			vertical_scrollbar: is_vertical_scrollbar
 		end
 
-	set_tab_length (new_length: INTEGER) is
+	set_tab_length (new_length: INTEGER)
 			-- Set `tab_length' to `new_length'.
 		local
 			fw: FONT_IMP
@@ -229,14 +229,14 @@ feature -- Status setting
 
 feature {NONE} -- Inapplicable
 
-	action_target: POINTER is
+	action_target: POINTER
 			-- Inapplicable for Windows
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	set_control_options is
+	set_control_options
 			-- Set options to control.
 		local
 			new_options: INTEGER
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			set_options (Ecoop_set, new_options)
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style for creation.
 		do
 			Result := Precursor {TEXT_IMP}
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Implementation of popup menu"
 	legal: "See notice at end of class.";
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_popup: POPUP; oui_parent: COMPOSITE) is
+	make (a_popup: POPUP; oui_parent: COMPOSITE)
 			-- Create a motif popup menu.
 		local
 			mc: MEL_COMPOSITE
@@ -63,13 +63,13 @@ feature -- Access
 
 feature -- Display
 
-	popup is
+	popup
 			-- Popup current popup menu on screen.
 		do
 			manage
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

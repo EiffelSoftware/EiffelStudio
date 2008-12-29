@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -24,7 +24,7 @@ create -- Creation procedure
 
 feature -- Status setting
 
-	set_repository (repository: DB_REPOSITORY) is
+	set_repository (repository: DB_REPOSITORY)
 			-- Set implementation repository with `repository'.
 		require
 			repository_not_void: repository /= Void
@@ -36,7 +36,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	owns_repository: BOOLEAN is
+	owns_repository: BOOLEAN
 			-- Is Current linked to a repository?
 		do
 			Result := implementation.owns_repository
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	put (object: ANY) is
+	put (object: ANY)
 			-- Insert `object' in repository attached to Current.
 		require
 			connected: is_connected
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 		end
 
-	force (object: ANY) is
+	force (object: ANY)
 			-- Insert `object' in repository attached to Current.
 		require
 			connected: is_connected
@@ -81,13 +81,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an interface object to store in active base.
 		do
 			implementation := handle.database.db_store
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

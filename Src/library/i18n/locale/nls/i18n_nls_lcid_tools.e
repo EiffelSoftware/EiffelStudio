@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants and conversion functions for NLS LCIDS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature --Access
 
-	is_supported_locale(lcid:INTEGER):BOOLEAN is
+	is_supported_locale(lcid:INTEGER):BOOLEAN
 			-- Is the given LCID supported _and_ installed?
 		do
 				-- Possible flags, from winnls.h :
@@ -25,7 +25,7 @@ feature --Access
 			Result := is_valid_locale(lcid, 2)
 		end
 
-	supported_locales: LIST[I18N_LOCALE_ID] is
+	supported_locales: LIST[I18N_LOCALE_ID]
 			--  List all installed locales
 		local
 			i: INTEGER
@@ -43,7 +43,7 @@ feature --Access
 			end
 		end
 
-	lcid_to_locale_id(lcid: INTEGER):I18N_LOCALE_ID is
+	lcid_to_locale_id(lcid: INTEGER):I18N_LOCALE_ID
 			-- Only Windows Vista can manage to give you the correct identifier in one query.
 			-- Everyone else needs to take a crash course on how these identifiers are composed:
 			-- Typically we have: ll-RR where ll is a lowercase language code from ISO 639-1 (or 639-2/T)
@@ -76,7 +76,7 @@ feature --Access
 			create Result.make (iso639, iso3166, script)
 		end
 
-	locale_id_to_lcid(id: I18N_LOCALE_ID):INTEGER is
+	locale_id_to_lcid(id: I18N_LOCALE_ID):INTEGER
 			-- takes an locale id and returns corresponding LCID
 			-- if it returns 0 Something Is Wrong
 		require
@@ -136,7 +136,7 @@ feature {NONE}  -- LCIDS
 
 feature -- Initialisation
 
-	initialize_locales is
+	initialize_locales
 			-- populate locales array and scripts array
 		do
 			locales := <<
@@ -372,7 +372,7 @@ feature -- Initialisation
 feature {NONE} -- C functions
 
 
-	is_valid_locale(lcid:INTEGER; flags:INTEGER):BOOLEAN is
+	is_valid_locale(lcid:INTEGER; flags:INTEGER):BOOLEAN
 			-- encapsulation of IsValidLocaleName
 		external
 			"C signature (LCID, DWORD): BOOL use <windows.h>"
@@ -383,7 +383,7 @@ feature {NONE} -- C functions
 invariant
 	locales /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

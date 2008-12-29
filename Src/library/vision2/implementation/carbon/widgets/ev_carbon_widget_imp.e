@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,21 +29,21 @@ inherit
 
 feature -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences, redefined by descendants
 		do
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	is_parentable: BOOLEAN is
+	is_parentable: BOOLEAN
 			-- May Current be parented?
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 			-- Initialize `c_object'
 		do
 			set_is_initialized (True)
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal position of the client area on screen,
 		local
 			err : INTEGER
@@ -66,7 +66,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := point.x.rounded
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical position of the client area on screen,
 		local
 			err : INTEGER
@@ -81,7 +81,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := point.y.rounded
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
 		local
@@ -95,7 +95,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := origin.x.rounded
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
 		local
@@ -109,7 +109,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := origin.y.rounded
 		end
 
-	minimum_width, real_minimum_width: INTEGER is
+	minimum_width, real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			minimum_size : CGSIZE_STRUCT
@@ -124,7 +124,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := minimum_size.width.rounded.max (1)
 		end
 
-	minimum_height, real_minimum_height: INTEGER is
+	minimum_height, real_minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			minimum_size : CGSIZE_STRUCT
@@ -142,17 +142,17 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		do
 		end
 
-	set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'.
 		do
 		end
 
-	set_focus is
+	set_focus
 			-- Grab keyboard focus.
 		local
 			window : POINTER
@@ -165,7 +165,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--err := set_keyboard_focus_external ( window, c_object, {CONTROLS_ANON_ENUMS}.kcontrolentirecontrol )
 		end
 
-	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		do
 		end
@@ -174,12 +174,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		do
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size measured in pixels.
 		local
 			a_rect : CGRECT_STRUCT
@@ -194,7 +194,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := Result.max( minimum_width )
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size measured in pixels.
 		local
 			a_rect : CGRECT_STRUCT
@@ -209,7 +209,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := Result.max (minimum_height)
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 		do
 		end
@@ -218,7 +218,7 @@ feature --{EV_BOX_IMP} --Box specific
 
 	expandable : BOOLEAN
 
-	set_expandable ( value : BOOLEAN ) is
+	set_expandable ( value : BOOLEAN )
 			-- set expandable
 		do
 			expandable := value
@@ -226,7 +226,7 @@ feature --{EV_BOX_IMP} --Box specific
 
 feature -- Helper features
 
-	get_control_data_boolean (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER): BOOLEAN is
+	get_control_data_boolean (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER): BOOLEAN
 			-- get a boolean value with get_control_data
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -240,7 +240,7 @@ feature -- Helper features
 			]"
 		end
 
-		set_control_data_boolean (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER;  value : BOOLEAN): INTEGER is
+		set_control_data_boolean (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER;  value : BOOLEAN): INTEGER
 			-- set a boolean value with set_control_data
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -255,12 +255,12 @@ feature -- Helper features
 
 feature -- Status report
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 		do
 				Result := hiview_is_latently_visible_external ( c_object ).to_boolean
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Sequences of lines through `points'."
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_coordinates (coords: ARRAY [EV_COORDINATE]) is
+	make_with_coordinates (coords: ARRAY [EV_COORDINATE])
 			-- Initialize with points in `coords'.
 		require
 			coords_exist: coords /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	start_angle: DOUBLE is
+	start_angle: DOUBLE
 			-- Angle that line begins on relative to world.
 		local
 			a_point: EV_RELATIVE_POINT
@@ -76,7 +76,7 @@ feature -- Status report
 			end
 		end
 
-	end_angle: DOUBLE is
+	end_angle: DOUBLE
 			-- Angle that line ends on relative to world.
 		local
 			a_point: EV_RELATIVE_POINT
@@ -90,7 +90,7 @@ feature -- Status report
 			end
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Returns number of lines this polyline has.
 		do
 			if points.count <= 1 then
@@ -106,7 +106,7 @@ feature -- Status report
 			Result_not_bigger_than_point_count: Result <= points.count
 		end
 
-	extract_line (index: INTEGER): EV_FIGURE_LINE is
+	extract_line (index: INTEGER): EV_FIGURE_LINE
 			-- Create a line-object for line with `index'.
 		require
 			index_within_bounds: index > 0 and then index <= line_count
@@ -124,7 +124,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_closed is
+	enable_closed
 			-- Set `is_closed' `True'.
 		do
 			is_closed := True
@@ -133,7 +133,7 @@ feature -- Status setting
 			is_closed: is_closed
 		end
 
-	disable_closed is
+	disable_closed
 			-- Set `is_closed' `False'.
 		do
 			is_closed := False
@@ -144,25 +144,25 @@ feature -- Status setting
 
 feature {EV_FIGURE_DRAWER} -- Implementation
 
-	start_point: EV_RELATIVE_POINT is
+	start_point: EV_RELATIVE_POINT
 			-- Point where `start_arrow' is drawn.
 		do
 			Result := points.i_th (1)
 		end
 
-	start_ref_point: EV_RELATIVE_POINT is
+	start_ref_point: EV_RELATIVE_POINT
 			-- Point that determines angle for `start_point'.
 		do
 			Result := points.i_th (2)
 		end
 
-	end_point: EV_RELATIVE_POINT is
+	end_point: EV_RELATIVE_POINT
 			-- Point where `end_arrow' is drawn.
 		do
 			Result := points.i_th (points.count)
 		end
 
-	end_ref_point: EV_RELATIVE_POINT is
+	end_ref_point: EV_RELATIVE_POINT
 			-- Point that determines angle for `end_point'.
 		do
 			Result := points.i_th (points.count - 1)
@@ -170,7 +170,7 @@ feature {EV_FIGURE_DRAWER} -- Implementation
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure? i.e. is it
 			-- on any of lines of this polyline?
 		local
@@ -204,7 +204,7 @@ feature -- Events
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

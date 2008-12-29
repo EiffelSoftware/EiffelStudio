@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,105 +12,105 @@ inherit
 
 feature -- Status Report
 
-	bind_to_object_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]): BOOLEAN is
+	bind_to_object_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `bind_to_object'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	bind_to_storage_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+	bind_to_storage_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `bind_to_storage'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	reduce_user_precondition (pbc: IBIND_CTX_INTERFACE; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	reduce_user_precondition (pbc: IBIND_CTX_INTERFACE; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `reduce'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	compose_with_user_precondition (pmk_right: IMONIKER_INTERFACE; f_only_if_not_generic: INTEGER; ppmk_composite: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	compose_with_user_precondition (pmk_right: IMONIKER_INTERFACE; f_only_if_not_generic: INTEGER; ppmk_composite: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `compose_with'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_user_precondition (f_forward: INTEGER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN is
+	enum_user_precondition (f_forward: INTEGER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_equal1_user_precondition (pmk_other_moniker: IMONIKER_INTERFACE): BOOLEAN is
+	is_equal1_user_precondition (pmk_other_moniker: IMONIKER_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `is_equal1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	hash_user_precondition (pdw_hash: INTEGER_REF): BOOLEAN is
+	hash_user_precondition (pdw_hash: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `hash'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_running_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pmk_newly_running: IMONIKER_INTERFACE): BOOLEAN is
+	is_running_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pmk_newly_running: IMONIKER_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `is_running'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_time_of_last_change_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD): BOOLEAN is
+	get_time_of_last_change_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_time_of_last_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	inverse_user_precondition (ppmk: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	inverse_user_precondition (ppmk: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `inverse'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	common_prefix_with_user_precondition (pmk_other: IMONIKER_INTERFACE; ppmk_prefix: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	common_prefix_with_user_precondition (pmk_other: IMONIKER_INTERFACE; ppmk_prefix: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `common_prefix_with'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	relative_path_to_user_precondition (pmk_other: IMONIKER_INTERFACE; ppmk_rel_path: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	relative_path_to_user_precondition (pmk_other: IMONIKER_INTERFACE; ppmk_rel_path: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `relative_path_to'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; ppsz_display_name: CELL [STRING]): BOOLEAN is
+	get_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; ppsz_display_name: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `get_display_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	parse_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	parse_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `parse_display_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_system_moniker_user_precondition (pdw_mksys: INTEGER_REF): BOOLEAN is
+	is_system_moniker_user_precondition (pdw_mksys: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `is_system_moniker'.
 			-- Redefine in descendants if needed.
 		do
@@ -119,7 +119,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]) is
+	bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -136,7 +136,7 @@ feature -- Basic Operations
 			valid_ppv_result: ppv_result.item /= Void
 		end
 
-	bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -153,7 +153,7 @@ feature -- Basic Operations
 			valid_ppv_obj: ppv_obj.item /= Void
 		end
 
-	reduce (pbc: IBIND_CTX_INTERFACE; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE]) is
+	reduce (pbc: IBIND_CTX_INTERFACE; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `dw_reduce_how_far' [in].  
@@ -171,7 +171,7 @@ feature -- Basic Operations
 			valid_ppmk_reduced: ppmk_reduced.item /= Void
 		end
 
-	compose_with (pmk_right: IMONIKER_INTERFACE; f_only_if_not_generic: INTEGER; ppmk_composite: CELL [IMONIKER_INTERFACE]) is
+	compose_with (pmk_right: IMONIKER_INTERFACE; f_only_if_not_generic: INTEGER; ppmk_composite: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pmk_right' [in].  
 			-- `f_only_if_not_generic' [in].  
@@ -185,7 +185,7 @@ feature -- Basic Operations
 			valid_ppmk_composite: ppmk_composite.item /= Void
 		end
 
-	enum (f_forward: INTEGER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is
+	enum (f_forward: INTEGER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE])
 			-- No description available.
 			-- `f_forward' [in].  
 			-- `ppenum_moniker' [out].  
@@ -198,7 +198,7 @@ feature -- Basic Operations
 			valid_ppenum_moniker: ppenum_moniker.item /= Void
 		end
 
-	is_equal1 (pmk_other_moniker: IMONIKER_INTERFACE) is
+	is_equal1 (pmk_other_moniker: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pmk_other_moniker' [in].  
 		require
@@ -207,7 +207,7 @@ feature -- Basic Operations
 
 		end
 
-	hash (pdw_hash: INTEGER_REF) is
+	hash (pdw_hash: INTEGER_REF)
 			-- No description available.
 			-- `pdw_hash' [out].  
 		require
@@ -217,7 +217,7 @@ feature -- Basic Operations
 
 		end
 
-	is_running (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pmk_newly_running: IMONIKER_INTERFACE) is
+	is_running (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pmk_newly_running: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -228,7 +228,7 @@ feature -- Basic Operations
 
 		end
 
-	get_time_of_last_change (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD) is
+	get_time_of_last_change (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD)
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -241,7 +241,7 @@ feature -- Basic Operations
 
 		end
 
-	inverse (ppmk: CELL [IMONIKER_INTERFACE]) is
+	inverse (ppmk: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `ppmk' [out].  
 		require
@@ -253,7 +253,7 @@ feature -- Basic Operations
 			valid_ppmk: ppmk.item /= Void
 		end
 
-	common_prefix_with (pmk_other: IMONIKER_INTERFACE; ppmk_prefix: CELL [IMONIKER_INTERFACE]) is
+	common_prefix_with (pmk_other: IMONIKER_INTERFACE; ppmk_prefix: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pmk_other' [in].  
 			-- `ppmk_prefix' [out].  
@@ -266,7 +266,7 @@ feature -- Basic Operations
 			valid_ppmk_prefix: ppmk_prefix.item /= Void
 		end
 
-	relative_path_to (pmk_other: IMONIKER_INTERFACE; ppmk_rel_path: CELL [IMONIKER_INTERFACE]) is
+	relative_path_to (pmk_other: IMONIKER_INTERFACE; ppmk_rel_path: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pmk_other' [in].  
 			-- `ppmk_rel_path' [out].  
@@ -279,7 +279,7 @@ feature -- Basic Operations
 			valid_ppmk_rel_path: ppmk_rel_path.item /= Void
 		end
 
-	get_display_name (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; ppsz_display_name: CELL [STRING]) is
+	get_display_name (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; ppsz_display_name: CELL [STRING])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -293,7 +293,7 @@ feature -- Basic Operations
 			valid_ppsz_display_name: ppsz_display_name.item /= Void
 		end
 
-	parse_display_name (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	parse_display_name (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -310,7 +310,7 @@ feature -- Basic Operations
 			valid_ppmk_out: ppmk_out.item /= Void
 		end
 
-	is_system_moniker (pdw_mksys: INTEGER_REF) is
+	is_system_moniker (pdw_mksys: INTEGER_REF)
 			-- No description available.
 			-- `pdw_mksys' [out].  
 		require
@@ -320,7 +320,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

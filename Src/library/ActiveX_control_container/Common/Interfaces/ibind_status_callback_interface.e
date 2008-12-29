@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,56 +12,56 @@ inherit
 
 feature -- Status Report
 
-	on_start_binding_user_precondition (dw_reserved: INTEGER; pib: IBINDING_INTERFACE): BOOLEAN is
+	on_start_binding_user_precondition (dw_reserved: INTEGER; pib: IBINDING_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `on_start_binding'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_priority_user_precondition (pn_priority: INTEGER_REF): BOOLEAN is
+	get_priority_user_precondition (pn_priority: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_priority'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_low_resource_user_precondition (reserved: INTEGER): BOOLEAN is
+	on_low_resource_user_precondition (reserved: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_low_resource'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_progress_user_precondition (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING): BOOLEAN is
+	on_progress_user_precondition (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING): BOOLEAN
 			-- User-defined preconditions for `on_progress'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_stop_binding_user_precondition (hresult: ECOM_HRESULT; sz_error: STRING): BOOLEAN is
+	on_stop_binding_user_precondition (hresult: ECOM_HRESULT; sz_error: STRING): BOOLEAN
 			-- User-defined preconditions for `on_stop_binding'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_bind_info_user_precondition (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD): BOOLEAN is
+	get_bind_info_user_precondition (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_bind_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_data_available_user_precondition (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD): BOOLEAN is
+	on_data_available_user_precondition (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD): BOOLEAN
 			-- User-defined preconditions for `on_data_available'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_object_available_user_precondition (riid: ECOM_GUID; punk: ECOM_INTERFACE): BOOLEAN is
+	on_object_available_user_precondition (riid: ECOM_GUID; punk: ECOM_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `on_object_available'.
 			-- Redefine in descendants if needed.
 		do
@@ -70,7 +70,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_start_binding (dw_reserved: INTEGER; pib: IBINDING_INTERFACE) is
+	on_start_binding (dw_reserved: INTEGER; pib: IBINDING_INTERFACE)
 			-- No description available.
 			-- `dw_reserved' [in].  
 			-- `pib' [in].  
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-	get_priority (pn_priority: INTEGER_REF) is
+	get_priority (pn_priority: INTEGER_REF)
 			-- No description available.
 			-- `pn_priority' [out].  
 		require
@@ -90,7 +90,7 @@ feature -- Basic Operations
 
 		end
 
-	on_low_resource (reserved: INTEGER) is
+	on_low_resource (reserved: INTEGER)
 			-- No description available.
 			-- `reserved' [in].  
 		require
@@ -99,7 +99,7 @@ feature -- Basic Operations
 
 		end
 
-	on_progress (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING) is
+	on_progress (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING)
 			-- No description available.
 			-- `ul_progress' [in].  
 			-- `ul_progress_max' [in].  
@@ -111,7 +111,7 @@ feature -- Basic Operations
 
 		end
 
-	on_stop_binding (hresult: ECOM_HRESULT; sz_error: STRING) is
+	on_stop_binding (hresult: ECOM_HRESULT; sz_error: STRING)
 			-- No description available.
 			-- `hresult' [in].  
 			-- `sz_error' [in].  
@@ -122,7 +122,7 @@ feature -- Basic Operations
 
 		end
 
-	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD) is
+	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD)
 			-- No description available.
 			-- `grf_bindf' [out].  
 			-- `pbindinfo' [in, out].  
@@ -135,7 +135,7 @@ feature -- Basic Operations
 
 		end
 
-	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD)
 			-- No description available.
 			-- `grf_bscf' [in].  
 			-- `dw_size' [in].  
@@ -151,7 +151,7 @@ feature -- Basic Operations
 
 		end
 
-	on_object_available (riid: ECOM_GUID; punk: ECOM_INTERFACE) is
+	on_object_available (riid: ECOM_GUID; punk: ECOM_INTERFACE)
 			-- No description available.
 			-- `riid' [in].  
 			-- `punk' [in].  
@@ -163,7 +163,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

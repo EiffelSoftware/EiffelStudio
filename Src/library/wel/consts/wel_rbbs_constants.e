@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rebar Band Style (RBBS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,49 +10,49 @@ class
 
 feature -- Access
 
-	Rbbs_break: INTEGER is
+	Rbbs_break: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_BREAK"
 		end
 
-	Rbbs_fixedsize: INTEGER is
+	Rbbs_fixedsize: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_FIXEDSIZE"
 		end
 
-	Rbbs_childedge: INTEGER is
+	Rbbs_childedge: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_CHILDEDGE"
 		end
 
-	Rbbs_hidden: INTEGER is
+	Rbbs_hidden: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_HIDDEN"
 		end
 
-	Rbbs_novert: INTEGER is
+	Rbbs_novert: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_NOVERT"
 		end
 
-	Rbbs_fixedbmp: INTEGER is
+	Rbbs_fixedbmp: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBBS_FIXEDBMP"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

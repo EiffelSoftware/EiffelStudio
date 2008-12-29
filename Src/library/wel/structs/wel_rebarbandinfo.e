@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a rebar control band."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,14 +49,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a band with no informations.
 		do
 			structure_make
 			set_cbsize (structure_size)
 		end
 
-	make_with_id (an_id: INTEGER) is
+	make_with_id (an_id: INTEGER)
 			-- Create a band with `an_id' as id.
 		do
 			make
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Array of flags that indicate which of the other
 			-- structure members contain valid data or which are
 			-- to be filled in. This member can be a combination
@@ -77,7 +77,7 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_fmask (item)
 		end
 
-	style: INTEGER is
+	style: INTEGER
 			-- Array of flags that specify the band style.
 			-- This value can be a combinaison of RBBS_* constants.
 			-- See class WEL_RBBS_CONSTANTS.
@@ -88,7 +88,7 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_fstyle (item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Item text
 		require
 			exists: exists
@@ -101,7 +101,7 @@ feature -- Access
 			end
 		end
 
-	length: INTEGER is
+	length: INTEGER
 			-- Current `length' of the band.
 		require
 			exists: exists
@@ -112,7 +112,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	id: INTEGER is
+	id: INTEGER
 			-- `id' of the band.
 		require
 			exists: exists
@@ -121,7 +121,7 @@ feature -- Access
 			Result := cwel_rebarbandinfo_get_wid (item)
 		end
 
-	child: WEL_WINDOW is
+	child: WEL_WINDOW
 			-- Child currently in the rebar.
 		require
 			exists: exists
@@ -133,7 +133,7 @@ feature -- Access
 			Result := window_of_item (hwnd)
 		end
 
-	child_minimum_width: INTEGER is
+	child_minimum_width: INTEGER
 			-- Minimum width required by the child.
 		require
 			exists: exists
@@ -144,7 +144,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	child_minimum_height: INTEGER is
+	child_minimum_height: INTEGER
 			-- Minimum width required by the child.
 		require
 			exists: exists
@@ -155,7 +155,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- foreground color used for the text of the
 			-- control
 		require
@@ -167,7 +167,7 @@ feature -- Access
 			color_not_void: Result /= Void
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 		require
@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_style (value: INTEGER) is
+	set_style (value: INTEGER)
 			-- Set `cbSize' (size of the structure) as `value'.
 		require
 			exists: exists
@@ -192,7 +192,7 @@ feature -- Element change
 			style_set: style = value
 		end
 
-	set_text (txt: STRING_GENERAL) is
+	set_text (txt: STRING_GENERAL)
 			-- Set `text' as `txt'.
 		require
 			exists: exists
@@ -206,7 +206,7 @@ feature -- Element change
 			text_set: text.is_equal (txt)
 		end
 
-	set_length (value: INTEGER) is
+	set_length (value: INTEGER)
 			-- Set `length' as `value'.
 		require
 			exists: exists
@@ -218,7 +218,7 @@ feature -- Element change
 			length_set: length = value
 		end
 
-	set_id (value: INTEGER) is
+	set_id (value: INTEGER)
 			-- Set `id' as `value'.
 		require
 			exists: exists
@@ -229,7 +229,7 @@ feature -- Element change
 			id_set: id = value
 		end
 
-	set_child (window: WEL_WINDOW) is
+	set_child (window: WEL_WINDOW)
 			-- Set `child' as `window'.
 			-- Do not use this features for controls as toolbars
 			-- that reposition themself automaticaly at a specific
@@ -245,7 +245,7 @@ feature -- Element change
 			window_set: child.is_equal (window)
 		end
 
-	set_unpositionable_child (window: WEL_WINDOW) is
+	set_unpositionable_child (window: WEL_WINDOW)
 			-- Set `child' as `window'.
 			-- Use this features for controls as toolbars
 			-- that reposition themself automaticaly at a specific
@@ -267,7 +267,7 @@ feature -- Element change
 			window_set: child.is_equal (window.parent)
 		end
 
-	set_child_minimum_width (value: INTEGER) is
+	set_child_minimum_width (value: INTEGER)
 			-- Set `child_minimum_width' as `value'.
 		require
 			exists: exists
@@ -279,7 +279,7 @@ feature -- Element change
 			value_set: child_minimum_width = value
 		end
 
-	set_child_minimum_height (value: INTEGER) is
+	set_child_minimum_height (value: INTEGER)
 			-- Set `child_minimum_height' as `value'.
 		require
 			exists: exists
@@ -291,7 +291,7 @@ feature -- Element change
 			value_set: child_minimum_height = value
 		end
 
-	set_foreground_color (color: WEL_COLOR_REF) is
+	set_foreground_color (color: WEL_COLOR_REF)
 			-- Set `foreground_color' as `color'.
 		require
 			exists: exists
@@ -303,7 +303,7 @@ feature -- Element change
 			color_set: foreground_color.is_equal (color)
 		end
 
-	set_background_color (color: WEL_COLOR_REF) is
+	set_background_color (color: WEL_COLOR_REF)
 			-- Set `background_color' as `color'.
 		require
 			exists: exists
@@ -315,7 +315,7 @@ feature -- Element change
 			color_set: background_color.is_equal (color)
 		end
 
-	set_background_bitmap (bmp: WEL_BITMAP) is
+	set_background_bitmap (bmp: WEL_BITMAP)
 			-- Set `background_bitmap' with `bmp'.
 		require
 			exists: exists
@@ -327,7 +327,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	clear_mask is
+	clear_mask
 			-- Clear the current `mask'.
 			-- Call it before to call a set_? feature when you
 			-- want to change only one parameter.
@@ -339,7 +339,7 @@ feature -- Basic operation
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_rebarbandinfo
@@ -347,19 +347,19 @@ feature -- Measurement
 
 feature {WEL_REBAR} -- Implementation
 
-	set_cch (value: INTEGER) is
+	set_cch (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
 		do
 			cwel_rebarbandinfo_set_cch (item, value)
 		end
 
-	set_cbsize (value: INTEGER) is
+	set_cbsize (value: INTEGER)
 			-- Set `cbSize' (size of the structure) as `value'.
 		do
 			cwel_rebarbandinfo_set_cbsize (item, value)
 		end
 
-	set_mask (a_mask: INTEGER) is
+	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- Internal use
 		do
@@ -375,154 +375,154 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_rebarbandinfo: INTEGER is
+	c_size_of_rebarbandinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"sizeof (REBARBANDINFO)"
 		end
 
-	cwel_rebarbandinfo_set_cbsize (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_cbsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_fmask (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_fmask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_fstyle (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_fstyle (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_clrfore (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_clrfore (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_clrback (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_clrback (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_lptext (ptr, value: POINTER) is
+	cwel_rebarbandinfo_set_lptext (ptr, value: POINTER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_cch (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_cch (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_iimage (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_iimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_hwndchild (ptr, value: POINTER) is
+	cwel_rebarbandinfo_set_hwndchild (ptr, value: POINTER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_cxminchild (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_cxminchild (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_cyminchild (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_cyminchild (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_cx (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_cx (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_hbmback (ptr: POINTER; bitmap: POINTER) is
+	cwel_rebarbandinfo_set_hbmback (ptr: POINTER; bitmap: POINTER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_set_wid (ptr: POINTER; value: INTEGER) is
+	cwel_rebarbandinfo_set_wid (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_cbsize (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_cbsize (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_fmask (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_fmask (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_fstyle (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_fstyle (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_clrfore (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_clrfore (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_clrback (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_clrback (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_lptext (ptr: POINTER): POINTER is
+	cwel_rebarbandinfo_get_lptext (ptr: POINTER): POINTER
 		external
 			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
-	cwel_rebarbandinfo_get_cch (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_cch (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_iimage (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_iimage (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_hwndchild (ptr: POINTER): POINTER is
+	cwel_rebarbandinfo_get_hwndchild (ptr: POINTER): POINTER
 		external
 			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
-	cwel_rebarbandinfo_get_cxminchild (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_cxminchild (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_cyminchild (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_cyminchild (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_cx (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_cx (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-	cwel_rebarbandinfo_get_hbmback (ptr: POINTER): POINTER is
+	cwel_rebarbandinfo_get_hbmback (ptr: POINTER): POINTER
 		external
 			"C [macro %"rebarbandinfo.h%"] (REBARBANDINFO *): EIF_POINTER"
 		end
 
-	cwel_rebarbandinfo_get_wid (ptr: POINTER): INTEGER is
+	cwel_rebarbandinfo_get_wid (ptr: POINTER): INTEGER
 		external
 			"C [macro %"rebarbandinfo.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

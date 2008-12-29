@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Preferences. This class should be used for creating a preference system for an application.
 			Briefly, preferences and their related attributes and values are stored at run-time in an
@@ -64,7 +64,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_storage (a_storage: PREFERENCES_STORAGE_I) is
+	make_with_storage (a_storage: PREFERENCES_STORAGE_I)
 			-- Create preferences based on underlying storage engine `a_storage'.
 		require
 			a_storage_not_void: a_storage /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			default_values_not_void: default_values /= Void
 		end
 
-	make_with_defaults_and_storage (a_defaults: ARRAY [STRING]; a_storage: PREFERENCES_STORAGE_I) is
+	make_with_defaults_and_storage (a_defaults: ARRAY [STRING]; a_storage: PREFERENCES_STORAGE_I)
 			-- Create preferences and initialize values from those in `a_defaults',
 			-- using `a_storage' as preferences underlying storage engine.
 		require
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			default_values_not_void: default_values /= Void
 		end
 
-	make is
+	make
 			-- This creation routine creates a location to store and retrieve preferences			
 			-- between sessions.  The location will be either a registry location of an XML file (depending
 			-- on the implementation chosen) and will be named based upon the name of the application.
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_empty)
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_location: STRING)
 			-- Create preferences and store them in the location `a_location' between sessions.
 			-- -- `a_location' is the path to either:
 			--		* the root registry key where preferences will be stored,
@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_with_location (a_location))
 		end
 
-	make_with_defaults_and_location (a_defaults: ARRAY [STRING]; a_location: STRING) is
+	make_with_defaults_and_location (a_defaults: ARRAY [STRING]; a_location: STRING)
 			-- Create preferences and initialize values from those in `a_defaults',
 			-- which is the path of one or more files that contain the default values.
 			-- Preferences will be stored in `a_location' between sessions, which is the
@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			load_defaults (a_defaults)
 		end
 
-	load_defaults (a_defaults: ARRAY [STRING]) is
+	load_defaults (a_defaults: ARRAY [STRING])
 			-- Initialize values from those in `a_defaults'.
 		require
 			default_not_void: a_defaults /= Void
@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 
 feature -- Importation
 
-	import_from_storage (a_storage: PREFERENCES_STORAGE_I) is
+	import_from_storage (a_storage: PREFERENCES_STORAGE_I)
 			-- Import preferences values from `a_storage'
 		require
 			a_storage_not_void: a_storage /= Void
@@ -195,7 +195,7 @@ feature -- Importation
 			end
 		end
 
-	export_to_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN) is
+	export_to_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN)
 			-- Import preferences values from `a_storage'
 		require
 			a_storage_not_void: a_storage /= Void
@@ -213,7 +213,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_save_defaults (a_flag: BOOLEAN) is
+	set_save_defaults (a_flag: BOOLEAN)
 			-- Set `save_defaults_to_store' with `a_flag'.
 		do
 			save_defaults_to_store := a_flag
@@ -223,7 +223,7 @@ feature -- Status Setting
 
 feature -- Manager
 
-	new_manager (a_namespace: STRING): PREFERENCE_MANAGER is
+	new_manager (a_namespace: STRING): PREFERENCE_MANAGER
 			-- Create a new preference manager with namespace `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -237,7 +237,7 @@ feature -- Manager
 			manager_added: managers.has (a_namespace)
 		end
 
-	manager (a_namespace: STRING): PREFERENCE_MANAGER is
+	manager (a_namespace: STRING): PREFERENCE_MANAGER
 			-- Associated manager to `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -249,7 +249,7 @@ feature -- Manager
 			result_not_void: Result /= Void
 		end
 
-	has_manager (a_namespace: STRING): BOOLEAN is
+	has_manager (a_namespace: STRING): BOOLEAN
 			-- Does Current contain manager with namespace `a_namespace'?
 		require
 			namespace_not_void: a_namespace /= Void
@@ -260,7 +260,7 @@ feature -- Manager
 
 feature {PREFERENCE_MANAGER} -- Element change
 
-	add_manager (a_manager: PREFERENCE_MANAGER) is
+	add_manager (a_manager: PREFERENCE_MANAGER)
 			-- Add manager.
 		require
 			manager_not_void: a_manager /= Void
@@ -273,7 +273,7 @@ feature {PREFERENCE_MANAGER} -- Element change
 
 feature -- Preference
 
-	get_preference (a_name: STRING): PREFERENCE is
+	get_preference (a_name: STRING): PREFERENCE
 			-- Fetch the preference with `a_name'.
 		require
 			name_not_void: a_name /= Void
@@ -285,13 +285,13 @@ feature -- Preference
 			result_not_void: Result /= Void
 		end
 
-	get_resource (a_name: STRING): PREFERENCE is
+	get_resource (a_name: STRING): PREFERENCE
 		obsolete "use get_preference instead of get_resource"
 		do
 			Result := get_preference (a_name)
 		end
 
-	get_preference_value_direct (a_name: STRING): STRING is
+	get_preference_value_direct (a_name: STRING): STRING
 			-- Fetch the preference string value with `a_name' directly from the underlying datastore.
 			-- Ignore values currently in `session_values' and `preferences'.  Use this if the
 			-- preference value has been changed externally and you need the updated value.
@@ -304,13 +304,13 @@ feature -- Preference
 			Result := preferences_storage.get_preference_value (a_name)
 		end
 
-	get_resource_value_direct (a_name: STRING): STRING is
+	get_resource_value_direct (a_name: STRING): STRING
 		obsolete "use get_preference_value_direct instead of get_resource_value_direct"
 		do
 			Result := get_preference_value_direct (a_name)
 		end
 
-	set_preference (a_name: STRING; a_preference: PREFERENCE) is
+	set_preference (a_name: STRING; a_preference: PREFERENCE)
 			-- Override current value of preference with `a_name' in `preferences'?
 		require
 			name_not_void: a_name /= Void
@@ -319,7 +319,7 @@ feature -- Preference
 			preferences.replace (a_preference, a_name)
 		end
 
-	has_preference (a_name: STRING): BOOLEAN is
+	has_preference (a_name: STRING): BOOLEAN
 			-- Does Current contain a preference with `a_name'?
 		require
 			name_not_void: a_name /= Void
@@ -327,13 +327,13 @@ feature -- Preference
 			Result := preferences.has (a_name)
 		end
 
-	has_resource (a_name: STRING): BOOLEAN is
+	has_resource (a_name: STRING): BOOLEAN
 		obsolete "use has_preference instead of has_resource"
 		do
 			Result := has_preference (a_name)
 		end
 
-	save_preference (a_preference: PREFERENCE) is
+	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to underlying data store.
 		require
 			preference_not_void: a_preference /= Void
@@ -349,32 +349,32 @@ feature -- Preference
 			end
 		end
 
-	save_preferences is
+	save_preferences
 			-- Commit all changes by saving the underlying data store.  Only save preferences
 			-- which are not using the default value.
 		do
 			save_preferences_using_storage (preferences_storage, True)
 		end
 
-	save_preferences_using_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN) is
+	save_preferences_using_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN)
 			-- Save all preferences value using `a_storage'.
 		do
 			a_storage.save_preferences (preferences.linear_representation, a_save_modified_values_only)
 		end
 
-	save_resource (a_preference: PREFERENCE) is
+	save_resource (a_preference: PREFERENCE)
 		obsolete "use save_preference instead of save_resource"
 		do
 			save_preference (a_preference)
 		end
 
-	save_resources is
+	save_resources
 		obsolete "use save_preferences instead of save_resources"
 		do
 			save_preferences
 		end
 
-	restore_defaults is
+	restore_defaults
 			-- Restore all preferences which have associated default values to their default values.
 		local
 			l_preference: PREFERENCE
@@ -397,7 +397,7 @@ feature -- Preference
 
 feature -- Storage access
 
-	preferences_storage_exists: BOOLEAN is
+	preferences_storage_exists: BOOLEAN
 			-- Does preferences storage exists ?
 		do
 			Result := preferences_storage.exists
@@ -415,7 +415,7 @@ feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_ST
 	preferences: HASH_TABLE [PREFERENCE, STRING]
 			-- Preferences part of Current.
 
-	resources: like preferences is
+	resources: like preferences
 		obsolete "use preferences instead of resources"
 		do
 			Result := preferences
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 	preferences_storage: PREFERENCES_STORAGE_I
 			-- Underlying preference storage.
 
-	extract_default_values (a_default_file_name: STRING) is
+	extract_default_values (a_default_file_name: STRING)
 			-- Extract from the default file the default values.  If a preference however exists in `preferences'
 			-- (i.e. saved in a previous session), then take this one instead.  Therefore the resulting list of
 			-- known preferences is a combination of defaults and user defined values.
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
     		end
 		end
 
-	load_default_attributes (xml_elem: XM_ELEMENT) is
+	load_default_attributes (xml_elem: XM_ELEMENT)
 			-- Load of data from `xml_elem'.
 		require
 			element_not_void: xml_elem /= Void
@@ -575,7 +575,7 @@ invariant
 	has_session_values: session_values /= Void
 	has_preferences_storage: preferences_storage /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

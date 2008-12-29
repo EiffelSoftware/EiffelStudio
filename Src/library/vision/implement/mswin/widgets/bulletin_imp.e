@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPbulletin"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -88,7 +88,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a bulletin.
 		do
 			create private_attributes
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	realize_current is
+	realize_current
 			-- Display a bulletin
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -116,7 +116,7 @@ feature -- Status setting
 			end
 		end;
 
-	show is
+	show
 			-- Show composite.
 		do
 			if
@@ -132,12 +132,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 		once
 			Result := "EvisionBulletin"
 		end
 
-	child_has_resized is
+	child_has_resized
 			-- Action to perform when a child
 			-- has changed size
 		do
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	default_position: BOOLEAN;
 			-- Is this to be centered around parent?
 
-	resize_for_shell is
+	resize_for_shell
 			-- Resize current widget if the parent is a shell.			
 		local
 			tw: TOP_IMP
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 
 	on_vertical_scroll_control,
 	on_horizontal_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Deliver scroll messages to control which they belong to
 		local
 			scroll_bar: WEL_SCROLL_BAR
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

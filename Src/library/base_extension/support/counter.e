@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Notion of counter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ feature -- Access
 	value: INTEGER
 			-- Counter value
 
-	next: INTEGER is
+	next: INTEGER
 			-- Next value
 		do
 			value := value + 1
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Settings
 
-	reset is
+	reset
 			-- Reset the counter
 		do
 			value := 0
@@ -29,7 +29,7 @@ feature -- Settings
 			value_set: value = 0
 		end
 
-	set_value (val: INTEGER) is
+	set_value (val: INTEGER)
 			-- Assign `val' to `value'.
 		do
 			value := val
@@ -37,7 +37,7 @@ feature -- Settings
 			value_set: value = val
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

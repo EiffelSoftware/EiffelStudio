@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "EiffelVision pixmap. Mswindows implementation for %
 				  %widget pixmap (drawable & self-displayable)"
 	legal: "See notice at end of class."
@@ -74,7 +74,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (other: EV_PIXMAP_IMP_DRAWABLE) is
+	make_with_drawable (other: EV_PIXMAP_IMP_DRAWABLE)
 			-- Create `Current' using attributes of `other'.
 		local
 			titled_window: EV_TITLED_WINDOW_IMP
@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 			other.safe_destroy
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			wel_make (default_parent, "EV_PIXMAP")
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 
 feature -- Loading/Saving
 
-	read_from_named_file (file_name: STRING_GENERAL) is
+	read_from_named_file (file_name: STRING_GENERAL)
 			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
@@ -204,7 +204,7 @@ feature -- Loading/Saving
 			update_display
 		end
 
- 	set_with_default is
+ 	set_with_default
 			-- Initialize `Current' with the default
 			-- pixmap (vision2 logo).
 			--
@@ -216,7 +216,7 @@ feature -- Loading/Saving
 
 feature -- Status setting
 
-	stretch (new_width, new_height: INTEGER) is
+	stretch (new_width, new_height: INTEGER)
 			-- Stretch `Current' to fit in size
 			-- `new_width' by `new_height'.
 		do
@@ -224,7 +224,7 @@ feature -- Status setting
 			update_display
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Resize the `Current'. If the new size
 			-- is smaller than the old one, the bitmap is
 			-- clipped.
@@ -235,20 +235,20 @@ feature -- Status setting
 
 feature -- Clearing and drawing operations
 
-	redraw is
+	redraw
 			-- Force `Current' to redraw itself.
 		do
 			update_display
 		end
 
-	clear is
+	clear
 			-- Erase `Current' with `background_color'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE}
 			update_display
 		end
 
-	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height' in `background_color'.
 		do
@@ -258,35 +258,35 @@ feature -- Clearing and drawing operations
 
 feature -- Drawing operations
 
-	flush is
+	flush
 			-- Execute any delayed calls to `expose_actions' without waiting
 			-- for next idle.
 		do
 			update
 		end
 
-	draw_point (x, y: INTEGER) is
+	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y)
 			update_display
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' at (`x', `y') using `font'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_text)
 			update_display
 		end
 
-	draw_segment (x1, y1, x2, y2: INTEGER) is
+	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x1, y1, x2, y2)
 			update_display
 		end
 
-	draw_straight_line (x1, y1, x2, y2: INTEGER) is
+	draw_straight_line (x1, y1, x2, y2: INTEGER)
 			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x1, y1, x2, y2)
@@ -297,7 +297,7 @@ feature -- Drawing operations
 		x,y : INTEGER;
 		a_vertical_radius, a_horizontal_radius: INTEGER;
 		a_start_angle, an_aperture: REAL
-	) is
+	)
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Start at `a_start_angle' and stop at `a_start_angle'
@@ -313,14 +313,14 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_pixmap)
 			update_display
 		end
 
-	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
@@ -328,7 +328,7 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+	draw_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER)
 			-- Draw an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
@@ -336,7 +336,7 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -349,7 +349,7 @@ feature -- Drawing operations
 		x, y: INTEGER;
 		a_vertical_radius, a_horizontal_radius: INTEGER;
 		a_start_angle, an_aperture: REAL
-	) is
+	)
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' +
@@ -370,7 +370,7 @@ feature -- Drawing operations
 
 feature -- Filling operations
 
-	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
 		do
@@ -378,7 +378,7 @@ feature -- Filling operations
 			update_display
 		end
 
-	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
+	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER)
 			-- Draw an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Fill with `background_color'.
@@ -390,7 +390,7 @@ feature -- Filling operations
 			update_display
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATE]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE])
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		do
@@ -401,7 +401,7 @@ feature -- Filling operations
 		x, y :INTEGER;
 		a_vertical_radius, a_horizontal_radius: INTEGER;
 		a_start_angle, an_aperture: REAL
-	) is
+	)
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' +
@@ -420,7 +420,7 @@ feature -- Filling operations
 
 feature {NONE} -- Implementation
 
-	copy_pixmap (other_interface: EV_PIXMAP) is
+	copy_pixmap (other_interface: EV_PIXMAP)
 			-- Update `Current' to have same appearence as `other_interface'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -430,14 +430,14 @@ feature {NONE} -- Implementation
 			invalidate_without_background
 		end
 
-	destroy is
+	destroy
 			-- Destroy the widget and the internal pixmaps
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE}
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Set the class background to NULL in order
 			-- to have full control on the WM_ERASEBKG event
 			-- (on_erase_background)
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_pointer (Default_pointer)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Process Wm_erasebkgnd message.
 		do
 				-- Disable the default windows processing.
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	update_display is
+	update_display
 			-- Update the screen.
 		do
 				-- If the bitmap is exposed, then ask for
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Windows events
 
-	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER] is
+	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER]
 			-- For `a_x', `a_y', give actual x and y and screen x and y.
 		local
 			pt: WEL_POINT
@@ -603,7 +603,7 @@ feature {NONE} -- Windows events
 			]
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -612,7 +612,7 @@ feature {NONE} -- Windows events
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -621,7 +621,7 @@ feature {NONE} -- Windows events
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- Redefined as the button press does not set the
 			-- focus automatically.
@@ -635,7 +635,7 @@ feature {NONE} -- Private Implementation
 	parented: BOOLEAN
 			-- Is the pixmap in a container?
 
-	on_parented is
+	on_parented
 			-- `Current' has just been added to a container
 			-- This has been redefined, as the Precursor updates
 			-- the implementation and we no longer need to perform this.
@@ -643,7 +643,7 @@ feature {NONE} -- Private Implementation
 			parented := True
 		end
 
-	on_orphaned is
+	on_orphaned
 			-- `Current' has just been removed from a container
 			-- This has been redefined, as the Precursor updates
 			-- the implementation and we no longer need to perform this.
@@ -651,14 +651,14 @@ feature {NONE} -- Private Implementation
 			parented := False
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style that memories the drawings.
 		do
 			Result := Ws_child + Ws_visible + Ws_clipchildren
 				+ Ws_clipsiblings
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
    			-- Standard style used to create the window class.
    			-- Can be redefined to return a user-defined style.
    		once
@@ -670,7 +670,7 @@ feature {NONE} -- Private Implementation
  	interface: EV_PIXMAP;
 			-- Interface for the bridge pattern.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

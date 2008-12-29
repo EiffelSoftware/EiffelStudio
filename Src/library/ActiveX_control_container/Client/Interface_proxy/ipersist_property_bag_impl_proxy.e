@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPersistPropertyBag' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ipersist_property_bag_impl_proxy_from_pointer(cpp_obj)
@@ -27,20 +27,20 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_class_id (p_class_id: ECOM_GUID) is
+	get_class_id (p_class_id: ECOM_GUID)
 			-- No description available.
 			-- `p_class_id' [out].  
 		do
 			ccom_get_class_id (initializer, p_class_id.item)
 		end
 
-	init_new is
+	init_new
 			-- No description available.
 		do
 			ccom_init_new (initializer)
 		end
 
-	load (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE) is
+	load (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE)
 			-- No description available.
 			-- `p_prop_bag' [in].  
 			-- `p_error_log' [in].  
@@ -70,7 +70,7 @@ feature -- Basic Operations
 			ccom_load (initializer, p_prop_bag_item, p_error_log_item)
 		end
 
-	save (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER) is
+	save (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER)
 			-- No description available.
 			-- `p_prop_bag' [in].  
 			-- `f_clear_dirty' [in].  
@@ -93,7 +93,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ipersist_property_bag_impl_proxy(initializer)
@@ -101,49 +101,49 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER) is
+	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](GUID *)"
 		end
 
-	ccom_init_new (cpp_obj: POINTER) is
+	ccom_init_new (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"]()"
 		end
 
-	ccom_load (cpp_obj: POINTER; p_prop_bag: POINTER; p_error_log: POINTER) is
+	ccom_load (cpp_obj: POINTER; p_prop_bag: POINTER; p_error_log: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](::IPropertyBag *,::IErrorLog *)"
 		end
 
-	ccom_save (cpp_obj: POINTER; p_prop_bag: POINTER; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER) is
+	ccom_save (cpp_obj: POINTER; p_prop_bag: POINTER; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](::IPropertyBag *,EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_delete_ipersist_property_bag_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ipersist_property_bag_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ipersist_property_bag_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ipersist_property_bag_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

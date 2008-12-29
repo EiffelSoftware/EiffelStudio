@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -16,13 +16,13 @@ inherit
 
 feature
 
-	create_any_local: INET_ADDRESS is
+	create_any_local: INET_ADDRESS
 			--
 		do
 			Result := impl.any_local_address
 		end
 
-	create_localhost: INET_ADDRESS is
+	create_localhost: INET_ADDRESS
 			--
 		local
 			localhostname: STRING
@@ -31,7 +31,7 @@ feature
 			Result := create_from_name (localhostname)
 		end
 
-	create_from_name (hostname: STRING): INET_ADDRESS is
+	create_from_name (hostname: STRING): INET_ADDRESS
 			--
 		local
 			r: ARRAY[INET_ADDRESS]
@@ -42,7 +42,7 @@ feature
 			end
 		end
 
-	create_from_address (address: ARRAY [NATURAL_8]) : INET_ADDRESS is
+	create_from_address (address: ARRAY [NATURAL_8]) : INET_ADDRESS
 			--
 		require
 			valid_address: address /= Void
@@ -61,7 +61,7 @@ feature
 			end
 		end
 
-	create_from_sockaddr (sockaddr: POINTER) : INET_ADDRESS is
+	create_from_sockaddr (sockaddr: POINTER) : INET_ADDRESS
 			--
 		require
 			valid_sockaddr: sockaddr /= default_pointer
@@ -81,7 +81,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	impl: INET_ADDRESS_IMPL is
+	impl: INET_ADDRESS_IMPL
 		once
 			if is_ipv6_available then
 				create {INET_ADDRESS_IMPL_V6} Result
@@ -90,9 +90,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	INT16SZ: INTEGER is 2
+	INT16SZ: INTEGER = 2
 
-    get_all_by_name (a_host: STRING): ARRAY[INET_ADDRESS] is
+    get_all_by_name (a_host: STRING): ARRAY[INET_ADDRESS]
     	local
     		ipv6_expected: BOOLEAN
     		host: STRING
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 	end
 
-    check_numeric_zone (s: STRING): INTEGER is
+    check_numeric_zone (s: STRING): INTEGER
     		--
     	local
     		percent: INTEGER
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    text_to_numeric_format_v4 (src: STRING): ARRAY [NATURAL_8] is
+    text_to_numeric_format_v4 (src: STRING): ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			end
     	end
 
-    text_to_numeric_format_v6 (src: STRING): ARRAY [NATURAL_8] is
+    text_to_numeric_format_v6 (src: STRING): ARRAY [NATURAL_8]
     	require
     		valid_src: src /= Void
     	local
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ARRAY [NATURAL_8] is
+	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): ARRAY [NATURAL_8]
 		local
 			i: INTEGER
 		do
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN is
+	is_ipv4_mapped_address (addr: ARRAY [NATURAL_8]): BOOLEAN
 		require
 			valid_addr: addr /= Void
 		do
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	hex_character_to_integer (c: CHARACTER): NATURAL_8 is
+	hex_character_to_integer (c: CHARACTER): NATURAL_8
 			--
 		do
 			if c >= '0' and then c <= '9' then
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	split (src: STRING; delimiter: CHARACTER): ARRAY[STRING] is
+	split (src: STRING; delimiter: CHARACTER): ARRAY[STRING]
 		require
     		valid_src: src /= Void
     	local
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dot_count (src: STRING): INTEGER is
+	dot_count (src: STRING): INTEGER
 			-- Returns the number of dot ('.') characters found in the given string
 
 		require
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_all_by_name_0 (host: STRING): ARRAY[INET_ADDRESS] is
+	get_all_by_name_0 (host: STRING): ARRAY[INET_ADDRESS]
 		local
 			ai: ADDRINFO
 			ia: INET_ADDRESS
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	getaddrinfo (host: STRING): ADDRINFO is
+	getaddrinfo (host: STRING): ADDRINFO
 		local
 			ext: C_STRING
 			p: POINTER
@@ -591,14 +591,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_getaddrinfo (hostname: POINTER): POINTER is
+	c_getaddrinfo (hostname: POINTER): POINTER
 		external
 			"C"
 		alias
 			"en_getaddrinfo"
 		end
 
-	get_sock_family (address: POINTER): INTEGER is
+	get_sock_family (address: POINTER): INTEGER
 			-- Get the family from the address structure.
 		external
 			"C"

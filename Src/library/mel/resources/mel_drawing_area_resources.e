@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Drawing Area resources."
@@ -12,7 +12,7 @@ class
 		
 feature -- Implementation
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNresizePolicy: POINTER is
+	XmNresizePolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNresizePolicy"
 		end;
 
-	XmRESIZE_NONE: INTEGER is
+	XmRESIZE_NONE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmRESIZE_NONE"
 		end;
 
-	XmRESIZE_GROW: INTEGER is
+	XmRESIZE_GROW: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmRESIZE_GROW"
 		end;
 
-	XmRESIZE_ANY: INTEGER is
+	XmRESIZE_ANY: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_INTEGER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmRESIZE_ANY"
 		end;
 
-	XmNexposeCallback: POINTER is
+	XmNexposeCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNexposeCallback"
 		end;
 
-	XmNinputCallback: POINTER is
+	XmNinputCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNinputCallback"
 		end;
 
-	XmNresizeCallback: POINTER is
+	XmNresizeCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawingA.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNresizeCallback"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

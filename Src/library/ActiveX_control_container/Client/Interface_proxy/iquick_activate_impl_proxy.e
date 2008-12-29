@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IQuickActivate' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iquick_activate_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
+	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD)
 			-- No description available.
 			-- `p_qa_container' [in].  
 			-- `p_qa_control' [out].  
@@ -35,14 +35,14 @@ feature -- Basic Operations
 			ccom_quick_activate (initializer, p_qa_container.item, p_qa_control.item)
 		end
 
-	set_content_extent (psizel: TAG_SIZEL_RECORD) is
+	set_content_extent (psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `psizel' [in].  
 		do
 			ccom_set_content_extent (initializer, psizel.item)
 		end
 
-	get_content_extent (psizel: TAG_SIZEL_RECORD) is
+	get_content_extent (psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `psizel' [out].  
 		do
@@ -51,7 +51,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iquick_activate_impl_proxy(initializer)
@@ -59,43 +59,43 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_quick_activate (cpp_obj: POINTER; p_qa_container: POINTER; p_qa_control: POINTER) is
+	ccom_quick_activate (cpp_obj: POINTER; p_qa_container: POINTER; p_qa_control: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"](ecom_control_library::tagQACONTAINER *,ecom_control_library::tagQACONTROL *)"
 		end
 
-	ccom_set_content_extent (cpp_obj: POINTER; psizel: POINTER) is
+	ccom_set_content_extent (cpp_obj: POINTER; psizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"](ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_get_content_extent (cpp_obj: POINTER; psizel: POINTER) is
+	ccom_get_content_extent (cpp_obj: POINTER; psizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"](ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_delete_iquick_activate_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iquick_activate_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iquick_activate_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iquick_activate_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

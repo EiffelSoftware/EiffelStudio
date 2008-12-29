@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision horizontal range. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Layout
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- Take a horizontal orientation
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -51,7 +51,7 @@ feature {NONE} -- Layout
 			]"
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		local
 			err : INTEGER
@@ -63,7 +63,7 @@ feature {NONE} -- Layout
 			Result := rect.bottom - rect.top
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := 37 -- Hardcoded value
@@ -74,7 +74,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_RANGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_HORIZONTAL_RANGE_IMP
 

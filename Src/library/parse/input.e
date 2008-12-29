@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Handling of input documents through a lexical analyzer"
@@ -24,7 +24,7 @@ create {INPUT}
 
 feature -- Initialisation
 
-	make is
+	make
 			-- Create an empty document
 		do
 			arrayed_list_make (0)
@@ -35,7 +35,7 @@ feature  -- Access
 	analyzer: LEXICAL;
 			-- Lexical analyzer used
 
-	keyword_code (s: STRING) : INTEGER is
+	keyword_code (s: STRING) : INTEGER
 			-- Keyword code corresponding to `s';
 			-- -1 if no specimen of `s' is found.
 		require
@@ -44,7 +44,7 @@ feature  -- Access
 			Result := analyzer.keyword_code (s)
 		end;
 
-	keyword_string (code: INTEGER): STRING is
+	keyword_string (code: INTEGER): STRING
 			-- Keyword string corresponding to `code'
 		require
 			lex_not_void: analyzer /= Void
@@ -52,7 +52,7 @@ feature  -- Access
 			Result := analyzer.keyword_string (code)
 		end;
 
-	set_lexical (lexical: LEXICAL) is
+	set_lexical (lexical: LEXICAL)
 			-- Designate `lexical' as the `analyzer' to be used.
 		require
 			lex_not_void: lexical /= Void
@@ -62,7 +62,7 @@ feature  -- Access
 
 feature  -- Status report
 
-	end_of_document : BOOLEAN is
+	end_of_document : BOOLEAN
 			-- Has end of document been reached?
 		do
 			Result := analyzer.end_of_text
@@ -70,7 +70,7 @@ feature  -- Status report
 
 feature  -- Status setting
 
-	set_input_file (filename: STRING) is
+	set_input_file (filename: STRING)
 			-- Set the name of the input file to be read
 			-- by the lexical analyzer.
 		require
@@ -81,7 +81,7 @@ feature  -- Status setting
 			analyzer.set_file (filename)
 		end;
 
-	set_input_string (stringname: STRING) is
+	set_input_string (stringname: STRING)
 			-- Set the name of the input string to be read
 			-- by the lexical analyzer.
 		do
@@ -90,7 +90,7 @@ feature  -- Status setting
 
 feature  -- Input
 
-	get_token is
+	get_token
 			-- Make next token accessible with ``token''
 		local
 			new_token: TOKEN
@@ -117,7 +117,7 @@ feature  -- Input
 			forth
 		end;
 	
-	retrieve_lex (filename: STRING) is
+	retrieve_lex (filename: STRING)
 			-- Retrieve `analyzer' from filename if exists.
 		require
 			name_not_void: filename /= Void
@@ -131,7 +131,7 @@ feature  -- Input
 
 feature  -- Output
 
-	out_list is
+	out_list
 			-- Output tokens recognized so far.
 		do
 			if not is_empty then
@@ -150,7 +150,7 @@ feature  -- Output
 		end;
 
 
-	raise_error (s: STRING) is
+	raise_error (s: STRING)
 			-- Print error message `s'.
 		do  
 			error_message.wipe_out;
@@ -168,25 +168,25 @@ feature  -- Output
 feature {NONE}
 
 
-	error_message : STRING is
+	error_message : STRING
 			-- Last error message output
 		once
 			create Result.make (120)
 		end
 
-	file_name : STRING is
+	file_name : STRING
 			-- Name of the file read by the lexical analyzer
 		do  
 			Result := analyzer.file_name
 		end;
 
-	line_number : INTEGER is
+	line_number : INTEGER
 			-- Line number of token
 		do
 			Result := analyzer.token_line_number
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

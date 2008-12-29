@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" An internal up-down control with a specific style.%
 		% Mswindows implementation."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 			-- No Ws_tabstop style otherwise, the focus is
 			-- lost when it is its turn.
@@ -35,12 +35,12 @@ feature {NONE} -- Implementation
 				Uds_setbuddyint | Uds_alignright
 		end
 
-	tooltip_window: WEL_WINDOW is
+	tooltip_window: WEL_WINDOW
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,105 +12,105 @@ inherit
 
 feature -- Status Report
 
-	show_context_menu_user_precondition (dw_id: INTEGER; ppt: TAG_POINT_RECORD; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): BOOLEAN is
+	show_context_menu_user_precondition (dw_id: INTEGER; ppt: TAG_POINT_RECORD; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `show_context_menu'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_host_info_user_precondition (p_info: X_DOCHOSTUIINFO_RECORD): BOOLEAN is
+	get_host_info_user_precondition (p_info: X_DOCHOSTUIINFO_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_host_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	show_ui_user_precondition (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE): BOOLEAN is
+	show_ui_user_precondition (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `show_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	hide_ui_user_precondition: BOOLEAN is
+	hide_ui_user_precondition: BOOLEAN
 			-- User-defined preconditions for `hide_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	update_ui_user_precondition: BOOLEAN is
+	update_ui_user_precondition: BOOLEAN
 			-- User-defined preconditions for `update_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN is
+	enable_modeless_user_precondition (f_enable: INTEGER): BOOLEAN
 			-- User-defined preconditions for `enable_modeless'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_doc_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN is
+	on_doc_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_doc_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_frame_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN is
+	on_frame_window_activate_user_precondition (f_activate: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_frame_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	resize_border_user_precondition (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_rame_window: INTEGER): BOOLEAN is
+	resize_border_user_precondition (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_rame_window: INTEGER): BOOLEAN
 			-- User-defined preconditions for `resize_border'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER): BOOLEAN is
+	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_option_key_path_user_precondition (pch_key: CELL [STRING]; dw: INTEGER): BOOLEAN is
+	get_option_key_path_user_precondition (pch_key: CELL [STRING]; dw: INTEGER): BOOLEAN
 			-- User-defined preconditions for `get_option_key_path'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_drop_target_user_precondition (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]): BOOLEAN is
+	get_drop_target_user_precondition (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_drop_target'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_external_user_precondition (pp_dispatch: CELL [ECOM_INTERFACE]): BOOLEAN is
+	get_external_user_precondition (pp_dispatch: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_external'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_url_user_precondition (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]): BOOLEAN is
+	translate_url_user_precondition (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `translate_url'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	filter_data_object_user_precondition (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE]): BOOLEAN is
+	filter_data_object_user_precondition (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `filter_data_object'.
 			-- Redefine in descendants if needed.
 		do
@@ -119,7 +119,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show_context_menu (dw_id: INTEGER; ppt: TAG_POINT_RECORD; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE) is
+	show_context_menu (dw_id: INTEGER; ppt: TAG_POINT_RECORD; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE)
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `ppt' [in].  
@@ -133,7 +133,7 @@ feature -- Basic Operations
 
 		end
 
-	get_host_info (p_info: X_DOCHOSTUIINFO_RECORD) is
+	get_host_info (p_info: X_DOCHOSTUIINFO_RECORD)
 			-- No description available.
 			-- `p_info' [in, out].  
 		require
@@ -144,7 +144,7 @@ feature -- Basic Operations
 
 		end
 
-	show_ui (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE) is
+	show_ui (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE)
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `p_active_object' [in].  
@@ -157,7 +157,7 @@ feature -- Basic Operations
 
 		end
 
-	hide_ui is
+	hide_ui
 			-- No description available.
 		require
 			hide_ui_user_precondition: hide_ui_user_precondition
@@ -165,7 +165,7 @@ feature -- Basic Operations
 
 		end
 
-	update_ui is
+	update_ui
 			-- No description available.
 		require
 			update_ui_user_precondition: update_ui_user_precondition
@@ -173,7 +173,7 @@ feature -- Basic Operations
 
 		end
 
-	enable_modeless (f_enable: INTEGER) is
+	enable_modeless (f_enable: INTEGER)
 			-- No description available.
 			-- `f_enable' [in].  
 		require
@@ -182,7 +182,7 @@ feature -- Basic Operations
 
 		end
 
-	on_doc_window_activate (f_activate: INTEGER) is
+	on_doc_window_activate (f_activate: INTEGER)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -191,7 +191,7 @@ feature -- Basic Operations
 
 		end
 
-	on_frame_window_activate (f_activate: INTEGER) is
+	on_frame_window_activate (f_activate: INTEGER)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -200,7 +200,7 @@ feature -- Basic Operations
 
 		end
 
-	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_rame_window: INTEGER) is
+	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_rame_window: INTEGER)
 			-- No description available.
 			-- `prc_border' [in].  
 			-- `p_uiwindow' [in].  
@@ -213,7 +213,7 @@ feature -- Basic Operations
 
 		end
 
-	translate_accelerator (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER) is
+	translate_accelerator (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER)
 			-- No description available.
 			-- `lpmsg' [in].  
 			-- `pguid_cmd_group' [in].  
@@ -228,7 +228,7 @@ feature -- Basic Operations
 
 		end
 
-	get_option_key_path (pch_key: CELL [STRING]; dw: INTEGER) is
+	get_option_key_path (pch_key: CELL [STRING]; dw: INTEGER)
 			-- No description available.
 			-- `pch_key' [out].  
 			-- `dw' [in].  
@@ -239,7 +239,7 @@ feature -- Basic Operations
 
 		end
 
-	get_drop_target (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]) is
+	get_drop_target (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE])
 			-- No description available.
 			-- `p_drop_target' [in].  
 			-- `pp_drop_target' [out].  
@@ -252,7 +252,7 @@ feature -- Basic Operations
 			valid_pp_drop_target: pp_drop_target.item /= Void
 		end
 
-	get_external (pp_dispatch: CELL [ECOM_INTERFACE]) is
+	get_external (pp_dispatch: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pp_dispatch' [out].  
 		require
@@ -264,7 +264,7 @@ feature -- Basic Operations
 			valid_pp_dispatch: pp_dispatch.item /= Void
 		end
 
-	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]) is
+	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING])
 			-- No description available.
 			-- `dw_translate' [in].  
 			-- `pch_urlin' [in].  
@@ -279,7 +279,7 @@ feature -- Basic Operations
 			valid_ppch_urlout: ppch_urlout.item /= Void
 		end
 
-	filter_data_object (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE]) is
+	filter_data_object (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE])
 			-- No description available.
 			-- `p_do' [in].  
 			-- `pp_doret' [out].  
@@ -292,7 +292,7 @@ feature -- Basic Operations
 			valid_pp_doret: pp_doret.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

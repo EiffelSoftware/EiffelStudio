@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class."; 
 	date: "$Date$";
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ create
 
 feature -- Initialization
 
-	make (an_override_s: OVERRIDE_S; oui_parent: COMPOSITE) is
+	make (an_override_s: OVERRIDE_S; oui_parent: COMPOSITE)
 			-- Create the widget
 		do
 			create private_attributes
@@ -59,7 +59,7 @@ feature -- Initialization
 			shell_height := 2 * window_border_width
 		end
 
-	realize is
+	realize
 			-- Realize current widget and children.
 		do
 			if not realized then
@@ -68,7 +68,7 @@ feature -- Initialization
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current widget.
 		do
 			make_top_with_coordinates ("", x, y, width + shell_width, height + shell_height)
@@ -77,7 +77,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is this widget popped up?
 		do
 			Result := exists and then shown
@@ -88,13 +88,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	child_has_resized is
+	child_has_resized
 			-- Notification from child of size change
 		do
 			set_enclosing_size
 		end
 
-	destroy (wid_list: LINKED_LIST [WIDGET])is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 		do
 			if insensitive_list /= Void then
 				set_windows_sensitive
@@ -102,7 +102,7 @@ feature -- Status setting
 			shell_destroy (wid_list)
 		end
 
-	popup is
+	popup
 			-- Popup widget
 		do
 			if not exists then
@@ -116,7 +116,7 @@ feature -- Status setting
 			set_enclosing_size
 		end
 
-	popdown is
+	popdown
 			-- Popdown widget
 		do
 			if insensitive_list /= Void then
@@ -128,7 +128,7 @@ feature -- Status setting
 			end
 		end
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
@@ -161,28 +161,28 @@ feature -- Status setting
 			end
 		end
 
-	unrealize is 
+	unrealize 
 		do
 			realized := false
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style
 		once
 			Result := Ws_border + Ws_popup -- Ws_visible + 
 		end
 
-	minimal_height, minimal_width: INTEGER is
+	minimal_height, minimal_width: INTEGER
 		do
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "EvisionOverrideShell"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

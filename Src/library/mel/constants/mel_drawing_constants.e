@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: 
 		"Constants used for drawing."
 	legal: "See notice at end of class.";
@@ -12,14 +12,14 @@ class
 
 feature -- Coordinate mode access
 
-	CoordModeOrigin: INTEGER is
+	CoordModeOrigin: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"CoordModeOrigin"
 		end;
 
-	CoordModePrevious: INTEGER is
+	CoordModePrevious: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -28,28 +28,28 @@ feature -- Coordinate mode access
 
 feature -- Shape access
 
-	Complex: INTEGER is
+	Complex: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Complex"
 		end;
 
-	Nonconvex: INTEGER is
+	Nonconvex: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Nonconvex"
 		end;
 
-	Convex: INTEGER is
+	Convex: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Convex"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

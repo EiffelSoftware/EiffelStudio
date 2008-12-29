@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "SToraGe TYpe flags"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Stgty_storage: INTEGER is
+	Stgty_storage: INTEGER
 			-- Storage object
 		external
 			"C [macro <objidl.h>]"
@@ -19,7 +19,7 @@ feature -- Access
 			"STGTY_STORAGE"
 		end
 		
-	Stgty_stream: INTEGER is
+	Stgty_stream: INTEGER
 			-- Stream object
 		external
 			"C [macro <objidl.h>]"
@@ -27,7 +27,7 @@ feature -- Access
 			"STGTY_STREAM"
 		end
 		
-	Stgty_lockbytes: INTEGER is
+	Stgty_lockbytes: INTEGER
 			-- Byte array object
 		external
 			"C [macro <objidl.h>]"
@@ -35,7 +35,7 @@ feature -- Access
 			"STGTY_LOCKBYTES"
 		end
 
-	is_valid_stgty (stgty: INTEGER): BOOLEAN is
+	is_valid_stgty (stgty: INTEGER): BOOLEAN
 			-- Is `stgty' a valid storage type flag?
 		do
 			Result := stgty = Stgty_storage or
@@ -43,7 +43,7 @@ feature -- Access
 						stgty = Stgty_lockbytes
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

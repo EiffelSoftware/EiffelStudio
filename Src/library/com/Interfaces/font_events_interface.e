@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Event interface for the Font object. OLE Automation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	font_changed_user_precondition (property_name: STRING): BOOLEAN is
+	font_changed_user_precondition (property_name: STRING): BOOLEAN
 			-- User-defined preconditions for `font_changed'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	font_changed (property_name: STRING) is
+	font_changed (property_name: STRING)
 			-- No description available.
 			-- `property_name' [in].
 		require
@@ -30,7 +30,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

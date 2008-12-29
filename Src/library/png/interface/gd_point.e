@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Point for a GIF structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (x1,y1: INTEGER) is
+	make (x1,y1: INTEGER)
 			-- Initialize
 		require
 			x_positive: x1 >= 0
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Internal Structure 
 
-	internal_make is
+	internal_make
 			-- Allocate `item'
 		do
 			item := c_alloc (1, c_size_of_point)
@@ -41,7 +41,7 @@ feature -- Internal Structure
 			--shared := False
 		end
 
-	set_x ( i: INTEGER ) is
+	set_x ( i: INTEGER )
 			-- Set coord x with 'i'
 		require
 			possible: i>=0
@@ -49,7 +49,7 @@ feature -- Internal Structure
 			c_point_set_x(item, i) 
 		end
 
-	set_y (i: INTEGER ) is
+	set_y (i: INTEGER )
 			-- Set coord y with 'i'
 		require
 			possible: i>=0
@@ -59,13 +59,13 @@ feature -- Internal Structure
 
 feature -- Access
 
-	get_x: INTEGER is
+	get_x: INTEGER
 			-- Get coord x of Current
 		do
 			Result := c_point_get_x(item)
 		end
 
-	get_y: INTEGER is
+	get_y: INTEGER
 			-- Get coord y of Current
 		do
 			Result := c_point_get_y(item)
@@ -78,7 +78,7 @@ feature {GIF_POINT, GIF_IMAGE} -- Implementation
 
 	item: POINTER
 
-	dispose is
+	dispose
 			-- Free C Structure that Current encapsulates
 		do
 			free(item)	
@@ -86,7 +86,7 @@ feature {GIF_POINT, GIF_IMAGE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_alloc (a_num, a_size: INTEGER): POINTER is
+	c_alloc (a_num, a_size: INTEGER): POINTER
 		-- C calloc
 		external
 			"C (size_t, size_t): EIF_POINTER | <malloc.h>"
@@ -94,7 +94,7 @@ feature {NONE} -- Externals
 			"calloc"
 		end
 
-	c_free (p: POINTER) is
+	c_free (p: POINTER)
 		-- Free C Structure that Current encapsulates
 		external
 			"C"
@@ -102,40 +102,40 @@ feature {NONE} -- Externals
 			"free"
 		end
 
-	c_point_get_x (p: POINTER): INTEGER is
+	c_point_get_x (p: POINTER): INTEGER
 		-- Get x
 		external
 			"C [macro <eiffel_png_point.h>]"
 		end
 
-	c_point_get_y (p: POINTER): INTEGER is
+	c_point_get_y (p: POINTER): INTEGER
 		-- Get x
 		external
 			"C [macro <eiffel_png_point.h>]"
 		end
 
 
-	c_point_set_x (p: POINTER; i: INTEGER) is
+	c_point_set_x (p: POINTER; i: INTEGER)
 		-- Set x
 		external
 			"C [macro <eiffel_png_point.h>]"
 		end
 
-	c_point_set_y (p: POINTER; i: INTEGER) is
+	c_point_set_y (p: POINTER; i: INTEGER)
 		-- Set x
 		external
 			"C [macro <eiffel_png_point.h>]"
 		end
 
 
-	c_size_of_point: INTEGER is
+	c_size_of_point: INTEGER
 		external
 			"C [macro <eiffel_png_point.h>]"
 		alias
 			"sizeof (gdPoint)"
 		end
 
-	c_enomem is
+	c_enomem
 			-- Eiffel run-time function to raise an
 			-- "Out of memory" exception.
 		external
@@ -147,7 +147,7 @@ feature {NONE} -- Externals
 invariant
 	item_exists: item /= DEFAULT_POINTER
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

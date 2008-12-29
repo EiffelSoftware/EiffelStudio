@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_strings (c: EDITOR_CURSOR; s1,s2: STRING_GENERAL; w: EDITABLE_TEXT) is
+	make_from_strings (c: EDITOR_CURSOR; s1,s2: STRING_GENERAL; w: EDITABLE_TEXT)
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
@@ -38,22 +38,22 @@ feature -- Access
 
 feature -- Element change
 
-	extend_old (c: CHARACTER_32) is
+	extend_old (c: CHARACTER_32)
 		do
 			old_message.extend (c)
 		end
 
-	extend_new (c: CHARACTER_32) is
+	extend_new (c: CHARACTER_32)
 		do
 			new_message.extend (c)
 		end
 
-	prepend_old  (c: CHARACTER_32) is
+	prepend_old  (c: CHARACTER_32)
 		do
 			old_message.precede (c)
 		end
 
-	extend_both (c1, c2: CHARACTER_32) is
+	extend_both (c1, c2: CHARACTER_32)
 		do
 			old_message.extend (c1)
 			new_message.extend (c2)
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	undo is
+	undo
 		local
 			cur: EDITOR_CURSOR
 		do
@@ -72,7 +72,7 @@ feature -- Basic operations
 			text.insert_string_at_cursor_pos (old_message)
 		end
 
-	redo is
+	redo
 		local
 			cur: EDITOR_CURSOR
 		do
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 
 	text : EDITABLE_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

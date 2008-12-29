@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Base class for items for use with EV_TOOL_BAR.
@@ -19,13 +19,13 @@ inherit
 
 feature -- Access
 
-	parent: EV_TOOL_BAR is
+	parent: EV_TOOL_BAR
 			-- Contains `Current'.
 		do
 			Result ?= Precursor {EV_ITEM}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

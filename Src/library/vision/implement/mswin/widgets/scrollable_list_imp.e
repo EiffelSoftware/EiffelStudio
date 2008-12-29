@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scrollable lists"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -101,7 +101,7 @@ create
 feature -- Initialization
 
 	make (a_scrollable_list: SCROLLABLE_LIST; is_managed, is_fixed: BOOLEAN;
-			oui_parent: COMPOSITE) is
+			oui_parent: COMPOSITE)
 		do
 			ll_make (10)
 			create private_attributes
@@ -113,7 +113,7 @@ feature -- Initialization
 			fixed_size_flag := is_fixed
 		end
 
-	realize is
+	realize
 			-- Realize the list box.
 		do
 			if not realized then
@@ -148,7 +148,7 @@ feature -- Initialization
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Destroy the list box.
 		do
 			wel_destroy
@@ -156,7 +156,7 @@ feature -- Initialization
 
 feature  -- Access
 
-	scroll_to_current is
+	scroll_to_current
 			-- Scroll to currently selected item.
 		do
 			if realized and then selected then
@@ -168,7 +168,7 @@ feature  -- Access
 			end
 		end
 
-	deselect_i_th (a_index: INTEGER) is
+	deselect_i_th (a_index: INTEGER)
 			-- Deselect item at position `a_index' if selected.
 		do
 			if is_selected (a_index - 1) then
@@ -176,7 +176,7 @@ feature  -- Access
 			end
 		end
 
-	deselect_item is
+	deselect_item
 			-- Deselect current item if selected.
 		do
 			if is_selected (index - 1) then
@@ -184,7 +184,7 @@ feature  -- Access
 			end
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is there at least one item selected?
 		do
 			if wel_item /= default_pointer then
@@ -197,7 +197,7 @@ feature  -- Access
 			end
 		end
 
-	count_selected_items: INTEGER is
+	count_selected_items: INTEGER
 			-- Number of items selected
 		require
 			exits: exists
@@ -210,7 +210,7 @@ feature  -- Access
 			result_small_enough: Result <= count
 		end
 
-	select_item_at (a_index: INTEGER) is
+	select_item_at (a_index: INTEGER)
 			-- Select item at position `a_index'.
 		do
 			if multiple_selection then
@@ -222,7 +222,7 @@ feature  -- Access
 			selected: not multiple_selection implies selected
 		end
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected items in current list
 		do
 			if multiple_selection then
@@ -232,7 +232,7 @@ feature  -- Access
 			end
 		end
 
-	selected_item: SCROLLABLE_LIST_ELEMENT is
+	selected_item: SCROLLABLE_LIST_ELEMENT
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		do
@@ -247,7 +247,7 @@ feature  -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
+	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
 			-- Selected items
 		do
 			if selected then
@@ -268,7 +268,7 @@ feature  -- Access
 			end
 		end
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- Position of the first selected item, if in multiple_selection mode
@@ -283,14 +283,14 @@ feature  -- Access
 			end
 		end
 
-	selected_positions: LINKED_LIST [INTEGER] is
+	selected_positions: LINKED_LIST [INTEGER]
 			-- Positions of the selected items
 			-- Void if single selection
 		do
 			Result := private_selected_positions
 		end
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 			-- Number of visible item of list
 		do
 			Result := private_visible_item_count
@@ -302,7 +302,7 @@ feature -- Status report
 			-- Is the list capable of multiple selection?
 
 feature -- Default action callbacks
-	add_default_action (a_command: COMMAND; argument: ANY) is
+	add_default_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute
 			-- when items are selected with double click or by
 			-- pressing 'RETURN'
@@ -311,7 +311,7 @@ feature -- Default action callbacks
 			default_actions.add (Current, a_command, argument)
 		end
 
-	remove_default_action  is
+	remove_default_action
 			-- Remove all actions executed
 			-- when items are selected with click double click or by
 			-- pressing 'RETURN'
@@ -324,7 +324,7 @@ feature -- Default action callbacks
 
 feature -- Status setting
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute
 			-- when items are selected with click selection mode
 			-- in current scroll list.
@@ -332,7 +332,7 @@ feature -- Status setting
 			selection_change_actions.add (Current, a_command, argument)
 		end
 
-	deselect_all is
+	deselect_all
 			-- Deselect all selected items.
 		do
 			if realized then
@@ -349,7 +349,7 @@ feature -- Status setting
 			end
 		end
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute
 			-- when items are selected with click selection mode in
 			-- current scroll list.
@@ -358,31 +358,31 @@ feature -- Status setting
 				argument)
 		end
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		do
 			private_select (index)
 		end
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		do
 			private_select (i)
 		end
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set the selection to multiple items
 		do
 			multiple_selection := True
 		end
 
-	set_single_selection is
+	set_single_selection
 			-- Set the selection to single items
 		do
 			multiple_selection := False
 		end
 
-	set_visible_item_count (a_count: INTEGER) is
+	set_visible_item_count (a_count: INTEGER)
 			-- Set the number of visible items to `a_count'.
 		do
 			private_visible_item_count := a_count
@@ -391,7 +391,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to closest `new_height' possible
 			-- and the width to `new_width'.
 		local
@@ -414,7 +414,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set the width to `new_width'
 		do
 			has_width := True
@@ -427,7 +427,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set the height to closest `new_height' possible.
 		local
 			a_visible_count: INTEGER
@@ -446,7 +446,7 @@ feature -- Status setting
 			end
 		end
 
-	valid_height (a_height: INTEGER): BOOLEAN is
+	valid_height (a_height: INTEGER): BOOLEAN
 			-- Is `a_height' valid?
 		do
 			Result := (count * item_height + 2 * Border_height) = a_height
@@ -454,7 +454,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	extend (an_item: SCROLLABLE_LIST_ELEMENT) is
+	extend (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Add `an_item' to end.
 			-- Do not move cursor.
 		do
@@ -464,7 +464,7 @@ feature -- Element change
 			end
 		end
 
-	put_right (an_item: SCROLLABLE_LIST_ELEMENT) is
+	put_right (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Add `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -474,7 +474,7 @@ feature -- Element change
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			ll_wipe_out
@@ -483,7 +483,7 @@ feature -- Element change
 			end
 		end
 
-	prune (an_item: SCROLLABLE_LIST_ELEMENT) is
+	prune (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Remove first occurrence of `an_item', if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor;
@@ -504,7 +504,7 @@ feature -- Element change
 			end
 		end
 
-	put_front (an_item: SCROLLABLE_LIST_ELEMENT) is
+	put_front (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Add `an_item' to beginning.
 			-- Do not move cursor.
 		do
@@ -514,7 +514,7 @@ feature -- Element change
 			end
 		end
 
-	put_i_th (an_item: SCROLLABLE_LIST_ELEMENT; i: INTEGER) is
+	put_i_th (an_item: SCROLLABLE_LIST_ELEMENT; i: INTEGER)
 			-- Replace `i'-th item, if in index interval, by `an_item'.
 			-- Do not move cursor.
 		local
@@ -526,7 +526,7 @@ feature -- Element change
 			go_to (pos)
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
@@ -537,7 +537,7 @@ feature -- Element change
 			ll_remove
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -547,7 +547,7 @@ feature -- Element change
 			ll_remove_right
 		end
 
-	put_left (an_item: SCROLLABLE_LIST_ELEMENT) is
+	put_left (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Add `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -557,7 +557,7 @@ feature -- Element change
 			end
 		end
 
-	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
+	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT])
 			-- Append a copy of `s'.
 		local
 			l: like s
@@ -576,7 +576,7 @@ feature -- Element change
 			end
 		end
 
-	replace (an_item: SCROLLABLE_LIST_ELEMENT) is
+	replace (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Replace current item by `v'.
 		do
 			if realized then
@@ -588,7 +588,7 @@ feature -- Element change
 			ll_replace (an_item)
 		end
 
-	prune_all (an_item: SCROLLABLE_LIST_ELEMENT) is
+	prune_all (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Remove all occurrences of `an_item'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -615,7 +615,7 @@ feature -- Element change
 			ll_prune_all (an_item)
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
@@ -632,7 +632,7 @@ feature -- Element change
 			ll_merge_left (other)
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -653,13 +653,13 @@ feature -- Element change
 			ll_merge_right (other)
 		end
 
-	force (an_item: SCROLLABLE_LIST_ELEMENT) is
+	force (an_item: SCROLLABLE_LIST_ELEMENT)
 			-- Add `an_item' to end.
 		do
 			extend (an_item)
 		end
 
-	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT]) is
+	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT])
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
@@ -680,7 +680,7 @@ feature -- Element change
 			ll_fill (other)
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 	private_scroll_width: INTEGER
 			-- Scrollable width of the list box
 
-	private_select (i: INTEGER) is
+	private_select (i: INTEGER)
 			-- Selection of item `i'
 		require
 			positive_i: i > 0
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	private_deselect (a_index: INTEGER) is
+	private_deselect (a_index: INTEGER)
 			-- Deselect item at position `a_index' and
 			-- update private attributes.
 		require
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 			not_item_selected: not is_selected (a_index - 1)
 		end
 
-	private_add (s: STRING; pos: INTEGER) is
+	private_add (s: STRING; pos: INTEGER)
 			-- Add a string and resize if necessary.
 		local
 			a_font_windows: FONT_IMP
@@ -773,7 +773,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	private_delete (pos: INTEGER) is
+	private_delete (pos: INTEGER)
 			-- Delete a string and resize if necessary.
 		require
 			exists: exists
@@ -811,7 +811,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	longest_string_width: INTEGER is
+	longest_string_width: INTEGER
 			-- Width of the longest string
 		local
 			i: INTEGER
@@ -829,7 +829,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unselect_all_items is
+	unselect_all_items
 			-- Unselect all the selected items.
 		require
 			exists: exists
@@ -840,7 +840,7 @@ feature {NONE} -- Implementation
 			count_items_selected: count_selected_items = 0
 		end
 
-	unselect_items (start_index, end_index: INTEGER) is
+	unselect_items (start_index, end_index: INTEGER)
 			-- Unselect items between `start_index'
 			-- and `end_index' (zero-based index).
 		require
@@ -860,7 +860,7 @@ feature {NONE} -- Implementation
 			no_selection: count_selected_items = 0
 		end
 
-	unselect_single_item is
+	unselect_single_item
 			-- Unselect the selected item.
 		require
 			exists: exists
@@ -872,7 +872,7 @@ feature {NONE} -- Implementation
 			unselected: not selected
 		end
 
-	update_private_selection is
+	update_private_selection
 			-- Updates the private selection
 		local
 			i: INTEGER
@@ -905,7 +905,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	on_lbn_selchange is
+	on_lbn_selchange
 			-- The selection is changed, update the
 			-- private attributes.
 
@@ -920,7 +920,7 @@ feature {NONE} -- Implementation
 		--	end
 		end
 
-	on_lbn_errspace is
+	on_lbn_errspace
 			-- Cannot allocate enough memory
 			-- to meet a specific request
 		local
@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 				% perform request!", "Error")
 		end
 
-	on_lbn_dblclk is
+	on_lbn_dblclk
 			-- List item is double clicked
 			-- This feature implements the default action together
 			-- with feature on_key_down
@@ -939,7 +939,7 @@ feature {NONE} -- Implementation
 			default_actions.execute (Current, Void)
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- a key is pressed when an item is selected.
 			-- This procedure checks if the pressed key is
 			-- 'RETURN' and executes the default action then.
@@ -952,7 +952,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -967,13 +967,13 @@ feature {NONE} -- Implementation
 	has_height: BOOLEAN
 			-- Is the default height overruled?
 
-	Border_height: INTEGER is
+	Border_height: INTEGER
 			-- Height of the border
 		once
 			Result := window_border_height
 		end
 
-	create_list_box is
+	create_list_box
 			-- Create the list
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -985,7 +985,7 @@ feature {NONE} -- Implementation
 			wel_make (wc, x, y, width, height, id_default)
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Style for creation
 		do
 			if multiple_selection then
@@ -1001,13 +1001,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Extended style for creation
 		do
 			Result := Ws_ex_clientedge
 		end
 
-	fill_list_box is
+	fill_list_box
 			-- Fill the box with the items.
 		local
 			pos: INTEGER
@@ -1028,7 +1028,7 @@ feature {NONE} -- Implementation
 			consistent_count: count = wel_count
 		end
 
-	select_the_items is
+	select_the_items
 			-- Select the selected items in the list box.
 		do
 			if multiple_selection then
@@ -1049,7 +1049,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_widget_default is
+	set_widget_default
 			-- Set the defaults for current widget.
 		local
 			sl: SCROLLABLE_LIST
@@ -1064,7 +1064,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

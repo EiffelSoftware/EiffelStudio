@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List box which can have multiple selections."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,13 +22,13 @@ create
 
 feature -- Status setting
 
-	select_item (index: INTEGER) is
+	select_item (index: INTEGER)
 			-- Select item at the zero-based `index'.
 		do
 			{WEL_API}.send_message (item, Lb_setsel, to_wparam (1), to_lparam (index))
 		end
 
-	unselect_item (index: INTEGER) is
+	unselect_item (index: INTEGER)
 			-- Unselect item at the zero-based `index'.
 		require
 			exists: exists
@@ -40,7 +40,7 @@ feature -- Status setting
 			is_not_selected: not is_selected (index)
 		end
 
-	select_items (start_index, end_index: INTEGER) is
+	select_items (start_index, end_index: INTEGER)
 			-- Select items between `start_index'
 			-- and `end_index' (zero-based index).
 		require
@@ -60,7 +60,7 @@ feature -- Status setting
 			-- `is_selected' (`i') = True
 		end
 
-	unselect_items (start_index, end_index: INTEGER) is
+	unselect_items (start_index, end_index: INTEGER)
 			-- Unselect items between `start_index'
 			-- and `end_index' (zero-based index).
 		require
@@ -80,7 +80,7 @@ feature -- Status setting
 			-- `is_selected' (`i') = False
 		end
 
-	select_all is
+	select_all
 			-- Select all items.
 		require
 			exists: exists
@@ -90,7 +90,7 @@ feature -- Status setting
 			all_selected: count_selected_items = count
 		end
 
-	unselect_all is
+	unselect_all
 			-- Unselect all the selected items.
 		require
 			exists: exists
@@ -100,7 +100,7 @@ feature -- Status setting
 			all_unselected: count_selected_items = 0
 		end
 
-	set_caret_index (index: INTEGER; scrolling: BOOLEAN) is
+	set_caret_index (index: INTEGER; scrolling: BOOLEAN)
 			-- Set the focus rectangle to the item at the
 			-- specified zero-based `index'. If `scrolling' is
 			-- True the item is scrolled until it is at least
@@ -124,13 +124,13 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is at least one item selected?
 		do
 			Result := count_selected_items > 0
 		end
 
-	count_selected_items: INTEGER is
+	count_selected_items: INTEGER
 			-- Number of items selected
 		require
 			exits: exists
@@ -143,7 +143,7 @@ feature -- Status report
 			result_small_enough: Result <= count
 		end
 
-	selected_items: ARRAY [INTEGER] is
+	selected_items: ARRAY [INTEGER]
 			-- Contains all the selected index
 			-- The Result is an array beginning at index 0.
 		require
@@ -175,7 +175,7 @@ feature -- Status report
 			count_ok: Result.count = count_selected_items
 		end
 
-	selected_strings: ARRAY [STRING_32] is
+	selected_strings: ARRAY [STRING_32]
 			-- Contains all the selected strings
 		require
 			exits: exists
@@ -198,7 +198,7 @@ feature -- Status report
 			count_ok: Result.count = count_selected_items
 		end
 
-	caret_index: INTEGER is
+	caret_index: INTEGER
 			-- Index of the item that has the focus
 		require
 			exists: exists
@@ -209,7 +209,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control.
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_count: exists implies selected_items.count = count_selected_items
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

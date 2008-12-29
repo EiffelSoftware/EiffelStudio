@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of static routines belonging to System.Boolean"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen false_string: SYSTEM_STRING is
+	frozen false_string: SYSTEM_STRING
 			-- (Static)
 			-- Represents the Boolean value false as a string.
 			-- This field is read-only.
@@ -25,7 +25,7 @@ feature -- Statics
 			"FalseString"
 		end
 
-	frozen true_string: SYSTEM_STRING is
+	frozen true_string: SYSTEM_STRING
 			-- (Static)
 			-- Represents the Boolean value true as a string.
 			-- This field is read-only.
@@ -35,7 +35,7 @@ feature -- Statics
 			"TrueString"
 		end
 
-	frozen from_string (value: SYSTEM_STRING): BOOLEAN is
+	frozen from_string (value: SYSTEM_STRING): BOOLEAN
 			-- (Static)
 			-- Converts the specified string representation of
 			-- a logical value to its System.Boolean equivalent.
@@ -58,7 +58,7 @@ feature -- Statics
 			"Parse"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

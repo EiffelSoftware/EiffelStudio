@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Helper to perform efficient search of a string in another one.
 		Note: The algorithm used is the one described in Communications of the ACM,
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current
 		do
 			create deltas.make (max_ascii_character_value + 1)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize_deltas (a_pattern: STRING_GENERAL) is
+	initialize_deltas (a_pattern: STRING_GENERAL)
 			-- Initialize `deltas' with `a_pattern'.
 			-- Optimized for ASCII characters only.
 		require
@@ -39,12 +39,12 @@ feature -- Initialization
 
 feature -- Access
 
-	max_ascii_character_value: INTEGER is 255
+	max_ascii_character_value: INTEGER = 255
 			-- Number of characters in the extended ASCII character set.
 
 feature -- Search
 
-	substring_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
 			-- Position of first occurrence of `a_pattern' at or after `start_pos'
 			-- and before `end_pos' in `a_string'.
 			-- 0 if there are no matches.
@@ -70,7 +70,7 @@ feature -- Search
 			end
 		end
 
-	substring_index_with_deltas (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER is
+	substring_index_with_deltas (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
 			-- Position of first occurrence of `a_pattern' at or after `start_pos' in `a_string'.
 			-- 0 if there are no matches.
 		require
@@ -137,7 +137,7 @@ feature -- Search
 			end
 		end
 
-	fuzzy_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos, fuzzy: INTEGER): INTEGER is
+	fuzzy_index (a_string, a_pattern: STRING_GENERAL; start_pos, end_pos, fuzzy: INTEGER): INTEGER
 			-- Position of first occurrence of `a_pattern' at or after `start_pos' in
 			-- `a_string' with 0..`fuzzy' mismatches between `a_string' and `a_pattern'.
 			-- 0 if there are no fuzzy matches.
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	internal_initialize_deltas (a_pattern: STRING_GENERAL; a_pattern_count: INTEGER; a_deltas: like deltas) is
+	internal_initialize_deltas (a_pattern: STRING_GENERAL; a_pattern_count: INTEGER; a_deltas: like deltas)
 			-- Initialize `a_deltas' with `a_pattern'.
 			-- Optimized for ASCII characters only.
 		require
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_fuzzy_deltas (a_pattern: STRING_GENERAL; fuzzy: INTEGER) is
+	initialize_fuzzy_deltas (a_pattern: STRING_GENERAL; fuzzy: INTEGER)
 			-- Compile `a_pattern' by computing the delta shift tables from a pattern
 			-- string. This has to be done before searching occurs. The first delta
 			-- table is computed with the full pattern, the second one is computed with
@@ -308,7 +308,7 @@ invariant
 	deltas_not_void: deltas /= Void
 	deltas_valid: deltas.count = max_ascii_character_value + 1
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

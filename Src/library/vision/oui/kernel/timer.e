@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A timer manager. %
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a timer.
 		do
 			create {TIMER_IMP} implementation.make
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		require
 			exists: not destroyed
@@ -43,7 +43,7 @@ feature -- Status report
 			Result := implementation.is_call_back_set
 		end;
 
-	is_regular_call_back: BOOLEAN is
+	is_regular_call_back: BOOLEAN
 			-- Is the call back set a regular one ?
 		require
 			exists: not destroyed;
@@ -52,14 +52,14 @@ feature -- Status report
 			Result := implementation.is_regular_call_back
 		end;
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			Result := implementation = Void
 		end;
 
 feature -- Status setting
 
-	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_delay'
 			-- in milliseconds has expired.
 		require
@@ -73,7 +73,7 @@ feature -- Status setting
 			is_call_back_set and (not is_regular_call_back)
 		end;
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		require
 			exists: not destroyed;
@@ -84,7 +84,7 @@ feature -- Status setting
 			not is_call_back_set
 		end;
 
-	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute all the `a_time'
 			-- milliseconds.
 		require
@@ -98,7 +98,7 @@ feature -- Status setting
 			is_call_back_set and is_regular_call_back
 		end;
 
-	destroy is
+	destroy
 			-- Destroy Current.
 		do
 			implementation.destroy;
@@ -112,7 +112,7 @@ feature -- Implementation
 	implementation: TIMER_I;;
 			-- Implementation of timer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

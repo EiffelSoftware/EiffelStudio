@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the drawing area. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_EXPOSE, XmCR_RESIZE, XmCR_INPUT)
@@ -31,7 +31,7 @@ feature -- Access
 			Result := <<XmCR_EXPOSE, XmCR_RESIZE, XmCR_INPUT>>
 		end;
 
-	window_widget (display: MEL_DISPLAY): MEL_WIDGET is
+	window_widget (display: MEL_DISPLAY): MEL_WIDGET
 			-- Mel widget from `window' 
 		do
 			Result := retrieve_widget_from_window (display.handle, window)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	window: POINTER is
+	window: POINTER
 			-- The widget's window 
 		do
 			Result := c_window (handle)
@@ -47,12 +47,12 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_window (a_callback_struct_ptr: POINTER): POINTER is
+	c_window (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmDrawingAreaCallbackStruct *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

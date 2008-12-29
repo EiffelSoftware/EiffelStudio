@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision Implementation of a font box"
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif font box.
 		local
 			mc: MEL_COMPOSITE
@@ -59,7 +59,7 @@ feature {NONE} -- Creation
 
 feature -- Status report
 
-	font: FONT is
+	font: FONT
 			-- Font currently selected by the user
 		do
 			create Result.make;
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Edit `a_font'.
 		local
 			font_name: STRING
@@ -81,7 +81,7 @@ feature -- Status setting
 
 feature  -- Element change
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
+	add_apply_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
         local
@@ -95,7 +95,7 @@ feature  -- Element change
             list.add_command (a_command, argument)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
         local
@@ -109,7 +109,7 @@ feature  -- Element change
             list.add_command (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
         local
@@ -125,21 +125,21 @@ feature  -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
+	remove_apply_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
 			remove_command (apply_command, a_command, argument)
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			remove_command (cancel_command, a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -148,19 +148,19 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-    set_background_color_from_imp (color_imp: COLOR_IMP) is
+    set_background_color_from_imp (color_imp: COLOR_IMP)
             -- Set the background color from implementation `color_imp'.
         do
 			mel_set_background_color (color_imp)
 		end;
 
-    set_foreground_color_from_imp (color_imp: COLOR_IMP) is
+    set_foreground_color_from_imp (color_imp: COLOR_IMP)
             -- Set the background color from implementation `color_imp'.
         do
 			mel_set_foreground_color (color_imp)
 		end
 
-	set_font_from_imp (font_implementation: FONT_IMP; value: INTEGER) is
+	set_font_from_imp (font_implementation: FONT_IMP; value: INTEGER)
 			-- Set text font from `font_implementation'.
 		local
 			a_font_list: MEL_FONT_LIST;
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

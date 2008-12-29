@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Helper factory to create new TYPED_PREFERENCE's.  This class is used by PREFERENCE_MANAGER to
 			create new preferences and values.  Use PREFERENCE_MANAGER to manipulate PREFERENCE objects in your
@@ -14,7 +14,7 @@ class
 
 feature -- Commands
 
-	new_preference (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H is
+	new_preference (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H
 			-- Create a new preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
@@ -73,13 +73,13 @@ feature -- Commands
 			preference_added: preferences.has_preference (a_name)
 		end
 
-	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H is
+	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: G): H
 		obsolete "use new_preference instead of new_resource."
 		do
 			Result := new_preference (preferences, a_manager, a_name, a_fallback_value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

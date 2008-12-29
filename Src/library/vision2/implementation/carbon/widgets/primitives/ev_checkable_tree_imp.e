@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A tree which displays a check box to left
@@ -39,13 +39,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor {EV_TREE_IMP} (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Setup `Current'
 		local
 			a_column, a_cell_renderer: POINTER
@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 --			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
 		end
 
-	boolean_tree_model_column: INTEGER is 2
+	boolean_tree_model_column: INTEGER = 2
 
-	on_tree_path_toggle (a_tree_path_str: POINTER) is
+	on_tree_path_toggle (a_tree_path_str: POINTER)
 			--
 		local
 			a_tree_path, a_int_ptr: POINTER
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	initialize_model is
+	initialize_model
 			-- Create our data model for `Current'
 		local
 			a_type_array: ARRAY [INTEGER]
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_item_checked (list_item: EV_TREE_NODE): BOOLEAN is
+	is_item_checked (list_item: EV_TREE_NODE): BOOLEAN
 			--
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -137,7 +137,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (tree_item: EV_TREE_NODE) is
+	check_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
@@ -155,7 +155,7 @@ feature -- Status setting
 --			end
 		end
 
-	uncheck_item (tree_item: EV_TREE_NODE) is
+	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- unchecked.
 		local
@@ -178,7 +178,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for all widgets.%N%
 		%Facilities for geometry management and user input."
@@ -54,7 +54,7 @@ inherit
 
 feature -- Basic operations
 
-	refresh_now is
+	refresh_now
 			-- Force an immediate redraw of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Contains `Current'.
 		do
 			Result := implementation.parent
@@ -72,7 +72,7 @@ feature -- Access
 			bridge_ok: Result = implementation.parent
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Access
 			-- post condition on this feature.
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this widget.
 		require
 			not_destroyed: not is_destroyed
@@ -92,7 +92,7 @@ feature -- Access
 			Result := implementation.internal_pointer_style
 		end
 
-	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE] is
+	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', `Current' will use the default drop target.
 		require
@@ -103,7 +103,7 @@ feature -- Access
 			bridge_ok: Result = implementation.actual_drop_target_agent
 		end
 
-	real_target: EV_DOCKABLE_TARGET is
+	real_target: EV_DOCKABLE_TARGET
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
 		require
@@ -138,7 +138,7 @@ feature {EV_BUILDER} -- Access
 
 feature -- Status report
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		require
@@ -149,7 +149,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_show_requested
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 			-- `True' when show requested and parent displayed.
 		require
@@ -160,7 +160,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_displayed
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		require
 			not_destroyed: not is_destroyed
@@ -170,7 +170,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.has_focus
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does widget have capture?
 		require
 			not_destroyed: not is_destroyed
@@ -182,7 +182,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	hide is
+	hide
 			-- Request that `Current' not be displayed even when its parent is.
 			-- If successful, make `is_show_requested' `False'.
 		require
@@ -191,7 +191,7 @@ feature -- Status setting
 			implementation.hide
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 			-- `True' by default.
 			-- If successful, make `is_show_requested' `True'.
@@ -201,7 +201,7 @@ feature -- Status setting
 			implementation.show
 		end
 
-	set_focus is
+	set_focus
 			-- Grab keyboard focus.
 		require
 			not_destroyed: not is_destroyed
@@ -211,7 +211,7 @@ feature -- Status setting
 			implementation.set_focus
 		end
 
-	enable_capture is
+	enable_capture
 			-- Grab all user input events (mouse and keyboard).
 			-- `disable_capture' must be called to resume normal input handling.
 		require
@@ -223,7 +223,7 @@ feature -- Status setting
 			has_capture: has_capture
 		end
 
-	disable_capture is
+	disable_capture
 			-- Disable grab of all user input events.
 		require
 			not_destroyed: not is_destroyed
@@ -233,7 +233,7 @@ feature -- Status setting
 			not_has_capture: not has_capture
 		end
 
-	center_pointer is
+	center_pointer
 			-- Position screen pointer over center of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status setting
 				screen_y + (height // 2))
 		end
 
-	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is
+	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent)
 			-- Assign `an_agent' to `actual_drop_target_agent'.
 		require
 			not_destroyed: not is_destroyed
@@ -254,7 +254,7 @@ feature -- Status setting
 			assigned: actual_drop_target_agent = an_agent
 		end
 
-	set_real_target (a_target: EV_DOCKABLE_TARGET) is
+	set_real_target (a_target: EV_DOCKABLE_TARGET)
 			-- Assign `a_target' to `real_target'.
 		require
 			not_destroyed: not is_destroyed
@@ -265,7 +265,7 @@ feature -- Status setting
 			assigned: real_target = a_target
 		end
 
-	remove_real_target is
+	remove_real_target
 			-- Ensure `real_target' is `Void'.
 		require
 			not_destroyed: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Status setting
 			real_target_void: real_target = Void
 		end
 
-	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler)
 			-- Assign `default_key_processing_handler' to `a_handler'.
 		require
 			not_destroyed: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status setting
 			implementation.set_default_key_processing_handler (a_handler)
 		end
 
-	remove_default_key_processing_handler is
+	remove_default_key_processing_handler
 			-- Ensure `default_key_processing_handler' is Void.
 		require
 			not_destroyed: not is_destroyed
@@ -295,7 +295,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pointer_style (a_cursor: like pointer_style) is
+	set_pointer_style (a_cursor: like pointer_style)
 			-- Assign `a_cursor' to `pointer_style'.
 		require
 			not_destroyed: not is_destroyed
@@ -306,7 +306,7 @@ feature -- Element change
 			pointer_style_assigned: pointer_style.is_equal (a_cursor)
 		end
 
-	set_minimum_width (a_minimum_width: INTEGER) is
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 			-- From now, `minimum_width' is fixed and will not be changed
@@ -322,7 +322,7 @@ feature -- Element change
 			minimum_width_set_by_user_set: minimum_width_set_by_user
 		end
 
-	set_minimum_height (a_minimum_height: INTEGER) is
+	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set `a_minimum_height' in pixels to `minimum_height'.
 			-- If `height' is less than `a_minimum_height', resize.
 			-- From now, `minimum_height' is fixed and will not be changed
@@ -338,7 +338,7 @@ feature -- Element change
 			minimum_height_set_by_user_set: minimum_height_set_by_user
 		end
 
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Assign `a_minimum_height' to `minimum_height'
 			-- and `a_minimum_width' to `minimum_width' in pixels.
 			-- If `width' or `height' is less than minimum size, resize.
@@ -361,7 +361,7 @@ feature -- Element change
 
 feature {EV_BUILDER} -- Element change
 
-	reset_minimum_width is
+	reset_minimum_width
 			-- Reset `minimum_width_set_by_user'.
 		do
 			minimum_width_set_by_user := False
@@ -369,7 +369,7 @@ feature {EV_BUILDER} -- Element change
 			minimum_width_set_by_user_reset: not minimum_width_set_by_user
 		end
 
-	reset_minimum_height is
+	reset_minimum_height
 			-- Reset `minimum_height_set_by_user'.
 		do
 			minimum_height_set_by_user := False
@@ -379,7 +379,7 @@ feature {EV_BUILDER} -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PICK_AND_DROPABLE} and Precursor {EV_SENSITIVE} and
@@ -404,7 +404,7 @@ invariant
 	parent_contains_current:
 		is_usable and then parent /= Void implies parent.has (Current)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

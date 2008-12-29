@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List View HitTest info (LVHT) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,48 +13,48 @@ obsolete
 
 feature -- Access
 
-	Lvht_above: INTEGER is 8
+	Lvht_above: INTEGER = 8
 			-- Above the client area.
 			--
 			-- Declared in Windows as LVHT_ABOVE
 
-	Lvht_below: INTEGER is 16
+	Lvht_below: INTEGER = 16
 			-- Below the client area.
 			--
 			-- Declared in Windows as LVHT_BELOW
 
-	Lvht_nowhere: INTEGER is 1
+	Lvht_nowhere: INTEGER = 1
 			-- In the client area, but below the last item.
 			--
 			-- Declared in Windows as LVHT_NOWHERE
 
-	Lvht_onitemicon: INTEGER is 2
+	Lvht_onitemicon: INTEGER = 2
 			-- On the button associated with an item.
 			--
 			-- Declared in Windows as LVHT_ONITEMICON
 
-	Lvht_onitemlabel: INTEGER is 4
+	Lvht_onitemlabel: INTEGER = 4
 			-- On the label (string) associated with an item.
 			--
 			-- Declared in Windows as LVHT_ONITEMLABEL
 
-	Lvht_onitemstateicon: INTEGER is 8
+	Lvht_onitemstateicon: INTEGER = 8
 			-- On the state icon for a tree view item that is in
 			-- a user-defines state.
 			--
 			-- Declared in Windows as LVHT_ONITEMSTATEICON
 
-	Lvht_toleft: INTEGER is 64
+	Lvht_toleft: INTEGER = 64
 			-- To the left of the client area.
 			--
 			-- Declared in Windows as LVHT_TOLEFT
 
-	Lvht_toright: INTEGER is 32;
+	Lvht_toright: INTEGER = 32;
 			-- To the right of the client area.
 			--
 			-- Declared in Windows as LVHT_TORIGHT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

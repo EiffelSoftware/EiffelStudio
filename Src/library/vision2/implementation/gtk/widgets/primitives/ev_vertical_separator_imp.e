@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision vertical separator. GTK+ implementation"
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a GTK vertical seperator in an event box.
 		local
 			p: POINTER
@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

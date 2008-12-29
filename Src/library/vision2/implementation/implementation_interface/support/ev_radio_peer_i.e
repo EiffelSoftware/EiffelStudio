@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio peer. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,19 +16,19 @@ inherit
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this radio item checked?
 		deferred
 		end
 
-	peers: LINKED_LIST [like interface] is
+	peers: LINKED_LIST [like interface]
 			-- List of all radio items in the group `interface' is in.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	selected_peer: like interface is
+	selected_peer: like interface
 			-- Radio item that is currently selected.
 		deferred
 		ensure
@@ -37,7 +37,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this radio item.
 		deferred
 		end
@@ -46,7 +46,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_PEER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

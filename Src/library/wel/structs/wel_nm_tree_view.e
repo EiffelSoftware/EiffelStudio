@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a tree view notification %
 		%message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_hdr (item))
@@ -37,14 +37,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	action: INTEGER is
+	action: INTEGER
 			-- Information about the notification-specific action flag.
 			-- See class WEL_TVAF_CONSTANTS for the meaning of this parameter.
 		do
 			Result := cwel_nm_treeview_get_action (item)
 		end
 
-	new_item: WEL_TREE_VIEW_ITEM is
+	new_item: WEL_TREE_VIEW_ITEM
 			-- Information about the new item state
 		local
 			tree: WEL_TREE_VIEW
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	old_item: WEL_TREE_VIEW_ITEM is
+	old_item: WEL_TREE_VIEW_ITEM
 			-- Information about the old item state
 		local
 			tree: WEL_TREE_VIEW
@@ -72,7 +72,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	position: WEL_POINT is
+	position: WEL_POINT
 			-- Mouse coordinates when notification occurred.
 		do
 			create Result.make_by_pointer (cwel_nm_treeview_get_ptdrag (item))
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_treeview
@@ -90,39 +90,39 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_treeview: INTEGER is
+	c_size_of_nm_treeview: INTEGER
 		external
 			"C [macro <nmtv.h>]"
 		alias
 			"sizeof (NM_TREEVIEW)"
 		end
 
-	cwel_nm_treeview_get_hdr (ptr: POINTER): POINTER is
+	cwel_nm_treeview_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
-	cwel_nm_treeview_get_action (ptr: POINTER): INTEGER is
+	cwel_nm_treeview_get_action (ptr: POINTER): INTEGER
 		external
 			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
-	cwel_nm_treeview_get_itemnew (ptr: POINTER): POINTER is
+	cwel_nm_treeview_get_itemnew (ptr: POINTER): POINTER
 		external
 			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
-	cwel_nm_treeview_get_itemold (ptr: POINTER): POINTER is
+	cwel_nm_treeview_get_itemold (ptr: POINTER): POINTER
 		external
 			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
-	cwel_nm_treeview_get_ptdrag (ptr: POINTER): POINTER is
+	cwel_nm_treeview_get_ptdrag (ptr: POINTER): POINTER
 		external
 			"C [macro <nmtv.h>] (NM_TREEVIEW *): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

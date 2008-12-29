@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Popup shell that bypasses window management."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a override shell widget.
 		require
 			name_exists: a_name /= Void;
@@ -41,12 +41,12 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	xt_create_override_shell (a_parent, a_name: POINTER): POINTER is
+	xt_create_override_shell (a_parent, a_name: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An unix datagram socket."
@@ -37,7 +37,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an unix datagram socket.
 		do
 			c_reset_error
@@ -47,7 +47,7 @@ feature -- Initialization
 			is_open_write := True
 		end;
 
-	make_bound (a_path: STRING) is
+	make_bound (a_path: STRING)
 			-- Create an unix socket bound to a local well known
 			-- address `a_path'.
 		local
@@ -57,7 +57,7 @@ feature -- Initialization
 			make_bound_to_address (an_address)
 		end;
 
-	make_targeted (a_peer_path: STRING) is
+	make_targeted (a_peer_path: STRING)
 			-- Create an unix socket targeted to `a_peer_path'.
 		local
 			an_address: UNIX_SOCKET_ADDRESS
@@ -68,7 +68,7 @@ feature -- Initialization
 
 feature -- Miscellaneous
 
-	target_to (a_peer_path: STRING) is
+	target_to (a_peer_path: STRING)
 			-- Target socket to `a_peer_path'.
 		require
 			socket_exists: exists
@@ -79,7 +79,7 @@ feature -- Miscellaneous
 			connect_to_peer (an_address)
 		end;
 
-	make_peer_address is
+	make_peer_address
 			-- Create a peer address.
 		do
 			create peer_address.make
@@ -87,7 +87,7 @@ feature -- Miscellaneous
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Rectangular figures with rounded corners."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with `radius' 10.
 		do
 			radius := 10
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_radius (a_radius: INTEGER) is
+	set_radius (a_radius: INTEGER)
 			-- Assign `a_radius' to `radius'.
 		require
 			a_radius_non_negative: a_radius >= 0
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature -- Status report
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_polygon (x, y, polygon_array)
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature {EV_FIGURE_DRAWER, EV_FIGURE_POSTSCRIPT_DRAWER} -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Absolute coordinates of `Current' converted to polygon.
 		local
 			ax, ay, bx, by: INTEGER
@@ -106,13 +106,13 @@ feature {EV_FIGURE_DRAWER, EV_FIGURE_POSTSCRIPT_DRAWER} -- Implementation
 			Result.put (create {EV_COORDINATE}.set (bx - r, ay), 12)
 		end
 
-	Radius_offset: DOUBLE is 0.2928932188134
+	Radius_offset: DOUBLE = 0.2928932188134
 			-- 1 - (sqrt (2)) / 2
 
 invariant
 	radius_non_negative: radius >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

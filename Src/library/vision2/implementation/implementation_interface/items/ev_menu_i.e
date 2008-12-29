@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_MENU_ITEM_LIST is
+	parent: EV_MENU_ITEM_LIST
 			-- Item list containing `Current'.
 		do
 			if parent_imp /= Void then
@@ -32,12 +32,12 @@ feature -- Access
 
 feature -- Basic operations
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		deferred
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		deferred
@@ -45,7 +45,7 @@ feature -- Basic operations
 		
 feature {EV_MENU} -- Contract support
 
-	one_radio_item_selected_per_separator: BOOLEAN is
+	one_radio_item_selected_per_separator: BOOLEAN
 			-- Is there at most one selected radio item between
 			-- consecutive separators?
 		local
@@ -83,7 +83,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU;	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

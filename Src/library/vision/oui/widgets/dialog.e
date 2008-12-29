@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A Dialog is a popup that is made up of widgets. These widgets %
@@ -21,7 +21,7 @@ inherit
 	
 feature -- Status setting
 
-	allow_resize is
+	allow_resize
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		require
@@ -30,7 +30,7 @@ feature -- Status setting
 			implementation.allow_resize
 		end;
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		require
@@ -39,7 +39,7 @@ feature -- Status setting
 			implementation.forbid_resize
 		end;
 
-	is_cascade_grab: BOOLEAN is
+	is_cascade_grab: BOOLEAN
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		require
@@ -48,7 +48,7 @@ feature -- Status setting
 			Result := implementation.is_cascade_grab
 		end;
 
-	is_exclusive_grab: BOOLEAN is
+	is_exclusive_grab: BOOLEAN
 			-- Is the shell popped up with exclusive grab ?
 		require
 			exists: not destroyed
@@ -56,7 +56,7 @@ feature -- Status setting
 			Result := implementation.is_exclusive_grab
 		end;
 
-	is_no_grab: BOOLEAN is
+	is_no_grab: BOOLEAN
 			-- Is the shell popped up with no grab ?
 		require
 			exists: not destroyed
@@ -64,7 +64,7 @@ feature -- Status setting
 			Result := implementation.is_no_grab
 		end;
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is the popup widget popped up on screen ?
 		require
 			exists: not destroyed
@@ -74,7 +74,7 @@ feature -- Status setting
 
 feature -- feature setting
 
-	lower is
+	lower
 			-- Lower the dialog box in the stacking order.
 		require
 			exists: not destroyed
@@ -82,7 +82,7 @@ feature -- feature setting
 			implementation.lower
 		end;
 
-	popdown is
+	popdown
 			-- Popdown dialog shell.
 		require
 			exists: not destroyed
@@ -92,7 +92,7 @@ feature -- feature setting
 			not is_popped_up
 		end;
 
-	popup is
+	popup
 			-- Popup a dialog shell with no grab on it.
 		require
 			exists: not destroyed
@@ -100,7 +100,7 @@ feature -- feature setting
 			implementation.popup
 		end;
 
-	raise is
+	raise
 			-- Raise the dialog box to the top of the stacking order.
 		require
 			exists: not destroyed
@@ -108,7 +108,7 @@ feature -- feature setting
 			implementation.raise
 		end;
 
-	set_cascade_grab is
+	set_cascade_grab
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells popped up with grab to receive events).
 		require
@@ -119,7 +119,7 @@ feature -- feature setting
 			is_cascade_grab
 		end;
 
-	set_exclusive_grab is
+	set_exclusive_grab
 			-- Specifies that the shell would be popped up with exclusive grab.
 		require
 			exists: not destroyed
@@ -129,7 +129,7 @@ feature -- feature setting
 			is_exclusive_grab
 		end;
 
-	set_no_grab is
+	set_no_grab
 			-- Specifies that the shell would be popped up with no grab.
 		require
 			exists: not destroyed
@@ -141,7 +141,7 @@ feature -- feature setting
 
 feature -- Element change
 
-	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY)
 			-- Set the dialog shell action to `cmd' with `arg'
 		require
 			action_exists: action /= Void
@@ -150,7 +150,7 @@ feature -- Element change
 			implementation.set_parent_action (action, cmd, arg)
 		end
 
-	remove_parent_action (action: STRING) is
+	remove_parent_action (action: STRING)
 			-- Remove `action' from the dialog shell 
 		require
 			action_exists: action /= Void
@@ -158,7 +158,7 @@ feature -- Element change
 			implementation.remove_parent_action (action)
 		end
 
-	dialog_command_target is
+	dialog_command_target
 			-- Set the command target to be the dialog shell
 		obsolete
 			"Use set_parent_action instead."
@@ -168,7 +168,7 @@ feature -- Element change
 			implementation.dialog_command_target;
 		end;
 
-	widget_command_target is
+	widget_command_target
 			-- Set the command target to be the widget
 		obsolete
 			"Not required when using set_parent_action."
@@ -180,7 +180,7 @@ feature -- Element change
 
 feature {DIALOG_I} -- Implementation
 
-	set_dialog_imp (a_dialog_imp: DIALOG_I) is
+	set_dialog_imp (a_dialog_imp: DIALOG_I)
 			-- Set dialog implementation to `a_dialog_imp'.
 		do
 			implementation := a_dialog_imp
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 	implementation: DIALOG_I;;
 			-- Implementation of dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

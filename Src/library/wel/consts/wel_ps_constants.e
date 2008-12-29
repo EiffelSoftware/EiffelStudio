@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pen style (PS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	Ps_solid: INTEGER is 0
+	Ps_solid: INTEGER = 0
 
-	Ps_dash: INTEGER is 1
+	Ps_dash: INTEGER = 1
 
-	Ps_dot: INTEGER is 2
+	Ps_dot: INTEGER = 2
 
-	Ps_dashdot: INTEGER is 3
+	Ps_dashdot: INTEGER = 3
 
-	Ps_dashdotdot: INTEGER is 4
+	Ps_dashdotdot: INTEGER = 4
 
-	Ps_null: INTEGER is 5
+	Ps_null: INTEGER = 5
 
-	Ps_insideframe: INTEGER is 6
+	Ps_insideframe: INTEGER = 6
 
 feature -- Status report
 
-	valid_pen_style_constant (c: INTEGER): BOOLEAN is
+	valid_pen_style_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid pen style constant?
 		do
 			Result := c = Ps_solid or else
@@ -38,7 +38,7 @@ feature -- Status report
 				c = Ps_insideframe
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

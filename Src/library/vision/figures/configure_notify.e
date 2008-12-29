@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Modification notification. %
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create notify_class;
 			set_conf_notify;
@@ -30,14 +30,14 @@ feature -- Initialization
 
 feature -- Access
 
-	get_conf_notified: FIGURE is
+	get_conf_notified: FIGURE
 		do
 			Result ?= notify_class.get_notified
 		end;
 
 feature -- Element change
 
-	set_conf_notify is
+	set_conf_notify
 			-- 'Current' notifies `conf_notified' when changes configuration
 		do
 			notify_class.set_notify
@@ -45,7 +45,7 @@ feature -- Element change
 			conf_notify: conf_notify
 		end;
 
-	set_conf_not_notify is
+	set_conf_not_notify
 			-- 'Current' does not notify `conf_notified' when changes configuration
 			-- but set the 'conf_modified' attribute instead
 		do
@@ -54,7 +54,7 @@ feature -- Element change
 			not_conf_notify: not conf_notify
 		end;
 
-	set_conf_receive is
+	set_conf_receive
 			-- 'Current' receives modification notification
 			-- so that it does not have to test the 'conf_modified' attribute
 			-- of its dependents
@@ -64,7 +64,7 @@ feature -- Element change
 			conf_receive: conf_receive
 		end;
 
-	set_conf_not_receive is
+	set_conf_not_receive
 			-- 'Current' does not receive modification notification
 			-- so that it has to test the 'conf_modified' attribute
 			-- of its dependents
@@ -74,13 +74,13 @@ feature -- Element change
 			not_conf_receive: not conf_receive
 		end;
 
-	set_conf_notified (arg: FIGURE) is
+	set_conf_notified (arg: FIGURE)
 			-- Set the figure object to notify when 'notify' is true
 		do
 			notify_class.set_notified (arg)
 		end;
 
-	set_conf_modified is
+	set_conf_modified
 			-- To be called when a configuration change has been performed
 		do
 			if not notify_class.notify then
@@ -91,7 +91,7 @@ feature -- Element change
 			end
 		end;
 
-	set_conf_modified_with (arg: CLOSURE) is
+	set_conf_modified_with (arg: CLOSURE)
 			-- To be called when a configuration change has been performed
 			-- with an 'arg' information 
 		do
@@ -103,20 +103,20 @@ feature -- Element change
 			end
 		end;
 
-	unset_conf_modified is
+	unset_conf_modified
 			-- Disable the 'conf_modified' state
 		do
 			notify_class.unset_modified
 		end;
 
-	set_conf_value_modified (bool: BOOLEAN) is
+	set_conf_value_modified (bool: BOOLEAN)
 		do
 			notify_class.set_value_modified (bool)
 		end;
 
 feature -- Updating
 	
-	conf_recompute is
+	conf_recompute
 			-- To be called before unsetting configuration
 		do
 			notify_class.recompute
@@ -129,25 +129,25 @@ feature {NONE} -- Access
 	
 feature -- Status report
 
-	conf_notify: BOOLEAN is
+	conf_notify: BOOLEAN
 			-- Does 'Current' notify its changes ?
 		do
 			Result := notify_class.notify
 		end;
 
-	conf_modified: BOOLEAN is
+	conf_modified: BOOLEAN
 			-- has `Current` been modified ?
 		do
 			Result := notify_class.modified
 		end;
 
-	conf_receive: BOOLEAN is
+	conf_receive: BOOLEAN
 			-- Does 'Current' receive information from its dependent ?
 		do
 			Result := notify_class.receive
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

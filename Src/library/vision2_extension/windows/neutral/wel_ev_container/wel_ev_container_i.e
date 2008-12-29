@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow insertion of a Vision2 control%
 		%within a WEL system."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {WEL_EV_CONTAINER} -- Initialization
 
-	set_real_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER) is
+	set_real_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER)
 			-- Actually target `Current' to `a_parent' and set x_position to `x_pos',
 			-- y_position to `y_pos', width to `a_width' and height to `a_height'.
 		deferred
@@ -27,7 +27,7 @@ feature {WEL_EV_CONTAINER} -- Initialization
 
 feature -- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Window containing `item'.
 		deferred
 		end
@@ -36,7 +36,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: WEL_EV_CONTAINER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

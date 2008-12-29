@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Variant constants, use `missing' as value for optional argument when %
 				%no value should be specified"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	missing: ECOM_VARIANT is
+	missing: ECOM_VARIANT
 			-- Value representing the default value of a COM optional argument.
 			-- Equivalent to an omitted VB argument, or C++ vtMissing, or .NET System.Reflection.Missing.
 		once
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_missing (v: ECOM_VARIANT): BOOLEAN is
+	is_missing (v: ECOM_VARIANT): BOOLEAN
 			-- Does `v' represent a COM optional argument?
 		require
 			attached: v /= Void
@@ -39,7 +39,7 @@ feature -- Status report
 			Result := is_error (v.variable_type) and then v.error.item = Disp_e_paramnotfound
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

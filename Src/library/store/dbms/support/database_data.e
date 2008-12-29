@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_DATA"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -32,7 +32,7 @@ feature -- Status report
 		-- Correspondance table between column rank and
 		-- attribute rank in mapped object
 
-	item (index: INTEGER): ANY is
+	item (index: INTEGER): ANY
 			-- Data at `index'-th column.
 		require else
 			index_in_range: valid_index (index)
@@ -42,13 +42,13 @@ feature -- Status report
 			returned_value: Result = value.item (index)
 		end
 
-	valid_index (index: INTEGER): BOOLEAN is
+	valid_index (index: INTEGER): BOOLEAN
 			-- Is `index' valid for `value'?
 		do
 			Result := index >0 and index <= count
 		end
 
-	column_name (index: INTEGER): STRING is
+	column_name (index: INTEGER): STRING
 			-- Name of the `index'-th column.
 		require else
 			index_in_range: index > 0 and index <= count
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Element change
 
-	update_map_table (object: ANY) is
+	update_map_table (object: ANY)
 			-- Update map table according to field names of `object'
 			-- and `Current' metadata.
 		local
@@ -98,7 +98,7 @@ feature -- Element change
 			end
 		end
 
-	fill_in (no_descriptor: INTEGER) is
+	fill_in (no_descriptor: INTEGER)
 			-- Fill attributes of Current with results obtained
 			-- from server after execution of query statement.
 		local
@@ -270,7 +270,7 @@ feature {NONE} -- Status report
 	database_string: DATABASE_STRING_EX [G]
 		-- String returned from the database C interface
 
-	buffer: STRING is
+	buffer: STRING
 			-- String buffer.
 		once
 			create Result.make (50)
@@ -293,7 +293,7 @@ feature {NONE} -- Status report
 	select_name: ARRAY [STRING];
 		-- Array of selected column names listed in select clause
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

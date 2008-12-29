@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
@@ -11,7 +11,7 @@ class IDENTIFIED_ROUTINES
 
 feature -- Basic operations
 
-	eif_id_object (an_id: INTEGER): ANY is
+	eif_id_object (an_id: INTEGER): ANY
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0
@@ -33,7 +33,7 @@ feature -- Basic operations
 			xyz_mutex.release_mutex
 		end
 
-	eif_object_id (an_object: ANY): INTEGER is
+	eif_object_id (an_object: ANY): INTEGER
 			-- New identifier for `an_object'
 		local
 			l_success: BOOLEAN
@@ -47,7 +47,7 @@ feature -- Basic operations
 			inserted: eif_id_object (Result) = an_object
 		end
 
-	eif_object_id_free (an_id: INTEGER) is
+	eif_object_id_free (an_id: INTEGER)
 			-- Free the entry `an_id'
 		require
 			an_id_non_negative: an_id >= 0
@@ -65,10 +65,10 @@ feature -- Basic operations
 
 feature {IDENTIFIED_CONTROLLER} -- Implementation
 
-	xyz_reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
+	xyz_reference_list: ARRAYED_LIST [WEAK_REFERENCE]
 			-- List of weak references used. Id's correspond to indices in this list.
 			-- Synchronization has to be done with `xyz_mutex'.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make (50)
@@ -76,9 +76,9 @@ feature {IDENTIFIED_CONTROLLER} -- Implementation
 			xyz_reference_list_not_void: Result /= Void
 		end
 
-	xyz_mutex: SYSTEM_MUTEX is
+	xyz_mutex: SYSTEM_MUTEX
 			-- Mutex to protect access to global list `xyz_reference_list'.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make

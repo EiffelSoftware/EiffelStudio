@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for editor related cursors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ deferred class
 
 feature -- Cursor
 
-	cur_cut_selection: EV_POINTER_STYLE is
+	cur_cut_selection: EV_POINTER_STYLE
 			-- Editor cut cursor icon
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	cur_copy_selection: EV_POINTER_STYLE is
+	cur_copy_selection: EV_POINTER_STYLE
 			-- Editor copy cursor icon
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Directories, in the Unix sense, with creation and exploration features"
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (dn: STRING) is
+	make (dn: STRING)
 			-- Create directory object for the directory
 			-- of name `dn'.
 		require
@@ -31,7 +31,7 @@ feature -- Initialization
 			mode := Close_directory
 		end
 
-	make_open_read (dn: STRING) is
+	make_open_read (dn: STRING)
 			-- Create directory object for the directory
 			-- of name `dn' and open it for reading.
 		require
@@ -41,7 +41,7 @@ feature -- Initialization
 			open_read
 		end
 
-	create_dir is
+	create_dir
 			-- Create a physical directory.
 		require
 			physical_not_exists: not exists
@@ -71,7 +71,7 @@ feature -- Initialization
 
 feature -- Access
 
-	readentry is
+	readentry
 			-- Read next directory entry
 			-- make result available in `lastentry'.
 			-- Make result void if all entries have been read.
@@ -98,7 +98,7 @@ feature -- Access
 	name: STRING
 			-- Directory name
 
-	has_entry (entry_name: STRING): BOOLEAN is
+	has_entry (entry_name: STRING): BOOLEAN
 			-- Has directory the entry `entry_name'?
 			-- The use of `dir_temp' is required not
 			-- to change the position in the current
@@ -126,14 +126,14 @@ feature -- Access
 			end
 		end
 
-	open_read is
+	open_read
 			-- Open directory `name' for reading.
 		do
 			mode := Read_directory
 			search_index := 0
 		end
 
-	close is
+	close
 			-- Close directory.
 		require
 			is_open: not is_closed
@@ -141,7 +141,7 @@ feature -- Access
 			mode := Close_directory
 		end
 
-	start is
+	start
 			-- Go to first entry of directory.
 		require
 			is_opened: not is_closed
@@ -149,7 +149,7 @@ feature -- Access
 			search_index := 0
 		end
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Change file name to `new_name'
 		require
 			not_new_name_void: new_name /= Void
@@ -169,7 +169,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of entries in directory.
 		require
 			directory_exists: exists
@@ -182,7 +182,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [STRING] is
+	linear_representation: ARRAYED_LIST [STRING]
 			-- The entries, in sequential format.
 		local
 			ent: NATIVE_ARRAY [SYSTEM_STRING]
@@ -210,13 +210,13 @@ feature -- Status report
 	lastentry: STRING
 			-- Last entry read by `readentry'
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is current directory closed?
 		do
 			Result := mode = Close_directory
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is directory empty?
 		require
 			directory_exists: exists
@@ -226,7 +226,7 @@ feature -- Status report
 			Result := (count = 0)
 		end
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is directory empty?
 		obsolete
 			"Use `is_empty' instead"
@@ -234,7 +234,7 @@ feature -- Status report
 			Result := is_empty
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the directory exist?
 		local
 			retried: BOOLEAN
@@ -247,7 +247,7 @@ feature -- Status report
 			retry
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is the directory readable?
 		require
 			directory_exists: exists
@@ -268,7 +268,7 @@ feature -- Status report
 			retry
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Is the directory executable?
 		require
 			directory_exists: exists
@@ -290,7 +290,7 @@ feature -- Status report
 			retry
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is the directory writable?
 		require
 			directory_exists: exists
@@ -313,7 +313,7 @@ feature -- Status report
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Delete directory if empty
 		require
 			directory_exists: exists
@@ -322,7 +322,7 @@ feature -- Removal
 			{SYSTEM_DIRECTORY}.delete (name.to_cil)
 		end
 
-	delete_content is
+	delete_content
 			-- Delete all files located in current directory and its
 			-- subdirectories.
 		require
@@ -364,7 +364,7 @@ feature -- Removal
 			end
 		end
 
-	recursive_delete is
+	recursive_delete
 			-- Delete directory, its files and its subdirectories.
 		require
 			directory_exists: exists
@@ -376,7 +376,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		is
+		
 			-- Delete all files located in current directory and its
 			-- subdirectories.
 			--
@@ -470,7 +470,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		is
+		
 			-- Delete directory, its files and its subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
@@ -493,7 +493,7 @@ feature -- Removal
 			end
 		end
 
-	dispose is
+	dispose
 			-- Ensure this medium is closed when garbage collected.
 		do
 			if not is_closed then
@@ -512,11 +512,11 @@ feature {NONE} -- Implementation
 			-- Status mode of the directory.
 			-- Possible values are the following:
 
-	Close_directory: INTEGER is unique
+	Close_directory: INTEGER = unique
 
-	Read_directory: INTEGER is unique;
+	Read_directory: INTEGER = unique;
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

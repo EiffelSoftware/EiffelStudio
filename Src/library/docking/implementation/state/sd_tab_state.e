@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_STATE which manage a SD_TAB_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER) is
+	make (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER)
 			-- Creation method
 		require
 			a_content_not_void: a_content /= Void
@@ -100,7 +100,7 @@ feature {NONE} -- Initlization
 			set: internal_content = a_content
 		end
 
-	make_with_tab_zone (a_content: SD_CONTENT; a_target_zone: SD_TAB_ZONE; a_direction: INTEGER) is
+	make_with_tab_zone (a_content: SD_CONTENT; a_target_zone: SD_TAB_ZONE; a_direction: INTEGER)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -123,7 +123,7 @@ feature {NONE} -- Initlization
 			set: internal_content = a_content
 		end
 
-	make_for_restore (a_contents: ARRAYED_LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	make_for_restore (a_contents: ARRAYED_LIST [SD_CONTENT]; a_container: EV_CONTAINER; a_direction: INTEGER)
 			-- Creation method for restoring.
 		require
 			at_least_two: a_contents /= Void and then a_contents.count >= 2
@@ -155,7 +155,7 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	make_for_restore_internal (a_content: SD_CONTENT; a_tab_zone: SD_TAB_ZONE; a_direction: INTEGER) is
+	make_for_restore_internal (a_content: SD_CONTENT; a_tab_zone: SD_TAB_ZONE; a_direction: INTEGER)
 			-- Creation method, only called by `make_for_restore'.
 		require
 			not_void: a_content /= Void
@@ -166,7 +166,7 @@ feature {NONE} -- Initlization
 			tab_zone := a_tab_zone
 		end
 
-	init_common (a_content: SD_CONTENT; a_direction: INTEGER) is
+	init_common (a_content: SD_CONTENT; a_direction: INTEGER)
 			-- Initlization common parts.
 		require
 			not_void: a_content /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- Redefine.
 		local
 			l_content: SD_CONTENT
@@ -269,7 +269,7 @@ feature -- Redefine
 			restored:
 		end
 
-	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Redefine.
 		do
 			internal_docking_manager.command.lock_update (a_multi_dock_area, False)
@@ -288,7 +288,7 @@ feature -- Redefine
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
 		end
 
-	stick (a_direction: INTEGER) is
+	stick (a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -324,7 +324,7 @@ feature -- Redefine
 			pruned: not internal_docking_manager.zones.has_zone (tab_zone)
 		end
 
-	close is
+	close
 			-- Redefine.
 		local
 			l_parent: EV_CONTAINER
@@ -345,7 +345,7 @@ feature -- Redefine
 			internal_docking_manager.command.unlock_update
 		end
 
-	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -381,7 +381,7 @@ feature -- Redefine
 			parent_changed:
 		end
 
-	float (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER)
 			-- Redefine.
 		local
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -397,7 +397,7 @@ feature -- Redefine
 --			whole_floated:
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- Redefine.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -432,7 +432,7 @@ feature -- Redefine
 			moved:
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- Redefine.
 		do
 			internal_docking_manager.command.lock_update (zone, False)
@@ -452,7 +452,7 @@ feature -- Redefine
 			moved:
 		end
 
-	hide is
+	hide
 			-- Redefine.
 		local
 			l_state: SD_STATE_VOID
@@ -463,7 +463,7 @@ feature -- Redefine
 			change_state (l_state)
 		end
 
-	show is
+	show
 			-- Redefine
 		local
 			l_state_void: SD_STATE_VOID
@@ -478,7 +478,7 @@ feature -- Redefine
 			end
 		end
 
-	set_user_widget (a_widget: EV_WIDGET) is
+	set_user_widget (a_widget: EV_WIDGET)
 			-- Redefine
 		do
 			zone.replace_user_widget (content)
@@ -486,7 +486,7 @@ feature -- Redefine
 
 feature {SD_CONTENT} -- Redefine
 
-	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
+	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
@@ -496,7 +496,7 @@ feature {SD_CONTENT} -- Redefine
 			end
 		end
 
-	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
@@ -506,7 +506,7 @@ feature {SD_CONTENT} -- Redefine
 			end
 		end
 
-	change_tab_tooltip (a_text: STRING_GENERAL) is
+	change_tab_tooltip (a_text: STRING_GENERAL)
 			-- <Precursor>
 		do
 			-- During zone transforming, `tab_zone' maybe not has `a_content'
@@ -518,7 +518,7 @@ feature {SD_CONTENT} -- Redefine
 
 feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
-	set_last_floating_width (a_int: INTEGER) is
+	set_last_floating_width (a_int: INTEGER)
 			-- Redefine
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -547,7 +547,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 			flag_cleared: is_set_width_after_restore = False
 		end
 
-	set_last_floating_height (a_int: INTEGER) is
+	set_last_floating_height (a_int: INTEGER)
 			-- Redefine
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -581,7 +581,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 feature -- Properties redefine.
 
-	content: SD_CONTENT is
+	content: SD_CONTENT
 			-- Redefine.
 		do
 			Result := internal_content
@@ -589,7 +589,7 @@ feature -- Properties redefine.
 			not_void: not internal_docking_manager.property.is_opening_config implies Result /= Void
 		end
 
-	zone: SD_TAB_ZONE is
+	zone: SD_TAB_ZONE
 			-- Redefine.
 		do
 			Result := tab_zone
@@ -599,18 +599,18 @@ feature -- Properties redefine.
 
 feature -- Query
 
-	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN is
+	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN
 		do
 			Result := a_titles.count > 1
 		end
 
-	has (a_content: SD_CONTENT): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN
 			-- Redefine
 		do
 			Result := tab_zone.has (a_content)
 		end
 
-	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN is
+	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- Redefine.
 		local
 			l_container: EV_SPLIT_AREA
@@ -638,7 +638,7 @@ feature -- Query
 			end
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- If Current selected in notebook widget?
 		do
 			Result := tab_zone.is_content_selected (content)
@@ -646,7 +646,7 @@ feature -- Query
 
 feature -- Command
 
-	select_tab (a_content: SD_CONTENT; a_focus: BOOLEAN) is
+	select_tab (a_content: SD_CONTENT; a_focus: BOOLEAN)
 			-- Enable select one tab.
 		require
 			has_content: has (a_content)
@@ -668,7 +668,7 @@ invariant
 	tab_zone_not_void: initialized implies tab_zone /= Void
 	assistant_not_void: initialized implies assistant /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

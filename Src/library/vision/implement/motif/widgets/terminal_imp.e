@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract class for a collection of widgets."
@@ -35,7 +35,7 @@ feature -- Status report
 	
 feature -- Status setting
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set font of every labels to `a_font_name'.
 		local
 			font_implementation: FONT_IMP
@@ -50,7 +50,7 @@ feature -- Status setting
 			set_font_from_imp (font_implementation, Label_font_value)
 		end;
 
-	set_button_font (a_font: FONT) is
+	set_button_font (a_font: FONT)
 			-- Set font of every buttons to `a_font_name'.
 		local
 			font_implementation: FONT_IMP
@@ -65,7 +65,7 @@ feature -- Status setting
 			set_font_from_imp (font_implementation, Button_font_value)
 		end;
 
-	set_text_font (a_font: FONT) is
+	set_text_font (a_font: FONT)
 			-- Set font of every text to `a_font_name'.
 		local
 			font_implementation: FONT_IMP
@@ -82,14 +82,14 @@ feature -- Status setting
 
 feature {TERMINAL_OUI}
 
-	build is
+	build
 			-- Build the terminal.
 		do
 		end; 
 
 feature {FONT_IMP} -- Implementation
 
-	update_label_font is
+	update_label_font
 			-- Update the label font.
 		local
 			font_implementation: FONT_IMP
@@ -98,7 +98,7 @@ feature {FONT_IMP} -- Implementation
 			set_font_from_imp (font_implementation, Label_font_value)
 		end;
 
-	update_text_font is
+	update_text_font
 			-- Update the text font.
 		local
 			font_implementation: FONT_IMP
@@ -107,7 +107,7 @@ feature {FONT_IMP} -- Implementation
 			set_font_from_imp (font_implementation, Text_font_value)
 		end;
 
-	update_button_font is
+	update_button_font
 			-- Update the button font.
 		local
 			font_implementation: FONT_IMP
@@ -118,18 +118,18 @@ feature {FONT_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Label_font_value: INTEGER is 1;
-	Text_font_value: INTEGER is 2;
-	Button_font_value: INTEGER is 3;
+	Label_font_value: INTEGER = 1;
+	Text_font_value: INTEGER = 2;
+	Button_font_value: INTEGER = 3;
 
-	children_list: LIST [POINTER] is
+	children_list: LIST [POINTER]
 			-- List of children C widget points to be used
 			-- for resouce settting
 		do
 			Result := children
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			list: like children_list;
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	set_font_from_imp (font_implementation: FONT_IMP; value: INTEGER) is
+	set_font_from_imp (font_implementation: FONT_IMP; value: INTEGER)
 			-- Set text font from `font_implementation'.
 		require
 			valid_font_imp: font_implementation /= Void;	
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	button_widget_list: LINKED_LIST [POINTER] is
+	button_widget_list: LINKED_LIST [POINTER]
 			-- List of C button widget
 		local
 			w: POINTER;
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end;
 
-	text_widget_list: LINKED_LIST [POINTER] is
+	text_widget_list: LINKED_LIST [POINTER]
 			-- List of C text widget
 		local
 			w: POINTER;
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end;
 
-	label_widget_list: LINKED_LIST [POINTER] is
+	label_widget_list: LINKED_LIST [POINTER]
 			-- List of C label widget
 		local
 			w: POINTER;
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

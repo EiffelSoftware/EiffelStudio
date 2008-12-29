@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_DOCKABLE_TARGET_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 	
 feature -- Event handling
 
-	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE is
+	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
 		-- Actions to be performed
 		do
 			if docked_actions_internal = Void then
@@ -26,7 +26,7 @@ feature {EV_ANY_I} -- Implementation
 	docked_actions_internal: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE;
 			-- Implementation of once per object `docked_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

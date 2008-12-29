@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"References to objects containing a double-precision real number"
@@ -30,13 +30,13 @@ feature -- Access
 	item: DOUBLE
 			-- Numeric double value
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := truncated_to_integer.hash_code
 		end
 
-	sign: INTEGER is
+	sign: INTEGER
 			-- Sign value (0, -1 or 1)
 		do
 			if item > 0.0 then
@@ -48,14 +48,14 @@ feature -- Access
 			three_way: Result = three_way_comparison (zero)
 		end
 
-	one: like Current is
+	one: like Current
 			-- Neutral element for "*" and "/"
 		do
 			create Result
 			Result.set_item (1.0)
 		end
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result
@@ -64,20 +64,20 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current double?
 		do
 			Result := item < other.item
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -90,7 +90,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	frozen set_item (d: DOUBLE) is
+	frozen set_item (d: DOUBLE)
 			-- Make `d' the `item' value.
 		do
 			item := d
@@ -98,7 +98,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: like Current): BOOLEAN is
+	divisible (other: like Current): BOOLEAN
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0.0
@@ -106,7 +106,7 @@ feature -- Status report
 			not_exact_zero: Result implies (other.item /= 0.0)
 		end
 
-	exponentiable (other: NUMERIC): BOOLEAN is
+	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		local
 			integer_value: INTEGER_REF
@@ -128,7 +128,7 @@ feature -- Status report
 				(other.conforms_to (0.0) and item > 0.0)) implies Result
 		end
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -137,7 +137,7 @@ feature -- Status report
 
 feature {NONE} -- Conversion
 
-	make_from_reference (v: DOUBLE_REF) is
+	make_from_reference (v: DOUBLE_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Conversion
 
 feature -- Conversion
 
-	to_reference: DOUBLE_REF is
+	to_reference: DOUBLE_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -158,7 +158,7 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	truncated_to_integer: INTEGER is
+	truncated_to_integer: INTEGER
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
@@ -169,7 +169,7 @@ feature -- Conversion
 			end
 		end
 
-	truncated_to_integer_64: INTEGER_64 is
+	truncated_to_integer_64: INTEGER_64
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
@@ -180,14 +180,14 @@ feature -- Conversion
 			end
 		end
 
-	truncated_to_real: REAL is
+	truncated_to_real: REAL
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
 			Result := {SYSTEM_CONVERT}.to_single_double (item)
 		end
 
-	ceiling: INTEGER is
+	ceiling: INTEGER
 			-- Smallest integral value no smaller than current object
 		do
 			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.ceiling (item))
@@ -196,7 +196,7 @@ feature -- Conversion
 			close_enough: Result - item < item.one
 		end
 
-	floor: INTEGER is
+	floor: INTEGER
 			-- Greatest integral value no greater than current object
 		do
 			Result := {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor (item))
@@ -205,7 +205,7 @@ feature -- Conversion
 			close_enough: item - Result < Result.one
 		end
 
-	rounded: INTEGER is
+	rounded: INTEGER
 			-- Rounded integral value
 		do
 			Result := sign * {SYSTEM_CONVERT}.to_int_32_double ({MATH}.floor ({MATH}.abs_double (item) + 0.5))
@@ -213,7 +213,7 @@ feature -- Conversion
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
 
-	ceiling_real_64: DOUBLE is
+	ceiling_real_64: DOUBLE
 			-- Smallest integral value no smaller than current object
 		do
 			Result := {MATH}.ceiling (item)
@@ -222,7 +222,7 @@ feature -- Conversion
 			close_enough: Result - item < item.one
 		end
 
-	floor_real_64: DOUBLE is
+	floor_real_64: DOUBLE
 			-- Greatest integral value no greater than current object
 		do
 			Result := {MATH}.floor (item)
@@ -231,7 +231,7 @@ feature -- Conversion
 			close_enough: item - Result < Result.one
 		end
 
-	rounded_real_64: DOUBLE is
+	rounded_real_64: DOUBLE
 			-- Rounded integral value
 		do
 			Result := sign * {MATH}.floor ({MATH}.abs_double (item) + 0.5)
@@ -241,7 +241,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	abs: DOUBLE is
+	abs: DOUBLE
 			-- Absolute value
 		do
 			Result := abs_ref.item
@@ -250,48 +250,48 @@ feature -- Basic operations
 			same_absolute_value: (Result = item) or (Result = -item)
 		end
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: like Current): like Current
 			-- Sum with `other'
 		do
 			create Result
 			Result.set_item (item + other.item)
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: like Current): like Current
 			-- Product with `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	infix "/" (other: like Current): like Current is
+	infix "/" (other: like Current): like Current
 			-- Division by `other'
 		do
 			create Result
 			Result.set_item (item / other.item)
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: DOUBLE): DOUBLE
 			-- Current double to the power `other'
 		do
 			Result := item ^ other
 		end
 
-	prefix "+": like Current is
+	prefix "+": like Current
 			-- Unary plus
 		do
 			create Result
 			Result.set_item (+ item)
 		end
 
-	prefix "-": like Current is
+	prefix "-": like Current
 			-- Unary minus
 		do
 			create Result
@@ -300,7 +300,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of double value
 		do
 			create Result.make_from_cil ({SYSTEM_CONVERT}.to_string_double_iformat_provider (item, {CULTURE_INFO}.invariant_culture))
@@ -308,7 +308,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	abs_ref: DOUBLE_REF is
+	abs_ref: DOUBLE_REF
 			-- Absolute value
 		do
 			if item >= 0.0 then
@@ -325,7 +325,7 @@ invariant
 
 	sign_times_abs: sign * abs = item
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

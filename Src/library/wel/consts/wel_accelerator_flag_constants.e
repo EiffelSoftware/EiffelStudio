@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Constants for defining accelerator keys %
 				  %in WEL_ACCELERATOR."
 	legal: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	Fcontrol: INTEGER is 8
+	Fcontrol: INTEGER = 8
 			-- The CTRL key must be held down when the accelerator
 			-- key is pressed.
 			--
 			-- Declared in Windows as FCONTROL
 
-	Fnoinvert: INTEGER is 2
+	Fnoinvert: INTEGER = 2
 			-- Specifies that no top-level menu item is highlighted
 			-- when the accelerator is used. If this flag is not
 			-- specified, a top-level menu item will be
@@ -26,26 +26,26 @@ feature -- Access
 			--
 			-- Declared in Windows as FNOINVERT
 
-	Fshift: INTEGER is 4
+	Fshift: INTEGER = 4
 			-- The SHIFT key must be held down when the accelerator
 			-- key is pressed.
 			--
 			-- Declared in Windows as FSHIFT
 
-	Fvirtkey: INTEGER is 1
+	Fvirtkey: INTEGER = 1
 			-- The key member specifies a virtual-key code. If this
 			-- flag is not specified, key is assumed to specify an
 			-- ASCII character code.
 			--
 			-- Declared in Windows as FVIRTKEY
 
-	Falt: INTEGER is 16;
+	Falt: INTEGER = 16;
 			-- The ALT key must be held down when the accelerator
 			-- key is pressed.
 			--
 			-- Declared in Windows as FALT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

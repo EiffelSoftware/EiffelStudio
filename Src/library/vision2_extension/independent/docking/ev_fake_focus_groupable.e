@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Signature class.
 					Descendents will keep title bar, borders highlight in group.
@@ -16,7 +16,7 @@ indexing
 deferred class
 	EV_FAKE_FOCUS_GROUPABLE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

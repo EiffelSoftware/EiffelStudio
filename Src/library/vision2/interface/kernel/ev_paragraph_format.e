@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent paragraph formatting information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform initialization of `Current'.
 		do
 			enable_left_alignment
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Current alignment. See EV_PARAGRAPH_CONSTANTS
 			-- for possible values.
 		require
@@ -35,31 +35,31 @@ feature -- Status report
 			Result := implementation.alignment
 		end
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Is `Current' left aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Is `Current' center aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Is `Current' right aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
 
-	is_justified: BOOLEAN is
+	is_justified: BOOLEAN
 			-- Is `Current' justified?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 
-	left_margin: INTEGER is
+	left_margin: INTEGER
 			-- Left margin between border and text in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -67,7 +67,7 @@ feature -- Status report
 			Result := implementation.left_margin
 		end
 
-	right_margin: INTEGER is
+	right_margin: INTEGER
 			-- Right margin between line end and border in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -75,7 +75,7 @@ feature -- Status report
 			Result := implementation.right_margin
 		end
 
-	top_spacing: INTEGER is
+	top_spacing: INTEGER
 			-- Spacing between top of paragraph and previous line in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -83,7 +83,7 @@ feature -- Status report
 			Result := implementation.top_spacing
 		end
 
-	bottom_spacing: INTEGER is
+	bottom_spacing: INTEGER
 			-- Spacing between bottom of paragraph and next line in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_left_alignment is
+	enable_left_alignment
 			-- Ensure `is_left_aligned' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -103,7 +103,7 @@ feature -- Status setting
 			is_left_aligned: is_left_aligned
 		end
 
-	enable_center_alignment is
+	enable_center_alignment
 			-- Ensure `is_center_aligned' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Status setting
 			is_center_aligned: is_center_aligned
 		end
 
-	enable_right_alignment is
+	enable_right_alignment
 			-- Ensure `is_right_aligned' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Status setting
 			is_right_aligned: is_right_aligned
 		end
 
-	enable_justification is
+	enable_justification
 			-- Ensure `is_justified' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -133,7 +133,7 @@ feature -- Status setting
 			is_justified: is_justified
 		end
 
-	set_alignment (an_alignment: INTEGER) is
+	set_alignment (an_alignment: INTEGER)
 			-- Assign `an_alignment' to `alignment.
 		require
 			not_destroyed: not is_destroyed
@@ -144,7 +144,7 @@ feature -- Status setting
 			alignment_set: alignment = an_alignment
 		end
 
-	set_left_margin (a_margin: INTEGER) is
+	set_left_margin (a_margin: INTEGER)
 			-- Set `left_margin' to `a_margin'.
 		require
 			not_destroyed: not is_destroyed
@@ -155,7 +155,7 @@ feature -- Status setting
 			margin_set: left_margin = a_margin
 		end
 
-	set_right_margin (a_margin: INTEGER) is
+	set_right_margin (a_margin: INTEGER)
 			-- Set `right_margin' to `a_margin'.
 		require
 			not_destroyed: not is_destroyed
@@ -166,7 +166,7 @@ feature -- Status setting
 			margin_set: right_margin = a_margin
 		end
 
-	set_top_spacing (a_spacing: INTEGER) is
+	set_top_spacing (a_spacing: INTEGER)
 			-- Set `top_spacing' to `a_spacing'.
 		require
 			not_destroyed: not is_destroyed
@@ -177,7 +177,7 @@ feature -- Status setting
 			spacing_set: top_spacing = a_spacing
 		end
 
-	set_bottom_spacing (a_spacing: INTEGER) is
+	set_bottom_spacing (a_spacing: INTEGER)
 			-- Set `bottom_spacing' to `a_spacing'.
 		require
 			not_destroyed: not is_destroyed
@@ -190,7 +190,7 @@ feature -- Status setting
 
 feature -- Contract Support
 
-	valid_alignment (an_alignment: INTEGER): BOOLEAN is
+	valid_alignment (an_alignment: INTEGER): BOOLEAN
 			-- Is `an_alignment' a valid paragraph alignment?
 		require
 			not_destroyed: not is_destroyed
@@ -208,7 +208,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of drawing area.
 		do
 			create {EV_PARAGRAPH_FORMAT_IMP} implementation.make (Current)
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_alignment: (create {EV_PARAGRAPH_CONSTANTS}).valid_alignment (alignment)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

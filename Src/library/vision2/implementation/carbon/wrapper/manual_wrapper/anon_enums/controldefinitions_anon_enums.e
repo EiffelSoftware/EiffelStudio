@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Wrapper for anynymous enums from file ControlDefinitions.h"
 
 class
@@ -6,3346 +6,3346 @@ class
 
 feature -- Carbon constants
 	
-	frozen kControlEntireControl: INTEGER is
+	frozen kControlEntireControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEntireControl"
 	end	
 
-	frozen kControlTabListResType: INTEGER is
+	frozen kControlTabListResType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabListResType"
 	end
 
-	frozen kControlListDescResType: INTEGER is
+	frozen kControlListDescResType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListDescResType"
 	end
 
-	frozen kControlCheckBoxUncheckedValue: INTEGER is
+	frozen kControlCheckBoxUncheckedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxUncheckedValue"
 	end
 
-	frozen kControlCheckBoxCheckedValue: INTEGER is
+	frozen kControlCheckBoxCheckedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxCheckedValue"
 	end
 
-	frozen kControlCheckBoxMixedValue: INTEGER is
+	frozen kControlCheckBoxMixedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxMixedValue"
 	end
 
-	frozen kControlRadioButtonUncheckedValue: INTEGER is
+	frozen kControlRadioButtonUncheckedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonUncheckedValue"
 	end
 
-	frozen kControlRadioButtonCheckedValue: INTEGER is
+	frozen kControlRadioButtonCheckedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonCheckedValue"
 	end
 
-	frozen kControlRadioButtonMixedValue: INTEGER is
+	frozen kControlRadioButtonMixedValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonMixedValue"
 	end
 
-	frozen popupFixedWidth: INTEGER is
+	frozen popupFixedWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupFixedWidth"
 	end
 
-	frozen popupVariableWidth: INTEGER is
+	frozen popupVariableWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupVariableWidth"
 	end
 
-	frozen popupUseAddResMenu: INTEGER is
+	frozen popupUseAddResMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupUseAddResMenu"
 	end
 
-	frozen popupUseWFont: INTEGER is
+	frozen popupUseWFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupUseWFont"
 	end
 
-	frozen popupTitleBold: INTEGER is
+	frozen popupTitleBold: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleBold"
 	end
 
-	frozen popupTitleItalic: INTEGER is
+	frozen popupTitleItalic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleItalic"
 	end
 
-	frozen popupTitleUnderline: INTEGER is
+	frozen popupTitleUnderline: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleUnderline"
 	end
 
-	frozen popupTitleOutline: INTEGER is
+	frozen popupTitleOutline: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleOutline"
 	end
 
-	frozen popupTitleShadow: INTEGER is
+	frozen popupTitleShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleShadow"
 	end
 
-	frozen popupTitleCondense: INTEGER is
+	frozen popupTitleCondense: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleCondense"
 	end
 
-	frozen popupTitleExtend: INTEGER is
+	frozen popupTitleExtend: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleExtend"
 	end
 
-	frozen popupTitleNoStyle: INTEGER is
+	frozen popupTitleNoStyle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleNoStyle"
 	end
 
-	frozen popupTitleLeftJust: INTEGER is
+	frozen popupTitleLeftJust: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleLeftJust"
 	end
 
-	frozen popupTitleCenterJust: INTEGER is
+	frozen popupTitleCenterJust: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleCenterJust"
 	end
 
-	frozen popupTitleRightJust: INTEGER is
+	frozen popupTitleRightJust: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupTitleRightJust"
 	end
 
-	frozen pushButProc: INTEGER is
+	frozen pushButProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"pushButProc"
 	end
 
-	frozen checkBoxProc: INTEGER is
+	frozen checkBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"checkBoxProc"
 	end
 
-	frozen radioButProc: INTEGER is
+	frozen radioButProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"radioButProc"
 	end
 
-	frozen scrollBarProc: INTEGER is
+	frozen scrollBarProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"scrollBarProc"
 	end
 
-	frozen popupMenuProc: INTEGER is
+	frozen popupMenuProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"popupMenuProc"
 	end
 
-	frozen kControlLabelPart: INTEGER is
+	frozen kControlLabelPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlLabelPart"
 	end
 
-	frozen kControlMenuPart: INTEGER is
+	frozen kControlMenuPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlMenuPart"
 	end
 
-	frozen kControlTrianglePart: INTEGER is
+	frozen kControlTrianglePart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTrianglePart"
 	end
 
-	frozen kControlEditTextPart: INTEGER is
+	frozen kControlEditTextPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextPart"
 	end
 
-	frozen kControlPicturePart: INTEGER is
+	frozen kControlPicturePart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPicturePart"
 	end
 
-	frozen kControlIconPart: INTEGER is
+	frozen kControlIconPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconPart"
 	end
 
-	frozen kControlClockPart: INTEGER is
+	frozen kControlClockPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockPart"
 	end
 
-	frozen kControlListBoxPart: INTEGER is
+	frozen kControlListBoxPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxPart"
 	end
 
-	frozen kControlListBoxDoubleClickPart: INTEGER is
+	frozen kControlListBoxDoubleClickPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxDoubleClickPart"
 	end
 
-	frozen kControlImageWellPart: INTEGER is
+	frozen kControlImageWellPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlImageWellPart"
 	end
 
-	frozen kControlRadioGroupPart: INTEGER is
+	frozen kControlRadioGroupPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioGroupPart"
 	end
 
-	frozen kControlButtonPart: INTEGER is
+	frozen kControlButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlButtonPart"
 	end
 
-	frozen kControlCheckBoxPart: INTEGER is
+	frozen kControlCheckBoxPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxPart"
 	end
 
-	frozen kControlRadioButtonPart: INTEGER is
+	frozen kControlRadioButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonPart"
 	end
 
-	frozen kControlUpButtonPart: INTEGER is
+	frozen kControlUpButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUpButtonPart"
 	end
 
-	frozen kControlDownButtonPart: INTEGER is
+	frozen kControlDownButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDownButtonPart"
 	end
 
-	frozen kControlPageUpPart: INTEGER is
+	frozen kControlPageUpPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPageUpPart"
 	end
 
-	frozen kControlPageDownPart: INTEGER is
+	frozen kControlPageDownPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPageDownPart"
 	end
 
-	frozen kControlClockHourDayPart: INTEGER is
+	frozen kControlClockHourDayPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockHourDayPart"
 	end
 
-	frozen kControlClockMinuteMonthPart: INTEGER is
+	frozen kControlClockMinuteMonthPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockMinuteMonthPart"
 	end
 
-	frozen kControlClockSecondYearPart: INTEGER is
+	frozen kControlClockSecondYearPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockSecondYearPart"
 	end
 
-	frozen kControlClockAMPMPart: INTEGER is
+	frozen kControlClockAMPMPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockAMPMPart"
 	end
 
-	frozen kControlDataBrowserPart: INTEGER is
+	frozen kControlDataBrowserPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserPart"
 	end
 
-	frozen kControlDataBrowserDraggedPart: INTEGER is
+	frozen kControlDataBrowserDraggedPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserDraggedPart"
 	end
 
-	frozen kControlBevelButtonSmallBevelProc: INTEGER is
+	frozen kControlBevelButtonSmallBevelProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonSmallBevelProc"
 	end
 
-	frozen kControlBevelButtonNormalBevelProc: INTEGER is
+	frozen kControlBevelButtonNormalBevelProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonNormalBevelProc"
 	end
 
-	frozen kControlBevelButtonLargeBevelProc: INTEGER is
+	frozen kControlBevelButtonLargeBevelProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonLargeBevelProc"
 	end
 
-	frozen kControlBevelButtonSmallBevelVariant: INTEGER is
+	frozen kControlBevelButtonSmallBevelVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonSmallBevelVariant"
 	end
 
-	frozen kControlBevelButtonNormalBevelVariant: INTEGER is
+	frozen kControlBevelButtonNormalBevelVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonNormalBevelVariant"
 	end
 
-	frozen kControlBevelButtonLargeBevelVariant: INTEGER is
+	frozen kControlBevelButtonLargeBevelVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonLargeBevelVariant"
 	end
 
-	frozen kControlBevelButtonMenuOnRightVariant: INTEGER is
+	frozen kControlBevelButtonMenuOnRightVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuOnRightVariant"
 	end
 
-	frozen kControlBevelButtonSmallBevel: INTEGER is
+	frozen kControlBevelButtonSmallBevel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonSmallBevel"
 	end
 
-	frozen kControlBevelButtonNormalBevel: INTEGER is
+	frozen kControlBevelButtonNormalBevel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonNormalBevel"
 	end
 
-	frozen kControlBevelButtonLargeBevel: INTEGER is
+	frozen kControlBevelButtonLargeBevel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonLargeBevel"
 	end
 
-	frozen kControlBehaviorPushbutton: INTEGER is
+	frozen kControlBehaviorPushbutton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorPushbutton"
 	end
 
-	frozen kControlBehaviorToggles: INTEGER is
+	frozen kControlBehaviorToggles: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorToggles"
 	end
 
-	frozen kControlBehaviorSticky: INTEGER is
+	frozen kControlBehaviorSticky: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorSticky"
 	end
 
-	frozen kControlBehaviorSingleValueMenu: INTEGER is
+	frozen kControlBehaviorSingleValueMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorSingleValueMenu"
 	end
 
-	frozen kControlBehaviorMultiValueMenu: INTEGER is
+	frozen kControlBehaviorMultiValueMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorMultiValueMenu"
 	end
 
-	frozen kControlBehaviorOffsetContents: INTEGER is
+	frozen kControlBehaviorOffsetContents: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorOffsetContents"
 	end
 
-	frozen kControlBehaviorCommandMenu: INTEGER is
+	frozen kControlBehaviorCommandMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBehaviorCommandMenu"
 	end
 
-	frozen kControlBevelButtonMenuOnBottom: INTEGER is
+	frozen kControlBevelButtonMenuOnBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuOnBottom"
 	end
 
-	frozen kControlBevelButtonMenuOnRight: INTEGER is
+	frozen kControlBevelButtonMenuOnRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuOnRight"
 	end
 
-	frozen kControlKindBevelButton: INTEGER is
+	frozen kControlKindBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindBevelButton"
 	end
 
-	frozen kControlBevelButtonAlignSysDirection: INTEGER is
+	frozen kControlBevelButtonAlignSysDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignSysDirection"
 	end
 
-	frozen kControlBevelButtonAlignCenter: INTEGER is
+	frozen kControlBevelButtonAlignCenter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignCenter"
 	end
 
-	frozen kControlBevelButtonAlignLeft: INTEGER is
+	frozen kControlBevelButtonAlignLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignLeft"
 	end
 
-	frozen kControlBevelButtonAlignRight: INTEGER is
+	frozen kControlBevelButtonAlignRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignRight"
 	end
 
-	frozen kControlBevelButtonAlignTop: INTEGER is
+	frozen kControlBevelButtonAlignTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTop"
 	end
 
-	frozen kControlBevelButtonAlignBottom: INTEGER is
+	frozen kControlBevelButtonAlignBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignBottom"
 	end
 
-	frozen kControlBevelButtonAlignTopLeft: INTEGER is
+	frozen kControlBevelButtonAlignTopLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTopLeft"
 	end
 
-	frozen kControlBevelButtonAlignBottomLeft: INTEGER is
+	frozen kControlBevelButtonAlignBottomLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignBottomLeft"
 	end
 
-	frozen kControlBevelButtonAlignTopRight: INTEGER is
+	frozen kControlBevelButtonAlignTopRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTopRight"
 	end
 
-	frozen kControlBevelButtonAlignBottomRight: INTEGER is
+	frozen kControlBevelButtonAlignBottomRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignBottomRight"
 	end
 
-	frozen kControlBevelButtonAlignTextSysDirection: INTEGER is
+	frozen kControlBevelButtonAlignTextSysDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTextSysDirection"
 	end
 
-	frozen kControlBevelButtonAlignTextCenter: INTEGER is
+	frozen kControlBevelButtonAlignTextCenter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTextCenter"
 	end
 
-	frozen kControlBevelButtonAlignTextFlushRight: INTEGER is
+	frozen kControlBevelButtonAlignTextFlushRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTextFlushRight"
 	end
 
-	frozen kControlBevelButtonAlignTextFlushLeft: INTEGER is
+	frozen kControlBevelButtonAlignTextFlushLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonAlignTextFlushLeft"
 	end
 
-	frozen kControlBevelButtonPlaceSysDirection: INTEGER is
+	frozen kControlBevelButtonPlaceSysDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceSysDirection"
 	end
 
-	frozen kControlBevelButtonPlaceNormally: INTEGER is
+	frozen kControlBevelButtonPlaceNormally: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceNormally"
 	end
 
-	frozen kControlBevelButtonPlaceToRightOfGraphic: INTEGER is
+	frozen kControlBevelButtonPlaceToRightOfGraphic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceToRightOfGraphic"
 	end
 
-	frozen kControlBevelButtonPlaceToLeftOfGraphic: INTEGER is
+	frozen kControlBevelButtonPlaceToLeftOfGraphic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceToLeftOfGraphic"
 	end
 
-	frozen kControlBevelButtonPlaceBelowGraphic: INTEGER is
+	frozen kControlBevelButtonPlaceBelowGraphic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceBelowGraphic"
 	end
 
-	frozen kControlBevelButtonPlaceAboveGraphic: INTEGER is
+	frozen kControlBevelButtonPlaceAboveGraphic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonPlaceAboveGraphic"
 	end
 
-	frozen kControlBevelButtonContentTag: INTEGER is
+	frozen kControlBevelButtonContentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonContentTag"
 	end
 
-	frozen kControlBevelButtonTransformTag: INTEGER is
+	frozen kControlBevelButtonTransformTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonTransformTag"
 	end
 
-	frozen kControlBevelButtonTextAlignTag: INTEGER is
+	frozen kControlBevelButtonTextAlignTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonTextAlignTag"
 	end
 
-	frozen kControlBevelButtonTextOffsetTag: INTEGER is
+	frozen kControlBevelButtonTextOffsetTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonTextOffsetTag"
 	end
 
-	frozen kControlBevelButtonGraphicAlignTag: INTEGER is
+	frozen kControlBevelButtonGraphicAlignTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonGraphicAlignTag"
 	end
 
-	frozen kControlBevelButtonGraphicOffsetTag: INTEGER is
+	frozen kControlBevelButtonGraphicOffsetTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonGraphicOffsetTag"
 	end
 
-	frozen kControlBevelButtonTextPlaceTag: INTEGER is
+	frozen kControlBevelButtonTextPlaceTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonTextPlaceTag"
 	end
 
-	frozen kControlBevelButtonMenuValueTag: INTEGER is
+	frozen kControlBevelButtonMenuValueTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuValueTag"
 	end
 
-	frozen kControlBevelButtonMenuHandleTag: INTEGER is
+	frozen kControlBevelButtonMenuHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuHandleTag"
 	end
 
-	frozen kControlBevelButtonMenuRefTag: INTEGER is
+	frozen kControlBevelButtonMenuRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuRefTag"
 	end
 
-	frozen kControlBevelButtonCenterPopupGlyphTag: INTEGER is
+	frozen kControlBevelButtonCenterPopupGlyphTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonCenterPopupGlyphTag"
 	end
 
-	frozen kControlBevelButtonLastMenuTag: INTEGER is
+	frozen kControlBevelButtonLastMenuTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonLastMenuTag"
 	end
 
-	frozen kControlBevelButtonMenuDelayTag: INTEGER is
+	frozen kControlBevelButtonMenuDelayTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonMenuDelayTag"
 	end
 
-	frozen kControlBevelButtonScaleIconTag: INTEGER is
+	frozen kControlBevelButtonScaleIconTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonScaleIconTag"
 	end
 
-	frozen kControlBevelButtonOwnedMenuRefTag: INTEGER is
+	frozen kControlBevelButtonOwnedMenuRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonOwnedMenuRefTag"
 	end
 
-	frozen kControlBevelButtonKindTag: INTEGER is
+	frozen kControlBevelButtonKindTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonKindTag"
 	end
 
-	frozen kControlBevelButtonIsMultiValueMenuTag: INTEGER is
+	frozen kControlBevelButtonIsMultiValueMenuTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBevelButtonIsMultiValueMenuTag"
 	end
 
-	frozen kControlSliderProc: INTEGER is
+	frozen kControlSliderProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderProc"
 	end
 
-	frozen kControlSliderLiveFeedback: INTEGER is
+	frozen kControlSliderLiveFeedback: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderLiveFeedback"
 	end
 
-	frozen kControlSliderHasTickMarks: INTEGER is
+	frozen kControlSliderHasTickMarks: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderHasTickMarks"
 	end
 
-	frozen kControlSliderReverseDirection: INTEGER is
+	frozen kControlSliderReverseDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderReverseDirection"
 	end
 
-	frozen kControlSliderNonDirectional: INTEGER is
+	frozen kControlSliderNonDirectional: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderNonDirectional"
 	end
 
-	frozen kControlSliderPointsDownOrRight: INTEGER is
+	frozen kControlSliderPointsDownOrRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderPointsDownOrRight"
 	end
 
-	frozen kControlSliderPointsUpOrLeft: INTEGER is
+	frozen kControlSliderPointsUpOrLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderPointsUpOrLeft"
 	end
 
-	frozen kControlSliderDoesNotPoint: INTEGER is
+	frozen kControlSliderDoesNotPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSliderDoesNotPoint"
 	end
 
-	frozen kControlKindSlider: INTEGER is
+	frozen kControlKindSlider: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindSlider"
 	end
 
-	frozen kControlTriangleProc: INTEGER is
+	frozen kControlTriangleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTriangleProc"
 	end
 
-	frozen kControlTriangleLeftFacingProc: INTEGER is
+	frozen kControlTriangleLeftFacingProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTriangleLeftFacingProc"
 	end
 
-	frozen kControlTriangleAutoToggleProc: INTEGER is
+	frozen kControlTriangleAutoToggleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTriangleAutoToggleProc"
 	end
 
-	frozen kControlTriangleLeftFacingAutoToggleProc: INTEGER is
+	frozen kControlTriangleLeftFacingAutoToggleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTriangleLeftFacingAutoToggleProc"
 	end
 
-	frozen kControlDisclosureTrianglePointDefault: INTEGER is
+	frozen kControlDisclosureTrianglePointDefault: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDisclosureTrianglePointDefault"
 	end
 
-	frozen kControlDisclosureTrianglePointRight: INTEGER is
+	frozen kControlDisclosureTrianglePointRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDisclosureTrianglePointRight"
 	end
 
-	frozen kControlDisclosureTrianglePointLeft: INTEGER is
+	frozen kControlDisclosureTrianglePointLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDisclosureTrianglePointLeft"
 	end
 
-	frozen kControlKindDisclosureTriangle: INTEGER is
+	frozen kControlKindDisclosureTriangle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindDisclosureTriangle"
 	end
 
-	frozen kControlTriangleLastValueTag: INTEGER is
+	frozen kControlTriangleLastValueTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTriangleLastValueTag"
 	end
 
-	frozen kControlProgressBarProc: INTEGER is
+	frozen kControlProgressBarProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlProgressBarProc"
 	end
 
-	frozen kControlRelevanceBarProc: INTEGER is
+	frozen kControlRelevanceBarProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRelevanceBarProc"
 	end
 
-	frozen kControlKindProgressBar: INTEGER is
+	frozen kControlKindProgressBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindProgressBar"
 	end
 
-	frozen kControlKindRelevanceBar: INTEGER is
+	frozen kControlKindRelevanceBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindRelevanceBar"
 	end
 
-	frozen kControlProgressBarIndeterminateTag: INTEGER is
+	frozen kControlProgressBarIndeterminateTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlProgressBarIndeterminateTag"
 	end
 
-	frozen kControlProgressBarAnimatingTag: INTEGER is
+	frozen kControlProgressBarAnimatingTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlProgressBarAnimatingTag"
 	end
 
-	frozen kControlLittleArrowsProc: INTEGER is
+	frozen kControlLittleArrowsProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlLittleArrowsProc"
 	end
 
-	frozen kControlKindLittleArrows: INTEGER is
+	frozen kControlKindLittleArrows: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindLittleArrows"
 	end
 
-	frozen kControlLittleArrowsIncrementValueTag: INTEGER is
+	frozen kControlLittleArrowsIncrementValueTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlLittleArrowsIncrementValueTag"
 	end
 
-	frozen kControlChasingArrowsProc: INTEGER is
+	frozen kControlChasingArrowsProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlChasingArrowsProc"
 	end
 
-	frozen kControlKindChasingArrows: INTEGER is
+	frozen kControlKindChasingArrows: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindChasingArrows"
 	end
 
-	frozen kControlChasingArrowsAnimatingTag: INTEGER is
+	frozen kControlChasingArrowsAnimatingTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlChasingArrowsAnimatingTag"
 	end
 
-	frozen kControlTabLargeProc: INTEGER is
+	frozen kControlTabLargeProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabLargeProc"
 	end
 
-	frozen kControlTabSmallProc: INTEGER is
+	frozen kControlTabSmallProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSmallProc"
 	end
 
-	frozen kControlTabLargeNorthProc: INTEGER is
+	frozen kControlTabLargeNorthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabLargeNorthProc"
 	end
 
-	frozen kControlTabSmallNorthProc: INTEGER is
+	frozen kControlTabSmallNorthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSmallNorthProc"
 	end
 
-	frozen kControlTabLargeSouthProc: INTEGER is
+	frozen kControlTabLargeSouthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabLargeSouthProc"
 	end
 
-	frozen kControlTabSmallSouthProc: INTEGER is
+	frozen kControlTabSmallSouthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSmallSouthProc"
 	end
 
-	frozen kControlTabLargeEastProc: INTEGER is
+	frozen kControlTabLargeEastProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabLargeEastProc"
 	end
 
-	frozen kControlTabSmallEastProc: INTEGER is
+	frozen kControlTabSmallEastProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSmallEastProc"
 	end
 
-	frozen kControlTabLargeWestProc: INTEGER is
+	frozen kControlTabLargeWestProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabLargeWestProc"
 	end
 
-	frozen kControlTabSmallWestProc: INTEGER is
+	frozen kControlTabSmallWestProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSmallWestProc"
 	end
 
-	frozen kControlTabDirectionNorth: INTEGER is
+	frozen kControlTabDirectionNorth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabDirectionNorth"
 	end
 
-	frozen kControlTabDirectionSouth: INTEGER is
+	frozen kControlTabDirectionSouth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabDirectionSouth"
 	end
 
-	frozen kControlTabDirectionEast: INTEGER is
+	frozen kControlTabDirectionEast: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabDirectionEast"
 	end
 
-	frozen kControlTabDirectionWest: INTEGER is
+	frozen kControlTabDirectionWest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabDirectionWest"
 	end
 
-	frozen kControlTabSizeLarge: INTEGER is
+	frozen kControlTabSizeLarge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSizeLarge"
 	end
 
-	frozen kControlTabSizeSmall: INTEGER is
+	frozen kControlTabSizeSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSizeSmall"
 	end
 
-	frozen kControlTabSizeMini: INTEGER is
+	frozen kControlTabSizeMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabSizeMini"
 	end
 
-	frozen kControlKindTabs: INTEGER is
+	frozen kControlKindTabs: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindTabs"
 	end
 
-	frozen kControlTabContentRectTag: INTEGER is
+	frozen kControlTabContentRectTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabContentRectTag"
 	end
 
-	frozen kControlTabEnabledFlagTag: INTEGER is
+	frozen kControlTabEnabledFlagTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabEnabledFlagTag"
 	end
 
-	frozen kControlTabFontStyleTag: INTEGER is
+	frozen kControlTabFontStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabFontStyleTag"
 	end
 
-	frozen kControlTabInfoTag: INTEGER is
+	frozen kControlTabInfoTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabInfoTag"
 	end
 
-	frozen kControlTabImageContentTag: INTEGER is
+	frozen kControlTabImageContentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabImageContentTag"
 	end
 
-	frozen kControlTabInfoVersionZero: INTEGER is
+	frozen kControlTabInfoVersionZero: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabInfoVersionZero"
 	end
 
-	frozen kControlTabInfoVersionOne: INTEGER is
+	frozen kControlTabInfoVersionOne: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlTabInfoVersionOne"
 	end
 
-	frozen kControlSeparatorLineProc: INTEGER is
+	frozen kControlSeparatorLineProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSeparatorLineProc"
 	end
 
-	frozen kControlKindSeparator: INTEGER is
+	frozen kControlKindSeparator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindSeparator"
 	end
 
-	frozen kControlGroupBoxTextTitleProc: INTEGER is
+	frozen kControlGroupBoxTextTitleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxTextTitleProc"
 	end
 
-	frozen kControlGroupBoxCheckBoxProc: INTEGER is
+	frozen kControlGroupBoxCheckBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxCheckBoxProc"
 	end
 
-	frozen kControlGroupBoxPopupButtonProc: INTEGER is
+	frozen kControlGroupBoxPopupButtonProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxPopupButtonProc"
 	end
 
-	frozen kControlGroupBoxSecondaryTextTitleProc: INTEGER is
+	frozen kControlGroupBoxSecondaryTextTitleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxSecondaryTextTitleProc"
 	end
 
-	frozen kControlGroupBoxSecondaryCheckBoxProc: INTEGER is
+	frozen kControlGroupBoxSecondaryCheckBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxSecondaryCheckBoxProc"
 	end
 
-	frozen kControlGroupBoxSecondaryPopupButtonProc: INTEGER is
+	frozen kControlGroupBoxSecondaryPopupButtonProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxSecondaryPopupButtonProc"
 	end
 
-	frozen kControlKindGroupBox: INTEGER is
+	frozen kControlKindGroupBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindGroupBox"
 	end
 
-	frozen kControlKindCheckGroupBox: INTEGER is
+	frozen kControlKindCheckGroupBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindCheckGroupBox"
 	end
 
-	frozen kControlKindPopupGroupBox: INTEGER is
+	frozen kControlKindPopupGroupBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPopupGroupBox"
 	end
 
-	frozen kControlGroupBoxMenuHandleTag: INTEGER is
+	frozen kControlGroupBoxMenuHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxMenuHandleTag"
 	end
 
-	frozen kControlGroupBoxMenuRefTag: INTEGER is
+	frozen kControlGroupBoxMenuRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxMenuRefTag"
 	end
 
-	frozen kControlGroupBoxFontStyleTag: INTEGER is
+	frozen kControlGroupBoxFontStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxFontStyleTag"
 	end
 
-	frozen kControlGroupBoxTitleRectTag: INTEGER is
+	frozen kControlGroupBoxTitleRectTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxTitleRectTag"
 	end
 
-	frozen kControlGroupBoxFrameRectTag: INTEGER is
+	frozen kControlGroupBoxFrameRectTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlGroupBoxFrameRectTag"
 	end
 
-	frozen kControlImageWellProc: INTEGER is
+	frozen kControlImageWellProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlImageWellProc"
 	end
 
-	frozen kControlKindImageWell: INTEGER is
+	frozen kControlKindImageWell: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindImageWell"
 	end
 
-	frozen kControlImageWellContentTag: INTEGER is
+	frozen kControlImageWellContentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlImageWellContentTag"
 	end
 
-	frozen kControlImageWellTransformTag: INTEGER is
+	frozen kControlImageWellTransformTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlImageWellTransformTag"
 	end
 
-	frozen kControlImageWellIsDragDestinationTag: INTEGER is
+	frozen kControlImageWellIsDragDestinationTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlImageWellIsDragDestinationTag"
 	end
 
-	frozen kControlPopupArrowEastProc: INTEGER is
+	frozen kControlPopupArrowEastProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowEastProc"
 	end
 
-	frozen kControlPopupArrowWestProc: INTEGER is
+	frozen kControlPopupArrowWestProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowWestProc"
 	end
 
-	frozen kControlPopupArrowNorthProc: INTEGER is
+	frozen kControlPopupArrowNorthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowNorthProc"
 	end
 
-	frozen kControlPopupArrowSouthProc: INTEGER is
+	frozen kControlPopupArrowSouthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSouthProc"
 	end
 
-	frozen kControlPopupArrowSmallEastProc: INTEGER is
+	frozen kControlPopupArrowSmallEastProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSmallEastProc"
 	end
 
-	frozen kControlPopupArrowSmallWestProc: INTEGER is
+	frozen kControlPopupArrowSmallWestProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSmallWestProc"
 	end
 
-	frozen kControlPopupArrowSmallNorthProc: INTEGER is
+	frozen kControlPopupArrowSmallNorthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSmallNorthProc"
 	end
 
-	frozen kControlPopupArrowSmallSouthProc: INTEGER is
+	frozen kControlPopupArrowSmallSouthProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSmallSouthProc"
 	end
 
-	frozen kControlPopupArrowOrientationEast: INTEGER is
+	frozen kControlPopupArrowOrientationEast: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowOrientationEast"
 	end
 
-	frozen kControlPopupArrowOrientationWest: INTEGER is
+	frozen kControlPopupArrowOrientationWest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowOrientationWest"
 	end
 
-	frozen kControlPopupArrowOrientationNorth: INTEGER is
+	frozen kControlPopupArrowOrientationNorth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowOrientationNorth"
 	end
 
-	frozen kControlPopupArrowOrientationSouth: INTEGER is
+	frozen kControlPopupArrowOrientationSouth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowOrientationSouth"
 	end
 
-	frozen kControlPopupArrowSizeNormal: INTEGER is
+	frozen kControlPopupArrowSizeNormal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSizeNormal"
 	end
 
-	frozen kControlPopupArrowSizeSmall: INTEGER is
+	frozen kControlPopupArrowSizeSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupArrowSizeSmall"
 	end
 
-	frozen kControlKindPopupArrow: INTEGER is
+	frozen kControlKindPopupArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPopupArrow"
 	end
 
-	frozen kControlPlacardProc: INTEGER is
+	frozen kControlPlacardProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPlacardProc"
 	end
 
-	frozen kControlKindPlacard: INTEGER is
+	frozen kControlKindPlacard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPlacard"
 	end
 
-	frozen kControlClockTimeProc: INTEGER is
+	frozen kControlClockTimeProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTimeProc"
 	end
 
-	frozen kControlClockTimeSecondsProc: INTEGER is
+	frozen kControlClockTimeSecondsProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTimeSecondsProc"
 	end
 
-	frozen kControlClockDateProc: INTEGER is
+	frozen kControlClockDateProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockDateProc"
 	end
 
-	frozen kControlClockMonthYearProc: INTEGER is
+	frozen kControlClockMonthYearProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockMonthYearProc"
 	end
 
-	frozen kControlClockTypeHourMinute: INTEGER is
+	frozen kControlClockTypeHourMinute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTypeHourMinute"
 	end
 
-	frozen kControlClockTypeHourMinuteSecond: INTEGER is
+	frozen kControlClockTypeHourMinuteSecond: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTypeHourMinuteSecond"
 	end
 
-	frozen kControlClockTypeMonthDayYear: INTEGER is
+	frozen kControlClockTypeMonthDayYear: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTypeMonthDayYear"
 	end
 
-	frozen kControlClockTypeMonthYear: INTEGER is
+	frozen kControlClockTypeMonthYear: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockTypeMonthYear"
 	end
 
-	frozen kControlClockFlagStandard: INTEGER is
+	frozen kControlClockFlagStandard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockFlagStandard"
 	end
 
-	frozen kControlClockNoFlags: INTEGER is
+	frozen kControlClockNoFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockNoFlags"
 	end
 
-	frozen kControlClockFlagDisplayOnly: INTEGER is
+	frozen kControlClockFlagDisplayOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockFlagDisplayOnly"
 	end
 
-	frozen kControlClockIsDisplayOnly: INTEGER is
+	frozen kControlClockIsDisplayOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockIsDisplayOnly"
 	end
 
-	frozen kControlClockFlagLive: INTEGER is
+	frozen kControlClockFlagLive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockFlagLive"
 	end
 
-	frozen kControlClockIsLive: INTEGER is
+	frozen kControlClockIsLive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockIsLive"
 	end
 
-	frozen kControlKindClock: INTEGER is
+	frozen kControlKindClock: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindClock"
 	end
 
-	frozen kControlClockLongDateTag: INTEGER is
+	frozen kControlClockLongDateTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockLongDateTag"
 	end
 
-	frozen kControlClockFontStyleTag: INTEGER is
+	frozen kControlClockFontStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockFontStyleTag"
 	end
 
-	frozen kControlClockAnimatingTag: INTEGER is
+	frozen kControlClockAnimatingTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlClockAnimatingTag"
 	end
 
-	frozen kControlUserPaneProc: INTEGER is
+	frozen kControlUserPaneProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneProc"
 	end
 
-	frozen kControlKindUserPane: INTEGER is
+	frozen kControlKindUserPane: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindUserPane"
 	end
 
-	frozen kControlUserItemDrawProcTag: INTEGER is
+	frozen kControlUserItemDrawProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserItemDrawProcTag"
 	end
 
-	frozen kControlUserPaneDrawProcTag: INTEGER is
+	frozen kControlUserPaneDrawProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneDrawProcTag"
 	end
 
-	frozen kControlUserPaneHitTestProcTag: INTEGER is
+	frozen kControlUserPaneHitTestProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneHitTestProcTag"
 	end
 
-	frozen kControlUserPaneTrackingProcTag: INTEGER is
+	frozen kControlUserPaneTrackingProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneTrackingProcTag"
 	end
 
-	frozen kControlUserPaneIdleProcTag: INTEGER is
+	frozen kControlUserPaneIdleProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneIdleProcTag"
 	end
 
-	frozen kControlUserPaneKeyDownProcTag: INTEGER is
+	frozen kControlUserPaneKeyDownProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneKeyDownProcTag"
 	end
 
-	frozen kControlUserPaneActivateProcTag: INTEGER is
+	frozen kControlUserPaneActivateProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneActivateProcTag"
 	end
 
-	frozen kControlUserPaneFocusProcTag: INTEGER is
+	frozen kControlUserPaneFocusProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneFocusProcTag"
 	end
 
-	frozen kControlUserPaneBackgroundProcTag: INTEGER is
+	frozen kControlUserPaneBackgroundProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlUserPaneBackgroundProcTag"
 	end
 
-	frozen kControlEditTextProc: INTEGER is
+	frozen kControlEditTextProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextProc"
 	end
 
-	frozen kControlEditTextPasswordProc: INTEGER is
+	frozen kControlEditTextPasswordProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextPasswordProc"
 	end
 
-	frozen kControlEditTextInlineInputProc: INTEGER is
+	frozen kControlEditTextInlineInputProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextInlineInputProc"
 	end
 
-	frozen kControlKindEditText: INTEGER is
+	frozen kControlKindEditText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindEditText"
 	end
 
-	frozen kControlEditTextStyleTag: INTEGER is
+	frozen kControlEditTextStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextStyleTag"
 	end
 
-	frozen kControlEditTextTextTag: INTEGER is
+	frozen kControlEditTextTextTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextTextTag"
 	end
 
-	frozen kControlEditTextTEHandleTag: INTEGER is
+	frozen kControlEditTextTEHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextTEHandleTag"
 	end
 
-	frozen kControlEditTextKeyFilterTag: INTEGER is
+	frozen kControlEditTextKeyFilterTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextKeyFilterTag"
 	end
 
-	frozen kControlEditTextSelectionTag: INTEGER is
+	frozen kControlEditTextSelectionTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextSelectionTag"
 	end
 
-	frozen kControlEditTextPasswordTag: INTEGER is
+	frozen kControlEditTextPasswordTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextPasswordTag"
 	end
 
-	frozen kControlEditTextKeyScriptBehaviorTag: INTEGER is
+	frozen kControlEditTextKeyScriptBehaviorTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextKeyScriptBehaviorTag"
 	end
 
-	frozen kControlEditTextLockedTag: INTEGER is
+	frozen kControlEditTextLockedTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextLockedTag"
 	end
 
-	frozen kControlEditTextFixedTextTag: INTEGER is
+	frozen kControlEditTextFixedTextTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextFixedTextTag"
 	end
 
-	frozen kControlEditTextValidationProcTag: INTEGER is
+	frozen kControlEditTextValidationProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextValidationProcTag"
 	end
 
-	frozen kControlEditTextInlinePreUpdateProcTag: INTEGER is
+	frozen kControlEditTextInlinePreUpdateProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextInlinePreUpdateProcTag"
 	end
 
-	frozen kControlEditTextInlinePostUpdateProcTag: INTEGER is
+	frozen kControlEditTextInlinePostUpdateProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextInlinePostUpdateProcTag"
 	end
 
-	frozen kControlEditTextCFStringTag: INTEGER is
+	frozen kControlEditTextCFStringTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextCFStringTag"
 	end
 
-	frozen kControlEditTextPasswordCFStringTag: INTEGER is
+	frozen kControlEditTextPasswordCFStringTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextPasswordCFStringTag"
 	end
 
-	frozen kControlStaticTextProc: INTEGER is
+	frozen kControlStaticTextProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextProc"
 	end
 
-	frozen kControlKindStaticText: INTEGER is
+	frozen kControlKindStaticText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindStaticText"
 	end
 
-	frozen kControlStaticTextStyleTag: INTEGER is
+	frozen kControlStaticTextStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextStyleTag"
 	end
 
-	frozen kControlStaticTextTextTag: INTEGER is
+	frozen kControlStaticTextTextTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextTextTag"
 	end
 
-	frozen kControlStaticTextTextHeightTag: INTEGER is
+	frozen kControlStaticTextTextHeightTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextTextHeightTag"
 	end
 
-	frozen kControlStaticTextTruncTag: INTEGER is
+	frozen kControlStaticTextTruncTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextTruncTag"
 	end
 
-	frozen kControlStaticTextCFStringTag: INTEGER is
+	frozen kControlStaticTextCFStringTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextCFStringTag"
 	end
 
-	frozen kControlStaticTextIsMultilineTag: INTEGER is
+	frozen kControlStaticTextIsMultilineTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlStaticTextIsMultilineTag"
 	end
 
-	frozen kControlPictureProc: INTEGER is
+	frozen kControlPictureProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPictureProc"
 	end
 
-	frozen kControlPictureNoTrackProc: INTEGER is
+	frozen kControlPictureNoTrackProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPictureNoTrackProc"
 	end
 
-	frozen kControlKindPicture: INTEGER is
+	frozen kControlKindPicture: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPicture"
 	end
 
-	frozen kControlPictureHandleTag: INTEGER is
+	frozen kControlPictureHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPictureHandleTag"
 	end
 
-	frozen kControlIconProc: INTEGER is
+	frozen kControlIconProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconProc"
 	end
 
-	frozen kControlIconNoTrackProc: INTEGER is
+	frozen kControlIconNoTrackProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconNoTrackProc"
 	end
 
-	frozen kControlIconSuiteProc: INTEGER is
+	frozen kControlIconSuiteProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconSuiteProc"
 	end
 
-	frozen kControlIconSuiteNoTrackProc: INTEGER is
+	frozen kControlIconSuiteNoTrackProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconSuiteNoTrackProc"
 	end
 
-	frozen kControlIconRefProc: INTEGER is
+	frozen kControlIconRefProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconRefProc"
 	end
 
-	frozen kControlIconRefNoTrackProc: INTEGER is
+	frozen kControlIconRefNoTrackProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconRefNoTrackProc"
 	end
 
-	frozen kControlKindIcon: INTEGER is
+	frozen kControlKindIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindIcon"
 	end
 
-	frozen kControlIconTransformTag: INTEGER is
+	frozen kControlIconTransformTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconTransformTag"
 	end
 
-	frozen kControlIconAlignmentTag: INTEGER is
+	frozen kControlIconAlignmentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconAlignmentTag"
 	end
 
-	frozen kControlIconResourceIDTag: INTEGER is
+	frozen kControlIconResourceIDTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconResourceIDTag"
 	end
 
-	frozen kControlIconContentTag: INTEGER is
+	frozen kControlIconContentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlIconContentTag"
 	end
 
-	frozen kControlWindowHeaderProc: INTEGER is
+	frozen kControlWindowHeaderProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlWindowHeaderProc"
 	end
 
-	frozen kControlWindowListViewHeaderProc: INTEGER is
+	frozen kControlWindowListViewHeaderProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlWindowListViewHeaderProc"
 	end
 
-	frozen kControlKindWindowHeader: INTEGER is
+	frozen kControlKindWindowHeader: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindWindowHeader"
 	end
 
-	frozen kControlWindowHeaderIsListHeaderTag: INTEGER is
+	frozen kControlWindowHeaderIsListHeaderTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlWindowHeaderIsListHeaderTag"
 	end
 
-	frozen kControlListBoxProc: INTEGER is
+	frozen kControlListBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxProc"
 	end
 
-	frozen kControlListBoxAutoSizeProc: INTEGER is
+	frozen kControlListBoxAutoSizeProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxAutoSizeProc"
 	end
 
-	frozen kControlKindListBox: INTEGER is
+	frozen kControlKindListBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindListBox"
 	end
 
-	frozen kControlListBoxListHandleTag: INTEGER is
+	frozen kControlListBoxListHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxListHandleTag"
 	end
 
-	frozen kControlListBoxKeyFilterTag: INTEGER is
+	frozen kControlListBoxKeyFilterTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxKeyFilterTag"
 	end
 
-	frozen kControlListBoxFontStyleTag: INTEGER is
+	frozen kControlListBoxFontStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxFontStyleTag"
 	end
 
-	frozen kControlListBoxDoubleClickTag: INTEGER is
+	frozen kControlListBoxDoubleClickTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxDoubleClickTag"
 	end
 
-	frozen kControlListBoxLDEFTag: INTEGER is
+	frozen kControlListBoxLDEFTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlListBoxLDEFTag"
 	end
 
-	frozen kControlPushButtonProc: INTEGER is
+	frozen kControlPushButtonProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButtonProc"
 	end
 
-	frozen kControlCheckBoxProc: INTEGER is
+	frozen kControlCheckBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxProc"
 	end
 
-	frozen kControlRadioButtonProc: INTEGER is
+	frozen kControlRadioButtonProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonProc"
 	end
 
-	frozen kControlPushButLeftIconProc: INTEGER is
+	frozen kControlPushButLeftIconProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButLeftIconProc"
 	end
 
-	frozen kControlPushButRightIconProc: INTEGER is
+	frozen kControlPushButRightIconProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButRightIconProc"
 	end
 
-	frozen kControlCheckBoxAutoToggleProc: INTEGER is
+	frozen kControlCheckBoxAutoToggleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlCheckBoxAutoToggleProc"
 	end
 
-	frozen kControlRadioButtonAutoToggleProc: INTEGER is
+	frozen kControlRadioButtonAutoToggleProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioButtonAutoToggleProc"
 	end
 
-	frozen kControlPushButtonIconOnLeft: INTEGER is
+	frozen kControlPushButtonIconOnLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButtonIconOnLeft"
 	end
 
-	frozen kControlPushButtonIconOnRight: INTEGER is
+	frozen kControlPushButtonIconOnRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButtonIconOnRight"
 	end
 
-	frozen kControlKindPushButton: INTEGER is
+	frozen kControlKindPushButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPushButton"
 	end
 
-	frozen kControlKindPushIconButton: INTEGER is
+	frozen kControlKindPushIconButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPushIconButton"
 	end
 
-	frozen kControlKindRadioButton: INTEGER is
+	frozen kControlKindRadioButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindRadioButton"
 	end
 
-	frozen kControlKindCheckBox: INTEGER is
+	frozen kControlKindCheckBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindCheckBox"
 	end
 
-	frozen kControlPushButtonDefaultTag: INTEGER is
+	frozen kControlPushButtonDefaultTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButtonDefaultTag"
 	end
 
-	frozen kControlPushButtonCancelTag: INTEGER is
+	frozen kControlPushButtonCancelTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPushButtonCancelTag"
 	end
 
-	frozen kControlScrollBarProc: INTEGER is
+	frozen kControlScrollBarProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollBarProc"
 	end
 
-	frozen kControlScrollBarLiveProc: INTEGER is
+	frozen kControlScrollBarLiveProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollBarLiveProc"
 	end
 
-	frozen kControlKindScrollBar: INTEGER is
+	frozen kControlKindScrollBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindScrollBar"
 	end
 
-	frozen kControlScrollBarShowsArrowsTag: INTEGER is
+	frozen kControlScrollBarShowsArrowsTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollBarShowsArrowsTag"
 	end
 
-	frozen kControlPopupButtonProc: INTEGER is
+	frozen kControlPopupButtonProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonProc"
 	end
 
-	frozen kControlPopupFixedWidthVariant: INTEGER is
+	frozen kControlPopupFixedWidthVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupFixedWidthVariant"
 	end
 
-	frozen kControlPopupVariableWidthVariant: INTEGER is
+	frozen kControlPopupVariableWidthVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupVariableWidthVariant"
 	end
 
-	frozen kControlPopupUseAddResMenuVariant: INTEGER is
+	frozen kControlPopupUseAddResMenuVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupUseAddResMenuVariant"
 	end
 
-	frozen kControlPopupUseWFontVariant: INTEGER is
+	frozen kControlPopupUseWFontVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupUseWFontVariant"
 	end
 
-	frozen kControlKindPopupButton: INTEGER is
+	frozen kControlKindPopupButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindPopupButton"
 	end
 
-	frozen kControlPopupButtonMenuHandleTag: INTEGER is
+	frozen kControlPopupButtonMenuHandleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonMenuHandleTag"
 	end
 
-	frozen kControlPopupButtonMenuRefTag: INTEGER is
+	frozen kControlPopupButtonMenuRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonMenuRefTag"
 	end
 
-	frozen kControlPopupButtonMenuIDTag: INTEGER is
+	frozen kControlPopupButtonMenuIDTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonMenuIDTag"
 	end
 
-	frozen kControlPopupButtonExtraHeightTag: INTEGER is
+	frozen kControlPopupButtonExtraHeightTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonExtraHeightTag"
 	end
 
-	frozen kControlPopupButtonOwnedMenuRefTag: INTEGER is
+	frozen kControlPopupButtonOwnedMenuRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonOwnedMenuRefTag"
 	end
 
-	frozen kControlPopupButtonCheckCurrentTag: INTEGER is
+	frozen kControlPopupButtonCheckCurrentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlPopupButtonCheckCurrentTag"
 	end
 
-	frozen kControlRadioGroupProc: INTEGER is
+	frozen kControlRadioGroupProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRadioGroupProc"
 	end
 
-	frozen kControlKindRadioGroup: INTEGER is
+	frozen kControlKindRadioGroup: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindRadioGroup"
 	end
 
-	frozen kControlScrollTextBoxProc: INTEGER is
+	frozen kControlScrollTextBoxProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxProc"
 	end
 
-	frozen kControlScrollTextBoxAutoScrollProc: INTEGER is
+	frozen kControlScrollTextBoxAutoScrollProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxAutoScrollProc"
 	end
 
-	frozen kControlKindScrollingTextBox: INTEGER is
+	frozen kControlKindScrollingTextBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindScrollingTextBox"
 	end
 
-	frozen kControlScrollTextBoxDelayBeforeAutoScrollTag: INTEGER is
+	frozen kControlScrollTextBoxDelayBeforeAutoScrollTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxDelayBeforeAutoScrollTag"
 	end
 
-	frozen kControlScrollTextBoxDelayBetweenAutoScrollTag: INTEGER is
+	frozen kControlScrollTextBoxDelayBetweenAutoScrollTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxDelayBetweenAutoScrollTag"
 	end
 
-	frozen kControlScrollTextBoxAutoScrollAmountTag: INTEGER is
+	frozen kControlScrollTextBoxAutoScrollAmountTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxAutoScrollAmountTag"
 	end
 
-	frozen kControlScrollTextBoxContentsTag: INTEGER is
+	frozen kControlScrollTextBoxContentsTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxContentsTag"
 	end
 
-	frozen kControlScrollTextBoxAnimatingTag: INTEGER is
+	frozen kControlScrollTextBoxAnimatingTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlScrollTextBoxAnimatingTag"
 	end
 
-	frozen kControlKindDisclosureButton: INTEGER is
+	frozen kControlKindDisclosureButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindDisclosureButton"
 	end
 
-	frozen kControlDisclosureButtonClosed: INTEGER is
+	frozen kControlDisclosureButtonClosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDisclosureButtonClosed"
 	end
 
-	frozen kControlDisclosureButtonDisclosed: INTEGER is
+	frozen kControlDisclosureButtonDisclosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDisclosureButtonDisclosed"
 	end
 
-	frozen kControlRoundButtonNormalSize: INTEGER is
+	frozen kControlRoundButtonNormalSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRoundButtonNormalSize"
 	end
 
-	frozen kControlRoundButtonLargeSize: INTEGER is
+	frozen kControlRoundButtonLargeSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRoundButtonLargeSize"
 	end
 
-	frozen kControlRoundButtonContentTag: INTEGER is
+	frozen kControlRoundButtonContentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRoundButtonContentTag"
 	end
 
-	frozen kControlRoundButtonSizeTag: INTEGER is
+	frozen kControlRoundButtonSizeTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlRoundButtonSizeTag"
 	end
 
-	frozen kControlKindRoundButton: INTEGER is
+	frozen kControlKindRoundButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindRoundButton"
 	end
 
-	frozen kControlKindDataBrowser: INTEGER is
+	frozen kControlKindDataBrowser: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindDataBrowser"
 	end
 
-	frozen errDataBrowserNotConfigured: INTEGER is
+	frozen errDataBrowserNotConfigured: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserNotConfigured"
 	end
 
-	frozen errDataBrowserItemNotFound: INTEGER is
+	frozen errDataBrowserItemNotFound: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserItemNotFound"
 	end
 
-	frozen errDataBrowserItemNotAdded: INTEGER is
+	frozen errDataBrowserItemNotAdded: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserItemNotAdded"
 	end
 
-	frozen errDataBrowserPropertyNotFound: INTEGER is
+	frozen errDataBrowserPropertyNotFound: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserPropertyNotFound"
 	end
 
-	frozen errDataBrowserInvalidPropertyPart: INTEGER is
+	frozen errDataBrowserInvalidPropertyPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserInvalidPropertyPart"
 	end
 
-	frozen errDataBrowserInvalidPropertyData: INTEGER is
+	frozen errDataBrowserInvalidPropertyData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserInvalidPropertyData"
 	end
 
-	frozen errDataBrowserPropertyNotSupported: INTEGER is
+	frozen errDataBrowserPropertyNotSupported: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errDataBrowserPropertyNotSupported"
 	end
 
-	frozen kControlDataBrowserIncludesFrameAndFocusTag: INTEGER is
+	frozen kControlDataBrowserIncludesFrameAndFocusTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserIncludesFrameAndFocusTag"
 	end
 
-	frozen kControlDataBrowserKeyFilterTag: INTEGER is
+	frozen kControlDataBrowserKeyFilterTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserKeyFilterTag"
 	end
 
-	frozen kControlDataBrowserEditTextKeyFilterTag: INTEGER is
+	frozen kControlDataBrowserEditTextKeyFilterTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserEditTextKeyFilterTag"
 	end
 
-	frozen kControlDataBrowserEditTextValidationProcTag: INTEGER is
+	frozen kControlDataBrowserEditTextValidationProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlDataBrowserEditTextValidationProcTag"
 	end
 
-	frozen kDataBrowserNoView: INTEGER is
+	frozen kDataBrowserNoView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserNoView"
 	end
 
-	frozen kDataBrowserListView: INTEGER is
+	frozen kDataBrowserListView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListView"
 	end
 
-	frozen kDataBrowserColumnView: INTEGER is
+	frozen kDataBrowserColumnView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserColumnView"
 	end
 
-	frozen kDataBrowserDragSelect: INTEGER is
+	frozen kDataBrowserDragSelect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDragSelect"
 	end
 
-	frozen kDataBrowserSelectOnlyOne: INTEGER is
+	frozen kDataBrowserSelectOnlyOne: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectOnlyOne"
 	end
 
-	frozen kDataBrowserResetSelection: INTEGER is
+	frozen kDataBrowserResetSelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserResetSelection"
 	end
 
-	frozen kDataBrowserCmdTogglesSelection: INTEGER is
+	frozen kDataBrowserCmdTogglesSelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserCmdTogglesSelection"
 	end
 
-	frozen kDataBrowserNoDisjointSelection: INTEGER is
+	frozen kDataBrowserNoDisjointSelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserNoDisjointSelection"
 	end
 
-	frozen kDataBrowserAlwaysExtendSelection: INTEGER is
+	frozen kDataBrowserAlwaysExtendSelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserAlwaysExtendSelection"
 	end
 
-	frozen kDataBrowserNeverEmptySelectionSet: INTEGER is
+	frozen kDataBrowserNeverEmptySelectionSet: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserNeverEmptySelectionSet"
 	end
 
-	frozen kDataBrowserOrderUndefined: INTEGER is
+	frozen kDataBrowserOrderUndefined: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserOrderUndefined"
 	end
 
-	frozen kDataBrowserOrderIncreasing: INTEGER is
+	frozen kDataBrowserOrderIncreasing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserOrderIncreasing"
 	end
 
-	frozen kDataBrowserOrderDecreasing: INTEGER is
+	frozen kDataBrowserOrderDecreasing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserOrderDecreasing"
 	end
 
-	frozen kDataBrowserItemNoState: INTEGER is
+	frozen kDataBrowserItemNoState: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemNoState"
 	end
 
-	frozen kDataBrowserItemAnyState: INTEGER is
+	frozen kDataBrowserItemAnyState: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemAnyState"
 	end
 
-	frozen kDataBrowserItemIsSelected: INTEGER is
+	frozen kDataBrowserItemIsSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsSelected"
 	end
 
-	frozen kDataBrowserContainerIsOpen: INTEGER is
+	frozen kDataBrowserContainerIsOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerIsOpen"
 	end
 
-	frozen kDataBrowserItemIsDragTarget: INTEGER is
+	frozen kDataBrowserItemIsDragTarget: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsDragTarget"
 	end
 
-	frozen kDataBrowserRevealOnly: INTEGER is
+	frozen kDataBrowserRevealOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserRevealOnly"
 	end
 
-	frozen kDataBrowserRevealAndCenterInView: INTEGER is
+	frozen kDataBrowserRevealAndCenterInView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserRevealAndCenterInView"
 	end
 
-	frozen kDataBrowserRevealWithoutSelecting: INTEGER is
+	frozen kDataBrowserRevealWithoutSelecting: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserRevealWithoutSelecting"
 	end
 
-	frozen kDataBrowserItemsAdd: INTEGER is
+	frozen kDataBrowserItemsAdd: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemsAdd"
 	end
 
-	frozen kDataBrowserItemsAssign: INTEGER is
+	frozen kDataBrowserItemsAssign: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemsAssign"
 	end
 
-	frozen kDataBrowserItemsToggle: INTEGER is
+	frozen kDataBrowserItemsToggle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemsToggle"
 	end
 
-	frozen kDataBrowserItemsRemove: INTEGER is
+	frozen kDataBrowserItemsRemove: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemsRemove"
 	end
 
-	frozen kDataBrowserSelectionAnchorUp: INTEGER is
+	frozen kDataBrowserSelectionAnchorUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectionAnchorUp"
 	end
 
-	frozen kDataBrowserSelectionAnchorDown: INTEGER is
+	frozen kDataBrowserSelectionAnchorDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectionAnchorDown"
 	end
 
-	frozen kDataBrowserSelectionAnchorLeft: INTEGER is
+	frozen kDataBrowserSelectionAnchorLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectionAnchorLeft"
 	end
 
-	frozen kDataBrowserSelectionAnchorRight: INTEGER is
+	frozen kDataBrowserSelectionAnchorRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectionAnchorRight"
 	end
 
-	frozen kDataBrowserEditMsgUndo: INTEGER is
+	frozen kDataBrowserEditMsgUndo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgUndo"
 	end
 
-	frozen kDataBrowserEditMsgRedo: INTEGER is
+	frozen kDataBrowserEditMsgRedo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgRedo"
 	end
 
-	frozen kDataBrowserEditMsgCut: INTEGER is
+	frozen kDataBrowserEditMsgCut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgCut"
 	end
 
-	frozen kDataBrowserEditMsgCopy: INTEGER is
+	frozen kDataBrowserEditMsgCopy: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgCopy"
 	end
 
-	frozen kDataBrowserEditMsgPaste: INTEGER is
+	frozen kDataBrowserEditMsgPaste: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgPaste"
 	end
 
-	frozen kDataBrowserEditMsgClear: INTEGER is
+	frozen kDataBrowserEditMsgClear: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgClear"
 	end
 
-	frozen kDataBrowserEditMsgSelectAll: INTEGER is
+	frozen kDataBrowserEditMsgSelectAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditMsgSelectAll"
 	end
 
-	frozen kDataBrowserItemAdded: INTEGER is
+	frozen kDataBrowserItemAdded: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemAdded"
 	end
 
-	frozen kDataBrowserItemRemoved: INTEGER is
+	frozen kDataBrowserItemRemoved: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemRemoved"
 	end
 
-	frozen kDataBrowserEditStarted: INTEGER is
+	frozen kDataBrowserEditStarted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditStarted"
 	end
 
-	frozen kDataBrowserEditStopped: INTEGER is
+	frozen kDataBrowserEditStopped: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserEditStopped"
 	end
 
-	frozen kDataBrowserItemSelected: INTEGER is
+	frozen kDataBrowserItemSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemSelected"
 	end
 
-	frozen kDataBrowserItemDeselected: INTEGER is
+	frozen kDataBrowserItemDeselected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemDeselected"
 	end
 
-	frozen kDataBrowserItemDoubleClicked: INTEGER is
+	frozen kDataBrowserItemDoubleClicked: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemDoubleClicked"
 	end
 
-	frozen kDataBrowserContainerOpened: INTEGER is
+	frozen kDataBrowserContainerOpened: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerOpened"
 	end
 
-	frozen kDataBrowserContainerClosing: INTEGER is
+	frozen kDataBrowserContainerClosing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerClosing"
 	end
 
-	frozen kDataBrowserContainerClosed: INTEGER is
+	frozen kDataBrowserContainerClosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerClosed"
 	end
 
-	frozen kDataBrowserContainerSorting: INTEGER is
+	frozen kDataBrowserContainerSorting: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerSorting"
 	end
 
-	frozen kDataBrowserContainerSorted: INTEGER is
+	frozen kDataBrowserContainerSorted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerSorted"
 	end
 
-	frozen kDataBrowserUserToggledContainer: INTEGER is
+	frozen kDataBrowserUserToggledContainer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserUserToggledContainer"
 	end
 
-	frozen kDataBrowserTargetChanged: INTEGER is
+	frozen kDataBrowserTargetChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTargetChanged"
 	end
 
-	frozen kDataBrowserUserStateChanged: INTEGER is
+	frozen kDataBrowserUserStateChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserUserStateChanged"
 	end
 
-	frozen kDataBrowserSelectionSetChanged: INTEGER is
+	frozen kDataBrowserSelectionSetChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSelectionSetChanged"
 	end
 
-	frozen kDataBrowserItemNoProperty: INTEGER is
+	frozen kDataBrowserItemNoProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemNoProperty"
 	end
 
-	frozen kDataBrowserItemIsActiveProperty: INTEGER is
+	frozen kDataBrowserItemIsActiveProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsActiveProperty"
 	end
 
-	frozen kDataBrowserItemIsSelectableProperty: INTEGER is
+	frozen kDataBrowserItemIsSelectableProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsSelectableProperty"
 	end
 
-	frozen kDataBrowserItemIsEditableProperty: INTEGER is
+	frozen kDataBrowserItemIsEditableProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsEditableProperty"
 	end
 
-	frozen kDataBrowserItemIsContainerProperty: INTEGER is
+	frozen kDataBrowserItemIsContainerProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemIsContainerProperty"
 	end
 
-	frozen kDataBrowserContainerIsOpenableProperty: INTEGER is
+	frozen kDataBrowserContainerIsOpenableProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerIsOpenableProperty"
 	end
 
-	frozen kDataBrowserContainerIsClosableProperty: INTEGER is
+	frozen kDataBrowserContainerIsClosableProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerIsClosableProperty"
 	end
 
-	frozen kDataBrowserContainerIsSortableProperty: INTEGER is
+	frozen kDataBrowserContainerIsSortableProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerIsSortableProperty"
 	end
 
-	frozen kDataBrowserItemSelfIdentityProperty: INTEGER is
+	frozen kDataBrowserItemSelfIdentityProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemSelfIdentityProperty"
 	end
 
-	frozen kDataBrowserContainerAliasIDProperty: INTEGER is
+	frozen kDataBrowserContainerAliasIDProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContainerAliasIDProperty"
 	end
 
-	frozen kDataBrowserColumnViewPreviewProperty: INTEGER is
+	frozen kDataBrowserColumnViewPreviewProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserColumnViewPreviewProperty"
 	end
 
-	frozen kDataBrowserItemParentContainerProperty: INTEGER is
+	frozen kDataBrowserItemParentContainerProperty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserItemParentContainerProperty"
 	end
 
-	frozen kDataBrowserCustomType: INTEGER is
+	frozen kDataBrowserCustomType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserCustomType"
 	end
 
-	frozen kDataBrowserIconType: INTEGER is
+	frozen kDataBrowserIconType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserIconType"
 	end
 
-	frozen kDataBrowserTextType: INTEGER is
+	frozen kDataBrowserTextType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTextType"
 	end
 
-	frozen kDataBrowserDateTimeType: INTEGER is
+	frozen kDataBrowserDateTimeType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDateTimeType"
 	end
 
-	frozen kDataBrowserSliderType: INTEGER is
+	frozen kDataBrowserSliderType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSliderType"
 	end
 
-	frozen kDataBrowserCheckboxType: INTEGER is
+	frozen kDataBrowserCheckboxType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserCheckboxType"
 	end
 
-	frozen kDataBrowserProgressBarType: INTEGER is
+	frozen kDataBrowserProgressBarType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserProgressBarType"
 	end
 
-	frozen kDataBrowserRelevanceRankType: INTEGER is
+	frozen kDataBrowserRelevanceRankType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserRelevanceRankType"
 	end
 
-	frozen kDataBrowserPopupMenuType: INTEGER is
+	frozen kDataBrowserPopupMenuType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPopupMenuType"
 	end
 
-	frozen kDataBrowserIconAndTextType: INTEGER is
+	frozen kDataBrowserIconAndTextType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserIconAndTextType"
 	end
 
-	frozen kDataBrowserPropertyEnclosingPart: INTEGER is
+	frozen kDataBrowserPropertyEnclosingPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyEnclosingPart"
 	end
 
-	frozen kDataBrowserPropertyContentPart: INTEGER is
+	frozen kDataBrowserPropertyContentPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyContentPart"
 	end
 
-	frozen kDataBrowserPropertyDisclosurePart: INTEGER is
+	frozen kDataBrowserPropertyDisclosurePart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyDisclosurePart"
 	end
 
-	frozen kDataBrowserPropertyTextPart: INTEGER is
+	frozen kDataBrowserPropertyTextPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyTextPart"
 	end
 
-	frozen kDataBrowserPropertyIconPart: INTEGER is
+	frozen kDataBrowserPropertyIconPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyIconPart"
 	end
 
-	frozen kDataBrowserPropertySliderPart: INTEGER is
+	frozen kDataBrowserPropertySliderPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertySliderPart"
 	end
 
-	frozen kDataBrowserPropertyCheckboxPart: INTEGER is
+	frozen kDataBrowserPropertyCheckboxPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyCheckboxPart"
 	end
 
-	frozen kDataBrowserPropertyProgressBarPart: INTEGER is
+	frozen kDataBrowserPropertyProgressBarPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyProgressBarPart"
 	end
 
-	frozen kDataBrowserPropertyRelevanceRankPart: INTEGER is
+	frozen kDataBrowserPropertyRelevanceRankPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyRelevanceRankPart"
 	end
 
-	frozen kDataBrowserUniversalPropertyFlagsMask: INTEGER is
+	frozen kDataBrowserUniversalPropertyFlagsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserUniversalPropertyFlagsMask"
 	end
 
-	frozen kDataBrowserPropertyIsMutable: INTEGER is
+	frozen kDataBrowserPropertyIsMutable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyIsMutable"
 	end
 
-	frozen kDataBrowserDefaultPropertyFlags: INTEGER is
+	frozen kDataBrowserDefaultPropertyFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDefaultPropertyFlags"
 	end
 
-	frozen kDataBrowserUniversalPropertyFlags: INTEGER is
+	frozen kDataBrowserUniversalPropertyFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserUniversalPropertyFlags"
 	end
 
-	frozen kDataBrowserPropertyIsEditable: INTEGER is
+	frozen kDataBrowserPropertyIsEditable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyIsEditable"
 	end
 
-	frozen kDataBrowserPropertyFlagsOffset: INTEGER is
+	frozen kDataBrowserPropertyFlagsOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyFlagsOffset"
 	end
 
-	frozen kDataBrowserPropertyFlagsMask: INTEGER is
+	frozen kDataBrowserPropertyFlagsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyFlagsMask"
 	end
 
-	frozen kDataBrowserCheckboxTriState: INTEGER is
+	frozen kDataBrowserCheckboxTriState: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserCheckboxTriState"
 	end
 
-	frozen kDataBrowserDateTimeRelative: INTEGER is
+	frozen kDataBrowserDateTimeRelative: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDateTimeRelative"
 	end
 
-	frozen kDataBrowserDateTimeDateOnly: INTEGER is
+	frozen kDataBrowserDateTimeDateOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDateTimeDateOnly"
 	end
 
-	frozen kDataBrowserDateTimeTimeOnly: INTEGER is
+	frozen kDataBrowserDateTimeTimeOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDateTimeTimeOnly"
 	end
 
-	frozen kDataBrowserDateTimeSecondsToo: INTEGER is
+	frozen kDataBrowserDateTimeSecondsToo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDateTimeSecondsToo"
 	end
 
-	frozen kDataBrowserSliderPlainThumb: INTEGER is
+	frozen kDataBrowserSliderPlainThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSliderPlainThumb"
 	end
 
-	frozen kDataBrowserSliderUpwardThumb: INTEGER is
+	frozen kDataBrowserSliderUpwardThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSliderUpwardThumb"
 	end
 
-	frozen kDataBrowserSliderDownwardThumb: INTEGER is
+	frozen kDataBrowserSliderDownwardThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserSliderDownwardThumb"
 	end
 
-	frozen kDataBrowserDoNotTruncateText: INTEGER is
+	frozen kDataBrowserDoNotTruncateText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserDoNotTruncateText"
 	end
 
-	frozen kDataBrowserTruncateTextAtEnd: INTEGER is
+	frozen kDataBrowserTruncateTextAtEnd: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTruncateTextAtEnd"
 	end
 
-	frozen kDataBrowserTruncateTextMiddle: INTEGER is
+	frozen kDataBrowserTruncateTextMiddle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTruncateTextMiddle"
 	end
 
-	frozen kDataBrowserTruncateTextAtStart: INTEGER is
+	frozen kDataBrowserTruncateTextAtStart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTruncateTextAtStart"
 	end
 
-	frozen kDataBrowserPropertyModificationFlags: INTEGER is
+	frozen kDataBrowserPropertyModificationFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserPropertyModificationFlags"
 	end
 
-	frozen kDataBrowserRelativeDateTime: INTEGER is
+	frozen kDataBrowserRelativeDateTime: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserRelativeDateTime"
 	end
 
-	frozen kDataBrowserViewSpecificFlagsOffset: INTEGER is
+	frozen kDataBrowserViewSpecificFlagsOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserViewSpecificFlagsOffset"
 	end
 
-	frozen kDataBrowserViewSpecificFlagsMask: INTEGER is
+	frozen kDataBrowserViewSpecificFlagsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserViewSpecificFlagsMask"
 	end
 
-	frozen kDataBrowserViewSpecificPropertyFlags: INTEGER is
+	frozen kDataBrowserViewSpecificPropertyFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserViewSpecificPropertyFlags"
 	end
 
-	frozen kDataBrowserClientPropertyFlagsOffset: INTEGER is
+	frozen kDataBrowserClientPropertyFlagsOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserClientPropertyFlagsOffset"
 	end
 
-	frozen kDataBrowserClientPropertyFlagsMask: INTEGER is
+	frozen kDataBrowserClientPropertyFlagsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserClientPropertyFlagsMask"
 	end
 
-	frozen kDataBrowserLatestCallbacks: INTEGER is
+	frozen kDataBrowserLatestCallbacks: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserLatestCallbacks"
 	end
 
-	frozen kDataBrowserContentHit: INTEGER is
+	frozen kDataBrowserContentHit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserContentHit"
 	end
 
-	frozen kDataBrowserNothingHit: INTEGER is
+	frozen kDataBrowserNothingHit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserNothingHit"
 	end
 
-	frozen kDataBrowserStopTracking: INTEGER is
+	frozen kDataBrowserStopTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserStopTracking"
 	end
 
-	frozen kDataBrowserLatestCustomCallbacks: INTEGER is
+	frozen kDataBrowserLatestCustomCallbacks: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserLatestCustomCallbacks"
 	end
 
-	frozen kDataBrowserTableViewMinimalHilite: INTEGER is
+	frozen kDataBrowserTableViewMinimalHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTableViewMinimalHilite"
 	end
 
-	frozen kDataBrowserTableViewFillHilite: INTEGER is
+	frozen kDataBrowserTableViewFillHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTableViewFillHilite"
 	end
 
-	frozen kDataBrowserTableViewSelectionColumn: INTEGER is
+	frozen kDataBrowserTableViewSelectionColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTableViewSelectionColumn"
 	end
 
-	frozen kDataBrowserTableViewLastColumn: INTEGER is
+	frozen kDataBrowserTableViewLastColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserTableViewLastColumn"
 	end
 
-	frozen kDataBrowserListViewSelectionColumn: INTEGER is
+	frozen kDataBrowserListViewSelectionColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewSelectionColumn"
 	end
 
-	frozen kDataBrowserListViewMovableColumn: INTEGER is
+	frozen kDataBrowserListViewMovableColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewMovableColumn"
 	end
 
-	frozen kDataBrowserListViewSortableColumn: INTEGER is
+	frozen kDataBrowserListViewSortableColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewSortableColumn"
 	end
 
-	frozen kDataBrowserListViewTypeSelectColumn: INTEGER is
+	frozen kDataBrowserListViewTypeSelectColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewTypeSelectColumn"
 	end
 
-	frozen kDataBrowserListViewDefaultColumnFlags: INTEGER is
+	frozen kDataBrowserListViewDefaultColumnFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewDefaultColumnFlags"
 	end
 
-	frozen kDataBrowserListViewLatestHeaderDesc: INTEGER is
+	frozen kDataBrowserListViewLatestHeaderDesc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewLatestHeaderDesc"
 	end
 
-	frozen kDataBrowserListViewAppendColumn: INTEGER is
+	frozen kDataBrowserListViewAppendColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kDataBrowserListViewAppendColumn"
 	end
 
-	frozen kControlEditUnicodeTextProc: INTEGER is
+	frozen kControlEditUnicodeTextProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditUnicodeTextProc"
 	end
 
-	frozen kControlEditUnicodeTextPasswordProc: INTEGER is
+	frozen kControlEditUnicodeTextPasswordProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditUnicodeTextPasswordProc"
 	end
 
-	frozen kControlKindEditUnicodeText: INTEGER is
+	frozen kControlKindEditUnicodeText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindEditUnicodeText"
 	end
 
-	frozen kControlEditTextSingleLineTag: INTEGER is
+	frozen kControlEditTextSingleLineTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextSingleLineTag"
 	end
 
-	frozen kControlEditTextInsertTextBufferTag: INTEGER is
+	frozen kControlEditTextInsertTextBufferTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextInsertTextBufferTag"
 	end
 
-	frozen kControlEditTextInsertCFStringRefTag: INTEGER is
+	frozen kControlEditTextInsertCFStringRefTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlEditTextInsertCFStringRefTag"
 	end
 
-	frozen kControlEditUnicodeTextPostUpdateProcTag: INTEGER is
+	frozen kControlEditUnicodeTextPostUpdateProcTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

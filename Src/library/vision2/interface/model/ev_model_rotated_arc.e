@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[         
 								
 				The arc is drawen from `start_angle' until `start_angle' + `aperture'.
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an arc with some `start_angle' and `aperture'.
 		do
 			Precursor {EV_MODEL_ROTATED_ELLIPTIC}
@@ -45,7 +45,7 @@ feature -- Access
 			
 feature -- Element change
 
-	set_start_angle (a_start_angle: DOUBLE) is
+	set_start_angle (a_start_angle: DOUBLE)
 			-- Set `start_angle' to `a_start_angle'.
 		require
 			a_start_angle_within_bounds:
@@ -57,7 +57,7 @@ feature -- Element change
 			start_angle_assigned: start_angle = a_start_angle
 		end
 
-	set_aperture (an_aperture: DOUBLE) is
+	set_aperture (an_aperture: DOUBLE)
 			-- Set `aperture' to `an_aperture'.
 		require
 			an_aperture_within_bounds:
@@ -71,7 +71,7 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is (`a_x', `a_y') on this figure?
 		local
 			cx, cy: DOUBLE
@@ -119,7 +119,7 @@ invariant
 	start_angle_within_bounds: start_angle >= 0 and then start_angle <= 2 * Pi
 	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

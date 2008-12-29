@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test containers implemented as arrayed lists"
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ deferred class ARRAYED_TEST_CONTAINER inherit
 
 feature -- Element change
 
-	extend (v: TESTABLE) is
+	extend (v: TESTABLE)
 			-- At `v' to end.
 		do
 			v.set_number (test_count + 1)
@@ -38,7 +38,7 @@ feature -- Element change
 			number_correct: v.number = test_count
 		end
 
-	replace (v: TESTABLE; i: INTEGER) is
+	replace (v: TESTABLE; i: INTEGER)
 			-- Replace `i'-th item with `v'.
 		do
 			v.set_number (i)
@@ -52,7 +52,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th item.
 		local
 			old_idx: INTEGER
@@ -72,7 +72,7 @@ feature -- Removal
 			select_test (old_idx)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision label, Carbon implementation."
@@ -50,7 +50,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		local
 			ret: INTEGER
@@ -77,7 +77,7 @@ feature -- Access
 	angle: REAL
 		-- Amount text is rotated counter-clockwise from horizontal plane in radians.
 
-	set_angle (a_angle: REAL) is
+	set_angle (a_angle: REAL)
 			--
 		do
 			angle := a_angle
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			local
 				a_rect: CGRECT_STRUCT
 				a_size: CGSIZE_STRUCT
@@ -100,12 +100,12 @@ feature -- Minimum size
 			Result := 15
 			end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			do
 				Result:= text.split ('%N').first.count * 8 + 5 -- Currently we approximate the width of the first text line
 			end
 
-		set_text (a_text: STRING_GENERAL) is
+		set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			ret: INTEGER
@@ -141,7 +141,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LABEL;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end --class LABEL_IMP
 

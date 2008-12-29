@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	get_pages_user_precondition (p_pages: TAG_CAUUID_RECORD): BOOLEAN is
+	get_pages_user_precondition (p_pages: TAG_CAUUID_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_pages'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_pages (p_pages: TAG_CAUUID_RECORD) is
+	get_pages (p_pages: TAG_CAUUID_RECORD)
 			-- No description available.
 			-- `p_pages' [out].  
 		require
@@ -32,7 +32,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Properties of the memory management mechanism.
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make, update (memory: INTEGER) is
+	make, update (memory: INTEGER)
 			-- Update Current for `memory' type.
 		do
 			mem_stat (memory)
@@ -48,7 +48,7 @@ feature -- Measurement
 			-- Number of bytes used for `type'
 			-- before last call to `update'
 
-	free: INTEGER is
+	free: INTEGER
 			-- Number of bytes still free for `type'
 			-- before last call to `update'
 		do
@@ -66,7 +66,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	mem_stat (mem: INTEGER) is
+	mem_stat (mem: INTEGER)
 			-- Initialize run-time buffer used by mem_info to retrieve the
 			-- statistics frozen at the time of this call.
 		do
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	mem_info (field: INTEGER): INTEGER is
+	mem_info (field: INTEGER): INTEGER
 			-- Read memory accounting structure, field by field.
 		do
 			check
@@ -87,7 +87,7 @@ invariant
 
 	consistent_memory: total = free + used + overhead
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

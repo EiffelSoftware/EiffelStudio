@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_TEXT_FIELD."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	return_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when return key is pressed.
 		do
 			Result := implementation.return_actions
@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

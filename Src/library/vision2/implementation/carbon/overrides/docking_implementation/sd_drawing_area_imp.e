@@ -1,4 +1,4 @@
-indexing
+note
 	description:"[
  					Object that to export update_for_pick_and_drop feature
 					which is in implementation. Carbon
@@ -38,7 +38,7 @@ feature -- Initialize
 
 feature {NONE} -- Implementation
 
-	update_for_pick_and_drop (a_starting: BOOLEAN) is
+	update_for_pick_and_drop (a_starting: BOOLEAN)
 			-- Redefine
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	interface: SD_DRAWING_AREA;
 			-- Redefine
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$"
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an interface object to register
 			-- all types for active base.
 		do
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 		
-	db_type (object: ANY): DB_TYPE is
+	db_type (object: ANY): DB_TYPE
 			-- DB_TYPE instance of `object'
 		require
 			object_not_void: object /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_registered (object: ANY): BOOLEAN is
+	is_registered (object: ANY): BOOLEAN
 			-- Is `object' type registered?
 		require
 			object_not_void: object /= Void
@@ -58,7 +58,7 @@ invariant
 
 	implementation_not_void: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

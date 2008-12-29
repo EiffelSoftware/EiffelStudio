@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "ComboBox message (CB) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,91 +13,91 @@ obsolete
 
 feature -- Access
 
-	Cb_geteditsel: INTEGER is 320
+	Cb_geteditsel: INTEGER = 320
 			-- Declared in Windows as CB_GETEDITSEL
 
-	Cb_limittext: INTEGER is 321
+	Cb_limittext: INTEGER = 321
 			-- Declared in Windows as CB_LIMITTEXT
 
-	Cb_seteditsel: INTEGER is 322
+	Cb_seteditsel: INTEGER = 322
 			-- Declared in Windows as CB_SETEDITSEL
 
-	Cb_addstring: INTEGER is 323
+	Cb_addstring: INTEGER = 323
 			-- Declared in Windows as CB_ADDSTRING
 
-	Cb_deletestring: INTEGER is 324
+	Cb_deletestring: INTEGER = 324
 			-- Declared in Windows as CB_DELETESTRING
 
-	Cb_dir: INTEGER is 325
+	Cb_dir: INTEGER = 325
 			-- Declared in Windows as CB_DIR
 
-	Cb_getcount: INTEGER is 326
+	Cb_getcount: INTEGER = 326
 			-- Declared in Windows as CB_GETCOUNT
 
-	Cb_getcursel: INTEGER is 327
+	Cb_getcursel: INTEGER = 327
 			-- Declared in Windows as CB_GETCURSEL
 
-	Cb_getlbtext: INTEGER is 328
+	Cb_getlbtext: INTEGER = 328
 			-- Declared in Windows as CB_GETLBTEXT
 
-	Cb_getlbtextlen: INTEGER is 329
+	Cb_getlbtextlen: INTEGER = 329
 			-- Declared in Windows as CB_GETLBTEXTLEN
 
-	Cb_insertstring: INTEGER is 330
+	Cb_insertstring: INTEGER = 330
 			-- Declared in Windows as CB_INSERTSTRING
 
-	Cb_resetcontent: INTEGER is 331
+	Cb_resetcontent: INTEGER = 331
 			-- Declared in Windows as CB_RESETCONTENT
 
-	Cb_findstring: INTEGER is 332
+	Cb_findstring: INTEGER = 332
 			-- Declared in Windows as CB_FINDSTRING
 
-	Cb_selectstring: INTEGER is 333
+	Cb_selectstring: INTEGER = 333
 			-- Declared in Windows as CB_SELECTSTRING
 
-	Cb_setcursel: INTEGER is 334
+	Cb_setcursel: INTEGER = 334
 			-- Declared in Windows as CB_SETCURSEL
 
-	Cb_showdropdown: INTEGER is 335
+	Cb_showdropdown: INTEGER = 335
 			-- Declared in Windows as CB_SHOWDROPDOWN
 
-	Cb_getitemdata: INTEGER is 336
+	Cb_getitemdata: INTEGER = 336
 			-- Declared in Windows as CB_GETITEMDATA
 
-	Cb_setitemdata: INTEGER is 337
+	Cb_setitemdata: INTEGER = 337
 			-- Declared in Windows as CB_SETITEMDATA
 
-	Cb_getdroppedcontrolrect: INTEGER is 338
+	Cb_getdroppedcontrolrect: INTEGER = 338
 			-- Declared in Windows as CB_GETDROPPEDCONTROLRECT
 
-	Cb_setitemheight: INTEGER is 339
+	Cb_setitemheight: INTEGER = 339
 			-- Declared in Windows as CB_SETITEMHEIGHT
 
-	Cb_getitemheight: INTEGER is 340
+	Cb_getitemheight: INTEGER = 340
 			-- Declared in Windows as CB_GETITEMHEIGHT
 
-	Cb_setextendedui: INTEGER is 341
+	Cb_setextendedui: INTEGER = 341
 			-- Declared in Windows as CB_SETEXTENDEDUI
 
-	Cb_getextendedui: INTEGER is 342
+	Cb_getextendedui: INTEGER = 342
 			-- Declared in Windows as CB_GETEXTENDEDUI
 
-	Cb_getdroppedstate: INTEGER is 343
+	Cb_getdroppedstate: INTEGER = 343
 			-- Declared in Windows as CB_GETDROPPEDSTATE
 
-	Cb_findstringexact: INTEGER is 344
+	Cb_findstringexact: INTEGER = 344
 			-- Declared in Windows as CB_FINDSTRINGEXACT
 
-	Cb_okay: INTEGER is 0
+	Cb_okay: INTEGER = 0
 			-- Declared in Windows as CB_OKAY
 
-	Cb_err: INTEGER is -1
+	Cb_err: INTEGER = -1
 			-- Declared in Windows as CB_ERR
 
-	Cb_errspace: INTEGER is -2
+	Cb_errspace: INTEGER = -2
 			-- Declared in Windows as CB_ERRSPACE
 
-	Cb_gettopindex: INTEGER is 347
+	Cb_gettopindex: INTEGER = 347
 			-- An application sends the CB_GETTOPINDEX message to
 			-- retrieve the zero-based index of the first visible
 			-- item in the list box portion of a combo box.
@@ -106,7 +106,7 @@ feature -- Access
 			-- the list box, but if the list box contents have
 			-- been scrolled, another item may be at the top.
 
-	Cb_settopindex: INTEGER is 348;
+	Cb_settopindex: INTEGER = 348;
 			-- An application sends the CB_SETTOPINDEX message to
 			-- ensure that a particular item is visible in the
 			-- list box of a combo box. The system scrolls the
@@ -114,7 +114,7 @@ feature -- Access
 			-- item appears at the top of the list box or the
 			-- maximum scroll range has been reached.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

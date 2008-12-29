@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facility to access a standard output medium"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature -- Status report
 
-	has_standard_output: BOOLEAN is
+	has_standard_output: BOOLEAN
 			-- Has a standard output been set?
 		do
 			Result := (standard_output /= Void)
@@ -20,7 +20,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_standard_output (o: IO_MEDIUM) is
+	set_standard_output (o: IO_MEDIUM)
 			-- Set standard output to `o'.
 		do
 			standard_output := o
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 	standard_output: IO_MEDIUM;
 			-- Standard output medium
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

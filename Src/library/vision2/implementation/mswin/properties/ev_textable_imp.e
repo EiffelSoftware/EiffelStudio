@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision textable. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in `Current'.
 		do
 			Result := wel_text
@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (a_text)
@@ -30,26 +30,26 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	wel_set_text (a_text: STRING_GENERAL) is
+	wel_set_text (a_text: STRING_GENERAL)
 			-- Set `a_text' in WEL object.
 		deferred
 		end
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Text from WEL object.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of text
 		deferred
 		ensure
 			positive_length: Result >= 0
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines required by `text'.
 		do
 			Result := text.occurrences ('%N') + 1
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Set to the size of the text.
 		obsolete
 			"Implement using {EV_FONT_IMP}.text_metrics."
@@ -69,7 +69,7 @@ feature -- Obsolete
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

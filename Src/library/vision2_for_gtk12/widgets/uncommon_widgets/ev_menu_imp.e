@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		local
 			pc: EV_COORDINATE
@@ -88,7 +88,7 @@ feature -- Basic operations
 			end
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		do
@@ -101,7 +101,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Generic menu item insertion.
 		local
 			accel_group: POINTER
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	on_activate is
+	on_activate
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
 		do
@@ -166,21 +166,21 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 	
-	destroy is
+	destroy
 			-- Destroy the menu
 		do
 			interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
 		end
 		
-	dispose is
+	dispose
 			-- Disposal routine
 		do
 			Precursor {EV_MENU_ITEM_IMP}
 			list_widget := NULL
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

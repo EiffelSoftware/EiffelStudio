@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the selection Box. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is
+	reasons_list: ARRAY [INTEGER]
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH)
@@ -31,7 +31,7 @@ feature -- Access
 			Result := <<XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH>>;
 		end;
 
-	value: MEL_STRING is
+	value: MEL_STRING
 			-- String that was either chosen from the list
 			-- of typed in
 		do
@@ -42,7 +42,7 @@ feature -- Access
             Result_is_shared: Result.is_shared
 		end;
 
-	length: INTEGER is
+	length: INTEGER
 			-- Number of bytes of `value'
 		do
 			Result := c_length (handle)
@@ -50,17 +50,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_value (a_callback_struct_ptr: POINTER): POINTER is
+	c_value (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Document Item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			name := a_name			
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_previous (a_prev: like previous) is
+	set_previous (a_prev: like previous)
 			-- Set `previous'		
 		do
 			previous := a_prev
@@ -42,7 +42,7 @@ feature -- Status setting
 			prev_set: previous = a_prev
 		end
 		
-	set_next (a_next: like next) is
+	set_next (a_next: like next)
 			-- Set `next'
 		require
 			a_next_not_void: a_next /= Void
@@ -55,7 +55,7 @@ feature -- Status setting
 
 feature -- Status
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Compare the names
 		do
 			Result := (other /= Void) and then
@@ -64,12 +64,12 @@ feature -- Status
 		
 feature {NONE} -- Implementation
 
-	update_position is
+	update_position
 			-- Update position
 		deferred
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that may be selected."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is selected?
 		require
 			not_destroyed: not is_destroyed
@@ -30,7 +30,7 @@ feature -- Status report
 			bridge_ok: is_selectable implies Result = implementation.is_selected
 		end
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May `enable_select' be called?
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Make `is_selected' True.
 		require
 			not_destroyed: not is_destroyed
@@ -56,7 +56,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_SELECTABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

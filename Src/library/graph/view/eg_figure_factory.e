@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that produces views for given models."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ feature -- Access
 	world: EG_FIGURE_WORLD
 			-- World `Current' is a factory for.
 
-	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE is
+	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
 			-- Create a node figure for `a_node'.
 		require
 			a_node_not_void: a_node /= Void
@@ -22,7 +22,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE is
+	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE is
+	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		require
 			a_link_not_void: a_link /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	model_from_xml (node: XM_ELEMENT): EG_ITEM is
+	model_from_xml (node: XM_ELEMENT): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		require
 			node_not_void: node /= Void
@@ -49,7 +49,7 @@ feature -- Access
 		
 feature {EG_FIGURE_WORLD} -- Implementation
 
-	set_world (a_world: like world) is
+	set_world (a_world: like world)
 			-- Set `world' to `a_world'.
 		require
 			a_world_not_void: a_world /= Void
@@ -61,7 +61,7 @@ feature {EG_FIGURE_WORLD} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	linkable_with_name (a_name: STRING): EG_LINKABLE is
+	linkable_with_name (a_name: STRING): EG_LINKABLE
 			-- Linkable with name `a_name' in graph if any
 		require
 			a_name_not_void: a_name /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

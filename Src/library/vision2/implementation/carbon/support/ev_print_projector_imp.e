@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -36,36 +36,36 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 		do
 			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I} -- Access
 
-	project is
+	project
 		do
 		end
 
-	add_ps_line (ps_code: STRING_GENERAL) is
+	add_ps_line (ps_code: STRING_GENERAL)
 			-- Append `ps_code' postscript to output.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	add_footer is
+	add_footer
 			-- Add showpage if printing to printer.
 		do
 			Precursor {EV_POSTSCRIPT_PROJECTOR}
 		end
 
-	tmp_print_job_name: STRING is
+	tmp_print_job_name: STRING
 			-- A unique print job file name.
 		do
 		end
@@ -74,7 +74,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRINT_PROJECTOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

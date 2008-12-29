@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sets of compactly coded times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 	
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create set for `n' times.
 		require
 			positive: n > 0
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): TIME is
+	item (i: INTEGER): TIME
 			-- Item at index `i'
 		require
 			index_in_range: 1 <= i and i <= last
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (t: TIME) is
+	put (t: TIME)
 			-- insert `t' as last item.
 		require 
 			exists: t /= Void
@@ -76,7 +76,7 @@ invariant
 	last_non_negative: last >= 0
 	last_small_enough: last <= count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Default color palette. This palette consists of the %
 		%static colors in the system palette."
 	legal: "See notice at end of class."
@@ -22,13 +22,13 @@ create
 
 feature {NONE} -- Implementation
 
-	stock_id: INTEGER is
+	stock_id: INTEGER
 			-- GDI stock object identifier
 		once
 			Result := Default_palette
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

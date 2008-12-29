@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All image format constants used by gdi+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ obsolete
 	
 feature -- Total
 
-	all_formats: ARRAYED_LIST [WEL_GDIP_IMAGE_FORMAT] is
+	all_formats: ARRAYED_LIST [WEL_GDIP_IMAGE_FORMAT]
 			-- All formats supported.
 		do
 			create Result.make (12)
@@ -35,7 +35,7 @@ feature -- Total
 
 feature -- Query
 
-	memoryBMP: WEL_GDIP_IMAGE_FORMAT is
+	memoryBMP: WEL_GDIP_IMAGE_FORMAT
     		-- Memory BMP format.
     	local
     		l_guid: WEL_GUID
@@ -47,7 +47,7 @@ feature -- Query
     		not_void: Result /= Void
     	end
 
-	bmp: WEL_GDIP_IMAGE_FORMAT is
+	bmp: WEL_GDIP_IMAGE_FORMAT
 			-- BMP format.
 		local
 			l_guid: WEL_GUID
@@ -59,7 +59,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	emf: WEL_GDIP_IMAGE_FORMAT is
+	emf: WEL_GDIP_IMAGE_FORMAT
 			-- EMF format.
 		local
 			l_guid: WEL_GUID
@@ -71,7 +71,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	wmf: WEL_GDIP_IMAGE_FORMAT is
+	wmf: WEL_GDIP_IMAGE_FORMAT
 			-- WMF format.
 		local
 			l_guid: WEL_GUID
@@ -83,7 +83,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	jpeg: WEL_GDIP_IMAGE_FORMAT is
+	jpeg: WEL_GDIP_IMAGE_FORMAT
 			-- JPEG format.
 		local
 			l_guid: WEL_GUID
@@ -95,7 +95,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	png: WEL_GDIP_IMAGE_FORMAT is
+	png: WEL_GDIP_IMAGE_FORMAT
 			-- PNG format.
 		local
 			l_guid: WEL_GUID
@@ -107,7 +107,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	gif: WEL_GDIP_IMAGE_FORMAT is
+	gif: WEL_GDIP_IMAGE_FORMAT
 			-- GIF format.
 		local
 			l_guid: WEL_GUID
@@ -119,7 +119,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	tiff: WEL_GDIP_IMAGE_FORMAT is
+	tiff: WEL_GDIP_IMAGE_FORMAT
 			-- TIFF format.
 		local
 			l_guid: WEL_GUID
@@ -131,7 +131,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	exif: WEL_GDIP_IMAGE_FORMAT is
+	exif: WEL_GDIP_IMAGE_FORMAT
 			-- EXIF format.
 		local
 			l_guid: WEL_GUID
@@ -143,7 +143,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	photoCD: WEL_GDIP_IMAGE_FORMAT is
+	photoCD: WEL_GDIP_IMAGE_FORMAT
 			-- photoCD format.
 		local
 			l_guid: WEL_GUID
@@ -155,7 +155,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	flashPIX: WEL_GDIP_IMAGE_FORMAT is
+	flashPIX: WEL_GDIP_IMAGE_FORMAT
 			-- flashPIX format.
 		local
 			l_guid: WEL_GUID
@@ -167,7 +167,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-	icon: WEL_GDIP_IMAGE_FORMAT is
+	icon: WEL_GDIP_IMAGE_FORMAT
 			-- ICON format.
 		local
 			l_guid: WEL_GUID
@@ -179,7 +179,7 @@ feature -- Query
     		not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

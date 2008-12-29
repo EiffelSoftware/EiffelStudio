@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision standard dialog. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,31 +28,31 @@ inherit
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of dialog shown in title bar.
 		deferred
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- Window this dialog is a transient for.
 		deferred
 		end
 
 feature -- Status report
 
-	selected_button: STRING_32 is
+	selected_button: STRING_32
 			-- Label of the last clicked button.
 		deferred
 		end
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show the dialog modal with respect to `a_window'.
 		deferred
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set the title of the dialog.
 		require
 			a_title_not_void: a_title /= Void
@@ -61,7 +61,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_accept: STRING_32 is
+	internal_accept: STRING_32
 			-- The text of the "ok" type button of `Current'.
 			-- e.g. not the cancel button.
 			-- Normally "OK", but redefined in some descendents
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_STANDARD_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

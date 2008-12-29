@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"This class represents a MS_WINDOWS io handler. %
 		%It is actually based on DDE and the references to files %
@@ -21,13 +21,13 @@ create
 
 feature -- Initialization
 
-	make (an_io_handler: IO_HANDLER) is
+	make (an_io_handler: IO_HANDLER)
 		do
 		end
 
 feature
 
-	call_back is
+	call_back
 			-- Call the command.
 		local
                       command_clone: COMMAND
@@ -50,7 +50,7 @@ feature
 	argument: ANY
 			-- Argument to be passed
 
-	destroy is
+	destroy
 		do
 			command := Void
 			argument := Void
@@ -59,13 +59,13 @@ feature
 	window: POINTER
 			-- Window handler is attached to.
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		do
 			Result := command /= Void
 		end
 
-	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when an operation
 			-- on `a_file' had raised an I/O error.
 			--| the behave of this routine should be examined when other
@@ -73,13 +73,13 @@ feature
 		do
 		end
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		do
 			command := Void
 		end
 
-	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		do
@@ -87,7 +87,7 @@ feature
 			argument := an_argument
 		end
 
-	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		do
@@ -95,13 +95,13 @@ feature
 
 feature {NONE} -- Implmentation
 
-	win_ioh_make_client (cb: POINTER; obj: IO_HANDLER_WINDOWS): POINTER is
+	win_ioh_make_client (cb: POINTER; obj: IO_HANDLER_WINDOWS): POINTER
 			-- Make the io handler function
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

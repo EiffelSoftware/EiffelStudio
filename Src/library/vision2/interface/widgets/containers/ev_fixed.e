@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Container that allows custom placement of widgets. Widgets are
@@ -80,7 +80,7 @@ feature -- Element change
 			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
-	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
+	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER)
 			-- Assign `an_x' to `a_widget.x_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -92,7 +92,7 @@ feature -- Element change
 			an_item_x_position_assigned: a_widget.x_position = an_x
 		end
 
-	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER) is
+	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER)
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Element change
 			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER)
 			-- Assign `an_x' to `a_widget.x_position'.
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
@@ -118,7 +118,7 @@ feature -- Element change
 			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER) is
+	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER)
 			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Element change
 			an_item_width_assigned: a_widget.width = a_width.max (a_widget.minimum_width)
 		end
 
-	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
+	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER)
 			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Element change
 			an_item_height_assigned: a_widget.height = a_height.max (a_widget.minimum_height)
 		end
 
-	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Assign `_width' to `a_widget.width'.
 			-- Assign `a_height' to `a_widget.height'.
 		require
@@ -165,13 +165,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_FIXED_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

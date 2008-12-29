@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To use with Gobo comparison facilities but implemented using agents instead."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_action: like action) is
+	make (an_action: like action)
 			-- Use `an_action' to compare two elements of type G.
 		require
 			an_action_not_void: an_action /= Void
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	test (v, u: G): BOOLEAN is
+	test (v, u: G): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
 		do
@@ -61,7 +61,7 @@ feature -- Comparison
 			Result := action.is_equal (other.action)
 		end
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := action.item ([u ,v])
@@ -70,7 +70,7 @@ feature -- Comparison
 invariant
 	action_not_void: action /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

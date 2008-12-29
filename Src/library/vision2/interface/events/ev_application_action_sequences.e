@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_APPLICATION."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-	post_launch_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	post_launch_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed just after application `launch'.
 		do
 			Result := implementation.post_launch_actions
@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when the application is otherwise idle.
 			-- Use of `idle_actions' is not thread-safe.  For thread-safe idle
 			-- actions handling use 'add_idle_action', `remove_idle_action'
@@ -48,7 +48,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pick_actions: EV_PND_ACTION_SEQUENCE is
+	pick_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when any "pick" occurs.
 		do
 			Result := implementation.pick_actions
@@ -56,7 +56,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	drop_actions: EV_PND_ACTION_SEQUENCE is
+	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when any "drop" occurs.
 		do
 			Result := implementation.drop_actions
@@ -64,7 +64,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	cancel_actions: EV_PND_ACTION_SEQUENCE is
+	cancel_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when a PND is cancelled.
 			-- A cancel may be initiated in a number of ways depending on the transport
 			-- type, including attempting to drop on a target that does not accept
@@ -75,7 +75,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is moved,
 			-- during a pick and drop. The "pick and drop" argument
 			-- is the current EV_ABSTRACT_PICK_AND_DROPABLE below the
@@ -99,7 +99,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	uncaught_exception_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [exception: EXCEPTION]] is
+	uncaught_exception_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [exception: EXCEPTION]]
 			-- Actions to be performed when an
 			-- action sequence called via callback
 			-- from the underlying toolkit raises an
@@ -110,7 +110,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_motion_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; screen_x: INTEGER; screen_y: INTEGER]] is
+	pointer_motion_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; screen_x: INTEGER; screen_y: INTEGER]]
 			-- Actions to be performed when screen pointer moves.
 		do
 			Result := implementation.pointer_motion_actions
@@ -118,7 +118,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]] is
+	pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]]
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			Result := implementation.pointer_button_press_actions
@@ -126,7 +126,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]] is
+	pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]]
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			Result := implementation.pointer_double_press_actions
@@ -134,7 +134,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]] is
+	pointer_button_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; button: INTEGER; screen_x: INTEGER; screen_y: INTEGER]]
 			-- Actions to be performed when screen pointer button is released.
 		do
 			Result := implementation.pointer_button_release_actions
@@ -142,7 +142,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	mouse_wheel_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; delta: INTEGER]] is
+	mouse_wheel_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; delta: INTEGER]]
 			-- Actions to be performed when mouse wheel is rotated.
 		do
 			Result := implementation.mouse_wheel_actions
@@ -150,7 +150,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; key: EV_KEY]] is
+	key_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; key: EV_KEY]]
 			-- Actions to be performed when a keyboard key is pressed.
 		do
 			Result := implementation.key_press_actions
@@ -158,7 +158,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; string: STRING_GENERAL]] is
+	key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; string: STRING_GENERAL]]
 			-- Actions to be performed when a keyboard press generates a displayable character.
 		do
 			Result := implementation.key_press_string_actions
@@ -166,7 +166,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; key: EV_KEY]] is
+	key_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; key: EV_KEY]]
 			-- Actions to be performed when a keyboard key is released.
 		do
 			Result := implementation.key_release_actions
@@ -174,7 +174,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	focus_in_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET]] is
+	focus_in_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET]]
 			-- Actions to be performed when getting focus.
 		do
 			Result := implementation.focus_in_actions
@@ -182,7 +182,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	focus_out_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET]] is
+	focus_out_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET]]
 			-- Actions to be performed when losing focus.
 		do
 			Result := implementation.focus_out_actions
@@ -190,7 +190,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	theme_changed_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	theme_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when operation system theme changed
 		do
 			Result := implementation.theme_changed_actions
@@ -198,13 +198,13 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	destroy_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when destroying current application.
 		do
 			Result := implementation.destroy_actions
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

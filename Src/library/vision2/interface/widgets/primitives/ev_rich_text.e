@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision rich text area, supporting multiple lines of text, with font and color
 		formatting applicable on a character by character basis.
@@ -26,7 +26,7 @@ inherit
 		
 feature -- Access
 
-	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT
 			-- `Result' is character format at caret position `caret_index'.
 		require
 			not_destroyed: not is_destroyed
@@ -41,7 +41,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	selected_character_format: EV_CHARACTER_FORMAT is
+	selected_character_format: EV_CHARACTER_FORMAT
 			-- `Result' is character format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -58,7 +58,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		require
 			not_destroyed: not is_destroyed
@@ -73,7 +73,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -90,7 +90,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		require
 			not_destroyed: not is_destroyed
@@ -105,7 +105,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		require
 			not_destroyed: not is_destroyed
@@ -120,7 +120,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end	
 		end
 
-	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -140,7 +140,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end	
 		end
 		
-	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_position' to `end_position'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
 			--`end_position' and `False' otherwise.
@@ -160,7 +160,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end	
 		end
 
-	buffer_locked_in_format_mode: BOOLEAN is
+	buffer_locked_in_format_mode: BOOLEAN
 			-- Is buffered formatting underway?
 			-- `True' after one or more calls to `buffered_format' and `False'
 			-- after buffer is flushed.
@@ -175,7 +175,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	buffer_locked_in_append_mode: BOOLEAN is
+	buffer_locked_in_append_mode: BOOLEAN
 			-- Is buffered appending underway?
 			-- `True' after one or more calls to `buffered_append' and `False'
 			-- after buffer is flushed.
@@ -190,7 +190,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -206,7 +206,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	position_from_index (an_index: INTEGER): EV_COORDINATE is
+	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		require
 			not_destroyed: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	character_displayed (an_index: INTEGER): BOOLEAN is
+	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -238,7 +238,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	tab_positions: EV_ACTIVE_LIST [INTEGER] is
+	tab_positions: EV_ACTIVE_LIST [INTEGER]
 			-- Width of each tab position in pixels, from left to right.
 			-- Insert values to update tab widths used in `Current'.
 			-- All additional tab positions use `tab_width'.
@@ -254,7 +254,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	tab_width: INTEGER is
+	tab_width: INTEGER
 			-- Default width in pixels of each tab in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -268,7 +268,7 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	last_load_successful: BOOLEAN is
+	last_load_successful: BOOLEAN
 			-- Did last call to `set_with_named_file' complete succesfully?
 			-- If an invalid RTF file is passed, `Result' is `False'.
 			-- `Result' is undefined if `set_with_named_file' not called.
@@ -280,7 +280,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_current_format (format: EV_CHARACTER_FORMAT) is
+	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to current caret position, applicable
 			-- to next typed characters.
 		require
@@ -295,7 +295,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on.
@@ -312,7 +312,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately.
 		require
@@ -328,7 +328,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from caret positions `start_position' to `end_position' applying all attributes
 			-- of `format' that are set to `True' within `applicable_attributes', ignoring others.
 		require
@@ -345,7 +345,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
@@ -363,7 +363,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_buffer' to apply buffered contents to `Current'.
 			-- `format' is not cloned internally and when buffer is flushed, its reference is
@@ -385,7 +385,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
 			-- or `flush_buffer_to' which inserts the formatted text.
@@ -408,7 +408,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	flush_buffer_to (start_position, end_position: INTEGER) is
+	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
@@ -425,7 +425,7 @@ feature -- Status setting
 			unselected: not has_selection
 		end
 
-	flush_buffer is
+	flush_buffer
 			-- Flush contents of buffer and unlock any set buffering mode.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
@@ -440,7 +440,7 @@ feature -- Status setting
 			unselected: not has_selection
 		end
 		
-	set_tab_width (a_width: INTEGER) is
+	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' in pixels to `tab_width'.
 		require
 			not_destroyed: not is_destroyed
@@ -455,7 +455,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	save_to_named_file (a_filename: FILE_NAME) is
+	save_to_named_file (a_filename: FILE_NAME)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
 			not_destroyed: not is_destroyed
@@ -469,7 +469,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	set_with_named_file (a_filename: FILE_NAME) is
+	set_with_named_file (a_filename: FILE_NAME)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
 			not_destroyed: not is_destroyed
@@ -487,7 +487,7 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
@@ -501,7 +501,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of drawing area.
 		do
 			create {EV_RICH_TEXT_IMP} implementation.make (Current)
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 invariant
 	buffer_locked_in_a_single_mode: not (buffer_locked_in_append_mode and buffer_locked_in_format_mode)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

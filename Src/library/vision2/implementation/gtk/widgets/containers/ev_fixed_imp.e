@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision fixed. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -32,14 +32,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_fixed_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (container_widget, True)
@@ -86,7 +86,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_container_check_resize (container_widget)
 		end
 
-	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
@@ -108,7 +108,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
 		end
 
-	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
@@ -125,7 +125,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	i_th_fixed_child (i: INTEGER): POINTER is
+	i_th_fixed_child (i: INTEGER): POINTER
 			-- `i-th' fixed child of `Current'.
 		local
 			glist: POINTER
@@ -134,19 +134,19 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (glist, i - 1)
 		end
 
-	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
+	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER
 			-- X position of `a_widget_imp' within `Current'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_fixed_child_struct_x (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
 		end
 
-	y_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
+	y_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER
 			-- Y position of `a_widget_imp' within `Current'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
 		end
 
-	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER) is
+	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
 		local
 			glist, fixlist, fixitem: POINTER
@@ -191,7 +191,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

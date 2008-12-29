@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of Motif Font context."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_font_list: MEL_FONT_LIST) is
+	make (a_font_list: MEL_FONT_LIST)
 			-- Create a font context for `a_font_list'.
 		require
 			valid_font_list: a_font_list /= Void and then a_font_list.is_valid
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next_entry: MEL_FONT_LIST_ENTRY is
+	next_entry: MEL_FONT_LIST_ENTRY
 			-- Next entry in a font_list
 		require
 			is_valid: is_valid
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free font context.
 		do
 			xm_font_list_free_font_context (handle);
@@ -55,26 +55,26 @@ feature -- Removal
 
 feature {NONE} -- External features
 
-	xm_font_list_init_font_context (a_font_list: POINTER): POINTER is
+	xm_font_list_init_font_context (a_font_list: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	xm_font_list_next_entry (a_font_context: POINTER): POINTER is
+	xm_font_list_next_entry (a_font_context: POINTER): POINTER
 		external
 			"C (XmFontContext): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListNextEntry"
 		end;
 
-	xm_font_list_free_font_context (a_font_context: POINTER) is
+	xm_font_list_free_font_context (a_font_context: POINTER)
 		external
 			"C (XmFontContext) | <Xm/Xm.h>"
 		alias
 			"XmFontListFreeFontContext"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

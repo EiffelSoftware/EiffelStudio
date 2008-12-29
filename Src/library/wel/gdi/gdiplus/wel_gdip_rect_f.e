@@ -1,4 +1,4 @@
-indexing
+note
 	description: "RectF used by Gdi+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create  internal_item.make (structure_size)
 		end
 
-	make_with_size (a_x, a_y, a_width, a_height: REAL) is
+	make_with_size (a_x, a_y, a_width, a_height: REAL)
 			-- Initlialize Current with `a_x', `a_y', `a_width' and `a_height'.
 		do
 			make
@@ -32,7 +32,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_x (a_x: REAL) is
+	set_x (a_x: REAL)
 			-- Set `x' with `a_x'.
 		do
 			c_set_x (item, a_x)
@@ -40,7 +40,7 @@ feature -- Command
 			set: x = a_x
 		end
 
-	set_y (a_y: REAL) is
+	set_y (a_y: REAL)
 			-- Set `y' with `a_y'.
 		do
 			c_set_y (item, a_y)
@@ -48,7 +48,7 @@ feature -- Command
 			set: y = a_y
 		end
 
-	set_width (a_width: REAL) is
+	set_width (a_width: REAL)
 			-- Set `width' with `a_width'.
 		do
 			c_set_width (item, a_width)
@@ -56,7 +56,7 @@ feature -- Command
 			set: width = a_width
 		end
 
-	set_height (a_height: REAL) is
+	set_height (a_height: REAL)
 			-- Set `height' with `a_height'.
 		do
 			c_set_height (item, a_height)
@@ -66,37 +66,37 @@ feature -- Command
 
 feature -- Query
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of Current structure.
 		do
 			Result := c_size_of_gp_rect
 		end
 
-	x: REAL is
+	x: REAL
 			-- X position
 		do
 			Result := c_x (item)
 		end
 
-	y: REAL is
+	y: REAL
 			-- Y position
 		do
 			Result := c_y (item)
 		end
 
-	width: REAL is
+	width: REAL
 			-- Width
 		do
 			Result := c_width (item)
 		end
 
-	height: REAL is
+	height: REAL
 			-- Height
 		do
 			Result := c_height (item)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Pointer to C struct
 		do
 			Result := internal_item.item
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_size_of_gp_rect: INTEGER is
+	c_size_of_gp_rect: INTEGER
 			-- RectF struct size.
 		external
 			"C [macro %"wel_gdi_plus.h%"]"
@@ -119,7 +119,7 @@ feature {NONE} -- C externals
 			"sizeof (RectF)"
 		end
 
-	c_set_x (a_item: POINTER; a_x: REAL) is
+	c_set_x (a_item: POINTER; a_x: REAL)
 			-- Set `a_item''s x with `a_x'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -131,7 +131,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_y (a_item: POINTER; a_y: REAL) is
+	c_set_y (a_item: POINTER; a_y: REAL)
 			-- Set `a_item''s y with `a_y'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -143,7 +143,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_width (a_item: POINTER; a_width: REAL) is
+	c_set_width (a_item: POINTER; a_width: REAL)
 			-- Set `a_item''s width with `a_width'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -155,7 +155,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_height (a_item: POINTER; a_height: REAL) is
+	c_set_height (a_item: POINTER; a_height: REAL)
 			-- Set `a_item''s height with `a_height'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -167,7 +167,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_x (a_item: POINTER): REAL is
+	c_x (a_item: POINTER): REAL
 			-- `a_item''s x
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -177,7 +177,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_y (a_item: POINTER): REAL is
+	c_y (a_item: POINTER): REAL
 			-- `a_item''s y
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -187,7 +187,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_width (a_item: POINTER): REAL is
+	c_width (a_item: POINTER): REAL
 			-- `a_item''s width
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -197,7 +197,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_height (a_item: POINTER): REAL is
+	c_height (a_item: POINTER): REAL
 			-- `a_item''s height
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -207,7 +207,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

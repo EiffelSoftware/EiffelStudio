@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Possible flags of the results of a hit test on a%
 					 %header control"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Hht_nowhere: INTEGER is
+	Hht_nowhere: INTEGER
 			-- The point is inside the bounding rectangle of the header control but 
 			-- is not over a header item. 
 		external
@@ -20,7 +20,7 @@ feature -- Access
 			"HHT_NOWHERE"
 		end 
 
-	Hht_on_divider: INTEGER is
+	Hht_on_divider: INTEGER
 			-- The point is on the divider between two header items. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -28,7 +28,7 @@ feature -- Access
 			"HHT_ONDIVIDER"
 		end 
  
-	Hht_on_div_open: INTEGER is
+	Hht_on_div_open: INTEGER
 			-- The point is on the divider of an item that has a width of zero. 
 			-- Dragging the divider reveals the item instead of resizing the item 
 			-- to the left of the divider. 
@@ -38,7 +38,7 @@ feature -- Access
 			"HHT_ONDIVOPEN"
 		end 
 
-	Hht_on_header: INTEGER is
+	Hht_on_header: INTEGER
 			-- The point is inside the bounding rectangle of the header control. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -46,7 +46,7 @@ feature -- Access
 			"HHT_ONHEADER"
 		end 
 
-	Hht_to_left: INTEGER is
+	Hht_to_left: INTEGER
 			-- The point is to the left of the bounding rectangle of the header control.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -54,7 +54,7 @@ feature -- Access
 			"HHT_TOLEFT"
 		end 
 
-	Hht_to_right: INTEGER is
+	Hht_to_right: INTEGER
 			-- The point is to the right of the bounding rectangle of the header control.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -62,7 +62,7 @@ feature -- Access
 			"HHT_TORIGHT"
 		end 
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

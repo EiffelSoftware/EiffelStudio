@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that handle the sending of data"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	send_mail is
+	send_mail
 		-- Send resource.
 		require
 			connection_exists: is_connected
@@ -26,7 +26,7 @@ feature -- Basic operations
 
 feature -- Implemantation (EMAIL_RESOURCE)
 
-	can_send: BOOLEAN is True
+	can_send: BOOLEAN = True
 		--Can a sending protocol send?
 
 feature -- Access
@@ -34,7 +34,7 @@ feature -- Access
 	memory_resource: MEMORY_RESOURCE;
 		-- Memory resource to be send
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

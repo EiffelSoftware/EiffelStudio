@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A unix socket address."
@@ -40,14 +40,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an unix socket address.
 		do
 			socket_address_make;
 			set_family (af_unix)
 		end;
 
-	make_from_path (a_path: like path) is
+	make_from_path (a_path: like path)
 			-- Create an unix socket address from a path.
 		do
 			make;
@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	path: STRING is
+	path: STRING
 			-- Path of the socket address file
 		do
 			create Result.make(0);
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	set_path (p: STRING) is 
+	set_path (p: STRING) 
 			-- Set socket path to `p'.
 		local
 			ext: C_STRING
@@ -76,7 +76,7 @@ feature -- Status settings
 
 feature {NONE} -- External
 
-	address_size: INTEGER is
+	address_size: INTEGER
 			-- Size of unix socket address
 		external
 			"C"
@@ -84,7 +84,7 @@ feature {NONE} -- External
 			"unix_address_size"
 		end;
 
-	set_sock_family (addr: POINTER; a_family: INTEGER) is
+	set_sock_family (addr: POINTER; a_family: INTEGER)
 			-- Set family name in socket address.
 		external
 			"C"
@@ -92,7 +92,7 @@ feature {NONE} -- External
 			"set_unix_family"
 		end;
 
-	get_sock_family (addr: POINTER): INTEGER is
+	get_sock_family (addr: POINTER): INTEGER
 			-- Get family name from socket address.
 		external
 			"C"
@@ -100,19 +100,19 @@ feature {NONE} -- External
 			"get_unix_family"
 		end;
 
-	set_unix_sock_path (addr: POINTER; a_path: POINTER) is
+	set_unix_sock_path (addr: POINTER; a_path: POINTER)
 			-- Set path in socket address.
 		external
 			"C"
 		end;
 
-	get_unix_sock_path (addr: POINTER): POINTER is
+	get_unix_sock_path (addr: POINTER): POINTER
 			-- Get path from socket address.
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

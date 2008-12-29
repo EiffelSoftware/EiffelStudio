@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -13,37 +13,37 @@ inherit
 
 feature {NONE} -- Status report
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Is there any more resulting row?
 		do
 			Result := not handle.status.found
 		end
 
-	is_connected: BOOLEAN is
+	is_connected: BOOLEAN
 			-- Has connection to the database server succeeded?
 		do
 			Result := handle.status.is_connected
 		end
 
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Error code of last transaction
 		do
 			Result := handle.status.error_code
 		end
 
-	is_ok: BOOLEAN is
+	is_ok: BOOLEAN
 			-- Is last SQL statement ok ?
 		do
 			Result := error_code = 0
 		end
 
-	error_message: STRING is
+	error_message: STRING
 			-- SQL error message prompted by database server
 		do
 			Result := handle.status.error_message
 		end
 	
-	warning_message: STRING is
+	warning_message: STRING
 			-- SQL warning message prompted by database server
 		do
 			Result := handle.status.warning_message
@@ -51,7 +51,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	reset is
+	reset
 			-- Reset `is_ok', `error_code_stored',`error_message_stored' and `warning_message' after error occurred.
 			--| Perform this operation through `DB_CONTROL'.
 		do
@@ -63,7 +63,7 @@ feature {NONE} -- Status setting
 			no_message_warning: warning_message.is_equal ("") 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

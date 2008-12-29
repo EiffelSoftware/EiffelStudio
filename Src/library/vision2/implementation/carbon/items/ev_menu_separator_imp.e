@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu separator. Carbon implementation."
 
 class
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
 			pixmapable_imp_initialize
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	initialize_menu_sep_box is
+	initialize_menu_sep_box
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
@@ -50,19 +50,19 @@ feature {NONE} -- Implementation
 
 	is_sensitive: BOOLEAN
 
-	enable_sensitive is
+	enable_sensitive
 			-- Implemented to fulfill assertions but leave c_object unsensitive.
 		do
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Implemented to fulfill assertions but leave c_object unsensitive.
 		do
 		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
-	dispose is
+	dispose
 			-- Unreference unwanted gtk widgets.
 		do
 		end
@@ -72,12 +72,12 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 	radio_group_ref: POINTER_REF
 
-	set_radio_group (p: POINTER) is
+	set_radio_group (p: POINTER)
 			-- Assign `p' to `radio_group'.
 		do
 		end
 
-	radio_group: POINTER is
+	radio_group: POINTER
 			-- GSList with all radio items of this container.
 		do
 		end
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_MENU_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_MENU_SEPARATOR_IMP
 

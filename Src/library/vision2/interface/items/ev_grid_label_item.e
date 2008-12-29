@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Cell consisting of a text label with optional pixmap.
 		The rules governing the position of `text' and `pixmap' in relation to `Current' are as follows:
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 				not text.same_type (a_text) implies text.is_equal (a_text)
 		end
 
-	initialize is
+	initialize
 			-- Mark `Current' as initialized.
 		do
 			set_text ("")
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -87,7 +87,7 @@ feature -- Status Setting
 				not text.same_type (a_text) implies text.is_equal (a_text)
 		end
 
-	remove_text is
+	remove_text
 			-- Make `text' `is_empty'.
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Status Setting
 			text_empty: text.is_empty
 		end
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -112,7 +112,7 @@ feature -- Status Setting
 			font_assigned: font = a_font
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Display image of `a_pixmap' on `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Status Setting
 			pixmap_set: pixmap = a_pixmap
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove image displayed on `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -139,7 +139,7 @@ feature -- Status Setting
 			pixmap_removed: pixmap = Void
 		end
 
-	set_left_border (a_left_border: INTEGER) is
+	set_left_border (a_left_border: INTEGER)
 			-- Assign `a_left_border' to `left_border'.
 		require
 			not_destroyed: not is_destroyed
@@ -153,7 +153,7 @@ feature -- Status Setting
 			left_border_set: left_border = a_left_border
 		end
 
-	set_right_border (a_right_border: INTEGER) is
+	set_right_border (a_right_border: INTEGER)
 			-- Assign `a_right_border' to `right_border'.
 		require
 			not_destroyed: not is_destroyed
@@ -167,7 +167,7 @@ feature -- Status Setting
 			right_border_set: right_border = a_right_border
 		end
 
-	set_top_border (a_top_border: INTEGER) is
+	set_top_border (a_top_border: INTEGER)
 			-- Assign `a_top_border' to `top_border'.
 		require
 			not_destroyed: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Status Setting
 			top_border_set: top_border = a_top_border
 		end
 
-	set_bottom_border (a_bottom_border: INTEGER) is
+	set_bottom_border (a_bottom_border: INTEGER)
 			-- Assign `a_bottom_border' to `bottom_border'.
 		require
 			not_destroyed: not is_destroyed
@@ -195,7 +195,7 @@ feature -- Status Setting
 			bottom_border_set: bottom_border = a_bottom_border
 		end
 
-	set_spacing (a_spacing: INTEGER) is
+	set_spacing (a_spacing: INTEGER)
 			-- Assign `a_spacing' to `spacing'.
 		require
 			not_destroyed: not is_destroyed
@@ -209,7 +209,7 @@ feature -- Status Setting
 			spacing_set: spacing = a_spacing
 		end
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		require
 			not_destroyed: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Status Setting
 			alignment_set: is_center_aligned
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -239,7 +239,7 @@ feature -- Status Setting
 			alignment_set: is_right_aligned
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -254,7 +254,7 @@ feature -- Status Setting
 			alignment_set: is_left_aligned
 		end
 
-	align_text_vertically_center is
+	align_text_vertically_center
 			-- Display `text' centered vertically.
 		require
 			not_destroyed: not is_destroyed
@@ -269,7 +269,7 @@ feature -- Status Setting
 			alignment_set: is_vertically_center_aligned
 		end
 
-	align_text_top is
+	align_text_top
 			-- Display `text' top aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -284,7 +284,7 @@ feature -- Status Setting
 			alignment_set: is_top_aligned
 		end
 
-	align_text_bottom is
+	align_text_bottom
 			-- Display `text' bottom aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -299,7 +299,7 @@ feature -- Status Setting
 			alignment_set: is_bottom_aligned
 		end
 
-	set_layout_procedure (a_layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]) is
+	set_layout_procedure (a_layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]])
 			-- Assign `a_layout_procedure' to `layout_procedure'.
 		do
 			layout_procedure := a_layout_procedure
@@ -307,7 +307,7 @@ feature -- Status Setting
 			layout_procedure_set: layout_procedure = a_layout_procedure
 		end
 
-	enable_full_select is
+	enable_full_select
 			-- Ensure `is_full_select_enabled' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -320,7 +320,7 @@ feature -- Status Setting
 			full_select_enabled: is_full_select_enabled
 		end
 
-	disable_full_select is
+	disable_full_select
 			-- Ensure `is_full_select_enabled' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -351,7 +351,7 @@ feature -- Measurement
 			-- Spacing between `text' and `pixmap' in pixels.
 			-- If both are not visible, this value does not affect appearance of `Current'.
 
-	text_width: INTEGER is
+	text_width: INTEGER
 			-- `Result' is width required to fully display `text' in `pixels'.
 			-- This function is optimized internally by `Current' and is therefore
 			-- faster than querying `font.string_size' directly.
@@ -363,7 +363,7 @@ feature -- Measurement
 			result_non_negative: Result >= 0
 		end
 
-	text_height: INTEGER is
+	text_height: INTEGER
 			-- `Result' is height required to fully display `text' in `pixels'.
 			-- This function is optimized internally by `Current' and is therefore
 			-- faster than querying `font.string_size' directly.
@@ -386,7 +386,7 @@ feature -- Status report
 	pixmap: EV_PIXMAP
 		-- Image displayed to left of `text'.
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Is `text' of `Current' left aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -395,7 +395,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (1) = True
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Is `text' of `Current' center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -404,7 +404,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (2) = True
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Is `text' of `Current' right aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -413,7 +413,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (3) = True
 		end
 
-	is_top_aligned: BOOLEAN is
+	is_top_aligned: BOOLEAN
 			-- Is `text' of `Current' top aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -422,7 +422,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (4) = True
 		end
 
-	is_vertically_center_aligned: BOOLEAN is
+	is_vertically_center_aligned: BOOLEAN
 			-- Is `text' of `Current' vertically center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -431,7 +431,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (5) = True
 		end
 
-	is_bottom_aligned: BOOLEAN is
+	is_bottom_aligned: BOOLEAN
 			-- Is `text' of `Current' bottom aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		require
@@ -453,7 +453,7 @@ feature -- Status report
 			-- label_item: EV_GRID_LABEL_ITEM - `Current' to which the settings apply.
 			-- label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT - Object into which desired positioning information must be set.
 
-	is_full_select_enabled: BOOLEAN is
+	is_full_select_enabled: BOOLEAN
 			-- Does selection highlighting fill complete area of `Current'?
 			-- If `False', highlighting is only applied to area of `text'.
 		require
@@ -464,7 +464,7 @@ feature -- Status report
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GRID_ITEM} and text.is_empty and pixmap = Void and
@@ -489,13 +489,13 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_LABEL_ITEM_I} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

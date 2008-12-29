@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Status window messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,70 +10,70 @@ class
 
 feature -- Access
 
-	Sb_getrect: INTEGER is
+	Sb_getrect: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETRECT"
 		end
 
-	Sb_setminheight: INTEGER is
+	Sb_setminheight: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETMINHEIGHT"
 		end
 
-	Sb_getborders: INTEGER is
+	Sb_getborders: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETBORDERS"
 		end
 
-	Sb_gettext: INTEGER is
+	Sb_gettext: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETTEXT"
 		end
 
-	Sb_gettextlength: INTEGER is
+	Sb_gettextlength: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETTEXTLENGTH"
 		end
 
-	Sb_settext: INTEGER is
+	Sb_settext: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETTEXT"
 		end
 
-	Sb_getparts: INTEGER is
+	Sb_getparts: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_GETPARTS"
 		end
 
-	Sb_setparts: INTEGER is
+	Sb_setparts: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SETPARTS"
 		end
 
-	Sb_simple: INTEGER is
+	Sb_simple: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"SB_SIMPLE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

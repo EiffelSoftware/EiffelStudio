@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					The CombineMode enumeration specifies how a new region is 
 					combined with an existing region.
@@ -14,23 +14,23 @@ class
 
 feature -- Enumeration
 
-	Replace: INTEGER is 0
+	Replace: INTEGER = 0
 			-- One clipping region is replaced by another.
 
-	Intersect: INTEGER is 1
+	Intersect: INTEGER = 1
 			-- Two clipping regions are combined by taking their intersection.
 
-	Union: INTEGER is 2
+	Union: INTEGER = 2
 			-- Two clipping regions are combined by taking the union of both.
 
-	Xor_mode: INTEGER is 3
+	Xor_mode: INTEGER = 3
 			-- Two clipping regions are combined by taking only the areas enclosed by one or the other region, but not both.
 
-	Exclude: INTEGER is 4
+	Exclude: INTEGER = 4
 			-- Specifies that the existing region is replaced by the result of the new region being removed
 			-- from the existing region. Said differently, the new region is excluded from the existing region.
 
-	Complement: INTEGER is 5
+	Complement: INTEGER = 5
 			-- Specifies that the existing region is replaced by the result of the existing region being
 			-- removed from the new region. Said differently, the existing region is excluded from the new region.
 
@@ -47,7 +47,7 @@ feature -- Query
 					or a_int = Complement
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

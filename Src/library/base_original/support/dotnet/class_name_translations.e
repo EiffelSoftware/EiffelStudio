@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Translations of class names between a storing and a retrieving
@@ -32,7 +32,7 @@ create
 
 feature -- Element change
 
-	put (new: STRING; key: STRING) is
+	put (new: STRING; key: STRING)
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Set `inserted' if and only if an insertion has
@@ -47,7 +47,7 @@ feature -- Element change
 			if inserted then add_translation (new, key) end
 		end
 
-	force (new: STRING; key: STRING) is
+	force (new: STRING; key: STRING)
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set `found'
@@ -59,7 +59,7 @@ feature -- Element change
 			add_translation (new, key)
 		end
 
-	extend (new: STRING; key: STRING) is
+	extend (new: STRING; key: STRING)
 			-- Assuming there is no item of key `key',
 			-- insert `new' with `key'.
 			-- Set `inserted'.
@@ -68,7 +68,7 @@ feature -- Element change
 			add_translation (new, key)
 		end
 
-	replace (new: STRING; key: STRING) is
+	replace (new: STRING; key: STRING)
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
@@ -84,7 +84,7 @@ feature -- Element change
 
 feature -- Removal
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values; reset status.
 		do
 			Precursor
@@ -92,7 +92,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	add_translation (new_name, old_name: STRING) is
+	add_translation (new_name, old_name: STRING)
 			-- Add a translation entry mapping class `old_name' in the
 			-- storing system to class `new_name' in the retrieving system.
 		local
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			o := old_name.to_c
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

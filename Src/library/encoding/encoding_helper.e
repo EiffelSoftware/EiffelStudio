@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper routines for encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Implementation
 
-	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER is
+	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER
 			-- Managed pointer of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER is
+	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER
 			-- Managed pointer of `a_string' which is taken as
 			-- 16bits string. High 16bits of characters of `a_string' are discarded.
 		require
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8 is
+	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8
 			-- STRING_8 read from `a_multi_string'.
 		require
 			a_multi_string_not_default: a_multi_string /= default_pointer
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	pointer_to_wide_string (a_w_string: POINTER; a_count: INTEGER): STRING_32 is
+	pointer_to_wide_string (a_w_string: POINTER; a_count: INTEGER): STRING_32
 			-- STRING_32 read from `a_w_string' of `a_count' bytes.
 		require
 			a_w_string_not_default: a_w_string /= default_pointer
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	string_32_to_stream (a_string: STRING_32): STRING_8 is
+	string_32_to_stream (a_string: STRING_32): STRING_8
 			-- Byte stream of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	string_16_to_stream (a_string: STRING_32): STRING_8 is
+	string_16_to_stream (a_string: STRING_32): STRING_8
 			-- We use `a_string' as 2 bytes encoding string, the first two bytes are not used.
 		require
 			a_string_not_void: a_string /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	string_general_to_stream (a_string: STRING_GENERAL): STRING is
+	string_general_to_stream (a_string: STRING_GENERAL): STRING
 			-- Streamize `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Endian
 
-	string_32_switch_endian (a_str: STRING_32): STRING_32 is
+	string_32_switch_endian (a_str: STRING_32): STRING_32
 			-- Switch endian of `a_str' for both high and low bits.
 		require
 			a_str_not_void: a_str /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Endian
 			Result_not_void: Result /= Void
 		end
 
-	string_16_switch_endian (a_str: STRING_32): STRING_32 is
+	string_16_switch_endian (a_str: STRING_32): STRING_32
 			-- Switch endian of `a_str' for low bits.
 			-- High bits are cleaned.
 		require
@@ -236,13 +236,13 @@ feature {NONE} -- Endian
 			Result_not_void: Result /= Void
 		end
 
-	is_little_endian: BOOLEAN is
+	is_little_endian: BOOLEAN
 			-- Is this system little endian?
 		once
 			Result := (create {PLATFORM}).is_little_endian
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

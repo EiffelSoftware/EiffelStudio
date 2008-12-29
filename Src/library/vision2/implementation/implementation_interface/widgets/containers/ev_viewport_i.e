@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision viewport. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,33 +14,33 @@ inherit
 
 feature -- Access
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		deferred
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_x_offset (an_x: INTEGER) is
+	set_x_offset (an_x: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 		deferred
 		ensure
 			assigned: x_offset = an_x
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Assign `a_y' to `y_offset'.
 		deferred
 		ensure
 			assigned: y_offset = a_y
 		end
 
-	set_offset (an_x, a_y: INTEGER) is
+	set_offset (an_x, a_y: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
 		do
@@ -51,7 +51,7 @@ feature -- Element change
 			assigned: y_offset = a_y
 		end
 		
-	set_item_width (a_width: INTEGER) is
+	set_item_width (a_width: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 		require
 			a_width_not_smaller_than_minimum_width:
@@ -60,7 +60,7 @@ feature -- Element change
 			set_item_size (a_width, item.height)
 		end
 
-	set_item_height (a_height: INTEGER) is
+	set_item_height (a_height: INTEGER)
 			-- Set `a_widget.height' to `a_height'.
 		require
 			a_height_not_smaller_than_minimum_height:
@@ -69,7 +69,7 @@ feature -- Element change
 			set_item_size (item.width, a_height)
 		end
 
-	set_item_size (a_width, a_height: INTEGER) is
+	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		require
@@ -80,7 +80,7 @@ feature -- Element change
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

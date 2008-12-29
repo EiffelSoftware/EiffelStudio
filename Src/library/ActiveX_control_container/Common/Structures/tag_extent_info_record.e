@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,19 +33,19 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cb: INTEGER is
+	cb: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_extent_info_cb (item)
 		end
 
-	dw_extent_mode: INTEGER is
+	dw_extent_mode: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_extent_info_dw_extent_mode (item)
 		end
 
-	sizel_proposed: TAG_SIZEL_RECORD is
+	sizel_proposed: TAG_SIZEL_RECORD
 			-- No description available.
 		do
 			Result := ccom_tag_extent_info_sizel_proposed (item)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_extent_info
@@ -63,19 +63,19 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cb (a_cb: INTEGER) is
+	set_cb (a_cb: INTEGER)
 			-- Set `cb' with `a_cb'.
 		do
 			ccom_tag_extent_info_set_cb (item, a_cb)
 		end
 
-	set_dw_extent_mode (a_dw_extent_mode: INTEGER) is
+	set_dw_extent_mode (a_dw_extent_mode: INTEGER)
 			-- Set `dw_extent_mode' with `a_dw_extent_mode'.
 		do
 			ccom_tag_extent_info_set_dw_extent_mode (item, a_dw_extent_mode)
 		end
 
-	set_sizel_proposed (a_sizel_proposed: TAG_SIZEL_RECORD) is
+	set_sizel_proposed (a_sizel_proposed: TAG_SIZEL_RECORD)
 			-- Set `sizel_proposed' with `a_sizel_proposed'.
 		require
 			non_void_a_sizel_proposed: a_sizel_proposed /= Void
@@ -86,7 +86,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_extent_info: INTEGER is
+	c_size_of_tag_extent_info: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagExtentInfo_s.h%"]"
@@ -94,43 +94,43 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagExtentInfo)"
 		end
 
-	ccom_tag_extent_info_cb (a_pointer: POINTER): INTEGER is
+	ccom_tag_extent_info_cb (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *):EIF_INTEGER"
 		end
 
-	ccom_tag_extent_info_set_cb (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_extent_info_set_cb (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *, ULONG)"
 		end
 
-	ccom_tag_extent_info_dw_extent_mode (a_pointer: POINTER): INTEGER is
+	ccom_tag_extent_info_dw_extent_mode (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *):EIF_INTEGER"
 		end
 
-	ccom_tag_extent_info_set_dw_extent_mode (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_extent_info_set_dw_extent_mode (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *, ULONG)"
 		end
 
-	ccom_tag_extent_info_sizel_proposed (a_pointer: POINTER): TAG_SIZEL_RECORD is
+	ccom_tag_extent_info_sizel_proposed (a_pointer: POINTER): TAG_SIZEL_RECORD
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *):EIF_REFERENCE"
 		end
 
-	ccom_tag_extent_info_set_sizel_proposed (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_extent_info_set_sizel_proposed (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagExtentInfo_s_impl.h%"](ecom_control_library::tagExtentInfo *, ecom_control_library::tagSIZEL *)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision colorizable. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color of face.
 		local
 			color: POINTER
@@ -48,7 +48,7 @@ feature -- Access
 			)
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color of foreground features like text.
 		local
 			color: POINTER
@@ -69,7 +69,7 @@ feature -- Access
 feature -- Status setting
 
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		do
 			real_set_background_color (visual_widget, a_color)
@@ -78,7 +78,7 @@ feature -- Status setting
 			end
 		end
 
-	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR) is
+	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR)
 			-- Implementation of `set_background_color'
 			-- Used also by classes that inherit EV_WIDGET_IMP but not
 			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
@@ -154,7 +154,7 @@ feature -- Status setting
 			end
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		do
 			real_set_foreground_color (visual_widget, a_color)
@@ -163,7 +163,7 @@ feature -- Status setting
 			end	
 		end
 
-	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
+	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR)
 			-- Implementation of `set_background_color'
 			-- Used also by classes that inherit EV_WIDGET_IMP but not
 			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
@@ -224,7 +224,7 @@ feature -- Status setting
 			end
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
 			if default_foreground_color /= Void then
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 	default_foreground_color: EV_COLOR
 		-- Color used for foreground of 'Current'
 
-	background_color_pointer: POINTER is
+	background_color_pointer: POINTER
 			-- Pointer to bg color for `a_widget'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_bg (
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	foreground_color_pointer: POINTER is
+	foreground_color_pointer: POINTER
 			-- Pointer to fg color for `a_widget'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
@@ -259,17 +259,17 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	Prelight_scale: REAL is 1.0909488
+	Prelight_scale: REAL = 1.0909488
 		-- Prelight color is this much lighter than `background_color'.
 
-	Highlight_scale: REAL is 0.90912397
+	Highlight_scale: REAL = 0.90912397
 		-- Highlight color is this much darker than `background_color'.
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COLORIZABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

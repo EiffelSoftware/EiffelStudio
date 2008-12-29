@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Choose color (CC) dialog constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,70 +10,70 @@ class
 
 feature -- Access
 
-	Cc_rgbinit: INTEGER is
+	Cc_rgbinit: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_RGBINIT"
 		end
 
-	Cc_fullopen: INTEGER is
+	Cc_fullopen: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_FULLOPEN"
 		end
 
-	Cc_preventfullopen: INTEGER is
+	Cc_preventfullopen: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_PREVENTFULLOPEN"
 		end
 
-	Cc_showhelp: INTEGER is
+	Cc_showhelp: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_SHOWHELP"
 		end
 
-	Cc_enablehook: INTEGER is
+	Cc_enablehook: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLEHOOK"
 		end
 
-	Cc_enabletemplate: INTEGER is
+	Cc_enabletemplate: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLETEMPLATE"
 		end
 
-	Cc_enabletemplatehandle: INTEGER is
+	Cc_enabletemplatehandle: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ENABLETEMPLATEHANDLE"
 		end
 
-	Cc_solidcolor: INTEGER is
+	Cc_solidcolor: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_SOLIDCOLOR"
 		end
 
-	Cc_anycolor: INTEGER is
+	Cc_anycolor: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"CC_ANYCOLOR"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

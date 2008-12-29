@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Receives and dispatch the Windows messages to the Eiffel objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the C variables
 		do
 			cwel_set_window_procedure_address ($window_procedure)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Wean `Current'
 		local
 			default_object: like Current
@@ -39,27 +39,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_set_window_procedure_address (address: POINTER) is
+	cwel_set_window_procedure_address (address: POINTER)
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_dialog_procedure_address (address: POINTER) is
+	cwel_set_dialog_procedure_address (address: POINTER)
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_dispatcher_object (dispatcher: like Current) is
+	cwel_set_dispatcher_object (dispatcher: like Current)
 		external
 			"C macro signature (EIF_OBJECT) use %"disptchr.h%""
 		end
 
-	cwel_release_dispatcher_object is
+	cwel_release_dispatcher_object
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

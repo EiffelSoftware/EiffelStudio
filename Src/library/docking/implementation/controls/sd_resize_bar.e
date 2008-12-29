@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Resize bar at side of SD_AUTO_HIDE_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	make (a_direction: INTEGER; a_source: SD_RESIZE_SOURCE) is
+	make (a_direction: INTEGER; a_source: SD_RESIZE_SOURCE)
 			-- Creation method.
 		require
 			a_source_not_void: a_source /= Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature {NONE} -- Agents
 
-	on_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer button press.
 		do
 			if a_button = 1 then
@@ -81,7 +81,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle expose action.
 		local
 			l_stock_colors: EV_STOCK_COLORS
@@ -101,7 +101,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle the resize window action.
 		local
 			l_scr_boundary: like screen_boundary
@@ -139,7 +139,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer release action.
 		do
 			if resizing then
@@ -168,7 +168,7 @@ feature -- Properties
 
 feature {NONE}  -- Implemenetation
 
-	clear_graph_last_drawn is
+	clear_graph_last_drawn
 			-- Clear the graph last drawn on the screen.
 		do
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
@@ -178,7 +178,7 @@ feature {NONE}  -- Implemenetation
 			end
 		end
 
-	setter: SD_SYSTEM_SETTER is
+	setter: SD_SYSTEM_SETTER
 			-- System setter
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
@@ -209,7 +209,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

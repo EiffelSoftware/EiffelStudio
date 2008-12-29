@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain all the icons used by this memory analyzer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Set
 
-	set_pixmap_directory (a_dir: STRING) is
+	set_pixmap_directory (a_dir: STRING)
 			-- Set `internal_pixmap_path'.
 		local
 			l_set_once: like pixmap_path
@@ -26,13 +26,13 @@ feature -- Set
 
 feature {NONE} -- Implementation
 
-	pixmap_width: INTEGER is 16
+	pixmap_width: INTEGER = 16
 			-- The width of the icons
 
-	pixmap_height: INTEGER is 16
+	pixmap_height: INTEGER = 16
 			-- The height of the icons
 
-	pixmap_path: DIRECTORY_NAME is
+	pixmap_path: DIRECTORY_NAME
 			-- Path containing all of the Memory Analyzer icons
 		once
 			Result := internal_pixmap_path
@@ -41,13 +41,13 @@ feature {NONE} -- Implementation
 	internal_pixmap_path: like pixmap_path
 			-- Path where have icons image.
 
-	image_matrix: EV_PIXMAP is
+	image_matrix: EV_PIXMAP
 			-- The pixmap contain all the icons
 		once
 			Result := pixmap_file_content ("memory_analyzer_icon_matrix")
 		end
 
-	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
+	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING]
 			--
 		once
 			create Result.make (25)
@@ -78,154 +78,154 @@ feature {NONE} -- Implementation
 
 feature -- Icons
 
-	auto_refresh_icon: EV_PIXMAP is
+	auto_refresh_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_auto_refresh)
 		ensure
 			auto_refresh_icon_not_void: Result /= Void
 		end
 
-	auto_refresh_speed_icon: EV_PIXMAP is
+	auto_refresh_speed_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_auto_refresh_speed)
 		ensure
 			auto_refresh_speed_icon_not_void: Result /= Void
 		end
 
-	state_change_icon: EV_PIXMAP is
+	state_change_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_state_change)
 		ensure
 			state_change_icon_not_void: Result /= Void
 		end
 
-	filter_icon: EV_PIXMAP is
+	filter_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_filter)
 		ensure
 			filter_icon_not_void: Result /= Void
 		end
 
-	gabage_clean_now_icon: EV_PIXMAP is
+	gabage_clean_now_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_gabage_clean_now)
 		ensure
 			gabage_clean_now_icon_not_void: Result /= Void
 		end
 
-	gabage_clean_enable_icon: EV_PIXMAP is
+	gabage_clean_enable_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_gabage_clean_enable)
 		ensure
 			gabage_clean_enable_icon_not_void: Result /= Void
 		end
 
-	gabage_clean_disable_icon: EV_PIXMAP is
+	gabage_clean_disable_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_gabage_clean_disable)
 		ensure
 			gabage_clean_disable_icon_not_void: Result /= Void
 		end
 
-	eiffel_pebble_icon: EV_PIXMAP is
+	eiffel_pebble_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_eiffel_pebble)
 		ensure
 			eiffel_pebble_icon_not_void: Result /= Void
 		end
 
-	object_graph_icon: EV_PIXMAP is
+	object_graph_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_object_graph)
 		ensure
 			object_graph_icon_not_void: Result /= Void
 		end
 
-	object_grid_icon: EV_PIXMAP is
+	object_grid_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_object_grid)
 		ensure
 			object_grid_icon_not_void: Result /= Void
 		end
 
-	gabage_collector_info_icon: EV_PIXMAP is
+	gabage_collector_info_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_gabage_collector_info)
 		ensure
 			gabage_collector_info_icon_not_void: Result /= Void
 		end
 
-	refresh_info_icon: EV_PIXMAP is
+	refresh_info_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_refresh_info)
 		ensure
 			refresh_info_icon_not_void: Result /= Void
 		end
 
-	save_current_state_icon: EV_PIXMAP is
+	save_current_state_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_save_current_state)
 		ensure
 			save_current_state_icon_not_void: Result /= Void
 		end
 
-	eiffel_pebble_x_icon: EV_PIXMAP is
+	eiffel_pebble_x_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_eiffel_pebble_x)
 		ensure
 			eiffel_pebble_x_icon_not_void: Result /= Void
 		end
 
-	object_grid_class_icon: EV_PIXMAP is
+	object_grid_class_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_object_grid_class)
 		ensure
 			object_grid_class_icon_not_void: Result /= Void
 		end
 
-	object_grid_class_x_icon: EV_PIXMAP is
+	object_grid_class_x_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_object_grid_class_x)
 		ensure
 			object_grid_class_x_icon_not_void: Result /= Void
 		end
 
-	open_system_states_icon: EV_PIXMAP is
+	open_system_states_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_open_system_states)
 		ensure
 			open_system_states_icon_not_void: Result /= Void
 		end
 
-	system_state_from_icon: EV_PIXMAP is
+	system_state_from_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_system_state_from)
 		ensure
 			system_state_from_icon_not_void: Result /= Void
 		end
 
-	system_state_to_icon: EV_PIXMAP is
+	system_state_to_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_system_state_to)
 		ensure
 			system_state_to_icon_not_void: Result /= Void
 		end
 
-	new_filter_class_name_icon: EV_PIXMAP is
+	new_filter_class_name_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_new_filter_class_name)
 		ensure
 			new_filter_class_name_icon_not_void: Result /= Void
 		end
 
-	new_filter_class_name_x_icon: EV_PIXMAP is
+	new_filter_class_name_x_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_new_filter_class_name_x)
 		ensure
 			new_filter_class_name_x_icon_not_void: Result /= Void
 		end
 
-	collect_statics_icon: EV_PIXMAP is
+	collect_statics_icon: EV_PIXMAP
 		once
 			Result := pixmap_file_content (icon_collect_statics)
 		ensure
@@ -234,31 +234,31 @@ feature -- Icons
 
 feature {NONE} -- Icons' Names
 
-	icon_auto_refresh: STRING is "icon_auto_refresh"
-	icon_collect_statics: STRING is "icon_collect_statics"
-	icon_auto_refresh_speed: STRING is "icon_auto_refresh_speed"
-	icon_state_change: STRING is "icon_state_change"
-	icon_filter: STRING is "icon_filter"
-	icon_gabage_clean_now: STRING is "icon_gabage_clean_now"
-	icon_gabage_clean_enable: STRING is "icon_gabage_clean_enable"
-	icon_gabage_clean_disable: STRING is "icon_gabage_clean_disable"
-	icon_eiffel_pebble: STRING is "icon_eiffel_pebble"
-	icon_object_graph: STRING is "icon_object_graph"
-	icon_object_grid: STRING is "icon_object_grid"
-	icon_gabage_collector_info: STRING is "icon_gabage_collector_info"
-	icon_refresh_info: STRING is "icon_refresh_info"
-	icon_save_current_state: STRING is "icon_save_current_state"
-	icon_eiffel_pebble_x: STRING is "icon_eiffel_pebble_X"
-	icon_object_grid_class: STRING is "icon_object_grid_class"
-	icon_object_grid_class_x: STRING is "icon_object_grid_class_X"
-	icon_open_system_states: STRING is "icon_open_system_states"
-	icon_system_state_from: STRING is "icon_system_state_from"
-	icon_system_state_to: STRING is "icon_system_state_to"
-	icon_new_filter_class_name: STRING is "icon_new_filter_class_name"
-	icon_new_filter_class_name_x: STRING is "icon_new_filter_class_name_X";
+	icon_auto_refresh: STRING = "icon_auto_refresh"
+	icon_collect_statics: STRING = "icon_collect_statics"
+	icon_auto_refresh_speed: STRING = "icon_auto_refresh_speed"
+	icon_state_change: STRING = "icon_state_change"
+	icon_filter: STRING = "icon_filter"
+	icon_gabage_clean_now: STRING = "icon_gabage_clean_now"
+	icon_gabage_clean_enable: STRING = "icon_gabage_clean_enable"
+	icon_gabage_clean_disable: STRING = "icon_gabage_clean_disable"
+	icon_eiffel_pebble: STRING = "icon_eiffel_pebble"
+	icon_object_graph: STRING = "icon_object_graph"
+	icon_object_grid: STRING = "icon_object_grid"
+	icon_gabage_collector_info: STRING = "icon_gabage_collector_info"
+	icon_refresh_info: STRING = "icon_refresh_info"
+	icon_save_current_state: STRING = "icon_save_current_state"
+	icon_eiffel_pebble_x: STRING = "icon_eiffel_pebble_X"
+	icon_object_grid_class: STRING = "icon_object_grid_class"
+	icon_object_grid_class_x: STRING = "icon_object_grid_class_X"
+	icon_open_system_states: STRING = "icon_open_system_states"
+	icon_system_state_from: STRING = "icon_system_state_from"
+	icon_system_state_to: STRING = "icon_system_state_to"
+	icon_new_filter_class_name: STRING = "icon_new_filter_class_name"
+	icon_new_filter_class_name_x: STRING = "icon_new_filter_class_name_X";
 			-- Icon names
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

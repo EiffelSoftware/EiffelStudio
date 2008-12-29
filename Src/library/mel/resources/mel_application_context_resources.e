@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Application context resources."
@@ -11,7 +11,7 @@ class MEL_APPLICATION_CONTEXT_RESOURCES
 
 feature -- Access
 
-	XtInputNoneMask: POINTER is
+	XtInputNoneMask: POINTER
 			-- Application context resource
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_POINTER"
@@ -19,7 +19,7 @@ feature -- Access
 			"XtInputNoneMask"
 		end;
 
-	XtInputReadMask: POINTER is
+	XtInputReadMask: POINTER
 			-- Application context resource
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_POINTER"
@@ -27,7 +27,7 @@ feature -- Access
 			"XtInputReadMask"
 		end;
 
-	XtInputWriteMask: POINTER is
+	XtInputWriteMask: POINTER
 			-- Application context resource
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_POINTER"
@@ -35,7 +35,7 @@ feature -- Access
 			"XtInputWriteMask"
 		end;
 
-	XtInputExceptMask: POINTER is
+	XtInputExceptMask: POINTER
 			-- Application context resource
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_POINTER"
@@ -43,7 +43,7 @@ feature -- Access
 			"XtInputExceptMask"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

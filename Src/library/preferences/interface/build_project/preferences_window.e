@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A EV_TITLED_WINDOW containing a tree view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
@@ -36,14 +36,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW) is
+	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW)
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
 			make_with_hidden (a_preferences, a_obs_parent_window, False)
 		end
 
-	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN) is
+	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN)
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			display_update_agent := agent on_preference_changed_externally
 		end
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -95,13 +95,13 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_show_full_preference_name (a_flag: BOOLEAN) is
+	set_show_full_preference_name (a_flag: BOOLEAN)
 			-- Set 'show_full_preference_name'
 		do
 			show_full_preference_name := a_flag
 		end
 
-	set_root_icon (a_icon: EV_PIXMAP) is
+	set_root_icon (a_icon: EV_PIXMAP)
 			-- Set the root node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -109,7 +109,7 @@ feature -- Status Setting
 			root_icon := a_icon
 		end
 
-	set_folder_icon (a_icon: EV_PIXMAP) is
+	set_folder_icon (a_icon: EV_PIXMAP)
 			-- Set the folder node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -119,7 +119,7 @@ feature -- Status Setting
 
 feature {NONE} -- Events
 
-	on_close is
+	on_close
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Events
 			hide
 		end
 
-	on_preference_changed (a_pref: PREFERENCE) is
+	on_preference_changed (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value in the edit item.
 		local
 			l_default_item: EV_GRID_LABEL_ITEM
@@ -155,7 +155,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_preference_changed_externally (a_pref: PREFERENCE) is
+	on_preference_changed_externally (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value NOT changed in the edit item.
 		do
 			if grid.row_count > 0 then
@@ -163,7 +163,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE)
 			-- Set the preference value to the original default.
 		local
 			l_text_item: EV_GRID_EDITABLE_ITEM
@@ -207,7 +207,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_restore is
+	on_restore
 			-- Restore all preferences to their default values.
 		local
 			l_confirmation_dialog: EV_CONFIRMATION_DIALOG
@@ -223,7 +223,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- The default cloumn was clicked.
 		local
 			l_popup_menu: EV_MENU
@@ -250,7 +250,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- An item was double pressed
 		local
 			l_col_index: INTEGER
@@ -270,7 +270,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_grid_key_pressed (k: EV_KEY) is
+	on_grid_key_pressed (k: EV_KEY)
 			-- An key was pressed
 		local
 			l_preference_widget: PREFERENCE_WIDGET
@@ -287,7 +287,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_description_key_pressed (a_key: EV_KEY) is
+	on_description_key_pressed (a_key: EV_KEY)
 			-- Description text area was key pressed
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_tab then
@@ -299,7 +299,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_window_resize is
+	on_window_resize
 			-- Dialog was resized
 		local
 			l_width: INTEGER
@@ -310,7 +310,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_double_clicked is
+	on_header_double_clicked
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
@@ -323,7 +323,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_resize is
+	on_header_resize
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
@@ -338,7 +338,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	fill_list is
+	fill_list
 			-- Fill left tree.
 		local
  			it,
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_right_list (a_pref_name: STRING) is
+	fill_right_list (a_pref_name: STRING)
 			-- Fill right list.
 		require
 			pref_name_not_void: a_pref_name /= Void
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	rebuild_right_list is
+	rebuild_right_list
 			-- Rebuild right list.  This is used to update the values shown for the currently visible preferences
 			-- in case they have been changed external to this window.
 		local
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN is
+	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN
 			-- Should we display the preference in the right list?
 		do
 			Result := a_pref_name.substring (1, b_pref_name.count).is_equal (b_pref_name)
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wipe_out_visible_preference_change_action is
+	wipe_out_visible_preference_change_action
 			-- Wipe out the change action setup to notify Current about a change from outside
 		do
 			from
@@ -624,13 +624,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy.
 		do
 			Precursor
 		end
 
-	pixmap_file_contents (pn: STRING): EV_PIXMAP is
+	pixmap_file_contents (pn: STRING): EV_PIXMAP
 			-- Load a pixmap in file named `pn'.
 		require
 			valid_file_name: pn /= Void
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	show_preference_description (a_preference: PREFERENCE) is
+	show_preference_description (a_preference: PREFERENCE)
 			-- Show selected list preference in edit widget.
 		require
 			preference_not_void: a_preference /= Void
@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_preference_change_item (l_preference: PREFERENCE; row_index: INTEGER) is
+	add_preference_change_item (l_preference: PREFERENCE; row_index: INTEGER)
 			-- Add the correct preference change widget item at `row_index' of `grid'.
 		local
 			l_bool: BOOLEAN_PREFERENCE
@@ -744,13 +744,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear_edit_widget is
+	clear_edit_widget
 			-- Clear the edit widget
 		do
 			description_text.set_text ("")
 		end
 
-	short_preference_name (a_name: STRING): STRING is
+	short_preference_name (a_name: STRING): STRING
 			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			Result := a_name.substring (a_name.last_index_of ('.', a_name.count) + 1, a_name.count)
 		end
 
-	formatted_name (a_name: STRING): STRING is
+	formatted_name (a_name: STRING): STRING
 			-- Formatted name for display
 		do
 			create Result.make_from_string (a_name)
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 			Result.replace_substring (Result.item (1).upper.out, 1, 1)
 		end
 
-	grid_remove_and_clear_all_rows (g: EV_GRID) is
+	grid_remove_and_clear_all_rows (g: EV_GRID)
 		require
 			g /= Void
 		local
@@ -788,13 +788,13 @@ feature {NONE} -- Implementation
 			g.selected_rows.count = 0
 		end
 
-	visible_preferences: ARRAYED_LIST [PREFERENCE] is
+	visible_preferences: ARRAYED_LIST [PREFERENCE]
 			-- List of the preferences currently in view.
 		once
 			create Result.make (10)
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
+	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
 			-- Try to translate `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -824,13 +824,13 @@ feature {NONE} -- Private attributes
 	folder_icon: EV_PIXMAP
 			-- Folder icon
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Font for row when value is a default value
 		once
 			create Result
 		end
 
-	non_default_font: EV_FONT is
+	non_default_font: EV_FONT
 			-- Font for row when value is not a default value
 		once
 			create Result
@@ -840,7 +840,7 @@ feature {NONE} -- Private attributes
 	grid: EV_GRID
 		-- Grid	
 
-	column_border_space: INTEGER is 3
+	column_border_space: INTEGER = 3
 		-- Padding space for column content
 
 	default_row_height: INTEGER
@@ -849,13 +849,13 @@ feature {NONE} -- Private attributes
 	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
 			-- Agent to be called when preference is changed outside	
 
-	resized_columns_list: ARRAY [BOOLEAN] is
+	resized_columns_list: ARRAY [BOOLEAN]
 			-- List of boolean s for each column indicating if it has been user resizedat all.
 		once
 			Result := <<False, False, False, False>>
 		end
 
-	application: EV_APPLICATION is
+	application: EV_APPLICATION
 			-- Application
 		once
 			Result := (create {EV_ENVIRONMENT}).application
@@ -864,7 +864,7 @@ feature {NONE} -- Private attributes
 invariant
 	has_preferences: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

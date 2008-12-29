@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Call record"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -420,7 +420,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			no_records: not recorder.keep_calls_records implies call_records = Void
 		end
 
-	get_value_records_flattened_into (vals: !like value_records) is
+	get_value_records_flattened_into (vals: !like value_records)
 			-- Flatten record `rec'
 			--| Note: all value records and object will be removed from sub call records.
 		require
@@ -740,7 +740,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			Result := Result + 1
 		end
 
-	to_string (a_level: INTEGER): STRING is
+	to_string (a_level: INTEGER): STRING
 			-- String representation of Current
 		local
 			subs: ?STRING
@@ -1182,7 +1182,7 @@ invariant
 	non_empty_call_records: {crecs: like call_records} call_records implies not crecs.is_empty
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

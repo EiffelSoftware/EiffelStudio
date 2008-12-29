@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Wizard state: Error "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	build is
+	build
 		do
 			Precursor {WIZARD_FINAL_STATE_WINDOW}
 			first_window.set_final_state (b_abort)
@@ -26,13 +26,13 @@ feature -- Initialization
 
 feature -- basic Operations
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			cancel
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

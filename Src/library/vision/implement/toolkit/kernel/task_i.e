@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "A tasking manager"
 	legal: "See notice at end of class.";
@@ -19,19 +19,19 @@ inherit
 	
 feature -- Status report
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 		deferred
 		end;
 
 feature -- Status setting
 
-	destroy is
+	destroy
 		deferred
 		end;
 
 feature -- Element change
 
-	add_action (a_command: COMMAND; an_argument: ANY) is
+	add_action (a_command: COMMAND; an_argument: ANY)
 			-- Add `a_command' with `argument' to the list of action to execute-- while the system is waiting for user events.
 		require
 			not_a_command_void: a_command /= Void
@@ -40,7 +40,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_action (a_command: COMMAND; an_argument: ANY) is
+	remove_action (a_command: COMMAND; an_argument: ANY)
 			-- Remove `a_command' with `argument' to the list of action to
 			-- execute while the system is waiting for user events.
 		require
@@ -49,7 +49,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

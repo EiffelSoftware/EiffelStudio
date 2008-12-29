@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that are used to convert SPECIAL [EV_COORDINATE] to ARRAY [EV_COORDINATE]
 					(workaround for the EV_FIGURE_DRAWER)
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_from_area (a: SPECIAL [EV_COORDINATE]) is
+	make_from_area (a: SPECIAL [EV_COORDINATE])
 			-- Make an ARRAY using `a' as `area'.
 		require
 			area_exists: a /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			upper := a.count
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

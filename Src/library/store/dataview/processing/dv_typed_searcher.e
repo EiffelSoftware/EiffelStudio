@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to rows of a database table."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,20 +19,20 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization.
 		do
 		end
 
 feature -- Access
 
-	Every_row: INTEGER is 0
+	Every_row: INTEGER = 0
 			-- Every table row are selected.
 
-	Id_selection: INTEGER is 1
+	Id_selection: INTEGER = 1
 			-- Table row is selected by its ID.
 
-	Qualified_selection: INTEGER is 2
+	Qualified_selection: INTEGER = 2
 			-- Table row is selected with a qualifier.
 
 feature -- Status report
@@ -44,7 +44,7 @@ feature -- Status report
 			-- Component behavior type: read all table rows,
 			-- tablerows selected by ID or by a qualifier.
 
-	valid_behavior_type (behavior: INTEGER): BOOLEAN is
+	valid_behavior_type (behavior: INTEGER): BOOLEAN
 			-- Is `behavior' valid?
 		do
 			Result := behavior >= Every_row and then behavior <= Qualified_selection
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_behavior_type (behavior: INTEGER) is
+	set_behavior_type (behavior: INTEGER)
 			-- Initialization.
 		require
 			valid_behavior_type: valid_behavior_type (behavior)
@@ -60,7 +60,7 @@ feature -- Basic operations
 			behavior_type := behavior
 		end
 
-	set_criterion (code: INTEGER) is
+	set_criterion (code: INTEGER)
 			-- Set table attribute `code' as criterion
 			-- for database read.
 		require
@@ -69,7 +69,7 @@ feature -- Basic operations
 			criterion := code
 		end
 
-	set_row_attribute_code (attr_code: INTEGER) is
+	set_row_attribute_code (attr_code: INTEGER)
 			-- Set `attr_code' as attribute code corresponding to criterion value to
 			-- match with the query.
 		require
@@ -79,7 +79,7 @@ feature -- Basic operations
 			attribute_code := attr_code
 		end
 
-	read_from_tablerow (db_table: DB_TABLE) is
+	read_from_tablerow (db_table: DB_TABLE)
 			-- Extract criterion_value from `db_table' using `attribute_code'
 			-- and read database on table with `table_code' with a selection
 			-- qualified by `criterion'.
@@ -95,7 +95,7 @@ feature -- Basic operations
 			read
 		end
 
-	read is
+	read
 			-- Extract criterion_value from `db_table' using `attribute_code'
 			-- and read database on table with `table_code' with a selection
 			-- qualified by `criterion'.
@@ -108,13 +108,13 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Basic operations
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			is_activated := True
 		end
 
-	set_table_code (tcode: INTEGER) is
+	set_table_code (tcode: INTEGER)
 			-- Set `tcode' as code of database table from which table rows
 			-- will be selected.
 		do
@@ -124,7 +124,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	refresh: ARRAYED_LIST [DB_TABLE] is
+	refresh: ARRAYED_LIST [DB_TABLE]
 			-- Read database with same qualifying value as last call of `db_read'.
 		local
 			database_handler: ABSTRACT_DB_TABLE_MANAGER
@@ -143,7 +143,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	clear is
+	clear
 			-- Clear user component.
 		require
 			is_activated: is_activated
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			-- for a database selection.
 	--|||		-- Code of the table ID attribute if behavior is ID selection.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

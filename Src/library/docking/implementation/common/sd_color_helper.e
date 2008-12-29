@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Algorithm of color calculating."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Saturation
 
-	color_with_lightness (a_color: EV_COLOR; a_lightness_increase: REAL): EV_COLOR is
+	color_with_lightness (a_color: EV_COLOR; a_lightness_increase: REAL): EV_COLOR
 			-- Make a color from `a_color' with `a_lightness_increase'.
 			--| Note the Result must be twined when needed
 		require
@@ -32,7 +32,7 @@ feature -- Saturation
 			Result.set_rgb_with_8_bit (new_r, new_g, new_b)
 		end
 
-	draw_round_before (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR) is
+	draw_round_before (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR)
 			-- Draw round ellipse before.
 		do
 			a_drawing_area.clear
@@ -40,7 +40,7 @@ feature -- Saturation
 			a_drawing_area.fill_ellipse (0, 0, a_drawing_area.width * 2, a_drawing_area.height * 2)
 		end
 
-	draw_round_after (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR) is
+	draw_round_after (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR)
 			-- Draw round ellipse after.
 		do
 			a_drawing_area.clear
@@ -48,7 +48,7 @@ feature -- Saturation
 			a_drawing_area.fill_ellipse (- a_drawing_area.width, 0, a_drawing_area.width * 2, a_drawing_area.height * 2)
 		end
 
-	draw_color_change_gradually (a_drawing_area: EV_DRAWING_AREA; a_start, a_to: EV_COLOR; a_start_x, a_to_x: INTEGER) is
+	draw_color_change_gradually (a_drawing_area: EV_DRAWING_AREA; a_start, a_to: EV_COLOR; a_start_x, a_to_x: INTEGER)
 			-- Draw color changed gradually on `a_drawing_area' from start x position.
 		local
 			l_rect: EV_RECTANGLE
@@ -57,7 +57,7 @@ feature -- Saturation
 			draw_color_change_gradually_in_area (a_drawing_area, l_rect, a_start, a_to)
 		end
 
-	draw_color_change_gradually_from (a_drawing_area: EV_DRAWING_AREA; a_start_x: INTEGER; a_start_color, a_to_color: EV_COLOR) is
+	draw_color_change_gradually_from (a_drawing_area: EV_DRAWING_AREA; a_start_x: INTEGER; a_start_color, a_to_color: EV_COLOR)
 			-- Draw color changed gradually on `a_drawing_area' from a_start_x.
 		local
 			l_rect: EV_RECTANGLE
@@ -66,7 +66,7 @@ feature -- Saturation
 			draw_color_change_gradually_in_area (a_drawing_area, l_rect, a_start_color, a_to_color)
 		end
 
-	draw_color_change_gradually_in_area (a_drawing_area: EV_DRAWING_AREA; a_area: EV_RECTANGLE; a_start_color, a_to_color: EV_COLOR) is
+	draw_color_change_gradually_in_area (a_drawing_area: EV_DRAWING_AREA; a_area: EV_RECTANGLE; a_start_color, a_to_color: EV_COLOR)
 			-- Draw gradually changing color in `a_area' of `a_drawing_area'.
 		require
 			not_void: a_area /= Void
@@ -93,7 +93,7 @@ feature -- Saturation
 			end
 		end
 
-	colorize_with (a_color: EV_COLOR a_colors: SPECIAL [SPECIAL [INTEGER]]) is
+	colorize_with (a_color: EV_COLOR a_colors: SPECIAL [SPECIAL [INTEGER]])
 			-- Draw a pixmap on desktop by colors, black is discarded.
 		require
 			a_pixmap_not_void: a_colors /= Void
@@ -152,7 +152,7 @@ feature -- Saturation
 			end
 		end
 
-	text_color_by (a_background_color: EV_COLOR): EV_COLOR is
+	text_color_by (a_background_color: EV_COLOR): EV_COLOR
 			-- Text color calculated base on a_background_color.
 		do
 			if a_background_color.lightness > 0.5 then
@@ -164,7 +164,7 @@ feature -- Saturation
 
 feature {NONE} -- Implementation
 
-	color_mix (a_first_color, a_second_color: EV_COLOR; a_percent: REAL): EV_COLOR is
+	color_mix (a_first_color, a_second_color: EV_COLOR; a_percent: REAL): EV_COLOR
 			-- Color mix with `a_first_color' and `a_second_color'.
 			--| This is a shared object, if needed don't forget to twin it.
 		require
@@ -183,13 +183,13 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	light_increase (a_color: INTEGER; a_lightness_increase: REAL): INTEGER is
+	light_increase (a_color: INTEGER; a_lightness_increase: REAL): INTEGER
 			-- Increas light.
 		do
 			Result := (a_color * (1 - a_lightness_increase) + 255 * a_lightness_increase).rounded
 		end
 
-	light_decrease (a_color: INTEGER; a_lightness_increase: REAL): INTEGER is
+	light_decrease (a_color: INTEGER; a_lightness_increase: REAL): INTEGER
 			-- Decrease light.
 		do
 			Result := (a_color * (1 + a_lightness_increase)).rounded
@@ -197,13 +197,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation : reuse
 
-	tmp_color: EV_COLOR is
+	tmp_color: EV_COLOR
 			-- Reuseable instance of EV_COLOR.
 		once
 			create Result
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

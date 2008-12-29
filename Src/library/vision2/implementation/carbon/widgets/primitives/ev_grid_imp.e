@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		Carbon implementation.
@@ -58,14 +58,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create grid
 		do
 			base_make (an_interface)
 
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 				-- We need to explicitly show the cell gtk widget as we are not calling the Precursor as the event hookup is not needed.
@@ -78,14 +78,14 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'
 		do
 			Precursor {EV_CELL_IMP} (a_color)
 			redraw_client_area
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		do
 			Precursor {EV_CELL_IMP} (a_color)
@@ -94,13 +94,13 @@ feature -- Element change
 
 feature {EV_GRID_ITEM_I} -- Implementation
 
-	extra_text_spacing: INTEGER is
+	extra_text_spacing: INTEGER
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		do
 			Result := 6
 		end
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
+	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT
@@ -126,7 +126,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			end
 		end
 
-	color_from_state (style_type, a_state: INTEGER): EV_COLOR is
+	color_from_state (style_type, a_state: INTEGER): EV_COLOR
 			-- Return color of either fg or bg representing `a_state'
 		local
 			a_widget, a_style: POINTER
@@ -138,7 +138,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end
 
-	text_style, base_style, fg_style, bg_style: INTEGER is unique
+	text_style, base_style, fg_style, bg_style: INTEGER = unique
 		-- Different coloring styles used in gtk.
 
 feature {EV_ANY_I} -- Implementation
@@ -147,7 +147,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end
 

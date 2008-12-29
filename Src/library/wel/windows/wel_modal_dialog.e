@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Modal dialog box that does not allow the user to switch %
 		%between the dialog box and other programs."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Basic operations
 
-	terminate (a_result: INTEGER) is
+	terminate (a_result: INTEGER)
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			-- Is `result_id' set in `terminate'?
 
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING_GENERAL) is
+			a_name: STRING_GENERAL)
 			-- Create the dialog
 		local
 			c_name: WEL_STRING
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER is
+	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER
 			-- SDK DialogBox
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, HWND, %
@@ -83,7 +83,7 @@ feature {NONE} -- Externals
 			"DialogBox"
 		end
 
-	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER) is
+	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER)
 			-- SDK EndDialog
 		external
 			"C [macro <wel.h>] (HWND, INT_PTR)"
@@ -91,7 +91,7 @@ feature {NONE} -- Externals
 			"EndDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Define Variable of type DOUBLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,14 +23,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_variable (Sqlt_flt, Double_bytes)
 		end
 
 feature -- Access
 
-	value: DOUBLE_REF is
+	value: DOUBLE_REF
 			-- Current value of define variable
 		local
 			double_value: DOUBLE
@@ -40,13 +40,13 @@ feature -- Access
 			Result.set_item (double_value)
 		end
 	
-	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN is
+	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN
 			-- Are `type' and `size' valid values for `data_type' and `data_size' ?
 		do
 			Result := type = Sqlt_flt and size = Double_bytes
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

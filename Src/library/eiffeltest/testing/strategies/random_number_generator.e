@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facility for generating pseudo-random numbers"
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	random_number_generator: RANDOM
 			-- Random number generator instance
 
-	refresh_random_seed is
+	refresh_random_seed
 			-- Set new time-dependent seed.
 		require
 			generator_created: random_number_generator /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		end
 	
 			
-	random: RANDOM is
+	random: RANDOM
 			-- Random generator
 		do
 			if random_number_generator = Void then
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			Result := random_number_generator
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

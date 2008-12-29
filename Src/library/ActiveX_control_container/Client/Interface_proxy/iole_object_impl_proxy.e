@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleObject' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_object_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	set_client_site (p_client_site: IOLE_CLIENT_SITE_INTERFACE) is
+	set_client_site (p_client_site: IOLE_CLIENT_SITE_INTERFACE)
 			-- No description available.
 			-- `p_client_site' [in].  
 		local
@@ -48,14 +48,14 @@ feature -- Basic Operations
 			ccom_set_client_site (initializer, p_client_site_item)
 		end
 
-	get_client_site (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]) is
+	get_client_site (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE])
 			-- No description available.
 			-- `pp_client_site' [out].  
 		do
 			ccom_get_client_site (initializer, pp_client_site)
 		end
 
-	set_host_names (sz_container_app: STRING; sz_container_obj: STRING) is
+	set_host_names (sz_container_app: STRING; sz_container_obj: STRING)
 			-- No description available.
 			-- `sz_container_app' [in].  
 			-- `sz_container_obj' [in].  
@@ -63,14 +63,14 @@ feature -- Basic Operations
 			ccom_set_host_names (initializer, sz_container_app, sz_container_obj)
 		end
 
-	close (dw_save_option: INTEGER) is
+	close (dw_save_option: INTEGER)
 			-- No description available.
 			-- `dw_save_option' [in].  
 		do
 			ccom_close (initializer, dw_save_option)
 		end
 
-	set_moniker (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE) is
+	set_moniker (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `dw_which_moniker' [in].  
 			-- `pmk' [in].  
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			ccom_set_moniker (initializer, dw_which_moniker, pmk_item)
 		end
 
-	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]) is
+	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `dw_assign' [in].  
 			-- `dw_which_moniker' [in].  
@@ -99,7 +99,7 @@ feature -- Basic Operations
 			ccom_get_moniker (initializer, dw_assign, dw_which_moniker, ppmk)
 		end
 
-	init_from_data (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER) is
+	init_from_data (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER)
 			-- No description available.
 			-- `p_data_object' [in].  
 			-- `f_creation' [in].  
@@ -120,7 +120,7 @@ feature -- Basic Operations
 			ccom_init_from_data (initializer, p_data_object_item, f_creation, dw_reserved)
 		end
 
-	get_clipboard_data (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]) is
+	get_clipboard_data (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE])
 			-- No description available.
 			-- `dw_reserved' [in].  
 			-- `pp_data_object' [out].  
@@ -128,7 +128,7 @@ feature -- Basic Operations
 			ccom_get_clipboard_data (initializer, dw_reserved, pp_data_object)
 		end
 
-	do_verb (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD) is
+	do_verb (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `i_verb' [in].  
 			-- `lpmsg' [in].  
@@ -156,33 +156,33 @@ feature -- Basic Operations
 			ccom_do_verb (initializer, i_verb, msg_item, p_active_site_item, lindex, hwnd_parent, lprc_pos_rect.item)
 		end
 
-	enum_verbs (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]) is
+	enum_verbs (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE])
 			-- No description available.
 			-- `pp_enum_ole_verb' [out].  
 		do
 			ccom_enum_verbs (initializer, pp_enum_ole_verb)
 		end
 
-	update is
+	update
 			-- No description available.
 		do
 			ccom_update (initializer)
 		end
 
-	is_up_to_date is
+	is_up_to_date
 			-- No description available.
 		do
 			ccom_is_up_to_date (initializer)
 		end
 
-	get_user_class_id (p_clsid: ECOM_GUID) is
+	get_user_class_id (p_clsid: ECOM_GUID)
 			-- No description available.
 			-- `p_clsid' [out].  
 		do
 			ccom_get_user_class_id (initializer, p_clsid.item)
 		end
 
-	get_user_type (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING]) is
+	get_user_type (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING])
 			-- No description available.
 			-- `dw_form_of_type' [in].  
 			-- `psz_user_type' [out].  
@@ -190,7 +190,7 @@ feature -- Basic Operations
 			ccom_get_user_type (initializer, dw_form_of_type, psz_user_type)
 		end
 
-	set_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD) is
+	set_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `psizel' [in].  
@@ -205,7 +205,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	get_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD) is
+	get_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `psizel' [out].  
@@ -213,7 +213,7 @@ feature -- Basic Operations
 			ccom_get_extent (initializer, dw_draw_aspect, psizel.item)
 		end
 
-	advise (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF) is
+	advise (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_adv_sink' [in].  
 			-- `pdw_connection' [out].  
@@ -233,21 +233,21 @@ feature -- Basic Operations
 			ccom_advise (initializer, p_adv_sink_item, pdw_connection)
 		end
 
-	unadvise (dw_connection: INTEGER) is
+	unadvise (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		do
 			ccom_unadvise (initializer, dw_connection)
 		end
 
-	enum_advise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_advise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_advise' [out].  
 		do
 			ccom_enum_advise (initializer, ppenum_advise)
 		end
 
-	get_misc_status (dw_aspect: INTEGER; pdw_status: INTEGER_REF) is
+	get_misc_status (dw_aspect: INTEGER; pdw_status: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `pdw_status' [out].  
@@ -255,7 +255,7 @@ feature -- Basic Operations
 			ccom_get_misc_status (initializer, dw_aspect, pdw_status)
 		end
 
-	set_color_scheme (p_logpal: TAG_LOGPALETTE_RECORD) is
+	set_color_scheme (p_logpal: TAG_LOGPALETTE_RECORD)
 			-- No description available.
 			-- `p_logpal' [in].  
 		do
@@ -264,7 +264,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_object_impl_proxy(initializer)
@@ -272,151 +272,151 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_set_client_site (cpp_obj: POINTER; p_client_site: POINTER) is
+	ccom_set_client_site (cpp_obj: POINTER; p_client_site: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IOleClientSite *)"
 		end
 
-	ccom_get_client_site (cpp_obj: POINTER; pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]) is
+	ccom_get_client_site (cpp_obj: POINTER; pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_set_host_names (cpp_obj: POINTER; sz_container_app: STRING; sz_container_obj: STRING) is
+	ccom_set_host_names (cpp_obj: POINTER; sz_container_app: STRING; sz_container_obj: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_close (cpp_obj: POINTER; dw_save_option: INTEGER) is
+	ccom_close (cpp_obj: POINTER; dw_save_option: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_set_moniker (cpp_obj: POINTER; dw_which_moniker: INTEGER; pmk: POINTER) is
+	ccom_set_moniker (cpp_obj: POINTER; dw_which_moniker: INTEGER; pmk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,::IMoniker *)"
 		end
 
-	ccom_get_moniker (cpp_obj: POINTER; dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]) is
+	ccom_get_moniker (cpp_obj: POINTER; dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_init_from_data (cpp_obj: POINTER; p_data_object: POINTER; f_creation: INTEGER; dw_reserved: INTEGER) is
+	ccom_init_from_data (cpp_obj: POINTER; p_data_object: POINTER; f_creation: INTEGER; dw_reserved: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_get_clipboard_data (cpp_obj: POINTER; dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]) is
+	ccom_get_clipboard_data (cpp_obj: POINTER; dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_do_verb (cpp_obj: POINTER; i_verb: INTEGER; lpmsg: POINTER; p_active_site: POINTER; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: POINTER) is
+	ccom_do_verb (cpp_obj: POINTER; i_verb: INTEGER; lpmsg: POINTER; p_active_site: POINTER; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagMSG *,::IOleClientSite *,EIF_INTEGER,EIF_POINTER,ecom_control_library::tagRECT *)"
 		end
 
-	ccom_enum_verbs (cpp_obj: POINTER; pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]) is
+	ccom_enum_verbs (cpp_obj: POINTER; pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_update (cpp_obj: POINTER) is
+	ccom_update (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"]()"
 		end
 
-	ccom_is_up_to_date (cpp_obj: POINTER) is
+	ccom_is_up_to_date (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"]()"
 		end
 
-	ccom_get_user_class_id (cpp_obj: POINTER; p_clsid: POINTER) is
+	ccom_get_user_class_id (cpp_obj: POINTER; p_clsid: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](GUID *)"
 		end
 
-	ccom_get_user_type (cpp_obj: POINTER; dw_form_of_type: INTEGER; psz_user_type: CELL [STRING]) is
+	ccom_get_user_type (cpp_obj: POINTER; dw_form_of_type: INTEGER; psz_user_type: CELL [STRING])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_set_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; psizel: POINTER) is
+	ccom_set_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; psizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_get_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; psizel: POINTER) is
+	ccom_get_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; psizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_advise (cpp_obj: POINTER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF) is
+	ccom_advise (cpp_obj: POINTER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IAdviseSink *,EIF_OBJECT)"
 		end
 
-	ccom_unadvise (cpp_obj: POINTER; dw_connection: INTEGER) is
+	ccom_unadvise (cpp_obj: POINTER; dw_connection: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_enum_advise (cpp_obj: POINTER; ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	ccom_enum_advise (cpp_obj: POINTER; ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_get_misc_status (cpp_obj: POINTER; dw_aspect: INTEGER; pdw_status: INTEGER_REF) is
+	ccom_get_misc_status (cpp_obj: POINTER; dw_aspect: INTEGER; pdw_status: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_set_color_scheme (cpp_obj: POINTER; p_logpal: POINTER) is
+	ccom_set_color_scheme (cpp_obj: POINTER; p_logpal: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](ecom_control_library::tagLOGPALETTE *)"
 		end
 
-	ccom_delete_iole_object_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_object_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_object_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_object_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

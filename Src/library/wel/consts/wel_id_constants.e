@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog response (ID) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Idok: INTEGER is 1
+	Idok: INTEGER = 1
 			-- OK button was selected.
 
-	Idcancel: INTEGER is 2
+	Idcancel: INTEGER = 2
 			-- Cancel button was selected.
 
-	Idabort: INTEGER is 3
+	Idabort: INTEGER = 3
 			-- Abort button was selected.
 
-	Idretry: INTEGER is 4
+	Idretry: INTEGER = 4
 			-- Retry button was selected.
 
-	Idignore: INTEGER is 5
+	Idignore: INTEGER = 5
 			-- Ignore button was selected.
 
-	Idyes: INTEGER is 6
+	Idyes: INTEGER = 6
 			-- Yes button was selected.
 
-	Idno: INTEGER is 7;
+	Idno: INTEGER = 7;
 			-- No button was selected.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The Cell is similar to EV_GRID_LABEL_ITEM, except it has a checkbox [x]
 		See description of EV_GRID_LABEL_ITEM for more details
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	is_checked: BOOLEAN is
+	is_checked: BOOLEAN
 			-- Is checkbox checked ?
 		do
 			Result := implementation.is_checked
@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Change
 
-	toggle_is_checked is
+	toggle_is_checked
 			-- Toggel checkbox status
 		do
 			implementation.toggle_is_checked
 		end
 
-	set_is_checked (b: BOOLEAN) is
+	set_is_checked (b: BOOLEAN)
 			-- Set checkbox status
 		do
 			if is_checked /= b then
@@ -47,7 +47,7 @@ feature -- Change
 
 feature -- Status
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is current sensitive ?
 		do
 			Result := implementation.is_sensitive
@@ -55,7 +55,7 @@ feature -- Status
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input
 		require
 			not_destroyed: not is_destroyed
@@ -65,7 +65,7 @@ feature -- Status setting
 			is_sensitive: (parent = Void or parent.is_sensitive) implies is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input
 		require
 			not_destroyed: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature -- Actions
 
-	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like Current]] is
+	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like Current]]
 			-- Actions called when checkbox value changed.
 		do
 			Result := implementation.checked_changed_actions
@@ -90,13 +90,13 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_CHECKABLE_LABEL_ITEM_I} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that show the whole system's memory objects in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initlization
 
-	make_with_grid (a_grid: EV_GRID) is
+	make_with_grid (a_grid: EV_GRID)
 		require
 			a_grid_not_void: a_grid /= Void
 		do
@@ -50,7 +50,7 @@ feature -- Initlization
 			object_grid_deny_curosor_set: object_grid.deny_cursor /= Void
 		end
 
-	adjust_column_width (a_column_index: INTEGER) is
+	adjust_column_width (a_column_index: INTEGER)
 			-- adjust a column width to fix the max width of the item its contain
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -62,7 +62,7 @@ feature -- Initlization
 
 feature -- Command
 
-	show_memory_map is
+	show_memory_map
 			-- Show memory map
 		local
 			l_new_table, l_old_table: HASH_TABLE [INTEGER, INTEGER]
@@ -155,7 +155,7 @@ feature -- Command
 			update_grid_content
 		end
 
-	set_finding_route_to_once (a_b: BOOLEAN) is
+	set_finding_route_to_once (a_b: BOOLEAN)
 			-- Set `finding_route_to_once' with `b'.
 		do
 			finding_route_to_once := a_b
@@ -163,7 +163,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE is
+	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE
 			-- User pick one item from the grid.
 		do
 			if a_item /= Void and then a_item.column.index = 1 then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_grid_header_click (a_column_index: INTEGER) is
+	on_grid_header_click (a_column_index: INTEGER)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_data is
+	sort_data
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		require
 			grid_data_not_void: grid_data /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			l_sorter.sort (grid_data)
 		end
 
-	update_grid_content is
+	update_grid_content
 			-- Fill grid using `grid_data'
 		require
 			grid_data_not_void: grid_data /= Void
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			system_util.collect
 		end
 
-	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Add all objects of the given dynamic type of `a_dynamic_type' as subnode
 			-- of row `a_parent_row'.
 		require
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_expand_actions_for_referers (an_object: ANY; a_parent_row: EV_GRID_ROW) is
+	on_expand_actions_for_referers (an_object: ANY; a_parent_row: EV_GRID_ROW)
 			-- Add all objects referring to `an_object' as subnode
 			-- of row `a_parent_row'.
 		require
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_check_box_selected (a_check_item: MA_GRID_CHECK_BOX_ITEM; a_object: ANY) is
+	on_check_box_selected (a_check_item: MA_GRID_CHECK_BOX_ITEM; a_object: ANY)
 			-- On check box selected.
 		require
 			a_check_item_not_void: a_check_item /= Void
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_reference_table (a_object_id: INTEGER; a_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32]) is
+	add_to_reference_table (a_object_id: INTEGER; a_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER_32])
 			-- Added all referer relations of objects of `a_object_id'.
 		require
 			tables_created: reference_table /= Void and name_table /= Void
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_once_object_table is
+	build_once_object_table
 			-- Record once object in `once_object_table'.
 		local
 			l_obj: like once_objects
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	is_object_from_ma (a_str: STRING): BOOLEAN is
+	is_object_from_ma (a_str: STRING): BOOLEAN
 			-- If the type of object is from MA.
 		do
 			if a_str /= Void then
@@ -547,7 +547,7 @@ feature -- Status report
 			end
 		end
 
-	column_index_valid (a_column_index: INTEGER): BOOLEAN  is
+	column_index_valid (a_column_index: INTEGER): BOOLEAN
 			-- Validate a column index.
 		do
 			Result := a_column_index > 0 and a_column_index <= object_grid.column_count
@@ -557,7 +557,7 @@ feature -- Status report
 
 feature {NONE} -- Fields
 
-	row_data: TUPLE [type_name: STRING; number_of_objects: INTEGER; variation_since_last_time: INTEGER; type_id: INTEGER] is
+	row_data: TUPLE [type_name: STRING; number_of_objects: INTEGER; variation_since_last_time: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		do
@@ -605,7 +605,7 @@ feature {NONE} -- Route building.
 
 feature {NONE} -- Sorting Implemention
 
-	sort_on_type_name (u, v: like row_data): BOOLEAN is
+	sort_on_type_name (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Sorting Implemention
 			end
 		end
 
-	sort_on_count (u, v: like row_data): BOOLEAN is
+	sort_on_count (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -639,7 +639,7 @@ feature {NONE} -- Sorting Implemention
 			end
 		end
 
-	sort_on_delta (u, v: like row_data): BOOLEAN is
+	sort_on_delta (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -654,12 +654,12 @@ feature {NONE} -- Sorting Implemention
 
 feature {NONE} -- Internal
 
-	once_objects: SPECIAL [ANY] is
+	once_objects: SPECIAL [ANY]
 		do
 			Result := {ISE_RUNTIME}.once_objects (special_any_dynamic_type)
 		end
 
-	special_any_dynamic_type: INTEGER is
+	special_any_dynamic_type: INTEGER
 			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
 		local
 			a: ARRAY [ANY]
@@ -675,7 +675,7 @@ feature {NONE} -- Internal
 invariant
 	object_grid_not_void: object_grid /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

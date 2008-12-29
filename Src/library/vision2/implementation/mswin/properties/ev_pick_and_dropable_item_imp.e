@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Mswindows implementation of pick and dropable for items."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 		--| exection of the actions, while we still need to access it
 		--| after the actions have been called.
 
-	set_pnd_original_parent is
+	set_pnd_original_parent
 			-- Assign `parent_imp' to `pnd_original_parent'.
 			--| This is done as a feature rather than just an assignment
 			--| within pnd_press as EV_TREE_ITEM_IMP needs to store
@@ -40,12 +40,12 @@ feature -- Access
 			end
 		end
 
-	parent_imp: EV_ITEM_LIST_I [EV_ITEM] is
+	parent_imp: EV_ITEM_LIST_I [EV_ITEM]
 			-- Parent implementation of `Current'.
 		deferred
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Window containing `Current' in parenting heirarchy.
 		local
 			pickable_parent: EV_PICK_AND_DROPABLE_IMP
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process a pointer press that may alter the current state
 			-- of pick/drag and drop.
 		do
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	check_drag_and_drop_release (a_x, a_y: INTEGER) is
+	check_drag_and_drop_release (a_x, a_y: INTEGER)
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
 		local
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to `parent_imp' pointer style.
 		local
 			pickable_parent: EV_PICK_AND_DROPABLE_IMP
@@ -151,7 +151,7 @@ feature -- Access
 			end
 		end
 
-	set_capture is
+	set_capture
 			-- Grab user input.
 			-- Works only on current windows thread.
 		do
@@ -161,7 +161,7 @@ feature -- Access
 			end
 		end
 
-	release_capture is
+	release_capture
 			-- Release user input.
 			-- Works only on current windows thread.
 		do
@@ -171,7 +171,7 @@ feature -- Access
 			end
 		end
 
-	set_heavy_capture is
+	set_heavy_capture
 			-- Grab user input.
 			-- Works on all windows threads.
 		do
@@ -181,13 +181,13 @@ feature -- Access
 			end
 		end
 
-	has_heavy_capture: BOOLEAN is
+	has_heavy_capture: BOOLEAN
 			-- Does `parent' have a heavy capture?
 		do
 			Result := pnd_original_parent /= Void and then pnd_original_parent.has_heavy_capture
 		end
 
-	release_heavy_capture is
+	release_heavy_capture
 			-- Release user input.
 			-- Works on all windows threads.
 		do
@@ -197,7 +197,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

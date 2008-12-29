@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Small pop-up window that displays a single line of
 		descriptive text giving the purpose of tools.
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER)
 			-- Create a tooltip control with `a_parent' as parent
 			-- and `an_id' as id.
 		require
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	i_th_tool_info (index: INTEGER): WEL_TOOL_INFO is
+	i_th_tool_info (index: INTEGER): WEL_TOOL_INFO
 			-- Tool info structure at the zero-based `index'
 		require
 			exists: exists
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count of tools
 		require
 			exists: exists
@@ -76,7 +76,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	autopop_delay_time: INTEGER is
+	autopop_delay_time: INTEGER
 			-- Length of time (in milliseconds) before the
 			-- tooltip window is hidden if the cursor remains
 			-- stationary in the tool's bounding rectangle after
@@ -90,7 +90,7 @@ feature -- Status report
 			positive_result: result >= 0
 		end
 
-	initial_delay_time: INTEGER is
+	initial_delay_time: INTEGER
 			-- Length of time (in milliseconds) that the
 			-- cursor must remain stationary within the bounding
 			-- rectangle of a tool before the tooltip window is
@@ -104,7 +104,7 @@ feature -- Status report
 			positive_result: result >= 0
 		end
 
-	reshow_delay_time: INTEGER is
+	reshow_delay_time: INTEGER
 			-- Length of the delay (in milliseconds) before
 			-- subsequent tooltip windows are displayed when the
 			-- cursor is moved from one tool to another.
@@ -117,7 +117,7 @@ feature -- Status report
 			positive_result: result >= 0
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the tooltip.
 		require
 			exists: exists
@@ -127,7 +127,7 @@ feature -- Status report
 			result_not_void: result /= Void
 		end
 
-	text_color: WEL_COLOR_REF is
+	text_color: WEL_COLOR_REF
 			-- Color used for the text of the tooltip.
 		require
 			exists: exists
@@ -137,7 +137,7 @@ feature -- Status report
 			result_not_void: result /= Void
 		end
 
-	max_tip_width: INTEGER is
+	max_tip_width: INTEGER
 			-- Maximum width that tooltip window will be displayed.
 			-- -1 if `set_max_tip_width' has not been called.
 		require
@@ -151,7 +151,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	activate is
+	activate
 			-- Activate the tooltip control.
 		require
 			exists: exists
@@ -159,7 +159,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Ttm_activate, to_wparam (1), default_pointer)
 		end
 
-	deactivate is
+	deactivate
 			-- Deactivate the tooltip control.
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Ttm_activate, default_pointer, default_pointer)
 		end
 
-	set_automatic_delay_time (delay: INTEGER) is
+	set_automatic_delay_time (delay: INTEGER)
 			-- Set automatically the initial, reshow, and
 			-- autopopup durations based on the value of
 			-- `delay' (in milliseconds).
@@ -179,7 +179,7 @@ feature -- Status setting
 				to_wparam (Ttdt_automatic), cwin_make_long (delay, 0))
 		end
 
-	set_autopop_delay_time (delay: INTEGER) is
+	set_autopop_delay_time (delay: INTEGER)
 			-- Set the length of time (in milliseconds) before the
 			-- tooltip window is hidden if the cursor remains
 			-- stationary in the tool's bounding rectangle after
@@ -192,7 +192,7 @@ feature -- Status setting
 				to_wparam (Ttdt_autopop), cwin_make_long (delay, 0))
 		end
 
-	set_max_tip_width (a_width: INTEGER) is
+	set_max_tip_width (a_width: INTEGER)
 			-- Set the maximum width for the tooltip window. If this
 			-- is set, then the text will be word wrapped to this width,
 			-- and newline characters will be processed.
@@ -204,7 +204,7 @@ feature -- Status setting
 		end
 
 
-	set_initial_delay_time (delay: INTEGER) is
+	set_initial_delay_time (delay: INTEGER)
 			-- Set the length of time (in milliseconds) that the
 			-- cursor must remain stationary within the bounding
 			-- rectangle of a tool before the tooltip window is
@@ -217,7 +217,7 @@ feature -- Status setting
 				to_wparam (Ttdt_initial), cwin_make_long (delay, 0))
 		end
 
-	set_reshow_delay_time (delay: INTEGER) is
+	set_reshow_delay_time (delay: INTEGER)
 			-- Set the length of the delay (in milliseconds) before
 			-- subsequent tooltip windows are displayed when the
 			-- cursor is moved from one tool to another.
@@ -229,7 +229,7 @@ feature -- Status setting
 				to_wparam (Ttdt_reshow), cwin_make_long (delay, 0))
 		end
 
-	set_background_color (a_color: WEL_COLOR_REF) is
+	set_background_color (a_color: WEL_COLOR_REF)
 			-- Background color used for the tooltip.
 		require
 			exists: exists
@@ -242,7 +242,7 @@ feature -- Status setting
 					background_color.blue = a_color.blue
 		end
 
-	set_text_color (a_color: WEL_COLOR_REF) is
+	set_text_color (a_color: WEL_COLOR_REF)
 			-- Color used for the text of the tooltip.
 		require
 			exists: exists
@@ -258,7 +258,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	add_tool (tool_info: WEL_TOOL_INFO) is
+	add_tool (tool_info: WEL_TOOL_INFO)
 			-- Add a new `tool_info' in the tooltip control.
 		require
 			exists: exists
@@ -269,7 +269,7 @@ feature -- Basic operations
 			count_increased: count = old count + 1
 		end
 
-	delete_tool (index: INTEGER) is
+	delete_tool (index: INTEGER)
 			-- Delete the tool at the zero-based `index'.
 		require
 			exists: exists
@@ -281,7 +281,7 @@ feature -- Basic operations
 			count_decreased: count = old count - 1
 		end
 
-	remove_tool (tool_info: WEL_TOOL_INFO) is
+	remove_tool (tool_info: WEL_TOOL_INFO)
 			-- Delete the `tool_info'.
 		require
 			exists: exists
@@ -292,7 +292,7 @@ feature -- Basic operations
 			count_decreased: count = old count - 1
 		end
 
-	update_text (tool_info: WEL_TOOL_INFO) is
+	update_text (tool_info: WEL_TOOL_INFO)
 			-- Update text of Current using `tool_info'.
 		require
 			exists: exists
@@ -303,19 +303,19 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_tooltips_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control.
 		once
 			Result := Tts_alwaystip
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Default extended style used to create the control.
 		once
 			Result := Ws_ex_topmost
@@ -323,14 +323,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_tooltips_class: POINTER is
+	cwin_tooltips_class: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"TOOLTIPS_CLASS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

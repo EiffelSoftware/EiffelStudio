@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -145,7 +145,7 @@ create
 
 feature -- Initialization
 
-	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE)
 			-- Initialize the list.
 		do
 			create private_attributes
@@ -161,7 +161,7 @@ feature -- Initialization
 			oui_widget := a_list
 		end
 
-	realize is
+	realize
 			-- Create the scrollable list.
 		local
 			i: INTEGER
@@ -219,7 +219,7 @@ feature -- Initialization
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Remember the attributes and destroy the scrolled list.
 		do
 			private_visible_item_count := visible_item_count
@@ -233,35 +233,35 @@ feature -- Initialization
 
 feature -- Status setting
 
-	add_browse_action (a_command: COMMAND; argument: ANY) is
+	add_browse_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with browse selection mode in current scroll list.
 		do
 			selection_change_actions.add (Current, a_command, argument)
 		end
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		do
 			selection_change_actions.add (Current, a_command, argument)
 		end
 
-	add_extended_action (a_command: COMMAND; argument: ANY) is
+	add_extended_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with extended selection mode in current scroll list.
 		do
 			selection_change_actions.add (Current, a_command, argument)
 		end
 
-	add_multiple_action (a_command: COMMAND; argument: ANY) is
+	add_multiple_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with multiple selection mode in current scroll list.
 		do
 			selection_change_actions.add (Current, a_command, argument)
 		end
 
-	add_single_action (a_command: COMMAND; argument: ANY) is
+	add_single_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with single selection mode in current scroll list.
 		do
@@ -270,42 +270,42 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_browse_action (a_command: COMMAND; argument: ANY) is
+	remove_browse_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with browse selection mode in current scroll list.
 		do
 			selection_change_actions.remove (Current, a_command, argument)
 		end
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with click selection mode in current scroll list.
 		do
 			selection_change_actions.remove (Current, a_command, argument)
 		end
 
-	remove_extended_action (a_command: COMMAND; argument: ANY) is
+	remove_extended_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with extended selection mode in current scroll list.
 		do
 			selection_change_actions.remove (Current, a_command, argument)
 		end
 
-	remove_multiple_action (a_command: COMMAND; argument: ANY) is
+	remove_multiple_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with multiple selection mode in current scroll list.
 		do
 			selection_change_actions.remove (Current, a_command, argument)
 		end
 
-	remove_single_action (a_command: COMMAND; argument: ANY) is
+	remove_single_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with single selection mode in current scroll list.
 		do
 			selection_change_actions.remove (Current, a_command, argument)
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set the height to closest `new_height' possible.
 		local
 			a_visible_count: INTEGER
@@ -324,7 +324,7 @@ feature -- Removal
 			end
 		end
 
-	set_form_height (new_height: INTEGER) is
+	set_form_height (new_height: INTEGER)
 			-- Set the height to closest `new_height' possible.
 		local
 			a_visible_count: INTEGER
@@ -340,7 +340,7 @@ feature -- Removal
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to closest `new_height' possible
 			-- and the width to `new_width'.
 		local
@@ -357,7 +357,7 @@ feature -- Removal
 			end
 		end
 
-	set_visible_item_count (a_count: INTEGER) is
+	set_visible_item_count (a_count: INTEGER)
 		local
 			old_height: INTEGER
 		do
@@ -372,13 +372,13 @@ feature -- Removal
 			end
 		end
 
-	set_largest_width is
+	set_largest_width
 			-- Set the largest width to the current width
 		do
 			largest_width := width
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set the width to `new_width'
 		local
 			old_width: INTEGER
@@ -395,13 +395,13 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	Border_height: INTEGER is
+	Border_height: INTEGER
 			-- Height of the border
 		once
 			Result := window_border_height
 		end
 
-	insert_item (s: STRING; iti: INTEGER) is
+	insert_item (s: STRING; iti: INTEGER)
 			-- Insert `s' at index `iti'.
 			-- Indexes start at 1.
 		local
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_item (i: INTEGER) is
+	delete_item (i: INTEGER)
 			-- Delete the item at index `i'.
 			-- Indexes start at 1.
 		do
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 	largest_width : INTEGER
 		-- Width of largest string in scrolled list
 
-	selected_items: LINKED_LIST[STRING] is
+	selected_items: LINKED_LIST[STRING]
 			-- All the selected items.
 		local
 			al : ARRAYED_LIST [STRING]
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_item: STRING is
+	selected_item: STRING
 		require else
 			single_selection: not multiple_selection
 		do
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 		do
 			if exists then
 				Result := (wel_height - 2 * Border_height) // item_height
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_positions: LINKED_LIST [INTEGER] is
+	selected_positions: LINKED_LIST [INTEGER]
 		local
 			al : ARRAYED_LIST [INTEGER]
 		do
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 		do
 			if multiple_selection then
 				Result := wel_count_selected_items
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 		do
 			if exists and then wel_single_selected and then not multiple_selection then
 				Result := wel_selected_item + 1
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_right (n: INTEGER) is
+	remove_right (n: INTEGER)
 			-- Remove min (`n', count - position) items
 			-- to the right of cursor position.
 			-- Do not move cursor.
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is there at least one item selected?
 		do
 			if multiple_selection then
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deselect_all is
+	deselect_all
 			-- Deselect all selected items.
 		do
 			if exists then
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_left (n: INTEGER) is
+	remove_left (n: INTEGER)
 			-- Remove min (`n', index - 1) items
 			-- to the left of cursor index.
 			-- Do not move cursor
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove is
+	remove
 			-- Remove item at cursor index
 			-- and move cursor to its right neighbor
 			-- (or after if no right neighbor).
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			not_empty_unchanged_index: not is_empty implies index = old index
 		end
 
-	prune_all (an_item: STRING) is
+	prune_all (an_item: STRING)
 			-- Remove all items `an_item' from list.
 			-- Put cursor after.
 		do
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Make list empty
 		do
 			if not is_empty then
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		do
 			if multiple_selection then
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	list_resize (a_width, a_height: INTEGER) is
+	list_resize (a_width, a_height: INTEGER)
 			-- Resize the window with `a_width', `a_height'.
 		require
 			exists: exists
@@ -673,21 +673,21 @@ feature {NONE} -- Implementation
 	default_style: INTEGER
 			-- Style of list to realize
 
-	Single_select_style : INTEGER is
+	Single_select_style : INTEGER
 		once
 			Result := Ws_child + Ws_group +
 				Ws_tabstop + Ws_border + Ws_vscroll +
 				Lbs_notify + Ws_visible
 		end
 
-	Multiple_select_style: INTEGER is
+	Multiple_select_style: INTEGER
 		once
 			Result := Ws_child + Ws_group +
 				Ws_tabstop + Ws_border + Ws_vscroll +
 				Lbs_notify + Lbs_multiplesel + Ws_visible
 		end
 
-	on_lbn_selchange is
+	on_lbn_selchange
 			-- The selection is changed, update the
 			-- private attributes.
 		local
@@ -700,12 +700,12 @@ feature {NONE} -- Implementation
 	oui_widget: SCROLL_LIST
 			-- Widget for context data
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 		do
 			Result := not exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Sortable Array"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 	found: BOOLEAN
 
-	binary_search (a_item: G) is
+	binary_search (a_item: G)
 		local
 			l_mid, l_lower, l_upper: INTEGER
 		do
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	balanced_linear_search (a_item: G; a_start: INTEGER) is
+	balanced_linear_search (a_item: G; a_start: INTEGER)
 		local
 			l_lower, l_upper, l_start, l_examined: INTEGER
 		do
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	linear_search (a_item: G) is
+	linear_search (a_item: G)
 		do
 			found := False
 			from
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	next_item_in_range (random_generator: RANDOM; a_min: INTEGER; a_max: INTEGER): INTEGER is
+	next_item_in_range (random_generator: RANDOM; a_min: INTEGER; a_max: INTEGER): INTEGER
 		local
 			l_double: DOUBLE
 		do
@@ -126,7 +126,7 @@ feature -- Basic operations
 			Result := l_double.rounded
 		end
 
-	sort is
+	sort
 			-- Taken from algorithm provided in "Combinatorial Algorithms, Theory and Practice" by
 			-- Edward M. Reingold, Jurg Nievergelt, and Narsingh Deo; Prentice-Hall Copyright 1977, page 289.
 			-- isbn 0-13-152447-X.
@@ -222,7 +222,7 @@ feature -- Basic operations
 
 feature -- Duplication
 
-	subarray (start_pos, end_pos: INTEGER): SORTABLE_ARRAY [G] is
+	subarray (start_pos, end_pos: INTEGER): SORTABLE_ARRAY [G]
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		do
@@ -230,7 +230,7 @@ feature -- Duplication
 			Result.subcopy (Current, start_pos, end_pos, start_pos)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

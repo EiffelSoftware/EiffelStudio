@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of STATSTG structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- name
 		local
 			l_string: WEL_STRING
@@ -40,7 +40,7 @@ feature -- Access
 			Result := l_string.string
 		end
 
-	is_same_name (other_name: STRING): BOOLEAN is
+	is_same_name (other_name: STRING): BOOLEAN
 		require
 			valid_other_name: other_name /= Void
 		local
@@ -51,7 +51,7 @@ feature -- Access
 			Result := l_string.is_equal (l_string2)
 		end
 
-	type: INTEGER is
+	type: INTEGER
 			-- Type of object
 			-- Returns one of the values from the STGTY enumeration.
 			-- See class ECOM_STGTY for values
@@ -61,7 +61,7 @@ feature -- Access
 			valid_type: is_valid_stgty (Result)
 		end
 
-	size: ECOM_ULARGE_INTEGER is
+	size: ECOM_ULARGE_INTEGER
 			-- Size in bytes of stream or byte array.
 		do
 			create Result.make_from_pointer (c_size (item))
@@ -69,7 +69,7 @@ feature -- Access
 			Result /= Void and Result.item /= Default_pointer
 		end
 
-	modification_time: WEL_FILE_TIME is
+	modification_time: WEL_FILE_TIME
 			-- Last modification time
 		do
 			create Result.make_by_pointer (c_modification_time (item))
@@ -77,7 +77,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	creation_time: WEL_FILE_TIME is
+	creation_time: WEL_FILE_TIME
 			-- Creation time
 		do
 			create Result.make_by_pointer (c_creation_time (item))
@@ -85,7 +85,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	access_time: WEL_FILE_TIME is
+	access_time: WEL_FILE_TIME
 			-- Last access time
 		do
 			create Result.make_by_pointer (c_access_time (item))
@@ -93,7 +93,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	mode: INTEGER is
+	mode: INTEGER
 			-- Access mode specified when the
 			-- object was opened.
 			-- See class ECOM_STGM for values
@@ -103,7 +103,7 @@ feature -- Access
 			valid_mode: is_valid_stgm (Result)
 		end
 
-	locks_supported: INTEGER is
+	locks_supported: INTEGER
 			-- Types of region locking supported
 			-- by stream or byte array. See the LOCKTYPES
 			-- enumeration for the values available. This member
@@ -112,7 +112,7 @@ feature -- Access
 			Result := c_locks_supported (item)
 		end
 
-	clsid: POINTER is
+	clsid: POINTER
 			-- Class identifier for storage object;
 			-- set to CLSID_NULL for new storage objects. This member
 			-- is not used for streams or byte arrays.
@@ -122,7 +122,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	memory_free is
+	memory_free
 			-- Free STATSTG structure
 		local
 			l_pointer: POINTER
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_co_task_mem_free (a_item: like item) is
+	c_co_task_mem_free (a_item: like item)
 			-- Call `CoTaskMemFree' on `a_item'.
 		external
 			"C inline use <windows.h>"
@@ -145,7 +145,7 @@ feature {NONE} -- Externals
 			"CoTaskMemFree((void*)$a_item)"
 		end
 
-	c_name (a_item: like item): POINTER is
+	c_name (a_item: like item): POINTER
 			-- Retrieve `pwcsName' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -153,7 +153,7 @@ feature {NONE} -- Externals
 			"((STATSTG*)$a_item)->pwcsName"
 		end
 
-	c_size (a_item: like item): POINTER is
+	c_size (a_item: like item): POINTER
 			-- Retrieve pointer on `cbSize' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -161,7 +161,7 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->cbSize)"
 		end
 
-	c_type (a_item: like item): INTEGER is
+	c_type (a_item: like item): INTEGER
 			-- Retrieve `type' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -169,7 +169,7 @@ feature {NONE} -- Externals
 			"(EIF_INTEGER)((STATSTG*)$a_item)->type"
 		end
 
-	c_modification_time (a_item: like item): POINTER is
+	c_modification_time (a_item: like item): POINTER
 			-- Retrieve pointer on `mtime' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -177,7 +177,7 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->mtime)"
 		end
 
-	c_creation_time (a_item: like item): POINTER is
+	c_creation_time (a_item: like item): POINTER
 			-- Retrieve pointer on `ctime' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -185,7 +185,7 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->ctime)"
 		end
 
-	c_access_time (a_item: like item): POINTER is
+	c_access_time (a_item: like item): POINTER
 			-- Retrieve pointer on `atime' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -193,7 +193,7 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->atime)"
 		end
 
-	c_mode (a_item: like item): INTEGER is
+	c_mode (a_item: like item): INTEGER
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -201,7 +201,7 @@ feature {NONE} -- Externals
 			"(EIF_INTEGER)((STATSTG*)$a_item)->grfMode"
 		end
 
-	c_locks_supported (a_item: like item): INTEGER is
+	c_locks_supported (a_item: like item): INTEGER
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -209,7 +209,7 @@ feature {NONE} -- Externals
 			"(EIF_INTEGER)(((STATSTG*)$a_item)->grfLocksSupported)"
 		end
 
-	c_clsid (a_item: like item): POINTER is
+	c_clsid (a_item: like item): POINTER
 			-- Retrieve pointer on `clsid' field of STATSTG structure
 		external
 			"C inline use <windows.h>"
@@ -217,7 +217,7 @@ feature {NONE} -- Externals
 			"&(((STATSTG*)$a_item)->clsid)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

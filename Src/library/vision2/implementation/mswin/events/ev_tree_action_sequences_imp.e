@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_TREE_IMP."
 	legal: "See notice at end of class."
@@ -15,19 +15,19 @@ inherit
 
 feature -- Event handling
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 		do
 			create Result
 		end
 
-	create_deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a deselect action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif radio box."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif radio_box.
 		local
 			mc: MEL_COMPOSITE
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_always_one (flag: BOOLEAN) is
+	set_always_one (flag: BOOLEAN)
 			-- Set radio always one to `flag;.
 		do
 			if flag then
@@ -64,7 +64,7 @@ feature -- Status setting
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

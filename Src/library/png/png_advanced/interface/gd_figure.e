@@ -1,4 +1,4 @@
-indexing
+note
 	description: "figure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Initialization
 
-	initialize_figure(im: like image) is
+	initialize_figure(im: like image)
 		-- Initializatize figure
 		require
 			not_void: im /= Void
@@ -26,13 +26,13 @@ feature -- Initialization
 			
 feature -- Drawings
 
-	draw_border is
+	draw_border
 		deferred
 		end
 
 feature -- Settings
 
-	set_x_y(new_x,new_y: INTEGER) is
+	set_x_y(new_x,new_y: INTEGER)
 			-- Set position of Current to
 			-- (new_x,new_y).
 		require
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Validity of use for Current Image.
 
-	coordinates_within_the_image(new_x,new_y: INTEGER): BOOLEAN is
+	coordinates_within_the_image(new_x,new_y: INTEGER): BOOLEAN
 			-- Does a point (x,y ) within the boundaries ?
 		do
 			Result := (gdImageBoundsSafe(image.image,new_x,new_y)=1)
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	gdImageBoundsSafe(p: POINTER; new_x,new_y: INTEGER):INTEGER is
+	gdImageBoundsSafe(p: POINTER; new_x,new_y: INTEGER):INTEGER
 		external
 			"c"
 		alias
@@ -72,7 +72,7 @@ feature {NONE} -- Externals
 invariant
 	image_exists: image /=Void	
 	center_within_image:coordinates_within_the_image(x,y)
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

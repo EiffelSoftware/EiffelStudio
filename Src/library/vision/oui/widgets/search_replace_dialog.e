@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dialog to ask for search or search and replace information"
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a question dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	case_sensitive: BOOLEAN is
+	case_sensitive: BOOLEAN
 			-- Is search and replace to be case sensitive?	
 		require
 			exists: not destroyed
@@ -61,7 +61,7 @@ feature -- Status report
 			Result := implementation.case_sensitive
 		end
 
-	replace_mode: BOOLEAN is
+	replace_mode: BOOLEAN
 			-- Is this dialog to do a replace?
 		require
 			exists: not destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 			Result := implementation.replace_mode
 		end
 
-	replace_text: STRING is
+	replace_text: STRING
 			-- Text to replace `search_text' with
 		require
 			exists: not destroyed;
@@ -78,7 +78,7 @@ feature -- Status report
 			Result := implementation.replace_text
 		end
 
-	search_text: STRING is
+	search_text: STRING
 			-- Text to search for
 		require
 			exists: not destroyed;
@@ -86,7 +86,7 @@ feature -- Status report
 			Result := implementation.search_text
 		end
 
-	search_upwards: BOOLEAN is
+	search_upwards: BOOLEAN
 			-- Do this search from the bottom up?
 		require
 			exists: not destroyed;
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_direction_request is
+	show_direction_request
 			-- Show the direction requestor.
 		require
 			exists: not destroyed;
@@ -105,7 +105,7 @@ feature -- Status setting
 			implementation.show_direction_request
 		end
 
-	hide_direction_request is
+	hide_direction_request
 			-- Hide the direction requestor.
 		require
 			exists: not destroyed;
@@ -114,7 +114,7 @@ feature -- Status setting
 			implementation.hide_direction_request
 		end
 
-	enable_direction_request is
+	enable_direction_request
 			-- Enable the direction requestor.
 		require
 			exists: not destroyed;
@@ -123,7 +123,7 @@ feature -- Status setting
 			implementation.enable_direction_request
 		end
 
-	disable_direction_request is
+	disable_direction_request
 			-- Disable the direction requestor.
 		require
 			exists: not destroyed;
@@ -132,7 +132,7 @@ feature -- Status setting
 			implementation.disable_direction_request
 		end
 
-	show_match_case is
+	show_match_case
 			-- Show match case requestor.
 		require
 			exists: not destroyed;
@@ -141,7 +141,7 @@ feature -- Status setting
 			implementation.show_match_case
 		end
 
-	hide_match_case is
+	hide_match_case
 			-- Hide match case requestor.
 		require
 			exists: not destroyed;
@@ -150,7 +150,7 @@ feature -- Status setting
 			implementation.hide_match_case
 		end
 
-	enable_match_case is
+	enable_match_case
 			-- Enable match case requestor.
 		require
 			exists: not destroyed;
@@ -159,7 +159,7 @@ feature -- Status setting
 			implementation.enable_match_case
 		end
 
-	disable_match_case is
+	disable_match_case
 			-- Disable match case requestor.
 		require
 			exists: not destroyed;
@@ -168,7 +168,7 @@ feature -- Status setting
 			implementation.disable_match_case
 		end
 
-	set_replace is
+	set_replace
 			-- Set dialog to search and replace.
 		require
 			exists: not destroyed
@@ -178,7 +178,7 @@ feature -- Status setting
 			replace_mode: replace_mode
 		end
 
-	set_replace_text (a_text: STRING)  is
+	set_replace_text (a_text: STRING)
 			-- Set `replace_text' to `a_text'.
 		require
 			exists: not destroyed
@@ -186,7 +186,7 @@ feature -- Status setting
 			implementation.set_replace_text (a_text)
 		end
 
-	set_search is
+	set_search
 			-- Set dialog to search.
 		require
 			exists: not destroyed;
@@ -196,7 +196,7 @@ feature -- Status setting
 			search_mode: not replace_mode
 		end
 
-	set_search_text (a_text: STRING) is
+	set_search_text (a_text: STRING)
 			-- Set `search_text' to `a_text'.
 		require
 			exists: not destroyed;
@@ -207,7 +207,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_find_action (a_command: COMMAND; argument: ANY) is
+	add_find_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects find option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -219,7 +219,7 @@ feature -- Element change
 			implementation.add_find_action (a_command, argument)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects cancel option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -231,7 +231,7 @@ feature -- Element change
 			implementation.add_cancel_action (a_command, argument)
 		end;
 
-	add_replace_action (a_command: COMMAND; argument: ANY) is
+	add_replace_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -243,7 +243,7 @@ feature -- Element change
 			implementation.add_replace_action (a_command, argument)
 		end;
 
-	add_replace_all_action (a_command: COMMAND; argument: ANY) is
+	add_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace all option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -257,7 +257,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the cancel option.
 		require
@@ -267,7 +267,7 @@ feature -- Removal
 			implementation.remove_cancel_action (a_command, argument)
 		end;
 
-	remove_find_action (a_command: COMMAND; argument: ANY) is
+	remove_find_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the find option.
 		require
@@ -277,7 +277,7 @@ feature -- Removal
 			implementation.remove_find_action (a_command, argument)
 		end;
 
-	remove_replace_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace option.
 		require
@@ -287,7 +287,7 @@ feature -- Removal
 			implementation.remove_replace_action (a_command, argument)
 		end;
 
-	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed
 			-- when the user selects the replace all option.
 		require
@@ -302,7 +302,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: SEARCH_REPLACE_DIALOG_I;
 			-- Implementation of search replace dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects that offer grid utils to the whole system.
 			     	Get the instance of this from SINGLETON_FACTORY
@@ -13,7 +13,7 @@ class
 
 feature -- Grid Tools
 
-	grid_remove_and_clear_all_rows (g: EV_GRID) is
+	grid_remove_and_clear_all_rows (g: EV_GRID)
 		require
 			g /= Void
 		local
@@ -39,7 +39,7 @@ feature -- Grid Tools
 
 feature {NONE} -- Grid Tool Implementation
 
-	grid_clear_row (row: EV_GRID_ROW) is
+	grid_clear_row (row: EV_GRID_ROW)
 			-- Clear the row
 		require
 			row_not_void: row /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Grid Tool Implementation
 			row_cleared: row.index_of_first_item  = 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

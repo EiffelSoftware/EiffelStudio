@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					cURL externals.
 					For more information, see:
@@ -14,7 +14,7 @@ class
 
 feature -- Command
 
-	global_init is
+	global_init
 			-- Declared as curl_global_init().
 		require
 			dynamic_library_exists: is_dynamic_library_exists
@@ -27,7 +27,7 @@ feature -- Command
 			end
 		end
 
-	global_cleanup is
+	global_cleanup
 			-- Declared as curl_global_cleanup().
 		local
 			l_ptr: POINTER
@@ -38,7 +38,7 @@ feature -- Command
 			end
 		end
 
-	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
+	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER)
 			-- Declared as curl_formadd ().
 		require
 			not_void: a_form /= Void
@@ -65,7 +65,7 @@ feature -- Command
 			end
 		end
 
-	slist_append (a_list: POINTER; a_string: STRING_GENERAL): POINTER is
+	slist_append (a_list: POINTER; a_string: STRING_GENERAL): POINTER
 			-- Declared as curl_slist_append ().
 		require
 			exists: a_list /= default_pointer
@@ -83,7 +83,7 @@ feature -- Command
 
 feature -- Query
 
-	is_dynamic_library_exists: BOOLEAN is
+	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
 		do
 			Result := (api_loader.module_pointer (module_name) /= default_pointer)
@@ -91,7 +91,7 @@ feature -- Query
 
 feature {CURL_FORM} -- Internal command
 
-	formfree (a_curl_form: POINTER) is
+	formfree (a_curl_form: POINTER)
 			-- Declared as curl_formfree ().
 			-- See: http://curl.askapache.com/libcurl/c/curl_formfree.html
 			-- curl_formfree() is used to clean up data previously built/appended with curl_formadd(3).
@@ -109,7 +109,7 @@ feature {CURL_FORM} -- Internal command
 
 feature {NONE} -- Implementation
 
-	api_loader: API_LOADER is
+	api_loader: API_LOADER
 			-- API dynamic loader
 		once
 			create Result
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	module_name: STRING is
+	module_name: STRING
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			Result := l_utility.module_name
 		end
 
-	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER) is
+	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: STRING_GENERAL; a_arg_3: INTEGER)
 			-- Declared as curl_formadd ().
 		local
 			l_c_string_1, l_c_string_2: C_STRING
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_formadd_string_string (a_api: POINTER; a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: POINTER; a_arg_2: INTEGER; a_arg_2_value: POINTER; a_arg_3: INTEGER) is
+	c_formadd_string_string (a_api: POINTER; a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: POINTER; a_arg_2: INTEGER; a_arg_2_value: POINTER; a_arg_3: INTEGER)
 			-- C implementation of formadd_string_string ().
 		require
 			exists: a_api /= default_pointer
@@ -163,7 +163,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_formfree (a_api: POINTER; a_curl_form: POINTER) is
+	c_formfree (a_api: POINTER; a_curl_form: POINTER)
 			-- Declared as curl_formfree ().
 		require
 			exists: a_api /= default_pointer
@@ -177,7 +177,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_curl_global_init (a_api: POINTER; a_opt: NATURAL_64) is
+	c_curl_global_init (a_api: POINTER; a_opt: NATURAL_64)
 			-- `a_api' point to API curl_global_init ()
 			-- `a_opt' is intialization option.
 		require
@@ -190,7 +190,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_curl_global_cleanup (a_api: POINTER) is
+	c_curl_global_cleanup (a_api: POINTER)
 			-- `a_api' point to API curl_global_cleanup()
 		require
 			exists: a_api /= default_pointer
@@ -202,7 +202,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_slist_append (a_api: POINTER; a_list_pointer: POINTER; a_string: POINTER): POINTER is
+	c_slist_append (a_api: POINTER; a_list_pointer: POINTER; a_string: POINTER): POINTER
 			-- Declared as curl_slist_append ().
 		require
 			exists: a_api /= default_pointer
@@ -218,7 +218,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

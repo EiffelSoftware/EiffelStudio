@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Menu shown when right click on SD_NOTEBOOK_TABs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create {SD_WIDGET_FACTORY}
 
 feature {NONE}  -- Initlization
 
-	make (a_notebook: SD_NOTEBOOK) is
+	make (a_notebook: SD_NOTEBOOK)
 			-- Creation method
 		require
 			not_void: a_notebook /= Void
@@ -48,7 +48,7 @@ feature -- Query
 
 feature {NONE}  -- Agents
 
-	on_close (a_content: SD_CONTENT) is
+	on_close (a_content: SD_CONTENT)
 			-- Handle close event.
 		require
 			not_void: a_content /= Void
@@ -56,7 +56,7 @@ feature {NONE}  -- Agents
 			a_content.close_request_actions.call (Void)
 		end
 
-	on_close_others (a_content: SD_CONTENT) is
+	on_close_others (a_content: SD_CONTENT)
 			-- Handle close others event.
 		require
 			not_void: a_content /= Void
@@ -75,7 +75,7 @@ feature {NONE}  -- Agents
 			end
 		end
 
-	on_close_all (a_content: SD_CONTENT) is
+	on_close_all (a_content: SD_CONTENT)
 			-- Handle close all event.
 		require
 			not_void: a_content /= Void
@@ -102,7 +102,7 @@ invariant
 	not_void: internal_shared /= Void
 	not_void: items /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

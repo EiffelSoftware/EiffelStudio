@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of Motif password widget."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_password: PASSWORD; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_password: PASSWORD; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif text_field but do not echo input
 		local
 			mc: MEL_COMPOSITE
@@ -43,14 +43,14 @@ feature {NONE} -- Creation
 		end;
 
 feature  -- Access
-	text, value :string is
+	text, value :string
 		do
 			Result := clone (password)
 		end
 
 feature {NONE} -- implementation
 
-	execute (arg:ANY) is
+	execute (arg:ANY)
 		local
 			vs: MEL_TEXT_VERIFY_CALLBACK_STRUCT
 		do
@@ -69,12 +69,12 @@ feature {NONE} -- implementation
 			vs.set_all_to ('*')
 		end
 
-	password: STRING is
+	password: STRING
 		once
 			create Result.make(0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

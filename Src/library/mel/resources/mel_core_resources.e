@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Core widget resources.."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNaccelerators: POINTER is
+	XmNaccelerators: POINTER
 			-- Core resource
 		  external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNaccelerators"
 		end;
 
-	XmNbackground: POINTER is
+	XmNbackground: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNbackground"
 		end;
 
-	XmNbackgroundPixmap: POINTER is
+	XmNbackgroundPixmap: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNbackgroundPixmap"
 		end;
 	
-	XmNborderColor: POINTER is
+	XmNborderColor: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNborderColor"
 		end;
 
-	XmNborderPixmap: POINTER is
+	XmNborderPixmap: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNborderPixmap"
 		end;
 	
-	XmNcolormap: POINTER is
+	XmNcolormap: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNcolormap"
 		end;
 
-	XmNdepth: POINTER is
+	XmNdepth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNdepth"
 		end;
 
-	XmNinitialResourcesPersistent: POINTER is
+	XmNinitialResourcesPersistent: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNinitialResourcesPersistent"
 		end;
 
-	XmNmappedWhenManaged: POINTER is
+	XmNmappedWhenManaged: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNmappedWhenManaged"
 		end;
 
-	XmNscreen: POINTER is
+	XmNscreen: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNscreen"
 		end;
 
-	XmNtranslations: POINTER is
+	XmNtranslations: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNtranslations"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

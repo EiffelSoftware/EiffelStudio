@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of Motif gadget push button."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_push_bg: PUSH_BG; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_push_bg: PUSH_BG; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif push button gadget.
 		local
 			mc: MEL_COMPOSITE
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is activated.
 		local
@@ -66,7 +66,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is armed.
 		local
@@ -80,7 +80,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current push button is released.
 		local
@@ -94,7 +94,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	set_accelerator_action (a_translation: STRING) is
+	set_accelerator_action (a_translation: STRING)
 			-- Set the accerlator action (modifiers and key to use as a shortcut
 			-- in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit conventions.
@@ -103,33 +103,33 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
 		do
 			remove_command (activate_command, a_command, argument)
 		end;
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
 		do
 			remove_command (arm_command, a_command, argument)
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
 		do
 			remove_command (disarm_command, a_command, argument)
 		end;
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

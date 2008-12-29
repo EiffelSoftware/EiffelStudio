@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the class, title, owner, %
 		%location, and size of a MDI child window."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING_GENERAL; a_title: STRING_GENERAL) is
+	make (a_class_name: STRING_GENERAL; a_title: STRING_GENERAL)
 			-- Make a MDI create structure with `a_class_name' and
 			-- `a_title'.
 		do
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name of the MDI child window
 		do
 			if str_class_name /= Void then
@@ -63,7 +63,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of the MDI child window
 		do
 			if str_title /= Void then
@@ -75,7 +75,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	owner: WEL_INSTANCE is
+	owner: WEL_INSTANCE
 			-- Owner of the MDI child window
 		do
 			create Result.make (cwel_mdi_cs_get_owner (item))
@@ -83,37 +83,37 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- x position of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_x (item)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- y position of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_y (item)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_width (item)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_height (item)
 		end
 
-	style: INTEGER is
+	style: INTEGER
 			-- Style of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_style (item)
 		end
 
-	lparam: POINTER is
+	lparam: POINTER
 			-- Lparam of the MDI child window
 		do
 			Result := cwel_mdi_cs_get_lparam (item)
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_class_name (a_class_name: STRING_GENERAL) is
+	set_class_name (a_class_name: STRING_GENERAL)
 			-- Set `class_name' with `a_class_name'
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -133,7 +133,7 @@ feature -- Element change
 			class_name_set: class_name.is_equal (a_class_name)
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
 			a_title_valid: a_title /= Void
@@ -144,7 +144,7 @@ feature -- Element change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_owner (an_owner: WEL_INSTANCE) is
+	set_owner (an_owner: WEL_INSTANCE)
 			-- Set `owner' with `an_owner'
 		require
 			an_owner_not_void: an_owner /= Void
@@ -154,31 +154,31 @@ feature -- Element change
 			owner_set: owner.item = an_owner.item
 		end
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'
 		do
 			cwel_mdi_cs_set_x (item, a_x)
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'
 		do
 			cwel_mdi_cs_set_y (item, a_y)
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
 		do
 			cwel_mdi_cs_set_width (item, a_width)
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'
 		do
 			cwel_mdi_cs_set_height (item, a_height)
 		end
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'
 		do
 			cwel_mdi_cs_set_style (item, a_style)
@@ -186,7 +186,7 @@ feature -- Element change
 			style_set: style = a_style
 		end
 
-	set_lparam (a_lparam: POINTER) is
+	set_lparam (a_lparam: POINTER)
 			-- Set `lparam' with `a_lparam'
 		do
 			cwel_mdi_cs_set_lparam (item, a_lparam)
@@ -196,7 +196,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_mdi_cs
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	main_args: WEL_MAIN_ARGUMENTS is
+	main_args: WEL_MAIN_ARGUMENTS
 		once
 			create Result
 		ensure
@@ -221,104 +221,104 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_mdi_cs: INTEGER is
+	c_size_of_mdi_cs: INTEGER
 		external
 			"C [macro <mdics.h>]"
 		alias
 			"sizeof (MDICREATESTRUCT)"
 		end
 
-	cwel_mdi_cs_set_class_name (ptr: POINTER; value: POINTER) is
+	cwel_mdi_cs_set_class_name (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_title (ptr: POINTER; value: POINTER) is
+	cwel_mdi_cs_set_title (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_owner (ptr: POINTER; value: POINTER) is
+	cwel_mdi_cs_set_owner (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_owner (ptr: POINTER): POINTER is
+	cwel_mdi_cs_get_owner (ptr: POINTER): POINTER
 		external
 			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
-	cwel_mdi_cs_set_x (ptr: POINTER; value: INTEGER) is
+	cwel_mdi_cs_set_x (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_class_name (ptr: POINTER): POINTER is
+	cwel_mdi_cs_get_class_name (ptr: POINTER): POINTER
 		external
 			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
-	cwel_mdi_cs_get_class_title (ptr: POINTER): POINTER is
+	cwel_mdi_cs_get_class_title (ptr: POINTER): POINTER
 		external
 			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
-	cwel_mdi_cs_get_x (ptr: POINTER): INTEGER is
+	cwel_mdi_cs_get_x (ptr: POINTER): INTEGER
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_y (ptr: POINTER; value: INTEGER) is
+	cwel_mdi_cs_set_y (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_y (ptr: POINTER): INTEGER is
+	cwel_mdi_cs_get_y (ptr: POINTER): INTEGER
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_width (ptr: POINTER; value: INTEGER) is
+	cwel_mdi_cs_set_width (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_width (ptr: POINTER): INTEGER is
+	cwel_mdi_cs_get_width (ptr: POINTER): INTEGER
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_height (ptr: POINTER; value: INTEGER) is
+	cwel_mdi_cs_set_height (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_height (ptr: POINTER): INTEGER is
+	cwel_mdi_cs_get_height (ptr: POINTER): INTEGER
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_style (ptr: POINTER; value: INTEGER) is
+	cwel_mdi_cs_set_style (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_style (ptr: POINTER): INTEGER is
+	cwel_mdi_cs_get_style (ptr: POINTER): INTEGER
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_set_lparam (ptr: POINTER; value: POINTER) is
+	cwel_mdi_cs_set_lparam (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <mdics.h>]"
 		end
 
-	cwel_mdi_cs_get_lparam (ptr: POINTER): POINTER is
+	cwel_mdi_cs_get_lparam (ptr: POINTER): POINTER
 		external
 			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

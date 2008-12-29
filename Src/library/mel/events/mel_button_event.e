@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XButtonEvent."
@@ -19,50 +19,50 @@ create
 
 feature -- Access
 
-	time: INTEGER is
+	time: INTEGER
 			-- Timestamp in milliseconds
 		do
 			Result := c_event_time (handle)
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position in window
 		do
 			Result := c_event_x (handle)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y position in window
 		do
 			Result := c_event_y (handle)
 		end;
 
-	x_root: INTEGER is
+	x_root: INTEGER
 			-- X position relative to root
 		do
 			Result := c_event_x_root (handle)
 		end;
 
-	y_root: INTEGER is
+	y_root: INTEGER
 			-- Y position relative to root
 		do
 			Result := c_event_y_root (handle)
 		end;
 
-	state: INTEGER is
+	state: INTEGER
 			-- State of key and buttons
 		do
 			Result := c_event_state (handle)
 		end;
 
-	button: INTEGER is
+	button: INTEGER
 			-- Button that triggered the event 
 			-- (Can be compared to Button1, Button2 ...)
 		do
 			Result := c_event_button (handle)
 		end;
 
-	is_button_press: BOOLEAN is
+	is_button_press: BOOLEAN
 			-- Is the event type `ButtonPress'?
 		do
 			Result := type = ButtonPress
@@ -70,7 +70,7 @@ feature -- Access
 			valid_result: Result = not is_button_release
 		end;
 
-	is_button_release: BOOLEAN is
+	is_button_release: BOOLEAN
 			-- Is the event type `ButtonRelease'?
 		do
 			Result := type = ButtonRelease
@@ -78,37 +78,37 @@ feature -- Access
 			valid_result: Result = not is_button_press
 		end;
 
-	is_button_one: BOOLEAN is
+	is_button_one: BOOLEAN
 			-- Is button 1 involved?
 		do
 			Result := button = Button1
 		end;
 
-	is_button_two: BOOLEAN is
+	is_button_two: BOOLEAN
 			-- Is button 2 involved?
 		do
 			Result := button = Button2
 		end;
 
-	is_button_three: BOOLEAN is
+	is_button_three: BOOLEAN
 			-- Is button 3 involved?
 		do
 			Result := button = Button3
 		end;
 
-	is_button_four: BOOLEAN is
+	is_button_four: BOOLEAN
 			-- Is button 4 involved?
 		do
 			Result := button = Button4
 		end;
 
-	is_button_five: BOOLEAN is
+	is_button_five: BOOLEAN
 			-- Is button 5 involved?
 		do
 			Result := button = Button5
 		end;
 
-	button_number: INTEGER is
+	button_number: INTEGER
 			-- Button number 
 		do
 			if is_button_one then	
@@ -126,14 +126,14 @@ feature -- Access
 			in_range: Result >= 1 and then Result <= 5
 		end
 
-	same_screen: BOOLEAN is
+	same_screen: BOOLEAN
 			-- Is the pointer is currently on the
 			-- same screen as window
 		do
 			Result := c_event_same_screen (handle)
 		end
 
-	subwindow_widget: MEL_WIDGET is
+	subwindow_widget: MEL_WIDGET
 			-- Subwindow widget
 		do
 			Result := retrieve_widget_from_window (subwindow)
@@ -141,13 +141,13 @@ feature -- Access
 
 feature -- Pointer access
 
-	root: POINTER is
+	root: POINTER
 			-- Root window 
 		do
 			Result := c_event_root (handle)
 		end;
 
-	subwindow: POINTER is
+	subwindow: POINTER
 			-- Child window 
 		do
 			Result := c_event_subwindow (handle)
@@ -155,57 +155,57 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_root (event_ptr: POINTER): POINTER is
+	c_event_root (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_POINTER"
 		end;
 
-	c_event_subwindow (event_ptr: POINTER): POINTER is
+	c_event_subwindow (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_POINTER"
 		end;
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x_root (event_ptr: POINTER): INTEGER is
+	c_event_x_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y_root (event_ptr: POINTER): INTEGER is
+	c_event_y_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_button (event_ptr: POINTER): INTEGER is
+	c_event_button (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_INTEGER"
 		end;
 
-	c_event_same_screen (event_ptr: POINTER): BOOLEAN is
+	c_event_same_screen (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XButtonEvent *): EIF_BOOLEAN"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

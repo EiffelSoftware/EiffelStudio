@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio peer. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Status report
 
-	peers: LINKED_LIST [like interface] is
+	peers: LINKED_LIST [like interface]
 			-- List of all radio items in the group `Current' is in.
 		do
 			if
@@ -42,7 +42,7 @@ feature -- Status report
 			end
 		end
 
-	selected_peer: like interface is
+	selected_peer: like interface
 			-- Radio item that is currently selected.
 		do
 			Result := peers.first
@@ -51,21 +51,21 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	widget_object (a_list: POINTER): POINTER is
+	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	radio_group: LINKED_LIST [like current] is
+	radio_group: LINKED_LIST [like current]
 			-- List of all radio item implementations
 		deferred
 		end
 
 	interface: EV_RADIO_PEER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

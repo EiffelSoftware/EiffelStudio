@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "A timer manager implementation"
 	legal: "See notice at end of class.";
@@ -19,12 +19,12 @@ inherit
 	
 feature -- Status report
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		deferred
 		end;
 
-	is_regular_call_back: BOOLEAN is
+	is_regular_call_back: BOOLEAN
 			-- Is the call back set a regular one ?
 		require
 			is_call_back_set
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is-- Set `a_command' with `argument' to execute when `a_delay';
+	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY)-- Set `a_command' with `argument' to execute when `a_delay';
 			-- in milliseconds has expired.
 		require
 			no_call_back_already_set: not is_call_back_set;
@@ -44,7 +44,7 @@ feature -- Status setting
 			is_call_back_set and (not is_regular_call_back)
 		end;
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		require
 			a_call_back_must_be_set: is_call_back_set
@@ -53,7 +53,7 @@ feature -- Status setting
 			not is_call_back_set
 		end;
 
-	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute all the `a_time'
 			-- milliseconds.
 		require
@@ -65,11 +65,11 @@ feature -- Status setting
 			is_call_back_set and is_regular_call_back
 		end;
 
-	destroy is
+	destroy
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

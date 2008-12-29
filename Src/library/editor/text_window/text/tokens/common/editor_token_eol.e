@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe the end of a line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialisation
 
-	make is
+	make
 			-- Create the token (image is an empty string)
 		do
 			wide_image := ""
@@ -33,16 +33,16 @@ feature -- Initialisation
 
 feature -- Status report
 
-	is_new_line: BOOLEAN is True
+	is_new_line: BOOLEAN = True
 			-- Is current a new line token?
 
 feature -- Display
 
-	width: INTEGER is
+	width: INTEGER
 		do
 		end
 
-	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL) is
+	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL)
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its normal state.
@@ -53,7 +53,7 @@ feature -- Display
 			display_end_token(d_y, a_device, a_width, False, panel)
 		end
 
-	display_end_token_selected(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL) is
+	display_end_token_selected(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL)
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- The token is displayed in its selected state.
@@ -64,12 +64,12 @@ feature -- Display
 			display_end_token (d_y, a_device, a_width, True, panel)
 		end
 
-	display(d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display(d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL)
 		do
 			-- Do nothing.
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		local
 			the_text_color: EV_COLOR
@@ -96,14 +96,14 @@ feature -- Display
 
 feature -- Width & height
 
-	get_substring_width(n: INTEGER): INTEGER is
+	get_substring_width(n: INTEGER): INTEGER
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
 			Result := 0
 		end
 
-	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	retrieve_position_by_width(a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
@@ -112,7 +112,7 @@ feature -- Width & height
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			--
 		do
 			a_visitor.process_editor_token_eol (Current)
@@ -120,14 +120,14 @@ feature -- Visitor
 
 feature {NONE} -- Private Constants
 
-	eol_symbol: STRING is
+	eol_symbol: STRING
 		once
 			Result := ""
 		end
 
 feature {NONE} -- Implementation
 
-	display_end_token (d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; selected: BOOLEAN; panel: TEXT_PANEL) is
+	display_end_token (d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; selected: BOOLEAN; panel: TEXT_PANEL)
 			-- Display the end token, at the coordinates (position,`d_y') on the
 			-- device context `a_device', with a screen width of `a_width'.
 			-- If `selected' is set, then the token is displayed in its selected
@@ -170,24 +170,24 @@ feature {NONE} -- Implementation
 
 feature -- Color
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			Result := spaces_text_color_id
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 		do
 				-- There is no background for this symbol.
 			Result := Void
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			Result := 0
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

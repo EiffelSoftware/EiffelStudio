@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to Windows CDDS%
 		%constants used with custom draw."
 	legal: "See notice at end of class."
@@ -11,37 +11,37 @@ class
 
 feature -- Access
 
-	cdds_prepaint: INTEGER is 1
+	cdds_prepaint: INTEGER = 1
 		-- Declared in Windows as CDDS_PREPAINT
 		
-	cdds_postpaint: INTEGER is 2
+	cdds_postpaint: INTEGER = 2
 		-- Declared in Windows as CDDS_POSTPAINT
 		
-	cdds_preerase: INTEGER is 3
+	cdds_preerase: INTEGER = 3
 		-- Declared in Windows as CDDS_PREERASE
 		
-	cdds_posterase: INTEGER is 4
+	cdds_posterase: INTEGER = 4
 		-- Declared in Windows as CDDS_POSTERASE
 		
-	cdds_item: INTEGER is 65536
+	cdds_item: INTEGER = 65536
 		-- Declared in Windows as CDDS_ITEM
 		
-	cdds_itemprepaint: INTEGER is 65537
+	cdds_itemprepaint: INTEGER = 65537
 		-- Declared in Windows as CDDS_ITEMPREPAINT
 		
-	cdds_itempostpaint: INTEGER is 65638
+	cdds_itempostpaint: INTEGER = 65638
 		-- Declared in Windows as CDDS_ITEMPOSTPAINT
 		
-	cdds_itempreerase: INTEGER is 65639
+	cdds_itempreerase: INTEGER = 65639
 		-- Declared in Windows as CDDS_ITEMPREERASE
 		
-	cdds_item_posterase: INTEGER is 65640
+	cdds_item_posterase: INTEGER = 65640
 		-- Declared in Windows as CDDS_ITEMPOSTERASE
 		
-	cdds_subitem: INTEGER is 131072;
+	cdds_subitem: INTEGER = 131072;
 		-- Declared in Windows as CDDS_SUBITEM
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

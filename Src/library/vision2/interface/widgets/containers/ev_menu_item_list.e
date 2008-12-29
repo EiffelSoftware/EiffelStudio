@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Contract support
 
-	is_parent_recursive (a_list: like item): BOOLEAN is
+	is_parent_recursive (a_list: like item): BOOLEAN
 			-- Is `Current' present in `a_list' hierarchy?
 		local
 			menu_item_list_parent: EV_MENU_ITEM_LIST
@@ -47,7 +47,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	item_select_actions_not_void: is_usable implies item_select_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

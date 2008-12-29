@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision checkable list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	checked_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	checked_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- All items checked in `Current'.
 		local
 			original_position: INTEGER
@@ -45,21 +45,21 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			-- Is `list_item' currently checked?
 		deferred
 		end
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		deferred
 		end
 
 
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- unchecked.
 		deferred
@@ -69,7 +69,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

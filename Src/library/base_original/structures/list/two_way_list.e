@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sequential, two-way linked lists"
@@ -65,7 +65,7 @@ feature -- Access
 	sublist: like Current
 			-- Result produced by last `split'
 
-	cursor: TWO_WAY_LIST_CURSOR [G] is
+	cursor: TWO_WAY_LIST_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (active, after, before)
@@ -73,7 +73,7 @@ feature -- Access
 		
 feature -- Status report
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position?
 		do
 			Result := (active = last_element)
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move cursor to next position, if any.
 		do
 			if before then
@@ -100,7 +100,7 @@ feature -- Cursor movement
 			end
 		end
 
-	back is
+	back
 			-- Move cursor to previous position, if any.
 		do
 			if after then
@@ -117,7 +117,7 @@ feature -- Cursor movement
 			end
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 			-- (Go before if empty)
 		do
@@ -133,7 +133,7 @@ feature -- Cursor movement
 			not_after: not after
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is to big.
 		local
@@ -166,7 +166,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
@@ -176,7 +176,7 @@ feature -- Element change
 			end
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
@@ -196,7 +196,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
@@ -222,7 +222,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -239,7 +239,7 @@ feature -- Element change
 			end
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -279,7 +279,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
@@ -291,7 +291,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
@@ -327,28 +327,28 @@ feature -- Removal
 			cleanup_after_remove (removed)
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
 			back; remove
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
 			forth; remove; back
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			ll_wipe_out
 			last_element := Void
 		end
 
-	split (n: INTEGER) is
+	split (n: INTEGER)
 			-- Remove from current list
 			-- min (`n', `count' - `index' - 1) items
 			-- starting at cursor position.
@@ -400,14 +400,14 @@ feature -- Removal
 			end
 		end
 
-	remove_sublist is
+	remove_sublist
 		do
 			sublist := Void
 		end
 
 feature {TWO_WAY_LIST} -- Implementation
 
-	make_sublist (first_item, last_item: like first_element; n: INTEGER) is
+	make_sublist (first_item, last_item: like first_element; n: INTEGER)
 			-- Create sublist
 		do
 			make
@@ -417,7 +417,7 @@ feature {TWO_WAY_LIST} -- Implementation
 			count := n
 		end
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -425,14 +425,14 @@ feature {TWO_WAY_LIST} -- Implementation
 			create Result.make
 		end
 
-	new_cell (v: like item): like first_element is
+	new_cell (v: like item): like first_element
 			-- A newly created instance of the type of `first_element'.
 		do
 			create Result
 			Result.put (v)
 		end
 
-	previous: like first_element is
+	previous: like first_element
 			-- Element left of cursor
 		do
 			if after then
@@ -451,7 +451,7 @@ invariant
 	last_element_constraint: last_element /= Void implies 
 				last_element.right = Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

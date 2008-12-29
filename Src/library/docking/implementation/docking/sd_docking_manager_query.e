@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Docking manager queries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -28,7 +28,7 @@ feature {NONE}  -- Initlization
 
 feature -- Querys
 
-	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL is
+	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL
 			-- Auto hide panel at `a_direction'.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -47,7 +47,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title (a_unique_title: STRING_GENERAL): SD_CONTENT is
+	content_by_title (a_unique_title: STRING_GENERAL): SD_CONTENT
 			-- Content by a_title.
 		require
 			a_title_not_void: a_unique_title /= Void
@@ -57,7 +57,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	contents_editors: ARRAYED_LIST [SD_CONTENT] is
+	contents_editors: ARRAYED_LIST [SD_CONTENT]
 			-- All editor type contents
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -105,7 +105,7 @@ feature -- Querys
 			end
 		end
 
-	has_content_visible: BOOLEAN is
+	has_content_visible: BOOLEAN
 			--  Has visible contents except editor place holder content?
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -127,7 +127,7 @@ feature -- Querys
 	is_opening_tools_layout: BOOLEAN
 			-- If executing {SD_DOCKING_MANAGER_QUERY}.`open_tools_config'
 
-	content_by_title_for_restore (a_unique_title: STRING_GENERAL): SD_CONTENT is
+	content_by_title_for_restore (a_unique_title: STRING_GENERAL): SD_CONTENT
 			-- Content by a_unique_title. Result = Void if not found.
 		require
 			a_unique_title_not_void: a_unique_title /= Void
@@ -172,7 +172,7 @@ feature -- Querys
 			end
 		end
 
-	inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
+	inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -186,7 +186,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	inner_container_include_hidden (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
+	inner_container_include_hidden (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA which `a_zone' in, also finding in widgets which are hidden by a maximized zone.
 			-- Maybe void if not found.
 		require
@@ -202,7 +202,7 @@ feature -- Querys
 			end
 		end
 
-	maximized_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
+	maximized_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA
 			-- Find `a_zone' only in main areas which have maximized zone.
 			-- Maybe void if not found.
 		require
@@ -234,7 +234,7 @@ feature -- Querys
 			end
 		end
 
-	maiximized_hidden_main_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
+	maiximized_hidden_main_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA
 			-- Find the item in main area hidden widget when whole editor area maximized.
 		local
 			l_item: EV_WIDGET
@@ -256,7 +256,7 @@ feature -- Querys
 			end
 		end
 
-	is_main_inner_container (a_area: SD_MULTI_DOCK_AREA): BOOLEAN is
+	is_main_inner_container (a_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- Contract support. If a_area is first one in `inner_containers'.
 		require
 			a_area_not_void: a_area /= Void
@@ -268,7 +268,7 @@ feature -- Querys
 			Result := l_areas.item = a_area
 		end
 
-	inner_container_main: SD_MULTI_DOCK_AREA is
+	inner_container_main: SD_MULTI_DOCK_AREA
 			-- Container in main window.
 		local
 			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
@@ -280,7 +280,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	zone_max_screen_x (a_zone: SD_ZONE): INTEGER is
+	zone_max_screen_x (a_zone: SD_ZONE): INTEGER
 			-- Max screen x of a_zone.
 		local
 			l_container: EV_WIDGET
@@ -289,7 +289,7 @@ feature -- Querys
 			Result := l_container.screen_x + l_container.width
 		end
 
-	container_rectangle: EV_RECTANGLE is
+	container_rectangle: EV_RECTANGLE
 			-- Rectangle area of `center_area'
 		local
 			l_center_area: EV_WIDGET
@@ -301,7 +301,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	fixed_area_rectangle: EV_RECTANGLE is
+	fixed_area_rectangle: EV_RECTANGLE
 			-- Rectangle area of `fixed_area'
 		local
 			l_widget: EV_WIDGET
@@ -310,7 +310,7 @@ feature -- Querys
 			create Result.make (l_widget.x_position, l_widget.y_position, l_widget.width, l_widget.height)
 		end
 
-	container_rectangle_screen: EV_RECTANGLE is
+	container_rectangle_screen: EV_RECTANGLE
 			-- Rectangle area of the `fixed_area' base on screen.
 		local
 			l_center_area: EV_WIDGET
@@ -321,7 +321,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	golbal_accelerators: SEQUENCE [EV_ACCELERATOR] is
+	golbal_accelerators: SEQUENCE [EV_ACCELERATOR]
 			-- Golbal accelerators.
 		local
 			l_titled_window: EV_TITLED_WINDOW
@@ -332,7 +332,7 @@ feature -- Querys
 			end
 		end
 
-	find_window_by_zone (a_zone: EV_WIDGET): EV_WINDOW is
+	find_window_by_zone (a_zone: EV_WIDGET): EV_WINDOW
 			-- Find a window which can lock_update.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -349,13 +349,13 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	is_zone_in_same_window (a_zone_one, a_zone_two: SD_ZONE): BOOLEAN is
+	is_zone_in_same_window (a_zone_one, a_zone_two: SD_ZONE): BOOLEAN
 			-- If a_zone_one and a_zone_two in same window?
 		do
 			Result := find_window_by_zone (a_zone_one) = find_window_by_zone (a_zone_two)
 		end
 
-	floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE] is
+	floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			-- All floating zones in Current system.
 		local
 			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
@@ -381,7 +381,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	is_floating (a_content: SD_CONTENT): BOOLEAN is
+	is_floating (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_content' floating?
 		require
 			not_void: a_content /= Void
@@ -407,7 +407,7 @@ feature -- Querys
 			end
 		end
 
-	is_title_unique (a_title: STRING_GENERAL): BOOLEAN is
+	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all contents unique_title?
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]
@@ -426,7 +426,7 @@ feature -- Querys
 			end
 		end
 
-	has_auto_hide_zone: BOOLEAN is
+	has_auto_hide_zone: BOOLEAN
 			-- If Current we have SD_AUTO_HIDE_ZONE showing?
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -446,7 +446,7 @@ feature -- Querys
 			end
 		end
 
-	all_zones_in_widget (a_widget: EV_WIDGET): ARRAYED_LIST [SD_ZONE] is
+	all_zones_in_widget (a_widget: EV_WIDGET): ARRAYED_LIST [SD_ZONE]
 			-- All zones in `a_widget' if exist.
 		require
 			not_void: a_widget /= Void
@@ -457,7 +457,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	only_one_editor_zone: SD_UPPER_ZONE is
+	only_one_editor_zone: SD_UPPER_ZONE
 			-- If Current docking layout only have one editor zone (only one SD_DOCKING_ZONE_UPPER or SD_TAB_ZONE_UPPER)?
 			-- If yes, then the result is the only one editor zone.
 			-- If not only one, then result is Void.
@@ -487,7 +487,7 @@ feature -- Querys
 			valid: editor_zone_count /= 1 implies Result = Void
 		end
 
-	editor_zone_count: INTEGER is
+	editor_zone_count: INTEGER
 			-- How many editors zones (not editor content) now?
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -507,7 +507,7 @@ feature -- Querys
 			end
 		end
 
-	docker_mediator (a_caller: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_DOCKER_MEDIATOR is
+	docker_mediator (a_caller: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_DOCKER_MEDIATOR
 			-- Factory method.
 		require
 			not_void: a_caller /= Void
@@ -536,7 +536,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	is_in_main_window (a_tool_bar: SD_TOOL_BAR): BOOLEAN is
+	is_in_main_window (a_tool_bar: SD_TOOL_BAR): BOOLEAN
 			-- If `a_widget' in main window?
 		do
 			Result := internal_docking_manager.tool_bar_container.top.has_recursive (a_tool_bar)
@@ -551,7 +551,7 @@ feature -- Querys
 			end
 		end
 
-	restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically, actions will be invoked.
 		do
 			if internal_restore_whole_editor_area_actions = Void then
@@ -565,7 +565,7 @@ feature -- Querys
 	internal_restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically, actions will be invoked.
 
-	restore_whole_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	restore_whole_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically for minimized editor area, actions will be invoked.
 		do
 			if internal_restore_whole_editor_area_for_minimized_actions = Void then
@@ -581,7 +581,7 @@ feature -- Querys
 
 feature -- Command
 
-	set_opening_tools_layout (a_bool: BOOLEAN) is
+	set_opening_tools_layout (a_bool: BOOLEAN)
 			-- Set `is_opening_tools_layout' with `a_bool'
 		do
 			is_opening_tools_layout := a_bool
@@ -591,7 +591,7 @@ feature -- Command
 
 feature {NONE} -- Implemnetation
 
-	internal_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA is
+	internal_inner_container (a_zone: EV_WIDGET): SD_MULTI_DOCK_AREA
 			-- SD_MULTI_DOCK_AREA which `a_zone' in.
 			-- Maybe void if not found.
 		require
@@ -613,7 +613,7 @@ feature {NONE} -- Implemnetation
 			end
 		end
 
-	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE]) is
+	zones_recursive (a_widget: EV_WIDGET; a_list: ARRAYED_LIST [SD_ZONE])
 			-- Add all zones in `a_widget' to `a_list'.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -644,7 +644,7 @@ feature {NONE} -- Implemnetation
 	internal_docking_manager: SD_DOCKING_MANAGER;
 			-- Docking manager which Current belong to.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain information about a list view notification%
 		%message."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nmlvinfotip_get_hdr (item))
@@ -26,13 +26,13 @@ feature -- access
 			result_not_void: Result /= Void
 		end
 		
-	dwflags: INTEGER is
+	dwflags: INTEGER
 			-- Flags, either 0 or LVGIT_UNFOLDED.
 		do
 			Result := cwel_nmlvinfotip_get_dwflags (item)
 		end
 
-	psztext: POINTER is
+	psztext: POINTER
 			-- Address of text to be displayed.
 		do
 			Result := cwel_nmlvinfotip_get_psztext (item)
@@ -40,7 +40,7 @@ feature -- access
 			Result_not_default: Result /= default_pointer
 		end
 
-	cchtextmax: INTEGER is
+	cchtextmax: INTEGER
 			-- Size of buffer at `psztext'.
 		do
 			Result := cwel_nmlvinfotip_get_cchtextmax (item)
@@ -48,7 +48,7 @@ feature -- access
 			Result_not_void: Result >= 0
 		end
 		
-	iitem: INTEGER is
+	iitem: INTEGER
 			-- Zero-based index of the item to which this structure refers. 
 		do
 			Result := cwel_nmlvinfotip_get_iitem (item)
@@ -56,7 +56,7 @@ feature -- access
 			Result_not_negative: Result >= 0
 		end
 		
-	lparam: INTEGER is
+	lparam: INTEGER
 			-- Application defined data associated with `hitem'.
 		do
 			Result := cwel_nmlvinfotip_get_lparam (item)
@@ -64,7 +64,7 @@ feature -- access
 			Result_not_void: Result /= 0
 		end
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_lvgetinfotip
@@ -72,56 +72,56 @@ feature -- access
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_lvgetinfotip: INTEGER is
+	c_size_of_nm_lvgetinfotip: INTEGER
 		external
 			"C [macro <commctrl.h>]"
 		alias
 			"sizeof (NMLVGETINFOTIP)"
 		end
 
-	cwel_nmlvinfotip_get_hdr (ptr: POINTER): POINTER is
+	cwel_nmlvinfotip_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_POINTER"
 		alias
 			"&hdr"
 		end
 		
-	cwel_nmlvinfotip_get_dwflags (ptr: POINTER): INTEGER is
+	cwel_nmlvinfotip_get_dwflags (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"dwFlags"
 		end
 
-	cwel_nmlvinfotip_get_psztext (ptr: POINTER): POINTER is
+	cwel_nmlvinfotip_get_psztext (ptr: POINTER): POINTER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_POINTER"
 		alias
 			"pszText"
 		end
 
-	cwel_nmlvinfotip_get_cchtextmax (ptr: POINTER): INTEGER is
+	cwel_nmlvinfotip_get_cchtextmax (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"cchTextMax"
 		end
 		
-	cwel_nmlvinfotip_get_iitem (ptr: POINTER): INTEGER is
+	cwel_nmlvinfotip_get_iitem (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"iItem"
 		end
 		
-	cwel_nmlvinfotip_get_lparam (ptr: POINTER): INTEGER is
+	cwel_nmlvinfotip_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMLVGETINFOTIP): EIF_INTEGER"
 		alias
 			"lParam"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

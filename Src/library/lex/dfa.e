@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General deterministic finite automata"
@@ -14,7 +14,7 @@ deferred class DFA inherit
 
 feature -- Access
 
-	recognize (l: LINKED_LIST [INTEGER]): INTEGER is
+	recognize (l: LINKED_LIST [INTEGER]): INTEGER
 			-- `final' value for the state reached after
 			-- making transitions from state to state on the
 			-- inputs listed in `l'; 0 if not recognized.
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end; 
 
-	possible_tokens (l: LINKED_LIST [INTEGER]): ARRAY [INTEGER] is
+	possible_tokens (l: LINKED_LIST [INTEGER]): ARRAY [INTEGER]
 			-- Attribute ``final_array'' of the state reached in Current after
 			-- making transitions from state to state on the
 			-- inputs listed in `l'; empty if not recognized
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end; 
 
-	find_successor (source, input_doc: INTEGER): STATE_OF_DFA is
+	find_successor (source, input_doc: INTEGER): STATE_OF_DFA
 			-- Successor of source on `input_doc';
 			-- void if no successor
 		deferred
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_transition (source, input_doc, target: INTEGER) is
+	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from `source' to `target' on `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -78,14 +78,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	start_state: STATE_OF_DFA is
+	start_state: STATE_OF_DFA
 			-- Start_number-th state
 			-- (Used for the beginning of the course
 			-- through the automaton)
 		deferred
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Eiffel class instanciated and used from the Eiffel runtime."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -77,7 +77,7 @@ feature -- Change
 			recording_values := b
 		end
 	
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

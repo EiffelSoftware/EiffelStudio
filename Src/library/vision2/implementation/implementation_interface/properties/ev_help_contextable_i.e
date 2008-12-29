@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EV_HELP_CONTEXTABLE implementation interface."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT] is
+	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		local
 			w: EV_WIDGET_I
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_help_context (an_help_context: like help_context) is
+	set_help_context (an_help_context: like help_context)
 			-- Assign `a_help_context' to `help_context'.
 			-- Assign `an_help_context' to `help_context'.
 		require
@@ -53,7 +53,7 @@ feature -- Element change
 			help_context_assigned: help_context.is_equal (an_help_context)
 		end
 
-	remove_help_context is
+	remove_help_context
 			-- Remove key press action associated with `EV_APPLICATION.help_key'.
 		require
 			help_context_not_void: help_context /= Void
@@ -75,17 +75,17 @@ feature {EV_HELP_CONTEXTABLE_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_help_context_changed is
+	on_help_context_changed
 			-- Call back to process help context changes.
 		do
 		end
 
-	on_help_context_removed is
+	on_help_context_removed
 			-- Call back to process help context removals.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

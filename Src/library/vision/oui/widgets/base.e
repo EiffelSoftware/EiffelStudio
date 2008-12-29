@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Root shell of an application"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make  (a_name: STRING; a_screen: SCREEN) is
+	make  (a_name: STRING; a_screen: SCREEN)
 			-- Create a base with `a_name' as identifier,
 			-- only if `a_name' not void otherwise identifier
 			-- will be defined as application name or the name
@@ -49,11 +49,11 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current base.
 		do
 		end;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

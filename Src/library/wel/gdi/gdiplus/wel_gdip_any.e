@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is an ancestor of all GDI+ classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	frozen default_create is
+	frozen default_create
 			-- Default creation method.
 		do
 			initialize_gdi_plus
 		end
 
-	initialize_gdi_plus is
+	initialize_gdi_plus
 			-- Properly initialize Current.
 		do
 			gdi_plus_handle := gdi_plus_starter.gdi_plus_handle
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Query
 
-	is_gdi_plus_installed: BOOLEAN is
+	is_gdi_plus_installed: BOOLEAN
 			-- If gdiplus.dll can be found on user's machine?
 		do
 			Result := gdi_plus_starter.is_gdi_plus_installed
@@ -44,7 +44,7 @@ feature -- Query
 
 feature -- Destroy
 
-	destroy_item is
+	destroy_item
 			-- Free Current Gdi+ object memory.
 		local
 			l_null: POINTER
@@ -60,7 +60,7 @@ feature -- Destroy
 
 feature {NONE} -- Externals
 
-	c_gdip_free (a_gdiplus_handle, a_gdip_object: POINTER) is
+	c_gdip_free (a_gdiplus_handle, a_gdip_object: POINTER)
 			-- Free `a_gdip_object' memory.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -83,7 +83,7 @@ feature {NONE} -- Externals
 
 feature {WEL_GDIP_ANY} -- Convenience
 
-	gdi_plus_starter: WEL_GDIP_STARTER is
+	gdi_plus_starter: WEL_GDIP_STARTER
 			-- Control loading of GDI+.
 		once
 			create Result
@@ -97,7 +97,7 @@ feature {WEL_GDIP_ANY} -- Convenience
 invariant
 	support: is_gdi_plus_installed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

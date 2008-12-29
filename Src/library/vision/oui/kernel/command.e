@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of command (semantic unity). %
@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_template: BOOLEAN is
+	is_template: BOOLEAN
 			-- Is the current command a template, in other words,
 			-- should it be cloned before execution?
 			-- If true, EiffelVision will clone Current command 
@@ -30,7 +30,7 @@ feature -- Status report
 		do
 		end;
 
-	context_data_useful: BOOLEAN is
+	context_data_useful: BOOLEAN
 			-- Should the context data be available
 			-- when Current command is invoked as a
 			-- callback
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute Current command.
 			-- `argument' is automatically passed by
 			-- EiffelVision when Current command is
@@ -49,7 +49,7 @@ feature -- Basic operations
 
 feature {EVENT_HDL} -- Element change
 
-	set_context_data (a_context_data: CONTEXT_DATA) is
+	set_context_data (a_context_data: CONTEXT_DATA)
 			-- Set `context_data' to `a_context_data'.
 		do
 			context_data := a_context_data
@@ -57,7 +57,7 @@ feature {EVENT_HDL} -- Element change
 			context_data = a_context_data
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

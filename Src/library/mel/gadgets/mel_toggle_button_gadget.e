@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Toggle Button Gadget."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif toggle button gadget.
 		local
 			widget_name: ANY
@@ -45,19 +45,19 @@ feature -- Initialization
 
 feature -- Access
 
-	value_changed_command: MEL_COMMAND_EXEC is
+	value_changed_command: MEL_COMMAND_EXEC
 			-- Command set for the value changed callback
 		do
 			Result := motif_command (XmNvalueChangedCallback)
 		end;
 
-	arm_command: MEL_COMMAND_EXEC is
+	arm_command: MEL_COMMAND_EXEC
 			-- Command set for the arm callback
 		do
 			Result := motif_command (XmNarmCallback)
 		end;
 
-	disarm_command: MEL_COMMAND_EXEC is
+	disarm_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNdisarmCallback)
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	state: BOOLEAN is
+	state: BOOLEAN
 			-- State of current toggle button
 		require
 			exists: not is_destroyed
@@ -73,7 +73,7 @@ feature -- Status report
 			Result := xm_toggle_button_get_state (screen_object);
 		end;
 
-	is_filled_on_select: BOOLEAN is
+	is_filled_on_select: BOOLEAN
 			-- Is the indicator filled with `fill_color'?
 		require
 			exists: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNfillOnSelect)
 		end;
 
-	is_indicator_visible: BOOLEAN is
+	is_indicator_visible: BOOLEAN
 			-- Is the indicator visible?
 		require
 			exists: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNindicatorOn)
 		end;
 
-	indicator_size: INTEGER is
+	indicator_size: INTEGER
 			-- Size of the indicator
 		require
 			exists: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Status report
 			indicator_size_large_enough: Result >= 0
 		end;
 
-	is_indicator_square: BOOLEAN is
+	is_indicator_square: BOOLEAN
 			-- Is the indicator type a square?
 		require
 			exists: not is_destroyed
@@ -107,7 +107,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNindicatorType) = XmN_OF_MANY
 		end;
 
-	select_color: MEL_PIXEL is
+	select_color: MEL_PIXEL
 			-- Color when toggle is selected
 		require
 			exists: not is_destroyed
@@ -119,7 +119,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	select_insensitive_pixmap: MEL_PIXMAP is
+	select_insensitive_pixmap: MEL_PIXMAP
 			-- Insensitive pixmap when toggle is selected
 		require
 			exists: not is_destroyed
@@ -131,7 +131,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	select_pixmap: MEL_PIXMAP is
+	select_pixmap: MEL_PIXMAP
 			-- Pixmap when toggle is selected
 		require
 			exists: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- Distance between the toggle indicator and its label
 		require
 			exists: not is_destroyed
@@ -153,7 +153,7 @@ feature -- Status report
 			spacing_large_enough: Result >= 0
 		end;
 
-	is_indicator_visible_when_off: BOOLEAN is
+	is_indicator_visible_when_off: BOOLEAN
 			-- Is the toggle indicator visible when off?
 		require
 			exists: not is_destroyed
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_toggle_on is
+	set_toggle_on
 			-- Set Current toggle on.
 		require
 			exists: not is_destroyed
@@ -173,7 +173,7 @@ feature -- Status setting
 			state_is_true: state
 		end;
 
-	set_toggle_off is
+	set_toggle_off
 			-- Set Current toggle off.
 		require
 			exists: not is_destroyed
@@ -183,7 +183,7 @@ feature -- Status setting
 			state_is_false: not state
 		end;
 
-	arm is
+	arm
 			-- Set `state' to `True' and call callback (if set).
 		require
 			exists: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Status setting
 			state_is_true: state
 		end;
 
-	disarm is
+	disarm
 			-- Set `state' to `False' and call callback (if set).
 		require
 			exists: not is_destroyed
@@ -203,7 +203,7 @@ feature -- Status setting
 			state_is_false: not state
 		end;
 
-	fill_on_select is
+	fill_on_select
 			-- Fill the indicator with `select_color' when toggle is selected.
 		require
 			exists: not is_destroyed
@@ -213,7 +213,7 @@ feature -- Status setting
 			filled_on_select_is_true: is_filled_on_select
 		end;
 
-	do_not_fill_on_select is
+	do_not_fill_on_select
 			-- Do not fill the indicator with `select_color'.
 		require
 			exists: not is_destroyed
@@ -223,7 +223,7 @@ feature -- Status setting
 			filled_on_select_is_false: not is_filled_on_select
 		end;
 
-	set_indicator_visible is
+	set_indicator_visible
 			-- Set the indicator visible.
 		require
 			exists: not is_destroyed
@@ -233,7 +233,7 @@ feature -- Status setting
 			indicator_visible_is_true: is_indicator_visible
 		end;
 
-	set_indicator_invisible is
+	set_indicator_invisible
 			-- Set the indicator invisible.
 		require
 			exists: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status setting
 			indicator_visible_is_false: not is_indicator_visible
 		end;
 
-	set_indicator_size (a_width: INTEGER) is
+	set_indicator_size (a_width: INTEGER)
 			-- Set `indicator_size' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -254,7 +254,7 @@ feature -- Status setting
 			value_set: indicator_size = a_width
 		end;
 
-	set_indicator_square is
+	set_indicator_square
 			-- Set the indicator type to square.
 		require
 			exists: not is_destroyed;
@@ -264,7 +264,7 @@ feature -- Status setting
 			indicator_square_is_true: is_indicator_square
 		end;
  
-  	set_indicator_diamond is
+  	set_indicator_diamond
 			-- Set the indicator type to diamond.
 		require
 			exists: not is_destroyed;
@@ -274,7 +274,7 @@ feature -- Status setting
 			indicator_square_is_false: not is_indicator_square
 		end;
 
-	set_select_color (a_color: MEL_PIXEL) is
+	set_select_color (a_color: MEL_PIXEL)
 			-- Set `select_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -286,7 +286,7 @@ feature -- Status setting
 			select_color_set: select_color.is_equal (a_color)
 		end;
 
-	set_select_insensitive_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_select_insensitive_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `select_insensitive_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -299,7 +299,7 @@ feature -- Status setting
 			select_insensitive_pixmap_set: select_insensitive_pixmap.is_equal (a_pixmap)
 		end;	
 
-	set_select_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_select_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `select_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -312,7 +312,7 @@ feature -- Status setting
 			select_pixmap_set: select_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_spacing (a_width: INTEGER) is
+	set_spacing (a_width: INTEGER)
 			-- Set `spacing' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -323,7 +323,7 @@ feature -- Status setting
 			value_set: spacing = a_width
 		end;
 
-	set_indicator_visible_when_off is
+	set_indicator_visible_when_off
 			-- Set the indicator visible when off.
 		require
 			exists: not is_destroyed
@@ -333,7 +333,7 @@ feature -- Status setting
 			indicator_is_visible_when_off: is_indicator_visible_when_off
 		end;
 
-	set_indicator_invisible_when_off is
+	set_indicator_invisible_when_off
 			-- Set the indicator invisible when off.
 		require
 			exists: not is_destroyed
@@ -345,7 +345,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the value of the button
 			-- has been changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -358,7 +358,7 @@ feature -- Element change
 			command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
-	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -370,7 +370,7 @@ feature -- Element change
 			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is released.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -384,7 +384,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_value_changed_callback is
+	remove_value_changed_callback
 			-- Remove the command for the value changed callback.
 		do
 			remove_callback (XmNvalueChangedCallback)
@@ -392,7 +392,7 @@ feature -- Removal
 			removed: value_changed_command = Void
 		end;
 
-	remove_arm_callback is
+	remove_arm_callback
 			-- Remove the command for the arm callback.
 		do
 			remove_callback (XmNarmCallback)
@@ -400,7 +400,7 @@ feature -- Removal
 			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback is
+	remove_disarm_callback
 			-- Remove the command for the arm callback.
 		do
 			remove_callback (XmNdisarmCallback)
@@ -411,7 +411,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-					resource_name: POINTER): MEL_TOGGLE_BUTTON_CALLBACK_STRUCT is
+					resource_name: POINTER): MEL_TOGGLE_BUTTON_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to the `a_callback_struct_ptr' pointer.
 		do
@@ -420,28 +420,28 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN) is
+	xm_toggle_button_set_state (scr_obj: POINTER; value1, value2: BOOLEAN)
 		external
 			"C (Widget, Boolean, Boolean) | <Xm/ToggleBG.h>"
 		alias
 			"XmToggleButtonSetState"
 		end;
 
-	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN is
+	xm_toggle_button_get_state (scr_obj: POINTER): BOOLEAN
 		external
 			"C (Widget): EIF_BOOLEAN | <Xm/ToggleB.h>"
 		alias
 			"XmToggleButtonGetState"
 		end;
 
-	xm_create_toggle_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_toggle_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ToggleBG.h>"
 		alias
 			"XmCreateToggleButtonGadget"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

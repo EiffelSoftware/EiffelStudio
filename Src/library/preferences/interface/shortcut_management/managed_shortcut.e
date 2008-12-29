@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects represents a managed shortcut"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ feature -- Access
 		deferred
 		end
 
-	key: EV_KEY is
+	key: EV_KEY
 			-- Actual key.
 		deferred
 		ensure
 			a_key_not_void: Result /= Void
 		end
 
-	display_string: STRING is
+	display_string: STRING
 			-- String representation of key combination.
 		local
 			a_key: STRING
@@ -56,7 +56,7 @@ feature -- Access
 	group: MANAGED_SHORTCUT_GROUP
 			-- Group of the shortcut.
 
-	overridden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	overridden_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called when Current is overriden within `group'.
 		do
 			if overridden_actions_internal = Void then
@@ -67,7 +67,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	modification_deny_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	modification_deny_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called when modificaton is denied.
 		do
 			if modification_deny_actions_internal = Void then
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Status change
 
-	set_group (a_group: MANAGED_SHORTCUT_GROUP) is
+	set_group (a_group: MANAGED_SHORTCUT_GROUP)
 			-- Set `group' with `a_group'.
 			-- Change elements in `group' and `a_group' also.
 		local
@@ -128,7 +128,7 @@ feature -- Status change
 									(a_group /= Void implies a_group.shortcuts.has (Current))
 		end
 
-	set_values (a_key: like key; alt, ctrl, shift: BOOLEAN) is
+	set_values (a_key: like key; alt, ctrl, shift: BOOLEAN)
 			-- Set values.
 		require
 			modifiable: modifiable_with (a_key, alt, ctrl, shift)
@@ -171,7 +171,7 @@ feature -- Status report
 	is_wiped: BOOLEAN
 			-- If true, shortcut management doesn't take current into account when comparing.
 
-	matches_shortcut (a_shortcut: like Current): BOOLEAN is
+	matches_shortcut (a_shortcut: like Current): BOOLEAN
 			-- Do `a_shortcut' matches current?
 		do
 			if a_shortcut /= Void then
@@ -181,7 +181,7 @@ feature -- Status report
 			end
 		end
 
-	matches (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN is
+	matches (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN
 			-- Do combinations of `a_key', `alt', `ctrl' an `shift' match Current?
 		require
 			a_key_not_void: a_key /= Void
@@ -196,7 +196,7 @@ feature -- Status report
 			end
 		end
 
-	modifiable_with (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN is
+	modifiable_with (a_key: like key; alt, ctrl, shift: BOOLEAN): BOOLEAN
 			-- Is current modifiable considering shortcuts in `group'?
 		do
 			if group = Void then
@@ -212,7 +212,7 @@ feature -- Status report
 
 feature {MANAGED_SHORTCUT, MANAGED_SHORTCUT_GROUP} -- Implementation
 
-	set_is_wiped (a_b: BOOLEAN) is
+	set_is_wiped (a_b: BOOLEAN)
 			-- Set `is_wiped' with `a_b'
 		require
 			not_a_b_implies_modifiable: not a_b implies modifiable_with (key, is_alt, is_ctrl, is_shift)
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 
 	overridden_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

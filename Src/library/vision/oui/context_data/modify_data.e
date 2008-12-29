@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Information given by EiffelVision when a callback is triggered"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET; a_current, a_next, a_start, a_last: INTEGER; a_text: STRING) is
+	make (a_widget: WIDGET; a_current, a_next, a_start, a_last: INTEGER; a_text: STRING)
 			-- Create a context_data `modify' action.
 		do
 			widget := a_widget;
@@ -45,7 +45,7 @@ feature -- Access
 	text: STRING;;
 			-- Text to be inserted between `start_position' and `last_position'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file dialog. Carbon implementation."
 
 deferred class
@@ -36,7 +36,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a window with a parent.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			create filters.make (0)
 		end
 
-	initialize is
+	initialize
 			-- Setup action sequences.
 		local
 			a_ok_button, a_cancel_button: POINTER
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	show is
+	show
 			--
 		local
 			ret: INTEGER
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 		local
 			ret: INTEGER
@@ -125,7 +125,7 @@ feature -- Access
 	filter: STRING_32
 			-- Filter currently applied to file list.
 
-	selected_filter_index: INTEGER is
+	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
 		local
@@ -153,7 +153,7 @@ feature -- Access
 
 feature -- Status report
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- `file_name' without its path.
 		do
 			if not file_name.is_empty then
@@ -165,7 +165,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING_32 is
+	file_path: STRING_32
 			-- Path of `file_name'.
 		do
 			if not file_name.is_empty then
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL) is
+	set_filter (a_filter: STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -220,7 +220,7 @@ feature -- Element change
 --			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
-	set_file_name (a_name: STRING_GENERAL) is
+	set_file_name (a_name: STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -229,7 +229,7 @@ feature -- Element change
 --			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_CARBON_CF_STRING
@@ -244,7 +244,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	remove_file_filters is
+	remove_file_filters
 			-- Remove current file filters of `Current'
 		local
 			a_filter_list: POINTER
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal to `a_window' until the user closes it
 		local
 			filter_string_list: LIST [STRING_32]
@@ -311,12 +311,12 @@ feature {NONE} -- Implementation
 			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)
 		end
 
-	file_chooser_action: INTEGER is
+	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		deferred
 		end
 
-	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN is
+	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		do
 			if a_name /= Void then
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	destroy is
+	destroy
 			-- Clean up
 		do
 			nav_dialog_dispose_external (c_object)
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_FILE_DIALOG_IMP
 

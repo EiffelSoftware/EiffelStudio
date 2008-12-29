@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that can access `set_count' from STRING"
 	legal: "See notice at end of class."
@@ -9,7 +9,7 @@ indexing
 class
 	STRING_HANDLER
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

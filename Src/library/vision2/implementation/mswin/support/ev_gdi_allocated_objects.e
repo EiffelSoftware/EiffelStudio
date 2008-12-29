@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Default initialization feature.
 		do
 				-- Allocate space for `Max_allocated_objects' objects.
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 	index_lightest_object: INTEGER
 			-- Index of the lightest object.
 
-	has_object (an_object: EV_GDI_OBJECT): BOOLEAN is
+	has_object (an_object: EV_GDI_OBJECT): BOOLEAN
 			-- Is `an_object' in `allocated_objects'?
 		local
 			i: INTEGER
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_allocated_objects (new_object: G) is
+	add_to_allocated_objects (new_object: G)
 			-- Add `new_object' to the array of allocated objects.
 		local
 			index_new_item: INTEGER
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_previously_allocated_object (real_object_index: INTEGER): WEL_GDI_ANY is
+	get_previously_allocated_object (real_object_index: INTEGER): WEL_GDI_ANY
 			-- Retrieve the WEL object located in the array at index `real_object_index'.
 		local
 			real_object: G
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	swap_allocated_objects (first_index, second_index: INTEGER) is
+	swap_allocated_objects (first_index, second_index: INTEGER)
 			-- Swap objects at indexes `first_index' and `second_index'.
 		require
 			valid_first_index: 
@@ -173,10 +173,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Max_allocated_objects: INTEGER is 15;
+	Max_allocated_objects: INTEGER = 15;
 			-- Maximum number of allocated objects we keep.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

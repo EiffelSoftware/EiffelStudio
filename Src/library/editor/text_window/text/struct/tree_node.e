@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree Node for a 2-3-4 balanced tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize as a blank tree.
 		do
 			create children.make (1, Child_number +1)
@@ -24,7 +24,7 @@ feature -- Initialization
 			keys_plus_one := 1
 		end
 
-	make_with_child (first_child: like Current) is
+	make_with_child (first_child: like Current)
 			-- Initialize Current with a `first_child'.
 			-- `first_child''s parent is changed as a side effect.
 		do
@@ -48,7 +48,7 @@ feature -- Access
 	keys: ARRAY [like item]
 		-- keys contained by Current
 
-	item (i: INTEGER): TREE_KEY [G] is
+	item (i: INTEGER): TREE_KEY [G]
 			-- `i'th key of the tree, if Current was the root node.
 		require
 			i_big_enough: i >= 1
@@ -94,7 +94,7 @@ feature -- Access
 			final_Result_good: is_root implies (Result.number = i)
 		end
 
-	first_item: like item is
+	first_item: like item
 			-- first key of a tree
 			-- goes much faster than "item (1)"
 		do
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end
 
-	last_item: like item is
+	last_item: like item
 			-- last key of a tree
 			-- goes much faster than "item (keys_plus_one - 1)"
 		do
@@ -126,19 +126,19 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_root: BOOLEAN is
+	is_root: BOOLEAN
 			-- Is Current the root node of the tree?
 		do
 			Result := (parent = Void)
 		end
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 			-- Is Current a leaf?
 		do
 			Result := (children @ 1 = Void)
 		end
 
-	pos_in_parent: INTEGER is
+	pos_in_parent: INTEGER
 			-- position of node in parent.
 		require
 			has_a_parent: not is_root
@@ -164,7 +164,7 @@ feature -- Status report
 --| Should we implement it as an attribute or as a function?
 
 
-	keys_before_child (i: INTEGER): INTEGER is
+	keys_before_child (i: INTEGER): INTEGER
 			-- Number of keys in the tree before child number `i'
 		local
 			j: INTEGER
@@ -218,13 +218,13 @@ feature {TREE_NODE} -- Status setting
 
 feature -- Element change
 
-	set_parent (par: like Current) is
+	set_parent (par: like Current)
 			-- make `par' the parent of Current
 		do
 			parent := par
 		end
 
-	insert_key_and_right_child (key : like item; node: like Current; pos: INTEGER) is
+	insert_key_and_right_child (key : like item; node: like Current; pos: INTEGER)
 			-- insert `key' at position `pos', and `node' at right of `key'
 			-- (so `node' will be @`pos'+1)
 		local
@@ -261,7 +261,7 @@ feature -- Element change
 			end
 		end
 
-	insert_key_and_left_child (key : like item; node: like Current; pos: INTEGER) is
+	insert_key_and_left_child (key : like item; node: like Current; pos: INTEGER)
 			-- insert `key' at position `pos', and `node' at left of `key'
 			-- (so `node' will be @`pos')
 		local
@@ -299,7 +299,7 @@ feature -- Element change
 			end
 		end
 
-	insert_first (key: like item) is
+	insert_first (key: like item)
 			-- Insert `key' in first position of the tree.
 		do
 			if is_leaf then
@@ -309,7 +309,7 @@ feature -- Element change
 			end
 		end
 
-	insert_last (key: like item) is
+	insert_last (key: like item)
 			-- Insert `key' in last position of the tree.
 		do
 			if is_leaf then
@@ -321,7 +321,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete (pos: INTEGER) is
+	delete (pos: INTEGER)
 			-- delete key in position `pos' in the node.
 		local
 			i: INTEGER
@@ -362,7 +362,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	Child_number: INTEGER is 5
+	Child_number: INTEGER = 5
 		-- Maximum number of children
 --| FIXME
 --| Christophe, 14 jan 2000
@@ -373,7 +373,7 @@ feature -- Resizing
 
 feature -- Transformation
 
-	balance_heavy_node is
+	balance_heavy_node
 			-- rebalance a heavy node (splitting it)
 			--| Changes in this feature implementation
 			--| may change "merge_left(right)" feature
@@ -419,7 +419,7 @@ feature -- Transformation
 			end
 		end
 
-	balance_light_root is
+	balance_light_root
 			-- Rebalance the root node by merging it with its children.
 		require
 			Current_is_root: is_root
@@ -449,7 +449,7 @@ feature -- Transformation
 			end
 		end
 
-	balance_light_node is
+	balance_light_node
 			-- rebalance a light node (by key migration or merging)
 		require
 		local
@@ -525,7 +525,7 @@ feature -- Conversion
 --| christophe, 25 jan 2000
 --| This features cannot work, because of changes during rebalancing nodes.
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Add `other' at the right of Current.
 		local
 			dummy		: like item
@@ -559,7 +559,7 @@ feature -- Conversion
 			dummy.delete
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Add `other' at the left of Current.
 		local
 			dummy		: like item
@@ -592,7 +592,7 @@ feature -- Conversion
 
 feature {TREE_NODE} -- Implementation
 
-	delete_key_and_right_child (pos: INTEGER) is
+	delete_key_and_right_child (pos: INTEGER)
 			-- delete key in position `pos', and its
 			-- right child (position `pos'+1)
 		local
@@ -621,7 +621,7 @@ feature {TREE_NODE} -- Implementation
 			end
 		end
 
-	delete_key_and_left_child (pos: INTEGER) is
+	delete_key_and_left_child (pos: INTEGER)
 			-- delete key in position `pos', and its
 			-- left child (position `pos')
 		do
@@ -629,7 +629,7 @@ feature {TREE_NODE} -- Implementation
 			delete_key_and_right_child (pos)
 		end
 
-	rec_update_key_number is
+	rec_update_key_number
 			-- update `key_number_plus_one' and
 			-- propagate update to `parent', if not root.
 		local
@@ -663,7 +663,7 @@ invariant
 --| It is not sure this can be fixed easily.
 --| Anyway, it would slow down execution
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

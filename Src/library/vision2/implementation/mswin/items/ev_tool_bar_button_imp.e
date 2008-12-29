@@ -1,4 +1,4 @@
-indexing
+note
 	description: " EiffelVision Toolbar button, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,13 +47,13 @@ create
 
 feature {NONE} --
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			--
 		do
 
 		end
 
-	wel_has_capture: BOOLEAN is
+	wel_has_capture: BOOLEAN
 			--
 		do
 
@@ -61,7 +61,7 @@ feature {NONE} --
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			create real_text.make (0)
 		end
 
-	initialize is
+	initialize
 			-- Do post creation initialization.
 		do
 			is_sensitive := True
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Text of `Current'
 		do
 			if real_text /= Void then
@@ -89,7 +89,7 @@ feature -- Access
 			end
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Number of characters of `real_text'.
 		do
 			Result := real_text.count
@@ -98,13 +98,13 @@ feature -- Access
 	real_text: STRING_32
 			-- Internal `text'. Not to be returned directly. Use clone.
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of the current item.
 		do
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	set_parent_imp (a_parent_imp: like parent_imp) is
+	set_parent_imp (a_parent_imp: like parent_imp)
 			-- Make `a_parent_imp' the new parent of `Current'.
 			-- `a_parent_imp' can be Void then the parent is the screen.
 		do
@@ -116,7 +116,7 @@ feature -- Access
 			end
 		end
 
-	gray_pixmap: EV_PIXMAP is
+	gray_pixmap: EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -177,21 +177,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			 -- Enable `Current'.
 		do
 			enabled_before := is_sensitive
 			enable_sensitive_internal
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			 -- Disable `Current'.
 		do
 			enabled_before := is_sensitive
 			disable_sensitive_internal
 		end
 
-	enable_sensitive_internal is
+	enable_sensitive_internal
 			 -- Enable `Current'.
 			 -- This is a special version used internally by the code that updates
 			 -- the pick and drop so that `enabled_before' is not updated. In
@@ -205,7 +205,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive_internal is
+	disable_sensitive_internal
 			 -- Disable `Current'.
 			 -- This is a special version used internally by the code that updates
 			 -- the pick and drop so that `enabled_before' is not updated. In
@@ -219,7 +219,7 @@ feature -- Status setting
 			end
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- Is parent of `Current' sensitive?
 		do
 			if parent_imp /= Void and then parent_imp.is_sensitive then
@@ -227,7 +227,7 @@ feature -- Status setting
 			end
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
 			if parent_imp /= Void then
@@ -235,7 +235,7 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -244,7 +244,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	wel_set_text (txt: STRING_GENERAL) is
+	wel_set_text (txt: STRING_GENERAL)
 			-- Make `txt' the new label of `Current'.
 		do
 			if txt /= Void then
@@ -256,7 +256,7 @@ feature -- Element change
 			end
 		end
 
-	set_pixmap (p: EV_PIXMAP) is
+	set_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed pixmap.
 		do
 				-- We must destroy the pixmap before we set a new one,
@@ -274,7 +274,7 @@ feature -- Element change
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove pixmap from `Current'.
 		do
 			if has_pixmap then
@@ -291,7 +291,7 @@ feature -- Element change
 			end
 		end
 
-	set_gray_pixmap (p: EV_PIXMAP) is
+	set_gray_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed gray pixmap.
 		do
 			if private_gray_pixmap /= Void then
@@ -308,7 +308,7 @@ feature -- Element change
 			end
 		end
 
-	remove_gray_pixmap is
+	remove_gray_pixmap
 			-- Remove pixmap from `Current'.
 		do
 			if has_gray_pixmap then
@@ -325,7 +325,7 @@ feature -- Element change
 			end
 		end
 
-	set_pixmap_in_parent is
+	set_pixmap_in_parent
 			-- Add the pixmap to the parent by updating the
 			-- parent's image list.
 		local
@@ -421,7 +421,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			if parent_imp /= Void then
@@ -429,7 +429,7 @@ feature -- Measurement
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			if parent_imp /= Void then
@@ -437,7 +437,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 			if parent_imp /= Void then
@@ -445,7 +445,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 			if parent_imp /= Void then
@@ -453,7 +453,7 @@ feature -- Measurement
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			if parent_imp /= Void then
@@ -461,7 +461,7 @@ feature -- Measurement
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			if parent_imp /= Void then
@@ -469,13 +469,13 @@ feature -- Measurement
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 			Result := width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 			Result := height
@@ -483,7 +483,7 @@ feature -- Measurement
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
-	restore_private_pixmaps is
+	restore_private_pixmaps
 			-- When `Current' is parented, `private_pixmap' and
 			-- `private_gray_pixmap' are assigned Void. This is to stop
 			-- us keeping to many references to GDI objects. When
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 	private_gray_pixmap: EV_PIXMAP
 			-- Internal gray pixmap for Current. Void if none.
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			Precursor {EV_TOOL_BAR_ITEM_IMP}
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation, pick and drop
 
-	widget_source: EV_WIDGET_IMP is
+	widget_source: EV_WIDGET_IMP
 			-- Widget drag source used for transport.
 		do
 			Result := parent_imp
@@ -528,7 +528,7 @@ feature {EV_ANY_I} -- Interface
 
 	interface: EV_TOOL_BAR_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

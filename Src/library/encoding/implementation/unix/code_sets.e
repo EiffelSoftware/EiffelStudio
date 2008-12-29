@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Code sets, only two byte and four byte encoding codeset are listed. 
 						The rest are granted as one byte encoding.
@@ -14,10 +14,10 @@ class
 
 feature -- Access
 
-	code_pages: HASH_TABLE [STRING, STRING] is
+	code_pages: HASH_TABLE [STRING, STRING]
 			-- All code pages that iconv can possibly support.
 			-- It is not used now.
-		indexing
+		note
 			EIS: "name=GNU libiconv", "src=http://www.gnu.org/software/libiconv/", "tag=encoding library"
 		once
 			create Result.make (122)
@@ -187,7 +187,7 @@ feature -- Access
 			Result.put ("RISCOS-LATIN1", "riscos-latin1")
 		end
 
-	two_byte_code_pages: HASH_TABLE [STRING, STRING] is
+	two_byte_code_pages: HASH_TABLE [STRING, STRING]
 			-- Two byte code pages that iconv can possibly support.
 		once
 			create Result.make (20)
@@ -214,7 +214,7 @@ feature -- Access
 			Result.put ("JAVA", "java")
 		end
 
-	four_byte_code_pages: HASH_TABLE [STRING, STRING] is
+	four_byte_code_pages: HASH_TABLE [STRING, STRING]
 			-- Four byte code pages that iconv can possibly support.
 		once
 			create Result.make (10)
@@ -233,7 +233,7 @@ feature -- Access
 			Result.put ("UCS-4-SWAPPED", "ucs-4-swapped")
 		end
 
-	little_endian_code_pages: HASH_TABLE [STRING, STRING] is
+	little_endian_code_pages: HASH_TABLE [STRING, STRING]
 			-- Little endian code pages that iconv can possibly support.
 		once
 			create Result.make (5)
@@ -244,7 +244,7 @@ feature -- Access
 			Result.put ("UTF-32LE", "utf-32le")
 		end
 
-	big_endian_code_pages: HASH_TABLE [STRING, STRING] is
+	big_endian_code_pages: HASH_TABLE [STRING, STRING]
 			-- Big endian code pages that iconv can possibly support.
 		once
 			create Result.make (5)
@@ -255,7 +255,7 @@ feature -- Access
 			Result.put ("UTF-32BE", "utf-32be")
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Small picture whose location on the screen is controlled %
 		%by a pointing device."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 feature {NONE} -- Initialization
 
 	make_by_bitmask (x_hot_spot, y_hot_spot: INTEGER;
-			and_plane, xor_plane: ARRAY [CHARACTER]) is
+			and_plane, xor_plane: ARRAY [CHARACTER])
 			-- Make a cursor using bitmask arrays.
 			-- `and_plane' and `xor_plane' points to an array of
 			-- byte that contains the bit values for the AND and XOR
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x_hotspot: INTEGER is
+	x_hotspot: INTEGER
 			-- X-coordinate of `Current's hot spot.
 		local
 			icon_info: WEL_ICON_INFO
@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	y_hotspot: INTEGER is
+	y_hotspot: INTEGER
 			-- Y-coordinate of a `Current's hot spot.
 		local
 			icon_info: WEL_ICON_INFO
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	previous_cursor: WEL_CURSOR is
+	previous_cursor: WEL_CURSOR
 			-- Previously assigned cursor
 		local
 			a_default_pointer: POINTER
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set is
+	set
 			-- Set current cursor for entire application and
 			-- save old one in `previous_cursor' if there was
 			-- one.
@@ -116,7 +116,7 @@ feature -- Basic operations
 			internal_previous_cursor := cwin_set_cursor (item)
 		end
 
-	restore_previous is
+	restore_previous
 			-- Restore `previous_cursor'.
 		require
 			previous_cursor_not_void: previous_cursor /= Void
@@ -132,7 +132,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 			-- Load cursor.
 		do
 			item := cwin_load_cursor (hinstance, id)
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	internal_previous_cursor: POINTER
 			-- Pointer on previous cursor
 
-	destroy_resource: BOOLEAN is
+	destroy_resource: BOOLEAN
 			-- SDK DestroyIcon/DestroyCursor
 		do
 			Result := cwin_destroy_cursor (item)
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_set_cursor (hcursor: POINTER): POINTER is
+	cwin_set_cursor (hcursor: POINTER): POINTER
 			-- SDK SetCursor
 		external
 			"C [macro <wel.h>] (HCURSOR): EIF_POINTER"
@@ -157,7 +157,7 @@ feature {NONE} -- Externals
 			"SetCursor"
 		end
 
-	cwin_load_cursor (hinstance: POINTER; id: POINTER): POINTER is
+	cwin_load_cursor (hinstance: POINTER; id: POINTER): POINTER
 			-- SDK LoadCursor
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
@@ -165,7 +165,7 @@ feature {NONE} -- Externals
 			"LoadCursor"
 		end
 
-	cwin_destroy_cursor (hcursor: POINTER): BOOLEAN is
+	cwin_destroy_cursor (hcursor: POINTER): BOOLEAN
 			-- SDK DestroyCursor
 		external
 			"C [macro <wel.h>] (HCURSOR): BOOL"
@@ -175,7 +175,7 @@ feature {NONE} -- Externals
 
 	cwin_create_cursor (hinstance: POINTER; x_hot_spot, y_hot_spot, width,
 			height: INTEGER; and_plane,
-			xor_plane: POINTER): POINTER is
+			xor_plane: POINTER): POINTER
 			-- SDK CreateCursor
 		external
 			"C [macro <wel.h>] (HINSTANCE, int, int, int, int,%
@@ -186,14 +186,14 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Constants
 
-	Image_type: INTEGER is
+	Image_type: INTEGER
 		-- Constant defining the type of the image
 		-- See WEL_IMAGE_CONSTANTS for possible values.
 		do
 			Result := Image_cursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Icon constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Icon_small: INTEGER is 0
+	Icon_small: INTEGER = 0
 			-- Declared in Windows as ICON_SMALL
 
-	Icon_big: INTEGER is 1;
+	Icon_big: INTEGER = 1;
 			-- Declared in Windows as ICON_BIG
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

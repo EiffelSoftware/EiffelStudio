@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process launcher on .NET"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
 		local
 			l_arg: STRING
 		do
@@ -60,7 +60,7 @@ feature{NONE} -- Initialization
 			executable_set: executable.is_equal (a_exec_name)
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
+	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
 			-- If directory name or file name in `cmd_line' includes space, use double quotes around
 			-- those names.
 		local
@@ -83,7 +83,7 @@ feature{NONE} -- Initialization
 		
 feature -- Control
 
-	launch is
+	launch
 			-- Launch process.	
 		local
 			retried: BOOLEAN
@@ -109,7 +109,7 @@ feature -- Control
 			retry
 		end
 
-	terminate is
+	terminate
 			-- Terminate launched process.
 		local
 			retried: BOOLEAN
@@ -131,7 +131,7 @@ feature -- Control
 			retry
 		end
 
-	terminate_tree is
+	terminate_tree
 			-- Terminate process tree starting from current launched process.
 		local
 			retried: BOOLEAN
@@ -160,7 +160,7 @@ feature -- Control
 			retry
 		end
 
-	wait_for_exit is
+	wait_for_exit
 			-- Wait until process has exited.
 		local
 			l_wait: BOOLEAN
@@ -168,7 +168,7 @@ feature -- Control
 			l_wait := timer.wait (0)
 		end
 
-	wait_for_exit_with_timeout (a_timeout: INTEGER) is
+	wait_for_exit_with_timeout (a_timeout: INTEGER)
 			-- Wait launched process to exit for at most `a_timeout' milliseconds.
 			-- Check `has_exited' after to see if launched process has exited.
 		local
@@ -179,7 +179,7 @@ feature -- Control
 
 feature{PROCESS_TIMER} -- Process status checking
 
-	check_exit is
+	check_exit
 			-- Check if process has exited.
 		local
 			l_threads_exited: BOOLEAN
@@ -226,7 +226,7 @@ feature{PROCESS_TIMER} -- Process status checking
 
 feature -- Interprocess data transmission
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Send `s' into launched process as its input data.
 		do
 			append_input_buffer (s)
@@ -234,17 +234,17 @@ feature -- Interprocess data transmission
 
 feature -- Status reporting
 
-	id: INTEGER is
+	id: INTEGER
 		do
 			Result := internal_id
 		end
 
-	has_exited: BOOLEAN is
+	has_exited: BOOLEAN
 		do
 			Result := has_cleaned_up
 		end
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 		do
 			Result := internal_exit_code
 		end
@@ -256,7 +256,7 @@ feature{NONE} -- Interprocess IO
 			-- This buffer is used temporarily to store data that can not be
 			-- consumed by launched process.
 
-	append_input_buffer (a_input:STRING) is
+	append_input_buffer (a_input:STRING)
 			-- Append `a_input' to `input_buffer'.
 		require
 			a_input_not_void: a_input /= Void
@@ -268,7 +268,7 @@ feature{NONE} -- Interprocess IO
 
 feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 
-	write_input_stream is
+	write_input_stream
 			-- Write at most `buffer_size' bytes of data in `input_buffer' into launched process.
 			--|Note: This feature will be used in input listening thread.			
 		require
@@ -315,7 +315,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 			end
 		end
 
-	read_output_stream is
+	read_output_stream
 			-- Read output stream from launched process and dispatch data to `output_handler'.
 			--|Note: This feature will be used in output listening thread.
 		require
@@ -353,7 +353,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 			end
 		end
 
-	read_error_stream is
+	read_error_stream
 			-- Read output stream from launched process and dispatch data to `output_handler'.
 			--|Note: This feature will be used in error listening thread.			
 		require
@@ -403,7 +403,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 
 feature{NONE} -- Implementation
 
-	start_info: SYSTEM_DLL_PROCESS_START_INFO is
+	start_info: SYSTEM_DLL_PROCESS_START_INFO
 			-- Process start information
 		require
 			process_not_running: not is_running
@@ -456,7 +456,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	initialize_after_launch is
+	initialize_after_launch
 			-- Initialize when process has been launched successfully.
 		do
 			if not child_process.has_exited then
@@ -470,7 +470,7 @@ feature{NONE} -- Implementation
 			start_listening_threads
 		end
 
-	start_listening_threads is
+	start_listening_threads
 			-- Start listening threads.
 		do
 			if input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
@@ -515,7 +515,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	try_terminate_process (a_process: like child_process) is
+	try_terminate_process (a_process: like child_process)
 			-- Try to terminate process `a_process'.
 			-- Set `last_termination_successful' with True if succeeded.
 		require
@@ -535,7 +535,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	terminate_sub_tree (pid: INTEGER; is_self: BOOLEAN) is
+	terminate_sub_tree (pid: INTEGER; is_self: BOOLEAN)
 			-- Try to termiate all sub-processes of process `pid'.
 			-- If `is_self' is True, terminate `pid' after all its child processes have
 			-- been terminated.
@@ -604,7 +604,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_by_id (pid: INTEGER): SYSTEM_DLL_PROCESS is
+	process_by_id (pid: INTEGER): SYSTEM_DLL_PROCESS
 			-- Process instance whose id is `pid'
 		local
 			retried: BOOLEAN
@@ -618,7 +618,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER] is
+	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER]
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		local
 			p_tbl: like process_id_pair_list
@@ -641,7 +641,7 @@ feature{NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	process_id_pair_list: LINKED_LIST [TUPLE [parent_id: INTEGER; pid: INTEGER]] is
+	process_id_pair_list: LINKED_LIST [TUPLE [parent_id: INTEGER; pid: INTEGER]]
 			--
 		local
 			l_cat: SYSTEM_DLL_PERFORMANCE_COUNTER_CATEGORY
@@ -677,7 +677,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	parent_process_id (a_process_instance_name: SYSTEM_STRING): INTEGER is
+	parent_process_id (a_process_instance_name: SYSTEM_STRING): INTEGER
 			-- Parent process id of process named `a_process_instance_name'
 		require
 			a_process_instance_name_attached: a_process_instance_name /= Void
@@ -688,7 +688,7 @@ feature{NONE} -- Implementation
 			Result := l_performance_counter.raw_value.as_integer_32
 		end
 
-	process_instance_name (a_pid: INTEGER; a_process_list: NATIVE_ARRAY [SYSTEM_STRING]): STRING is
+	process_instance_name (a_pid: INTEGER; a_process_list: NATIVE_ARRAY [SYSTEM_STRING]): STRING
 			-- Process instance name of process id `a_pid' in `a_process_list'		
 		require
 			a_process_list_attached: a_process_list /= Void
@@ -719,7 +719,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	is_io_redirected: BOOLEAN is
+	is_io_redirected: BOOLEAN
 			-- Is input, output or error redirected?
 		do
 			Result := input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection or
@@ -771,13 +771,13 @@ feature{NONE} -- Implementation
 	internal_id: INTEGER
 			-- Internal process id
 
-	environment_table_as_pointer: POINTER is
+	environment_table_as_pointer: POINTER
 			-- {POINTER} representation of `environment_variable_table'
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
 		do
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

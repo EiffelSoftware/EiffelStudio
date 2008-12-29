@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Scrollable window"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrolled window with `a_name' as identifier
 			-- `a_parent' as parent.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled window with `a_name' as identifier
 			-- `a_parent' as parent.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a scrolled window with `a_name' as identifier
 			-- `a_parent' as parent.
 		do
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	working_area: WIDGET is
+	working_area: WIDGET
 			-- Working area of window which will
 			-- be moved using scrollbars
 		require
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_working_area (a_widget: WIDGET) is
+	set_working_area (a_widget: WIDGET)
 			-- Set work area of windon to `a_widget'.
 		require
 			exists: not destroyed;
@@ -98,12 +98,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current scrolled window.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

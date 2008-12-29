@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Type flags used by {TEST_OUTCOME_I} to indicate the outcome of a {TEST_I}.
 	]"

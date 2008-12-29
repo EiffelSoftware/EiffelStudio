@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Individual elements of lexical analysis"
@@ -27,7 +27,7 @@ feature -- Access
 	string_value: STRING;
 			-- The token's character string
 
-	is_keyword (i: INTEGER): BOOLEAN is
+	is_keyword (i: INTEGER): BOOLEAN
 			-- If the token is a keyword,
 			-- is `i' its identification number?
 		do
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set (typ, lin, col, key: INTEGER; str: STRING) is
+	set (typ, lin, col, key: INTEGER; str: STRING)
 		-- Reset the contents of the token:
 		-- type `type', line number `lin',
 		-- column number `col', keyword value `key'.
@@ -54,13 +54,13 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	position_in_line: INTEGER is
+	position_in_line: INTEGER
 		obsolete "Use ``column_number'' instead"
 	do
 		Result := column_number
 	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

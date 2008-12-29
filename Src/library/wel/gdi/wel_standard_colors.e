@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Definition of the sixteen standard colors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	White: WEL_COLOR_REF is
+	White: WEL_COLOR_REF
 			-- White color
 		once
 			create Result.make_rgb (255, 255, 255)
@@ -18,7 +18,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Black: WEL_COLOR_REF is
+	Black: WEL_COLOR_REF
 			-- Black color
 		once
 			create Result.make_rgb (0, 0, 0)
@@ -26,7 +26,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Grey, Gray: WEL_COLOR_REF is
+	Grey, Gray: WEL_COLOR_REF
 			-- Grey color
 		once
 			create Result.make_rgb (192, 192, 192)
@@ -34,7 +34,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_grey, Dark_gray: WEL_COLOR_REF is
+	Dark_grey, Dark_gray: WEL_COLOR_REF
 			-- Dark grey color
 		once
 			create Result.make_rgb (128, 128, 128)
@@ -42,7 +42,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Blue: WEL_COLOR_REF is
+	Blue: WEL_COLOR_REF
 			-- Blue color
 		once
 			create Result.make_rgb (0, 0, 255)
@@ -50,7 +50,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_blue: WEL_COLOR_REF is
+	Dark_blue: WEL_COLOR_REF
 			-- Dark blue color
 		once
 			create Result.make_rgb (0, 0, 128)
@@ -58,7 +58,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Cyan: WEL_COLOR_REF is
+	Cyan: WEL_COLOR_REF
 			-- Cyan color
 		once
 			create Result.make_rgb (0, 255, 255)
@@ -66,7 +66,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_cyan: WEL_COLOR_REF is
+	Dark_cyan: WEL_COLOR_REF
 			-- Dark cyan color
 		once
 			create Result.make_rgb (0, 128, 128)
@@ -74,7 +74,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Green: WEL_COLOR_REF is
+	Green: WEL_COLOR_REF
 			-- Green color
 		once
 			create Result.make_rgb (0, 255, 0)
@@ -82,7 +82,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_green: WEL_COLOR_REF is
+	Dark_green: WEL_COLOR_REF
 			-- Dark green color
 		once
 			create Result.make_rgb (0, 128, 0)
@@ -90,7 +90,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Yellow: WEL_COLOR_REF is
+	Yellow: WEL_COLOR_REF
 			-- Yellow color
 		once
 			create Result.make_rgb (255, 255, 0)
@@ -98,7 +98,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_yellow: WEL_COLOR_REF is
+	Dark_yellow: WEL_COLOR_REF
 			-- Dark yellow color
 		once
 			create Result.make_rgb (128, 128, 0)
@@ -106,7 +106,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Red: WEL_COLOR_REF is
+	Red: WEL_COLOR_REF
 			-- Red color
 		once
 			create Result.make_rgb (255, 0, 0)
@@ -114,7 +114,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_red: WEL_COLOR_REF is
+	Dark_red: WEL_COLOR_REF
 			-- Dark red color
 		once
 			create Result.make_rgb (128, 0, 0)
@@ -122,7 +122,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Magenta: WEL_COLOR_REF is
+	Magenta: WEL_COLOR_REF
 			-- Magenta color
 		once
 			create Result.make_rgb (255, 0, 255)
@@ -130,7 +130,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_magenta: WEL_COLOR_REF is
+	Dark_magenta: WEL_COLOR_REF
 			-- Dark magenta color
 		once
 			create Result.make_rgb (128, 0, 128)
@@ -138,7 +138,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

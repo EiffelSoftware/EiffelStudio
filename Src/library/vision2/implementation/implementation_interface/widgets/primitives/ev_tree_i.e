@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision Tree. Implementation interface"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 				-- Set default width & height for the pixmaps
@@ -38,20 +38,20 @@ feature {EV_ANY} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_TREE_NODE is
+	selected_item: EV_TREE_NODE
 			-- Currently selected tree item.
 		deferred
 		end
 
 feature -- Status report
 
-	ensure_item_visible (an_item: EV_TREE_NODE) is
+	ensure_item_visible (an_item: EV_TREE_NODE)
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		deferred
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is at least one tree item selected?
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

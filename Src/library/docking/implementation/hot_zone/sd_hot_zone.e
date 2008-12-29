@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			SD_HOT_ZONE that draw feedback rectangle or triangle feedbacks (or transparent feedback or ...)
 			 when user dragging a window for docking.
@@ -16,37 +16,37 @@ inherit
 	
 feature -- Commands
 
-	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Apply change when user pointer stop dragging. It something changed, result is true.
 		deferred
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Update feedback rectangle when user move pointer.
 		deferred
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Update feedback indicator when user move pointer.
 		deferred
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Clear indicator if pointer is out of area.
 		deferred
 		end
 
-	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If `Current' area will process `a_screen_x', `a_screen_y'?
 		do
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Clear indicator.
 		deferred
 		end
 
-	build_indicator is
+	build_indicator
 			-- Build indicator.
 		deferred
 		end
@@ -68,7 +68,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

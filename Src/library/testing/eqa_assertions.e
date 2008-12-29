@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Universal assertion mechanisms."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Basic operations
 
-	frozen assert (a_tag: STRING; a_condition: BOOLEAN) is
+	frozen assert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -25,7 +25,7 @@ feature -- Basic operations
 			end
 		end
 
-	disassert (a_tag: STRING; a_condition: BOOLEAN) is
+	disassert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert that `a_condition' is false.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -33,14 +33,14 @@ feature -- Basic operations
 			assert (a_tag, not a_condition)
 		end
 
-	on_violation (a_tag: STRING) is
+	on_violation (a_tag: STRING)
 			-- Called when a violation occurred in `assert'.
 		require
 			last_assertion_failed: last_assertion_failed
 		do
 		end
 
-	on_satisfaction (a_tag: STRING) is
+	on_satisfaction (a_tag: STRING)
 			-- Called when no violation occurred in `assert'.
 		require
 			last_assertion_succeeded: not last_assertion_failed

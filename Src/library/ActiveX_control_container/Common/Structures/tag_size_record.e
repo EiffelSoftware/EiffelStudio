@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cx: INTEGER is
+	cx: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_size_cx (item)
 		end
 
-	cy: INTEGER is
+	cy: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_size_cy (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_size
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cx (a_cx: INTEGER) is
+	set_cx (a_cx: INTEGER)
 			-- Set `cx' with `a_cx'.
 		do
 			ccom_tag_size_set_cx (item, a_cx)
 		end
 
-	set_cy (a_cy: INTEGER) is
+	set_cy (a_cy: INTEGER)
 			-- Set `cy' with `a_cy'.
 		do
 			ccom_tag_size_set_cy (item, a_cy)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_size: INTEGER is
+	c_size_of_tag_size: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagSIZE_s.h%"]"
@@ -77,31 +77,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagSIZE)"
 		end
 
-	ccom_tag_size_cx (a_pointer: POINTER): INTEGER is
+	ccom_tag_size_cx (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagSIZE_s_impl.h%"](ecom_control_library::tagSIZE *):EIF_INTEGER"
 		end
 
-	ccom_tag_size_set_cx (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_size_set_cx (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagSIZE_s_impl.h%"](ecom_control_library::tagSIZE *, LONG)"
 		end
 
-	ccom_tag_size_cy (a_pointer: POINTER): INTEGER is
+	ccom_tag_size_cy (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagSIZE_s_impl.h%"](ecom_control_library::tagSIZE *):EIF_INTEGER"
 		end
 
-	ccom_tag_size_set_cy (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_size_set_cy (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagSIZE_s_impl.h%"](ecom_control_library::tagSIZE *, LONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

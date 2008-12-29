@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ image attributes functions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initlization
 
-	make is
+	make
 			-- Creation method
 		local
 			l_result: INTEGER
@@ -31,13 +31,13 @@ feature -- Initlization
 
 feature -- Command
 
-	clear_color_key is
+	clear_color_key
 			-- Clear color key
 		do
 			clear_color_key_with_type ({WEL_GDIP_COLOR_ADJUST_TYPE}.coloradjusttypedefault)
 		end
 
-	clear_color_key_with_type (a_type: INTEGER) is
+	clear_color_key_with_type (a_type: INTEGER)
 			-- Clear color key with `a_type'
 		require
 			valid: (create {WEL_GDIP_COLOR_ADJUST_TYPE}).is_valid (a_type)
@@ -48,7 +48,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	set_color_matrix (a_color_matrix: WEL_COLOR_MATRIX) is
+	set_color_matrix (a_color_matrix: WEL_COLOR_MATRIX)
 			-- Set color matrix to `a_color_matrix'
 		require
 			not_void: a_color_matrix /= Void
@@ -56,7 +56,7 @@ feature -- Command
 			set_color_matrix_with_flag (a_color_matrix, {WEL_GDIP_COLOR_ADJUST_TYPE}.coloradjusttypedefault, {WEL_GDIP_COLOR_MATRIX_FLAGS}.colormatrixflagsdefault)
 		end
 
-	set_color_matrix_with_flag (a_color_matrix: WEL_COLOR_MATRIX; a_color_matrix_adjust_type: INTEGER; a_color_matrix_flags: INTEGER) is
+	set_color_matrix_with_flag (a_color_matrix: WEL_COLOR_MATRIX; a_color_matrix_adjust_type: INTEGER; a_color_matrix_flags: INTEGER)
 			-- Set `a_color_matrix' with `a_color_matrix_flags'
 		require
 			not_void: a_color_matrix /= Void
@@ -71,7 +71,7 @@ feature -- Command
 
 feature -- Destory
 
-	destroy_item is
+	destroy_item
 			-- Destory Gdi+ object.
 		local
 			l_result: INTEGER
@@ -85,7 +85,7 @@ feature -- Destory
 
 feature {NONE} -- C externals
 
-	c_gdip_create_image_attributes (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_image_attributes (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create `a_result_image_attributes'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -110,7 +110,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_dispose_image_attributes (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_dispose_image_attributes (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Dispose `a_image_attributes'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -135,7 +135,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_set_image_attributes_color_keys (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_color_adjust_type: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_set_image_attributes_color_keys (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_color_adjust_type: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Set image attributes color keys.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -163,7 +163,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_set_image_attributes_color_matrix (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_new_color_matrix: POINTER; a_color_adjust_type: INTEGER; a_color_matrix_flag: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_set_image_attributes_color_matrix (a_gdiplus_handle: POINTER; a_image_attributes: POINTER; a_new_color_matrix: POINTER; a_color_adjust_type: INTEGER; a_color_matrix_flag: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Set `a_image_attributes''s color matrix.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -195,7 +195,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

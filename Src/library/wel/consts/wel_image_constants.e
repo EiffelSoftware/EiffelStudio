@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Image constants (Image type)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	Image_bitmap: INTEGER is 0
+	Image_bitmap: INTEGER = 0
 			-- Declared in Windows as IMAGE_BITMAP
 
-	Image_icon: INTEGER is 1
+	Image_icon: INTEGER = 1
 			-- Declared in Windows as IMAGE_ICON
 
-	Image_cursor: INTEGER is 2
+	Image_cursor: INTEGER = 2
 			-- Declared in Windows as IMAGE_CURSOR
 
-	Image_enhmetafile: INTEGER is 3;
+	Image_enhmetafile: INTEGER = 3;
 			-- Declared in Windows as IMAGE_ENHMETAFILE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

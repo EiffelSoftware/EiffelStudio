@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		do
 			if argument_count < 1 then
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	prepare is
+	prepare
 			-- Prepare the first window to be displayed.
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			first_window.show
 		end
 
-	Wizard_title: STRING_GENERAL is
+	Wizard_title: STRING_GENERAL
 			-- Window title for this wizard.
 		once
 			Result := "Wizard Version 1.1"
@@ -59,14 +59,14 @@ feature {NONE} -- Initialization
 			Valid_result: Result /= Void and then not Result.is_empty
 		end
 
-	wizard_factory: WIZARD_FACTORY is
+	wizard_factory: WIZARD_FACTORY
 			-- Factory for current project.
 		deferred
 		ensure
 			wizard_factory_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

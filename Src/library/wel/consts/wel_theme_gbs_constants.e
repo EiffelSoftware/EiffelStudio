@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows XP theme constants for part BP_GROUPBOX."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 		
-	Gbs_normal: INTEGER is 1
+	Gbs_normal: INTEGER = 1
 			-- GBS_NORMAL
 			
-	Gbs_disabled: INTEGER is 2;
+	Gbs_disabled: INTEGER = 2;
 			-- GBS_DISABLED
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

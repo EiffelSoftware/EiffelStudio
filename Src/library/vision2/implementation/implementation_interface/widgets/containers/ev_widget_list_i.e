@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision widget list. Implementation interface."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {EV_ANY_I} -- implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify all children.
 		local
 			loc_cursor: CURSOR
@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- implementation
 
 	interface: EV_WIDGET_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

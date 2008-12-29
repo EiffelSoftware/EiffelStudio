@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General push button implementation"
 	legal: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 
 feature -- Element change
 
-	set_accelerator_action (a_translation: STRING) is
+	set_accelerator_action (a_translation: STRING)
 			-- Set the accerlator action (modifiers and key to use as a shortcut
 			-- in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit conventions.
@@ -27,12 +27,12 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

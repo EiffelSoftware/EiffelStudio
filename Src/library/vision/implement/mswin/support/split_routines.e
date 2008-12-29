@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Drawing routines for split windows"
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Basic routines
 
-	draw_vertical_split (a_dc: WEL_DC; a_x, a_y1, a_y2: INTEGER) is
+	draw_vertical_split (a_dc: WEL_DC; a_x, a_y1, a_y2: INTEGER)
 			-- draw a vertical split at 'a_x' from `a_y1' to `a_y2'
 			-- on `a_dc'
 		require
@@ -52,7 +52,7 @@ feature -- Basic routines
 			a_dc.line (a_x + 5, a_y1, a_x + 5, a_y2)
 		end
 
-	draw_horizontal_split (a_dc: WEL_DC; a_y, a_x1, a_x2: INTEGER) is
+	draw_horizontal_split (a_dc: WEL_DC; a_y, a_x1, a_x2: INTEGER)
 			-- Draw an horizontal split at 'a_y' from `a_x1' to `a_x2'
 			-- on `a_dc'
 		require
@@ -72,7 +72,7 @@ feature -- Basic routines
 			a_dc.line (a_x1, a_y + 5, a_x2, a_y + 5)
 		end
 
-	invert_rectangle (a_dc: WEL_DC; a_left, a_top, a_right, a_bottom: INTEGER) is
+	invert_rectangle (a_dc: WEL_DC; a_left, a_top, a_right, a_bottom: INTEGER)
 			-- Invert the rectangular zone defined by
 			-- `a_left', `a_top', `a_right', `a_bottom'
 			-- on `a_dc'.
@@ -90,7 +90,7 @@ feature -- Basic routines
 
 feature {NONE} -- Implementation
 
-	window_frame_pen: WEL_PEN is
+	window_frame_pen: WEL_PEN
 			-- Pen with the window frame color
 		local
 			color: WEL_COLOR_REF
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			result_exists: Result.exists
 		end
 
-	face_pen: WEL_PEN is
+	face_pen: WEL_PEN
 			-- Pen with the face color
 		local
 			color: WEL_COLOR_REF
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			result_exists: Result.exists
 		end
 	
-	shadow_pen: WEL_PEN is
+	shadow_pen: WEL_PEN
 			-- Pen with the shadow color
 		local
 			color: WEL_COLOR_REF
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			result_exists: Result.exists
 		end
 
-	highlight_pen: WEL_PEN is
+	highlight_pen: WEL_PEN
 			-- Pen with the highlight color
 		local
 			color: WEL_COLOR_REF
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			result_exists: Result.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

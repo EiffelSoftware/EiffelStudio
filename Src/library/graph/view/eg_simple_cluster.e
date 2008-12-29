@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A very simple implementation of a EG_CLUSTER_FIGURE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {EG_SIMPLE_CLUSTER}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an empty cluster.
 		do
 			Precursor {EG_CLUSTER_FIGURE}
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			extend (rectangle)
 		end
 
-	make_with_model (a_model: EG_CLUSTER) is
+	make_with_model (a_model: EG_CLUSTER)
 			-- Create a cluster using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -50,37 +50,37 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		do
 			Result := rectangle.x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		do
 			Result := rectangle.y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		do
 			Result := rectangle.bounding_box
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 			Result := rectangle.height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		do
 			Result := rectangle.width
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_CLUSTER"
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Element change
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		local
 			m: DOUBLE
@@ -151,7 +151,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of current may have changed.
 		local
 			l_min_size: like minimum_size
@@ -167,7 +167,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -183,13 +183,13 @@ feature {NONE} -- Implementation
 	rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle visualising the border of `Current'.
 
-	number_of_figures: INTEGER is 2
+	number_of_figures: INTEGER = 2
 			-- number of figures used to visialize `Current'.
 			-- (`name_label' and `rectangle')
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 invariant
 	rectangle_not_void: rectangle /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

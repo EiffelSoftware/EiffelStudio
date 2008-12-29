@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio button. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create radio button.
 		do
 			base_make (an_interface)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			enable_select
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 	
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
@@ -64,7 +64,7 @@ feature -- Status report
 	
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
@@ -74,14 +74,14 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	widget_object (a_list: POINTER): POINTER is
+	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
 			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
 			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (Result)
 		end
 
-	radio_group: POINTER is
+	radio_group: POINTER
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_radio_button_group (visual_widget)
 		end
@@ -90,7 +90,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

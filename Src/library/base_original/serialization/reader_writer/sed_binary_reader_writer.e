@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to serialize/deserialize data using a buffer in binary format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ inherit
 
 feature -- Status report
 
-	is_ready_for_reading: BOOLEAN is
+	is_ready_for_reading: BOOLEAN
 			-- Is Current ready for future read operations?
 		do
 			Result := is_for_reading
 		end
 
-	is_ready_for_writing: BOOLEAN is
+	is_ready_for_writing: BOOLEAN
 			-- Is Current ready for future write operations?
 		do
 			Result := not is_for_reading
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_for_reading is
+	set_for_reading
 			-- Set current for reading.
 		do
 			is_for_reading := True
@@ -43,7 +43,7 @@ feature -- Settings
 			is_for_reading: is_for_reading
 		end
 
-	set_for_writing is
+	set_for_writing
 			-- Set current for writing.
 		do
 			is_for_reading := False
@@ -53,7 +53,7 @@ feature -- Settings
 
 feature -- Access
 
-	read_natural_8: NATURAL_8 is
+	read_natural_8: NATURAL_8
 			-- Read next natural_8
 		local
 			l_pos: INTEGER
@@ -65,7 +65,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_natural_16: NATURAL_16 is
+	read_natural_16: NATURAL_16
 			-- Read next natural_16
 		local
 			l_pos: INTEGER
@@ -81,7 +81,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_natural_32: NATURAL_32 is
+	read_natural_32: NATURAL_32
 			-- Read next natural_32
 		local
 			l_pos: INTEGER
@@ -97,7 +97,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_natural_64: NATURAL_64 is
+	read_natural_64: NATURAL_64
 			-- Read next natural_64
 		local
 			l_pos: INTEGER
@@ -113,7 +113,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_integer_8: INTEGER_8 is
+	read_integer_8: INTEGER_8
 			-- Read next integer_8
 		do
 			check
@@ -122,7 +122,7 @@ feature -- Access
 			Result := read_natural_8.as_integer_8
 		end
 
-	read_integer_16: INTEGER_16 is
+	read_integer_16: INTEGER_16
 			-- Read next integer_16
 		do
 			check
@@ -131,7 +131,7 @@ feature -- Access
 			Result := read_natural_16.as_integer_16
 		end
 
-	read_integer_32: INTEGER is
+	read_integer_32: INTEGER
 			-- Read next integer_32
 		do
 			check
@@ -140,7 +140,7 @@ feature -- Access
 			Result := read_natural_32.as_integer_32
 		end
 
-	read_integer_64: INTEGER_64 is
+	read_integer_64: INTEGER_64
 			-- Read next integer_64
 		do
 			check
@@ -149,7 +149,7 @@ feature -- Access
 			Result := read_natural_64.as_integer_64
 		end
 
-	read_real_32: REAL is
+	read_real_32: REAL
 			-- Read next real_32
 		local
 			l_pos: INTEGER_32
@@ -165,7 +165,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_real_64: DOUBLE is
+	read_real_64: DOUBLE
 			-- Read next real_64
 		local
 			l_pos: INTEGER_32
@@ -181,7 +181,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_pointer: POINTER is
+	read_pointer: POINTER
 			-- Read next pointer
 		local
 			l_val32: NATURAL_32
@@ -220,7 +220,7 @@ feature -- Access
 
 feature -- Element change
 
-	write_natural_8 (v: NATURAL_8) is
+	write_natural_8 (v: NATURAL_8)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -232,7 +232,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_natural_16 (v: NATURAL_16) is
+	write_natural_16 (v: NATURAL_16)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -248,7 +248,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_natural_32 (v: NATURAL_32) is
+	write_natural_32 (v: NATURAL_32)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -264,7 +264,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_natural_64 (v: NATURAL_64) is
+	write_natural_64 (v: NATURAL_64)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -280,7 +280,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_integer_8 (v: INTEGER_8) is
+	write_integer_8 (v: INTEGER_8)
 			-- Write `v'.
 		do
 			check
@@ -289,7 +289,7 @@ feature -- Element change
 			write_natural_8 (v.as_natural_8)
 		end
 
-	write_integer_16 (v: INTEGER_16) is
+	write_integer_16 (v: INTEGER_16)
 			-- Write `v'.
 		do
 			check
@@ -298,7 +298,7 @@ feature -- Element change
 			write_natural_16 (v.as_natural_16)
 		end
 
-	write_integer_32 (v: INTEGER) is
+	write_integer_32 (v: INTEGER)
 			-- Write `v'.
 		do
 			check
@@ -307,7 +307,7 @@ feature -- Element change
 			write_natural_32 (v.as_natural_32)
 		end
 
-	write_integer_64 (v: INTEGER_64) is
+	write_integer_64 (v: INTEGER_64)
 			-- Write `v'.
 		do
 			check
@@ -316,7 +316,7 @@ feature -- Element change
 			write_natural_64 (v.as_natural_64)
 		end
 
-	write_real_32 (v: REAL) is
+	write_real_32 (v: REAL)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -332,7 +332,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_real_64 (v: DOUBLE) is
+	write_real_64 (v: DOUBLE)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -348,7 +348,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_pointer (v: POINTER) is
+	write_pointer (v: POINTER)
 			-- Write `v'.
 		local
 			l_val32: NATURAL_32
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation: Status report
 	buffer_position: INTEGER
 			-- Position in `buffer' for next read/write operation
 
-	default_buffer_size: INTEGER is 262144
+	default_buffer_size: INTEGER = 262144
 			-- Default size for `buffer'
 
 	is_little_endian_storable: BOOLEAN
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation: Status report
 
 feature {NONE} -- Buffer update
 
-	check_buffer (n: INTEGER) is
+	check_buffer (n: INTEGER)
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
 			-- Otherwise, read/write to `medium' to free some space and reset `buffer_position'
 			-- to an appropriate position.
@@ -413,7 +413,7 @@ invariant
 	buffer_position_non_negative: buffer_position >= 0
 	stored_pointer_bytes_non_negative: stored_pointer_bytes >= 0
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

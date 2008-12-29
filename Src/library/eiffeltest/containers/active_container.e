@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Containers that have a current position"
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class ACTIVE_CONTAINER [G] inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require
 			not_empty: not is_empty
@@ -22,7 +22,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): G
 			-- `i'-th item
 		require
 			not_empty: not is_empty
@@ -32,14 +32,14 @@ feature -- Access
 			index_unchanged: index = old index
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current index
 		deferred
 		end
 	
 feature -- Status setting
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Go to `i'-th position.
 		require
 			not_empty: not is_empty
@@ -53,7 +53,7 @@ invariant
 
 	index_in_range: not is_empty implies valid_index (index)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

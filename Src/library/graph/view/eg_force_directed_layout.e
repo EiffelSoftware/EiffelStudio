@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			EG_FORCE_DIRECTED_LAYOUT is a force directed layout using a spring particle system and
 			a Barnes and Hut solver. The complexity is therfore O(n log n) where n is the number of
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_FORCE_DIRECTED_LAYOUT
 		do
 			Precursor {EG_LAYOUT}
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Element change
 
-	preset (a_level: INTEGER) is
+	preset (a_level: INTEGER)
 			-- Rest the setting accordingly to `a_level', which is one of:
 			-- 1: tight, 2: normal, 3: loose
 		do
@@ -113,7 +113,7 @@ feature -- Element change
 			end
 		end
 
-	set_move_threshold (d: INTEGER) is
+	set_move_threshold (d: INTEGER)
 			-- Set `move_threshold' to `d'.
 		do
 			move_threshold := d
@@ -121,7 +121,7 @@ feature -- Element change
 			set: move_threshold = d
 		end
 
-	set_theta (a_theta: INTEGER) is
+	set_theta (a_theta: INTEGER)
 			-- Set `theta' to `a_theta'.
 		require
 			valid_value: a_theta >= 0 and a_theta <= 100
@@ -129,7 +129,7 @@ feature -- Element change
 			theta := a_theta
 		end
 
-	set_center_attraction (a_value: INTEGER) is
+	set_center_attraction (a_value: INTEGER)
 			-- Set 'center_attraction' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -139,7 +139,7 @@ feature -- Element change
 			set: center_attraction = a_value
 		end
 
-	set_stiffness (a_value: INTEGER) is
+	set_stiffness (a_value: INTEGER)
 			-- Set 'stiffness' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -149,7 +149,7 @@ feature -- Element change
 			set: stiffness = a_value
 		end
 
-	set_electrical_repulsion (a_value: INTEGER) is
+	set_electrical_repulsion (a_value: INTEGER)
 			-- Set 'electrical_repulsion' value in percentage of maximum.
 		require
 			valid_value: a_value >= 0 and then a_value <= 100
@@ -159,7 +159,7 @@ feature -- Element change
 			set: electrical_repulsion = a_value
 		end
 
-	set_center (ax, ay: INTEGER) is
+	set_center (ax, ay: INTEGER)
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
 			center_x := ax
@@ -170,7 +170,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	reset is
+	reset
 			-- Set `is_stopped' to False.
 		do
 			is_stopped := False
@@ -179,7 +179,7 @@ feature -- Basic operations
 			set: not is_stopped
 		end
 
-	stop is
+	stop
 			-- Set `is_stopped' to True, call `stop_actions'.
 		do
 			is_stopped := True
@@ -188,7 +188,7 @@ feature -- Basic operations
 			set: is_stopped
 		end
 
-	layout is
+	layout
 			-- Arrange the elements in `graph'.
 		do
 			if not is_stopped then
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 	iterations: INTEGER
 			-- Number of iterations
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			l_item: EG_LINKABLE_FIGURE
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recursive_energy (a_node: EG_LINKABLE_FIGURE; solver: EG_SPRING_ENERGY) is
+	recursive_energy (a_node: EG_LINKABLE_FIGURE; solver: EG_SPRING_ENERGY)
 			-- Calculate spring energy for `a_node'
 		local
 			i: INTEGER
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_PARTICLE is
+	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_PARTICLE
 			-- Create a new spring particle solver for `particles' and initialize it.
 		require
 			particles_exist: particles /= Void
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_ENERGY is
+	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EG_SPRING_ENERGY
 			-- Create a new spring energy solver for `particles' and initialize it.
 		require
 			particles_exist: particles /= Void
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

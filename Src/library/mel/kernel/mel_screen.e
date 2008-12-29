@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the X screen."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_screen_ptr: POINTER; a_display: MEL_DISPLAY) is
+	make (a_screen_ptr: POINTER; a_display: MEL_DISPLAY)
 			-- Create a screen according to a C pointer.
 		require
 			screen_ptr_not_null: a_screen_ptr /= default_pointer;
@@ -48,13 +48,13 @@ feature -- Access
 	display: MEL_DISPLAY;
 			-- Associated display
 
-	root_window: POINTER is
+	root_window: POINTER
 			-- Root window from a screen
 		do
 			Result := root_window_of_screen (handle)
 		end;
 
-	planes: INTEGER is
+	planes: INTEGER
 			-- Number of plane of the root window
 		require
 			is_valid: is_valid
@@ -64,7 +64,7 @@ feature -- Access
 			planes_large_enough: Result >= 0
 		end;
 
-	default_gc: MEL_GC is
+	default_gc: MEL_GC
 			-- Default graphic context for current screen
 		require
 			is_valid: is_valid
@@ -73,7 +73,7 @@ feature -- Access
 					(display, default_gc_of_screen (handle))
 		end;
 
-	white_pixel: MEL_PIXEL is
+	white_pixel: MEL_PIXEL
 			-- White pixel of this screen
 		require
 			is_valid: is_valid
@@ -86,7 +86,7 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	black_pixel: MEL_PIXEL is
+	black_pixel: MEL_PIXEL
 			-- Black pixel of this screen
 		require
 			is_valid: is_valid
@@ -99,7 +99,7 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	default_colormap: MEL_COLORMAP is
+	default_colormap: MEL_COLORMAP
 			-- Default color map for Current screen
 		require
 			is_valid: is_valid
@@ -107,13 +107,13 @@ feature -- Access
 			create Result.make_default (Current)
 		end;
 
-	default_depth: INTEGER is
+	default_depth: INTEGER
 			-- Default depth of screen
 		do
 			Result := default_depth_of_screen (handle)
 		end;
 
-	widgets_pointed: LINKED_LIST [POINTER] is
+	widgets_pointed: LINKED_LIST [POINTER]
 			-- List of C Widgets currently pointed by the mouse pointer
 			-- (Order is based from parent to child)
 		require
@@ -135,7 +135,7 @@ feature -- Access
 			end;
 		end;
 
-	mel_widgets_pointed: LINKED_LIST [MEL_OBJECT] is
+	mel_widgets_pointed: LINKED_LIST [MEL_OBJECT]
 			-- List of mel widgets currently pointed by the mouse pointer
 			-- (Order is based from parent to child)
 		require
@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end;
 
-	query_button_pointer (i: INTEGER): BOOLEAN is
+	query_button_pointer (i: INTEGER): BOOLEAN
 			-- Query the state of the `i' th button.
 		require
 			is_valid: is_valid;
@@ -176,7 +176,7 @@ feature -- Access
 
 feature -- Measurement
 
-	x: INTEGER is
+	x: INTEGER
 			-- Current absolute horizontal coordinate of the mouse
 		require
 			is_valid: is_valid
@@ -187,7 +187,7 @@ feature -- Measurement
 			position_small_enough: Result < width
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Current absolute vertical coordinate of the mouse
 		require
 			is_valid: is_valid
@@ -198,7 +198,7 @@ feature -- Measurement
 			position_small_enough: Result < height
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixel of the screen
 		require
 			is_valid: is_valid
@@ -208,7 +208,7 @@ feature -- Measurement
 			width_large_enough: Result >= 0
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixel of the screen
 		require
 			is_valid: is_valid
@@ -218,7 +218,7 @@ feature -- Measurement
 			height_large_enough: Result >= 0
 		end;
 
-	width_mm: INTEGER is
+	width_mm: INTEGER
 			-- Width in millimeters of the screen
 		require
 			is_valid: is_valid
@@ -228,7 +228,7 @@ feature -- Measurement
 			width_mm_large_enough: Result >= 0
 		end;
 
-	height_mm: INTEGER is
+	height_mm: INTEGER
 			-- Height in millimeters of the screen
 		require
 			is_valid: is_valid
@@ -240,7 +240,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the screen valid?
 		do
 			Result := display.is_valid
@@ -248,7 +248,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	display_handle: POINTER is
+	display_handle: POINTER
 			-- Associated C handle for the display
 		do	
 			Result := display.handle
@@ -256,104 +256,104 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	default_depth_of_screen (screen_ptr: POINTER): INTEGER is
+	default_depth_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"DefaultDepthOfScreen"
 		end;
 
-	root_window_of_screen (screen_ptr: POINTER): POINTER is
+	root_window_of_screen (screen_ptr: POINTER): POINTER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
 		alias
 			"RootWindowOfScreen"
 		end;
 
-	width_of_screen (screen_ptr: POINTER): INTEGER is
+	width_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"WidthOfScreen"
 		end;
 
-	height_of_screen (screen_ptr: POINTER): INTEGER is
+	height_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"HeightOfScreen"
 		end;
 
-	width_mm_of_screen (screen_ptr: POINTER): INTEGER is
+	width_mm_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"WidthMMOfScreen"
 		end;
 
-	height_mm_of_screen (screen_ptr: POINTER): INTEGER is
+	height_mm_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"HeightMMOfScreen"
 		end;
 
-	planes_of_screen (screen_ptr: POINTER): INTEGER is
+	planes_of_screen (screen_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_INTEGER"
 		alias
 			"PlanesOfScreen"
 		end;
 
-	white_pixel_of_screen (screen_ptr: POINTER): POINTER is
+	white_pixel_of_screen (screen_ptr: POINTER): POINTER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
 		alias
 			"WhitePixelOfScreen"
 		end;
 
-	black_pixel_of_screen (screen_ptr: POINTER): POINTER is
+	black_pixel_of_screen (screen_ptr: POINTER): POINTER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
 		alias
 			"BlackPixelOfScreen"
 		end;
 
-	default_gc_of_screen (screen_ptr: POINTER): POINTER is
+	default_gc_of_screen (screen_ptr: POINTER): POINTER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
 		alias
 			"DefaultGCOfScreen"
 		end;
 
-	xt_window_to_widget (a_display: POINTER; a_target: POINTER): POINTER is
+	xt_window_to_widget (a_display: POINTER; a_target: POINTER): POINTER
 		external
 			"C (Display *, Window): EIF_POINTER |  <X11/Intrinsic.h>"
 		alias
 			"XtWindowToWidget"
 		end;
 
-	x_query_button_pointer (dp, sp: POINTER; pos: INTEGER): BOOLEAN is
+	x_query_button_pointer (dp, sp: POINTER; pos: INTEGER): BOOLEAN
 		external
 			"C"
 		end;
 
-	x_query_y_pointer (dp, sp: POINTER): INTEGER is
+	x_query_y_pointer (dp, sp: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	x_query_x_pointer (dp, sp: POINTER): INTEGER is
+	x_query_x_pointer (dp, sp: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	x_query_window_pointer (dspl_pointer: POINTER; wndw: POINTER): POINTER is
+	x_query_window_pointer (dspl_pointer: POINTER; wndw: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

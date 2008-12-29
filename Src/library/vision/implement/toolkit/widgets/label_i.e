@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General label implementation"
 	legal: "See notice at end of class.";
@@ -18,43 +18,43 @@ inherit
 	
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of current label
 		deferred
 		end
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current label to recompute its  size according to
 			-- some changes on its value.
 		deferred
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid current label to recompute its size according to
 			-- some changes on its value.
 		deferred
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 		-- Set text alignment of current label to right.
 		deferred
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment of current label to center.
 		deferred
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment of current label to left.
 		deferred
 		end;
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set text of current label to `a_text'.
 		require
 			not_a_text_void: a_text /= Void
@@ -63,7 +63,7 @@ feature -- Element change
 			set: text.is_equal (a_text)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

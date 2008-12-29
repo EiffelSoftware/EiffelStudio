@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,21 +25,21 @@ feature -- Access
 
 feature -- Display updates
 
-	full_project is
+	full_project
 			-- Project entire area.
 		do
 			world.update
 			Precursor {EV_MODEL_BUFFER_PROJECTOR}
 		end
 		
-	project is
+	project
 			-- Make a standard projection of world on device.
 		do
 			world.update
 			Precursor {EV_MODEL_BUFFER_PROJECTOR}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

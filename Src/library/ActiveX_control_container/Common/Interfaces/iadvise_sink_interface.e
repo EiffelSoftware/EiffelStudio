@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD): BOOLEAN is
+	on_data_change_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD): BOOLEAN
 			-- User-defined preconditions for `on_data_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_view_change_user_precondition (dw_aspect: INTEGER; lindex: INTEGER): BOOLEAN is
+	on_view_change_user_precondition (dw_aspect: INTEGER; lindex: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_view_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_rename_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN is
+	on_rename_user_precondition (pmk: IMONIKER_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `on_rename'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_save_user_precondition: BOOLEAN is
+	on_save_user_precondition: BOOLEAN
 			-- User-defined preconditions for `on_save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_close_user_precondition: BOOLEAN is
+	on_close_user_precondition: BOOLEAN
 			-- User-defined preconditions for `on_close'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
@@ -63,7 +63,7 @@ feature -- Basic Operations
 
 		end
 
-	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
+	on_view_change (dw_aspect: INTEGER; lindex: INTEGER)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
@@ -73,7 +73,7 @@ feature -- Basic Operations
 
 		end
 
-	on_rename (pmk: IMONIKER_INTERFACE) is
+	on_rename (pmk: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pmk' [in].  
 		require
@@ -82,7 +82,7 @@ feature -- Basic Operations
 
 		end
 
-	on_save is
+	on_save
 			-- No description available.
 		require
 			on_save_user_precondition: on_save_user_precondition
@@ -90,7 +90,7 @@ feature -- Basic Operations
 
 		end
 
-	on_close is
+	on_close
 			-- No description available.
 		require
 			on_close_user_precondition: on_close_user_precondition
@@ -98,7 +98,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

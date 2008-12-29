@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Default widget for viewing and editing ARRAY preferences for which there must be only one selected value.
 		]"
@@ -29,7 +29,7 @@ feature -- Access
 	change_item_widget: EV_GRID_CHOICE_ITEM
 			-- Widget to change the value of this preference.
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identfier
 		do
 			Result := "COMBO"
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_preference (new_preference: like preference) is
+	set_preference (new_preference: like preference)
 			-- Set the preference.
 		require else
 			preference_is_choice: new_preference.is_choice
@@ -48,13 +48,13 @@ feature -- Status Setting
 			end
 		end
 
-	show is
+	show
 			-- Show the widget in its editable state
 		do
 			activate_combo
 		end
 
-	set_displayed_value (a_mapping: like value_mapping) is
+	set_displayed_value (a_mapping: like value_mapping)
 			-- Set values for display.
 			-- If values are not found, original ones are displayed.
 		do
@@ -65,7 +65,7 @@ feature -- Status Setting
 
 feature {NONE} -- Command
 
-	update_changes is
+	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.
 		local
 			l_value,
@@ -102,12 +102,12 @@ feature {NONE} -- Command
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference is
+	update_preference
 			--	Update preference.	
 		do
 		end
 
-	refresh is
+	refresh
 			-- Reset.
 		do
 			Precursor {PREFERENCE_WIDGET}
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	preference: ARRAY_PREFERENCE
 			-- Actual preference.
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 		end
 
-	activate_combo is
+	activate_combo
 			-- Activate the combo
 		do
 			if preference.selected_index > 0 then
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	displayed_values: ARRAY [STRING_GENERAL] is
+	displayed_values: ARRAY [STRING_GENERAL]
 			-- Displayed values
 			-- If `value_mapping' is Void or empty, original values are used.
 		local
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	displayed_selected_value: STRING_GENERAL is
+	displayed_selected_value: STRING_GENERAL
 			-- Displayed value
 		do
 			if value_mapping /= Void then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			-- Key: values
 			-- Item: strings displayed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper for extracting locale information from the NLS get_localeinfo function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Interface
 
-	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER is
+	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER
 			--
 		external
 			"C inline use <windows.h>"
@@ -26,7 +26,7 @@ feature -- Interface
 			]"
 		end
 
-	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32 is
+	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32
 			--
 		local
 			pointer: POINTER
@@ -38,7 +38,7 @@ feature -- Interface
 
 feature {NONE} -- C helper
 
-	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): POINTER is
+	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): POINTER
 			--
 		external
 			"C inline use <windows.h>"
@@ -53,7 +53,7 @@ feature {NONE} -- C helper
 
 feature {NONE} -- utf16-LE (aka "wide string") handling
 
-	pointer_to_string(ptr: POINTER): STRING_32 is
+	pointer_to_string(ptr: POINTER): STRING_32
 			-- takes a pointer to a utf16-LE string (the LE is important!)
 			-- and returns the corresponding STRING_32 by means of Horrible Things
 		require
@@ -105,14 +105,14 @@ feature {NONE} -- utf16-LE (aka "wide string") handling
 
 		end
 
-	c_wcslen (ptr: POINTER): INTEGER is
+	c_wcslen (ptr: POINTER): INTEGER
 		external
 			"C (void *): EIF_INTEGER| <string.h>"
 		alias
 			"wcslen"
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

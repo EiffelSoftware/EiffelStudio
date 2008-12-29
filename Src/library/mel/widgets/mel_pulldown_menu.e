@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN used as a pulldown menu pane."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_ROW_COLUMN) is
+	make (a_name: STRING; a_parent: MEL_ROW_COLUMN)
 			-- Create a motif pulldown menu in `a_parent'.
 		require
 			name_exists: a_name /= Void;
@@ -69,7 +69,7 @@ feature -- Initialization
 					a_parent.is_menu_option) implies parent.parent = a_parent;
 		end;
 
-	build_pulldown_menu (a_name: STRING; a_parent: MEL_ROW_COLUMN) is
+	build_pulldown_menu (a_name: STRING; a_parent: MEL_ROW_COLUMN)
 			-- Create a pulldown with `a_parent' and automatically
 			-- create a cascade with name `a_name' and parent `a_parent'.
 			-- Also, attach pulldown to the cascade button.
@@ -92,7 +92,7 @@ feature -- Initialization
 					a_parent.is_menu_option) implies parent.parent = a_parent;
 		end;
 
-	build_pulldown_menu_gadget (a_name: STRING; a_parent: MEL_ROW_COLUMN) is
+	build_pulldown_menu_gadget (a_name: STRING; a_parent: MEL_ROW_COLUMN)
 			-- Create a pulldown with `a_parent' and automatically
 			-- create a cascade gadget with name `a_name' and parent `a_parent'.
 			-- Also, attach pulldown to the cascade gadget button.
@@ -122,14 +122,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	xm_create_pulldown_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_pulldown_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreatePulldownMenu"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

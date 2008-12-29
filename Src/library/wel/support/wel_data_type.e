@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Conversion to and from Windows data type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Conversion from Eiffel to Windows
 
-	frozen to_lparam (i: INTEGER): POINTER is
+	frozen to_lparam (i: INTEGER): POINTER
 			-- Convert integer value `i' in a valid `LPARAM' value.
 		external
 			"C inline use <windows.h>"
@@ -18,7 +18,7 @@ feature -- Conversion from Eiffel to Windows
 			"(EIF_POINTER) (LPARAM) $i"
 		end
 
-	frozen to_wparam (i: INTEGER): POINTER is
+	frozen to_wparam (i: INTEGER): POINTER
 			-- Convert integer value `i' in a valid `WPARAM' value.
 		external
 			"C inline use <windows.h>"
@@ -26,7 +26,7 @@ feature -- Conversion from Eiffel to Windows
 			"(EIF_POINTER) (WPARAM) $i"
 		end
 
-	frozen to_lresult (i: INTEGER): POINTER is
+	frozen to_lresult (i: INTEGER): POINTER
 			-- Convert integer value `i' in a valid LRESULT value.
 		external
 			"C inline use <windows.h>"
@@ -34,7 +34,7 @@ feature -- Conversion from Eiffel to Windows
 			"(EIF_POINTER) (LRESULT) $i"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

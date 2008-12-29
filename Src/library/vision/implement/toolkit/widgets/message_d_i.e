@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General message dialog implementation"
 	legal: "See notice at end of class.";
@@ -15,54 +15,54 @@ inherit
 
 feature -- Status setting
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set message alignment to beginning.
 		deferred
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set message alignment to center.
 		deferred
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set message alignment to right.
 		deferred
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		deferred
 		end;
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		deferred
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		deferred
 		end
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		deferred
 		end;
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		deferred
 		end;
 		
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		deferred
 		end;
 
 feature -- Element change
 
-	set_help_label (a_label: STRING) is
+	set_help_label (a_label: STRING)
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		require
@@ -70,14 +70,14 @@ feature -- Element change
 		deferred
 		end;
 
-	set_message (a_message: STRING) is
+	set_message (a_message: STRING)
 			-- Set `a_message' as message.
 		require
 			not_message_void: a_message /= Void
 		deferred
 		end;
 
-	set_ok_label (a_label: STRING) is
+	set_ok_label (a_label: STRING)
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		require
@@ -85,7 +85,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_cancel_label (a_label: STRING) is
+	set_cancel_label (a_label: STRING)
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		require
@@ -93,7 +93,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -101,7 +101,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
@@ -109,7 +109,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
@@ -119,7 +119,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -127,7 +127,7 @@ feature -- Removal
 		deferred
 		end;
 	
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
@@ -135,7 +135,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
@@ -145,13 +145,13 @@ feature -- Removal
 
 feature -- Display update
 
-    update_display is
+    update_display
 			-- Updates the display of all the windows in the application	
 			-- Windows implementation does not do anything
         deferred
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

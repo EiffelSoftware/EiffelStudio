@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ inherit
 
 feature -- Status setting
 
-   	destroy (wid_list: LINKED_LIST [WIDGET]) is
+   	destroy (wid_list: LINKED_LIST [WIDGET])
     			-- Destroy screen widget implementation and all
     			-- screen widget implementations of its children
     			-- contained in wid_list
@@ -58,7 +58,7 @@ feature -- Status setting
 			end
 		end
 
-	realize is
+	realize
 			-- Realize current widget
 		do
 			if not realized then
@@ -77,7 +77,7 @@ feature -- Status setting
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current widget.
 		local
 			call_configure_action: BOOLEAN
@@ -108,7 +108,7 @@ feature -- Status setting
 			end
 		end
 
-	set_iconic_state is
+	set_iconic_state
 			-- Set start state of the application to be iconic.
 		do
 			private_iconic_state := true
@@ -117,7 +117,7 @@ feature -- Status setting
 			end
 		end
 
-	set_icon_name (a_name: STRING) is
+	set_icon_name (a_name: STRING)
 			-- Set `icon_name' to `a_name'.
 		do
 			icon_name := a_name.twin
@@ -128,7 +128,7 @@ feature -- Status setting
 			end
 		end
 
-	set_normal_state is
+	set_normal_state
 			-- Set start state of the application to be normal.
 		do
 			private_iconic_state := false
@@ -137,7 +137,7 @@ feature -- Status setting
 			end
 		end
 
-	set_maximized_state is
+	set_maximized_state
 			-- Set start state if the application to be maximized.
 		do
 			private_iconic_state := false
@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Can the user close the window?
 			-- Performs user action
 		do
@@ -161,7 +161,7 @@ feature -- Status report
 			-- Short form of application name to be displayed
 			-- by the window manager when application is iconified
 
-	is_iconic_state: BOOLEAN is
+	is_iconic_state: BOOLEAN
 			-- Does application start in iconic state?
 		do
 			if exists then
@@ -171,7 +171,7 @@ feature -- Status report
 			end
 		end
 
-	is_maximized_state: BOOLEAN is
+	is_maximized_state: BOOLEAN
 			-- Does application start in maximized state?
 		do
 			if exists then
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			-- Storage for title before an iconise action
 			--| it will be changed to icon_name
 
-	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		local
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON;
 			-- Icon for top window
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the window
 		do
 			Result := Ws_overlappedwindow
@@ -243,19 +243,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	null_class_icon: WEL_NULL_ICON is
+	null_class_icon: WEL_NULL_ICON
 			-- Icon for drawing icon
 		once
 			create Result
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionTop"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

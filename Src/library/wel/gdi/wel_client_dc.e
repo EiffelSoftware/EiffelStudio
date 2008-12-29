@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window's client area device context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: WEL_WINDOW) is
+	make (a_window: WEL_WINDOW)
 			-- Makes a DC associated with `a_window'
 		require
 			a_window_not_void: a_window /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		do
 			check
@@ -49,7 +49,7 @@ feature -- Basic operations
 			item := cwin_get_dc (hwindow)
 		end
 
-	release is
+	release
 			-- Release the device context
 		local
 			a_default_pointer: POINTER
@@ -63,7 +63,7 @@ feature -- Basic operations
 			item := a_default_pointer
 		end
 
-	quick_release is
+	quick_release
 			-- Release the device context
 		local
 			a_default_pointer: POINTER
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Delete the current device context.
 		local
 			a_default_pointer: POINTER	-- Default_pointer
@@ -97,7 +97,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

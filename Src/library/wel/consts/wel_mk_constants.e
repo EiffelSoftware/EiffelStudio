@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mouse and Key (MK) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,22 +10,22 @@ class
 
 feature -- Access
 
-	Mk_control: INTEGER is 8
+	Mk_control: INTEGER = 8
 			-- Declared in Windows as MK_CONTROL
 
-	Mk_lbutton: INTEGER is 1
+	Mk_lbutton: INTEGER = 1
 			-- Declared in Windows as MK_LBUTTON
 
-	Mk_mbutton: INTEGER is 16
+	Mk_mbutton: INTEGER = 16
 			-- Declared in Windows as MK_MBUTTON
 
-	Mk_rbutton: INTEGER is 2
+	Mk_rbutton: INTEGER = 2
 			-- Declared in Windows as MK_RBUTTON
 
-	Mk_shift: INTEGER is 4;
+	Mk_shift: INTEGER = 4;
 			-- Declared in Windows as MK_SHIFT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

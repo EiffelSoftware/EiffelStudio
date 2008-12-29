@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text component. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,14 +29,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			wel_set_font ((create {WEL_SHARED_FONTS}).gui_font)
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Called after creation. Set current size and
 			-- notify parent.
 		do
@@ -45,18 +45,18 @@ feature {NONE} -- Initialization
 				total_vertical_padding)
 		end
 
-	total_vertical_padding: INTEGER is 9
+	total_vertical_padding: INTEGER = 9
 		-- Number of pixels to be added to height of font used internally,
 		-- to give us minimum height of `Current'.
 
-	internal_font_height: INTEGER is
+	internal_font_height: INTEGER
 			-- `Result' is height of font used by `Current'.
 		deferred
 		end
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is text editable?
 		do
 			Result := not read_only
@@ -64,19 +64,19 @@ feature -- Status report
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of caret.
 		do
 			Result := internal_caret_position + 1
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of first character selected.
 		do
 			Result := wel_selection_start + 1
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of last character selected.
 		do
 			Result := wel_selection_end
@@ -84,7 +84,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 
 feature {EV_ANY_I}-- Status setting
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 				-- If `flag' then make `Current' editable else
 				-- make `Current' component read-only.
 			do
@@ -95,7 +95,7 @@ feature {EV_ANY_I}-- Status setting
 				end
 			end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
@@ -104,13 +104,13 @@ feature {EV_ANY_I}-- Status setting
 			internal_set_caret_position (pos - 1)
 		end
 
-	set_capacity (value: INTEGER) is
+	set_capacity (value: INTEGER)
 			-- Make `value' new maximal length in characters of text.
 		do
 			set_text_limit (value)
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Return maximum number of characters `Current' may hold.
 		do
 			Result := get_text_limit
@@ -118,7 +118,7 @@ feature {EV_ANY_I}-- Status setting
 
 feature {EV_ANY_I}-- element change
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at `caret_position'.
 		local
 			temp_text: STRING_32
@@ -135,7 +135,7 @@ feature {EV_ANY_I}-- element change
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	append_text (txt:STRING_GENERAL) is
+	append_text (txt:STRING_GENERAL)
 			-- Append 'txt' to text of `Current'.
 		local
 			temp_text: STRING_32
@@ -148,7 +148,7 @@ feature {EV_ANY_I}-- element change
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	prepend_text (txt: STRING_GENERAL) is
+	prepend_text (txt: STRING_GENERAL)
 			-- Prepend 'txt' to text of `Current'.
 		local
 			temp_text: STRING_32
@@ -161,7 +161,7 @@ feature {EV_ANY_I}-- element change
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	maximum_character_width: INTEGER is
+	maximum_character_width: INTEGER
 			-- `Result' is width of widest character (W), when displayed.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -178,7 +178,7 @@ feature {EV_ANY_I}-- element change
 
 feature {EV_ANY_I} -- Resizing
 
-	set_minimum_width_in_characters (nb: INTEGER) is
+	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make a minimum of `nb' characters visible on one line.
 		do
 			set_minimum_width (nb * maximum_character_width)
@@ -186,7 +186,7 @@ feature {EV_ANY_I} -- Resizing
 
 feature -- Basic operation
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) text between
 			-- 'start_pos' and 'end_pos'
 		local
@@ -202,7 +202,7 @@ feature -- Basic operation
 			set_selection (actual_start, actual_end)
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert string which is in Clipboard at
 			-- `index' postion in text.
 			-- If Clipboard is empty, it does nothing.
@@ -219,74 +219,74 @@ feature -- Basic operation
 			end
 		end
 
-	wel_set_font (a_wel_font: WEL_FONT) is
+	wel_set_font (a_wel_font: WEL_FONT)
 			-- Assign `a_wel_font' to font of `Current'.
 		deferred
 		end
 
 feature {NONE} -- Deferred features
 
-	internal_caret_position: INTEGER is
+	internal_caret_position: INTEGER
 			-- Caret position.
 		deferred
 		end
 
-	internal_set_caret_position (a_position: INTEGER) is
+	internal_set_caret_position (a_position: INTEGER)
 			-- Set caret position with `a_position'.
 		deferred
 		end
 
-	set_selection (start_position, end_position: INTEGER) is
+	set_selection (start_position, end_position: INTEGER)
 			-- Set selection between `start_position'
 			-- and `end_position'.
 		deferred
 		end
 
-	set_text_limit (value: INTEGER) is
+	set_text_limit (value: INTEGER)
 			-- Make `value' new maximal length of text.
 		deferred
 		end
 
-	get_text_limit: INTEGER is
+	get_text_limit: INTEGER
 			-- Result is maximum text length.
 		deferred
 		end
 
-	read_only: BOOLEAN is
+	read_only: BOOLEAN
 			-- Is `current' edit control read-only?
 		deferred
 		end
 
-	set_read_only is
+	set_read_only
 			-- Set `Current' read only.
 		deferred
 		end
 
-	set_read_write is
+	set_read_write
 			-- Set `Current' read/write.
 		deferred
 		end
 
-	clip_paste is
+	clip_paste
 			-- Paste at current caret position
 			-- content of clipboard.
 		deferred
 		end
 
-	wel_font: WEL_FONT is
+	wel_font: WEL_FONT
 			-- Font of `Current'.
 		deferred
 		end
 
-	wel_selection_start: INTEGER is
+	wel_selection_start: INTEGER
 		deferred
 		end
 
-	wel_selection_end: INTEGER is
+	wel_selection_end: INTEGER
 		deferred
 		end
 
-	wel_background_color: WEL_COLOR_REF is
+	wel_background_color: WEL_COLOR_REF
 		do
 			Result := background_color_imp
 			if Result = Void then
@@ -294,7 +294,7 @@ feature {NONE} -- Deferred features
 			end
 		end
 
-	wel_foreground_color: WEL_COLOR_REF is
+	wel_foreground_color: WEL_COLOR_REF
 		do
 			Result := foreground_color_imp
 			if Result = Void then
@@ -302,7 +302,7 @@ feature {NONE} -- Deferred features
 			end
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
@@ -324,7 +324,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 		-- Should the context menu be overridden, so
 		-- it is not displayed?
 
-	disable_context_menu is
+	disable_context_menu
 			-- Assign `True' to `override_context_menu'.
 			-- This will stop the context menu appearing, the
 			-- next time that `allow_pick_and_drop' is executed.
@@ -332,7 +332,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 			override_context_menu := True
 		end
 
-	enable_context_menu is
+	enable_context_menu
 			-- Assign `False' to `override_context_menu'.
 		do
 			override_context_menu := False
@@ -340,7 +340,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	allow_pick_and_drop is
+	allow_pick_and_drop
 			-- Override context menu on `Current' if pick and drop
 			-- should be handled instead. We must handle two cases :-
 			-- 1. We are attempting to pick from `Current'.
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			enable_context_menu
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		local
 			edit_control: WEL_SINGLE_LINE_EDIT
@@ -383,7 +383,7 @@ feature {NONE} -- interface
 
 	interface: EV_TEXT_COMPONENT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

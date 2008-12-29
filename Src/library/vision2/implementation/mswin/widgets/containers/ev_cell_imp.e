@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision cell, Mswindows implementation."
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current'.
 		do
 			base_make (an_interface)
@@ -57,7 +57,7 @@ feature -- Element change
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -69,7 +69,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			mw: INTEGER
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Implementation
 			ev_set_minimum_width (mw)
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_width of `Current'.
 		local
 			mh: INTEGER
@@ -91,7 +91,7 @@ feature {EV_ANY_I} -- Implementation
 			ev_set_minimum_height (mh)
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width the
 			-- minimum_height of `Current'.
 		local
@@ -108,7 +108,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

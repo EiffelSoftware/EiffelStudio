@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer manager for TEXT_PANEL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		-- Initialize `Current'.
 		do
 			create edition_observer_list.make (10)
@@ -37,7 +37,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_changed (value: BOOLEAN; directly_edited: BOOLEAN) is
+	set_changed (value: BOOLEAN; directly_edited: BOOLEAN)
 			-- Assign `value' to `changed'
 		do
 			if value and not is_modified then
@@ -48,7 +48,7 @@ feature -- Status setting
 
 feature -- Operations
 
-	add_edition_observer (a_text_observer: TEXT_OBSERVER) is
+	add_edition_observer (a_text_observer: TEXT_OBSERVER)
 			-- Add an observer `an_text_observer' to the "edition observers" list.
 		require
 			not_in_loop: not is_notifying
@@ -59,7 +59,7 @@ feature -- Operations
 			end
 		end
 
-	add_cursor_observer (a_text_observer: TEXT_OBSERVER) is
+	add_cursor_observer (a_text_observer: TEXT_OBSERVER)
 			-- Add an observer `an_text_observer' to the "cursor observers" list.
 		require
 			not_in_loop: not is_notifying
@@ -70,7 +70,7 @@ feature -- Operations
 			end
 		end
 
-	add_selection_observer (a_text_observer: TEXT_OBSERVER) is
+	add_selection_observer (a_text_observer: TEXT_OBSERVER)
 			-- Add an observer `an_text_observer' to the "selection observers" list.
 		require
 			not_in_loop: not is_notifying
@@ -81,7 +81,7 @@ feature -- Operations
 			end
 		end
 
-	add_lines_observer (a_text_observer: TEXT_OBSERVER) is
+	add_lines_observer (a_text_observer: TEXT_OBSERVER)
 			-- Add an observer `an_text_observer' to the "lines observers" list.
 		require
 			not_in_loop: not is_notifying
@@ -92,7 +92,7 @@ feature -- Operations
 			end
 		end
 
-	remove_observer (a_text_observer: TEXT_OBSERVER) is
+	remove_observer (a_text_observer: TEXT_OBSERVER)
 		-- Remove the observer 'an_text_observer' from the list.
 		require
 			not_in_loop: not is_notifying
@@ -143,7 +143,7 @@ feature -- Operations
 	post_notify_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE]]
 			-- Actions to call after other notifications
 
-	execute_post_notify_actions is
+	execute_post_notify_actions
 			-- Execute actions in `post_notify_acions'
 		do
 			from
@@ -158,7 +158,7 @@ feature -- Operations
 
 feature {NONE} -- Updates
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Notify observers that some text has been modified.
 			-- If `directly_edited', the user has modified the text in the editor,
 			-- not via another tool or wizard.
@@ -187,7 +187,7 @@ feature {NONE} -- Updates
 			is_notifying := tmp_is_notifying
 		end
 
-	on_text_reset is
+	on_text_reset
 			-- Notify observers that `reset' was called on the text.
 		require
 			not_in_loop: not is_notifying
@@ -210,7 +210,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_cursor_moved is
+	on_cursor_moved
 			-- Notify observers that the current cursor has moved.
 		local
 			l_cur: CURSOR
@@ -231,7 +231,7 @@ feature {NONE} -- Updates
 			is_notifying := old_not
 		end
 
-	on_text_back_to_its_last_saved_state is
+	on_text_back_to_its_last_saved_state
 			-- Notify observers that text is in the same state as when it
 			-- was saved for the last time.
 		require
@@ -255,7 +255,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Notify observers that a new text has just been loaded.
 		require
 			not_in_loop: not is_notifying
@@ -277,7 +277,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- Notify observers that a new text has just finished loading.
 			--| FIXME XR: This is necessary because on_text_loaded is called when
 			--| `text_being_processed' is still True.
@@ -300,7 +300,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_text_block_loaded (was_first_block: BOOLEAN) is
+	on_text_block_loaded (was_first_block: BOOLEAN)
 			-- Notify observers that a new block of text has just been loaded.
 			-- `first_block' is True if the block was the first one
 		do
@@ -317,7 +317,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_selection_begun is
+	on_selection_begun
 			-- Notify observers that a selection has just begun.
 		do
 			is_notifying := True
@@ -333,7 +333,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_selection_finished is
+	on_selection_finished
 			-- Notify observers that the selection has just been disabled.
 		do
 			is_notifying := True
@@ -349,7 +349,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_line_modified (l_num: INTEGER) is
+	on_line_modified (l_num: INTEGER)
 			-- Notify observers that a line has just been modified.
 		do
 			is_notifying := True
@@ -365,7 +365,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_line_removed (l_num: INTEGER) is
+	on_line_removed (l_num: INTEGER)
 			-- Notify observers that a line has just been removed.
 		do
 			is_notifying := True
@@ -381,7 +381,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_block_removed is
+	on_block_removed
 			-- Notify observers that a line has just been removed.
 		do
 			is_notifying := True
@@ -397,7 +397,7 @@ feature {NONE} -- Updates
 			execute_post_notify_actions
 		end
 
-	on_line_inserted (l_num: INTEGER) is
+	on_line_inserted (l_num: INTEGER)
 			-- Notify observers that a line has just been inserted.
 		do
 			is_notifying := True
@@ -415,7 +415,7 @@ feature {NONE} -- Updates
 
 feature -- Memory management
 
-	recycle is
+	recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -441,7 +441,7 @@ feature {TEXT_PANEL} -- Implementation
 	lines_observer_list: ARRAYED_LIST [TEXT_OBSERVER];
 		-- List of editor observers.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

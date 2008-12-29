@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unix-specific operating system services for process"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- File descriptor operations
 
-	valid_file_descriptor (fd: INTEGER): BOOLEAN is
+	valid_file_descriptor (fd: INTEGER): BOOLEAN
 			-- Is `fd' in the range of valid file descriptors?
 		do
 			Result := fd >= 0
@@ -23,7 +23,7 @@ feature -- File descriptor operations
 
 feature -- File descriptor operations
 
-	duplicate_file_descriptor (old_fd, new_fd: INTEGER) is
+	duplicate_file_descriptor (old_fd, new_fd: INTEGER)
 			-- Duplicate existing file descriptor `old_fd' and
 			-- give the new file descriptor the value `new_fd'.
 			-- If `new_fd' is in use, it is first deallocated
@@ -45,7 +45,7 @@ feature -- File descriptor operations
 			]"
 		end;
 
-	close_file_descriptor (fd: INTEGER) is
+	close_file_descriptor (fd: INTEGER)
 			-- Close existing open file descriptor `fd'
 		require
 			valid_descriptor: valid_file_descriptor (fd)
@@ -65,7 +65,7 @@ feature -- File descriptor operations
 
 feature -- Pipes
 
-	new_pipe: PROCESS_UNIX_PIPE is
+	new_pipe: PROCESS_UNIX_PIPE
 			-- New pipe object for interprocess communication
 		local
 			read_fd, write_fd: INTEGER
@@ -78,14 +78,14 @@ feature -- Pipes
 
 feature -- Process operations
 
-	fork_process: INTEGER is
+	fork_process: INTEGER
 			-- Fork a new process.  Return process id of new
 			-- process to the parent process and 0 to the child
 		do
 			Result := unix_fork_process;
 		end
 
-	new_process_group is
+	new_process_group
 			-- Let the current process become a process group leader.
 		external
 			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
@@ -98,7 +98,7 @@ feature -- Process operations
 		end
 
 	exec_process (prog_file: STRING; args: ARRAY [STRING];
-			close_nonstd_files: BOOLEAN; env_ptr: POINTER) is
+			close_nonstd_files: BOOLEAN; env_ptr: POINTER)
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
 			-- arguments `args' and environment variables stored in `env_ptr'.
@@ -137,7 +137,7 @@ feature -- Process operations
 			unix_exec_process ($pname, arguments, env_ptr, close_nonstd_files)
 		end
 
-	terminate_hard (pid: INTEGER) is
+	terminate_hard (pid: INTEGER)
 			-- Send a kill signal (SIGKILL) to the process(es)
 			-- identified by `pid'
 		do
@@ -146,7 +146,7 @@ feature -- Process operations
 
 feature{NONE} -- Implementation
 
-	send_signal (sig, pid: INTEGER) is
+	send_signal (sig, pid: INTEGER)
 			-- Send signal `sig' to the process(es) identified by
 			-- `pid'.  If signal is 0, error checking is done but
 			-- no signal is actually sent.  If `pid' > 0, send
@@ -162,20 +162,20 @@ feature{NONE} -- Implementation
 			unix_kill (pid, sig)
 		end
 
-	unix_fork_process: INTEGER is
+	unix_fork_process: INTEGER
 			-- Create a new process.  Return the process id
 			-- to the parent and 0 to the child
 		do
 			c_unix_fork_process ($Result)
 		end
 
-	str_dup (area: POINTER): POINTER is
+	str_dup (area: POINTER): POINTER
 			-- Return new copy of C string indicated by `area'
 		do
 			c_str_dup (area, $Result);
 		end
 
-	unix_allocate_arg_memory (count: INTEGER): POINTER is
+	unix_allocate_arg_memory (count: INTEGER): POINTER
 			-- Return pointer to newly allocated memory
 			-- for `count' arguments which is not subject
 			-- to garbage collection.  `count' must
@@ -187,7 +187,7 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_str_dup (area: POINTER; a_result: TYPED_POINTER [POINTER]) is
+	c_str_dup (area: POINTER; a_result: TYPED_POINTER [POINTER])
 			-- Duplicate data from `area' to `a_result'.
 			external
 				"C inline use <string.h>"
@@ -206,7 +206,7 @@ feature {NONE} -- Externals
 			end
 
 
-	unix_pipe (read_fd, write_fd: POINTER) is
+	unix_pipe (read_fd, write_fd: POINTER)
 			-- Create a new pipe and put the read file descriptor
 			-- in `read_fd' and the write file descriptor in
 			-- `write_fd'
@@ -231,7 +231,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	unix_kill (pid, sig: INTEGER) is
+	unix_kill (pid, sig: INTEGER)
 			-- Send signal `sig' to process(es) identified by `pid'
 		external
 			"C inline use <sys/types.h>, <signal.h>"
@@ -248,7 +248,7 @@ feature {NONE} -- Externals
 
 		end
 
-	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: TYPED_POINTER [BOOLEAN]; a_status: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]) is
+	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: TYPED_POINTER [BOOLEAN]; a_status: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN])
 			-- Wait for process specified by `pid'.  Block if
 			-- no process has status available if `block' is
 			-- true.  Set boolean at `status_avail_addr' to
@@ -277,7 +277,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_unix_fork_process (a_result : TYPED_POINTER [INTEGER]) is
+	c_unix_fork_process (a_result : TYPED_POINTER [INTEGER])
 			-- Fork process, and set return value in `a_result'.
 		external
 			"C inline use <sys/types.h>, <unistd.h>"
@@ -292,7 +292,7 @@ feature {NONE} -- Externals
 		end
 
 
-	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN) is
+	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN)
 			-- Call execv or execve to overlay current process with
 			-- new one.  Does not return (raises exception
 			-- if error doing the exec)
@@ -322,7 +322,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_unix_allocate_arg_memory (count: INTEGER; a_result: TYPED_POINTER [POINTER]) is
+	c_unix_allocate_arg_memory (count: INTEGER; a_result: TYPED_POINTER [POINTER])
 			-- Allocate memory for a POINTER array of `count' items.
 		external
 			"C inline"
@@ -340,7 +340,7 @@ feature {NONE} -- Externals
 		end
 
 
-	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER) is
+	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER)
 			-- Set the element of `arg_array' at position `pos'
 			-- (relative to 0) to `arg'
 		external
@@ -355,7 +355,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	attach_terminals (pid: INTEGER) is
+	attach_terminals (pid: INTEGER)
 			-- Attach terminal control to process group to which process `pid' belongs.
 		external
 			"C inline use <sys/types.h>, <unistd.h>, <termios.h>"
@@ -369,7 +369,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

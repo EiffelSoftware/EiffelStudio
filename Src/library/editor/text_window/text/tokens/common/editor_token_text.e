@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe a generic text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Initialisation
 
-	make (text: like wide_image) is
+	make (text: like wide_image)
 		require
 			text_not_void: text /= Void
 			no_eol_in_text: not text.has ('%N')
@@ -40,7 +40,7 @@ feature -- Miscellaneous
 	width: INTEGER
 			-- Width in pixel of the entire token.
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
@@ -91,7 +91,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	retrieve_position_by_width (a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local
@@ -129,7 +129,7 @@ feature -- Miscellaneous
 			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
-	display(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -140,7 +140,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`x_offset',`d_y')
 		do
@@ -151,7 +151,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `device'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -163,7 +163,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beginning to `pivot'		
@@ -294,7 +294,7 @@ feature -- Miscellaneous
 
 feature -- Status Setting
 
-	update_width is
+	update_width
 			-- update value of `width'
 		do
 			width := get_substring_width (wide_image.count)
@@ -302,7 +302,7 @@ feature -- Status Setting
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_text (Current)
@@ -310,7 +310,7 @@ feature -- Visitor
 
 feature -- Setting
 
-	set_image (a_image: like wide_image) is
+	set_image (a_image: like wide_image)
 			-- Set `wide_image' with `a_image'.
 		require
 			a_image_not_void: a_image /= Void
@@ -324,11 +324,11 @@ feature -- Setting
 
 feature -- implementation of clickable and editable text
 
-	is_text: BOOLEAN is True
+	is_text: BOOLEAN = True
 
 feature {NONE} -- Implementation
 
-	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE)
 		local
 			text_to_be_drawn: STRING_32
 		do
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
  			draw_text_top_left (position, d_y, text_to_be_drawn, device)
 		end
 
-	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE)
 		local
 			text_to_be_drawn: STRING_32
 		do
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	expanded_image_substring (n1, n2: INTEGER): STRING_32 is
+	expanded_image_substring (n1, n2: INTEGER): STRING_32
 		local
 			sz, i, j: INTEGER
 		do
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tabulation_width: INTEGER is
+	tabulation_width: INTEGER
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gray_text_color: EV_COLOR is
+	gray_text_color: EV_COLOR
 			-- Gray color
 		local
 			lightness: REAL
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 invariant
 	wide_image_not_void: wide_image /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision internal timeout. Window that%
 		% calls the different timeout created."
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_timeout (timeout: EV_TIMEOUT_IMP) is
+	add_timeout (timeout: EV_TIMEOUT_IMP)
 			-- Add `timeout' to the list of timeout to
 			-- be executed.
 		do
@@ -37,7 +37,7 @@ feature -- Element change
 			timeouts.force (timeout.id, timeout.id)
 		end
 
-	change_interval (a_timer_id, an_interval: INTEGER) is
+	change_interval (a_timer_id, an_interval: INTEGER)
 			-- Set timer with `an_id' to `an_interval'.
 		require
 			a_timer_id_exists: a_timer_id > 0 and then timeouts.has (a_timer_id)
@@ -52,7 +52,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_timeout (id: INTEGER) is
+	remove_timeout (id: INTEGER)
 			-- Remove `timeout' from the list of timeouts to
 			-- be executed.
 		do
@@ -67,7 +67,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	on_timer (id: INTEGER) is
+	on_timer (id: INTEGER)
 			-- Wm_timer message.
 		local
 			timeout: EV_TIMEOUT_IMP
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

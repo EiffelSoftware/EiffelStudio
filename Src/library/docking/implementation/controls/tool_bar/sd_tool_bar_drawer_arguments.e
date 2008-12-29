@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Arguments for SD_TOOL_BAR_DRAWER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 		end
@@ -23,7 +23,7 @@ feature -- Properties
 	tool_bar: SD_TOOL_BAR
 			-- SD_TOOL_BAR
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
 			-- Set `tool_bar'
 		require
 			not_void: a_tool_bar /= Void
@@ -36,7 +36,7 @@ feature -- Properties
 	item: SD_TOOL_BAR_ITEM
 			-- Item on `tool_bar'
 
-	set_item (a_item: SD_TOOL_BAR_ITEM) is
+	set_item (a_item: SD_TOOL_BAR_ITEM)
 			-- Set `item'.
 		require
 			not_void: a_item /= Void
@@ -49,7 +49,7 @@ feature -- Properties
 	position: EV_COORDINATE
 			-- Position to draw `item' on `tool_bar'
 
-	set_position (a_position: EV_COORDINATE) is
+	set_position (a_position: EV_COORDINATE)
 			-- Set `position'
 		require
 			not_void: a_position /= Void
@@ -61,7 +61,7 @@ feature -- Properties
 
 feature -- Query
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- If Current valid?
 		local
 			l_not_void: BOOLEAN
@@ -75,7 +75,7 @@ feature -- Query
 		end
 
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	begin_of_selection: INTEGER is
+	begin_of_selection: INTEGER
 			-- Position of the beginning of the current selection highlightened
 		require
 			selection_active: is_selection_active;
@@ -25,7 +25,7 @@ feature -- Access
 			result_small_enough: Result < count
 		end;
 
-	end_of_selection: INTEGER is
+	end_of_selection: INTEGER
 			-- Position of the end of the current selection highlightened
 		require
 			selection_active: is_selection_active;
@@ -36,7 +36,7 @@ feature -- Access
 			result_small_enough: Result <= count
 		end;
 
-	show_selection is
+	show_selection
 			-- Show the selection when there is one.
 			-- The text will scroll if the selection is out
 			-- of range.
@@ -47,7 +47,7 @@ feature -- Access
 			show_selection: is_selection_visible = True
 		end
 
-	hide_selection is
+	hide_selection
 			-- Hide the selection when there is one.
 			-- The text will not scroll if the selection is out
 			-- of range.
@@ -58,7 +58,7 @@ feature -- Access
 			hide_selection: is_selection_visible = False
 		end
 
-	cursor_position: INTEGER is
+	cursor_position: INTEGER
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
 		deferred
@@ -67,17 +67,17 @@ feature -- Access
 			result_small_enough: Result <= count
 		end;
 
-	character_position (x_pos, y_pos: INTEGER): INTEGER is
+	character_position (x_pos, y_pos: INTEGER): INTEGER
 			-- Character position at cursor position `x' and `y'
 		deferred
 		end;
 
-	top_character_position: INTEGER is
+	top_character_position: INTEGER
 			-- Character position of first character displayed
 		deferred
 		end;
 
-	rows: INTEGER is
+	rows: INTEGER
 			-- Height of Current widget measured in character
 			-- heights.
 		require
@@ -85,31 +85,31 @@ feature -- Access
 		deferred
 		end;
 
-	coordinate (char_pos: INTEGER): COORD_XY is
+	coordinate (char_pos: INTEGER): COORD_XY
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		deferred
 		end;
 
-	x_coordinate (char_pos: INTEGER): INTEGER is
+	x_coordinate (char_pos: INTEGER): INTEGER
 			-- X coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		deferred
 		end;
 
-	y_coordinate (char_pos: INTEGER): INTEGER is
+	y_coordinate (char_pos: INTEGER): INTEGER
 			-- Y coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		deferred
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Distance between top edge of text window and current text,
 			-- and between bottom edge of text window and current text.
 		deferred
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Distance between left edge of text window and current text,
 			-- and between right edge of text window and current text.
 		deferred
@@ -117,58 +117,58 @@ feature -- Access
 
 feature -- Status report
 
-	is_any_resizable: BOOLEAN is
+	is_any_resizable: BOOLEAN
 			-- Is width and height of current text resizable?
 		deferred
 		ensure
 			Result implies is_width_resizable and is_height_resizable
 		end;
 
-	is_bell_enabled: BOOLEAN is
+	is_bell_enabled: BOOLEAN
 			-- Is the bell enabled when an action is forbidden
 		deferred
 		end;
 
-	is_height_resizable: BOOLEAN is
+	is_height_resizable: BOOLEAN
 			-- Is height of current text resizable?
 		deferred
 		end;
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is current text in read only mode?
 		deferred
 		end;
 
-	is_selection_active: BOOLEAN is
+	is_selection_active: BOOLEAN
 			-- Is there a selection currently active ?
 		require
 			realized: realized
 		deferred
 		end;
 
-	is_selection_visible: BOOLEAN is
+	is_selection_visible: BOOLEAN
 			-- Will the selection be visible ?
 		require
 			realized: realized
 		deferred
 		end;
 
-	is_width_resizable: BOOLEAN is
+	is_width_resizable: BOOLEAN
 			-- Is width of current text resizable?
 		deferred
 		end;
 
-	is_word_wrap_mode: BOOLEAN is
+	is_word_wrap_mode: BOOLEAN
 			-- Is specified that lines are to be broken at word breaks?
 		deferred
 		end;
 
-	is_multi_line_mode: BOOLEAN is
+	is_multi_line_mode: BOOLEAN
 			-- Is Current editing a multiline text?
 		deferred
 		end;
 
-	is_cursor_position_visible: BOOLEAN is
+	is_cursor_position_visible: BOOLEAN
 			-- Is the insert cursor position marked
 			-- by a blinking text cursor?
 		deferred
@@ -176,13 +176,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_action is
+	allow_action
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		deferred
 		end;
 
-	clear_selection is
+	clear_selection
 			-- Clear a selection
 		require
 			selection_active: is_selection_active;
@@ -192,87 +192,87 @@ feature -- Status setting
 			not is_selection_active
 		end;
 
-	disable_resize is
+	disable_resize
 			-- Disable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		deferred
 		end;
 
-	disable_resize_height is
+	disable_resize_height
 			-- Disable that current text widget attempts to resize its height
 			-- to accommodate all the text contained.
 		deferred
 		end;
 
-	disable_resize_width is
+	disable_resize_width
 			-- Disable that current text widget attempts to resize its width
 			-- to accommodate all the text contained.
 		deferred
 		end;
 
-	disable_verify_bell is
+	disable_verify_bell
 			-- Disable the bell when an action is forbidden
 		deferred
 		end
 
-	enable_resize is
+	enable_resize
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		deferred
 		end;
 
-	enable_resize_height is
+	enable_resize_height
 			-- Enable that current text widget attempts to resize its height to
 			-- accomodate all the text contained.
 		deferred
 		end;
 
-	enable_resize_width is
+	enable_resize_width
 			-- Enable that current text widget attempts to resize its width to
 			-- accommodate all the text contained.
 		deferred
 		end;
 
-	enable_verify_bell is
+	enable_verify_bell
 			-- Enable the bell when an action is forbidden
 		deferred
 		end;
 
 
-	set_cursor_position_visible (flag: BOOLEAN) is
+	set_cursor_position_visible (flag: BOOLEAN)
 			-- Set is_cursor_position_visible to flag.
 		deferred
 		end;
 
-	forbid_action is
+	forbid_action
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		deferred
 		end;
 
-	set_read_only is
+	set_read_only
 			-- Set current text to be read only.
 		deferred
 		end;
 
-	set_single_line_mode is
+	set_single_line_mode
 			-- Set editing for single line text.
 		deferred
 		end;
 
-	set_multi_line_mode is
+	set_multi_line_mode
 			-- Set editing for multiline text.
 		deferred
 		end;
 
-	set_editable is
+	set_editable
 			-- Set current text to be editable.
 		deferred
 		end;
 
 feature -- Basic functions
 
-	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Search for the string `text_to_find' in the TEXT
 		require
 			text_to_find_not_void: text_to_find /= Void
@@ -281,7 +281,7 @@ feature -- Basic functions
 
 feature -- Element change
 
-	add_modify_action (a_command: COMMAND; argument: ANY) is
+	add_modify_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		require
@@ -289,7 +289,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_motion_action (a_command: COMMAND; argument: ANY) is
+	add_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute before insert
 			-- cursor is moved to a new position.
 		require
@@ -297,21 +297,21 @@ feature -- Element change
 		deferred
 		end;
 
-	set_margin_height (new_height: INTEGER) is
+	set_margin_height (new_height: INTEGER)
 			-- Set `margin_height' to `new_height'.
 		require
 			new_height_large_enough: new_height >= 0
 		deferred
 		end;
 
-	set_margin_width (new_width: INTEGER) is
+	set_margin_width (new_width: INTEGER)
 			-- Set `margin_width' to `new_width'.
 		require
 			new_width_large_enough: new_width >= 0
 		deferred
 		end;
 
-	set_selection (first, last: INTEGER) is
+	set_selection (first, last: INTEGER)
 			-- Select the text between `first' and `last'.
 			-- This text will be physically highlightened on the screen.
 		require
@@ -326,12 +326,12 @@ feature -- Element change
 			end_set: end_of_selection = last
 		end
 
-	set_top_character_position (char_pos: INTEGER) is
+	set_top_character_position (char_pos: INTEGER)
 			-- Set first character displayed to `char_pos'.
 		deferred
 		end;
 
-	set_rows (i: INTEGER) is
+	set_rows (i: INTEGER)
 			-- Set the character height of Current widget to `i'.
 		require
 			is_multi_line_mode: is_multi_line_mode;
@@ -339,7 +339,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
+	set_cursor_position (a_position: INTEGER)
 			-- Set `cursor_position' to `a_position'.
 		require
 			a_position_positive_not_null: a_position >= 0;
@@ -351,7 +351,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_modify_action (a_command: COMMAND; argument: ANY) is
+	remove_modify_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		require
@@ -359,7 +359,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- insert cursor is moved to a new position.
 		require
@@ -367,7 +367,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

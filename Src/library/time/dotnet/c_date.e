@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a date on .NET"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an instance of C_DATA using current local time.
 		do
 			is_utc := False
 			update
 		end
 
-	make_utc is
+	make_utc
 			-- Create an instance of C_DATE holding UTC values.
 		do
 			is_utc := True
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Update
 
-	update is
+	update
 			-- Pointer to `struct tm' area.
 		local
 			l_now: SYSTEM_DATE_TIME
@@ -85,7 +85,7 @@ feature -- Status
 	millisecond_now: INTEGER;
 			-- Current millisecond at creation time or after last call to `update'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

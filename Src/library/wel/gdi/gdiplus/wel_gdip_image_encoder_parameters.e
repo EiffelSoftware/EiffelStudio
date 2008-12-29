@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Encoder parameters list used by 
 					{WEL_GDIP_IMAGE_ENCODER_PARAMETERS}.save_image_to_file_with_encoder_and_parameters
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_count: INTEGER) is
+	make (a_count: INTEGER)
 			-- Creation method
 		require
 			valid: a_count > 0
@@ -29,7 +29,7 @@ feature -- Query
 	parameters: !ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER_PARAMETER]
 			-- All parameters current managed.
 
-	item: !MANAGED_POINTER is
+	item: !MANAGED_POINTER
 			-- Convert Current to C memory
 		local
 			l_paras: like parameters
@@ -49,7 +49,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

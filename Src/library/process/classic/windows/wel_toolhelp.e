@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process/Thread iteration"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	process_id_pair_list: LINKED_LIST [ WEL_PROCESS_ID_PAIR ] is
+	process_id_pair_list: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
 			-- List of process id pairs taken from a system snapshot.
 			-- first item of a pair is parent process id, second item of a pair is process id.
 		local
@@ -44,7 +44,7 @@ feature -- Access
 			end
 		end
 
-	process_information: ARRAYED_LIST [WEL_PROCESS_ENTRY_32] is
+	process_information: ARRAYED_LIST [WEL_PROCESS_ENTRY_32]
 			-- Information about all running processes
 		local
 			ptr: POINTER
@@ -79,7 +79,7 @@ feature -- Access
 
 feature{NONE} -- System snapshot
 
-	cwin_create_toolhelp32_snapshot (flags: INTEGER; prc_id: INTEGER; handle: TYPED_POINTER [POINTER]) is
+	cwin_create_toolhelp32_snapshot (flags: INTEGER; prc_id: INTEGER; handle: TYPED_POINTER [POINTER])
 			-- Get system information snapshot and store result in `handle'.
 			-- After use, call `cwin_close_handle' to close `handle'.
 		external
@@ -98,7 +98,7 @@ feature{NONE} -- System snapshot
 
 feature{NONE} -- Process Iteration
 
-	cwin_process32_first (snapshot: POINTER; prc_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_process32_first (snapshot: POINTER; prc_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN])
 			-- Get information of the first process in `snapshot' and store result in `prc_entry'.
 			-- If successed, set `succ' to True, otherwise to False.
 			-- This feature will create a POINTER object `prc_entry' if successful,
@@ -126,7 +126,7 @@ feature{NONE} -- Process Iteration
 			]"
 		end
 
-	cwin_process32_next (snapshot: POINTER; prc_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_process32_next (snapshot: POINTER; prc_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN])
 			-- Get information of the next process in `snapshot' and store result in `prc_entry'.
 			-- If successed, set `succ' to True, otherwise to False.
 			-- After use, call `cwin_free_pointer' to dispose `prc_entry'.
@@ -147,7 +147,7 @@ feature{NONE} -- Process Iteration
 			]"
 		end
 
-	cwin_get_process_id_and_parent_id (prc_entry: POINTER; pid: TYPED_POINTER [INTEGER]; parent_pid: TYPED_POINTER [INTEGER]) is
+	cwin_get_process_id_and_parent_id (prc_entry: POINTER; pid: TYPED_POINTER [INTEGER]; parent_pid: TYPED_POINTER [INTEGER])
 			-- Get process id and its parent process id from `prc_entry'.
 		external
 			"C inline use <Tlhelp32.h>"
@@ -160,7 +160,7 @@ feature{NONE} -- Process Iteration
 			]"
 		end
 
-	read_process_entry (prc_entry: POINTER; pid, ppid: TYPED_POINTER [INTEGER]; thr_count: TYPED_POINTER [INTEGER]; pri_base: TYPED_POINTER [INTEGER_64]; exe: TYPED_POINTER [POINTER]) is
+	read_process_entry (prc_entry: POINTER; pid, ppid: TYPED_POINTER [INTEGER]; thr_count: TYPED_POINTER [INTEGER]; pri_base: TYPED_POINTER [INTEGER_64]; exe: TYPED_POINTER [POINTER])
 			-- Get process information from process entryp `prc_entry'.
 			-- Store process id in `pid', parent process id in `ppid', thread count in `thr_count',
 			-- priority class base in `pri_base' and executable file name in `exe'.
@@ -180,7 +180,7 @@ feature{NONE} -- Process Iteration
 
 feature{NONE} -- Thread iteration
 
-	cwin_thread32_first (snapshot: POINTER; thread_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_thread32_first (snapshot: POINTER; thread_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN])
 			-- Retrieves information about the first thread in a system snapshot `snapshot'.
 			-- If successful, set `succ' to True and store thread information in `thread_entry'.
 			-- After use, call `cwin_free_pointer' to dispose `thread_entry'.
@@ -207,7 +207,7 @@ feature{NONE} -- Thread iteration
 			]"
 		end
 
-	cwin_thread32_next (snapshot: POINTER; thread_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_thread32_next (snapshot: POINTER; thread_entry: TYPED_POINTER [POINTER]; succ: TYPED_POINTER [BOOLEAN])
 			-- Retrieves information about the next thread in a system snapshot `snapshot'.
 			-- If successful, set `succ' to True and store thread information in `thread_entry'.
 			-- After use, call `cwin_free_pointer' to dispose `thread_entry'.
@@ -228,7 +228,7 @@ feature{NONE} -- Thread iteration
 			]"
 		end
 
-	cwin_read_thread_entry_32 (thread_entry: POINTER; owner_pid: TYPED_POINTER [INTEGER]; thread_id: TYPED_POINTER [INTEGER]; base_pri: TYPED_POINTER [INTEGER]) is
+	cwin_read_thread_entry_32 (thread_entry: POINTER; owner_pid: TYPED_POINTER [INTEGER]; thread_id: TYPED_POINTER [INTEGER]; base_pri: TYPED_POINTER [INTEGER])
 			-- Read thread information stored in `thread_entry' into `owner_pid', `thread_id' and `base_pri'.
 		external
 			"C inline use <Tlhelp32.h>"
@@ -242,7 +242,7 @@ feature{NONE} -- Thread iteration
 			]"
 		end
 
-	thread_information: ARRAYED_LIST [WEL_THREAD_ENTRY_32] is
+	thread_information: ARRAYED_LIST [WEL_THREAD_ENTRY_32]
 			-- Information of all threads that are running
 		local
 			handle: POINTER
@@ -273,7 +273,7 @@ feature{NONE} -- Thread iteration
 
 feature{NONE} -- Pointer and handle control
 
-	cwin_free_pointer(ptr: POINTER) is
+	cwin_free_pointer(ptr: POINTER)
 			--
 		external
 			"C inline"
@@ -285,7 +285,7 @@ feature{NONE} -- Pointer and handle control
 			]"
 		end
 
-	cwin_close_handle (a_handle: POINTER) is
+	cwin_close_handle (a_handle: POINTER)
 			-- SDK CloseHandle
 		external
 			"C [macro <winbase.h>] (HANDLE)"
@@ -295,7 +295,7 @@ feature{NONE} -- Pointer and handle control
 
 feature{NONE} -- System Snapshot parameters
 
-	cwin_th32cs_snapprocess: INTEGER is
+	cwin_th32cs_snapprocess: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -303,7 +303,7 @@ feature{NONE} -- System Snapshot parameters
 			"TH32CS_SNAPPROCESS"
 		end
 
-	cwin_th32cs_inherit: INTEGER is
+	cwin_th32cs_inherit: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -311,7 +311,7 @@ feature{NONE} -- System Snapshot parameters
 			"TH32CS_INHERIT"
 		end
 
-	cwin_th32cs_snapall: INTEGER is
+	cwin_th32cs_snapall: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -319,7 +319,7 @@ feature{NONE} -- System Snapshot parameters
 			"TH32CS_SNAPALL"
 		end
 
-	cwin_th32cs_snapheaplist: INTEGER is
+	cwin_th32cs_snapheaplist: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -327,7 +327,7 @@ feature{NONE} -- System Snapshot parameters
 			"TH32CS_SNAPHEAPLIST"
 		end
 
-	cwin_th32cs_snapmodule: INTEGER is
+	cwin_th32cs_snapmodule: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -335,7 +335,7 @@ feature{NONE} -- System Snapshot parameters
 			"TH32CS_SNAPMODULE"
 		end
 
-	cwin_th32cs_snapthread: INTEGER is
+	cwin_th32cs_snapthread: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -345,7 +345,7 @@ feature{NONE} -- System Snapshot parameters
 
 feature -- Process operation
 
-	cwin_open_process (desired_access: INTEGER; inheritable: BOOLEAN;  prc_id: INTEGER): POINTER is
+	cwin_open_process (desired_access: INTEGER; inheritable: BOOLEAN;  prc_id: INTEGER): POINTER
 			-- After use, call `cwin_close_handle' to close retrieved handle.
 		external
 			"C signature (DWORD, BOOL, DWORD): HANDLE use <Tlhelp32.h>"
@@ -355,10 +355,10 @@ feature -- Process operation
 
 feature{NONE} -- Implementation
 
-	initial_list_capacity: INTEGER is 100;
+	initial_list_capacity: INTEGER = 100;
 			-- Initial list capacity
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

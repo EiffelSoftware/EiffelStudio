@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Logical color palette."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_log_palette: WEL_LOG_PALETTE) is
+	make (a_log_palette: WEL_LOG_PALETTE)
 			-- Create a palette associated to `a_log_palette'
 		require
 			a_log_palette_not_void: a_log_palette /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	palette_index (i: INTEGER): WEL_COLOR_REF is
+	palette_index (i: INTEGER): WEL_COLOR_REF
 			-- Color number `i' of the palette
 		require
 			exists: exists
@@ -40,7 +40,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_palette (a_palette: POINTER): POINTER is
+	cwin_create_palette (a_palette: POINTER): POINTER
 			-- SDK CreatePalette
 		external
 			"C [macro <windows.h>] (LOGPALETTE *): EIF_POINTER"
@@ -48,7 +48,7 @@ feature {NONE} -- Externals
 			"CreatePalette"
 		end
 
-	cwin_palette_index (i: INTEGER): INTEGER is
+	cwin_palette_index (i: INTEGER): INTEGER
 			-- SDK PALETTEINDEX
 		external
 			"C [macro <windows.h>] (WORD): COLORREF"
@@ -56,7 +56,7 @@ feature {NONE} -- Externals
 			"PALETTEINDEX"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

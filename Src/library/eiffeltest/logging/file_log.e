@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Log facilities logging test results into a file"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: FILE) is
+	make (f: FILE)
 			-- Create file log to `f'.
 		require
 			file_exists: f /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 	output_device: FILE
 			-- Device for log output
 
-	open is
+	open
 			-- Open device.
 		do
 			if not output_device.is_open_write then
@@ -44,13 +44,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close is
+	close
 			-- Close device
 		do
 			output_device.close
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

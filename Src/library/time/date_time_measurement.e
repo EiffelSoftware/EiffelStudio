@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Date/Time Measurement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,17 +13,17 @@ deferred class DATE_TIME_MEASUREMENT inherit
 		
 feature -- Access
 
-	date: DATE_MEASUREMENT is
+	date: DATE_MEASUREMENT
 		-- Date corresponding to current object
 		deferred
 		end
 
-	time: TIME_MEASUREMENT is 
+	time: TIME_MEASUREMENT 
 		-- Time corresponding to current object
 		deferred
 		end
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year of the current object
 		do
 			Result := date.year
@@ -31,7 +31,7 @@ feature -- Access
 			same_year: Result = date.year
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month of the current object
 		do
 			Result := date.month
@@ -39,7 +39,7 @@ feature -- Access
 			same_month: Result = date.month
 		end
 
-	day: INTEGER is 
+	day: INTEGER 
 			-- Day of the current object 
 		do 
 			Result := date.day 
@@ -47,7 +47,7 @@ feature -- Access
 			same_day: Result = date.day
 		end 
  
-	hour: INTEGER is 
+	hour: INTEGER 
 			-- Hour of the current object
 		do
 			Result := time.hour
@@ -55,7 +55,7 @@ feature -- Access
 			same_hour: Result = time.hour
 		end
 			 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute of the current object 
 		do
 			Result := time.minute
@@ -63,7 +63,7 @@ feature -- Access
 			same_minute: Result = time.minute
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Second of the current object
 		do
 			Result := time.second
@@ -71,7 +71,7 @@ feature -- Access
 			same_second: Result = time.second
 		end
 
-	fine_second: DOUBLE is 
+	fine_second: DOUBLE 
 			-- Representation of second with decimals
 		do 
 			Result := time.fine_second 
@@ -84,7 +84,7 @@ invariant
 	date_exists: date /= Void
 	time_exists: time /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

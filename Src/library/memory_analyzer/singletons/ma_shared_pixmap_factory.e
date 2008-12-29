@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for all of the pixmapped graphics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature
 
-	pixmap_file_content (fn: STRING): EV_PIXMAP is
+	pixmap_file_content (fn: STRING): EV_PIXMAP
 			-- Load a pixmap with name `fn'
 		local
 			full_path: FILE_NAME
@@ -54,21 +54,21 @@ feature
 
 feature {NONE} -- Implementation
 
-	pixmap_width: INTEGER is
+	pixmap_width: INTEGER
 			-- Width in pixels of the created factory image
 		deferred
 		ensure
 			result_positive: Result > 0
 		end
 
-	pixmap_height: INTEGER is
+	pixmap_height: INTEGER
 			-- Height in pixels of the created factory image
 		deferred
 		ensure
 			result_positive: Result > 0
 		end
 
-	Pixmap_suffix: STRING is
+	Pixmap_suffix: STRING
 			-- Suffix for pixmaps.
 		do
 			Result := "png"
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	pixmap_path: DIRECTORY_NAME is
+	pixmap_path: DIRECTORY_NAME
 			-- Path containing all of the Studio pixmaps
 		deferred
 		ensure
@@ -84,14 +84,14 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	image_matrix: EV_PIXMAP is
+	image_matrix: EV_PIXMAP
 			-- Matrix pixmap containing all of the present icons
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
+	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING]
 			-- Lookup hash table for Studio pixmapped images
 		deferred
 		ensure
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			result_compares_objects: Result.object_comparison
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

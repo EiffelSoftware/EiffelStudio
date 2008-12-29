@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,49 +12,49 @@ inherit
 
 feature -- Status Report
 
-	register_user_precondition (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF): BOOLEAN is
+	register_user_precondition (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `register'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	revoke_user_precondition (dw_register: INTEGER): BOOLEAN is
+	revoke_user_precondition (dw_register: INTEGER): BOOLEAN
 			-- User-defined preconditions for `revoke'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_running_user_precondition (pmk_object_name: IMONIKER_INTERFACE): BOOLEAN is
+	is_running_user_precondition (pmk_object_name: IMONIKER_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `is_running'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_object_user_precondition (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE]): BOOLEAN is
+	get_object_user_precondition (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_object'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	note_change_time_user_precondition (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD): BOOLEAN is
+	note_change_time_user_precondition (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD): BOOLEAN
 			-- User-defined preconditions for `note_change_time'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_time_of_last_change_user_precondition (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD): BOOLEAN is
+	get_time_of_last_change_user_precondition (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_time_of_last_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_running_user_precondition (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN is
+	enum_running_user_precondition (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_running'.
 			-- Redefine in descendants if needed.
 		do
@@ -63,7 +63,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	register (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF) is
+	register (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF)
 			-- No description available.
 			-- `grf_flags' [in].  
 			-- `punk_object' [in].  
@@ -76,7 +76,7 @@ feature -- Basic Operations
 
 		end
 
-	revoke (dw_register: INTEGER) is
+	revoke (dw_register: INTEGER)
 			-- No description available.
 			-- `dw_register' [in].  
 		require
@@ -85,7 +85,7 @@ feature -- Basic Operations
 
 		end
 
-	is_running (pmk_object_name: IMONIKER_INTERFACE) is
+	is_running (pmk_object_name: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pmk_object_name' [in].  
 		require
@@ -94,7 +94,7 @@ feature -- Basic Operations
 
 		end
 
-	get_object (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE]) is
+	get_object (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk_object_name' [in].  
 			-- `ppunk_object' [out].  
@@ -107,7 +107,7 @@ feature -- Basic Operations
 			valid_ppunk_object: ppunk_object.item /= Void
 		end
 
-	note_change_time (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD) is
+	note_change_time (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD)
 			-- No description available.
 			-- `dw_register' [in].  
 			-- `pfiletime' [in].  
@@ -119,7 +119,7 @@ feature -- Basic Operations
 
 		end
 
-	get_time_of_last_change (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD) is
+	get_time_of_last_change (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD)
 			-- No description available.
 			-- `pmk_object_name' [in].  
 			-- `pfiletime' [out].  
@@ -131,7 +131,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_running (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is
+	enum_running (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE])
 			-- No description available.
 			-- `ppenum_moniker' [out].  
 		require
@@ -143,7 +143,7 @@ feature -- Basic Operations
 			valid_ppenum_moniker: ppenum_moniker.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

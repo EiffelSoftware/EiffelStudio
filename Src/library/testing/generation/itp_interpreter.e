@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interpreter for line based Eiffel like interpreter language.
 		Depends on a generated Erl-G reflection library.
@@ -33,7 +33,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	execute is
+	execute
 			-- Execute interpreter.
 			-- Command line for current: interpreter <port> <melt feature id> <log file>
 			-- <port> is the port number used in socket IPC
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature {NONE} -- Handlers
 
-	report_type_request is
+	report_type_request
 		require
 			last_request_attached: last_request /= Void
 			last_request_is_type_request: last_request.flag = type_request_flag
@@ -156,16 +156,16 @@ feature {NONE} -- Handlers
 			send_response_to_socket
 		end
 
-	report_quit_request is
+	report_quit_request
 		do
 			should_quit := True
 		end
 
-	report_start_request is
+	report_start_request
 		do
 		end
 
-	report_execute_request is
+	report_execute_request
 			-- Report execute request.
 		require
 			last_request_attached: last_request /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Handlers
 
 feature {NONE} -- Error Reporting
 
-	report_error (a_reason: STRING) is
+	report_error (a_reason: STRING)
 		require
 			a_reason_not_void: a_reason /= Void
 			a_reason_not_empty: not a_reason.is_empty
@@ -209,7 +209,7 @@ feature {NONE} -- Error Reporting
 			has_error: has_error
 		end
 
-	log_internal_error (a_reason: STRING) is
+	log_internal_error (a_reason: STRING)
 			-- Put `a_reason' in log file.
 		require
 			a_reason_attached: a_reason /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Logging
 	log_file: PLAIN_TEXT_FILE
 			-- Log file
 
-	log_instance (an_object: ANY) is
+	log_instance (an_object: ANY)
 			-- Log an XML representation of `an_object' to `log_file'.
 		do
 			log_message ("<instance<![CDATA[%N")
@@ -241,7 +241,7 @@ feature {NONE} -- Logging
 			log_message ("]]>%N</instance>%N")
 		end
 
-	log_message (a_message: STRING) is
+	log_message (a_message: STRING)
 			-- Log message `a_messgae' to `log_message'.
 		require
 			a_message_not_void: a_message /= Void
@@ -251,7 +251,7 @@ feature {NONE} -- Logging
 			end
 		end
 
-	report_trace is
+	report_trace
 			-- Report trace information into `error_buffer'.
 		require
 --			has_exception: An exception happened before
@@ -320,7 +320,7 @@ feature{NONE} -- IO Buffer
 			-- Note: Error here does not mean standard error from testee feature, stderr error should be handled by
 			-- `output_buffer'.
 
-	wipe_out_buffer is
+	wipe_out_buffer
 			-- Clear `output_buffer' and `error_buffer'.
 		do
 			output_buffer.wipe_out
@@ -330,7 +330,7 @@ feature{NONE} -- IO Buffer
 			error_buffer_cleared: error_buffer.is_empty
 		end
 
-	buffer_size: INTEGER is 4096
+	buffer_size: INTEGER = 4096
 			-- Size in byte for `output_buffer'
 
 feature{NONE} -- Socket IPC
@@ -343,7 +343,7 @@ feature{NONE} -- Socket IPC
 			-- `flag' indicates request type,
 			-- `data' stores data needed for that reques type.
 
-	retrieve_request is
+	retrieve_request
 			-- Retrieve request from proxy and store it in `last_request'.
 			-- Blocking if no request is received.
 			-- Close socket on error.
@@ -378,7 +378,7 @@ feature{NONE} -- Socket IPC
 			retry
 		end
 
-	send_response_to_socket is
+	send_response_to_socket
 			-- Send response stored in `output_buffer' and `error_buffer' into `socket'.
 			-- If error occurs, close `socket'.
 		local
@@ -397,7 +397,7 @@ feature{NONE} -- Socket IPC
 			retry
 		end
 
-	print_line_and_flush (a_text: STRING) is
+	print_line_and_flush (a_text: STRING)
 			-- Print `a_text' followed by a newline and flush output stream.
 		require
 			a_text_not_void: a_text /= Void
@@ -408,7 +408,7 @@ feature{NONE} -- Socket IPC
 
 feature{NONE} -- Parsing
 
-	parse is
+	parse
 			-- Parse input and call corresponding handler routines (`report_*').
 		require
 			not_has_error: not has_error
@@ -452,7 +452,7 @@ feature{NONE} -- Byte code
 	byte_code_feature_pattern_id: INTEGER
 			-- Pattern ID for feature whose byte-code is to be injected
 
-	execute_protected is
+	execute_protected
 			-- Execute `procedure' in a protected way.
 		local
 			failed: BOOLEAN
@@ -473,7 +473,7 @@ feature{NONE} -- Byte code
 			retry
 		end
 
-	pointer_for_byte_code (a_byte_code_string: STRING): POINTER is
+	pointer_for_byte_code (a_byte_code_string: STRING): POINTER
 			-- pointer representation for `a_byte_code_string'
 		require
 			a_byte_code_string_attached: a_byte_code_string /= Void
@@ -497,7 +497,7 @@ feature{NONE} -- Byte code
 			result_attached: Result /= default_pointer
 		end
 
-	execute_byte_code is
+	execute_byte_code
 			-- Execute test case
 			-- The test case will be written as byte-code.
 		local
@@ -506,19 +506,19 @@ feature{NONE} -- Byte code
 			v_1 := Void
 		end
 
-	store_variable_at_index	(a_object: ANY; a_index: INTEGER) is
+	store_variable_at_index	(a_object: ANY; a_index: INTEGER)
 			-- Store `a_object' at `a_index' in `store'.
 		do
 			store.assign_value (a_object, a_index)
 		end
 
-	variable_at_index (a_index: INTEGER): ANY is
+	variable_at_index (a_index: INTEGER): ANY
 			-- Object in `store' at position `a_index'.
 		do
 			Result := store.variable_value (a_index)
 		end
 
-	eif_override_byte_code_of_body (a_body_id: INTEGER; a_pattern_id: INTEGER; a_byte_code: POINTER; a_length: INTEGER) is
+	eif_override_byte_code_of_body (a_body_id: INTEGER; a_pattern_id: INTEGER; a_byte_code: POINTER; a_length: INTEGER)
 			-- Store `a_byte_code' of `a_length' byte long for feature with `a_body_id'.
 		require
 			a_body_id_not_negative: a_body_id >= 0
@@ -534,7 +534,7 @@ feature{NONE} -- Byte code
 			]"
 		end
 
-	main_loop is
+	main_loop
 			-- Main loop
 		do
 			from
@@ -549,11 +549,11 @@ feature{NONE} -- Byte code
 
 feature{NONE} -- Error message
 
-	invalid_request_format_error: STRING is "Invalid request format."
+	invalid_request_format_error: STRING = "Invalid request format."
 
-	byte_code_not_found_error: STRING is "No byte-code is found in request."
+	byte_code_not_found_error: STRING = "No byte-code is found in request."
 
-	byte_code_length_error: STRING is "Length of retrieved byte-code is not the same as specified in request."
+	byte_code_length_error: STRING = "Length of retrieved byte-code is not the same as specified in request."
 
 invariant
 	log_file_open_write: log_file /= Void implies log_file.is_open_write

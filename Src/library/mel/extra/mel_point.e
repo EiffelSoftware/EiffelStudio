@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Two dimensional point."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_x, a_y: INTEGER) is
+	make (an_x, a_y: INTEGER)
 			-- Create a two dimensions point.
 		do
 			x := an_x;
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Change the x coordinate of the point.
 		do
 			x := a_x
@@ -41,7 +41,7 @@ feature -- Element change
 			x_set: x = a_x
 		end;
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Change the y coordinate of the point.
 		do
 			y := a_y
@@ -49,7 +49,7 @@ feature -- Element change
 			y_set: y = a_y
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEL tooltipable. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Text of tooltip assigned to `Current'.
 		do
 			if internal_tooltip_string = Void then
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		local
 			l_app: EV_APPLICATION_IMP
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 	internal_tooltip_string: STRING_32
 		-- Internal text of tooltip assigned to `Current'.
 
-	tooltip_window: WEL_WINDOW is
+	tooltip_window: WEL_WINDOW
 			-- Window of `Current' for use with tooltips.
 			--| This is redefined in descendents as necessary.
 			--| When redefinition has taken place in all descendents then
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			Result := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

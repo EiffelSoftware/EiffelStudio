@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision Implementation of a selection box."
@@ -42,7 +42,7 @@ create
  
 feature {NONE} -- Initialization
  
-	make (a_prompt: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_prompt: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif prompt.
 		local
 			mc: MEL_COMPOSITE
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	selection_text: STRING is
+	selection_text: STRING
 			-- Current text in selection box
 		local
 			t: MEL_STRING
@@ -66,7 +66,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_apply_label (a_label: STRING) is
+	set_apply_label (a_label: STRING)
 			-- Set `a_label' as label for apply button,
 			-- by default this label is `apply'.
 		local
@@ -77,7 +77,7 @@ feature -- Status Setting
 			ms.destroy
 		end;
 
-	set_cancel_label (a_label: STRING) is
+	set_cancel_label (a_label: STRING)
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		local
@@ -88,7 +88,7 @@ feature -- Status Setting
 			ms.destroy
 		end;
 
-	set_help_label (a_label: STRING) is
+	set_help_label (a_label: STRING)
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		local
@@ -99,7 +99,7 @@ feature -- Status Setting
 			ms.destroy
 		end;
 
-	set_ok_label (a_label: STRING) is
+	set_ok_label (a_label: STRING)
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		local
@@ -110,7 +110,7 @@ feature -- Status Setting
 			ms.destroy
 		end;
 
-	set_selection_label (a_label: STRING) is
+	set_selection_label (a_label: STRING)
 			-- Set `a_label' as selection label,
 			-- by default this label is `selection'.
 		local
@@ -121,7 +121,7 @@ feature -- Status Setting
 			ms.destroy
 		end;
 
-	set_selection_text (a_text: STRING) is
+	set_selection_text (a_text: STRING)
 			-- Set selection text to `a_text'.
 		local
 			ms: MEL_STRING
@@ -133,49 +133,49 @@ feature -- Status Setting
 
 feature -- Display
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		do
 			apply_button.unmanage
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			cancel_button.unmanage
 		end;
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		do
 			help_button.unmanage
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			ok_button.unmanage
 		end;
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		do
 			apply_button.manage
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		do
 			cancel_button.manage
 		end;
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		do
 			help_button.manage
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		do
 			ok_button.manage
@@ -183,7 +183,7 @@ feature -- Display
 
 feature -- Element change
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
+	add_apply_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		local
@@ -197,7 +197,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		local
@@ -211,7 +211,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		local
@@ -225,7 +225,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		local
@@ -241,28 +241,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
+	remove_apply_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
 			remove_command (apply_command, a_command, argument)
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			remove_command (cancel_command, a_command, argument)
 		end;
 
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		do
 			remove_command (help_command, a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -271,14 +271,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	set_foreground_color_from_imp (color_imp: COLOR_IMP) is
+	set_foreground_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		do
 			mel_set_foreground_color (color_imp);
 			text.set_foreground_color (color_imp)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

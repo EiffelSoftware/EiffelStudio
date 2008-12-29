@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that is a factory for scaled fonts.
 			Reduces memory usage and speed up systems with only a few different fonts and a
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EV_SCALED_FONT_FACTORY
 		do
 			create scaled_fonts.make (1, max_table_size)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	registered_font (a_font: EV_FONT): EV_IDENTIFIED_FONT is
+	registered_font (a_font: EV_FONT): EV_IDENTIFIED_FONT
 			-- Return new identified font for `a_font'
 			-- or identified font for `a_font' if same object is registred.
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			result_not_Void: Result /= Void
 		end
 		
-	scaled_font (an_id_font: EV_IDENTIFIED_FONT; should_height: INTEGER): EV_FONT is
+	scaled_font (an_id_font: EV_IDENTIFIED_FONT; should_height: INTEGER): EV_FONT
 			-- `an_id_font' scaled to `should_height'.
 		require
 			an_id_font_not_Void: an_id_font /= Void
@@ -73,7 +73,7 @@ feature -- Access
 	
 feature -- Element change
 
-	register_font (an_id_font: EV_IDENTIFIED_FONT) is
+	register_font (an_id_font: EV_IDENTIFIED_FONT)
 			-- Register `an_id_font' in the factory.
 		require
 			an_id_font_not_Void: an_id_font /= Void
@@ -86,7 +86,7 @@ feature -- Element change
 			end
 		end
 		
-	unregister_font (an_id_font: EV_IDENTIFIED_FONT) is
+	unregister_font (an_id_font: EV_IDENTIFIED_FONT)
 			-- Unregister `an_id_font' if in factory.
 		require
 			an_id_font_not_Void: an_id_font /= Void
@@ -108,10 +108,10 @@ feature {NONE} -- Implementation
 	orginal_fonts: ARRAY [EV_FONT]
 			-- Table of orginal fonts for `scaled_fonts'.
 	
-	max_table_size: INTEGER is 20
+	max_table_size: INTEGER = 20
 			-- Maxmimum size of `scaled_fonts' and `orginal_fonts'.
 	
-	scaled_font_internal (a_font: EV_FONT; a_height: INTEGER): EV_FONT is
+	scaled_font_internal (a_font: EV_FONT; a_height: INTEGER): EV_FONT
 			-- `a_font' scaled to `a_height'.
 		require
 			a_font_not_Void: a_font /= Void
@@ -131,7 +131,7 @@ invariant
 	scaled_fonts_not_Void: scaled_fonts /= Void
 	orginal_fonts_not_Void: orginal_fonts /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

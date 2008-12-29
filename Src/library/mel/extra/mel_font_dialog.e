@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"MEL Implementation of a font box."
@@ -39,7 +39,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif form dialog.
 		local
 			widget_name: ANY
@@ -60,7 +60,7 @@ feature -- Access
 	parent: MEL_DIALOG_SHELL;;
 			-- Dialog shell
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

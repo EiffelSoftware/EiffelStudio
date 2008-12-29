@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Control window with two children separated%
@@ -27,40 +27,40 @@ feature -- Access
 
 feature -- Element change
 
-	update_split is
+	update_split
 		deferred
 		end
 
-	set_proportion (p:INTEGER) is
+	set_proportion (p:INTEGER)
 			-- Set the split proportion from 0 to 100.
 		require
 			valid_proportion: p>=0 and then p<=100
 		deferred
 		end
 
-	add_child (a_child: SPLIT_WINDOW_CHILD) is
+	add_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as currently lowest child.
 		require
 			a_child_not_void: a_child /= Void
 		deferred
 		end
 
-	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+	remove_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Remove `a_child' from the display.
 		deferred
 		end
 
-	add_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	add_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as managed.
 		deferred
 		end
 
-	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	remove_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Remove `a_window' as managed.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

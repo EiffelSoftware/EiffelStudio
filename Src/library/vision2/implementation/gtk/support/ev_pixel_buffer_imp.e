@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gtk implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
 		local
 			l_x, l_y, l_width, l_height: NATURAL_32
@@ -52,14 +52,14 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make (an_interface: EV_PIXEL_BUFFER) is
+	make (an_interface: EV_PIXEL_BUFFER)
 			-- Creation method.
 		do
 			base_make (an_interface)
 			make_with_size (1, 1)
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap''s image data.
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			set_gdkpixbuf (l_pixbuf)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			if reusable_managed_pointer = Void then
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING) is
+	set_with_named_file (a_file_name: STRING)
 			-- Load pixel data file `a_file_name'.
 		local
 			l_cs: EV_GTK_C_STRING
@@ -103,7 +103,7 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: STRING) is
+	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
 		local
 			l_cs, l_file_type: EV_GTK_C_STRING
@@ -155,7 +155,7 @@ feature -- Command
 		end
 
 
-	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Draw Current to `a_drawable'
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP
@@ -172,7 +172,7 @@ feature -- Command
 			end
 		end
 
-	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
+	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -194,7 +194,7 @@ feature -- Command
 			end
 		end
 
-	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Get RGBA value at `a_y', `a_y'.
 		local
 			byte_pos: INTEGER_32
@@ -216,7 +216,7 @@ feature -- Command
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
 		end
 
-	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+	set_pixel (a_x, a_y, rgba: NATURAL_32)
 			-- Set RGBA value at `a_x', `a_y' to `rgba'.
 		local
 			byte_pos: INTEGER_32
@@ -239,7 +239,7 @@ feature -- Command
 			l_managed_pointer.put_natural_32_be (rgba, byte_pos)
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
 			-- Draw `a_text' using `a_font' at `a_point'.
 		local
 			l_x, l_y, l_width, l_height: INTEGER
@@ -290,7 +290,7 @@ feature -- Command
 			l_pixbuf_ptr2 := default_pointer
 		end
 
-	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		local
 			l_pixel_buffer_imp: EV_PIXEL_BUFFER_IMP
@@ -349,7 +349,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of buffer in pixels.
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
@@ -359,7 +359,7 @@ feature -- Query
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of buffer in pixels.
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
@@ -369,7 +369,7 @@ feature -- Query
 			end
 		end
 
-	data_ptr: POINTER is
+	data_ptr: POINTER
 			--Memory acess point to image data.
 			-- This feature is NOT platform independent.
 		do
@@ -378,7 +378,7 @@ feature -- Query
 
 feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
-	set_from_stock_id (a_stock_id: POINTER) is
+	set_from_stock_id (a_stock_id: POINTER)
 			-- Pixmap symbolizing a piece of information
 		require
 			a_stock_id_not_null: a_stock_id /= default_pointer
@@ -405,7 +405,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 	internal_pixmap: EV_PIXMAP
 		-- Pixmap used for fallback implementation on gtk 1.2
 
-	set_gdkpixbuf (a_pixbuf: POINTER) is
+	set_gdkpixbuf (a_pixbuf: POINTER)
 			-- Set `gdk_pixbuf' to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
@@ -426,7 +426,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 
 		end
 
-	set_internal_pixmap (a_pixmap: like internal_pixmap) is
+	set_internal_pixmap (a_pixmap: like internal_pixmap)
 			-- Set `internal_pixmap' to `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -437,7 +437,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 	gdk_pixbuf: POINTER
 		-- Pointer to the GdkPixbuf structure.
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_in_destroy (True)
@@ -447,7 +447,7 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 
 feature {NONE} -- Dispose
 
-	dispose is
+	dispose
 			-- Dispose current.
 		do
 			set_gdkpixbuf (default_pointer)
@@ -455,7 +455,7 @@ feature {NONE} -- Dispose
 
 feature {NONE} -- Obsolete
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
 		obsolete
 			"Use draw_pixel_buffer_with_x_y instead"
@@ -466,7 +466,7 @@ feature {NONE} -- Obsolete
 			{EV_GTK_EXTERNALS}.gdk_pixbuf_copy_area (l_pixel_buffer_imp.gdk_pixbuf, 0, 0, a_rect.width, a_rect.height, gdk_pixbuf, a_rect.x, a_rect.y)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

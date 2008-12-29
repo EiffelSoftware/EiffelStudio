@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS action"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: COMMAND; a_argument: ANY) is
+	make (a_command: COMMAND; a_argument: ANY)
 		require
 			a_command_exists: a_command /= Void
 		do
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	execute is
+	execute
 		do
 			command.execute (argument)
 		end
@@ -43,7 +43,7 @@ invariant
 
 	command_not_void: command /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

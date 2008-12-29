@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toggle button on SD_TOOL_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			Precursor {SD_TOOL_BAR_BUTTON}
@@ -32,7 +32,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- If current selected?
 		do
 			Result := state = {SD_TOOL_BAR_ITEM_STATE}.checked or state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked
@@ -40,7 +40,7 @@ feature -- Query
 
 feature -- Command
 
-	enable_select is
+	enable_select
 			-- Enable select.
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.checked
@@ -48,7 +48,7 @@ feature -- Command
 			update
 		end
 
-	disable_select is
+	disable_select
 			-- Disable select
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
@@ -58,7 +58,7 @@ feature -- Command
 
 feature {NONE} -- Agents
 
-	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
 			-- Handle pointer press actions.
 		do
 			if has_position (a_relative_x, a_relative_y) and is_sensitive then
@@ -74,7 +74,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
 			-- Handle pointer release actions.
 		do
 			if is_sensitive then
@@ -96,7 +96,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- Handle pointer motion actions.
 		do
 			if tool_bar /= Void then
@@ -121,7 +121,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Handle pointer leave actions.
 		do
 			if state /= last_state then
@@ -137,7 +137,7 @@ feature {NONE} --Implementation
 	last_state: INTEGER;
 			-- Last button state.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

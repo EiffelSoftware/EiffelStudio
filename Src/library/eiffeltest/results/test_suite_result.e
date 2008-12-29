@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Results of executing a test suite"
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create result.
 		do
 			list_make (0)
@@ -62,7 +62,7 @@ feature -- Measurement
 	 
 feature -- Status report
 
-	all_tests_passed: BOOLEAN is
+	all_tests_passed: BOOLEAN
 			-- Have all test runs passed?
 		local
 			old_run: INTEGER
@@ -86,25 +86,25 @@ feature -- Status report
 			run_unchanged: run = old run
 		end
 	 
-	has_passed: BOOLEAN is
+	has_passed: BOOLEAN
 			-- Has selected run passed?
 		do
 			Result := (item.state = Passed_state)
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Has selected run thrown an exception?
 		do
 			Result := (item.state = Exception_state)
 		end
 
-	insertable (v: TEST_RUN_RESULT): BOOLEAN is
+	insertable (v: TEST_RUN_RESULT): BOOLEAN
 			-- Can `v' be inserted?
 		do
 			Result := True
 		end
 
-	has_results: BOOLEAN is
+	has_results: BOOLEAN
 			-- Are there test results available?
 		do
 			Result := run_count > 0
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_result (res: LINEAR [TEST_RUN_RESULT]) is
+	add_result (res: LINEAR [TEST_RUN_RESULT])
 			-- Add result from subresults `res'.
 		require
 			results_not_empty: res /= Void and then not res.is_empty
@@ -140,7 +140,7 @@ feature -- Element change
 
 feature -- Removal
 	
-	clear_results is
+	clear_results
 			-- Clear test results.
 		do
 			passed_tests := 0
@@ -154,7 +154,7 @@ invariant
 			all_tests_passed = (has_results and failed_tests = 0)
 	valid_run_index: has_results implies valid_run_index (run)
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

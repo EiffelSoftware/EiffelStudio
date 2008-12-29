@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EiffelVision text area. To query multiple lines of text from the user.
@@ -32,7 +32,7 @@ create
 
 feature -- Access
 
-	line (i: INTEGER): STRING_32 is
+	line (i: INTEGER): STRING_32
 			-- `Result' is content of `i'th line.
 		require
 			not_destroyed: not is_destroyed
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_word_wrapping: BOOLEAN is
+	has_word_wrapping: BOOLEAN
 			-- Is word wrapping enabled?
 			-- If enabled, lines that are too long to be displayed
 			-- in `Current' will be wrapped onto new lines.
@@ -59,7 +59,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.has_word_wrapping
 		end
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- Line currently containing cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 			valid_line_index: valid_line_index (Result)
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -79,7 +79,7 @@ feature -- Status report
 			result_greater_zero: Result > 0
 		end
 
-	first_position_from_line_number (i: INTEGER): INTEGER is
+	first_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of first character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
@@ -90,7 +90,7 @@ feature -- Status report
 			valid_caret_position: valid_caret_position (i)
 		end
 
-	last_position_from_line_number (i: INTEGER): INTEGER is
+	last_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of last character on `i'-th line.
 		require
 			not_destroyed: not is_destroyed
@@ -101,7 +101,7 @@ feature -- Status report
 			valid_caret_position: valid_caret_position (i)
 		end
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		require
 			not_destroyed: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Ensure `has_word_wrapping' is True.
 		require
 			not_destroyed: not is_destroyed
@@ -124,7 +124,7 @@ feature -- Basic operation
 			word_wrapping_enabled: has_word_wrapping
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Ensure `has_word_wrapping' is False.
 		require
 			not_destroyed: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Basic operation
 			word_wrapping_disabled: not has_word_wrapping
 		end
 
-	scroll_to_line (i: INTEGER) is
+	scroll_to_line (i: INTEGER)
 			-- Ensure that line `i' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Basic operation
 			implementation.scroll_to_line (i)
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Ensure that the last line is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -151,7 +151,7 @@ feature -- Basic operation
 			implementation.scroll_to_end
 		end
 
-	search (str: STRING_GENERAL; start: INTEGER): INTEGER is
+	search (str: STRING_GENERAL; start: INTEGER): INTEGER
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
@@ -161,7 +161,7 @@ feature -- Basic operation
 			Result := implementation.search (str, start)
 		end
 
-	select_lines (first_line, last_line: INTEGER) is
+	select_lines (first_line, last_line: INTEGER)
 			-- Select all lines from `first_line' to `last_line'.
 		require
 			not_destroyed: not is_destroyed
@@ -175,13 +175,13 @@ feature -- Basic operation
 
 feature -- Contract support
 
-	valid_line_index (i: INTEGER): BOOLEAN is
+	valid_line_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid line index?
 		do
 			Result := i > 0 and i <= line_count
 		end
 
-	last_line_not_empty: BOOLEAN is
+	last_line_not_empty: BOOLEAN
 			-- Has last line at least one character?
 		obsolete "Use `not line (line_count).is_empty'"
 		do
@@ -190,7 +190,7 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TEXT_COMPONENT} and Precursor {EV_FONTABLE} and has_word_wrapping
@@ -203,13 +203,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TEXT_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

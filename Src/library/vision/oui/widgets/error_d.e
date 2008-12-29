@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Message box with a specific error symbol to warn the user %
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an error dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -50,7 +50,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaiton
 	implementation: ERROR_D_I;
 			-- Implementation of error dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision fixed. Implementation interface."
 	legal: "See notice at end of class."
@@ -58,7 +58,7 @@ feature -- Element change
 			an_item_height_assigned: a_widget.height = a_height
 		end
 
-	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
+	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER)
 			-- Set `a_widget.x_position' to `an_x'.
 		require
 			has_a_widget: has (a_widget)
@@ -68,7 +68,7 @@ feature -- Element change
 			a_widget_x_position_assigned: a_widget.x_position = an_x
 		end
 
-	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER) is
+	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER)
 			-- Set `a_widget.y_position' to `a_y'.
 		require
 			has_a_widget: has (a_widget)
@@ -78,7 +78,7 @@ feature -- Element change
 			a_widget_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER)
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		require
@@ -89,7 +89,7 @@ feature -- Element change
 			a_widget_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER) is
+	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 		require
 			has_a_widget: has (a_widget)
@@ -99,7 +99,7 @@ feature -- Element change
 			set_item_size (a_widget, a_width, a_widget.height)
 		end
 
-	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
+	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER)
 			-- Set `a_widget.height' to `a_height'.
 		require
 			has_a_widget: has (a_widget)
@@ -109,7 +109,7 @@ feature -- Element change
 			set_item_size (a_widget, a_widget.width, a_height)
 		end
 
-	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		require
@@ -127,7 +127,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

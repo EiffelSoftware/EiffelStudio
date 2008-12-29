@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities for inspecting global environment information."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	application: EV_APPLICATION is
+	application: EV_APPLICATION
 			-- Single application object for system.
 		require
 			not_destroyed: not is_destroyed
@@ -32,7 +32,7 @@ feature -- Access
 			bridge_ok: Result = implementation.application
 		end
 
-	supported_image_formats: LINEAR [STRING_32] is
+	supported_image_formats: LINEAR [STRING_32]
 			-- `Result' contains all supported image formats
 			-- on current platform, as a three letter uppercase
 			-- extension. e.g. PNG, BMP, ICO.
@@ -45,7 +45,7 @@ feature -- Access
 			object_comparison_set: Result.object_comparison
 		end
 
-	font_families: LINEAR [STRING_32] is
+	font_families: LINEAR [STRING_32]
 			-- All fonts families available on current platform.
 		require
 			not_destroyed: not is_destroyed
@@ -55,7 +55,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	font_families_8: LINEAR [STRING] is
+	font_families_8: LINEAR [STRING]
 			-- All fonts families available on current platform.
 		require
 			not_destroyed: not is_destroyed
@@ -82,7 +82,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	mouse_wheel_scroll_lines: INTEGER is
+	mouse_wheel_scroll_lines: INTEGER
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
 		require
@@ -91,7 +91,7 @@ feature -- Access
 			Result := implementation.mouse_wheel_scroll_lines
 		end
 
-	default_pointer_style_width: INTEGER is
+	default_pointer_style_width: INTEGER
 			-- Default pointer style width.
 		require
 			not_destroyed: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Access
 			Result := implementation.default_pointer_style_width
 		end
 
-	default_pointer_style_height: INTEGER is
+	default_pointer_style_height: INTEGER
 			-- Default pointer style height.
 		require
 			not_destoryed: not is_destroyed
@@ -107,7 +107,7 @@ feature -- Access
 			Result := implementation.default_pointer_style_height
 		end
 
-	has_printer: BOOLEAN is
+	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		require
@@ -118,7 +118,7 @@ feature -- Access
 
 feature {NONE} -- Contract support
 
-	application_exists: BOOLEAN is
+	application_exists: BOOLEAN
 			-- Does the application exist? This is used to stop
 			-- manipulation of widgets before an application is created.
 			-- As we are now in the process of creating the application,
@@ -134,13 +134,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_ENVIRONMENT_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

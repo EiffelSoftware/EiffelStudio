@@ -1,4 +1,4 @@
- indexing
+ note
 	description: "A notebook show mini tool bar and tabs at top."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		do
 			create internal_tool_bar.make
@@ -82,7 +82,7 @@ feature {NONE} -- Initlization
 			init_action
 		end
 
-	init_action is
+	init_action
 			-- Initialize actions.
 		do
 			internal_normal_max_button.select_actions.extend (agent on_normal_max_window)
@@ -109,7 +109,7 @@ feature -- Query
 	is_maximized: BOOLEAN
 			-- If Current is maximized?
 
-	is_in_close_area: BOOLEAN is
+	is_in_close_area: BOOLEAN
 			-- If pointer position in tab close button area?
 		do
 			from
@@ -122,7 +122,7 @@ feature -- Query
 			end
 		end
 
-	in_normal_maximize_area: BOOLEAN is
+	in_normal_maximize_area: BOOLEAN
 			-- If pointer position in normal/maximize button area?
 		do
 			Result := internal_minimize_button.state = {SD_TOOL_BAR_ITEM_STATE}.hot
@@ -130,7 +130,7 @@ feature -- Query
 
 feature -- Command
 
-	set_mini_tool_bar (a_widget: EV_WIDGET) is
+	set_mini_tool_bar (a_widget: EV_WIDGET)
 			-- Set `custom_area' widget.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -139,7 +139,7 @@ feature -- Command
 			custom_area.extend (a_widget)
 		end
 
-	set_tab_position (a_position: INTEGER) is
+	set_tab_position (a_position: INTEGER)
 			-- Redefine
 		do
 			start
@@ -158,7 +158,7 @@ feature -- Command
 			disable_item_expand (internal_border_for_tab_area)
 		end
 
-	set_show_maximized (a_maximized: BOOLEAN) is
+	set_show_maximized (a_maximized: BOOLEAN)
 			-- Set `internal_normal_max_button''s pixmap.
 		do
 			if a_maximized then
@@ -177,7 +177,7 @@ feature -- Command
 			is_maximized := a_maximized
 		end
 
-	set_show_minimized (a_minimized: BOOLEAN) is
+	set_show_minimized (a_minimized: BOOLEAN)
 			-- Set `internal_minimized_button''s pixmap
 		do
 			if not a_minimized then
@@ -195,19 +195,19 @@ feature -- Command
 			end
 		end
 
-	extend (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			Precursor {SD_NOTEBOOK} (a_content)
 		end
 
-	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Redefine.
 		do
 			internal_tab_box.on_resize (a_x, a_y, a_width - internal_tool_bar.width, a_height)
 		end
 
-	destroy is
+	destroy
 			-- Refefine
 		do
 			Precursor {SD_NOTEBOOK}
@@ -217,19 +217,19 @@ feature -- Command
 
 feature {NONE}  -- Agents
 
-	on_normal_max_window is
+	on_normal_max_window
 			-- Handle normal max window.
 		do
 			normal_max_actions.call (Void)
 		end
 
-	on_minimize is
+	on_minimize
 			-- Handle minimize actions.
 		do
 			minimize_actions.call (Void)
 		end
 
-	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_tab_area_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle tab area pointer press actions.
 		do
 			if a_button = 1 then
@@ -239,7 +239,7 @@ feature {NONE}  -- Agents
 			end
 		end
 
-	on_tab_area_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_tab_area_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle tab area pointer release actions.
 		do
 			if a_button = 1 then
@@ -249,7 +249,7 @@ feature {NONE}  -- Agents
 			end
 		end
 
-	on_tab_area_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_tab_area_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle tab area motion actions.
 		do
 			if is_pointer_pressed then
@@ -265,7 +265,7 @@ feature {NONE}  -- Implementation
 	is_pointer_pressed: BOOLEAN
 			-- If pointer pressed on `internal_tab_box'?
 
-	setter: SD_SYSTEM_SETTER is
+	setter: SD_SYSTEM_SETTER
 			-- System setter
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
@@ -298,7 +298,7 @@ invariant
 	normal_max_actions_not_void: normal_max_actions /= Void
 	minimize_actions_not_void: minimize_actions /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

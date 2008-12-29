@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Display content of simple help context in a dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ create
 
 feature -- Access
 
-	Help_title: STRING is "Contextual Help"
+	Help_title: STRING = "Contextual Help"
 			-- Help dialog title
 
 feature -- Basic Operations
 
-	show (a_help_context: EV_SIMPLE_HELP_CONTEXT) is
+	show (a_help_context: EV_SIMPLE_HELP_CONTEXT)
 			-- Display content of `a_help_context' in a dialog.
 		local
 			help_dialog: EV_INFORMATION_DIALOG
@@ -37,7 +37,7 @@ feature -- Basic Operations
 			help_dialog.show
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

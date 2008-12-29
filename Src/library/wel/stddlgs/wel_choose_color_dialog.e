@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Standard dialog box to choose a color."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make and setup the structure
 		do
 			standard_dialog_make
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rgb_result: WEL_COLOR_REF is
+	rgb_result: WEL_COLOR_REF
 			-- Color selected by the user and default color
 			-- selected when the dialog box is created.
 		require
@@ -59,7 +59,7 @@ feature -- Access
 	custom_colors: WEL_CUSTOM_COLORS
 			-- Custom colors chosen by the user
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in 
 			-- class WEL_CHOOSE_COLOR_CONSTANTS.
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
@@ -79,7 +79,7 @@ feature -- Element change
 			flags_set: flags = a_flags
 		end
 
-	add_flag (a_flags: INTEGER) is
+	add_flag (a_flags: INTEGER)
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
@@ -89,7 +89,7 @@ feature -- Element change
 			has_flag: has_flag (a_flags)
 		end
 
-	remove_flag (a_flags: INTEGER) is
+	remove_flag (a_flags: INTEGER)
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
@@ -99,7 +99,7 @@ feature -- Element change
 			has_not_flag: not has_flag (a_flags)
 		end
 
-	set_rgb_result (color: WEL_COLOR_REF) is
+	set_rgb_result (color: WEL_COLOR_REF)
 			-- Set `rgb_result' with `color'
 		require
 			color_not_void: color /= Void
@@ -110,7 +110,7 @@ feature -- Element change
 			color_set: rgb_result.item = (color.item)
 		end
 
-	set_custom_colors (a_custom_colors: WEL_CUSTOM_COLORS) is
+	set_custom_colors (a_custom_colors: WEL_CUSTOM_COLORS)
 			-- Set `custom_colors' with `a_custom_colors'.
 		require
 			a_custom_colors_not_void: a_custom_colors /= Void
@@ -124,7 +124,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	prevent_full_open is
+	prevent_full_open
 			-- Disable the define custom colors button,
 			-- preventing the user from creating custom colors.
 		do
@@ -133,7 +133,7 @@ feature -- Status setting
 			full_open_prevented: not full_open_allowed
 		end
 
-	allow_full_open is
+	allow_full_open
 			-- Enable the define custom colors button,
 			-- allowing the user from creating custom colors.
 		do
@@ -144,7 +144,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	has_flag (a_flags: INTEGER): BOOLEAN is
+	has_flag (a_flags: INTEGER): BOOLEAN
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
 			-- values.
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := flag_set (flags, a_flags)
 		end
 
-	full_open_allowed: BOOLEAN is
+	full_open_allowed: BOOLEAN
 			-- Is the define custom colors button enabled?
 			-- This button allows the user to create custom colors.
 		do
@@ -161,7 +161,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+	activate (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
 		do
@@ -171,7 +171,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
+	set_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set the parent window with `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_choose_color
@@ -190,68 +190,68 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_choose_color: INTEGER is
+	c_size_of_choose_color: INTEGER
 		external
 			"C [macro <chooseco.h>]"
 		alias
 			"sizeof (CHOOSECOLOR)"
 		end
 
-	cwel_choose_color_set_lstructsize (ptr: POINTER; value: INTEGER) is
+	cwel_choose_color_set_lstructsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_hwndowner (ptr: POINTER; value: POINTER) is
+	cwel_choose_color_set_hwndowner (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_rgbresult (ptr: POINTER; value: INTEGER) is
+	cwel_choose_color_set_rgbresult (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_lpcustcolors (ptr: POINTER; value: POINTER) is
+	cwel_choose_color_set_lpcustcolors (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_choose_color_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_set_lpfnhook (ptr: POINTER; value: POINTER) is
+	cwel_choose_color_set_lpfnhook (ptr: POINTER; value: POINTER)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((LPCHOOSECOLOR) $ptr)->lpfnHook = (LPCCHOOKPROC) $value;"
 		end
 
-	cwel_choose_color_get_rgbresult (ptr: POINTER): INTEGER is
+	cwel_choose_color_get_rgbresult (ptr: POINTER): INTEGER
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_get_lpcustcolors (ptr: POINTER): POINTER is
+	cwel_choose_color_get_lpcustcolors (ptr: POINTER): POINTER
 		external
 			"C [macro <chooseco.h>] (CHOOSECOLOR *): EIF_POINTER"
 		end
 
-	cwel_choose_color_get_flags (ptr: POINTER): INTEGER is
+	cwel_choose_color_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-	cwel_choose_color_get_lpfnhook (ptr: POINTER): POINTER is
+	cwel_choose_color_get_lpfnhook (ptr: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"return (EIF_POINTER) ((LPCHOOSECOLOR) $ptr)->lpfnHook;"
 		end
 
-	cwin_choose_color (ptr: POINTER): BOOLEAN is
+	cwin_choose_color (ptr: POINTER): BOOLEAN
 			-- SDK ChooseColor
 		external
 			"C [macro <cdlg.h>] (CHOOSECOLOR *): EIF_BOOLEAN"
@@ -259,7 +259,7 @@ feature {NONE} -- Externals
 			"ChooseColor"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

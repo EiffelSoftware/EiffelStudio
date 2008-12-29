@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception raised in signal handler
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.exception_in_signal_handler
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Exception in signal handler."
+	frozen internal_meaning: STRING = "Exception in signal handler."
 
 end

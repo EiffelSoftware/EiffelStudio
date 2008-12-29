@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	
 						An EV_FIGURE_ELLIPTIC is defined by pa and pb
@@ -44,7 +44,7 @@ inherit
 	
 feature {NONE} -- Initialization
 	
-	default_create is
+	default_create
 			-- Create a EV_FIGURE_ELLIPTIC at (0,0) with no dimension.
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -56,30 +56,30 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- Since not rotatable.
 			
-	is_scalable: BOOLEAN is
+	is_scalable: BOOLEAN
 			-- Elliptic is scalable.
 		do
 			Result := True
 		end
 		
 
-	is_rotatable: BOOLEAN is 
+	is_rotatable: BOOLEAN 
 			-- Elliptic is not rotatable.
 			-- (Use a rotatable_elliptic)
 		do
 			Result := False
 		end
 			
-	is_transformable: BOOLEAN is 
+	is_transformable: BOOLEAN 
 			-- Elliptic is not transformable.
 		do
 			Result := False
 		end
 		
-	radius1: INTEGER is
+	radius1: INTEGER
 			-- The horizontal radius.
 		local
 			l_point_array: like point_array
@@ -92,7 +92,7 @@ feature -- Access
 			Result := as_integer ((p0.x_precise - p1.x_precise) / 2).abs
 		end
 		
-	radius2: INTEGER is
+	radius2: INTEGER
 			-- The vertical radius.
 		local
 			l_point_array: like point_array
@@ -104,26 +104,26 @@ feature -- Access
 			Result := as_integer ((p0.y_precise - p1.y_precise) / 2).abs
 		end
 		
-	point_a_x: INTEGER is
+	point_a_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	point_a_y: INTEGER is
+	point_a_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (0).y
 		end	
 	
 		
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (1).x
 		end
 		
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (1).y
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_radius1 (radius: INTEGER) is
+	set_radius1 (radius: INTEGER)
 			-- Set `radius1' to `radius'.
 		require
 			radius_positive: radius >= 0
@@ -152,7 +152,7 @@ feature -- Element change
 			set: radius1 = radius
 		end
 		
-	set_radius2 (radius: INTEGER) is
+	set_radius2 (radius: INTEGER)
 			-- Set `radius2' to `radius'
 		require
 			radius_positive: radius >= 0
@@ -173,7 +173,7 @@ feature -- Element change
 			set: radius2 = radius
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position of (`ax', `ay').
 		do
 			point_array.item (0).set_precise (ax, ay)
@@ -182,7 +182,7 @@ feature -- Element change
 			center_invalidate
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 		do
 			point_array.item (1).set_precise (ax, ay)
@@ -193,7 +193,7 @@ feature -- Element change
 
 feature -- Events
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthegonal rectangle `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, lw2, v1, v2: DOUBLE
@@ -236,7 +236,7 @@ feature -- Events
 		
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set position of the center.
 		local
 			l_point_array: like point_array
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

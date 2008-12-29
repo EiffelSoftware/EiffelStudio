@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A tree which displays a check box to left
@@ -36,7 +36,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor {EV_TREE_IMP} (an_interface)
@@ -44,20 +44,20 @@ feature {NONE} -- Initialization
 		
 feature -- Status report
 
-	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
+	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- is `tree_item' checked?
 		do
 		end
 
 feature -- Status setting
 
-	check_item (tree_item: EV_TREE_NODE) is
+	check_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		do
 		end
 
-	uncheck_item (tree_item: EV_TREE_NODE) is
+	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		do
@@ -67,7 +67,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

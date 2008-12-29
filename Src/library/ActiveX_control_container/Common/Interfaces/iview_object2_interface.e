@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	get_extent_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD): BOOLEAN is
+	get_extent_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_extent'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_extent (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD) is
+	get_extent (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General menu button implementation"
 	legal: "See notice at end of class.";
@@ -16,19 +16,19 @@ inherit
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	attach_menu (a_menu: MENU_PULL) is
+	attach_menu (a_menu: MENU_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -37,19 +37,19 @@ feature -- Element change
  
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

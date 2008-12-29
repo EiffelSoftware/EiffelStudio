@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Abstract class of X Drawing functions."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	valid_gc (gc: MEL_GC): BOOLEAN is
+	valid_gc (gc: MEL_GC): BOOLEAN
 			-- Is the graphic context `gc' valid?
 		do
 			Result := gc /= Void and then
@@ -31,12 +31,12 @@ feature -- Access
 					and then display.handle = gc.display_handle
 		end;
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Associated display
 		deferred
 		end;
 
-	valid_window: BOOLEAN is
+	valid_window: BOOLEAN
 			-- Is the associated window valid?
 		do
 			Result := window /= default_pointer
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Output
 
-	clear_area (a_x, a_y, a_width, a_height: INTEGER; exposures: BOOLEAN) is
+	clear_area (a_x, a_y, a_width, a_height: INTEGER; exposures: BOOLEAN)
 			-- Clear the area of upper left `a_x' and `a_y' with size
 			-- `a_width' and `a_height'. Generate an expose event
 			-- if `exposures' is True.
@@ -56,7 +56,7 @@ feature -- Output
 					a_x, a_y, a_width, a_height, exposures);
 		end;
 
-	clear_window is
+	clear_window
 			-- Clear the window.
 		require
 			valid_window: valid_window
@@ -64,7 +64,7 @@ feature -- Output
 			x_clear_window (display_handle, window);
 		end;
 
-	draw_point (gc: MEL_GC; x1, y1: INTEGER) is
+	draw_point (gc: MEL_GC; x1, y1: INTEGER)
 			-- Draw a point at `x1', `y1'.
 		require
 			valid_window: valid_window;
@@ -73,7 +73,7 @@ feature -- Output
 			x_draw_point (gc.display_handle, window, gc.handle, x1, y1)
 		end;
 
-	draw_line (gc: MEL_GC; x1, y1: INTEGER; x2, y2: INTEGER) is
+	draw_line (gc: MEL_GC; x1, y1: INTEGER; x2, y2: INTEGER)
 			-- Draw a line between `x1' `y1' to `x2' `y2'.
 		require
 			valid_window: valid_window;
@@ -83,7 +83,7 @@ feature -- Output
 				x1, y1, x2, y2)
 		end;
 
-	draw_string (gc: MEL_GC; x1, y1: INTEGER; a_string: STRING) is
+	draw_string (gc: MEL_GC; x1, y1: INTEGER; a_string: STRING)
 			-- Draw `a_string' at position `x1' and `y1'. 
 		require
 			valid_window: valid_window;
@@ -97,7 +97,7 @@ feature -- Output
 				x1, y1, $ext, a_string.count)
 		end;
 
-	draw_image_string (gc: MEL_GC; x1, y1: INTEGER; a_string: STRING) is
+	draw_image_string (gc: MEL_GC; x1, y1: INTEGER; a_string: STRING)
 			-- Draw `a_string' at position `x1' and `y1'. `draw_image_string'
 			-- is the same as `draw_string' except the text string is filled
 			-- with the background pixel from `gc'.
@@ -113,7 +113,7 @@ feature -- Output
 				x1, y1, $ext, a_string.count)
 		end;
 
-	draw_rectangle (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER) is
+	draw_rectangle (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER)
 			-- Draw an outline of rectangle with upper-left coordinates
 			-- `x1' `y1' with size `a_width' and `a_height'.
 		require
@@ -125,7 +125,7 @@ feature -- Output
 				x1, y1, a_width, a_height)
 		end;
 
-	fill_rectangle (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER) is
+	fill_rectangle (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER)
 			-- Fill a rectangle with upper-left coordinates
 			-- `x1' `y1' with size `a_width' and `a_height'.
 		require
@@ -138,7 +138,7 @@ feature -- Output
 		end;
 
 	draw_arc (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER;
-				angle1, angle2: INTEGER) is
+				angle1, angle2: INTEGER)
 			-- Draw a circular or elliptical arc at coordinate `x1' and `y1'
 			-- with `a_width' and `a_height' to specify the major and
 			-- minor axises of the arc. `angle1' specifies the start of the
@@ -157,7 +157,7 @@ feature -- Output
 		end;
 
 	fill_arc (gc: MEL_GC; x1, y1: INTEGER; a_width, a_height: INTEGER;
-				angle1, angle2: INTEGER) is
+				angle1, angle2: INTEGER)
 			-- Fill a circular or elliptical arc at coordinate `x1' and `y1'
 			-- with `a_width' and `a_height' to specify the major and
 			-- minor axises of the arc. `angle1' specifies the start of the
@@ -175,7 +175,7 @@ feature -- Output
 				x1, y1, a_width, a_height, angle1, angle2)
 		end;
 
-	draw_lines (gc: MEL_GC; list: LIST [MEL_POINT]; is_coord_mode_origin: BOOLEAN) is
+	draw_lines (gc: MEL_GC; list: LIST [MEL_POINT]; is_coord_mode_origin: BOOLEAN)
 			-- Draw a polygon with list of points `list'. If `is_coord_mode_origin'
 			-- then coordinate mode is CoordModeOrigin. Otherwize, the coordinate
 			-- mode is CoordModePrevious.
@@ -215,7 +215,7 @@ feature -- Output
 		end;
 
 	fill_polygon (gc: MEL_GC; list: LIST [MEL_POINT];
-				a_shape: INTEGER; is_coord_mode_origin: BOOLEAN) is
+				a_shape: INTEGER; is_coord_mode_origin: BOOLEAN)
 			-- Fill a polygon with list of points `list' with shape `a_shape'. 
 		 	-- If `is_coord_mode_origin' then coordinate mode is CoordModeOrigin. 
 			-- Otherwize, the coordinate mode is CoordModePrevious.
@@ -257,29 +257,29 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	window: POINTER is
+	window: POINTER
 			-- Associated window
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	c_create_xpoints (a_number: INTEGER): POINTER is
+	c_create_xpoints (a_number: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	c_put_xpoint (an_array: POINTER; a_pos, x1, y2: INTEGER) is
+	c_put_xpoint (an_array: POINTER; a_pos, x1, y2: INTEGER)
 		external
 			"C"
 		end;
 
-	c_free_xpoints (an_array: POINTER) is
+	c_free_xpoints (an_array: POINTER)
 		external
 			"C"
 		end;
 
-	x_clear_window (a_display: POINTER; drawable: POINTER) is
+	x_clear_window (a_display: POINTER; drawable: POINTER)
 		external
 			"C [macro <X11/Xlib.h>] (Display *, Window) | <X11/Xlib.h>"
 		alias
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 		end;
 
 	x_clear_area (a_display: POINTER; w: POINTER; a_x, a_y, width, height: INTEGER;
-				exposure: BOOLEAN) is
+				exposure: BOOLEAN)
 		external
 			"C (Display *, Window, int, int,%
 				%unsigned int, unsigned int, Bool) | <X11/Xlib.h>"
@@ -295,42 +295,42 @@ feature {NONE} -- Implementation
 			"XClearArea"
 		end;
 
-	x_draw_point (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y: INTEGER) is
+	x_draw_point (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawPoint"
 		end;
 
-	x_draw_line (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x1, y1, x2, y2: INTEGER) is
+	x_draw_line (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x1, y1, x2, y2: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawLine"
 		end;
 
-	x_draw_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER) is
+	x_draw_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawRectangle"
 		end;
 
-	x_draw_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER) is
+	x_draw_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawArc"
 		end;
 
-	x_fill_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER) is
+	x_fill_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XFillRectangle"
 		end;
 
-	x_fill_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER) is
+	x_fill_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, int, int, int, int) | <X11/Xlib.h>"
 		alias
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 		end;
 
 	x_draw_lines (a_display, w, gc, arr_pt: POINTER; count,
-					val: INTEGER) is
+					val: INTEGER)
 		external
 			"C (Display *, Drawable, GC, XPoint *, int, int) | <X11/Xlib.h>"
 		alias
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 		end;
 
 	x_fill_polygon (a_display, w, a_gc, arr_pt: POINTER;
-				count, a_shape, a_mode: INTEGER) is
+				count, a_shape, a_mode: INTEGER)
 		external
 			"C (Display *, Drawable, GC, XPoint *, int, int, int) | <X11/Xlib.h>"
 		alias
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 		end;
 
 	x_draw_image_string (a_display, w, a_gc: POINTER; x1,
-					y1: INTEGER; t_name: POINTER; count: INTEGER) is
+					y1: INTEGER; t_name: POINTER; count: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, char *, int) | <X11/Xlib.h>"
 		alias
@@ -362,14 +362,14 @@ feature {NONE} -- Implementation
 		end;
 
 	x_draw_string (a_display, w, a_gc: POINTER; x1,
-					y1: INTEGER; t_name: POINTER; count: INTEGER) is
+					y1: INTEGER; t_name: POINTER; count: INTEGER)
 		external
 			"C (Display *, Drawable, GC, int, int, char *, int) | <X11/Xlib.h>"
 		alias
 			"XDrawString"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

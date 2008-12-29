@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog that contain mini tool bar when not enough space shown in SD_TITLE_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_widget: EV_WIDGET) is
+	make (a_widget: EV_WIDGET)
 			-- Creation method.
 		require
 			not_void: a_widget /= Void
@@ -39,7 +39,7 @@ feature {NONE}  -- Initlization
 	top_box: EV_BOX
 			-- Top level box.
 
-	on_focus_out is
+	on_focus_out
 			-- Handle focus out actions.
 		do
 			destroy
@@ -48,7 +48,7 @@ feature {NONE}  -- Initlization
 	internal_shared: SD_SHARED;
 			-- ALl singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

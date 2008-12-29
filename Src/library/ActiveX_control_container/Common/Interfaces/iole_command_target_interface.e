@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	query_status_user_precondition (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD): BOOLEAN is
+	query_status_user_precondition (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD): BOOLEAN
 			-- User-defined preconditions for `query_status'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	exec_user_precondition (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT): BOOLEAN is
+	exec_user_precondition (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT): BOOLEAN
 			-- User-defined preconditions for `exec'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
+	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD)
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `c_cmds' [in].  
@@ -45,7 +45,7 @@ feature -- Basic Operations
 
 		end
 
-	exec (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT) is
+	exec (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT)
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `n_cmd_id' [in].  
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

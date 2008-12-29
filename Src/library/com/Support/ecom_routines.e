@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM Routines"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ feature -- Access
 --			create Result
 --		end
 
-	guid_routines: ECOM_GUID_ROUTINES is
+	guid_routines: ECOM_GUID_ROUTINES
 		once
 			create Result
 		end
 
 feature {NONE} -- Implementation
 
-	initializer_routines: POINTER is
+	initializer_routines: POINTER
 			-- Pointer to structure
 		once
 			Result := ccom_create_e_routines
@@ -31,12 +31,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_e_routines: POINTER is
+	ccom_create_e_routines: POINTER
 		external
 			"C++ [new E_Routines %"E_Routines.h%"]()"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

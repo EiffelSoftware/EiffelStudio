@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command manager which is able to retrieve the command %
 		%associated to a Windows message."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make a command manager.
 		do
 			hash_table_make (Table_size)
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Basic routines
 
-	force (command: WEL_COMMAND_EXEC; message: INTEGER) is
+	force (command: WEL_COMMAND_EXEC; message: INTEGER)
 			-- Put `command' associated to `message'.
 		require
 			command_not_void: command /= Void
@@ -41,7 +41,7 @@ feature -- Basic routines
 			exists: exists (message)
 		end
 
-	remove (message: INTEGER) is
+	remove (message: INTEGER)
 			-- Remove the command associated to `message'.
 		require
 			positive_message: message >= 0
@@ -53,7 +53,7 @@ feature -- Basic routines
 
 feature -- Status report
 
-	exists (message: INTEGER): BOOLEAN is
+	exists (message: INTEGER): BOOLEAN
 			-- Does a command associated to `message' exist?
 		require
 			positive_message: message >= 0
@@ -63,10 +63,10 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	Table_size: INTEGER is 5;
+	Table_size: INTEGER = 5;
 			-- Initial hash table size
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

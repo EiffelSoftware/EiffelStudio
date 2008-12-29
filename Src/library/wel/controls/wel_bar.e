@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to scroll bar and track bar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status report
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position
 		require
 			exists: exists
@@ -23,7 +23,7 @@ feature -- Status report
 			valid_maximum: Result <= maximum
 		end
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum position
 		require
 			exists: exists
@@ -32,7 +32,7 @@ feature -- Status report
 			minimum_ok: Result <= maximum
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum position
 		require
 			exists: exists
@@ -41,7 +41,7 @@ feature -- Status report
 			maximum_ok: Result >= minimum
 		end
 
-	valid_maximum (a_position: INTEGER): BOOLEAN is
+	valid_maximum (a_position: INTEGER): BOOLEAN
 			-- Is `a_position' valid as a maximum?
 		do
 			Result := a_position <= maximum
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_position (new_position: INTEGER) is
+	set_position (new_position: INTEGER)
 			-- Set `position' with `new_position'
 		require
 			exists: exists
@@ -60,7 +60,7 @@ feature -- Status setting
 			position_set: position = new_position
 		end
 
-	set_range (a_minimum, a_maximum: INTEGER) is
+	set_range (a_minimum, a_maximum: INTEGER)
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
 		require
@@ -77,7 +77,7 @@ invariant
 	--range_ok: exists implies minimum <= maximum
 	--position_ok: exists implies position >= minimum and position <= maximum
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Eiffel Vision print dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 	collate_chk: EV_CHECK_BUTTON
 	print_btn, cancel_btn: EV_BUTTON
 
-	initialize is
+	initialize
 				-- Setup window and action sequences.
 		local
 			printer_frame, range_frame, copies_frame, orientation_frame, page_type_frame: EV_FRAME
@@ -200,28 +200,28 @@ feature {NONE} -- Initialization
 		end
 
 
-	set_output_to_printer is
+	set_output_to_printer
 			-- enable/disable appropriate text fields
 		do
 			file_txt.disable_sensitive
 			printer_txt.enable_sensitive
 		end
 
-	set_output_to_file is
+	set_output_to_file
 			-- enable/disable appropriate text fields
 		do
 			printer_txt.disable_sensitive
 			file_txt.enable_sensitive
 		end
 
-	range_spin_buttons_enable_sensitive is
+	range_spin_buttons_enable_sensitive
 			-- Enable spin buttons for range selection
 		do
 			from_spn.enable_sensitive
 			to_spn.enable_sensitive
 		end
 
-	from_spin_button_value_change is
+	from_spin_button_value_change
 			-- Reset max and min values of 'to' button when input changes
 		do
 			if from_spn.value > to_spn.value then
@@ -229,7 +229,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	to_spin_button_value_change is
+	to_spin_button_value_change
 			-- Reset max and min values of 'from' button when input changes
 		do
 			if to_spn.value < from_spn.value then
@@ -237,14 +237,14 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	range_spin_buttons_disable_sensitive is
+	range_spin_buttons_disable_sensitive
 			-- Disable spin buttons for range selection
 		do
 			from_spn.disable_sensitive
 			to_spn.disable_sensitive
 		end
 
-	toggle_collate_pages is
+	toggle_collate_pages
 			-- toggle collate status pixmap
 		do
 			if collate_chk.is_selected then
@@ -257,7 +257,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	print_context: EV_PRINT_CONTEXT is
+	print_context: EV_PRINT_CONTEXT
 			-- Return a print context from the dialog
 		local
 			pspc: EV_POSTSCRIPT_PAGE_CONSTANTS
@@ -291,32 +291,32 @@ feature -- Access
 			Result.set_vertical_resolution (pspc.page_height (page_constant, landscape_checked) - (2 * pspc.Default_bottom_margin))
 		end
 
-	from_page: INTEGER is
+	from_page: INTEGER
 			-- Value for the starting page edit control
 		do
 			Result := from_spn.value
 		end
 
-	to_page: INTEGER is
+	to_page: INTEGER
 			-- Value for the ending page edit control
 		do
 			Result := to_spn.value
 		end
 
-	copies: INTEGER is
+	copies: INTEGER
 			-- Number of copies for the Copies edit control
 		do
 			Result := copies_spn.value
 		end
 
-	output_file_name: STRING_32 is
+	output_file_name: STRING_32
 			-- String representation of the path to output
 			-- the printed area to.
 		do
 			Result := file_txt.text
 		end
 
-	printer_name: STRING_32 is
+	printer_name: STRING_32
 			-- String representation of the printer to output
 			-- the printed area to.
 		do
@@ -325,61 +325,61 @@ feature -- Access
 
 feature -- Status report
 
-	all_pages_selected: BOOLEAN is
+	all_pages_selected: BOOLEAN
 			-- Is the "All pages" radio button selected?
 		do
 			Result := all_rdo.is_selected
 		end
 
-	page_numbers_selected: BOOLEAN is
+	page_numbers_selected: BOOLEAN
 			-- Is the "Page" radio button selected?
 		do
 			Result := range_rdo.is_selected
 		end
 
-	selection_selected: BOOLEAN is
+	selection_selected: BOOLEAN
 			 -- Is the "Selection" radio button selected?
 		do
 			Result := selection_rdo.is_selected
 		end
 
-	page_numbers_enabled: BOOLEAN is
+	page_numbers_enabled: BOOLEAN
 			-- Is the "Range" radio button enabled?
 		do
 			Result := range_rdo.is_sensitive
 		end
 
-	selection_enabled: BOOLEAN is
+	selection_enabled: BOOLEAN
 			-- Is the "Selection" radio button selected?
 		do
 			Result := selection_rdo.is_sensitive
 		end
 
-	collate_checked: BOOLEAN is
+	collate_checked: BOOLEAN
 			-- Is the "Collate" check box checked?
 		do
 			Result := collate_chk.is_selected
 		end
 
-	print_to_file_enabled: BOOLEAN is
+	print_to_file_enabled: BOOLEAN
 			-- Is the "File" radio button enabled?
 		do
 			Result := file_rdo.is_sensitive
 		end
 
-	print_to_file_shown: BOOLEAN is
+	print_to_file_shown: BOOLEAN
 			-- Is the "File" radio button visible?
 		do
 			Result := file_rdo.is_show_requested
 		end
 
-	print_to_file_checked: BOOLEAN is
+	print_to_file_checked: BOOLEAN
 			-- Is the "File" radio button checked?
 		do
 			Result := file_rdo.is_selected
 		end
 
-	landscape_checked: BOOLEAN is
+	landscape_checked: BOOLEAN
 			-- Is the "Landscape" radio button checked?
 		do
 			Result := landscape_rdo.is_selected
@@ -387,99 +387,99 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_all_pages is
+	select_all_pages
 			-- Select the "All pages" radio button.
 			-- Selected by default.
 		do
 			all_rdo.enable_select
 		end
 
-	select_page_numbers is
+	select_page_numbers
 			-- Select the "Page numbers" radio button.
 			-- By default, the "All pages" button is selected.
 		do
 			range_rdo.enable_select
 		end
 
- 	select_selection is
+ 	select_selection
   			-- Select the "Selection" radio button.
 			-- By default, the "All pages" button is selected.
 		do
 			selection_rdo.enable_select
 		end
 
-	enable_page_numbers is
+	enable_page_numbers
 			-- Enable the "Range" radio button.
 		do
 			range_rdo.enable_sensitive
 		end
 
-	disable_page_numbers is
+	disable_page_numbers
 			-- Disable the "Range" radio button.
 		do
 			range_rdo.disable_sensitive
 		end
 
-	enable_selection is
+	enable_selection
 			-- Enable the "Selection" radio button.
 		do
 			selection_rdo.enable_sensitive
 		end
 
-	disable_selection is
+	disable_selection
 			-- Disable the "Selection" radio button.
 		do
 			selection_rdo.disable_sensitive
 		end
 
-	check_collate is
+	check_collate
                         -- Check the "Collate" check box.
 		do
 			collate_chk.enable_select
 		end
 
-	uncheck_collate is
+	uncheck_collate
 			-- Uncheck the "Collate" check box.
 		do
 			collate_chk.enable_select
 		end
 
-	enable_print_to_file is
+	enable_print_to_file
 			-- Enable the "File" radio button.
 		do
 			file_rdo.enable_sensitive
 			file_txt.enable_sensitive
 		end
 
-	disable_print_to_file is
+	disable_print_to_file
 			-- Disable the "File" radio button.
 		do
 			file_rdo.disable_sensitive
 			file_txt.disable_sensitive
 		end
 
-	show_print_to_file is
+	show_print_to_file
 			-- Show the "File" radio button.
 		do
 			file_rdo.show
 			file_txt.show
 		end
 
-	hide_print_to_file is
+	hide_print_to_file
 			-- Hide the "File" radio button.
 		do
 			file_rdo.hide
 			file_txt.hide
 		end
 
-	check_print_to_file is
+	check_print_to_file
 			-- Check the "File" check box.
 			-- By default, the "Printer" button is selected.
 		do
 			file_rdo.enable_select
 		end
 
-        uncheck_print_to_file is
+        uncheck_print_to_file
 			-- Uncheck the "File" check box.
 			-- By default, the "Printer" button is selected.
 		do
@@ -488,25 +488,25 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_from_page (value: INTEGER) is
+	set_from_page (value: INTEGER)
 			 -- Make `value' the new `from_page' number.
 		do
 			from_spn.set_value (value)
   		end
 
-	set_to_page (value: INTEGER) is
+	set_to_page (value: INTEGER)
 			-- Make `value' the new `to_page' number.
 		do
 			to_spn.set_value (value)
 		end
 
-	set_copies (value: INTEGER) is
+	set_copies (value: INTEGER)
 			-- Make `value' the new `copies' number.
 		do
 			copies_spn.set_value (value)
 		end
 
-	set_maximum_to_page (value: INTEGER) is
+	set_maximum_to_page (value: INTEGER)
 			-- Make `value' the new maximum `to_page' value.
 		do
 			from_spn.value_range.adapt (minimum_from_page |..| value)
@@ -514,7 +514,7 @@ feature -- Element change
 			maximum_to_page := value
 		end
 
-	set_minimum_from_page (value: INTEGER) is
+	set_minimum_from_page (value: INTEGER)
 			-- Make `value' the new minimum `from_page' value.
 		do
 			from_spn.value_range.adapt (value |..| maximum_to_page)
@@ -526,18 +526,18 @@ feature {NONE} -- Implementation
 
 	page_type_combo: EV_COMBO_BOX
 
-	Letter: STRING is "Letter"
-	Legal: STRING is "Legal"
-	Executive: STRING is "Executive"
-	Ledger: STRING is "Ledger"
-	A4: STRING is "A4"
-	A5: STRING is "A5"
-	B5: STRING is "B5"
-	C5: STRING is "C5"
+	Letter: STRING = "Letter"
+	Legal: STRING = "Legal"
+	Executive: STRING = "Executive"
+	Ledger: STRING = "Ledger"
+	A4: STRING = "A4"
+	A5: STRING = "A5"
+	B5: STRING = "B5"
+	C5: STRING = "C5"
 
 	interface: EV_PRINT_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

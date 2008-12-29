@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		NIIF constants to control WEL_NOTIFY_ICON_DATA structure.
 		Note: Version 5.0. Flags that can be set to add an icon to a balloon ToolTip.
@@ -15,29 +15,29 @@ class
 
 feature -- Access
 
-	niif_none: INTEGER is 0x0
+	niif_none: INTEGER = 0x0
 			-- No icon.
 
-	niif_info: INTEGER is 0x1
+	niif_info: INTEGER = 0x1
 			-- An information icon.
 
-	niif_warning: INTEGER is 0x2
+	niif_warning: INTEGER = 0x2
 			-- A warning icon.
 
-	niif_error: INTEGER is 0x3
+	niif_error: INTEGER = 0x3
 			-- An error icon.
 
-	niif_user: INTEGER is 0x4
+	niif_user: INTEGER = 0x4
 			-- Windows XP Service Pack 2 (SP2) and later.
 			-- Use the icon identified in hIcon as the notification balloon's title icon.
 
-	niif_icon_mask: INTEGER is 0xF
+	niif_icon_mask: INTEGER = 0xF
 			-- Version 6.0. Reserved.
 
-	niif_nosound: INTEGER is 0x10;
+	niif_nosound: INTEGER = 0x10;
 			-- Version 6.0. Do not play the associated sound. Applies only to balloon ToolTips.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

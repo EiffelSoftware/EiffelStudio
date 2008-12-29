@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing variables.
 		]"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_index: INTEGER) is
+	make (a_index: INTEGER)
 			-- Create new variable with `a_index'.
 		require
 			a_index_positive: a_index > 0
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name (a_prefix: STRING): STRING is
+	name (a_prefix: STRING): STRING
 			-- Name of variable
 			-- Return a new string every time.
 		require
@@ -52,7 +52,7 @@ feature -- Access
 			good_result: Result.is_equal (a_prefix + index.out)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := index
 		ensure then
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ITP_EXPRESSION_PROCESSOR) is
+	process (a_processor: ITP_EXPRESSION_PROCESSOR)
 		do
 			a_processor.process_variable (Current)
 		end

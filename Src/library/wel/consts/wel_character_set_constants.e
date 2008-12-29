@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Character set constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access 
 
-	Ansi_charset: INTEGER is 0
+	Ansi_charset: INTEGER = 0
 
-	Default_charset: INTEGER is 1
+	Default_charset: INTEGER = 1
 
-	Symbol_charset: INTEGER is 2
+	Symbol_charset: INTEGER = 2
 
-	Shiftjis_charset: INTEGER is 128
+	Shiftjis_charset: INTEGER = 128
 
-	Hangeul_charset: INTEGER is 129
+	Hangeul_charset: INTEGER = 129
 
-	Chinesebig5_charset: INTEGER is 136
+	Chinesebig5_charset: INTEGER = 136
 
-	Oem_charset: INTEGER is 255
+	Oem_charset: INTEGER = 255
 			-- (is operating-system dependent)
 
-	Unicode_charset: INTEGER is 1;
+	Unicode_charset: INTEGER = 1;
 			--| Not defined in windows.h
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

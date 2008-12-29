@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"Eiffel Vision file open dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -41,105 +41,105 @@ feature {EV_ANY_I}
 	--| FIXME These features are all required by EV_POSITIONED and
 	--| EV_POSITIONABLE. Is there a way to implement these?
 
-	set_x_position (a: INTEGER) is
+	set_x_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_y_position (a: INTEGER) is
+	set_y_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_height (a: INTEGER) is
+	set_height (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_width (a: INTEGER) is
+	set_width (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_size (a, b: INTEGER) is
+	set_size (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_position (a, b: INTEGER) is
+	set_position (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

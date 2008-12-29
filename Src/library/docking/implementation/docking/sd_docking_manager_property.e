@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Docking manager properties."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -32,7 +32,7 @@ feature -- Properties
 	last_focus_content: SD_CONTENT
 			-- Last focused zone.
 
-	set_last_focus_content (a_content: SD_CONTENT) is
+	set_last_focus_content (a_content: SD_CONTENT)
 			-- Set `last_focus_content'.
 		require
 			not_destroyed: not is_destroyed
@@ -45,7 +45,7 @@ feature -- Properties
 			set: last_focus_content = a_content
 		end
 
-	contents_by_click_order: ARRAYED_LIST [SD_CONTENT] is
+	contents_by_click_order: ARRAYED_LIST [SD_CONTENT]
 			-- All contents by user click order.
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Properties
 			Result.append (l_current_list)
 		end
 
-	main_area_drop_actions: EV_PND_ACTION_SEQUENCE is
+	main_area_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Main area (editor area) drop acitons.
 			-- This actions will be called if there is no editor zone and end user drop a stone to the void editor area.
 		require
@@ -102,7 +102,7 @@ feature -- Properties
 			-- Manager for user dragging events.
 			-- Maybe Void if user is not dragging.
 
-	set_docker_mediator (a_mediator: SD_DOCKER_MEDIATOR) is
+	set_docker_mediator (a_mediator: SD_DOCKER_MEDIATOR)
 			-- Set `docker_mediator' with `a_mediator'.
 		require
 			not_destroyed: not is_destroyed
@@ -112,7 +112,7 @@ feature -- Properties
 			set: docker_mediator = a_mediator
 		end
 
-	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]] is
+	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
 			-- SD_TOOL_BAR_RESIABLE_ITEM data.
 		require
 			not_destroyed: not is_destroyed
@@ -148,7 +148,7 @@ feature -- Properties
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 
-	set_is_opening_config (a_bool: BOOLEAN) is
+	set_is_opening_config (a_bool: BOOLEAN)
 			-- Set `is_opening_config' to `a_bool'
 		require
 			not_destroyed: not is_destroyed
@@ -160,7 +160,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR} -- Setting
 
 feature -- Contract support
 
-	has (a_content: SD_CONTENT): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN
 			-- Dose docking manager has a_content?
 		require
 			not_destroyed: not is_destroyed
@@ -173,7 +173,7 @@ feature -- Contract support
 
 feature {NONE}  -- Implementation
 
-	set_content_first (a_content: SD_CONTENT) is
+	set_content_first (a_content: SD_CONTENT)
 			-- Set a_content which is just clicked by user to first of `contents_by_click_order'.
 		require
 			has: has (a_content)
@@ -193,7 +193,7 @@ feature {NONE}  -- Implementation
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Destory all underline objects
 		do
 			main_area_drop_actions.wipe_out
@@ -204,7 +204,7 @@ feature -- Command
 			destroyed: is_destroyed
 		end
 
-	remove_from_clicked_list (a_content: SD_CONTENT) is
+	remove_from_clicked_list (a_content: SD_CONTENT)
 			-- Remove `a_content' from `internal_clicked_list'
 		require
 			not_destroyed: not is_destroyed
@@ -215,7 +215,7 @@ feature -- Command
 invariant
 	internal_clicked_list_not_void: internal_clicked_list /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

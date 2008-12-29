@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_IMPseparator"
 	legal: "See notice at end of class.";
@@ -78,7 +78,7 @@ create
 
 feature -- Initialization
 
-	make (a_separator: SEPARATOR; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_separator: SEPARATOR; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make widget and set defaults.
 		local
 			local_menu: WEL_MENU
@@ -105,7 +105,7 @@ feature -- Status report
 	in_menu: BOOLEAN
 			-- Is current separator in a menu?
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 			-- Is Current realized?
 		do
 			if not in_menu then
@@ -120,7 +120,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_3d_separator is
+	set_3d_separator
 			-- Set the separator to be Windows 3D
 		do
 			if is_horizontal then
@@ -131,7 +131,7 @@ feature -- Status setting
 			w3d_separator := True
 		end
 
-	set_foreground_color (c: COLOR) is
+	set_foreground_color (c: COLOR)
 			-- Set the foreground color of current widget.
 		do
 			private_foreground_color := c
@@ -145,7 +145,7 @@ feature -- Status setting
 			end
 		end
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -175,7 +175,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set the size.
 		do
 			if private_attributes.width /= a_width
@@ -199,7 +199,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set the width.
 		do
 			if private_attributes.width /= a_width then
@@ -221,7 +221,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set the height.
 		do
 			if private_attributes.height /= a_height then
@@ -243,7 +243,7 @@ feature -- Status setting
 			end
 		end
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set x coordinate.
 		do
 			if in_menu then
@@ -260,7 +260,7 @@ feature -- Status setting
 			private_attributes.set_x (a_x)
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set y coordinate.
 		do
 			if in_menu then
@@ -277,7 +277,7 @@ feature -- Status setting
 			private_attributes.set_y (a_y)
 		end
 
-	realize is
+	realize
 			-- Realize separator.
 		local
 			local_menu: WEL_MENU
@@ -297,7 +297,7 @@ feature -- Status setting
 			end
 		end
 
-	set_double_dashed_line is
+	set_double_dashed_line
 			-- Set separator to be double dashed.
 		do
 			create pen.make (Ps_dash, 1, pen_color)
@@ -310,7 +310,7 @@ feature -- Status setting
 			not is_horizontal implies (width >= 5)
 		end
 
-	set_double_line is
+	set_double_line
 			-- Set separator to be double line.
 		do
 			create pen.make (Ps_solid, 1, pen_color)
@@ -323,7 +323,7 @@ feature -- Status setting
 			not is_horizontal implies (width >= 5)
 		end
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set separator to be double horizontal.
 		do
 			if is_horizontal /= flag then
@@ -346,7 +346,7 @@ feature -- Status setting
 			is_horizontal_equals_flag: is_horizontal = flag
 		end
 
-	set_no_line is
+	set_no_line
 			-- Set separator to have no line.
 		do
 			create pen.make (Ps_null, 1, pen_color)
@@ -355,7 +355,7 @@ feature -- Status setting
 			end
 		end
 
-	set_single_dashed_line is
+	set_single_dashed_line
 			-- Set separator to be a single dashed line.
 		do
 			create pen.make (Ps_dash, 1, pen_color)
@@ -365,7 +365,7 @@ feature -- Status setting
 			end
 		end
 
-	set_single_line is
+	set_single_line
 			-- Set separator to be a single line.
 		do
 			create pen.make (Ps_solid, 1, pen_color)
@@ -377,7 +377,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy Current.
 		local
 			ww: WIDGET_IMP
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 	w3d_separator: BOOLEAN
 			-- Is separator 3D Windows standard?
 
-	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT) is
+	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT)
 			-- Repaint separator.
 		local
 			a_pen: WEL_PEN
@@ -456,13 +456,13 @@ feature {NONE} -- Implementation
 	pen: WEL_PEN
 			-- Pen used for drawing the separator.
 
-	c_background: WEL_COLOR_REF is
+	c_background: WEL_COLOR_REF
 			-- Color background
 		once
 			create Result.make_system (Color_window)
 		end
 
-	pen_color: WEL_COLOR_REF is
+	pen_color: WEL_COLOR_REF
 			-- Color of the pen to draw separator.
 		do
 			if foreground_color.implementation /= Void then
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	black_color: WEL_COLOR_REF is
+	black_color: WEL_COLOR_REF
 			-- Black color
 		once
 			create Result.make_rgb (0, 0, 0)
@@ -482,13 +482,13 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	set_default_pen is
+	set_default_pen
 			-- Set default pen to draw separator.
 		do
 			create pen.make (Ps_solid, 1, black_color)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		do
 			Result := "EVisionSeparator"
@@ -498,11 +498,11 @@ feature {NONE} -- Inapplicable
 
 	wel_font: WEL_FONT
 
-	wel_set_font (f:WEL_FONT) is
+	wel_set_font (f:WEL_FONT)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

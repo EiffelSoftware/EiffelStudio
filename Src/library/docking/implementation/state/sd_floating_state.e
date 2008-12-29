@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_STATE that manage SD_FLOATING_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER; a_visible: BOOLEAN) is
+	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER; a_visible: BOOLEAN)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine.
 
-	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Redefine.
 		local
 			l_width_height: INTEGER
@@ -85,12 +85,12 @@ feature -- Redefine.
 			internal_docking_manager.command.update_title_bar
 		end
 
-	stick (a_direction: INTEGER) is
+	stick (a_direction: INTEGER)
 			-- Redefine.
 		do
 		end
 
-	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_zone: SD_ZONE
@@ -106,7 +106,7 @@ feature -- Redefine.
 			internal_docking_manager.command.update_title_bar
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- Redefine.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -146,7 +146,7 @@ feature -- Redefine.
 			internal_docking_manager.command.unlock_update
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- Redefine.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -176,7 +176,7 @@ feature -- Redefine.
 			internal_docking_manager.command.unlock_update
 		end
 
-	change_state (a_state: SD_STATE) is
+	change_state (a_state: SD_STATE)
 			-- Redefine
 		do
 			content.change_state (a_state)
@@ -187,14 +187,14 @@ feature -- Redefine.
 			set: a_state.last_floating_width = last_floating_width
 		end
 
-	record_state is
+	record_state
 			-- Redefine
 		do
 			last_floating_width := internal_zone.width
 			last_floating_height := internal_zone.height
 		end
 
-	content_void: BOOLEAN is
+	content_void: BOOLEAN
 			-- Redefine.
 		do
 			Result := not internal_zone.inner_container.readable
@@ -203,13 +203,13 @@ feature -- Redefine.
 	internal_zone: SD_FLOATING_ZONE
 			-- Redefine.
 
-	zone: SD_ZONE is
+	zone: SD_ZONE
 			-- Redefine.
 		do
 			Result := internal_zone
 		end
 
-	set_user_widget (a_widget: EV_WIDGET) is
+	set_user_widget (a_widget: EV_WIDGET)
 			-- Redefine
 		do
 			-- Do nothing.
@@ -217,13 +217,13 @@ feature -- Redefine.
 
 feature -- Command
 
-	update_title_bar is
+	update_title_bar
 			-- Update title bar.
 		do
 			internal_zone.update_title_bar
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set floating zone size.
 		do
 			internal_zone.set_size (a_width, a_height)
@@ -233,7 +233,7 @@ feature -- Command
 
 feature -- Query
 
-	inner_container: SD_MULTI_DOCK_AREA is
+	inner_container: SD_MULTI_DOCK_AREA
 			-- Main container of `Current'.
 		do
 			Result := internal_zone.inner_container
@@ -243,7 +243,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	set_all_zones_direction (a_direction: INTEGER) is
+	set_all_zones_direction (a_direction: INTEGER)
 			-- Set all zones direction.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_zone_split_area_whole_content (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area_whole_content (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Change whole floating zone contents to `a_target_zone'.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

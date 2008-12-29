@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A combo box which has a drop down list box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height including the list box
 		do
 			Result := dropped_rect.height
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status setting
 
-	show_list is
+	show_list
 			-- Show the drop down list
 		require
 			exists: exists
@@ -38,7 +38,7 @@ feature -- Status setting
 			list_shown: list_shown
 		end
 
-	hide_list is
+	hide_list
 			-- Hide the drop down list
 		require
 			exists: exists
@@ -50,7 +50,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	list_shown: BOOLEAN is
+	list_shown: BOOLEAN
 			-- Is the drop down list shown?
 		require
 			exists: exists
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Obsolete
 
-	show_drop_down is obsolete "Use ``show_list''"
+	show_drop_down obsolete "Use ``show_list''"
 		require
 			exists: exists
 		do
@@ -70,7 +70,7 @@ feature -- Obsolete
 			list_shown: list_shown
 		end
 
-	hide_drop_down is obsolete "Use ``hide_list''"
+	hide_drop_down obsolete "Use ``hide_list''"
 		require
 			exists: exists
 		do
@@ -79,7 +79,7 @@ feature -- Obsolete
 			list_not_shown: not list_shown
 		end
 
-	dropped_down: BOOLEAN is obsolete "Use ``list_shown''"
+	dropped_down: BOOLEAN obsolete "Use ``list_shown''"
 		require
 			exists: exists
 		do
@@ -88,7 +88,7 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 				Cbs_autohscroll
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

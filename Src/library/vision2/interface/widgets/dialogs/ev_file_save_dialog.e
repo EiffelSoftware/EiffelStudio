@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"Eiffel Vision file save dialog."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 	
 feature -- Event handling
 
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Save.
 		obsolete
 			"This has been replaced by save_actions"
@@ -40,13 +40,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_FILE_SAVE_DIALOG_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

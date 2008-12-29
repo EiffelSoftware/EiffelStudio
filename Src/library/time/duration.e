@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Temporal intervals"
 	legal: "See notice at end of class."
 	status: "See notice at end of class." 
@@ -16,18 +16,18 @@ deferred class DURATION inherit
 
 feature -- Status report
 
-	is_positive: BOOLEAN is
+	is_positive: BOOLEAN
 			-- Is duration positive?
 		deferred
 		end
 	 
-	is_negative: BOOLEAN is
+	is_negative: BOOLEAN
 			-- Is duration negative?
 		do
 			Result := not is_positive and not is_zero
 		end
 
-	is_zero: BOOLEAN is
+	is_zero: BOOLEAN
 			-- Is duration zero?
 		do
 			Result := equal (Current, zero)
@@ -35,13 +35,13 @@ feature -- Status report
 		
 feature -- Element change
 
-	prefix "+": like Current is
+	prefix "+": like Current
 			-- Unary plus
 		do
 			Result := deep_twin
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: like Current): like Current
 			-- Difference with `other'
 		do
 			Result := Current + -other
@@ -51,7 +51,7 @@ invariant
 
 	sign_correctness: is_positive xor is_negative xor is_zero
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

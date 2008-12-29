@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Boolean format of the database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,19 +15,19 @@ inherit
 
 feature -- Status report
 
-	sql_name: STRING is
+	sql_name: STRING
 			-- SQL type name for boolean
 		do
 			Result := db_spec.sql_name_boolean
 		end
 
-	eiffel_ref: ANY is
+	eiffel_ref: ANY
 			-- Shared boolean reference
 		once
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

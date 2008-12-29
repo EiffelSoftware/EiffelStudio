@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision text field. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -109,7 +109,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with inteface `an_interface'.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- (export status {NONE})
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Status report
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of `Current'
 		do
 			Result := wel_text
@@ -170,7 +170,7 @@ feature -- Alignment
 
 feature {EV_ANY_I} -- Status setting
 
-	hide_border is
+	hide_border
 			-- Ensure that `Current' is displayed with no border.
 		do
 			set_ex_style (0)
@@ -181,7 +181,7 @@ feature {EV_ANY_I} -- Status setting
 
 feature {NONE} -- WEL Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- We specify the Es_autovscroll style otherwise
 			-- the system beeps when we press the return key.
 		do
@@ -201,7 +201,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	recreate_current is
+	recreate_current
 			-- Destroy the existing widget and recreate current using the new style.
 		local
 			par_imp: WEL_WINDOW
@@ -261,7 +261,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- We check if the enter key is pressed.
 			-- 13 is the number of the return key.
 		local
@@ -282,26 +282,26 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_en_change is
+	on_en_change
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
 			interface.change_actions.call (Void)
 		end
 
-	enable is
+	enable
 			-- Enable mouse and keyboard input.
 		do
 			cwin_enable_window (wel_item, True)
 		end
 
-	disable is
+	disable
 			-- Disable mouse and keyboard input
 		do
 			cwin_enable_window (wel_item, False)
 		end
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
@@ -310,7 +310,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_SPIN_BUTTON_IMP} -- Implementation
 
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- Encapsulation of the SDK GetNextDlgTabItem.
 			-- This has been redefined from EV_WIDGET_IMP as EV_SPIN_BUTTON
 			-- uses an instance of EV_TEXT_FIELD internally.
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_TEXT_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

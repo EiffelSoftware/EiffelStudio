@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Simple containers"
 	legal: "See notice at end of class."
@@ -12,26 +12,26 @@ deferred class
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of elements
 		deferred
 		end
 	 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is container empty?
 		deferred
 		end
 
-	insertable (v: G): BOOLEAN is
+	insertable (v: G): BOOLEAN
 			-- Can `v' be inserted?
 		require
 			item_exists: v /= Void
 		deferred
 		end
 	 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is index `i' valid?
 		deferred
 		ensure
@@ -40,7 +40,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' to the end.
 		require
 			item_exists: v /= Void
@@ -50,7 +50,7 @@ feature -- Element change
 			one_more_item: count = old count + 1
 		end
 
-	replace (v: G; i: INTEGER) is
+	replace (v: G; i: INTEGER)
 			-- Replace `i'-th item with `v'.
 		require
 			not_empty: not is_empty
@@ -63,7 +63,7 @@ feature -- Element change
 	 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th item.
 		require
 			not_empty: not is_empty
@@ -73,7 +73,7 @@ feature -- Removal
 			one_less_item: count = old count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		deferred
 		ensure
@@ -84,7 +84,7 @@ invariant
 
 	empty_definition: is_empty = (count = 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

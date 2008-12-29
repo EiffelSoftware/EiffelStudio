@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation for SD_SYSTEM_SETTER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Command
 
-	before_enable_capture is
+	before_enable_capture
 			-- Redefine
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -29,7 +29,7 @@ feature -- Command
 			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_normal)
 		end
 
-	after_disable_capture is
+	after_disable_capture
 			-- Redefine
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -38,7 +38,7 @@ feature -- Command
 			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 		end
 
-	is_remote_desktop: BOOLEAN is
+	is_remote_desktop: BOOLEAN
 			-- Redefine
 		local
 			l_routine: WEL_WINDOWS_ROUTINES
@@ -47,7 +47,7 @@ feature -- Command
 			Result := l_routine.is_terminal_service
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provides the constants for I18N_NLS_GET_LOCALE_INFO"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,12 +10,12 @@ class
 
 feature -- Shared object
 
-	nls_constants: I18N_NLS_LC_CTYPE_CONSTANTS is
+	nls_constants: I18N_NLS_LC_CTYPE_CONSTANTS
 		once
 			create Result
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

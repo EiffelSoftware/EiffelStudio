@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPwidget"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -67,19 +67,19 @@ feature -- Access
 	parent: COMPOSITE_IMP;
 			-- Parent widget
 
-	screen: SCREEN_I is
+	screen: SCREEN_I
 			-- Screen of widget
 		do
 			Result := widget_manager.screen (widget_oui).implementation
 		end;
 
-	screen_object: POINTER is
+	screen_object: POINTER
 			-- Screen object implementation of current widget
 		do
 			Result := wel_item
 		end;
 
-	owner: WIDGET is
+	owner: WIDGET
 			-- Corresponding widget
 		do
 			Result := widget_manager.implementation_to_oui (Current)
@@ -87,7 +87,7 @@ feature -- Access
 
 feature  -- Status report
 
-	background_color: COLOR is
+	background_color: COLOR
 			-- Color used for the background.
 		local
 			wel_color: WEL_COLOR_REF
@@ -108,13 +108,13 @@ feature  -- Status report
 	cursor: SCREEN_CURSOR
 			-- Screen cursor of current widget
 
-	get_multi_click_time: INTEGER is
+	get_multi_click_time: INTEGER
 			-- Call to system resources
 		do
 			Result := double_click.double_click_time
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of widget
 		do
 			if exists then
@@ -124,7 +124,7 @@ feature  -- Status report
 			end
 		end;
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client rectangle of current widget
 		do
 			if exists then
@@ -132,13 +132,13 @@ feature  -- Status report
 			end
 		end
 
-	form_height: INTEGER is
+	form_height: INTEGER
 			-- Height used by forms
 		do
 			Result := client_height
 		end
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- Is current widget insensitive?
 		do
 			if exists then
@@ -151,13 +151,13 @@ feature  -- Status report
 	managed: BOOLEAN;
 			-- Is current widget managed?
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 			-- Is this widget realized?
 		do
 			Result := exists
 		end;
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Horizontal position relative to corner of screen
 		do
 			if exists then
@@ -167,7 +167,7 @@ feature  -- Status report
 			end
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Vertical position relative to corner of screen
 		do
 			if exists then
@@ -181,7 +181,7 @@ feature  -- Status report
 			-- Is current widget visible on the screen?
 			-- |Motif like shown
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of widget
 		do
 			if exists then
@@ -191,7 +191,7 @@ feature  -- Status report
 			end
 		end;
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client_rectangle of current widget
 		do
 			if exists then
@@ -199,13 +199,13 @@ feature  -- Status report
 			end
 		end
 
-	form_width: INTEGER is
+	form_width: INTEGER
 			-- Width used by forms
 		do
 			Result := client_width
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- Horizontal position relative to parent
 		do
 			if exists then
@@ -215,7 +215,7 @@ feature  -- Status report
 			end
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Vertical position relative to parent
 		do
 			if exists then
@@ -228,13 +228,13 @@ feature  -- Status report
 	screen_cursor: SCREEN_CURSOR_IMP;
 			-- Screen cursor associated to current widget
 
-	valid_background_pixmap (a_pixmap : PIXMAP): BOOLEAN is
+	valid_background_pixmap (a_pixmap : PIXMAP): BOOLEAN
 			-- Is `a_pixmap' valid for current widget?
 		do
 			Result := False
 		end
 
-	valid_background_color (a_color: COLOR): BOOLEAN is
+	valid_background_color (a_color: COLOR): BOOLEAN
 			-- Is `a_color' valid for current widget?
 		do
 			Result := False
@@ -242,7 +242,7 @@ feature  -- Status report
 
 feature -- Status setting
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy screen widget implementation and all
 			-- screen widget implementations of its children
 			-- contained in wid_list
@@ -266,7 +266,7 @@ feature -- Status setting
 			end
 		end;
 
-	get_focus is
+	get_focus
 			-- Get the focus.
 		do
 			if exists then
@@ -274,7 +274,7 @@ feature -- Status setting
 			end
 		end;
 
-	grab (a_cursor: SCREEN_CURSOR) is
+	grab (a_cursor: SCREEN_CURSOR)
 			-- Grab the mouse and the keyboard.
 			-- If cursor is not Void, the pointer will have the shape
 			-- set by cursor during the grab.
@@ -293,7 +293,7 @@ feature -- Status setting
 			end
 		end;
 
-	hide is
+	hide
 			-- Make widget invisible on the screen
 		do
 			if exists then
@@ -302,12 +302,12 @@ feature -- Status setting
 			shown := False
 		end;
 
-	realize is
+	realize
 			-- Realize the object.
 		deferred
 		end;
 
-	raise is
+	raise
 			-- Raise current to top of peer stacking order
 		do
 			if exists then
@@ -316,7 +316,7 @@ feature -- Status setting
 			end
 		end;
 
-	lower is
+	lower
 			-- Lower current to the bottom of peer stacking order
 		do
 			if exists then
@@ -324,12 +324,12 @@ feature -- Status setting
 			end
 		end;
 
-	release_focus is
+	release_focus
 			-- Do nothing.
 		do
 		end;
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 			-- Set the background color to `a_color'
 			-- We may need a call to UpdateWindow
 		do
@@ -339,7 +339,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_background_pixmap (a_pixmap: PIXMAP) is
+	set_background_pixmap (a_pixmap: PIXMAP)
 			-- Set the background pixmap
 			-- but does nothing
 		require else
@@ -353,13 +353,13 @@ feature -- Status setting
 			pixmap_set: valid_background_pixmap (a_pixmap) implies background_pixmap = a_pixmap
 		end;
 
-	set_cursor (a_cursor: SCREEN_CURSOR) is
+	set_cursor (a_cursor: SCREEN_CURSOR)
 			-- Set the cursor to `a_cursor'.
 		do
 			screen_cursor ?= a_cursor.implementation
 		end;
 
-	set_form_height (a_height: INTEGER) is
+	set_form_height (a_height: INTEGER)
 			-- Set the height used by forms.
 		do
 			if form_height /= a_height then
@@ -370,7 +370,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= a_height then
@@ -384,7 +384,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if `flag'. This means
 			-- that any events with an event type of KeyPress,
 			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
@@ -402,7 +402,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -447,7 +447,7 @@ feature -- Status setting
 			end
 		end
 
-	set_multi_click_time (new_time: INTEGER) is
+	set_multi_click_time (new_time: INTEGER)
 			-- Set the double click time.
 		do
 			check
@@ -456,7 +456,7 @@ feature -- Status setting
 			double_click.set_double_click_time (new_time)
 		end;
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
@@ -473,7 +473,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_widget_default is
+	set_widget_default
 			-- Set the defaults for current widget.
 		do
 			if managed and then parent.realized then
@@ -485,7 +485,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_form_width (a_width: INTEGER) is
+	set_form_width (a_width: INTEGER)
 			-- Set the width for form.
 		do
 			if form_width /= a_width then
@@ -496,7 +496,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -510,7 +510,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Set `x' to `new_x'.
 		do
 			private_attributes.set_x (new_x)
@@ -519,7 +519,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_x_y (new_x, new_y: INTEGER) is
+	set_x_y (new_x, new_y: INTEGER)
 			-- Set `x' to `new_x', `y' to `new_y'.
 		do
 			private_attributes.set_y (new_y)
@@ -529,7 +529,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Set `y' to `new_y'.
 		do
 			private_attributes.set_y (new_y)
@@ -538,7 +538,7 @@ feature -- Status setting
 			end
 		end
 
-	show is
+	show
 			-- Show widget on screen.
 		do
 			if exists
@@ -549,7 +549,7 @@ feature -- Status setting
 			shown := (parent /= Void and parent.shown) or (parent = Void)
 		end
 
-	ungrab is
+	ungrab
 			-- Release the mouse and the keyboard from an earlier grab.
 		do
 			if exists then
@@ -563,7 +563,7 @@ feature -- Status setting
 			end
 		end;
 
-	unrealize is
+	unrealize
 			-- Unrealize the widget
 		do
 			wel_destroy
@@ -571,7 +571,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		do
@@ -585,7 +585,7 @@ feature -- Element change
 			end
 		end;
 
-	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- `number'-th mouse button is pressed.
 		do
@@ -599,7 +599,7 @@ feature -- Element change
 			end
 		end;
 
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- `number'-th mouse button is released.
 		do
@@ -613,104 +613,104 @@ feature -- Element change
 			end
 		end;
 
-	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- `number'-th mouse button is clicked.
 		do
 		end;
 
-	add_resize_action (a_command: COMMAND; argument: ANY) is
+	add_resize_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- window resizes or moves.
 		do
 			resize_actions.add (Current, a_command, argument)
 		end
 
-	add_enter_action (a_command: COMMAND; argument: ANY) is
+	add_enter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- pointer enter the window.
 		do
 			enter_actions.add (Current, a_command, argument)
 		end;
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
+	add_expose_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when
 			-- the widget is exposed
 		do
 			expose_actions.add (Current, a_command, argument)
 		end;
 
-	add_key_press_action (a_command: COMMAND; argument: ANY) is
+	add_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when a key
 			-- is pressed.
 		do
 			key_press_actions.add (Current, a_command, argument)
 		end;
 
-	add_key_release_action (a_command: COMMAND; argument: ANY) is
+	add_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when a key
 			-- is released.
 		do
 			key_release_actions.add (Current, a_command, argument)
 		end;
 
-	add_leave_action (a_command: COMMAND; argument: ANY) is
+	add_leave_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- pointer leave the window.
 		do
 			leave_actions.add (Current, a_command, argument)
 		end;
 
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- mouse is moved.
 		do
 			pointer_motion_actions.add (Current, a_command, argument)
 		end;
 
-	add_destroy_action (a_command: COMMAND; argument: ANY) is
+	add_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- widget is destroyed.
 		do
 			destroy_actions.add (Current, a_command, argument)
 		end;
 
-	add_map_action (a_command: COMMAND; argument: ANY) is
+	add_map_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- widget is mapped.
 		do
 			map_actions.add (Current, a_command, argument)
 		end
 
-	add_unmap_action (a_command: COMMAND; argument: ANY) is
+	add_unmap_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- widget is unmapped.
 		do
 			unmap_actions.add (Current, a_command, argument)
 		end
 
-	add_visible_action (a_command: COMMAND; argument: ANY) is
+	add_visible_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when the
 			-- widget is unmapped.
 		do
 			visible_actions.add (Current, a_command, argument)
 		end
 
-	remove_map_action (a_command: COMMAND; argument: ANY) is
+	remove_map_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of actions to execute when the
 			-- widget is mapped.
 		do
 			map_actions.remove (Current, a_command, argument)
 		end
 
-	remove_unmap_action (a_command: COMMAND; argument: ANY) is
+	remove_unmap_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of actions to execute when the
 			-- widget is unmapped.
 		do
 			unmap_actions.remove (Current, a_command, argument)
 		end
 
-	remove_visible_action (a_command: COMMAND; argument: ANY) is
+	remove_visible_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of actions to execute when the
 			-- widget is unmapped.
 		do
@@ -719,7 +719,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove a command according to the
 			-- translation. See X windows reference guide.
 		local
@@ -779,7 +779,7 @@ feature -- Removal
 			end
 		end;
 
-	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		do
@@ -793,14 +793,14 @@ feature -- Removal
 			end
 		end;
 
-	remove_resize_action (a_command: COMMAND; arg: ANY) is
+	remove_resize_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current area is resized.
 		do
 			resize_actions.remove (Current, a_command, arg)
 		end
 
-	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- `number'-th mouse button is pressed.
 		do
@@ -814,7 +814,7 @@ feature -- Removal
 			end
 		end;
 
-	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- `number'-th mouse button is released.
 		do
@@ -828,62 +828,62 @@ feature -- Removal
 			end
 		end;
 
-	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- `number'-th mouse button is clicked.
 		do
 		end;
 
-	remove_destroy_action (a_command: COMMAND; argument: ANY) is
+	remove_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- widget is destroyed.
 		do
 			destroy_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_enter_action (a_command: COMMAND; argument: ANY) is
+	remove_enter_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command from the list of actions to execute when the
 			-- pointer enter the window.
 		do
 			enter_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
+	remove_expose_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when
 			-- the widget is exposed
 		do
 			expose_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+	remove_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when a key
 			-- is pressed.
 		do
 			key_press_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+	remove_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when a key
 			-- is released.
 		do
 			key_release_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_leave_action (a_command: COMMAND; argument: ANY) is
+	remove_leave_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command from the list of actions to execute when the
 			-- pointer leave the window.
 		do
 			leave_actions.remove (Current, a_command, argument)
 		end;
 
-	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command to the list of actions to execute when the
 			-- mouse is moved.
 		do
 			pointer_motion_actions.remove (Current, a_command, argument)
 		end;
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set an action according to `a_translation'.
 		local
 			translation: TRANSLATION_COMMAND;
@@ -935,7 +935,7 @@ feature -- Removal
 
 feature -- Implementation
 
-	on_vision_mouse_enter is
+	on_vision_mouse_enter
 			-- Vision message.
 			-- The mouse entered current widget.
 			-- Update the cursor_widget and send
@@ -954,127 +954,127 @@ feature -- Implementation
 			-- Color used for the background.
 			-- Not set at creation
 
-	absolute_x: INTEGER is
+	absolute_x: INTEGER
 			-- Absolute x coordinate
 		deferred
 		end
 
-	absolute_y: INTEGER is
+	absolute_y: INTEGER
 			-- Absolute y coordinate
 		deferred
 		end
 
-	client_rect: WEL_RECT is
+	client_rect: WEL_RECT
 			-- Client rectangle
 		deferred
 		end
 
-	enable is
+	enable
 			-- Enable the widget.
 		deferred
 		end
 
-	enabled: BOOLEAN is
+	enabled: BOOLEAN
 			-- Is this widget enabled?
 		deferred
 		end
 
-	disable is
+	disable
 			-- Disable the widget.
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does this widget exist?
 		deferred
 		end
 
-	invalidate is
+	invalidate
 			-- Invalidate this widget.
 		deferred
 		end
 
-	resize (new_width, new_height: INTEGER) is
+	resize (new_width, new_height: INTEGER)
 			-- Resize widget to `new_width' and `new_height'
 		deferred
 		end
 
-	wel_destroy is
+	wel_destroy
 			-- Destroy the window
 		deferred
 		end
 
-	wel_hide is
+	wel_hide
 			-- Hide the window
 		deferred
 		end
 
-	wel_show is
+	wel_show
 			-- Show the window
 		deferred
 		end
 
-	wel_width: INTEGER is
+	wel_width: INTEGER
 			-- Window width
 		deferred
 		end
 
-	wel_height: INTEGER is
+	wel_height: INTEGER
 			-- Window height
 		deferred
 		end
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Window text
 		deferred
 		end
 
-	wel_set_text (a_text: STRING_GENERAL) is
+	wel_set_text (a_text: STRING_GENERAL)
 			-- Set the window text
 		deferred
 		end
 
-	wel_set_x (a_x: INTEGER) is
+	wel_set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'
 		deferred
 		end
 
-	wel_set_y (a_y: INTEGER) is
+	wel_set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'
 		deferred
 		end
 
-	wel_set_width (a_width: INTEGER) is
+	wel_set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
 		deferred
 		end
 
-	wel_set_height (a_height: INTEGER) is
+	wel_set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'
 		deferred
 		end
 
-	wel_shown: BOOLEAN is
+	wel_shown: BOOLEAN
 			-- Is the window shown?
 		deferred
 		end
 
-	wel_parent: WEL_WINDOW is
+	wel_parent: WEL_WINDOW
 			-- Parent window
 		deferred
 		end
 
-	wel_move (a_x, a_y: INTEGER) is
+	wel_move (a_x, a_y: INTEGER)
 			-- Move the window to `a_x', `a_y'.
 		deferred
 		end
 
-	wel_set_focus is
+	wel_set_focus
 			-- Set the focus to `Current'
 		deferred
 		end
 
-	wel_set_capture is
+	wel_set_capture
 			-- Set the mouse capture to the `Current' window.
 			-- Once the window has captured the mouse, all
 			-- mouse input is directed to this window, regardless
@@ -1083,37 +1083,37 @@ feature -- Implementation
 		deferred
 		end
 
-	wel_release_capture is
+	wel_release_capture
 			-- Release the mouse capture after a call
 			-- to `set_capture'.
 		deferred
 		end
 
-	disable_default_processing is
+	disable_default_processing
 			-- Prevent default_processing of a message by windows.
 		deferred
 		end
 
-	set_z_order (z_order: POINTER) is
+	set_z_order (z_order: POINTER)
 			-- Set the z-order of the window.
 		deferred
 		end
 
-	wel_item: POINTER is
+	wel_item: POINTER
 		deferred
 		end
 
-	wel_x: INTEGER is
+	wel_x: INTEGER
 			-- Window x position
 		deferred
 		end
 
-	wel_y: INTEGER is
+	wel_y: INTEGER
 			-- Window y position
 		deferred
 		end
 
-	on_mouse_leave is
+	on_mouse_leave
 			-- Mouse leave
 		local
 			cd: CONTEXT_DATA
@@ -1124,7 +1124,7 @@ feature -- Implementation
 			end
 		end;
 
-	on_mouse_enter is
+	on_mouse_enter
 			-- Mouse enter
 		local
 			cd: CONTEXT_DATA
@@ -1135,7 +1135,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		require
@@ -1147,7 +1147,7 @@ feature {NONE} -- Implementation
 			resize_actions.execute (Current, resize_data)
 		end
 
-	on_move (x_pos, y_pos: INTEGER) is
+	on_move (x_pos, y_pos: INTEGER)
 			-- Wm_move message.
 			-- This message is sent after a window has been moved.
 			-- `x_pos' specifies the x-coordinate of the upper-left
@@ -1160,7 +1160,7 @@ feature {NONE} -- Implementation
 			resize_actions.execute (Current, Void)
 		end
 
-	on_hide is
+	on_hide
 			-- Wm_showwindow message.
 			-- Execute a visible command if appropriate.
 		require
@@ -1169,7 +1169,7 @@ feature {NONE} -- Implementation
 			visible_actions.execute (Current, Void)
 		end
 
-	on_show is
+	on_show
 			-- Wm_showwindow message.
 			-- Execute a visible command if appropriate.
 		require
@@ -1178,7 +1178,7 @@ feature {NONE} -- Implementation
 			visible_actions.execute (Current, Void)
 		end
 
-	on_vision_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_vision_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- EiffelVision mouse move event
 		local
 			cd: MOTNOT_DATA
@@ -1195,7 +1195,7 @@ feature {NONE} -- Implementation
 			pointer_motion_actions.execute (Current, cd)
 		end;
 
-	double_click: WEL_DOUBLE_CLICK is
+	double_click: WEL_DOUBLE_CLICK
 			-- Windows double click
 		once
 			create Result
@@ -1203,7 +1203,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end;
 
-	left_button_down_widget_implementation: CELL [WIDGET_IMP] is
+	left_button_down_widget_implementation: CELL [WIDGET_IMP]
 			-- Widget down with left button implementation
 		once
 			create Result.put (Void)
@@ -1211,7 +1211,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end;
 
-	middle_button_down_widget_implementation: CELL [WIDGET_IMP] is
+	middle_button_down_widget_implementation: CELL [WIDGET_IMP]
 			-- Widget down with middle button implementation
 		once
 			create Result.put (Void)
@@ -1219,7 +1219,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end;
 
-	right_button_down_widget_implementation: CELL [WIDGET_IMP] is
+	right_button_down_widget_implementation: CELL [WIDGET_IMP]
 			-- Widget down with right button implementation
 		once
 			create Result.put (Void)
@@ -1227,25 +1227,25 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end;
 
-	left_button_down_widget: WIDGET_IMP is
+	left_button_down_widget: WIDGET_IMP
 			-- Widget down with left button
 		do
 			Result := left_button_down_widget_implementation.item
 		end;
 
-	middle_button_down_widget: WIDGET_IMP is
+	middle_button_down_widget: WIDGET_IMP
 			-- Widget down with middle button
 		do
 			Result := middle_button_down_widget_implementation.item
 		end;
 
-	right_button_down_widget: WIDGET_IMP is
+	right_button_down_widget: WIDGET_IMP
 			-- Widget down with right button
 		do
 			Result := right_button_down_widget_implementation.item
 		end;
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousemove message
 		do
 			on_vision_mouse_enter
@@ -1259,7 +1259,7 @@ feature {NONE} -- Implementation
 			on_vision_mouse_move (keys, x_pos, y_pos)
 		end;
 
-	on_lbutton_move (keys, x_pos, y_pos: INTEGER) is
+	on_lbutton_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse moves with the left button dowm
 		local
 			cd: MOTNOT_DATA
@@ -1277,7 +1277,7 @@ feature {NONE} -- Implementation
 			--left_button_motion_actions.execute (left_button_down_widget, cd)
 		end;
 
-	on_mbutton_move (keys, x_pos, y_pos: INTEGER) is
+	on_mbutton_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse moves with the middle button dowm
 		local
 			cd: MOTNOT_DATA
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 			middle_button_motion_actions.execute (Current, cd)
 		end;
 
-	on_rbutton_move (keys, x_pos, y_pos: INTEGER) is
+	on_rbutton_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse moves with the right button dowm
 		local
 			cd: MOTNOT_DATA
@@ -1312,7 +1312,7 @@ feature {NONE} -- Implementation
 			--right_button_motion_actions.execute (right_button_down_widget, cd)
 		end;
 
-	on_left_button_down (keys, a_x, a_y: INTEGER) is
+	on_left_button_down (keys, a_x, a_y: INTEGER)
 			-- Wm_lbuttondown message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -1334,7 +1334,7 @@ feature {NONE} -- Implementation
 			left_button_press_actions.execute (Current, cd)
 		end;
 
-	on_left_button_up (keys, a_x, a_y: INTEGER) is
+	on_left_button_up (keys, a_x, a_y: INTEGER)
 			-- Wm_lbuttonup message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -1358,7 +1358,7 @@ feature {NONE} -- Implementation
 			left_button_release_actions.execute (Current, cd)
 		end;
 
-	on_right_button_down (keys, a_x, a_y: INTEGER) is
+	on_right_button_down (keys, a_x, a_y: INTEGER)
 			-- Wm_rbuttondown message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -1380,7 +1380,7 @@ feature {NONE} -- Implementation
 			right_button_press_actions.execute (Current, cd)
 		end;
 
-	on_right_button_up (keys, a_x, a_y: INTEGER) is
+	on_right_button_up (keys, a_x, a_y: INTEGER)
 			-- Wm_rbuttonup message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -1404,7 +1404,7 @@ feature {NONE} -- Implementation
 			right_button_release_actions.execute (Current, cd)
 		end;
 
-	on_key_down (code, flags: INTEGER) is
+	on_key_down (code, flags: INTEGER)
 			-- Respond to a wm_key_down message.
 		local
 			cd: KYPRESS_DATA
@@ -1419,7 +1419,7 @@ feature {NONE} -- Implementation
 			key_press_actions.execute (Current, cd)
 		end;
 
-	on_key_up (code, flags: INTEGER) is
+	on_key_up (code, flags: INTEGER)
 			-- Respond to a wm_key_up message.
 		local
 			cd: KEYREL_DATA
@@ -1434,7 +1434,7 @@ feature {NONE} -- Implementation
 			key_release_actions.execute (Current, cd)
 		end;
 
-	on_destroy is
+	on_destroy
 			-- The window is about be to destroyed.
 		local
 			cd: CONTEXT_DATA
@@ -1443,7 +1443,7 @@ feature {NONE} -- Implementation
 			destroy_actions.execute (Current, cd)
 		end;
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 			-- Wm_setcursor
 		local
 			scw: SCREEN_CURSOR_IMP
@@ -1465,13 +1465,13 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	grabbed_cursor: SCREEN_CURSOR_IMP is
+	grabbed_cursor: SCREEN_CURSOR_IMP
 			-- Grabbed screen cursor
 		do
 			Result := grabbed_cursor_implementation.item
 		end;
 
-	grabbed_cursor_implementation: CELL [SCREEN_CURSOR_IMP] is
+	grabbed_cursor_implementation: CELL [SCREEN_CURSOR_IMP]
 			-- Grabbed cursor implementation
 		once
 			create Result.put (Void)
@@ -1482,7 +1482,7 @@ feature {NONE} -- Implementation
 	translation_commands: LINKED_LIST [TRANSLATION_COMMAND];
 			-- Translation commands
 
-	remove_equivalent_translation (tr: TRANSLATION_COMMAND) is
+	remove_equivalent_translation (tr: TRANSLATION_COMMAND)
 			-- Remove an equivalent translation.
 		local
 			translation: TRANSLATION_COMMAND;
@@ -1525,7 +1525,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	widget_oui: WIDGET is
+	widget_oui: WIDGET
 			-- Object user interface widget associated with
 			-- current implementation
 		do
@@ -1535,13 +1535,13 @@ feature {NONE} -- Implementation
 	widget_index: INTEGER;
 			-- Widget index in widget manager
 
-	set_widget_index (index: INTEGER) is
+	set_widget_index (index: INTEGER)
 			-- Set widget_index to index
 		do
 			widget_index := index
 		end;
 
-	clean_up is
+	clean_up
 			-- Clean up current widget.
 		do
 		end;
@@ -1552,10 +1552,10 @@ feature {NONE} -- Implementation
 	old_cursor_id: POINTER;
 			-- the cursor id as it was before a grab.
 
-	Id_default: INTEGER is 0;
+	Id_default: INTEGER = 0;
 			-- Identifier used for WEL
 
-	class_background, background_brush: WEL_BRUSH is
+	class_background, background_brush: WEL_BRUSH
 			-- Default background.
 		local
 			pixmap_color: PIXMAP_IMP
@@ -1585,7 +1585,7 @@ feature {NONE} -- Implementation
 invariant
 	private_attribute_exist: private_attributes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

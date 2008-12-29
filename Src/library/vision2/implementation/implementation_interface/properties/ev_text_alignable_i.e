@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision2 text alignable.%
 		%Implementation interface."
 	legal: "See notice at end of class."
@@ -14,31 +14,31 @@ inherit
 	
 feature -- Access
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Current text positioning.
 		deferred
 		end
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		deferred
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		deferred
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		deferred
 		end
 		
 feature {NONE} -- Implementation
 
-	default_alignment: INTEGER is
+	default_alignment: INTEGER
 			-- Default alignment used during
 			-- creation of real implementation
 			-- Center alignment by default as this is the most
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center 
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General popup shell implementation"
 	legal: "See notice at end of class.";
@@ -16,42 +16,42 @@ inherit
 	
 feature -- Status report
 
-	is_cascade_grab: BOOLEAN is
+	is_cascade_grab: BOOLEAN
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		deferred
 		end;
 
-	is_exclusive_grab: BOOLEAN is
+	is_exclusive_grab: BOOLEAN
 			-- Is the shell popped up with exclusive grab ?
 		deferred
 		end;
 
-	is_no_grab: BOOLEAN is
+	is_no_grab: BOOLEAN
 			-- Is the shell popped up with no grab ?
 		deferred
 		end;
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is the popup widget popped up on screen ?
 		deferred
 		end;
 
 feature -- Status setting 
 
-	popdown is
+	popdown
 			-- Popdown popup shell.
 		deferred
 		ensure
 			not_pupped_up: not is_popped_up
 		end;
 
-	popup is
+	popup
 			-- Popup a popup shell with no grab on it.
 		deferred
 		end;
 
-	set_cascade_grab is
+	set_cascade_grab
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells popped up with grab to receive events).
 		deferred
@@ -59,21 +59,21 @@ feature -- Status setting
 			is_cascade_grab: is_cascade_grab
 		end;
 
-	set_exclusive_grab is
+	set_exclusive_grab
 			-- Specifies that the shell would be popped up with exclusive grab.
 		deferred
 		ensure
 			is_exclusive_grab: is_exclusive_grab
 		end;
 
-	set_no_grab is
+	set_no_grab
 			-- Specifies that the shell would be popped up with no grab.
 		deferred
 		ensure
 			is_no_grab: is_no_grab
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

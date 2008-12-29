@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision2 toolbar, carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tool-bar.
 		local
 			ret: INTEGER
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id (current)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		local
 			button: EV_TOOL_BAR_BUTTON_IMP
@@ -120,7 +120,7 @@ feature -- Status setting
 			layout
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 				local
 			button_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -144,7 +144,7 @@ feature -- Status setting
 			layout
 		end
 
-	enable_vertical is
+	enable_vertical
 			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
@@ -152,7 +152,7 @@ feature -- Status setting
 			layout
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
@@ -165,14 +165,14 @@ feature -- Status setting
 feature -- Implementation
 
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 
 		do
 			Result := get_embedded_width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 
 		do
@@ -180,7 +180,7 @@ feature -- Implementation
 		end
 
 
-	layout is
+	layout
 			-- Set the style of `Current' relative to items
 		local
 			button_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -224,7 +224,7 @@ feature -- Implementation
 
 		end
 
-	get_insertion_coords (an_index: INTEGER): RECT_STRUCT is
+	get_insertion_coords (an_index: INTEGER): RECT_STRUCT
 			-- Get the coordinates for insertion of the current tool bar item
 		local
 			carbon_item: EV_CARBON_WIDGET_IMP
@@ -253,7 +253,7 @@ feature -- Implementation
 			end
 		end
 
-	get_embedded_width: INTEGER is
+	get_embedded_width: INTEGER
 			-- Get the width of all embedded items
 		local
 			carbon_item: EV_CARBON_WIDGET_IMP
@@ -289,7 +289,7 @@ feature -- Implementation
 			end
 		end
 
-	get_embedded_height: INTEGER is
+	get_embedded_height: INTEGER
 			-- Get the height of all embedded items
 		local
 			carbon_item: EV_CARBON_WIDGET_IMP
@@ -328,7 +328,7 @@ feature -- Implementation
 
 
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
@@ -361,7 +361,7 @@ feature -- Implementation
 		end
 
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			imp: EV_ITEM_IMP
@@ -380,7 +380,7 @@ feature -- Implementation
 
 feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Radio button handling
 
-	add_radio_button (w: EV_RADIO_PEER_IMP) is
+	add_radio_button (w: EV_RADIO_PEER_IMP)
 			-- Connect radio button to tool bar group.
 		require
 			w_not_void: w /= Void
@@ -395,18 +395,18 @@ feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Radio button handling
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation (obsolete?)
 
-	block_selection_for_docking is
+	block_selection_for_docking
 			--
 		do
 		end
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is index - 1 of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
 		do
 		end
 
-	list_widget: POINTER is
+	list_widget: POINTER
 			--
 		do
 		end
@@ -416,7 +416,7 @@ feature {EV_ANY_I} -- Interface
 	interface: EV_TOOL_BAR;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

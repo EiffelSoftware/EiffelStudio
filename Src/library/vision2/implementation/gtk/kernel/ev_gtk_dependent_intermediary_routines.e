@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Intermediary routines between gtk and eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Implementation
 
-	new_toolbar_item_select_actions_intermediary (a_object_id: INTEGER) is
+	new_toolbar_item_select_actions_intermediary (a_object_id: INTEGER)
 			-- Intermediary agent for toolbar button select action
 		local
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -36,7 +36,7 @@ feature -- Implementation
 			end
 		end
 
-	pnd_deferred_parent_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pnd_deferred_parent_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Start of pick and drop transport
 		local
 			pnd_par: EV_PND_DEFERRED_ITEM_PARENT
@@ -45,7 +45,7 @@ feature -- Implementation
 			pnd_par.on_mouse_button_event (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	mcl_column_click_callback (a_object_id: INTEGER; int: INTEGER) is
+	mcl_column_click_callback (a_object_id: INTEGER; int: INTEGER)
 		local
 			a_mcl: EV_MULTI_COLUMN_LIST_IMP
 		do
@@ -55,7 +55,7 @@ feature -- Implementation
 			end
 		end
 
-	mcl_column_resize_callback (a_object_id: INTEGER; a_column: INTEGER) is
+	mcl_column_resize_callback (a_object_id: INTEGER; a_column: INTEGER)
 		local
 			a_column_ptr: POINTER
 			temp_width: INTEGER
@@ -76,7 +76,7 @@ feature -- Implementation
 			end
 		end
 
-	text_buffer_mark_set_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER) is
+	text_buffer_mark_set_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER)
 			-- Used for caret positioning events
 		local
 			a_rich_text: EV_RICH_TEXT_IMP
@@ -90,7 +90,7 @@ feature -- Implementation
 			end
 		end
 
-	tree_row_expansion_change_intermediary (a_object_id: INTEGER; is_expanded: BOOLEAN; nargs: INTEGER; args: POINTER) is
+	tree_row_expansion_change_intermediary (a_object_id: INTEGER; is_expanded: BOOLEAN; nargs: INTEGER; args: POINTER)
 			-- Used for calling expansion actions for tree nodes
 		local
 			a_tree_imp: EV_TREE_IMP
@@ -115,7 +115,7 @@ feature -- Implementation
 			end
 		end
 
-	boolean_cell_renderer_toggle_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER) is
+	boolean_cell_renderer_toggle_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER)
 			-- Called when a cell renderer is toggled (EV_CHECKABLE_LIST)
 		local
 			a_list_imp: EV_GTK_TREE_VIEW
@@ -128,7 +128,7 @@ feature -- Implementation
 			end
 		end
 
-	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
+	page_switch_translate (n: INTEGER; args: POINTER): TUPLE
 			-- Retrieve index of switched page.
 		local
 			gtkarg2: POINTER
@@ -137,7 +137,7 @@ feature -- Implementation
 			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
 		end
 
-	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER) is
+	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER)
 			-- A selection event has occurred on a PND deferred item parent.
 		local
 			a_pnd_widget: EV_PND_DEFERRED_ITEM_PARENT
@@ -148,7 +148,7 @@ feature -- Implementation
 			end
 		end
 
-	on_combo_box_toggle_button_event (a_object_id: INTEGER; a_event_id: INTEGER) is
+	on_combo_box_toggle_button_event (a_object_id: INTEGER; a_event_id: INTEGER)
 			-- A combo box toggle button has been toggled.
 		local
 			a_combo: EV_COMBO_BOX_IMP
@@ -167,7 +167,7 @@ feature -- Implementation
 			end
 		end
 
-	toolbar_item_select_actions_intermediary (a_object_id: INTEGER) is
+	toolbar_item_select_actions_intermediary (a_object_id: INTEGER)
 			-- Intermediary agent for toolbar button select action
 		local
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -184,7 +184,7 @@ feature -- Implementation
 			end
 		end
 
-	gdk_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
+	gdk_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER)
 			-- Intermediary agent for gdk events.
 		local
 			l_any_imp: EV_ANY_IMP
@@ -195,7 +195,7 @@ feature -- Implementation
 
 feature {EV_ANY_I} -- Externals
 
-	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
+	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP
 			-- Get Eiffel object from `a_c_object'.
 		external
 			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
@@ -203,7 +203,7 @@ feature {EV_ANY_I} -- Externals
 			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

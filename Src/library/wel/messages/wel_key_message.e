@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_char, Wm_syschar, %
 		%Wm_keydown, Wm_keyup, Wm_syskeydown, Wm_syskeyup. These %
 		%messages are sent when a key is pressed."
@@ -18,20 +18,20 @@ create
 
 feature -- Access
 
-	code: INTEGER is
+	code: INTEGER
 			-- Character code of the key
 			-- See class WEL_VK_CONSTANTS for different values.
 		do
 			Result := w_param.to_integer_32
 		end
 
-	data: INTEGER is
+	data: INTEGER
 			-- Key data
 		do
 			Result := l_param.to_integer_32
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

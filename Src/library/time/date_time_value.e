@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ feature -- Access
 	time: TIME_VALUE
 			-- Time of the current object
 			 
-	fractional_second: DOUBLE is 
+	fractional_second: DOUBLE 
 			-- Decimal part of second 
 		do 
 			Result := time.fractional_second
@@ -24,7 +24,7 @@ feature -- Access
 			same_fractional: Result = time.fractional_second
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

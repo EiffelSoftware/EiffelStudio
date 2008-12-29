@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projectors that make representations of `world' on EV_PIXMAP."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_world: EV_MODEL_WORLD; a_pixmap: like pixmap) is
+	make (a_world: EV_MODEL_WORLD; a_pixmap: like pixmap)
 			-- Create with `a_world' and `a_pixmap'.
 		require
 			a_world_not_void: a_world /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (
 		a_world: EV_MODEL_WORLD;
-		a_buffer: EV_PIXMAP; a_pixmap: like pixmap) is
+		a_buffer: EV_PIXMAP; a_pixmap: like pixmap)
 			-- Create with `a_world', `a_pixmap' and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void
@@ -55,14 +55,14 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP
 			-- Drawable widget to draw to.
 
-	project_rectangle (u: EV_RECTANGLE) is
+	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u' and flush pixmap.
 		do
 			Precursor (u)
 			pixmap.flush
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

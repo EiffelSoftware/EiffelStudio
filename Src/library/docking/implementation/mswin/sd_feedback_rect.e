@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Transparent rectangle which only avail on Microsoft Windows 2000 and later."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make  is
+	make
 			-- Creation method
 		do
 			default_create
@@ -33,13 +33,13 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	clear is
+	clear
 			-- Clear
 		do
 			Precursor {EV_POPUP_WINDOW}
 		end
 
-	set_area (a_rect: EV_RECTANGLE) is
+	set_area (a_rect: EV_RECTANGLE)
 			-- Set feedback area.
 		local
 			l_region: WEL_REGION
@@ -56,7 +56,7 @@ feature -- Command
 			check successed: l_result /= 0 end
 		end
 
-	set_tab_area (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
+	set_tab_area (a_top_rect, a_bottom_rect: EV_RECTANGLE)
 			-- Set size for tab feedback.
 		require
 			a_top_rect_not_void: a_top_rect /= Void
@@ -96,17 +96,17 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	alpha: INTEGER is 153
+	alpha: INTEGER = 153
 			-- Transparent alpha value.
 
-	set_area_internal (a_rect: EV_RECTANGLE) is
+	set_area_internal (a_rect: EV_RECTANGLE)
 			-- Set feedback area, not destroy `internal_extra_area'.
 		do
 			set_position (a_rect.left, a_rect.top)
 			set_size (a_rect.width, a_rect.height)
 		end
 
-	set_transparent (a_alpha: INTEGER)is
+	set_transparent (a_alpha: INTEGER)
 			-- Set transparent. a_alpha is a value from 0-255.
 		local
 			l_imp: EV_POPUP_WINDOW_IMP
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)
 		end
 
-	cwin_setlayeredwindowattributes (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
+	cwin_setlayeredwindowattributes (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER])
 				-- Set layered window properties on Windows 2000 and later.
 		require
 			exists: a_wnd /= a_wnd.default_pointer
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	set_window_rgn (a_hwnd: POINTER; a_rgn: POINTER; a_result: TYPED_POINTER [INTEGER]) is
+	set_window_rgn (a_hwnd: POINTER; a_rgn: POINTER; a_result: TYPED_POINTER [INTEGER])
 			-- Set Windows reigon.
 		external
 			"C inline use <Winuser.h>"
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED;
 			-- All singletons.
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

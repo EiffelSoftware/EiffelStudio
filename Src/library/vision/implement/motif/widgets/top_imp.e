@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a Motif top shell widget."
@@ -52,13 +52,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_iconic_state: BOOLEAN is
+	is_iconic_state: BOOLEAN
 			-- Does application start in iconic state?
 		do
 			Result := is_iconic
 		end;
 
-	is_maximized_state: BOOLEAN is
+	is_maximized_state: BOOLEAN
 			-- Does application start in maximized state?
 		do
 			-- Not implemented
@@ -66,42 +66,42 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_maximized_state is
+	set_maximized_state
 			-- Set start state of the application to be maximized.
 		do
 			-- Not implemented.
 		end
 
-	set_iconic_state is
+	set_iconic_state
 			-- Set start state of the application to be iconic.
 		do
 			set_initial_state_to_iconic
 		end;
 
-	set_normal_state is
+	set_normal_state
 			-- Set start state of the application to be normal.
 		do
 			set_initial_state_to_normal
 		end;
 
-	delete_window_action is
+	delete_window_action
 			-- Execute command when close button is activated.
 		deferred
 		end;
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Put at horizontal position `new_x'
 		do
 			set_x_y (new_x, y)
 		end;
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Put at vertical position `new_y'
 		do
 			set_x_y (x, new_y)
 		end;
 
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+	set_x_y (new_x: INTEGER; new_y: INTEGER)
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y'
 		do
@@ -114,7 +114,7 @@ feature -- Status Setting
 
 feature -- Element change
 
-	add_protocol is
+	add_protocol
 			-- Add the protocol to catch the close button from
 			-- the window manager
 		local
@@ -127,13 +127,13 @@ feature -- Element change
 
 feature -- Execution
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Execute the delete window command.
 		do
 			delete_window_action
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

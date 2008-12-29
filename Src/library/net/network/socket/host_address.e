@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A host address."
@@ -22,27 +22,27 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a host address object.
 		do
 			create address_host.make (in_addr_size)
 		end;
 
-	make_local is
+	make_local
 			-- Create a local host address object.
 		do
 			make;
 			set_in_address_any
 		end;
 
-	make_from_name (a_name: STRING) is
+	make_from_name (a_name: STRING)
 			-- Create host address from host name `a_name'.
 		do
 			make;
 			set_address_from_name (a_name)
 		end;
 
-	make_from_ip_number (an_ip_address: STRING) is
+	make_from_ip_number (an_ip_address: STRING)
 			-- Create host address from IP number in dotted format.
 		do
 			make;
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Object address size
 		do
 			Result := address_host.count
@@ -64,7 +64,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are the two host address areas equal ?
 		do
 			Result := address_host.is_equal (other.address_host)
@@ -72,19 +72,19 @@ feature -- Comparison
 
 feature -- Status_report
 
-	host_number: INTEGER is
+	host_number: INTEGER
 			-- IP number in long integer form of current address
 		do
 			Result := get_host_addr (address_host.item)
 		end;
 
-	host_address: STRING is
+	host_address: STRING
 			-- IP number (dotted format) of current address
 		do
 			create Result.make_from_c (net_host (address_host.item))
 		end;
 
-	local_host_name: STRING is
+	local_host_name: STRING
 			-- Host name of the local machine
 		local
 			l_c_str: C_STRING
@@ -96,7 +96,7 @@ feature -- Status_report
 
 feature -- Status_setting
 
-	set_address_from_name (a_name: STRING) is
+	set_address_from_name (a_name: STRING)
 			-- Set the host address using the name provided in 'a_name'.
 		require
 			name_valid: a_name /= Void and then not a_name.is_empty
@@ -107,7 +107,7 @@ feature -- Status_setting
 			host_address_from_name (address_host.item, ext.item)
 		end;
 
-	set_host_address (host_id: STRING) is
+	set_host_address (host_id: STRING)
 			-- Set host address from dotted format string.
 		require
 			dotted_address_not_void: host_id /= Void
@@ -120,7 +120,7 @@ feature -- Status_setting
 			set_host_addr (address_host.item, host_num)
 		end;
 
-	set_in_address_any is
+	set_in_address_any
 			-- Set host address to "in address any".
 			-- This is a special address selected by the host machine.
 		do
@@ -129,7 +129,7 @@ feature -- Status_setting
 
 feature -- Conversion
 
-	from_c (ptr: POINTER) is
+	from_c (ptr: POINTER)
 			-- Converts a c host address structure (address_in)
 			-- to an eiffel address object.
 		do
@@ -138,7 +138,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone')
 		do
@@ -151,32 +151,32 @@ feature -- Duplication
 
 feature {NONE} -- External
 
-	c_get_hostname (buf: POINTER; nb: INTEGER) is
+	c_get_hostname (buf: POINTER; nb: INTEGER)
 			-- Get local hostname.
 		external
 			"C signature (char *, size_t)"
 		end;
 
-	in_addr_size: INTEGER is
+	in_addr_size: INTEGER
 			-- Size of the c address structure
 		external
 			"C"
 		end;
 
-	inet_inaddr_any: INTEGER is
+	inet_inaddr_any: INTEGER
 			-- C constant for "wildcard" address
 		external
 			"C"
 		end;
 
-	set_host_addr (addr: POINTER; value: INTEGER) is
+	set_host_addr (addr: POINTER; value: INTEGER)
 		external
 			"C"
 		alias
 			"set_sin_addr"
 		end;
 
-	get_host_addr (addr: POINTER): INTEGER is
+	get_host_addr (addr: POINTER): INTEGER
 			-- get the host number from 'addr'
 		external
 			"C"
@@ -184,32 +184,32 @@ feature {NONE} -- External
 			"get_sin_addr"
 		end;
 
-	net_host_addr(host_addr: POINTER): INTEGER is
+	net_host_addr(host_addr: POINTER): INTEGER
 			--	Convert the dotted string address to a host number
 		external
 			"C"
 		end;
 
-	net_host (addr: POINTER): POINTER is
+	net_host (addr: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	host_address_from_name (addr, name: POINTER) is
+	host_address_from_name (addr, name: POINTER)
 			-- sets the host address in 'addr' using the
 			-- name to identify the host.
 		external
 			"C"
 		end;
 
-	set_from_c (addr: POINTER ptr: POINTER) is
+	set_from_c (addr: POINTER ptr: POINTER)
 			-- copies the address infor in 'ptr'
 			-- to the addr object.
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

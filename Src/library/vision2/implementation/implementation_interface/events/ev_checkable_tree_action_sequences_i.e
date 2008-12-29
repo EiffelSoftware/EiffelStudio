@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_CHECKABLE_TREE_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Event handling
 
-	check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when an item is checked.
 		do
 			if check_actions_internal = Void then
@@ -24,7 +24,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	create_check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Create a check action sequence.
 		deferred
 		end
@@ -34,7 +34,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when an item is unchecked.
 		do
 			if uncheck_actions_internal = Void then
@@ -48,7 +48,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	create_uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Create a uncheck action sequence.
 		deferred
 		end
@@ -56,7 +56,7 @@ feature {EV_ANY_I} -- Implementation
 	uncheck_actions_internal: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE;
 			-- Implementation of once per object `uncheck_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Transactions consisting out of a single transfer"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, t: DATA_RESOURCE) is
+	make (s, t: DATA_RESOURCE)
 			-- Create transaction.
 		require
 			source_exists: s /= Void
@@ -44,18 +44,18 @@ feature -- Access
 	
 feature -- Measurement
 
-	count: INTEGER is 1
+	count: INTEGER = 1
 			-- Number of transactions (Always 1)
 
 feature -- Status report
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Is transaction set up correctly?
 		do
 			Result := source.is_readable and target.is_writable
 		end
 
-	succeeded: BOOLEAN is
+	succeeded: BOOLEAN
 			-- Has the transaction succeeded?
 		do
 			Result := not error and then not source.is_packet_pending and 
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	reset_error is
+	reset_error
 			-- Reset error flags.
 		do
 			source.reset_error
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute transaction.
 		do
 			debug Io.error.put_string ("- OPEN -%N") end
@@ -95,7 +95,7 @@ feature -- Basic operations
 			if target.is_open then target.close end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

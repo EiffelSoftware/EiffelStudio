@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -24,13 +24,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Set up action sequence connections and create graphics context.
 		do
 			drawable := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, 1, 1, 1)
@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Status Setting
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		local
 			oldpix: POINTER
@@ -63,7 +63,7 @@ feature -- Status Setting
 			end
 		end
 
-	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg_color)
@@ -76,7 +76,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 		-- Width in pixels of mask bitmap.
 		local
 			a_y: INTEGER
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		-- Width in pixels of mask bitmap.
 		local
 			a_x: INTEGER
@@ -103,7 +103,7 @@ feature {EV_PIXMAP_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			-- Access to application object implementation.
 		local
 			env: EV_ENVIRONMENT
@@ -115,20 +115,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	redraw is
+	redraw
 			-- Redraw the entire area.
 		do
 			-- Not needed for masking implementation.
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, bg_color)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, fg_color)
 		end
 
-	destroy is
+	destroy
 		do
 			if drawable /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (drawable)
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	dispose is
+	dispose
 			-- Cleanup
 		do
 			if drawable /= default_pointer then
@@ -145,17 +145,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	flush is
+	flush
 			-- Force all queued draw to be called.
 		do
 		end
 
-	update_if_needed is
+	update_if_needed
 			-- Update `Current' if needed.
 		do
 		end
 
-	mask: POINTER is
+	mask: POINTER
 		do
 			-- Not applicable
 		end

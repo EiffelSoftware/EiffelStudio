@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Figures which define a line width"
 	legal: "See notice at end of class.";
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_line_width (a_line_width: INTEGER) is
+	set_line_width (a_line_width: INTEGER)
 			-- Set `line_width' of current figure to `a_line_width'.
 		require
 			a_line_width_positive: a_line_width >= 0
@@ -31,7 +31,7 @@ invariant
 
 	line_width >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

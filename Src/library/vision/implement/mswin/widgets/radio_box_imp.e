@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPradio box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_radio_box: RADIO_BOX; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make a radio box.
 		do
 			create private_attributes
@@ -34,7 +34,7 @@ feature -- Initialization
 			managed := man
 		end
 
-	set_always_one (flag: BOOLEAN) is
+	set_always_one (flag: BOOLEAN)
 			-- Set `only_one' to `flag'.
 		do
 			only_one := flag
@@ -45,13 +45,13 @@ feature {NONE} -- Implementation
 	only_one: BOOLEAN
 			-- Can there be only one checked radio button?
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionRadioBox"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

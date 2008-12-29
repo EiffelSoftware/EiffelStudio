@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,70 +12,70 @@ inherit
 
 feature -- Status Report
 
-	can_in_place_activate_user_precondition: BOOLEAN is
+	can_in_place_activate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `can_in_place_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_in_place_activate_user_precondition: BOOLEAN is
+	on_in_place_activate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `on_in_place_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_uiactivate_user_precondition: BOOLEAN is
+	on_uiactivate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `on_uiactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_window_context_user_precondition (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD): BOOLEAN is
+	get_window_context_user_precondition (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_window_context'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	scroll_user_precondition (scroll_extant: TAG_SIZE_RECORD): BOOLEAN is
+	scroll_user_precondition (scroll_extant: TAG_SIZE_RECORD): BOOLEAN
 			-- User-defined preconditions for `scroll'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_uideactivate_user_precondition (f_undoable: INTEGER): BOOLEAN is
+	on_uideactivate_user_precondition (f_undoable: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_uideactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_in_place_deactivate_user_precondition: BOOLEAN is
+	on_in_place_deactivate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `on_in_place_deactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	discard_undo_state_user_precondition: BOOLEAN is
+	discard_undo_state_user_precondition: BOOLEAN
 			-- User-defined preconditions for `discard_undo_state'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	deactivate_and_undo_user_precondition: BOOLEAN is
+	deactivate_and_undo_user_precondition: BOOLEAN
 			-- User-defined preconditions for `deactivate_and_undo'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_pos_rect_change_user_precondition (lprc_pos_rect: TAG_RECT_RECORD): BOOLEAN is
+	on_pos_rect_change_user_precondition (lprc_pos_rect: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `on_pos_rect_change'.
 			-- Redefine in descendants if needed.
 		do
@@ -84,7 +84,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	can_in_place_activate is
+	can_in_place_activate
 			-- No description available.
 		require
 			can_in_place_activate_user_precondition: can_in_place_activate_user_precondition
@@ -92,7 +92,7 @@ feature -- Basic Operations
 
 		end
 
-	on_in_place_activate is
+	on_in_place_activate
 			-- No description available.
 		require
 			on_in_place_activate_user_precondition: on_in_place_activate_user_precondition
@@ -100,7 +100,7 @@ feature -- Basic Operations
 
 		end
 
-	on_uiactivate is
+	on_uiactivate
 			-- No description available.
 		require
 			on_uiactivate_user_precondition: on_uiactivate_user_precondition
@@ -108,7 +108,7 @@ feature -- Basic Operations
 
 		end
 
-	get_window_context (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD) is
+	get_window_context (pp_frame: CELL [IOLE_IN_PLACE_FRAME_INTERFACE]; pp_doc: CELL [IOLE_IN_PLACE_UIWINDOW_INTERFACE]; lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD; lp_frame_info: TAG_OIFI_RECORD)
 			-- No description available.
 			-- `pp_frame' [out].  
 			-- `pp_doc' [out].  
@@ -132,7 +132,7 @@ feature -- Basic Operations
 			valid_pp_doc: pp_doc.item /= Void
 		end
 
-	scroll (scroll_extant: TAG_SIZE_RECORD) is
+	scroll (scroll_extant: TAG_SIZE_RECORD)
 			-- No description available.
 			-- `scroll_extant' [in].  
 		require
@@ -143,7 +143,7 @@ feature -- Basic Operations
 
 		end
 
-	on_uideactivate (f_undoable: INTEGER) is
+	on_uideactivate (f_undoable: INTEGER)
 			-- No description available.
 			-- `f_undoable' [in].  
 		require
@@ -152,7 +152,7 @@ feature -- Basic Operations
 
 		end
 
-	on_in_place_deactivate is
+	on_in_place_deactivate
 			-- No description available.
 		require
 			on_in_place_deactivate_user_precondition: on_in_place_deactivate_user_precondition
@@ -160,7 +160,7 @@ feature -- Basic Operations
 
 		end
 
-	discard_undo_state is
+	discard_undo_state
 			-- No description available.
 		require
 			discard_undo_state_user_precondition: discard_undo_state_user_precondition
@@ -168,7 +168,7 @@ feature -- Basic Operations
 
 		end
 
-	deactivate_and_undo is
+	deactivate_and_undo
 			-- No description available.
 		require
 			deactivate_and_undo_user_precondition: deactivate_and_undo_user_precondition
@@ -176,7 +176,7 @@ feature -- Basic Operations
 
 		end
 
-	on_pos_rect_change (lprc_pos_rect: TAG_RECT_RECORD) is
+	on_pos_rect_change (lprc_pos_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `lprc_pos_rect' [in].  
 		require
@@ -187,7 +187,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

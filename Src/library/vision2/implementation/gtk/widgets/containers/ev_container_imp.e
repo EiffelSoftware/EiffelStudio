@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision container, GTK+ implementation."
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create `shared_pointer' for radio groups.
 		do
 			Precursor {EV_WIDGET_IMP}
@@ -41,19 +41,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	container_widget: POINTER is
+	container_widget: POINTER
 		do
 			Result := visual_widget
 		end
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
 			Result := width
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of container
 			-- Redefined in children.
 		do
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Element change
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 		local
 			w: EV_WIDGET_IMP
@@ -89,19 +89,19 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 			-- pointer `radio_group' with merged containers even when
 			-- its value is still `NULL'.
 
-	set_shared_pointer (p: POINTER_REF) is
+	set_shared_pointer (p: POINTER_REF)
 			-- Assign `p' to `shared_pointer'.
 		do
 			shared_pointer := p
 		end
 
-	set_radio_group (p: POINTER) is
+	set_radio_group (p: POINTER)
 			-- Assign `p' to `radio_group'.
 		do
 			shared_pointer.set_item (p)
 		end
 
-	radio_group: POINTER is
+	radio_group: POINTER
 			-- GSList with all radio items of this container.
 			-- `Current' Shares reference with merged containers.
 		do
@@ -110,7 +110,7 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 
 feature -- Status setting
 
-	connect_radio_grouping (a_container: EV_CONTAINER) is
+	connect_radio_grouping (a_container: EV_CONTAINER)
 			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: ARRAYED_LIST [POINTER]
@@ -141,7 +141,7 @@ feature -- Status setting
 			end
 		end
 
-	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Remove Join of `a_container' to radio grouping of `Current'.
 		local
 			l: ARRAYED_LIST [POINTER]
@@ -221,7 +221,7 @@ feature -- Status setting
 			end
 		end
 
-	add_radio_button (a_widget_imp: EV_WIDGET_IMP) is
+	add_radio_button (a_widget_imp: EV_WIDGET_IMP)
 			-- Called every time a widget is added to the container.
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
@@ -239,7 +239,7 @@ feature -- Status setting
 			end
 		end
 
-	remove_radio_button (a_widget_imp: EV_WIDGET_IMP) is
+	remove_radio_button (a_widget_imp: EV_WIDGET_IMP)
 			-- Called every time a widget is removed from the container.
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
@@ -292,7 +292,7 @@ feature -- Status setting
 			end
 		end
 
-	internal_set_background_pixmap (a_pixmap: EV_PIXMAP) is
+	internal_set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		local
 			a_style: POINTER
@@ -328,21 +328,21 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
 		end
 
-	set_background_pixmap (a_pixmap: EV_PIXMAP) is
+	set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		do
 			background_pixmap := a_pixmap.twin
 			internal_set_background_pixmap (a_pixmap)
 		end
 
-	bg_pixmap (p: POINTER): POINTER is
+	bg_pixmap (p: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
 		alias
 			"&bg_pixmap"
 		end
 
-	remove_background_pixmap is
+	remove_background_pixmap
 			-- Make background pixmap Void.
 		local
 			a_style, mem_ptr: POINTER
@@ -366,7 +366,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	propagate_foreground_color is
+	propagate_foreground_color
 			-- Propagate the current foreground color of the
 			-- container to the children.
 		do
@@ -374,7 +374,7 @@ feature -- Basic operations
 			propagate_foreground_color_internal (foreground_color, c_object)
 		end
 
-	propagate_background_color is
+	propagate_background_color
 			-- Propagate the current background color of the
 			-- container to the children.
 		do
@@ -384,7 +384,7 @@ feature -- Basic operations
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Render `Current' unusable.
 		do
 			if interface.prunable then
@@ -395,7 +395,7 @@ feature -- Command
 
 feature -- Event handling
 
-	on_new_item (an_item_imp: EV_WIDGET_IMP) is
+	on_new_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called after `an_item' is added.
 		do
 			add_radio_button (an_item_imp)
@@ -405,7 +405,7 @@ feature -- Event handling
 --			end
 		end
 
-	on_removed_item (an_item_imp: EV_WIDGET_IMP) is
+	on_removed_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called just before `an_item' is removed.
 		do
 			an_item_imp.set_parent_imp (Void)
@@ -414,13 +414,13 @@ feature -- Event handling
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP)
 			--
 		do
 			-- By default do nothing
 		end
 
-	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP) is
+	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP)
 			--
 		do
 			Precursor {EV_WIDGET_IMP} (a_parent_imp)
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
+	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER]
 			-- Convert `gslist' to Eiffel structure.
 		local
 			cur: POINTER
@@ -465,7 +465,7 @@ feature {NONE} -- Externals
 		--	same_size: Result.count = g_slist_length (gslist)
 		end
 
-	glist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
+	glist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER]
 			-- Convert `gslist' to Eiffel structure.
 		local
 			cur: POINTER
@@ -489,7 +489,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Execution of a list of commands as a result of MOTIF callback"
@@ -23,7 +23,7 @@ create
 
 feature -- Element change
 
-    add_command (command: MEL_COMMAND; argument: ANY) is
+    add_command (command: MEL_COMMAND; argument: ANY)
             -- Add `command' with `argument' to list of commands.
 		require
 			command_not_void: command /= Void
@@ -36,7 +36,7 @@ feature -- Element change
 
 feature -- Removal
 
-    remove_command (command: MEL_COMMAND; argument: ANY) is
+    remove_command (command: MEL_COMMAND; argument: ANY)
             -- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
@@ -58,7 +58,7 @@ feature -- Removal
 
 feature -- Execution
 
-    execute (argument: ANY) is
+    execute (argument: ANY)
             -- Execute list of commands
 		local
 			a_list: like Current
@@ -77,7 +77,7 @@ feature -- Execution
             end
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

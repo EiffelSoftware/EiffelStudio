@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML file preference storage implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create preferences storage in XML file.  File will be created based on name of application.
 			-- For operating systems which support it it will stored in the users home directory.  For operating
 			-- systems that do not support home directories it will be stored in the current working directory.
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			make_with_location (l_loc)
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_location: STRING)
 			-- Create preference storage in the XML file at location `a_location'.
 			-- If file does not exist create new one.
 		do
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature {PREFERENCES} -- Initialization
 
-	initialize_with_preferences (a_preferences: PREFERENCES) is
+	initialize_with_preferences (a_preferences: PREFERENCES)
 		do
 			Precursor (a_preferences)
 			extract_preferences_from_file
@@ -74,7 +74,7 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Resource Management
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does storage exists ?
 		local
 			f: RAW_FILE
@@ -83,26 +83,26 @@ feature {PREFERENCES} -- Resource Management
 			Result := f.exists
 		end
 
-	has_preference (a_name: STRING): BOOLEAN is
+	has_preference (a_name: STRING): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		do
 			Result := session_values.has (a_name)
 		end
 
-	get_preference_value (a_name: STRING): STRING is
+	get_preference_value (a_name: STRING): STRING
 			-- Retrieve the preference string value from the underlying store.
 		do
 			Result := session_values.item (a_name)
 		end
 
-	save_preference (a_preference: PREFERENCE) is
+	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to the file on disk.
 		do
 				-- TODO: neilc.  How to save only a single preference to the file?
 			save_preferences (preferences.preferences.linear_representation, True)
 		end
 
-	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN) is
+	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN)
 			-- Save all preferences in `a_preferences' to storage device.
 			-- If `a_save_modified_values_only' then only preferences whose value is different
 			-- from the default one are saved, otherwise all preferences are saved.
@@ -142,7 +142,7 @@ feature {PREFERENCES} -- Resource Management
 			end
 		end
 
-	remove_preference (a_preference: PREFERENCE) is
+	remove_preference (a_preference: PREFERENCE)
 			-- Remove `preference' from storage device.
 		do
 		end
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 	xml_structure: XM_DOCUMENT
 			-- XML structure built from parsing of `file'.
 
-	extract_preferences_from_file is
+	extract_preferences_from_file
 			-- Extract from the `file' the saved preference values.
 		require
 			location_not_void: location /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	escape_xml (a_string: STRING): STRING is
+	escape_xml (a_string: STRING): STRING
 			-- Escape xml entities in `a_string'.
 		do
 			if a_string /= Void then
@@ -222,31 +222,31 @@ feature {NONE} -- Implementation
 			result_void_iff_a_string_void: (Result = Void) = (a_string = Void)
 		end
 
-	Lt_string: STRING is
+	Lt_string: STRING
 		once
 			create Result.make (1)
 			Result.append_character (lt_char)
 		end
 
-	Gt_string: STRING is
+	Gt_string: STRING
 		once
 			create Result.make (1)
 			Result.append_character (gt_char)
 		end
 
-	Amp_string: STRING is
+	Amp_string: STRING
 		once
 			create Result.make (1)
 			Result.append_character (amp_char)
 		end
 
-	Quot_string: STRING is
+	Quot_string: STRING
 		once
 			create Result.make (1)
 			Result.append_character (quot_char)
 		end
 
-	safe_open_write (a_file: FILE) is
+	safe_open_write (a_file: FILE)
 			-- Safely open `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -266,7 +266,7 @@ invariant
 	has_session_values: session_values /= Void
 	has_xml_structure: xml_structure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

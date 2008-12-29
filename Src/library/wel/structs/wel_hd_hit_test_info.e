@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a structure that contains%
 					 %information about a hit test for a WEL_HEADER_CONTROL"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	point: WEL_POINT is
+	point: WEL_POINT
 			-- Points to test, in client coordinates 	
 		require
 			exists: exists
@@ -32,7 +32,7 @@ feature -- Access
 			create Result.make (cwel_hd_hit_test_info_get_pt_x (item), cwel_hd_hit_test_info_get_pt_y (item))
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Variable that receives information about the results of a hit test. 
 			-- This member can be one or more of the values defined in WEL_HHT_CONSTANTS 		
 		require
@@ -41,7 +41,7 @@ feature -- Access
 			Result := cwel_hd_hit_test_info_get_flags (item)
 		end		
 
-	index: INTEGER is
+	index: INTEGER
 			-- Retrieves the index of the item at `point' if any
 		require
 			exists: exists
@@ -53,7 +53,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_point (a_point: WEL_POINT) is
+	set_point (a_point: WEL_POINT)
 			-- Sets the point to test, in client coordinates
 		require
 			exists: exists
@@ -63,7 +63,7 @@ feature -- Element change
 			cwel_hd_hit_test_info_set_pt_y (item, a_point.y)
 		end
 
-	set_flags (value: INTEGER) is
+	set_flags (value: INTEGER)
 			-- Sets variable that receives information about the results of a hit test. 
 			-- This member can be one or more of the values defined in WEL_HHT_CONSTANTS 		
 			-- (Usually set by the OS)
@@ -73,7 +73,7 @@ feature -- Element change
 			cwel_hd_hit_test_info_set_flags (item, value)
 		end		
 
-	set_index (value: INTEGER) is
+	set_index (value: INTEGER)
 			-- Sets the index of the item at `point' if any
 			-- (Usually set by the OS)
 		require
@@ -87,7 +87,7 @@ feature -- Element change
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_hd_hit_test_info
@@ -95,54 +95,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_hd_hit_test_info: INTEGER is
+	c_size_of_hd_hit_test_info: INTEGER
 		external
 			"C [macro %"nmtb.h%"]"
 		alias
 			"sizeof (HD_HITTESTINFO)"
 		end
 
-	cwel_hd_hit_test_info_get_pt_x (ptr: POINTER): INTEGER is
+	cwel_hd_hit_test_info_get_pt_x (ptr: POINTER): INTEGER
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*): EIF_INTEGER"
 		end
 
-	cwel_hd_hit_test_info_set_pt_x (ptr: POINTER; value: INTEGER) is
+	cwel_hd_hit_test_info_set_pt_x (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*, LONG)"
 		end
 
-	cwel_hd_hit_test_info_get_pt_y (ptr: POINTER): INTEGER is
+	cwel_hd_hit_test_info_get_pt_y (ptr: POINTER): INTEGER
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*): EIF_INTEGER"
 		end
 
-	cwel_hd_hit_test_info_set_pt_y (ptr: POINTER; value: INTEGER) is
+	cwel_hd_hit_test_info_set_pt_y (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*, LONG)"
 		end
 
-	cwel_hd_hit_test_info_get_flags (ptr: POINTER): INTEGER is
+	cwel_hd_hit_test_info_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*): EIF_INTEGER"
 		end
 
-	cwel_hd_hit_test_info_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_hd_hit_test_info_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*, UINT)"
 		end
 
-	cwel_hd_hit_test_info_get_i_item (ptr: POINTER): INTEGER is
+	cwel_hd_hit_test_info_get_i_item (ptr: POINTER): INTEGER
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*): EIF_INTEGER"
 		end
 
-	cwel_hd_hit_test_info_set_i_item (ptr: POINTER; value: INTEGER) is
+	cwel_hd_hit_test_info_set_i_item (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"hd_hit_test_info.h%"] (HD_HITTESTINFO*, int)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPone-line text editor"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -75,7 +75,7 @@ create
 
 feature -- Initialization
 
-	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a text field.
 		do
 			create private_attributes
@@ -85,7 +85,7 @@ feature -- Initialization
 			a_text_field.set_font_imp (Current)
 		end
 
-	realize is
+	realize
 			-- Realize current widget
 		local
 			f: FONT
@@ -126,7 +126,7 @@ feature -- Initialization
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealize current widget
 		do
 			private_text := text
@@ -135,7 +135,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
                         -- Add `a_command' to the list of action to be executed when
 			-- an activate event occurs.
                         -- `argument' will be passed to `a_command' whenever it is
@@ -146,7 +146,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
                         -- Remove `a_command' from the list of action to execute when the
 			-- an activate event occurs.
 		do
@@ -159,7 +159,7 @@ feature -- Access
 			-- Maximum number of characters in current
 			-- text field
 
-	text: STRING is
+	text: STRING
 			-- Value of current text field
 		do
 			if exists then
@@ -171,7 +171,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of character in current text field
 		do
 			if exists  then
@@ -183,19 +183,19 @@ feature -- Measurement
 
 feature -- Status setting
 
-	clear is
+	clear
 			-- Clear current text field.
 		do
 			set_text ("")
 		end
 
-	set_maximum_size (a_max: INTEGER) is
+	set_maximum_size (a_max: INTEGER)
 			-- Set maximum_size to `a_max'.
 		do
 			maximum_size := a_max
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		do
 			if a_text /= Void then
@@ -208,7 +208,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= a_height then
@@ -226,7 +226,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	append (s: STRING) is
+	append (s: STRING)
                         -- Append `s' at the end of current text.
 		local
 			a_text: STRING
@@ -236,7 +236,7 @@ feature -- Element change
 			set_text (a_text)
 		end
 
-	insert (s: STRING; a_position : INTEGER) is
+	insert (s: STRING; a_position : INTEGER)
                         -- Insert `s' in current text field at `a_position'.
                         -- Same as `replace (a_position, a_position, s)'.
 		local
@@ -251,7 +251,7 @@ feature -- Element change
 			set_text (a_text)
 		end
 
-	replace (from_position, to_position: INTEGER; s: STRING) is
+	replace (from_position, to_position: INTEGER; s: STRING)
                         -- Replace text from `from_position' to `to_position' by `s'.
 		local
 			a_text: STRING
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 	private_text: STRING
 			-- Value of current text field
 
-	on_char (virtual_key, key_data: INTEGER) is
+	on_char (virtual_key, key_data: INTEGER)
 			-- Wm_char message
 		do
 			if virtual_key = vk_return or virtual_key = vk_tab then
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_up (code, flags: INTEGER) is
+	on_key_up (code, flags: INTEGER)
 			-- Respond to a wm_key_up message.
 		local
 			cd: KEYREL_DATA
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_down (code, flags: INTEGER) is
+	on_key_down (code, flags: INTEGER)
 			-- Wm_keydown message
 		local
 			kw: KEYBOARD_WINDOWS
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	go_to_prev_text_field is
+	go_to_prev_text_field
 			-- Go to previous text field in same top window as current text field.
 		local
 			tf: TEXT_FIELD_IMP
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	go_to_next_text_field is
+	go_to_next_text_field
 			-- Go to next text field in same top window as current text field.
 		local
 			tf: TEXT_FIELD_IMP
@@ -426,19 +426,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	shift_pressed: BOOLEAN is
+	shift_pressed: BOOLEAN
 			-- Is the shift-key pressed?
 		do
 			Result := shift_pressed_cell.item
 		end
 
-	shift_pressed_cell: BOOLEAN_REF is
+	shift_pressed_cell: BOOLEAN_REF
 			-- Is the shift-key pressed?
 		once
 			create Result
 		end
 
-	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW is
+	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW
 			-- Find the	top most window which contains `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

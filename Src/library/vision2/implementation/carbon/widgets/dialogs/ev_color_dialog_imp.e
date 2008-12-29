@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision color selection dialog. Carbon implementation."
 
 class
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	initialize is
+	initialize
 			-- Connect action sequences to button signals.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	show is
+	show
 			--
 		local
 			ret: INTEGER
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Currently selected color.
 		do
 			Result := internal_set_color
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Set `color' to `a_color'.
 		do
 			internal_set_color := a_color
@@ -95,7 +95,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COLOR_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007: The Eiffel.Mac Team"
 
 end -- class EV_COLOR_DIALOG_IMP

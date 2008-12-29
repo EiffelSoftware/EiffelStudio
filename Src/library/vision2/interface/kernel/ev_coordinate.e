@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A position in a 2 dimensional space as INTEGERs (x, y)"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 	
 feature -- Initialization
 
-	make, set, make_with_position, set_position (a_x: like x; a_y: like y) is
+	make, set, make_with_position, set_position (a_x: like x; a_y: like y)
 			-- Create an EV_COORDINATE at position (`a_x', `a_y').
 		do
 			x_precise := a_x
@@ -31,7 +31,7 @@ feature -- Initialization
 			y_set: y = a_y
 		end
 		
-	make_precise, set_precise (a_x: like x_precise; a_y: like y_precise) is
+	make_precise, set_precise (a_x: like x_precise; a_y: like y_precise)
 			-- Create an EV_COORDINATE at position (`a_x', `a_y')
 		do
 			x_precise := a_x
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Access
 
-	x, x_abs: INTEGER is
+	x, x_abs: INTEGER
 			-- Horizontal position.
 		do
 			if x_precise > 0.0 then
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 			
-	y, y_abs: INTEGER is
+	y, y_abs: INTEGER
 			-- Vertical position.
 		do
 			if y_precise > 0.0 then
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x (a_x: like x) is
+	set_x (a_x: like x)
 			-- Assign `a_x' to `x'.
 		do
 			x_precise := a_x
@@ -80,7 +80,7 @@ feature -- Element change
 			x_set: x = a_x
 		end
 
-	set_y (a_y: like y) is
+	set_y (a_y: like y)
 			-- Assign `a_y' to `y'.
 		do
 			y_precise := a_y
@@ -88,7 +88,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 		
-	set_x_precise (a_x: like x_precise) is
+	set_x_precise (a_x: like x_precise)
 			-- Assign `a_x' to `x'.
 		do
 			x_precise := a_x
@@ -96,7 +96,7 @@ feature -- Element change
 			x_set: x_precise = a_x
 		end
 
-	set_y_precise (a_y: like y_precise) is
+	set_y_precise (a_y: like y_precise)
 			-- Assign `a_y' to `y'.
 		do
 			y_precise := a_y
@@ -106,13 +106,13 @@ feature -- Element change
 		
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Textual representation.
 		do
 			Result := "(" + x.out + ", " + y.out + ")"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

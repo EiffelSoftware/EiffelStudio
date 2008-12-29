@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Windows implementation of a focus label."
@@ -26,20 +26,20 @@ create
 
 feature -- Initialization
 
-	initialize (a_parent: COMPOSITE) is
+	initialize (a_parent: COMPOSITE)
 			-- Initialize Current.
 		do
 			create fs_list.make (20);
 			init_common_controls_dll
 		end;
 
-	initialize_widget (a_focusable: FOCUSABLE) is
+	initialize_widget (a_focusable: FOCUSABLE)
 			-- Platform specific initialization of the focusable widget.
 		do
 			fs_list.extend (a_focusable)
 		end;
 
-	initialize_focusables (initializer: TOOLTIP_INITIALIZER) is
+	initialize_focusables (initializer: TOOLTIP_INITIALIZER)
 			-- Actual initialization for Windows.
 		require else
 			fs_list_not_void: fs_list /= Void
@@ -89,7 +89,7 @@ feature {NONE}
 
 	tooltip: WEL_TOOLTIP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -17,19 +17,19 @@ inherit
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the pixmap valid and usable ?
 		deferred
 		end;
 
-	last_operation_correct: BOOLEAN is
+	last_operation_correct: BOOLEAN
 			-- Is the last operation correctly performed ?
 		deferred
 		end;
 
 feature -- Measurement
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Depth of pixmap (Number of colors)
 		require
 			is_valid: is_valid
@@ -38,7 +38,7 @@ feature -- Measurement
 			result_positive: Result >= 1
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of pixmap
 		require
 			is_valid: is_valid
@@ -47,7 +47,7 @@ feature -- Measurement
 			result_positive: Result >= 1
 		end;
 
-	hot_x: INTEGER is
+	hot_x: INTEGER
 			-- Horizontal position of "hot" point
 		require
 			is_valid: is_valid
@@ -56,7 +56,7 @@ feature -- Measurement
 			result_positive: Result >= 0
 		end;
 
-	hot_y : INTEGER is
+	hot_y : INTEGER
 			-- Vertical position of "hot" point
 		require
 			is_valid: is_valid
@@ -65,7 +65,7 @@ feature -- Measurement
 			result_positive: Result >= 0
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pixmap
 		require
 			is_valid
@@ -76,7 +76,7 @@ feature -- Measurement
 
 feature -- Basic operations
 
-	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
+	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER)
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
 			-- `a_widget' into the pixmap.
 			-- Set `last_operation_correct'.
@@ -93,7 +93,7 @@ feature -- Basic operations
 			valid: last_operation_correct implies is_valid
 		end;
 
-	read_from_file (a_file_name: STRING) is
+	read_from_file (a_file_name: STRING)
 			-- Load the bitmap described in `a_file_name'.
 			-- Set `last_operation_correct'.
 		require
@@ -103,7 +103,7 @@ feature -- Basic operations
 			valid_when_correct: last_operation_correct implies is_valid;
 		end;
 
-	store (a_file_name: STRING) is
+	store (a_file_name: STRING)
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
@@ -121,7 +121,7 @@ invariant
 	valid_hot_x: is_valid implies ((hot_x >= 0) and (hot_x < width));
 	valid_hot_y: is_valid implies ((hot_y >= 0) and (hot_y < height))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

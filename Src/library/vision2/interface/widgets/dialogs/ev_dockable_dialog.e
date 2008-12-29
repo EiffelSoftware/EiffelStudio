@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Dialogs that are created by the Vision2 docking mechanism when
 			an EV_DOCKABLE_SOURCE is dropped while not over a valid EV_DOCKABLE_TARGET.
@@ -36,25 +36,25 @@ feature -- Access
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	set_original_parent (an_original_parent: EV_DOCKABLE_TARGET) is
+	set_original_parent (an_original_parent: EV_DOCKABLE_TARGET)
 			-- Assign `an_original_parent' to `original_parent'.
 		do
 			original_parent := an_original_parent
 		end
 		
-	set_original_parent_index (an_index: INTEGER) is
+	set_original_parent_index (an_index: INTEGER)
 			-- Assign `an_index' to `original_parent_index'.
 		do
 			original_parent_index := an_index
 		end
 		
-	set_expansion_was_disabled is
+	set_expansion_was_disabled
 			-- Assign `True' to `expansion_was_disabled'.
 		do
 			expansion_was_disabled := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of data resource factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create factory.
 		do
 			default_service := "http"
@@ -35,20 +35,20 @@ feature -- Access
 
 feature -- Status report
 
-	is_service_supported: BOOLEAN is
+	is_service_supported: BOOLEAN
 			-- Is service supported?
 		do
 			Result := (lookup_service_id /= 0)
 		end
 
-	is_address_set: BOOLEAN is
+	is_address_set: BOOLEAN
 			-- Has address been set?
 		do
 			Result := (address /= Void and service /= Void) and then
 				not (address.is_empty and service.is_empty)
 		end
 
-	is_address_correct: BOOLEAN is
+	is_address_correct: BOOLEAN
 			-- Is address correct?
 		require
 			address_set: is_address_set
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_address (addr: STRING) is
+	set_address (addr: STRING)
 			-- Set address.
 		require
 			address_exists: addr /= Void
@@ -101,7 +101,7 @@ feature -- Status setting
 					is_address_set
 		end
 
-	set_default_service (service_name: STRING) is
+	set_default_service (service_name: STRING)
 			-- Set default service to `service_name'.
 		require
 			name_exists: service_name /= Void
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	create_resource is
+	create_resource
 			-- Create resource.
 		require
 			correct_address: is_address_correct
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 
 	resource_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
 
-	lookup_service_id: INTEGER is
+	lookup_service_id: INTEGER
 			-- Lookup ID for service.
 		local
 			i: INTEGER
@@ -149,13 +149,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation (Factory setup)
 
-	supported_services: ARRAY [STRING] is
+	supported_services: ARRAY [STRING]
 			-- Names of supported services
 		once
 			Result := << "file", "http", "ftp" >>
 		end
 
-	setup_factory is
+	setup_factory
 			-- Set up the factory functions.
 		local
 			id: INTEGER
@@ -179,13 +179,13 @@ feature {NONE} -- Implementation (Factory setup)
 		end
 
 
-	create_file_url: URL is
+	create_file_url: URL
 			-- Create file URL.
 		do
 			create {FILE_URL} Result.make (address)
 		end
 
-	create_file_resource: DATA_RESOURCE is
+	create_file_resource: DATA_RESOURCE
 			-- Create file service.
 		local
 			u: FILE_URL
@@ -199,13 +199,13 @@ feature {NONE} -- Implementation (Factory setup)
 			create {FILE_PROTOCOL} Result.make (u)
 		end
 
-	create_http_url: URL is
+	create_http_url: URL
 			-- Create HTTP URL.
 		do
 			create {HTTP_URL} Result.make (address)
 		end
 
-	create_http_resource: DATA_RESOURCE is
+	create_http_resource: DATA_RESOURCE
 			-- Create HTTP service.
 		local
 			u: HTTP_URL
@@ -219,13 +219,13 @@ feature {NONE} -- Implementation (Factory setup)
 			create {HTTP_PROTOCOL} Result.make (u)
 		end
 
-	create_ftp_url: URL is
+	create_ftp_url: URL
 			-- Create FTP URL.
 		do
 			create {FTP_URL} Result.make (address)
 		end
 
-	create_ftp_resource: DATA_RESOURCE is
+	create_ftp_resource: DATA_RESOURCE
 			-- Create FTP service.
 		local
 			u: FTP_URL
@@ -244,7 +244,7 @@ invariant
 	default_service_specified: default_service /= Void and then
 							not default_service.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

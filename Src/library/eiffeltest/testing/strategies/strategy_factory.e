@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Factory for execution strategies"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature {NONE} -- Initialization
 
-	strategy_factory: HASHED_PROTOTYPE_FACTORY [EXECUTION_STRATEGY] is
+	strategy_factory: HASHED_PROTOTYPE_FACTORY [EXECUTION_STRATEGY]
 			-- Singleton of strategy factory
 		local
 			e: EXECUTION_STRATEGY
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			not_empty: Result /= Void and then not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

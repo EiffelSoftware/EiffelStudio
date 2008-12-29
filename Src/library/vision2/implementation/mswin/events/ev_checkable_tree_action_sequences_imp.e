@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_CHECKABLE_TREE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,19 +13,19 @@ inherit
 
 feature -- Event handling
 
-	create_check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	create_check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Create a select action sequence.
 		do
 			create Result
 		end
 
-	create_uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE is
+	create_uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Create an uncheck action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

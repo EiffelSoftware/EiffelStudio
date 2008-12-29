@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object that represent the buffered screen of an editor window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Measurement
 
-	corrected_height: INTEGER is
+	corrected_height: INTEGER
 			-- Vertical size in pixels.
 			-- Same as `minimum_height' when not displayed.
 		do
@@ -48,7 +48,7 @@ feature -- Measurement
 
 feature -- Element change
 	
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Change the current font
 		do
 			if (a_font /= current_font_used) then
@@ -57,7 +57,7 @@ feature -- Element change
 			end
 		end
 	
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Change the current foreground color
 		do
 			if (a_color /= current_foreground_color_used) then
@@ -66,7 +66,7 @@ feature -- Element change
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

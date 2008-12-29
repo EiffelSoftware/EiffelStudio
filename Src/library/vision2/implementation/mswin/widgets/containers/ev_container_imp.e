@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision container. Mswindow implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
@@ -65,21 +65,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	client_x: INTEGER is
+	client_x: INTEGER
 			-- Left of the client area.
 			-- `Result' in pixels.
 		do
 			Result := client_rect.x
 		end
 
-	client_y: INTEGER is
+	client_y: INTEGER
 			-- Top of the client area.
 			-- `Result' in pixels.
 		do
 			Result := client_rect.y
 		end
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of container.
 			-- `Result' in pixels.
 		do
@@ -90,7 +90,7 @@ feature -- Access
 			end
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of container
 			-- `Result' in pixels.
 		do
@@ -104,7 +104,7 @@ feature -- Access
 	background_pixmap_imp: EV_PIXMAP_IMP
 			-- Pixmap used for the background of the widget
 
-	background_pixmap: EV_PIXMAP is
+	background_pixmap: EV_PIXMAP
 			-- `Result' is pixmap used for background.
 		do
 			if background_pixmap_imp /= Void then
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER)
 			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the screen.
 		local
@@ -138,7 +138,7 @@ feature -- Element change
 			end
 		end
 
-	set_background_pixmap (pix: EV_PIXMAP) is
+	set_background_pixmap (pix: EV_PIXMAP)
 			-- Set the background pixmap and redraw the container.
 		local
 			pixmap: like pix
@@ -153,7 +153,7 @@ feature -- Element change
 			end
 		end
 
-	remove_background_pixmap is
+	remove_background_pixmap
 			-- Remove background pixmap.
 		do
 			background_pixmap_imp := Void
@@ -164,7 +164,7 @@ feature -- Element change
 
 feature -- Assertion test
 
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Has `a_child' been added properly?
 		do
 			Result := is_child (a_child)
@@ -172,7 +172,7 @@ feature -- Assertion test
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -188,7 +188,7 @@ feature -- Status setting
 
 feature {NONE} -- WEL Implementation
 
-	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU)
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		local
 			menu_list: EV_MENU_ITEM_LIST
@@ -208,7 +208,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT)
 			-- Handle Wm_drawitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -235,7 +235,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC)
 			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
@@ -281,7 +281,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-   	background_brush: WEL_BRUSH is
+   	background_brush: WEL_BRUSH
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background
@@ -299,7 +299,7 @@ feature {NONE} -- WEL Implementation
  			end
  		end
 
-	on_wm_vscroll (wparam, lparam: POINTER) is
+	on_wm_vscroll (wparam, lparam: POINTER)
  			-- Wm_vscroll message.
  		local
  			gauge: EV_GAUGE_IMP
@@ -331,7 +331,7 @@ feature {NONE} -- WEL Implementation
 			end
  		end
 
- 	on_wm_hscroll (wparam, lparam: POINTER) is
+ 	on_wm_hscroll (wparam, lparam: POINTER)
  			-- Wm_hscroll message.
  		local
  			gauge: EV_GAUGE_IMP
@@ -363,14 +363,14 @@ feature {NONE} -- WEL Implementation
 			end
  		end
 
-	on_destroy is
+	on_destroy
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
 			--| To be redefined in descendents as required.
 		do
 		end
 
-	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
 			tooltip_text: WEL_TOOLTIP_TEXT
 			tvinfotip: WEL_NM_TREE_VIEW_GETINFOTIP
@@ -486,7 +486,7 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Implementation, focus event
 
-	redraw_current_push_button (focused_button: EV_BUTTON) is
+	redraw_current_push_button (focused_button: EV_BUTTON)
 			-- Put a bold border on the `focused_button' and
 			-- remove any bold border on the other buttons.
 			--
@@ -521,23 +521,23 @@ feature {NONE} -- Implementation, focus event
 
 feature {NONE} -- Implementation : deferred features
 
-	client_rect: WEL_RECT is
+	client_rect: WEL_RECT
 		deferred
 		end
 
-	disable_default_processing is
+	disable_default_processing
 		deferred
 		end
 
-	set_message_return_value (v: POINTER) is
+	set_message_return_value (v: POINTER)
 		deferred
 		end
 
-	on_vertical_scroll (scroll_code, position: INTEGER) is
+	on_vertical_scroll (scroll_code, position: INTEGER)
 		deferred
 		end
 
-	on_horizontal_scroll (scroll_code, position: INTEGER) is
+	on_horizontal_scroll (scroll_code, position: INTEGER)
 		deferred
 		end
 
@@ -547,44 +547,44 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		deferred
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		deferred
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		deferred
 		end
 
-	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		deferred
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		deferred
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of `Current'?
 		deferred
 		end
 
-	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		require
 			child_not_void: child /= Void
@@ -601,7 +601,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Radio items in `Current'.
 			-- `Current' shares reference with merged containers.
 
-	is_merged (other: EV_CONTAINER): BOOLEAN is
+	is_merged (other: EV_CONTAINER): BOOLEAN
 			-- Is `Current' merged with `other'?
 		require
 			other_not_void: other /= Void
@@ -612,7 +612,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			Result := c_imp.radio_group = radio_group
 		end
 
-	reset_radio_group is
+	reset_radio_group
 			-- Reset radio group to be an empty
 			-- list.
 		do
@@ -623,7 +623,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		end
 
 
-	set_radio_group (rg: like radio_group) is
+	set_radio_group (rg: like radio_group)
 			-- Set `radio_group' by reference. (Merge)
 		do
 			radio_group := rg
@@ -631,7 +631,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			radio_group_set: radio_group = rg
 		end
 
-	add_radio_button (w: EV_WIDGET) is
+	add_radio_button (w: EV_WIDGET)
 			-- Called every time a widget is added to the container.
 			--| If `w' is a radio button then we update associated
 			--| radio buttons as necessary.
@@ -649,7 +649,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_WIDGET) is
+	remove_radio_button (w: EV_WIDGET)
 			-- Called every time a widget is removed from the container.
 			--| If `w' is a radio button then we update  associated
 			--| radio buttons as necessary.
@@ -665,7 +665,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			end
 		end
 
-	enable_widget_sensitivity (w: EV_WIDGET) is
+	enable_widget_sensitivity (w: EV_WIDGET)
 			-- Called every time a widget is removed from `Current'.
 			--| If `Current' is disabled and `w' has never been disabled
 			--| through the interface then we must enable `w' again.
@@ -687,7 +687,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			end
 		end
 
-	disable_widget_sensitivity (w: EV_WIDGET) is
+	disable_widget_sensitivity (w: EV_WIDGET)
 			-- Called every time a widget is added to `Current'.
 			--| If `Current' is disabled then we must disable `w'.
 		local
@@ -704,7 +704,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 feature -- Status setting
 
-	connect_radio_grouping (a_container: EV_CONTAINER) is
+	connect_radio_grouping (a_container: EV_CONTAINER)
 			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: like radio_group
@@ -730,7 +730,7 @@ feature -- Status setting
 			end
 		end
 
-	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Removed radio grouping of `a_container' from `Current'.
 		local
 			l: like radio_group
@@ -803,7 +803,7 @@ feature -- Event handling
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -816,7 +816,7 @@ invariant
 	new_item_actions_not_void: is_usable implies new_item_actions /= Void
 	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

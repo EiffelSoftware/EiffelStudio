@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Item for use in EV_MENU.
@@ -59,7 +59,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_text_and_action
-		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE]) is
+		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE])
 			-- Create with 'a_text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default name if no other name is set.
 		local
 			i: INTEGER
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Obsolete
 
-	align_text_left is
+	align_text_left
 			-- Display text left aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -104,7 +104,7 @@ feature -- Obsolete
 		do
 		end
 
-	align_text_center is
+	align_text_center
 			-- Display text center aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -112,7 +112,7 @@ feature -- Obsolete
 		do
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display text right aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -122,7 +122,7 @@ feature -- Obsolete
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ITEM} and Precursor {EV_TEXTABLE} and
@@ -136,13 +136,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

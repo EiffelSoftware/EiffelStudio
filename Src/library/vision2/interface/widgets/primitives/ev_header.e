@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelVision header control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ inherit
 
 feature -- Access
 
-	item_x_offset (an_item: EV_HEADER_ITEM): INTEGER is
+	item_x_offset (an_item: EV_HEADER_ITEM): INTEGER
 			-- `Result' is x position of `an_item' in relation to `Current'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -60,7 +60,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		require
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Contract support
 
-	is_parent_recursive (a_list_item: EV_HEADER_ITEM): BOOLEAN is
+	is_parent_recursive (a_list_item: EV_HEADER_ITEM): BOOLEAN
 			-- Is `a_list_item' a parent of `Current'?
 		do
 			Result := False
@@ -81,14 +81,14 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and
 				Precursor {EV_FONTABLE} and Precursor {EV_ITEM_PIXMAP_SCALER}
 		end
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := not is_tabable_from and not is_tabable_to
 		end
@@ -100,13 +100,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HEADER_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

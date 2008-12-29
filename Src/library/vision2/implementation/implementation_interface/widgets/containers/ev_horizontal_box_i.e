@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision horizontal box. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,19 +18,19 @@ inherit
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	pointer_offset: INTEGER is
+	pointer_offset: INTEGER
 			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		do
 			Result := internal_screen.pointer_position.x - screen_x		
 		end
 		
-	docking_dimension_of_current_item: INTEGER is
+	docking_dimension_of_current_item: INTEGER
 			-- Dimension of `interface.item' matching orientation of `Current'.
 		do
 			Result := interface.item.width
 		end
 		
-	docking_dimension_of_current: INTEGER is
+	docking_dimension_of_current: INTEGER
 			-- Dimension of `Current' matching orientation of `Current'
 		do
 			Result := width
@@ -40,7 +40,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

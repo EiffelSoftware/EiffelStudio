@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Item pixmap scaler. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set the size of displayed pixmaps in `Current' to
 			-- `a_width' by `a_height'.
 		do
@@ -40,23 +40,23 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		deferred
 		end
 
-	initialize_pixmaps is
+	initialize_pixmaps
 			-- Assign default sizes to pixmaps.
 		do
 			pixmaps_width := default_pixmaps_width
 			pixmaps_height := default_pixmaps_height
 		end
 
-	default_pixmaps_width: INTEGER is 16
+	default_pixmaps_width: INTEGER = 16
 		-- Default width for pixmaps.
 
-	default_pixmaps_height: INTEGER is 16
+	default_pixmaps_height: INTEGER = 16
 		-- Default height for pixmaps.
 
 feature {EV_ANY_I} -- Implementation
@@ -65,7 +65,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

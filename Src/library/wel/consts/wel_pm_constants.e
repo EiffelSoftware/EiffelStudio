@@ -1,4 +1,4 @@
-indexing
+note
 	description: "PeekMessage (PM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ class
 
 feature -- Access
 
-	Pm_noremove: INTEGER is 0
+	Pm_noremove: INTEGER = 0
 
-	Pm_remove: INTEGER is 1
+	Pm_remove: INTEGER = 1
 
-	Pm_noyield: INTEGER is 2;
+	Pm_noyield: INTEGER = 2;
 
-	Pm_qs_paint: INTEGER is 0x200000
+	Pm_qs_paint: INTEGER = 0x200000
 
-	Pm_qs_postmessage: INTEGER is 0x980000;
+	Pm_qs_postmessage: INTEGER = 0x980000;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

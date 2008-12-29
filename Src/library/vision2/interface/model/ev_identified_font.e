@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an font with an id (for EV_SCALED_FONT_FACTORY)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialisation
 
-	make_with_id (a_font: like font; an_id: like id) is
+	make_with_id (a_font: like font; an_id: like id)
 			-- Create an EV_IDENTIFIED_FONT containing `a_font' with `an_id'.
 		require
 			a_font_not_void: a_font /= Void
@@ -37,7 +37,7 @@ invariant
 	font_not_void: font /= Void
 	id_positive: id >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

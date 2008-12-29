@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Abstract notion of a focus label."
 	legal: "See notice at end of class."
@@ -10,19 +10,19 @@ deferred class FOCUS_LABEL_I
 
 feature -- Initialization
 
-	initialize (a_parent: COMPOSITE) is
+	initialize (a_parent: COMPOSITE)
 			-- Initialization
 		deferred
 		end;
  
-	initialize_widget (a_focusable: FOCUSABLE) is
+	initialize_widget (a_focusable: FOCUSABLE)
 			-- Platform specific initialization of the focusable widget
 		require
 			non_void_focusable: a_focusable /= Void
 		deferred
 		end;
 
-	initialize_focusables (initializer: TOOLTIP_INITIALIZER) is
+	initialize_focusables (initializer: TOOLTIP_INITIALIZER)
 			-- Initialize the focusables.
 			-- Should be called after all focusables for the tooltip_initializer 
 			-- were created and tooltip_initializer itself was realized
@@ -32,7 +32,7 @@ feature -- Initialization
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

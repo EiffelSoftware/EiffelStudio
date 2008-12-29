@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -85,7 +85,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 			-- `Current' will be in single selection mode.
 		local
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			set_extended_view_style (default_ex_style)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -121,7 +121,7 @@ feature -- Access
 	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items')
@@ -136,7 +136,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- Currently selected items.
 		do
 			if not internal_selected_items_uptodate then
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Status setting
 
-	ensure_item_visible (an_item: EV_LIST_ITEM) is
+	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure `an_item' is visible in `Current'.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -162,19 +162,19 @@ feature -- Status setting
 			ensure_visible (internal_get_index (item_imp) - 1)
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at `an_index'.
 		do
 			(ev_children @ an_index).enable_select
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at `an_index'.
 		do
 			(ev_children @ an_index).disable_select
 		end
 
-	clear_selection is
+	clear_selection
 			-- Make `selected_items' empty.
 		local
 			local_selected_items: like selected_items
@@ -200,7 +200,7 @@ feature -- Status setting
 			internal_selected_items.wipe_out
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one item to be selected.
 		do
 			if not multiple_selection_enabled then
@@ -215,7 +215,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		local
 			old_selected_item: EV_LIST_ITEM
@@ -250,7 +250,7 @@ feature -- Status setting
 		-- during `disable_select' and then enable all these items again
 		-- during `enable_select'.
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -279,7 +279,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object desensitive to user input.
 		do
 				-- Do nothing if we are already not sensitive.
@@ -296,7 +296,7 @@ feature -- Status setting
 			end
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -307,7 +307,7 @@ feature -- Status setting
 			end
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
@@ -320,7 +320,7 @@ feature -- Status setting
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
@@ -388,7 +388,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button double press.
 		local
@@ -408,7 +408,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 feature {EV_LIST_ITEM_I} -- Implementation
 
 	set_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position,
-		image_index: INTEGER) is
+		image_index: INTEGER)
 			-- Set pixmap of `an_item' at position `position' in `Current'
 			-- to the `image_index'th image in `image_list'.
 		local
@@ -421,7 +421,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			set_column_width (lvscw_autosize, 0)
 		end
 
-	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER) is
+	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER)
 			-- Remove pixmap of `an_item' located at position `position' in
 			-- `Current'.
 		local
@@ -434,7 +434,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			set_column_width (lvscw_autosize, 0)
 		end
 
-	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at `an_index'.
 		local
 			litem: WEL_LIST_VIEW_ITEM
@@ -450,7 +450,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			set_column_width (lvscw_autosize, 0) -- Autosize
 		end
 
-	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
+	refresh_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Refresh current so that it take into account
 			-- changes made in `item_imp'
 		do
@@ -461,7 +461,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			set_column_width (lvscw_autosize, 0)
 		end
 
-	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+	remove_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Remove `item' from the list
 		local
 			an_index: INTEGER
@@ -471,13 +471,13 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			set_column_width (lvscw_autosize, 0) -- Autosize
 		end
 
-	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
+	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER
 			-- Return the index of `item_imp' in the list.
 		do
 			Result := ev_children.index_of (item_imp, 1)
 		end
 
-	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' selected in `Current'?
 		local
 			i: INTEGER
@@ -487,7 +487,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			Result := flag_set (i, Lvis_selected)
 		end
 
-	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
+	internal_select_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Select `item_imp' in `Current'.
 		local
 			i: INTEGER
@@ -500,7 +500,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
-	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
+	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Deselect `item_imp' in `Current'.
 		local
 			i: INTEGER
@@ -513,7 +513,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		local
@@ -528,7 +528,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			log_font.dispose
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 			-- Redefined for speed optimization.
 		local
@@ -564,7 +564,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 
-	setup_image_list is
+	setup_image_list
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		do
@@ -578,7 +578,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 			image_list_not_void: image_list /= Void
 		end
 
-	remove_image_list is
+	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current'.
 		do
@@ -594,7 +594,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 
 feature {EV_ANY_I} -- Implementation
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP
 			-- `Result' is list item at pixel position `x_pos', `y_pos'.
 		local
 			pt: WEL_POINT
@@ -610,7 +610,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of `Current'.
 		once
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
@@ -622,12 +622,12 @@ feature {EV_ANY_I} -- Implementation
 				+ Ws_clipchildren
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 		once
 			Result := Lvs_ex_infotip
 		end
 
-	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -671,21 +671,21 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' resized.
 		do
 			Precursor {WEL_LIST_VIEW} (size_type, a_width, a_height)
 			Precursor {EV_PRIMITIVE_IMP} (size_type, a_width, a_height)
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
 			it: EV_LIST_ITEM_IMP
@@ -705,7 +705,7 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -789,7 +789,7 @@ feature {EV_ANY_I} -- Implementation
 			brush.delete
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
@@ -809,7 +809,7 @@ feature {NONE} -- Implementation
 	internal_selected_items: like selected_items
 			-- Cached version of all selected items.
 
-	retrieve_selected_items: like selected_items is
+	retrieve_selected_items: like selected_items
 			-- Current selected items (non cached version)
 		local
 			i: INTEGER
@@ -831,7 +831,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	valid_selected_items (a_selected_items: like selected_items): BOOLEAN is
+	valid_selected_items (a_selected_items: like selected_items): BOOLEAN
 			-- Validate `a_selected_items' as selected items list.
 		local
 			good_selected_items: like selected_items
@@ -862,7 +862,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wipe_out
@@ -873,7 +873,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

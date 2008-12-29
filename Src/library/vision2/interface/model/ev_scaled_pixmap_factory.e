@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that is a factory for scaled pixmaps.
 			Reduces memory usage and speed up systems with only a few diffrend pixmaps and a
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EV_SCALED_PIXMAP_FACTORY
 		do
 			create scaled_pixmaps.make (1, max_table_size)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	registered_pixmap (a_pixmap: EV_PIXMAP): EV_IDENTIFIED_PIXMAP is
+	registered_pixmap (a_pixmap: EV_PIXMAP): EV_IDENTIFIED_PIXMAP
 			-- Return new identified font for `a_pixmap'.
 		require
 			a_pixmap_not_Void: a_pixmap /= Void
@@ -50,7 +50,7 @@ feature -- Access
 			result_not_Void: Result /= Void
 		end
 		
-	scaled_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP is
+	scaled_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP
 			-- `an_id_pixmap' scaled to `a_height' and `a_width'.
 		require
 			an_id_pixmap_not_Void: an_id_pixmap /= Void
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Element change
 
-	register_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP) is
+	register_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Register `an_id_pixmap' in the factory.
 		local
 			i: INTEGER
@@ -92,10 +92,10 @@ feature {NONE} -- Implementation
 	orginal_pixmaps: ARRAY [EV_PIXMAP]
 			-- Table of orginal pixmaps for `scaled_pixmaps'.
 	
-	max_table_size: INTEGER is 20
+	max_table_size: INTEGER = 20
 			-- Maxmimum size of `scaled_pixmaps' and `orginal_pixmaps'.
 	
-	scaled_pixmap_internal (a_pixmap: EV_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP is
+	scaled_pixmap_internal (a_pixmap: EV_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP
 			-- `a_font' scaled to `a_height'.
 		require
 			a_pixmap_not_Void: a_pixmap /= Void
@@ -116,7 +116,7 @@ invariant
 	scaled_pixmaps_not_Void: scaled_pixmaps /= Void
 	orginal_pixmaps_not_Void: orginal_pixmaps /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

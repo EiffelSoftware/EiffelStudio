@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Access to environment variables set by the HTTP server when the %
 		%CGI application is executed. This class may be used as ancestor %
@@ -22,19 +22,19 @@ inherit
 
 feature -- Not request-specific environment variables
 
-	Gateway_interface: STRING is
+	Gateway_interface: STRING
 			-- Revision of the CGI specification to which this server complies.
 		once
 			Result := get_env_variable ("GATEWAY_INTERFACE")
 		end
 
-	Server_name: STRING is
+	Server_name: STRING
 			-- Server's hostname, DNS alias, or IP address.
 		once
 			Result := get_env_variable ("SERVER_NAME")
 		end
 
-	Server_software: STRING is
+	Server_software: STRING
 			-- Name and version of information server answering the request.
 		once
 			Result := get_env_variable ("SERVER_SOFTWARE")
@@ -42,85 +42,85 @@ feature -- Not request-specific environment variables
 
 feature -- Request specific environment variables
 
-	Auth_type: STRING is
+	Auth_type: STRING
 			-- Protocol-specific authentication method used to validate user.
 		once
 			Result := get_env_variable ("AUTH_TYPE")
 		end
 
-	Content_length: STRING is
+	Content_length: STRING
 			-- Length of the said content as given by the client.
 		once
 			Result := get_env_variable ("CONTENT_LENGTH")
 		end
 
-	Content_type: STRING is
+	Content_type: STRING
 			-- Content type of data.
 		once
 			Result := get_env_variable ("CONTENT_TYPE")
 		end
 
-	Path_info: STRING is
+	Path_info: STRING
 			-- Extra path information, as given by the client.
 		once
 			Result := get_env_variable ("PATH_INFO")
 		end
 
-	Path_translated: STRING is
+	Path_translated: STRING
 			-- Translated version of PATH_INFO provided by server.
 		once
 			Result := get_env_variable ("PATH_TRANSLATED")
 		end
 
-	Query_string: STRING is
+	Query_string: STRING
 			-- Information which follows ? in URL referencing CGI program.
 		once
 			Result := get_env_variable ("QUERY_STRING")
 		end
 
-	Remote_host: STRING is
+	Remote_host: STRING
 			-- Hostname making the request.
 		once
 			Result := get_env_variable ("REMOTE_HOST")
 		end
 
-	Remote_addr: STRING is
+	Remote_addr: STRING
 			-- IP address of the remote host making the request.
 		once
 			Result := get_env_variable ("REMOTE_ADDR")
 		end
 
-	Remote_ident: STRING is
+	Remote_ident: STRING
 			-- User name retrieved from server if RFC 931 supported.
 		once
 			Result := get_env_variable ("REMOTE_IDENT")
 		end
 
-	Request_method: STRING is
+	Request_method: STRING
 			-- Method with which the request was made.
 		once
 			Result := get_env_variable ("REQUEST_METHOD")
 		end
 
-	Remote_user: STRING is
+	Remote_user: STRING
 			-- Username, if applicable.
 		once
 			Result := get_env_variable ("REMOTE_USER")
 		end
 
-	Script_name: STRING is
+	Script_name: STRING
 			-- Virtual path to the script being executed.
 		once
 			Result := get_env_variable ("SCRIPT_NAME")
 		end
 
-	Server_port: STRING is
+	Server_port: STRING
 			-- Port number to which request was sent.
 		once
 			Result := get_env_variable ("SERVER_PORT")
 		end
 
-	Server_protocol: STRING is
+	Server_protocol: STRING
 			-- Name and revision of information protocol of this request.
 		once
 			Result := get_env_variable ("SERVER_PROTOCOL")
@@ -128,7 +128,7 @@ feature -- Request specific environment variables
 
 feature -- Cookies
 
-	Cookies: HASH_TABLE [STRING,STRING] is
+	Cookies: HASH_TABLE [STRING,STRING]
 			-- Cookie Information relative to data.
 		local
 			i,j: INTEGER
@@ -163,13 +163,13 @@ feature -- Cookies
 
 feature -- Headerline based environment variables
 
-	Http_accept: STRING is
+	Http_accept: STRING
 			-- MIME types which the client will accept.
 		once
 			Result := get_env_variable ("HTTP_ACCEPT")
 		end
 
-	Http_user_agent: STRING is
+	Http_user_agent: STRING
 			-- Browser the client is using to send the request.
 		once
 			Result := get_env_variable ("HTTP_USER_AGENT")
@@ -177,7 +177,7 @@ feature -- Headerline based environment variables
 
 feature -- Environment variable setting
 
-	set_environment_variable (variable, val: STRING) is
+	set_environment_variable (variable, val: STRING)
 			-- Set environment variable `variable' to `val'.
 		require
 			valid_variable: variable /= Void and then variable.count > 0
@@ -190,7 +190,7 @@ feature -- Environment variable setting
 
 feature {NONE} -- Implementation
 
-	get_env_variable (v: STRING): STRING is
+	get_env_variable (v: STRING): STRING
 			-- Get value of environment variable `v'.
 		do
 			Result := get (v)
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

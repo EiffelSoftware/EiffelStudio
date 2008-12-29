@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Char format effect (CFE) constants for the rich edit %
 		%control."
 	legal: "See notice at end of class."
@@ -11,31 +11,31 @@ class
 
 feature -- Access
 
-	Cfe_bold: INTEGER is 1
+	Cfe_bold: INTEGER = 1
 			-- Characters are bold.
 
-	Cfe_italic: INTEGER is 2
+	Cfe_italic: INTEGER = 2
 			-- Characters are italic.
 
-	Cfe_underline: INTEGER is 4
+	Cfe_underline: INTEGER = 4
 			-- Characters are underlined.
 
-	Cfe_strikeout: INTEGER is 8
+	Cfe_strikeout: INTEGER = 8
 			-- Characters are struck out.
 
-	Cfe_protected: INTEGER is 16
+	Cfe_protected: INTEGER = 16
 			-- Characters are protected; an attempt to modify them
 			-- will cause an EN_PROTECTED notification message.
 
-	Cfe_autocolor: INTEGER is 1073741824
+	Cfe_autocolor: INTEGER = 1073741824
 			-- The text color is the return value of
 			-- GetSysColor (COLOR_WINDOWTEXT).
 			
-	Cfe_autobackcolor: INTEGER is 67108864;
+	Cfe_autobackcolor: INTEGER = 67108864;
 			-- The text background color is the value
 			-- of the containing control.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

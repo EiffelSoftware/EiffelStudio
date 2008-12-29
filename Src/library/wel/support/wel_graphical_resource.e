@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Graphical resource common features (Icons & Cursors)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_file (file_name: STRING_GENERAL) is
+	make_by_file (file_name: STRING_GENERAL)
 			-- Load an icon file named `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_icon_info (icon_info: WEL_ICON_INFO) is
+	make_by_icon_info (icon_info: WEL_ICON_INFO)
 			-- Create an icon from an `icon_info' structure
 		require
 			icon_info_not_void: icon_info /= Void
@@ -63,21 +63,21 @@ feature {NONE} -- Initialization
 			item_not_void: item /= default_pointer
 		end
 
-	make_by_id (id: INTEGER) is
+	make_by_id (id: INTEGER)
 			-- Load the resource by an `id'
 		do
 			Precursor {WEL_RESOURCE} (id)
 			gdi_make
 		end
 
-	make_by_name (name: STRING_GENERAL) is
+	make_by_name (name: STRING_GENERAL)
 			-- Load the resource by a `name'
 		do
 			Precursor {WEL_RESOURCE} (name)
 			gdi_make
 		end
 
-	make_by_predefined_id (id: POINTER) is
+	make_by_predefined_id (id: POINTER)
 			-- Load the resource by an `id', predefined by Windows
 		do
 			Precursor {WEL_RESOURCE} (id)
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_icon_info: WEL_ICON_INFO is
+	get_icon_info: WEL_ICON_INFO
 			-- Retrieve information about a icon/cursor
 			--
 			-- Return Void if an error occurred while retrieving
@@ -107,13 +107,13 @@ feature -- Access
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Delete the current gdi object
 		do
 			delete_gdi_object
 		end
 
-	delete_gdi_object is
+	delete_gdi_object
 			-- Delete the current gdi object
 		local
 			p: POINTER
@@ -139,7 +139,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	destroy_resource: BOOLEAN is
+	destroy_resource: BOOLEAN
 			-- SDK DestroyIcon/DestroyCursor
 		deferred
 		end
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	cwin_load_image (hinstance, name: POINTER; type, width, height,
-				load_flags: INTEGER): POINTER is
+				load_flags: INTEGER): POINTER
 			-- SDK LoadImage
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, UINT, int, int, %
@@ -156,14 +156,14 @@ feature {NONE} -- Externals
 			"LoadImage"
 		end
 
-	Lr_loadfromfile: INTEGER is
+	Lr_loadfromfile: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"LR_LOADFROMFILE"
 		end
 
-	cwin_get_icon_info (hicon: POINTER; iconinfo: POINTER): INTEGER is
+	cwin_get_icon_info (hicon: POINTER; iconinfo: POINTER): INTEGER
 			-- SDK CreateIconIndirect
 		external
 			"C [macro <wel.h>] (HICON, ICONINFO *): EIF_INTEGER"
@@ -171,7 +171,7 @@ feature {NONE} -- Externals
 			"GetIconInfo"
 		end
 
-	cwin_create_icon_indirect (info: POINTER): POINTER is
+	cwin_create_icon_indirect (info: POINTER): POINTER
 			-- SDK CreateIconIndirect
 		external
 			"C [macro <wel.h>] (ICONINFO *): EIF_POINTER"
@@ -181,13 +181,13 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Constants
 
-	Image_type: INTEGER is
+	Image_type: INTEGER
 		-- Constant defining the type of the image
 		-- See WEL_IMAGE_CONSTANTS for possible values.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

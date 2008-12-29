@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Mechanisms for building lexical analyzers from regular expressions. %
@@ -29,7 +29,7 @@ create
 
 feature -- Element change
 
-	put_nameless_expression (s: STRING; n: INTEGER) is
+	put_nameless_expression (s: STRING; n: INTEGER)
 			-- Record the regular expression described
 			-- by `s', and associate it with token type `n'.
 		require
@@ -48,7 +48,7 @@ feature -- Element change
 			end
 		end; 
 
-	build_dollar_any is
+	build_dollar_any
 			-- Build $., matching any character.
 		require
 			good_first_character: description.item (cursor) = '.'
@@ -56,7 +56,7 @@ feature -- Element change
 			any_character
 		end; 
 
-	build_dollar_p is
+	build_dollar_p
 			-- Build $P, matching any printable character.
 		require
 			good_first_character: description.item (cursor) = 'P'
@@ -64,7 +64,7 @@ feature -- Element change
 			any_printable
 		end; 
 
-	build_dollar_b is
+	build_dollar_b
 			-- Build $B, matching any number of break characters:
 			-- blank, new-line, tabulation, carriage-return.
 		do
@@ -75,7 +75,7 @@ feature -- Element change
 			union (last_created_tool - 3, last_created_tool)
 		end; 
 
-	build_dollar_n is
+	build_dollar_n
 			-- Build $N, matching natural integer constants.
 			-- +('0'..'9')
 		do
@@ -84,7 +84,7 @@ feature -- Element change
 			dollar_n := last_created_tool
 		end; 
 
-	build_dollar_z is
+	build_dollar_z
 			-- Build $Z, matching possibly signed integer constants.
 			-- ['+' | '-'] +('0'..'9')
 		do
@@ -98,7 +98,7 @@ feature -- Element change
 			dollar_z := last_created_tool
 		end; 
 
-	build_dollar_r is
+	build_dollar_r
 			-- Build $R, matching floating point constants.
 			-- ['+' | '-'] +('0'..'9') '.' *('0'..'9') ['e' | 'E' ['+' | '-']
 			-- +('0'..'9')]
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	last_string: STRING;
 			-- String used in `action_set_word' and `action_up_to'.
 
-	build_sequence (end_sequence: CHARACTER) is
+	build_sequence (end_sequence: CHARACTER)
 			-- Build the tool corresponding to the next sequence
 			-- in description.
 		local
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 				description.item (cursor) = end_sequence
 		end; 
 
-	build_tool is
+	build_tool
 			-- Build the tool corresponding to the current
 			-- position in description.
 		require
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			--| Cursor has to be on the next regular expression.
 		end; 
 
-	action_parenthesis is
+	action_parenthesis
 			-- Build the sequence included in parenthesis.
 		require
 			good_first_character: description.item (cursor) = '('
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 				parsing_stopped or else description.item (cursor - 1) = ')'
 		end; 
 
-	action_bracket is
+	action_bracket
 			-- Build a tool and make it optional.
 		require
 			good_first_character: description.item (cursor) = '['
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 					description.item (cursor - 1) = ']'
 		end; 
 
-	action_quote is
+	action_quote
 			-- Look for the first char, eventually for the second,
 			-- and build 'first_char' or 'first_char'..'second_char'.
 		require
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			-- cursor after last quote.
 		end; 
 
-	action_two_char (first_char: CHARACTER) is
+	action_two_char (first_char: CHARACTER)
 			-- Look for the second character and build the
 			-- category 'first_char'..'second_char'.
 			-- If there is a minus sign build:
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	get_char_in_quotes is
+	get_char_in_quotes
 			-- Set `current_char' to character found between two quotes.
 			-- "quote" if '\'', "return" if '\n', "tab" if '\t' etc.
 			-- If the character is '\s' set current_char to '\0' and
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 				description.item (cursor - 1) = '%''
 		end; 
 
-	action_star is
+	action_star
 			-- Build a tool and then an iteration of any number,
 			-- including none, of this tool.
 		require
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	action_plus is
+	action_plus
 			-- Build a tool and then an iteration of any number,
 			-- greater than one, of this tool.
 		require
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	action_tilde is
+	action_tilde
 			-- Build a tool and then another identical,
 			-- but case insensitive.
 		require
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	action_dollar is
+	action_dollar
 			-- Build tools described with the dollar sign and
 			-- a character.
 		require
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 			cursor_after: is_cursor_after
 		end; 
 
-	is_cursor_after: BOOLEAN is
+	is_cursor_after: BOOLEAN
 		do
 			Result := parsing_stopped or else description.item (cursor - 1) = '.'
 				or else description.item (cursor - 1) = 'P';
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 	dollar_n, dollar_z, dollar_r: INTEGER;
 			-- Tool numbers of $N, $Z, and $R
 
-	build_dollar_w is
+	build_dollar_w
 			-- Build $W: one or more printable characters,
 			-- excluding break characters.
 			-- +($P-' '-'\`t''-'\`n''-'\`r'')
@@ -517,13 +517,13 @@ feature {NONE} -- Implementation
 			iteration1 (last_created_tool)
 		end; 
 
-	build_dollar_l is
+	build_dollar_l
 			-- Build $L: a new-line character.
 		do
 			interval ('%N', '%N')
 		end; 
 
-	action_set_word is
+	action_set_word
 			-- Build a tool "word", same as ('w' 'o' 'r' 'd').
 		require
 			good_first_character: description.item (cursor) = '"'
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 				description.item (cursor - 1) = '"'
 		end; 
 
-	action_up_to is
+	action_up_to
 			-- Build a tool which is a sequence of any character,
 			-- finished by a given word.
 		require
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 				description.item (cursor - 1) = '"'
 		end; 
 
-	get_string is
+	get_string
 			-- Set last_string to the string value beginning at cursor.
 		require
 			good_first_character: description.item (cursor) = '"'
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 				description.item (cursor - 1) = '"'
 		end; 
 
-	action_digit is
+	action_digit
 			-- Build a tool and then an iteration of n times this tool.
 		require
 			good_first_character: description.item (cursor) >= '0' and
@@ -627,7 +627,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	get_octal is
+	get_octal
 			-- Set the value of current_char to the character
 			-- corresponding to the octal number beginning at cursor.
 			-- Format: '\ooo'.
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			-- cursor after octal number
 		end; 
 
-	get_hexadecimal is
+	get_hexadecimal
 			-- Set the value of current_char to the character
 			-- corresponding to the hexadecimal number beginning
 			-- at cursor. Format: '\xhh'.
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 			-- cursor_after_hexadecimal:
 		end; 
 
-	hexa_value (c: CHARACTER): INTEGER is
+	hexa_value (c: CHARACTER): INTEGER
 			-- O if c = '0', 1 if c = '1',.., 15 if c = 'f' or 'F',
 			-- -1 otherwiswe.
 		local
@@ -715,7 +715,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	remove_separators is
+	remove_separators
 			-- Remove ' ' '\n' and '\t' of description except
 			-- when they are between quotes.
 			-- This routine also computes description_length.
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING) is
+	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING)
 			-- Print an error message and stop parsing.
 			-- Two kind of messages are possible, whether expected
 			-- is '\0' or not.
@@ -802,7 +802,7 @@ invariant
 
 	cursor_not_too_far: cursor <= description_length
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

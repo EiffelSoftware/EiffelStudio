@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Edit control notification (EN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,27 +10,27 @@ class
 
 feature -- Access
 
-	En_setfocus: INTEGER is 256
+	En_setfocus: INTEGER = 256
 
-	En_killfocus: INTEGER is 512
+	En_killfocus: INTEGER = 512
 
-	En_change: INTEGER is 768
+	En_change: INTEGER = 768
 
-	En_update: INTEGER is 1024
+	En_update: INTEGER = 1024
 
-	En_errspace: INTEGER is 1280
+	En_errspace: INTEGER = 1280
 
-	En_maxtext: INTEGER is 1281
+	En_maxtext: INTEGER = 1281
 
-	En_hscroll: INTEGER is 1537
+	En_hscroll: INTEGER = 1537
 
-	En_vscroll: INTEGER is 1538
+	En_vscroll: INTEGER = 1538
 
-	En_msgfilter: INTEGER is 1792
+	En_msgfilter: INTEGER = 1792
 	
-	En_requestresize: INTEGER is 1793;
+	En_requestresize: INTEGER = 1793;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

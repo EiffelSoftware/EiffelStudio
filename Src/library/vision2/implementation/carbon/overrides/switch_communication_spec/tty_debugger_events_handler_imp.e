@@ -1,4 +1,4 @@
-indexing
+note
 	description: "implementation for DEBUGGER_MANAGER. Carbon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create {TTY_DEBUGGER_EVENTS_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make (a_interface: like interface) is
+	make (a_interface: like interface)
 			-- Initialize current
 		do
 			interface := a_interface
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature {DEBUGGER_EVENTS_HANDLER} -- Access
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 		local
 			l_no_more_events: BOOLEAN
 		do
@@ -34,7 +34,7 @@ feature {DEBUGGER_EVENTS_HANDLER} -- Access
 			end
 		end
 
-	timer_win32_handle: POINTER is
+	timer_win32_handle: POINTER
 		do
 		end
 
@@ -43,7 +43,7 @@ feature {NONE} -- Interface
 	interface: TTY_DEBUGGER_EVENTS_HANDLER;
 			-- Interface instance.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

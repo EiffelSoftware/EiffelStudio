@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision password field. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create password field with `*'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP}
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PASSWORD_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

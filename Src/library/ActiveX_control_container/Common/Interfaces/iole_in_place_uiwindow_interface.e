@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	get_border_user_precondition (lprect_border: TAG_RECT_RECORD): BOOLEAN is
+	get_border_user_precondition (lprect_border: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_border'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	request_border_space_user_precondition (pborderwidths: TAG_RECT_RECORD): BOOLEAN is
+	request_border_space_user_precondition (pborderwidths: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `request_border_space'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_border_space_user_precondition (pborderwidths: TAG_RECT_RECORD): BOOLEAN is
+	set_border_space_user_precondition (pborderwidths: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `set_border_space'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_active_object_user_precondition (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING): BOOLEAN is
+	set_active_object_user_precondition (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING): BOOLEAN
 			-- User-defined preconditions for `set_active_object'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_border (lprect_border: TAG_RECT_RECORD) is
+	get_border (lprect_border: TAG_RECT_RECORD)
 			-- No description available.
 			-- `lprect_border' [out].  
 		require
@@ -53,7 +53,7 @@ feature -- Basic Operations
 
 		end
 
-	request_border_space (pborderwidths: TAG_RECT_RECORD) is
+	request_border_space (pborderwidths: TAG_RECT_RECORD)
 			-- No description available.
 			-- `pborderwidths' [in].  
 		require
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-	set_border_space (pborderwidths: TAG_RECT_RECORD) is
+	set_border_space (pborderwidths: TAG_RECT_RECORD)
 			-- No description available.
 			-- `pborderwidths' [in].  
 		require
@@ -75,7 +75,7 @@ feature -- Basic Operations
 
 		end
 
-	set_active_object (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING) is
+	set_active_object (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING)
 			-- No description available.
 			-- `p_active_object' [in].  
 			-- `psz_obj_name' [in].  
@@ -85,7 +85,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

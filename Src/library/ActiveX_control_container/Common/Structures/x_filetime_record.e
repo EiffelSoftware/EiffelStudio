@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	dw_low_date_time: INTEGER is
+	dw_low_date_time: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_filetime_dw_low_date_time (item)
 		end
 
-	dw_high_date_time: INTEGER is
+	dw_high_date_time: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_filetime_dw_high_date_time (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_filetime
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_dw_low_date_time (a_dw_low_date_time: INTEGER) is
+	set_dw_low_date_time (a_dw_low_date_time: INTEGER)
 			-- Set `dw_low_date_time' with `a_dw_low_date_time'.
 		do
 			ccom_x_filetime_set_dw_low_date_time (item, a_dw_low_date_time)
 		end
 
-	set_dw_high_date_time (a_dw_high_date_time: INTEGER) is
+	set_dw_high_date_time (a_dw_high_date_time: INTEGER)
 			-- Set `dw_high_date_time' with `a_dw_high_date_time'.
 		do
 			ccom_x_filetime_set_dw_high_date_time (item, a_dw_high_date_time)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_filetime: INTEGER is
+	c_size_of_x_filetime: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__FILETIME_s.h%"]"
@@ -77,31 +77,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_FILETIME)"
 		end
 
-	ccom_x_filetime_dw_low_date_time (a_pointer: POINTER): INTEGER is
+	ccom_x_filetime_dw_low_date_time (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__FILETIME_s_impl.h%"](ecom_control_library::_FILETIME *):EIF_INTEGER"
 		end
 
-	ccom_x_filetime_set_dw_low_date_time (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_filetime_set_dw_low_date_time (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__FILETIME_s_impl.h%"](ecom_control_library::_FILETIME *, ULONG)"
 		end
 
-	ccom_x_filetime_dw_high_date_time (a_pointer: POINTER): INTEGER is
+	ccom_x_filetime_dw_high_date_time (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__FILETIME_s_impl.h%"](ecom_control_library::_FILETIME *):EIF_INTEGER"
 		end
 
-	ccom_x_filetime_set_dw_high_date_time (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_filetime_set_dw_high_date_time (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__FILETIME_s_impl.h%"](ecom_control_library::_FILETIME *, ULONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

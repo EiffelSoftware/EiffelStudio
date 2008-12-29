@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rich edit messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,133 +10,133 @@ class
 
 feature -- Access
 
-	Em_getcharformat: INTEGER is 1082
+	Em_getcharformat: INTEGER = 1082
 			-- Declared in Windows as EM_GETCHARFORMAT
 
-	Em_getparaformat: INTEGER is 1085
+	Em_getparaformat: INTEGER = 1085
 			-- Declared in Windows as EM_GETPARAFORMAT
 
-	Em_setbkgndcolor: INTEGER is 1091
+	Em_setbkgndcolor: INTEGER = 1091
 			-- Declared in Windows as EM_SETBKGNDCOLOR
 
-	Em_setcharformat: INTEGER is 1092
+	Em_setcharformat: INTEGER = 1092
 			-- Declared in Windows as EM_SETCHARFORMAT
 
-	Em_seteventmask: INTEGER is 1093
+	Em_seteventmask: INTEGER = 1093
 			-- Declared in Windows as EM_SETEVENTMASK
 
-	Em_setparaformat: INTEGER is 1095
+	Em_setparaformat: INTEGER = 1095
 			-- Declared in Windows as EM_SETPARAFORMAT
 
-	Em_charfrompos: INTEGER is 215
+	Em_charfrompos: INTEGER = 215
 			-- Declared in Windows as EM_CHARFROMPOS
 
-	Em_exgetsel: INTEGER is 1076
+	Em_exgetsel: INTEGER = 1076
 			-- Declared in Windows as EM_EXGETSEL
 
-	Em_exsetsel: INTEGER is 1079
+	Em_exsetsel: INTEGER = 1079
 			-- Declared in Windows as EM_EXSETSEL
 
-	Em_hideselection: INTEGER is 1087
+	Em_hideselection: INTEGER = 1087
 			-- Declared in Windows as EM_HIDESELECTION
 
-	Em_posfromchar: INTEGER is 214
+	Em_posfromchar: INTEGER = 214
 			-- Declared in Windows as EM_POSFROMCHAR
 
-	Em_selectiontype: INTEGER is 1090
+	Em_selectiontype: INTEGER = 1090
 			-- Declared in Windows as EM_SELECTIONTYPE
 
-	En_selchange: INTEGER is 1794
+	En_selchange: INTEGER = 1794
 			-- Declared in Windows as EN_SELCHANGE
 
-	Em_exlimittext: INTEGER is 1077
+	Em_exlimittext: INTEGER = 1077
 			-- Declared in Windows as EM_EXLIMITTEXT
 
-	Em_findtext: INTEGER is 1080
+	Em_findtext: INTEGER = 1080
 			-- Declared in Windows as EM_FINDTEXT
 
-	Em_findtextex: INTEGER is 1103
+	Em_findtextex: INTEGER = 1103
 			-- Declared in Windows as EM_FINDTEXTEX
 
-	Em_getseltext: INTEGER is 1086
+	Em_getseltext: INTEGER = 1086
 			-- Declared in Windows as EM_GETSELTEXT
 
-	Em_gettextrange: INTEGER is 1099
+	Em_gettextrange: INTEGER = 1099
 			-- Declared in Windows as EM_GETTEXTRANGE
 
-	Em_setlimittext: INTEGER is 197
+	Em_setlimittext: INTEGER = 197
 			-- Declared in Windows as EM_SETLIMITTEXT
 
-	Em_exlinefromchar: INTEGER is 1078
+	Em_exlinefromchar: INTEGER = 1078
 			-- Declared in Windows as EM_EXLINEFROMCHAR
 
-	Em_findwordbreak: INTEGER is 1100
+	Em_findwordbreak: INTEGER = 1100
 			-- Declared in Windows as EM_FINDWORDBREAK
 
-	Em_getwordbreakprocex: INTEGER is 1104
+	Em_getwordbreakprocex: INTEGER = 1104
 			-- Declared in Windows as EM_GETWORDBREAKPROCEX
 
-	Em_setwordbreakprocex: INTEGER is 1105
+	Em_setwordbreakprocex: INTEGER = 1105
 			-- Declared in Windows as EM_SETWORDBREAKPROCEX
 
-	Em_canpaste: INTEGER is 1074
+	Em_canpaste: INTEGER = 1074
 			-- Declared in Windows as EM_CANPASTE
 
-	Em_pastespecial: INTEGER is 1088
+	Em_pastespecial: INTEGER = 1088
 			-- Declared in Windows as EM_PASTESPECIAL
 
-	Em_streamin: INTEGER is 1097
+	Em_streamin: INTEGER = 1097
 			-- Declared in Windows as EM_STREAMIN
 
-	Em_streamout: INTEGER is 1098
+	Em_streamout: INTEGER = 1098
 			-- Declared in Windows as EM_STREAMOUT
 
-	Em_displayband: INTEGER is 1075
+	Em_displayband: INTEGER = 1075
 			-- Declared in Windows as EM_DISPLAYBAND
 
-	Em_formatrange: INTEGER is 1081
+	Em_formatrange: INTEGER = 1081
 			-- Declared in Windows as EM_FORMATRANGE
 
-	Em_settargetdevice: INTEGER is 1096
+	Em_settargetdevice: INTEGER = 1096
 			-- Declared in Windows as EM_SETTARGETDEVICE
 
-	Em_requestresize: INTEGER is 1089
+	Em_requestresize: INTEGER = 1089
 			-- Declared in Windows as EM_REQUESTRESIZE
 
-	Em_geteventmask: INTEGER is 1083
+	Em_geteventmask: INTEGER = 1083
 			-- Declared in Windows as EM_GETEVENTMASK
 
-	Em_getimecolor: INTEGER is 1129
+	Em_getimecolor: INTEGER = 1129
 			-- Declared in Windows as EM_GETIMECOLOR
 
-	Em_getimeoptions: INTEGER is 1131
+	Em_getimeoptions: INTEGER = 1131
 			-- Declared in Windows as EM_GETIMEOPTIONS
 
-	Em_getoptions: INTEGER is 1102
+	Em_getoptions: INTEGER = 1102
 			-- Declared in Windows as EM_GETOPTIONS
 
-	Em_getpunctuation: INTEGER is 1125
+	Em_getpunctuation: INTEGER = 1125
 			-- Declared in Windows as EM_GETPUNCTUATION
 
-	Em_getwordwrapmode: INTEGER is 1127
+	Em_getwordwrapmode: INTEGER = 1127
 			-- Declared in Windows as EM_GETWORDWRAPMODE
 
-	Em_setimecolor: INTEGER is 1128
+	Em_setimecolor: INTEGER = 1128
 			-- Declared in Windows as EM_SETIMECOLOR
 
-	Em_setimeoptions: INTEGER is 1130
+	Em_setimeoptions: INTEGER = 1130
 			-- Declared in Windows as EM_SETIMEOPTIONS
 
-	Em_setoptions: INTEGER is 1101
+	Em_setoptions: INTEGER = 1101
 			-- Declared in Windows as EM_SETOPTIONS
 
-	Em_setpunctuation: INTEGER is 1124
+	Em_setpunctuation: INTEGER = 1124
 			-- Declared in Windows as EM_SETPUNCTUATION
 
-	Em_setwordwrapmode: INTEGER is 1126;
+	Em_setwordwrapmode: INTEGER = 1126;
 			-- Declared in Windows as EM_SETWORDWRAPMODE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

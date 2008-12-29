@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"URLs for FTP resources"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: STRING) is
+	make (a: STRING)
 	 		-- Create address.
 		do
 			Precursor (a)
@@ -32,27 +32,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Service: STRING is "ftp"
+	Service: STRING = "ftp"
 			-- Name of service (Answer: "ftp")
 
 feature -- Status report
 
-	Default_port: INTEGER is 21
+	Default_port: INTEGER = 21
 			-- Number of default port for service (Answer: 21)
 			
-	Is_proxy_supported: BOOLEAN is True
+	Is_proxy_supported: BOOLEAN = True
 			-- Are proxy connections supported? (Answer: yes)
 
-	Has_username: BOOLEAN is True
+	Has_username: BOOLEAN = True
 			-- Can address contain a username? (Answer: yes)
 
-	is_path_correct (p: STRING): BOOLEAN is
+	is_path_correct (p: STRING): BOOLEAN
 			-- Is path name correct?
 		do
 			Result := not p.is_empty and then path_charset.contains_string (p)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

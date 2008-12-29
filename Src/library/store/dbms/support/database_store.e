@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_STORE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -37,7 +37,7 @@ create {DATABASE_STORE}
 
 feature -- Initialization
 
-	make (size: INTEGER) is
+	make (size: INTEGER)
 		do
 			create ht.make (1)
 			create ht_order.make (1)
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set_repository (one_repository: DATABASE_REPOSITORY[G]) is
+	set_repository (one_repository: DATABASE_REPOSITORY[G])
 			-- Associate `one_repository' handle to current
 			-- db_store handle.
 		require
@@ -64,7 +64,7 @@ feature -- Status report
 	repository: DATABASE_REPOSITORY[G]
 			-- Associated repository
 
-	owns_repository: BOOLEAN is
+	owns_repository: BOOLEAN
 			-- Is the current store operation associated
 			-- with a repository?
 		do
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	put (object: ANY) is
+	put (object: ANY)
 			-- Store `object' into active repository.
 		require
 			object_exists: object /= Void
@@ -134,7 +134,7 @@ feature -- Basic operations
 
 		end
 
-	force (obj: ANY) is
+	force (obj: ANY)
 			-- Store `object' into supposingly fixed
 			-- and resizable active repository.
 		require
@@ -154,7 +154,7 @@ feature {NONE} -- Status report
 		-- Correspondence table between table column rank and
 		-- attribute rank of object to be stored.
 
-	next_index (k: INTEGER): INTEGER is
+	next_index (k: INTEGER): INTEGER
 			-- Value at k-th index in map table
 		do
 			Result := map_table.item (k)
@@ -162,7 +162,7 @@ feature {NONE} -- Status report
 			resulting_value: Result = map_table.item (k)
 		end
 
-	sql_string: STRING is
+	sql_string: STRING
 			-- Constant string
 		once
 			create Result.make (256)
@@ -170,7 +170,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	update_map_table (object: ANY) is
+	update_map_table (object: ANY)
 			-- Update map table according to field names of `object'.
 		require
 			not_void_object: object /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-	make_default_table (i: INTEGER) is
+	make_default_table (i: INTEGER)
 			-- Create and initialize map table of size `is' with default values.
 		local
 			j: INTEGER
@@ -251,7 +251,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-	start (object: ANY) is
+	start (object: ANY)
 			-- Set `max_index' to last non zero column rank.
 			-- (Input parameter unused)
 		do
@@ -264,7 +264,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

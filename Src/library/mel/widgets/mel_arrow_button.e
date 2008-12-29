@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Directional arrow-shaped button."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif arrow button widget.
 		require
 			name_exists: a_name /= Void;
@@ -52,19 +52,19 @@ feature -- Initialization
 
 feature -- Access
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	arm_command: MEL_COMMAND_EXEC is
+	arm_command: MEL_COMMAND_EXEC
 			-- Command set for the arm callback
 		do
 			Result := motif_command (XmNarmCallback)
 		end;
 
-	disarm_command: MEL_COMMAND_EXEC is
+	disarm_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNdisarmCallback)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_up: BOOLEAN is
+	is_up: BOOLEAN
 			-- Does the arrow point up?
 		require
 			exists: not is_destroyed
@@ -80,7 +80,7 @@ feature -- Status report
 			Result := XmARROW_UP = arrow_direction
 		end;
 
-	is_down: BOOLEAN is
+	is_down: BOOLEAN
 			-- Does the arrow point down?
 		require
 			exists: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Status report
 			Result := XmARROW_DOWN = arrow_direction
 		end;
 
-	is_left: BOOLEAN is
+	is_left: BOOLEAN
 			-- Does the arrow point to the left?
 		require
 			exists: not is_destroyed
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := XmARROW_LEFT = arrow_direction
 		end;
 
-	is_right: BOOLEAN is
+	is_right: BOOLEAN
 			-- Does the arror point to the right?
 		require
 			exists: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Status report
 			Result := XmARROW_RIGHT = arrow_direction
 		end;
 
-	is_multiclick_kept: BOOLEAN is
+	is_multiclick_kept: BOOLEAN
 			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
@@ -112,7 +112,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
 		end;
 
-	is_multiclick_discarded: BOOLEAN is
+	is_multiclick_discarded: BOOLEAN
 			-- Are the successive button clicks discard?
 		require
 			exists: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_up is
+	set_up
 			-- Set the arrow direction to up.
 		require
 			exists: not is_destroyed
@@ -133,7 +133,7 @@ feature -- Status setting
 			set: is_up
 		end;
 
-	set_down is
+	set_down
 			-- Set the arrow direction to down.
 		require
 			exists: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status setting
 			set: is_down
 		end;
 
-	set_left is
+	set_left
 			-- Set the arrow direction to left.
 		require
 			exists: not is_destroyed
@@ -153,7 +153,7 @@ feature -- Status setting
 			set: is_left
 		end;
 
-	set_right is
+	set_right
 			-- Set the arrow direction to right.
 		require
 			exists: not is_destroyed
@@ -163,7 +163,7 @@ feature -- Status setting
 			set: is_right
 		end;
 
-	set_multiclick_to_keep is
+	set_multiclick_to_keep
 			-- Set `is_multiclick_kept' to True.
 		require
 			exists: not is_destroyed
@@ -173,7 +173,7 @@ feature -- Status setting
 			keep_successive_clicks: is_multiclick_kept
 		end;
 
-	set_multiclick_to_discard is
+	set_multiclick_to_discard
 			-- Set `is_multiclick_discarded' to True.
 		require
 			exists: not is_destroyed
@@ -185,7 +185,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is
 			-- is pressed and released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -199,7 +199,7 @@ feature -- Element change
 
 		end;
 
-	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -211,7 +211,7 @@ feature -- Element change
 			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is released.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -225,7 +225,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback is
+	remove_activate_callback
 			-- Remove the command for the activate callback.
 		do
 			remove_callback (XmNactivateCallback)
@@ -233,7 +233,7 @@ feature -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_arm_callback is
+	remove_arm_callback
 			-- Remove the command for the arm callback.
 		do
 			remove_callback (XmNarmCallback)
@@ -241,7 +241,7 @@ feature -- Removal
 			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the command for the disarm callback.
 		do
 			remove_callback (XmNdisarmCallback)
@@ -252,7 +252,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-					resource_name: POINTER): MEL_ARROW_BUTTON_CALLBACK_STRUCT is
+					resource_name: POINTER): MEL_ARROW_BUTTON_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -261,20 +261,20 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	arrow_direction: INTEGER is
+	arrow_direction: INTEGER
 			-- Arrow direction 
 		do
 			Result := get_xt_unsigned_char (screen_object, XmNarrowDirection)
 		end;
 
-	xm_create_arrow_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_arrow_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ArrowB.h>"
 		alias
 			"XmCreateArrowButton"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

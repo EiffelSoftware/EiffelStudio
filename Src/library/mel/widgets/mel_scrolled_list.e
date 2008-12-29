@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"MEL_LIST as a child of a MEL_SCROLLED_WINDOW."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make_variable (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make_variable (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrolled list with `is_list_size_policy_variable'
 			-- set to True.
 		require
@@ -53,7 +53,7 @@ feature -- Initialization
 			list_size_policy_set: is_list_size_policy_variable
 		end;
 
-	make_constant (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make_constant (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrolled list with a constant size.
 		require
 			name_exists: a_name /= Void
@@ -76,7 +76,7 @@ feature -- Initialization
 			list_size_policy_set: is_list_size_policy_constant
 		end;
 
-	make_resize_if_possible (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make_resize_if_possible (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrolled list with an horizontal scrollbar if it's too large.
 		require
 			name_exists: a_name /= Void
@@ -99,7 +99,7 @@ feature -- Initialization
 			list_size_policy_set: is_list_size_policy_resize_if_possible
 		end;
 
-	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE)
 			-- Create a motif widget from an existing widget.
 		require
 			valid_a_screen_object: a_screen_object /= default_pointer;
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_scroll_bar_dirplay_policy_static: BOOLEAN is
+	is_scroll_bar_dirplay_policy_static: BOOLEAN
 			-- Is the scrollbar always displayed?
 		require
 			exists: not is_destroyed
@@ -129,7 +129,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy) = XmSTATIC
 		end;
 
-	is_list_size_policy_variable: BOOLEAN is
+	is_list_size_policy_variable: BOOLEAN
 			-- Is the list size policy variable?
 		require
 			exists: not is_destroyed
@@ -137,7 +137,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNlistSizePolicy) = XmVARIABLE
 		end;
 
-	is_list_size_policy_constant: BOOLEAN is
+	is_list_size_policy_constant: BOOLEAN
 			-- Is the list size policy constant?
 		require
 			exists: not is_destroyed
@@ -145,7 +145,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNlistSizePolicy) = XmCONSTANT
 		end;
 
-	is_list_size_policy_resize_if_possible: BOOLEAN is
+	is_list_size_policy_resize_if_possible: BOOLEAN
 			-- Is the list size policy "resizing if it's possible"?
 		require
 			exists: not is_destroyed
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_scroll_bar_dirplay_policy_static is
+	set_scroll_bar_dirplay_policy_static
 			-- Set `is_scroll_bar_dirplay_policy_static'.
 		require
 			exists: not is_destroyed
@@ -165,7 +165,7 @@ feature -- Status setting
 			policy_set: is_scroll_bar_dirplay_policy_static
 		end;
 
-	set_scroll_bar_dirplay_policy_as_needed is
+	set_scroll_bar_dirplay_policy_as_needed
 			-- Unset `is_scroll_bar_dirplay_policy_static'.
 		require
 			exists: not is_destroyed
@@ -177,7 +177,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	clean_up is
+	clean_up
 			-- Clean up the object.
 		do
 			parent.clean_up;
@@ -185,24 +185,24 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xm_create_scrolled_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_scrolled_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/List.h>"
 		alias
 			"XmCreateScrolledList"
 		end;
 
-	xm_create_scrolled_list_constant (a_parent: POINTER; a_name: POINTER): POINTER is
+	xm_create_scrolled_list_constant (a_parent: POINTER; a_name: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	xm_create_scrolled_list_resize (a_parent: POINTER; a_name: POINTER): POINTER is
+	xm_create_scrolled_list_resize (a_parent: POINTER; a_name: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

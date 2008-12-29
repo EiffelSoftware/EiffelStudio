@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control that has a check box and a text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Status setting
 
-	set_checked is
+	set_checked
 			-- Check the button
 			--| `check' would be a better name, but ...
 		require
@@ -41,7 +41,7 @@ feature -- Status setting
 			checked: checked
 		end
 
-	set_unchecked is
+	set_unchecked
 			-- Uncheck the button
 		require
 			exists: exists
@@ -53,7 +53,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	checked: BOOLEAN is
+	checked: BOOLEAN
 			-- Is the button checked?
 		require
 			exists: exists
@@ -64,14 +64,14 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Bs_autocheckbox
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

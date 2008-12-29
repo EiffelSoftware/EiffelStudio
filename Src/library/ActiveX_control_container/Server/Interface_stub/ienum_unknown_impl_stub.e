@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IEnumUnknown' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature -- Basic Operations
 
-	create_item is
+	create_item
 			-- Initialize `item'
 		do
 			item := ccom_create_item (Current)
@@ -28,13 +28,13 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	ccom_create_item (eif_object: IENUM_UNKNOWN_IMPL_STUB): POINTER is
+	ccom_create_item (eif_object: IENUM_UNKNOWN_IMPL_STUB): POINTER
 			-- Initialize `item'
 		external
 			"C++ [new ecom_control_library::IEnumUnknown_impl_stub %"ecom_control_library_ienumunknown_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

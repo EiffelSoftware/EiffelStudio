@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"URLs for network resources"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ deferred class NETWORK_RESOURCE_URL inherit
 
 feature {NONE} -- Initialization
 
-	make (a: STRING) is
+	make (a: STRING)
 			-- Create address.
 		do
 			create username.make (0)
@@ -45,7 +45,7 @@ feature -- Access
 	password: STRING
 			-- Optional password
 
-	location: STRING is
+	location: STRING
 			-- Full URL of resource
 		do
 			Result := service.twin
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 			
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash function
 		local
 			str: STRING
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is equal to `other'?
 		do
 			if host /= Void and username /= Void and other /= Void then
@@ -89,25 +89,25 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_host_correct (h: STRING): BOOLEAN is
+	is_host_correct (h: STRING): BOOLEAN
 			-- Is host `h' name correct?
 		do
 			Result :=  h /= Void and then host_charset.contains_string (h)
 		end
 
-	is_path_correct (p: STRING): BOOLEAN is
+	is_path_correct (p: STRING): BOOLEAN
 			-- Is path name correct?
 		do
 			Result := p /= Void and then path_charset.contains_string (p)
 		end
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Is address correct?
 		do
 			Result := is_host_correct (host) and then is_path_correct (path)
 		end
 
-	is_password_accepted: BOOLEAN is
+	is_password_accepted: BOOLEAN
 			-- Can a password be set?
 		do
 			Result := not username.is_empty
@@ -115,7 +115,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_username (un: STRING) is
+	set_username (un: STRING)
 			-- Set username.
 		do
 			username := un
@@ -123,7 +123,7 @@ feature -- Status setting
 			username_set: username = un
 		end
 	 
-	set_password (pw: STRING) is
+	set_password (pw: STRING)
 			-- Set password.
 		do
 			password := pw
@@ -133,7 +133,7 @@ feature -- Status setting
 	 
 feature {NONE} -- Basic operations
 
-	analyze is
+	analyze
 			-- Analyze address.
 		local
 			pos, pos2: INTEGER
@@ -188,7 +188,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	path_charset: CHARACTER_SET is
+	path_charset: CHARACTER_SET
 			-- Character set for path names
 		once
 			Result := Host_charset.twin
@@ -203,7 +203,7 @@ invariant
 	password_exists: password /= Void
 	password_constraint: not password.is_empty implies not username.is_empty
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

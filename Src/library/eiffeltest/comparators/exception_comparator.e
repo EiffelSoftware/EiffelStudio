@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Comparators for `is_assertion_exception' on RESULT_RECORD"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 	
 feature -- Status report
 
-	is_assertion_exception (n: INTEGER): BOOLEAN is
+	is_assertion_exception (n: INTEGER): BOOLEAN
 			-- Is assertion `n' an exception?
 		do
 			Result := callback.is_assertion_exception (n)
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			-- Reference to callback object
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

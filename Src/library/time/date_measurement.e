@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Date Measurement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,24 +11,24 @@ deferred class DATE_MEASUREMENT inherit
 
 feature -- Access
 
-	day: INTEGER is
+	day: INTEGER
 			-- Number of days associated with current object
 		deferred
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Number of monthes associated with current object
 		deferred
 		end
 	 
-	year: INTEGER is
+	year: INTEGER
 			-- Number of years associated with current object
 		deferred
 		end
 
 feature -- Element change
 
-	set_date (y, m, d: INTEGER) is
+	set_date (y, m, d: INTEGER)
 			-- Set `year' with `y', `month' with `m' and `day' with `d'.
 		require
 			d_large_enough: d >= 1
@@ -42,7 +42,7 @@ feature -- Element change
 			year_set: year = y
 		end
 
-	set_day (d: INTEGER) is
+	set_day (d: INTEGER)
 			-- Set `day' to `d'.
 		require
 			d_large_enough: d >= 1
@@ -52,7 +52,7 @@ feature -- Element change
 			day_set: day = d
 		end
 
-	set_month (m: INTEGER) is
+	set_month (m: INTEGER)
 			-- Set `month' to `m'.
 			-- `day' must be small enough.
 		require
@@ -64,7 +64,7 @@ feature -- Element change
 			month_set: month = m
 		end
 	
-	set_year (y: INTEGER) is
+	set_year (y: INTEGER)
 			-- Set `year' to `y'.
 		require
 			can_not_cut_29th_feb: day <= days_in_i_th_month (month, y)
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Status Report
 
-	days_in_month: INTEGER is
+	days_in_month: INTEGER
 			-- Number of days in month 'month'.
 		do
 			Result := days_in_i_th_month (month, year)
@@ -83,7 +83,7 @@ feature -- Status Report
 			positive_result: Result > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

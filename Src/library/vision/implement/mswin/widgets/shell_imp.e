@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -89,7 +89,7 @@ inherit
 
 feature -- Initialization
 
-	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL; a_x, a_y, a_width, a_height: INTEGER) is
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL; a_x, a_y, a_width, a_height: INTEGER)
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -104,7 +104,7 @@ feature -- Initialization
 		end
 
 	make_top_with_coordinates (a_name: STRING_GENERAL; a_x, a_y, a_width,
-			a_height: INTEGER) is
+			a_height: INTEGER)
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -120,7 +120,7 @@ feature -- Initialization
 
 feature -- Access
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Relative x-position of the client-area to the screen.
 		do
 			if exists then
@@ -130,7 +130,7 @@ feature -- Access
 			end
 		end
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Relative y-position of the client-area to the screen.
 		do
 			if exists then
@@ -147,7 +147,7 @@ feature -- Access
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of widget
 		do
 			if exists then
@@ -163,7 +163,7 @@ feature -- Access
 	shell_width: INTEGER
 			-- Extra width of shell around widgets
 
-	title: STRING is
+	title: STRING
 		do
 			if exists then
 				Result := wel_text
@@ -174,7 +174,7 @@ feature -- Access
 
 	private_title: STRING
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of widget
 		do
 			if exists then
@@ -186,7 +186,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'
 		do
 			if private_attributes.height /= new_height then
@@ -202,7 +202,7 @@ feature -- Status setting
 			correct_client_height: exists implies client_height = new_height
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
@@ -224,7 +224,7 @@ feature -- Status setting
 			correct_height: exists implies client_height = new_height
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set the client rect to have a width of
 			-- `new_client_width'
 		do
@@ -241,11 +241,11 @@ feature -- Status setting
 			correct_width: exists implies client_width = new_width
 		end
 
-	set_override (flag: BOOLEAN)  is
+	set_override (flag: BOOLEAN)
 		do
 		end
 
-	realize_current is
+	realize_current
 		do
 			if title /= Void then
 				make_top_with_coordinates (title, x, y, width+shell_width, height+shell_height)
@@ -256,7 +256,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		local
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_shell_children (a_width, a_height: INTEGER) is
+	resize_shell_children (a_width, a_height: INTEGER)
 			-- resize the children to `a_width', `a_height'
 		local
 			local_children: LIST [WIDGET_IMP]
@@ -379,24 +379,24 @@ feature {NONE} -- Implementation
 	children_resizing: BOOLEAN
 			-- Are the children currently being resized
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		once
 			Result := Ws_overlappedwindow + Ws_visible
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionShell"
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Windows 3D look
 		once
 			Result := 0
 		end
 
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
 		local
 		 	track: WEL_POINT
 			w: INTEGER
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 		do
 			if fixed_size_flag then
 				disable_default_processing
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 	is_restored: BOOLEAN;
 			--Is the shell restored ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

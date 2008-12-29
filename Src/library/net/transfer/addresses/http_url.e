@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"URLs for HTTP resources"
 	legal: "See notice at end of class."
@@ -17,21 +17,21 @@ create
 
 feature -- Access
 
-	Service: STRING is "http"
+	Service: STRING = "http"
 			-- Name of service (Answer: "http")
 
 feature -- Status report
 
-	Default_port: INTEGER is 80
+	Default_port: INTEGER = 80
 			-- Number of default port for service (Answer: 80)
 			
-	Is_proxy_supported: BOOLEAN is True
+	Is_proxy_supported: BOOLEAN = True
 			-- Are proxy connections supported? (Answer: yes)
 
-	Has_username: BOOLEAN is True;
+	Has_username: BOOLEAN = True;
 			-- Can address contain a username?
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

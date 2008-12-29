@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control over thread execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

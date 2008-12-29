@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Fundamental Motif Object."
@@ -36,7 +36,7 @@ feature -- Access
 			-- Screen object of Current
 
 	is_valid_parent (a_screen_object: POINTER; 
-			a_parent: MEL_COMPOSITE): BOOLEAN is
+			a_parent: MEL_COMPOSITE): BOOLEAN
 			-- Is `a_parent' a valid parent for `a_screen_object'?
 		require
 			valid_screen_object: a_screen_object /= default_pointer;
@@ -45,7 +45,7 @@ feature -- Access
 			Result := xt_parent (a_screen_object) = a_parent.screen_object
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Name of Current
 		require
 			exists: not is_destroyed
@@ -56,7 +56,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end;
 
-	application_context: MEL_APPLICATION_CONTEXT is
+	application_context: MEL_APPLICATION_CONTEXT
 			-- Associated application context.
 		require
 			exists: not is_destroyed
@@ -67,7 +67,7 @@ feature -- Access
 			application_context_is_valid: Result /= Void and Result.is_valid
 		end;
 
-	screen: MEL_SCREEN is
+	screen: MEL_SCREEN
 			-- Associated screen
 		require
 			exists: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Access
 			screen_not_void: Result /= Void
 		end;
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Associated display
 		require
 			exists: not is_destroyed
@@ -87,13 +87,13 @@ feature -- Access
 			display_is_valid: Result /= Void and then Result.is_valid
 		end;
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := screen_object.hash_code
 		end;
 
-	current_time: INTEGER is
+	current_time: INTEGER
 			-- Call `CurrentTime' from X
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
@@ -102,7 +102,7 @@ feature -- Access
 		end;
 
 	command_set (a_command_exec: MEL_COMMAND_EXEC;
-			a_command: MEL_COMMAND; an_argument: ANY): BOOLEAN is
+			a_command: MEL_COMMAND; an_argument: ANY): BOOLEAN
 		require
 			command_exec_not_void: a_command_exec /= Void
 		do
@@ -114,7 +114,7 @@ feature -- Access
 					a_command_exec.argument = an_argument
 		end;
 
-	destroy_command: MEL_COMMAND_EXEC is
+	destroy_command: MEL_COMMAND_EXEC
 			-- Command set for the destroy callback
 		do
 			Result := motif_command (XmNdestroyCallback)
@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Status report
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 			-- Is Current realized?
 		require
 			exists: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Status report
 			Result := xt_is_realized (screen_object);
 		end;
 
-	is_managed: BOOLEAN is
+	is_managed: BOOLEAN
 			-- Is Current managed?
 		require
 			exists: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status report
 			Result := xt_is_managed (screen_object);
 		end;
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is Current sensitive?
 		require
 			exists: not is_destroyed
@@ -146,7 +146,7 @@ feature -- Status report
 			Result := xt_is_sensitive (screen_object);
 		end;
 
-	is_shown: BOOLEAN is
+	is_shown: BOOLEAN
 			-- Is Current shown on the screen?
 		require
 			exists: not is_destroyed;
@@ -155,7 +155,7 @@ feature -- Status report
 			Result := is_managed and then xt_is_visible (screen_object)
 		end;
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is Current is_destroyed?
 		do
 			Result := screen_object = default_pointer
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	manage is
+	manage
 			-- Enable geometry management.
 		require
 			exists: not is_destroyed
@@ -173,7 +173,7 @@ feature -- Status setting
 			is_managed: parent /= Void implies is_managed
 		end;
 
-	unmanage is
+	unmanage
 			-- Disable geometry management.
 		require
 			exists: not is_destroyed
@@ -183,7 +183,7 @@ feature -- Status setting
 			is_unmanaged: parent /= Void implies not is_managed
 		end;
 
-	set_sensitive is
+	set_sensitive
 			-- Set `is_sensitive' to True.
 		require
 			exists: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Status setting
 			is_sensitive: is_sensitive 
 		end;
 
-	set_insensitive is
+	set_insensitive
 			-- Set `is_sensitive' to False.
 		require
 			exists: not is_destroyed
@@ -203,7 +203,7 @@ feature -- Status setting
 			not_sensitive: not is_sensitive 
 		end;
 
-	map, show is
+	map, show
 			-- Show Current on the screen.
 		require
 			exists: not is_destroyed;
@@ -216,7 +216,7 @@ feature -- Status setting
 				(parent = Void implies is_shown)
 		end;
 
-	unmap, hide is
+	unmap, hide
 			-- Hide Current.
 		require
 			exists: not is_destroyed
@@ -229,7 +229,7 @@ feature -- Status setting
 				(parent = Void implies not is_shown)
 		end;
 
-	realize is
+	realize
 			-- Create Current's window and create recursively all the
 			-- children's windows plus
 			-- perform some extra initialization.
@@ -241,7 +241,7 @@ feature -- Status setting
 			realized
 		end;
 
-	unrealize is
+	unrealize
 			-- Destroy Current's window and all children's windows.
 		require
 			exists: not is_destroyed
@@ -253,7 +253,7 @@ feature -- Status setting
 
 feature -- Update
 
-	process_traversal (a_direction: INTEGER) is
+	process_traversal (a_direction: INTEGER)
 			-- Traverse Current's hierarchy with direction `a_direction'.
 			-- (Directions constants are in class MEL_TRAVERSAL_CONSTANTS)
 		require
@@ -263,7 +263,7 @@ feature -- Update
 			end
 		end;
 
-	update_display is
+	update_display
 			-- Update the display of Current widget by forcing all pending
 			-- exposure events to be processed immediately.
 		require
@@ -274,7 +274,7 @@ feature -- Update
 
 feature -- Element change
 
-	set_callback (a_callback_resource: POINTER; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_callback (a_callback_resource: POINTER; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when callback of type 
 			-- `a_callback_resource' is performed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -294,7 +294,7 @@ feature -- Element change
 			end
 		end;
 
-	set_destroy_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_destroy_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when an object is destroyed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -308,7 +308,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_callback (a_callback_resource: POINTER) is
+	remove_callback (a_callback_resource: POINTER)
 			-- Remove the command specified by callback type `a_callback_resource'.
 		require
 			exists: not is_destroyed;
@@ -322,13 +322,13 @@ feature -- Removal
 			end;
 		end;
 
-	remove_destroy_callback is
+	remove_destroy_callback
 			-- Remove the command for the destroy callback.
 		do
 			remove_callback (XmNdestroyCallback)
 		end;
 
-	destroy is
+	destroy
 			-- Destroy the associated screen object.
 		require
 			exists: not is_destroyed
@@ -363,7 +363,7 @@ end;
 
 feature -- Miscellaneous
 
-	set_default is
+	set_default
 			-- Set the values to their defaults.
 			-- (Default: Do nothing.)
 		do
@@ -371,7 +371,7 @@ feature -- Miscellaneous
 
 feature -- Initialization
 
-	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE)
 			-- Create a mel widget from existing widget `a_screen_object'.
 		require
 			screen_object_not_null: a_screen_object /= default_pointer;
@@ -389,7 +389,7 @@ feature -- Initialization
 feature {MEL_DISPATCHER} -- Implementation
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		require
@@ -405,7 +405,7 @@ feature {MEL_DISPATCHER} -- Implementation
 
 feature {MEL_OBJECT, MEL_CLEAN_UP_CALLBACK} -- Implementation
 
-	clean_up, object_clean_up is
+	clean_up, object_clean_up
 			-- Clean up object widget data structures.
 		require
 			exist: not is_destroyed
@@ -430,7 +430,7 @@ end;
 feature {NONE} -- Implementation
 
 	add_to_callbacks (a_command: MEL_COMMAND_EXEC; 
-			a_key: MEL_CALLBACK_KEY): BOOLEAN is
+			a_key: MEL_CALLBACK_KEY): BOOLEAN
 			-- Add `a_command' with `a_key' to the callback table.
 			-- Set Result to `True' if `a_key' did not exist (i.e callback
 			-- was already registered)
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			command_set: callbacks.has (a_key)
 		end;
 
-	remove_from_callbacks (a_key: MEL_CALLBACK_KEY): BOOLEAN is
+	remove_from_callbacks (a_key: MEL_CALLBACK_KEY): BOOLEAN
 			-- Remove entry with `a_key'.
 			-- Set Result to `True' if `a_key' existed (i.e callback
 			-- was registered)
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			command_removed: callbacks /= Void implies not callbacks.has (a_key)
 		end;
 
-	motif_command (a_callback_resource: POINTER): MEL_COMMAND_EXEC is
+	motif_command (a_callback_resource: POINTER): MEL_COMMAND_EXEC
 			-- Command set for motif callback `a_callback_resource'
 		local
 			cb: like callbacks;
@@ -489,7 +489,7 @@ feature {MEL_DISPATCHER} -- Implementation
 
 	execute_callback (
 				a_key: MEL_CALLBACK_KEY;
-				a_callback_struct: MEL_CALLBACK_STRUCT) is
+				a_callback_struct: MEL_CALLBACK_STRUCT)
 		require
 			has_callback: callbacks.has (a_key)
 		do
@@ -498,24 +498,24 @@ feature {MEL_DISPATCHER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	c_add_callback (scr_obj: POINTER; resource_name: POINTER) is
+	c_add_callback (scr_obj: POINTER; resource_name: POINTER)
 		external
 			"C"
 		end;
 
-	c_remove_callback (scr_obj: POINTER; resource_name: POINTER) is
+	c_remove_callback (scr_obj: POINTER; resource_name: POINTER)
 		external
 			"C"
 		end;
 
-	xm_process_traversal (a_target: POINTER; dir: INTEGER): BOOLEAN is
+	xm_process_traversal (a_target: POINTER; dir: INTEGER): BOOLEAN
 		external
 			"C (Widget, XmTraversalDirection): EIF_BOOLEAN | <Xm/Xm.h>"
 		alias
 			"XmProcessTraversal"
 		end;
 
-	xm_update_display (a_target: POINTER) is
+	xm_update_display (a_target: POINTER)
 		external
 			"C (Widget) | <Xm/Xm.h>"
 		alias
@@ -528,7 +528,7 @@ invariant
 			implies screen_object = default_pointer;
 	destroyed_implies_void_parent: is_destroyed implies parent = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

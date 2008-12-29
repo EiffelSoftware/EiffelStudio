@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A common class for the heirs of the WEL_CONTROL_WINDOW."
 	legal: "See notice at end of class."
@@ -76,7 +76,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create `Current' with `default_parent'.
 		do
 			wel_make (default_parent, "")
@@ -89,38 +89,38 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
 			Result := Cs_dblclks
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used by windows at creation.
 		do
 			Result := Ws_child | Ws_clipchildren |
 				Ws_clipsiblings | Ws_visible
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Extended style used by windows at creation.
 		do
 			Result := Ws_ex_controlparent
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create.
 		do
 			Result := generator
 		end
 
-	application_imp: EV_APPLICATION_IMP is
+	application_imp: EV_APPLICATION_IMP
 			-- Access to the current application
 		deferred
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -138,7 +138,7 @@ feature {NONE} -- WEL Implementation
 			bk_brush.delete
 		end
 
-	current_as_container: EV_CONTAINER_IMP is
+	current_as_container: EV_CONTAINER_IMP
 			-- Result is `Current' as a container.
 		do
 			Result ?= Current
@@ -146,7 +146,7 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Deferred features
 
-	default_parent: WEL_FRAME_WINDOW is
+	default_parent: WEL_FRAME_WINDOW
 			-- Parent of `Current' when a parent is required and has not
 			-- been specified.
 		deferred
@@ -154,43 +154,43 @@ feature {NONE} -- Deferred features
 
 feature {NONE} -- Features that should be directly implemented by externals.
 
-	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		external
 			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
@@ -198,7 +198,7 @@ feature {NONE} -- Features that should be directly implemented by externals.
 			"GetNextDlgTabItem"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "IStorage and Istream lock types flags"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Lock_write: INTEGER is
+	Lock_write: INTEGER
 			-- If lock is granted, specified region of stream
 			-- can be read by calling IStream.Read from any opening of
 			-- this stream. Attempts to write to this region from any opening
@@ -23,7 +23,7 @@ feature -- Access
 			"LOCK_WRITE"
 		end
 		
-	Lock_exclusive: INTEGER is
+	Lock_exclusive: INTEGER
 			-- Attempts to read or write this stream by other stream openings
 			-- return error EOLE_STG_E_ACCESSDENIED.
 		external
@@ -32,7 +32,7 @@ feature -- Access
 			"LOCK_EXCLUSIVE"
 		end
 		
-	Lock_onlyonce: INTEGER is
+	Lock_onlyonce: INTEGER
 			-- If lock is granted, no other EOLE_LOCK_ONLYONCE lock can be
 			-- obtained on bytes in given region. Usually this lock type
 			-- is an alias for some other lock type and other semantics might occur
@@ -43,7 +43,7 @@ feature -- Access
 			"LOCK_ONLYONCE"
 		end
 
-	is_valid_lock (lock: INTEGER): BOOLEAN is
+	is_valid_lock (lock: INTEGER): BOOLEAN
 			-- Is `lock' a valid locktype?
 		do
 			Result := lock = Lock_write or
@@ -51,7 +51,7 @@ feature -- Access
 						lock = Lock_onlyonce
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

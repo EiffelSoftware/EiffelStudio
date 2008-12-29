@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General finite-state automata, implemented by arrays"
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (i, s: INTEGER) is
+	make (i, s: INTEGER)
 			-- Make an automaton including at most `s' states,
 			-- with transitions 0 to `i'.
 		require
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_final (state, f: INTEGER) is
+	set_final (state, f: INTEGER)
 			-- Make `state' `final' for regular expression `f'.
 		require
 			is_in_automaton: state <= upper and state >= lower
@@ -50,7 +50,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_right (s: S) is
+	add_right (s: S)
 			-- Assign `s' to the first possible item.
 		require
 			not_full: last_position < count
@@ -59,7 +59,7 @@ feature -- Element change
 			put (s, last_position)
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

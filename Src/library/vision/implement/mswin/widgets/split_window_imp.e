@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Control window with two children separated%
@@ -101,7 +101,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN) is
+	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN)
 			-- Create a Windows specific horizontal split window.
 		require
 			a_window_not_void: a_window /= Void
@@ -132,17 +132,17 @@ feature -- Access
 			--| height or the width
 
 feature -- Change
-	set_proportion (p:INTEGER) is
+	set_proportion (p:INTEGER)
 			-- Set the split proportion from 0 to 100
 		do
 			proportion := p
 		end
 
-	update_split is
+	update_split
 		do
 		end
 
-	realize_current is
+	realize_current
 			-- Create the actual Windows window.
 		local
 			pi: WEL_COMPOSITE_WINDOW
@@ -164,7 +164,7 @@ feature -- Change
 			end
 		end
 
-	set_default_split_size is
+	set_default_split_size
 			-- Set default split size after realization.
 		local
 			pi: WEL_COMPOSITE_WINDOW
@@ -186,12 +186,12 @@ feature -- Change
 
 feature -- Setting
 
-	set_widget_default is
+	set_widget_default
 			-- Set default values for Current
 		do
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the size of Current to `new_width', `new_height'.
 			-- Propagate event to children.
 		do
@@ -235,7 +235,7 @@ feature -- Setting
 
 feature -- Sizing policy
 
-	child_has_resized is
+	child_has_resized
 			-- Respond to resizing from children.
 		do
 			if first_child /= Void and then 
@@ -255,7 +255,7 @@ feature -- Sizing policy
 
 feature -- Element change
 
-	set_first_child (a_child: SPLIT_WINDOW_CHILD) is
+	set_first_child (a_child: SPLIT_WINDOW_CHILD)
 			-- set `first_child' to `a_child'.
 		require
 			a_child_not_void: a_child /= Void
@@ -265,7 +265,7 @@ feature -- Element change
 			first_child_set: first_child = a_child
 		end
 
-	set_second_child (a_child: SPLIT_WINDOW_CHILD) is
+	set_second_child (a_child: SPLIT_WINDOW_CHILD)
 			-- set `second_child' to `a_child'.
 		require
 			a_window_not_void: a_child /= Void
@@ -276,7 +276,7 @@ feature -- Element change
 			second_child_set: second_child = a_child
 		end
 
-	remove_first_child is
+	remove_first_child
 			-- Remove `first_child' from the display.
 		do
 			split_position := 0
@@ -284,7 +284,7 @@ feature -- Element change
 			resize_second_child
 		end
 
-	remove_second_child is
+	remove_second_child
 			-- Remove `second_child' from the display.
 		do
 			split_position := split_size
@@ -292,7 +292,7 @@ feature -- Element change
 			resize_first_child
 		end
 
-	add_child (a_child: SPLIT_WINDOW_CHILD) is
+	add_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Add `a_child' as currently lowest child.
 		do
 			if first_child = Void then
@@ -302,7 +302,7 @@ feature -- Element change
 			end
 		end
 
-	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+	remove_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Remove `a_child' from the display.
 		do
 			if a_child = second_child then
@@ -312,7 +312,7 @@ feature -- Element change
 			end
 		end
 
-	add_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	add_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as managed.
 		do
 			if a_window = second_child then
@@ -338,7 +338,7 @@ feature -- Element change
 					first_child.managed and second_child.managed) implies split_visible
 		end
 
-	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	remove_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Remove `a_window' as managed.
 		do
 			if a_window = second_child then
@@ -351,7 +351,7 @@ feature -- Element change
 
 feature -- {NONE} -- Implementation
 
-	resize_first_child is
+	resize_first_child
 			-- Resize the top child to the correct dimensions.
 		do
 			if is_vertical then
@@ -361,7 +361,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	resize_second_child is
+	resize_second_child
 			-- Resize the bottom child to the correct dimensions.
 		local
 			add_size, zero: INTEGER
@@ -381,7 +381,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	resize_children is
+	resize_children
 			-- Resize the two children if they are managed
 		do
 			if first_child /= Void and then first_child.managed then
@@ -392,7 +392,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	draw_split (a_dc: WEL_DC) is
+	draw_split (a_dc: WEL_DC)
 			-- Draw the top split on `a_dc'.
 		do
 			if split_visible then
@@ -404,7 +404,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	invert_split (a_dc: WEL_DC) is
+	invert_split (a_dc: WEL_DC)
 			-- Invert the split on `a_dc'.
 		do
 			if split_visible then
@@ -416,10 +416,10 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	split_width: INTEGER is 6
+	split_width: INTEGER = 6
 			-- Width of either split
 
-	on_mouse_move (code, a_x, a_y: INTEGER) is
+	on_mouse_move (code, a_x, a_y: INTEGER)
 			-- Respond to a mouse move message.
 		local
 			new_position: INTEGER
@@ -449,7 +449,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_down (keys, a_x, a_y: INTEGER) is
+	on_left_button_down (keys, a_x, a_y: INTEGER)
 			-- Respond to a left button down message.
 		local
 			value: INTEGER
@@ -473,7 +473,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_up (keys, a_x, a_y: INTEGER) is
+	on_left_button_up (keys, a_x, a_y: INTEGER)
 			-- Respond to a left button up message.
 		local
 			value: INTEGER
@@ -506,7 +506,7 @@ feature -- {NONE} -- Implementation
 			is_splitting := False
 		end
 
-	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT) is
+	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT)
 			-- Respond to a paint message.
 		do
 			if split_visible then
@@ -514,7 +514,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	on_size (code, a_width, a_height: INTEGER) is
+	on_size (code, a_width, a_height: INTEGER)
 			-- Respond to a resize message.
 		do
 			if not flag_set (code, Size_minimized) then
@@ -538,7 +538,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	on_set_cursor (code: INTEGER) is
+	on_set_cursor (code: INTEGER)
 			-- Respond to a cursor message.
 		local
 			point: WEL_POINT
@@ -569,7 +569,7 @@ feature -- {NONE} -- Implementation
 			end
 		end
 
-	on_split (value: INTEGER): BOOLEAN is
+	on_split (value: INTEGER): BOOLEAN
 			-- Is a point with `value' as the coordinate on the split?
 		do
 			Result := (value >= split_position)
@@ -582,7 +582,7 @@ feature -- {NONE} -- Implementation
 	cursor: WEL_CURSOR
 			-- Current cursor
 
-	class_name: STRING is
+	class_name: STRING
 		once
 			Result := "EvisionSplit"
 		end
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 	split_visible: BOOLEAN;
 			-- Is the split visible?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

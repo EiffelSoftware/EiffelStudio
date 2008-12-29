@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Absolute times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature -- Initialization
 
-	make (h, m, s: INTEGER) is
+	make (h, m, s: INTEGER)
 			-- Set `hour, `minute' and `second' to `h', `m', `s' respectively.
 		require
 			correct_time: is_correct_time (h, m, s, False)
@@ -64,7 +64,7 @@ feature -- Initialization
 			fractional_second_set: fractional_second = 0
 		end
 
-	make_fine (h, m: INTEGER; s: DOUBLE) is
+	make_fine (h, m: INTEGER; s: DOUBLE)
 			-- Set `hour, `minute' and `second' to `h', `m' and truncated to
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
@@ -82,7 +82,7 @@ feature -- Initialization
 			fine_second_set: fine_second = s
 		end
 
-	make_now is
+	make_now
 			-- Set current time according to timezone.
 		local
 			l_date: C_DATE
@@ -92,7 +92,7 @@ feature -- Initialization
 			fractional_second := l_date.millisecond_now / 1000
 		end
 
-	make_now_utc is
+	make_now_utc
 			-- Set the current object to today's date in utc format.
 		local
 			l_date: C_DATE
@@ -102,7 +102,7 @@ feature -- Initialization
 			fractional_second := l_date.millisecond_now / 1000
 		end
 
-	make_by_seconds (sec: INTEGER) is
+	make_by_seconds (sec: INTEGER)
 			-- Set the object by the number of seconds `sec' from midnight.
 		require
 			s_large_enough: sec >= 0
@@ -120,7 +120,7 @@ feature -- Initialization
 			seconds_set: seconds = sec
 		end
 
-	make_by_fine_seconds (sec: DOUBLE) is
+	make_by_fine_seconds (sec: DOUBLE)
 			-- Set the object by the number of seconds `sec'.
 		require
 			s_large_enough: sec >= 0
@@ -133,7 +133,7 @@ feature -- Initialization
 			fractional_second := sec - s
 		end
 
-	make_from_string_default (s: STRING) is
+	make_from_string_default (s: STRING)
 			-- Initialize from a "standard" string of form
 			-- `default_format_string'.
 		require
@@ -143,7 +143,7 @@ feature -- Initialization
 			make_from_string (s, Default_format_string)
 		end
 
-	make_from_string (s: STRING; code: STRING) is
+	make_from_string (s: STRING; code: STRING)
 			-- Initialize from a "standard" string of form
 			-- `code'.
 		require
@@ -159,7 +159,7 @@ feature -- Initialization
 			make_fine (time.hour, time.minute, time.fine_second)
 		end
 
-	make_by_compact_time (c_t: INTEGER) is
+	make_by_compact_time (c_t: INTEGER)
 			-- Initialize from `compact_time'.
 		require
 			c_t_valid: compact_time_valid (c_t)
@@ -171,7 +171,7 @@ feature -- Initialization
 
 feature -- Access
 
-	origin: TIME is
+	origin: TIME
 			-- Origin time
 		once
 			create Result.make (0, 0, 0)
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is the current time before `other'?
 		local
 			l_current, l_other: like compact_time
@@ -194,7 +194,7 @@ feature -- Comparison
 
 feature -- Measurement
 
-	duration: TIME_DURATION is
+	duration: TIME_DURATION
 			-- Duration elapsed from midnight
 		do
 			create Result.make_fine (hour, minute, fine_second)
@@ -203,7 +203,7 @@ feature -- Measurement
 			seconds_small_enough: duration.seconds_count < Seconds_in_day
 		end
 
-	seconds: INTEGER is
+	seconds: INTEGER
 			-- Number of seconds elapsed from midnight
 		do
 			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) +
@@ -212,7 +212,7 @@ feature -- Measurement
 			result_definition: Result = duration.seconds_count
 		end
 
-	fine_seconds: DOUBLE is
+	fine_seconds: DOUBLE
 			-- Number of seconds and fractions of seconds elapsed from midnight
 		do
 			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) +
@@ -221,7 +221,7 @@ feature -- Measurement
 
 feature -- Basic operations
 
-	infix "+" (t: TIME_DURATION): TIME is
+	infix "+" (t: TIME_DURATION): TIME
 			-- Sum of the current time and duration `t'
 		require
 			t_exists: t /= Void
@@ -234,14 +234,14 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	relative_duration (other: like Current): TIME_DURATION is
+	relative_duration (other: like Current): TIME_DURATION
 			-- Duration elapsed from `other' to `Current'
 		do
 			create Result.make_by_fine_seconds (fine_seconds - other.fine_seconds)
 			Result := Result.to_canonical
 		end
 
-	second_add (s: INTEGER) is
+	second_add (s: INTEGER)
 			-- Add `s' seconds to the current time.
 		local
 			total_second: INTEGER
@@ -256,7 +256,7 @@ feature -- Basic operations
 			end
 		end
 
-	fine_second_add (f: DOUBLE) is
+	fine_second_add (f: DOUBLE)
 			-- Add `f' seconds to the current time.
 			-- if `f' has decimals, `fractional_second' is modified.
 		local
@@ -272,7 +272,7 @@ feature -- Basic operations
 			end
 		end;
 
-	minute_add (m: INTEGER) is
+	minute_add (m: INTEGER)
 			-- Add `m' minutes to the current object.
 		local
 			total_minute: INTEGER
@@ -286,13 +286,13 @@ feature -- Basic operations
 			end
 		end
 
-	hour_add (h: INTEGER) is
+	hour_add (h: INTEGER)
 			-- Add `h' hours to the current object.
 		do
 			set_hour (mod (hour + h, Hours_in_day))
 		end
 
-	second_forth is
+	second_forth
 			-- Move to next second.
 		do
 			if fine_second < Seconds_in_minute - 1 then
@@ -303,7 +303,7 @@ feature -- Basic operations
 			end
 		end
 
-	second_back is
+	second_back
 			-- Move to previous second.
 		do
 			if fine_second > 0 then
@@ -314,7 +314,7 @@ feature -- Basic operations
 			end
 		end;
 
-	minute_forth is
+	minute_forth
 			-- Move to next minute.
 		do
 			if minute < Minutes_in_hour - 1 then
@@ -325,7 +325,7 @@ feature -- Basic operations
 			end
 		end
 
-	minute_back is
+	minute_back
 			-- Move to evious minute.	
 		do
 			if minute > 0 then
@@ -336,7 +336,7 @@ feature -- Basic operations
 			end
 		end
 
-	hour_forth is
+	hour_forth
 			-- Move to next hour.
 		do
 			if hour < Hours_in_day -  1 then
@@ -346,7 +346,7 @@ feature -- Basic operations
 			end
 		end
 
-	hour_back is
+	hour_back
 			-- Move to evious hour.
 		do
 			if hour > 0 then
@@ -358,14 +358,14 @@ feature -- Basic operations
 
 feature -- Output
 
-	debug_output, out: STRING is
+	debug_output, out: STRING
 			-- Printable representation of time with "standard"
 			-- Form: `time_default_format_string'
 		do
 			Result := formatted_out (time_default_format_string)
 		end
 
-	formatted_out (s: STRING): STRING is
+	formatted_out (s: STRING): STRING
 			-- Printable representation of time with "standard"
 			-- Form: `s'
 		require
@@ -388,7 +388,7 @@ invariant
 	hour_large_enough: hour >= 0
 	hour_small_enough: hour < hours_in_day
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

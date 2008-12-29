@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Implementation of DB_PROC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- If the database has row numbers
 			-- initialize `row_number'
 		do
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	text: STRING is
+	text: STRING
 			-- SQL statement attached to stored procedure
 		local
 			tuple: DB_TUPLE
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	load is
+	load
 			-- Make result of stored procedure execution available.
 			-- Activate current stored procedure from server
 			-- so that presence may be accurately tested using `exists'.
@@ -88,7 +88,7 @@ feature -- Basic operations
 			set_p_exists
 		end
 
-	store (sql: STRING) is
+	store (sql: STRING)
 			-- Store current procedure performing `sql' statement.
 		require else
 			argument_not_void: sql /= Void
@@ -112,7 +112,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute (destination: DB_EXPRESSION) is
+	execute (destination: DB_EXPRESSION)
 			-- Execute current procedure with `destination'
 			-- as a DB_SELECTION or a DB_CHANGE object mapping
 			-- entity values with procedure parameter names
@@ -136,7 +136,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_string (destination: DB_EXPRESSION; sql: STRING) is
+	execute_string (destination: DB_EXPRESSION; sql: STRING)
 			-- Execute the procedure using the sql statement `sql'
 		do
 			private_string.wipe_out
@@ -145,7 +145,7 @@ feature -- Basic operations
 			destination.execute_query
 		end
 
-	drop is
+	drop
 			-- Drop current procedure from server.
 		do
 			if db_spec.support_drop_proc then
@@ -167,13 +167,13 @@ feature -- Basic operations
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does current procedure exist in server?
 		do
 			Result := p_exists
 		end
 
-	arguments_set: BOOLEAN is
+	arguments_set: BOOLEAN
 			-- Have arguments been set?
 		do
 			Result := (arguments_name /= Void and arguments_type /= Void)
@@ -184,7 +184,7 @@ feature -- Status report
 
 feature -- Element change
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Change procedure name with `new_name'.
 		do
 			name := new_name
@@ -196,7 +196,7 @@ feature -- Element change
 		end
 
 	set_arguments (args_name: like arguments_name;
-			 			args_type: like arguments_type) is
+			 			args_type: like arguments_type)
 			-- Set `arguments_name' and `arguments_type'
 			-- of current as a variable list of argument
 			-- names and a variable list of argument
@@ -214,7 +214,7 @@ feature -- Element change
 			set_with_input_parameter2: arguments_type = args_type
 		end
 
-	set_no_arguments is
+	set_no_arguments
 			-- No arguments for the current procedure.
 		do
 			arguments_type := Void
@@ -227,7 +227,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	set_p_exists is
+	set_p_exists
 			-- Set `p_exists'.
 		local
 			temp_int: INTEGER_REF
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			-- Value is effective after `set_p_exists'
 			-- execution.
 
-	append_in_args_value (s: STRING) is
+	append_in_args_value (s: STRING)
 			-- Append map variables name from `d' in `s'.
 			-- Map variables are used for set input arguments.
 		require
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			s_larger: s.count > old s.count
 		end
 
-	append_in_args_type (s: STRING) is
+	append_in_args_type (s: STRING)
 			-- Append arguments type name in `s'.
 		require
 			s_not_void: s /= Void
@@ -348,7 +348,7 @@ feature {NONE} -- Status report
 	owner: STRING
 			-- the owner of the procedure
 
-	proc_name: STRING is
+	proc_name: STRING
 			-- Name of the procedure
 		local
 			quoter: STRING
@@ -379,7 +379,7 @@ feature {NONE} -- Status report
 			Result.append(quoter)
 		end
 
-	private_selection: DB_SELECTION is
+	private_selection: DB_SELECTION
 			-- Shared local object
 		once
 			create Result.make
@@ -387,7 +387,7 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	private_change: DB_CHANGE is
+	private_change: DB_CHANGE
 			-- Shared local object
 		once
 			create Result.make
@@ -395,7 +395,7 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	private_string: STRING is
+	private_string: STRING
 			-- Constant string
 		once
 			create Result.make (50)
@@ -403,19 +403,19 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	Select_text (a_proc_name: STRING): STRING is
+	Select_text (a_proc_name: STRING): STRING
 			-- SQL query to get procedure text.
 		do
 			Result := db_spec.Select_text (a_proc_name)
 		end
 
-	Select_exists: STRING is
+	Select_exists: STRING
 			-- SQL query to test procedure existing.
 		do
 			Result := db_spec.Select_exists (name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

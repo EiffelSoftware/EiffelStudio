@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Screen device context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		local
 			a_default_pointer: POINTER
@@ -26,7 +26,7 @@ feature -- Basic operations
 			end
 		end
 
-	release is
+	release
 			-- Release the device context
 		local
 			a_default_pointer: POINTER
@@ -38,7 +38,7 @@ feature -- Basic operations
 			end
 		end
 
-	quick_release is
+	quick_release
 			-- Release the device context
 		local
 			a_default_pointer: POINTER
@@ -51,7 +51,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	destroy_item is
+	destroy_item
 			-- Delete the current device context.
 		local
 			a_default_pointer: POINTER	-- Default_pointer
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			MsWindows Implementation  of Character format containing color,
@@ -76,7 +76,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' and assign `an_interface' to `interface'.
 		local
 			l_font: WEL_LOG_FONT
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			l_font := default_wel_log_font
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the current format.
 		local
 			color_ref: WEL_COLOR_REF
@@ -108,7 +108,7 @@ feature -- Access
 			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background color of the current format.
 		local
 			color_ref: WEL_COLOR_REF
@@ -117,7 +117,7 @@ feature -- Access
 			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of the current format.
 		local
 			font_imp: EV_FONT_IMP
@@ -136,7 +136,7 @@ feature -- Access
 			end
 		end
 
-	effects: EV_CHARACTER_FORMAT_EFFECTS is
+	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'.
 		local
 			effects_flag: INTEGER
@@ -158,7 +158,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Make `value' the new font.
 		local
 			font_imp: EV_FONT_IMP
@@ -199,7 +199,7 @@ feature -- Status setting
 			l_log_font.dispose
 		end
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Make `value' the new color.
 		local
 			color_imp: EV_COLOR_IMP
@@ -208,7 +208,7 @@ feature -- Status setting
 			set_text_color (color_imp)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Make `value' the new background color.
 		local
 			color_imp: EV_COLOR_IMP
@@ -218,7 +218,7 @@ feature -- Status setting
 			bcolor_set := True
 		end
 
-	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Make `an_effect' the new `effects'.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -244,13 +244,13 @@ feature -- Status setting
 
 feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Face name used by `Current'.
 		do
 			Result := face_name
 		end
 
-	family: INTEGER is
+	family: INTEGER
 			-- Family used by `Current'.
 		local
 			l_font: WEL_LOG_FONT
@@ -280,7 +280,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 	wel_screen_font_family: INTEGER
 		-- Font family of the wel screen font.
 
-	Default_wel_log_font: WEL_LOG_FONT is
+	Default_wel_log_font: WEL_LOG_FONT
 			-- Structure used to initialize fonts.
 		once
 			create Result.make_by_font (gui_font)
@@ -289,19 +289,19 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			wel_screen_font_family := Result.family
 		end
 
-	italic: BOOLEAN is
+	italic: BOOLEAN
 			-- Is `Current' italic?
 		do
 			Result := flag_set (wel_effects, cfm_italic)
 		end
 
-	is_bold: BOOLEAN is
+	is_bold: BOOLEAN
 			-- Is `Current' bold?
 		do
 			Result := flag_set (wel_effects, cfm_bold)
 		end
 
-	shape: INTEGER is
+	shape: INTEGER
 			-- Shape of `Current'.
 		do
 			if flag_set (wel_effects, cfm_italic) then
@@ -311,7 +311,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			end
 		end
 
-	vertical_offset: INTEGER is
+	vertical_offset: INTEGER
 			-- Vertical offset of `Current' in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -322,13 +322,13 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			screen_dc.release
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			--  Height of `Current'.
 		do
 			Result := height_in_pixels
 		end
 
-	fcolor: INTEGER is
+	fcolor: INTEGER
 			-- foreground color RGB packed into 24 bit.
 			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
 			-- Blue, Green, Red
@@ -336,7 +336,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			Result := text_color.item
 		end
 
-	bcolor: INTEGER is
+	bcolor: INTEGER
 			-- background color RGB packed into 24 bit.
 			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
 			-- Blue, Green, Red
@@ -344,13 +344,13 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 			Result := wel_background_color.item
 		end
 
-	is_striked_out: BOOLEAN is
+	is_striked_out: BOOLEAN
 			-- Is the character striked out?
 		do
 			Result := flag_set (wel_effects, Cfm_strikeout)
 		end
 
-	is_underlined: BOOLEAN is
+	is_underlined: BOOLEAN
 			-- Is the character underlined?
 		do
 			Result := flag_set (wel_effects, Cfm_underline)
@@ -358,13 +358,13 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			destroy_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

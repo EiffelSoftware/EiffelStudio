@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision tool-bar radio button. implementation%
 		% interface."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a Carbon toggle button.
 		local
 			ret: INTEGER
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select `Current'.
 		local
 			temp: EV_TOOL_BAR_RADIO_BUTTON_IMP
@@ -73,7 +73,7 @@ feature -- Status setting
 			-- First element of 'radio_group' is the one that is selected
 		end
 
-	disable_select is
+	disable_select
 			-- Unselect 'Current'
 		do
 			set_control32bit_value_external (c_object, 0)
@@ -81,7 +81,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected.
 		do
 			Result := radio_group.first = current
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 			-- Attach to GTK "clicked" signal.
 		do
@@ -98,7 +98,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_item_parent_imp (a_container_imp: EV_ITEM_LIST_IMP [EV_ITEM]) is
+	set_item_parent_imp (a_container_imp: EV_ITEM_LIST_IMP [EV_ITEM])
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)
@@ -106,12 +106,12 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	widget_object (a_list: POINTER): POINTER is
+	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
 		end
 
-	radio_group: LINKED_LIST [like current] is
+	radio_group: LINKED_LIST [like current]
 			-- List of all radio item implementations
 		local
 			temp: EV_TOOL_BAR_IMP
@@ -128,7 +128,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TOOL_BAR_RADIO_BUTTON;
 			-- Interface of `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

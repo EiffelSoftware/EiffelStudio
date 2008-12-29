@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Frame resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Access
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Access
 			"XmNmarginWidth"
 		end;
 
-	XmNshadowType: POINTER is
+	XmNshadowType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Frame.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Access
 			"XmNshadowType"
 		end;
 
-	XmSHADOW_IN: INTEGER is
+	XmSHADOW_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -44,7 +44,7 @@ feature -- Access
 			"XmSHADOW_IN"
 		end;
 
-	XmSHADOW_OUT: INTEGER is
+	XmSHADOW_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -52,7 +52,7 @@ feature -- Access
 			"XmSHADOW_OUT"
 		end;
 
-	XmSHADOW_ETCHED_IN: INTEGER is
+	XmSHADOW_ETCHED_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -60,7 +60,7 @@ feature -- Access
 			"XmSHADOW_ETCHED_IN"
 		end;
 
-	XmSHADOW_ETCHED_OUT: INTEGER is
+	XmSHADOW_ETCHED_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Frame.h>]: EIF_INTEGER"
@@ -68,7 +68,7 @@ feature -- Access
 			"XmSHADOW_ETCHED_OUT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

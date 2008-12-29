@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An unnamed Unix pipe used for interprocess communication"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {PROCESS_UNIX_OS} -- Creation
 
-	make (read_fd, write_fd: INTEGER) is
+	make (read_fd, write_fd: INTEGER)
 			-- Create a pipe object which represents the
 			-- pipe with read file descriptor `read_fd' and
 			-- write file descriptor `write_fd'
@@ -46,7 +46,7 @@ feature -- Attributes
 
 feature -- Modification
 
-	close_read_descriptor is
+	close_read_descriptor
 			-- Close descriptor to be used for reading from pipe,
 			-- if it is open
 		do
@@ -56,7 +56,7 @@ feature -- Modification
 			end
 		end
 
-	close_write_descriptor is
+	close_write_descriptor
 			-- Close descriptor to be used for write to pipe,
 			-- if it is open
 		do
@@ -66,7 +66,7 @@ feature -- Modification
 			end
 		end
 
-	erase_read_descriptor is
+	erase_read_descriptor
 			-- Set `read_descriptor' to an invalid value
 			-- so it won't be closed if object is GC'ed.
 			-- Caller must take responsiblity for ensuring
@@ -75,7 +75,7 @@ feature -- Modification
 			read_descriptor := Invalid_file_descriptor
 		end
 
-	erase_write_descriptor is
+	erase_write_descriptor
 			-- Set `write_descriptor' to an invalid value
 			-- so it won't be closed if object is GC'ed.
 			-- Caller must take responsiblity for ensuring
@@ -86,7 +86,7 @@ feature -- Modification
 
 feature {NONE} -- Cleanup
 
-	dispose is
+	dispose
 		do
 			close_read_descriptor
 			close_write_descriptor
@@ -94,10 +94,10 @@ feature {NONE} -- Cleanup
 
 feature {NONE} -- Implementation
 
-	Invalid_file_descriptor: INTEGER is -1;
+	Invalid_file_descriptor: INTEGER = -1;
 			-- File descriptor which is not in valid range
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

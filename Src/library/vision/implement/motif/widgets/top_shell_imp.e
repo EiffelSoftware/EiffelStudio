@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Top level shell which is used in an application that needs %
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_top_shell: TOP_SHELL) is
+	make (a_top_shell: TOP_SHELL)
 			-- Create a motif top level shell.
 		local
 			x_display: MEL_DISPLAY;
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			add_protocol
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

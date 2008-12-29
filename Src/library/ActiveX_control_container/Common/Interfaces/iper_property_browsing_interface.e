@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	get_display_string_user_precondition (disp_id: INTEGER; p_bstr: CELL [STRING]): BOOLEAN is
+	get_display_string_user_precondition (disp_id: INTEGER; p_bstr: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `get_display_string'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	map_property_to_page_user_precondition (disp_id: INTEGER; p_clsid: ECOM_GUID): BOOLEAN is
+	map_property_to_page_user_precondition (disp_id: INTEGER; p_clsid: ECOM_GUID): BOOLEAN
 			-- User-defined preconditions for `map_property_to_page'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_predefined_strings_user_precondition (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD): BOOLEAN is
+	get_predefined_strings_user_precondition (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_predefined_strings'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_predefined_value_user_precondition (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT): BOOLEAN is
+	get_predefined_value_user_precondition (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT): BOOLEAN
 			-- User-defined preconditions for `get_predefined_value'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_display_string (disp_id: INTEGER; p_bstr: CELL [STRING]) is
+	get_display_string (disp_id: INTEGER; p_bstr: CELL [STRING])
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_bstr' [out].  
@@ -55,7 +55,7 @@ feature -- Basic Operations
 			valid_p_bstr: p_bstr.item /= Void
 		end
 
-	map_property_to_page (disp_id: INTEGER; p_clsid: ECOM_GUID) is
+	map_property_to_page (disp_id: INTEGER; p_clsid: ECOM_GUID)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_clsid' [out].  
@@ -67,7 +67,7 @@ feature -- Basic Operations
 
 		end
 
-	get_predefined_strings (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD) is
+	get_predefined_strings (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_ca_strings_out' [out].  
@@ -82,7 +82,7 @@ feature -- Basic Operations
 
 		end
 
-	get_predefined_value (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT) is
+	get_predefined_value (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `dw_cookie' [in].  
@@ -95,7 +95,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

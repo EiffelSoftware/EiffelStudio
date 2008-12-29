@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that enable basic database management."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Connection
 
-	set_connection_information (user_name, password, data_source: STRING) is
+	set_connection_information (user_name, password, data_source: STRING)
 			-- Set information required to connect to the database.
 		require
 			not_void: user_name /= Void and password /= Void and data_source /= Void
@@ -29,7 +29,7 @@ feature -- Connection
 			retry
 		end
 
-	establish_connection is
+	establish_connection
 			-- Establish connection.
 		require
 			information_set: database_handle_created
@@ -59,7 +59,7 @@ feature -- Connection
 			retry
 		end
 
-	disconnect is
+	disconnect
 			-- Disconnect from database.
 		require
 			is_connected: is_connected
@@ -76,13 +76,13 @@ feature -- Status report
 			-- Error message if an error occurred during last
 			-- database operation.
 
-	is_connected: BOOLEAN is
+	is_connected: BOOLEAN
 			-- Is the application connected to a database?
 		do
 			Result := session_control /= Void and then session_control.is_connected
 		end
 
-	database_handle_created: BOOLEAN is
+	database_handle_created: BOOLEAN
 			-- Has the database handle been created?
 		do
 			Result := database_appl /= Void
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Queries
 
-	load_data_with_select (s: STRING): ANY is
+	load_data_with_select (s: STRING): ANY
 			-- Load directly a single data from the database.
 			--| This can be used for instance to retrieve a table rows count or
 			--| a minimum value.
@@ -128,7 +128,7 @@ feature -- Queries
 			retry
 		end
 
-	load_list_with_select (s: STRING; an_obj: ANY): ARRAYED_LIST [like an_obj] is
+	load_list_with_select (s: STRING; an_obj: ANY): ARRAYED_LIST [like an_obj]
 			-- Load list of objects whose type are the same as `an_obj',
 			-- following the SQL query `s'.
 		require
@@ -172,7 +172,7 @@ feature -- Queries
 
 feature -- Queries without result to load.
 
-	execute_query (a_query: STRING) is
+	execute_query (a_query: STRING)
 			-- Execute `a_query' and commit changes.
 		require
 			not_void: a_query /= Void
@@ -181,7 +181,7 @@ feature -- Queries without result to load.
 			commit
 		end
 
-	execute_query_without_commit (a_query: STRING) is
+	execute_query_without_commit (a_query: STRING)
 				-- Execute `a_query' in the database.
 				-- Warning: query executed is not committed.
 		require
@@ -203,7 +203,7 @@ feature -- Queries without result to load.
 			retry
 		end
 
-	commit is
+	commit
 			-- Commit updates in the database.
 		local
 			rescued: BOOLEAN
@@ -224,7 +224,7 @@ feature -- Queries without result to load.
 			retry
 		end
 
-	insert_with_repository (an_obj: ANY; rep: DB_REPOSITORY) is
+	insert_with_repository (an_obj: ANY; rep: DB_REPOSITORY)
 			--	Store in the database object `an_obj' with `db_repository'.
 		require
 			repository_loaded: rep.loaded
@@ -250,7 +250,7 @@ feature -- Queries without result to load.
 
 feature -- Access
 
-	database_handle_name: STRING is
+	database_handle_name: STRING
 			-- Database handle name
 		do
 			Result := database_appl.db_spec.database_handle_name
@@ -258,7 +258,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	string_format (s: STRING): STRING is
+	string_format (s: STRING): STRING
 			-- String representation in SQL of `s'.
 		do
 			Result := database_appl.db_spec.string_format (s)
@@ -267,13 +267,13 @@ feature -- Access
 	session_control: DB_CONTROL
 			-- Session control.
 
-	db_selection: DB_SELECTION is
+	db_selection: DB_SELECTION
 			-- Performs a selection in the database (i.e. a query).
 		once
 			create Result.make
 		end
 
-	db_change: DB_CHANGE is
+	db_change: DB_CHANGE
 			-- Performs a change in the database (i.e. a command).
 		once
 			create Result.make
@@ -284,34 +284,34 @@ feature {NONE} -- Implementation
 	database_appl: DATABASE_APPL [G]
 			-- Database application.
 
-	unexpected_error (action: STRING): STRING is
+	unexpected_error (action: STRING): STRING
 			-- Unexpected error message.
 		do
 			Result := "Unexpected error in " + action
 		end
 
-	Connection_info_name: STRING is "set_connection_information"
+	Connection_info_name: STRING = "set_connection_information"
 			-- `set_connection_information' feature name.
 
-	Establish_connection_name: STRING is "establish_connection"
+	Establish_connection_name: STRING = "establish_connection"
 			-- `establish_connection' feature name.
 
-	Data_select_name: STRING is "load_data_with_select"
+	Data_select_name: STRING = "load_data_with_select"
 			-- `load_data_with_select' feature name.
 
-	List_select_name: STRING is "load_list_with_select"
+	List_select_name: STRING = "load_list_with_select"
 			-- `load_list_with_select' feature name.
 
-	Execute_query_name: STRING is "execute_query_without_commit"
+	Execute_query_name: STRING = "execute_query_without_commit"
 			-- `execute_query_without_commit' feature name.
 
-	Commit_name: STRING is "commit"
+	Commit_name: STRING = "commit"
 			-- `commit' feature name.
 
-	Insert_name: STRING is "insert_with_repository";
+	Insert_name: STRING = "insert_with_repository";
 			-- `insert_with_repository' feature name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

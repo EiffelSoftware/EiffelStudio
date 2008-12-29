@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN that contains MEL_TOGGLE_BUTTONs."
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif check box widget.
 		local
 			widget_name: ANY
@@ -49,12 +49,12 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	xm_create_check_box (a_parent, a_name: POINTER): POINTER is
+	xm_create_check_box (a_parent, a_name: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

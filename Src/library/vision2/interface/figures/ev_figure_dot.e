@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Pixels on `point' with size `line_width'."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_ellipse (x, y, point.x_abs,
@@ -36,7 +36,7 @@ feature -- Events
 
 feature {EV_PROJECTOR} -- Implementation
 
-	coordinates: EV_COORDINATE is
+	coordinates: EV_COORDINATE
 			-- Absolute center coordinates of `Current'.
 		do
 			Result := point.absolute_coordinates
@@ -44,7 +44,7 @@ feature {EV_PROJECTOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			px, py, lw: INTEGER
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 
-	metrics: TUPLE [INTEGER, INTEGER, INTEGER] is
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER]
 			-- [`x', `y', `width']
 		local
 			p: EV_RELATIVE_POINT
@@ -68,7 +68,7 @@ feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 			Result := [p.x_abs - lw, p.y_abs - lw, line_width]
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

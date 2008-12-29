@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow access to the operating %N%
 	%system clipboard."
 	legal: "See notice at end of class."
@@ -17,12 +17,12 @@ inherit
 
 feature -- Access
 
-	has_text: BOOLEAN is
+	has_text: BOOLEAN
 			-- Does the clipboard currently contain text?
 		deferred
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		require
 			text_not_void: a_text /= Void
@@ -49,7 +49,7 @@ invariant
 	has_text_implies_text_not_empty: has_text implies not text.is_empty
 	not_has_text_implies_text_empty: not has_text implies text.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

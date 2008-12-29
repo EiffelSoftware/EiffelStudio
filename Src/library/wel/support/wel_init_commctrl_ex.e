@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the initialization of the common controls dll.%
 				 % Note: Require Windows98 or Windows95+IE4 or WindowsNT4+IE4 or Windows2000"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the Win32 dlls only.
 		local
 			bool: BOOLEAN
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			bool := cwin_init_common_controls_ex (item)
 		end
 
-	make_with_flags (flags: INTEGER) is
+	make_with_flags (flags: INTEGER)
 			-- initialize the given dll.
 		local
 			bool: BOOLEAN
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dwicc: INTEGER is
+	dwicc: INTEGER
 		-- Set of bit flags that indicate which common control
 		-- classes will be loaded from the DLL.
 		-- This value can be a combination of WEL_ICC_CONSTANTS.
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_dwicc (value: INTEGER) is
+	set_dwicc (value: INTEGER)
 			-- Set `dwicc' with `value'.
 		do
 			cwel_initcommctrlex_set_dwicc (item, value)
@@ -73,7 +73,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_initcommctrlex
@@ -81,13 +81,13 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	dwsize: INTEGER is
+	dwsize: INTEGER
 			-- Size of the structure.
 		do
 			Result := cwel_initcommctrlex_get_dwsize (item)
 		end
 
-	set_dwsize (value: INTEGER) is
+	set_dwsize (value: INTEGER)
 			-- Set `dwsize' with `value'.
 		do
 			cwel_initcommctrlex_set_dwsize (item, value)
@@ -97,34 +97,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_initcommctrlex: INTEGER is
+	c_size_of_initcommctrlex: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"sizeof (INITCOMMONCONTROLSEX)"
 		end
 
-	cwel_initcommctrlex_set_dwsize (ptr: POINTER; value: INTEGER) is
+	cwel_initcommctrlex_set_dwsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"initcommctrlex.h%"]"
 		end
 
-	cwel_initcommctrlex_set_dwicc (ptr: POINTER; value: INTEGER) is
+	cwel_initcommctrlex_set_dwicc (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"initcommctrlex.h%"]"
 		end
 
-	cwel_initcommctrlex_get_dwsize (ptr: POINTER): INTEGER is
+	cwel_initcommctrlex_get_dwsize (ptr: POINTER): INTEGER
 		external
 			"C [macro %"initcommctrlex.h%"]"
 		end
 
-	cwel_initcommctrlex_get_dwicc (ptr: POINTER): INTEGER is
+	cwel_initcommctrlex_get_dwicc (ptr: POINTER): INTEGER
 		external
 			"C [macro %"initcommctrlex.h%"]"
 		end
 
-	cwin_init_common_controls_ex (ptr: POINTER): BOOLEAN is
+	cwin_init_common_controls_ex (ptr: POINTER): BOOLEAN
 			-- SDK InitCommonControlsEx
 		external
 			"C [macro %"cctrl.h%"] (LPINITCOMMONCONTROLSEX): BOOL"
@@ -132,7 +132,7 @@ feature {NONE} -- Externals
 			"InitCommonControlsEx"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

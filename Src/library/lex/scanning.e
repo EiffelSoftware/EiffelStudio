@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Mechanisms for building and using lexical analyzers. %
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	build (store_file_name, grammar_file_name: STRING) is
+	build (store_file_name, grammar_file_name: STRING)
 			-- Create a lexical analyzer.
 			-- If `store_file_name' is the name of an existing file,
 			-- use analyzer stored in that file.
@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	analyze (input_file_name: STRING) is
+	analyze (input_file_name: STRING)
 			-- Perform lexical analysis on file
 			-- of name `input_file_name'.
 		do
@@ -59,7 +59,7 @@ feature -- Status setting
 
 feature -- Output
 
-	end_analysis is
+	end_analysis
 			-- Terminate lexical analysis.
 			-- This default version of the procedure
 			-- does nothing.
@@ -68,7 +68,7 @@ feature -- Output
 		do
 		end;
 
-	begin_analysis is
+	begin_analysis
 			-- Initialize lexical analysis.
 			-- This default version of the procedure
 			-- simply prints header information.
@@ -84,7 +84,7 @@ feature -- Output
 			end
 		end;
 
-	do_a_token (read_token: TOKEN) is
+	do_a_token (read_token: TOKEN)
 			-- Handle `read_token'.
 			-- This default version of the procedure
 			-- simply prints information on `read_token'.
@@ -115,7 +115,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	build_from_grammar (store_file_name, grammar_file_name: STRING) is
+	build_from_grammar (store_file_name, grammar_file_name: STRING)
 			-- From the grammar in file of name `grammar_file_name',
 			-- make a lexical analyzer for Eiffel
 			-- and store it into file of name `store_file_name'
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			analyzer_exists: analyzer /= Void
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

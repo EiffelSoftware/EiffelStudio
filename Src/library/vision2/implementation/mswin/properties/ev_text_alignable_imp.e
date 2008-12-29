@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision2 text alignable. Ms Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Alignment of `text' on `Current'.
 		do
 			Result := text_alignment
@@ -26,25 +26,25 @@ feature
 			--	* Text_alignment_right
 			--	* Text_alignment_center
 			
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 		end
         
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		do
 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

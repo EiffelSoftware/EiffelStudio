@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Title widget used in SD_TITLE_BAR for showing title with desaturation effect."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			default_create
@@ -43,7 +43,7 @@ feature -- Properties
 	title: STRING_32
 			-- Text showing on Current.
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title'.
 		require
 			not_void: a_title /= Void
@@ -56,7 +56,7 @@ feature -- Properties
 	is_focus_color_enable: BOOLEAN
 			-- If focus color enabled?
 
-	set_focus_color_enable (a_bool: BOOLEAN) is
+	set_focus_color_enable (a_bool: BOOLEAN)
 			-- Set `is_focus_color_enable'
 		do
 			is_focus_color_enable := a_bool
@@ -68,7 +68,7 @@ feature -- Properties
 			-- If Current use focused color?
 			-- Otherwise we use non-focused color.
 
-	set_focused_color (a_bool: BOOLEAN) is
+	set_focused_color (a_bool: BOOLEAN)
 			-- Set `is_focus_color'
 		do
 			is_focused_color := a_bool
@@ -78,13 +78,13 @@ feature -- Properties
 
 feature -- Command
 
-	refresh is
+	refresh
 			-- Redraw
 		do
 			on_expose
 		end
 
-	set_non_focus_active_background_color is
+	set_non_focus_active_background_color
 			-- Set non focus active background colors
 		local
 			l_text_color: EV_COLOR
@@ -94,7 +94,7 @@ feature -- Command
 			set_foreground_color (l_text_color)
 		end
 
-	set_focus_background_color is
+	set_focus_background_color
 			-- Set focus background colors
 		local
 			l_text_color: EV_COLOR
@@ -104,7 +104,7 @@ feature -- Command
 			set_foreground_color (l_text_color)
 		end
 
-	set_disable_focus_background_color is
+	set_disable_focus_background_color
 			-- Set background color for disable status.
 		local
 			l_text_color: EV_COLOR
@@ -122,19 +122,19 @@ feature -- Query
 	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag actions
 
-	hightlight_color: EV_COLOR is
+	hightlight_color: EV_COLOR
 			-- Highlight color.
 		do
 			Result := internal_shared.focused_color
 		end
 
-	hightlight_non_focus_color: EV_COLOR is
+	hightlight_non_focus_color: EV_COLOR
 			-- Highligh nonfocus color.
 		do
 			Result := internal_shared.non_focused_title_color
 		end
 
-	hightlight_gray_color: EV_COLOR is
+	hightlight_gray_color: EV_COLOR
 			-- Highlight gray color.
 		do
 			Result := internal_shared.non_focused_color
@@ -142,7 +142,7 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer press.
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
@@ -154,7 +154,7 @@ feature {NONE} -- Agents
 			set: a_button = {EV_POINTER_CONSTANTS}.left implies pressed = True
 		end
 
-	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer release.
 		do
 			pressed := False
@@ -166,13 +166,13 @@ feature {NONE} -- Agents
 			set: pressed = False
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Hanle pointer leave.
 		do
 			pressed := False
 		end
 
-	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer motion.
 		do
 			if pressed then
@@ -202,10 +202,10 @@ feature {NONE} -- Implementation
 			-- Is pointer button pressed?
 			-- This flag used for judging whether to call `drag_actions'.
 
-	offset_x: INTEGER is 4
+	offset_x: INTEGER = 4
 			-- The x position start to draw title text.
 
-	on_expose is
+	on_expose
 			-- Handle expose actions.
 		local
 			l_helper: SD_COLOR_HELPER
@@ -257,7 +257,7 @@ invariant
 	not_void: drag_actions /= Void
 	not_void: title /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

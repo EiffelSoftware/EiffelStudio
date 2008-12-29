@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"iffelVision implementation of Motif label gadget."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label_gadget: LABEL_G; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_label_gadget: LABEL_G; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif label gadget.
 		local
 			mc: MEL_COMPOSITE
@@ -40,14 +40,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_label: BOOLEAN is
+	is_label: BOOLEAN
 			-- Is current button a label?
 			-- (False by default)
 		do
 			Result := True
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

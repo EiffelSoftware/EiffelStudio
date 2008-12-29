@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List view selection type constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,46 +13,46 @@ obsolete
 
 feature -- Access
 
-	Lvn_begindrag: INTEGER is -109
+	Lvn_begindrag: INTEGER = -109
 			-- Declared in Windows as LVN_BEGINDRAG
 
-	Lvn_beginlabeledit: INTEGER is -175
+	Lvn_beginlabeledit: INTEGER = -175
 			-- Declared in Windows as LVN_BEGINLABELEDIT
 
-	Lvn_beginrdrag: INTEGER is -111
+	Lvn_beginrdrag: INTEGER = -111
 			-- Declared in Windows as LVN_BEGINRDRAG
 
-	Lvn_columnclick: INTEGER is -108
+	Lvn_columnclick: INTEGER = -108
 			-- Declared in Windows as LVN_COLUMNCLICK
 
-	Lvn_deleteallitems: INTEGER is -104
+	Lvn_deleteallitems: INTEGER = -104
 			-- Declared in Windows as LVN_DELETEALLITEMS
 
-	Lvn_deleteitem: INTEGER is -103
+	Lvn_deleteitem: INTEGER = -103
 			-- Declared in Windows as LVN_DELETEITEM
 
-	Lvn_endlabeledit: INTEGER is -176
+	Lvn_endlabeledit: INTEGER = -176
 			-- Declared in Windows as LVN_ENDLABELEDIT
 
-	Lvn_getdispinfo: INTEGER is -177
+	Lvn_getdispinfo: INTEGER = -177
 			-- Declared in Windows as LVN_GETDISPINFO
 
-	Lvn_insertitem: INTEGER is -102
+	Lvn_insertitem: INTEGER = -102
 			-- Declared in Windows as LVN_INSERTITEM
 
-	Lvn_itemchanged: INTEGER is -101
+	Lvn_itemchanged: INTEGER = -101
 			-- Declared in Windows as LVN_ITEMCHANGED
 
-	Lvn_itemchanging: INTEGER is -100
+	Lvn_itemchanging: INTEGER = -100
 			-- Declared in Windows as LVN_ITEMCHANGING
 
-	Lvn_keydown: INTEGER is -155
+	Lvn_keydown: INTEGER = -155
 			-- Declared in Windows as LVN_KEYDOWN
 
-	Lvn_setdispinfo: INTEGER is -178;
+	Lvn_setdispinfo: INTEGER = -178;
 		-- Declared in Windows as LVN_SETDISPINFO
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

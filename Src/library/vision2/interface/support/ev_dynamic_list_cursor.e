@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Cursor for Eiffel Vision dynamic lists."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 
-	make (current_item: G; before_state, after_state: BOOLEAN) is
+	make (current_item: G; before_state, after_state: BOOLEAN)
 			-- Create a cursor pointing to `current_item'.
 			-- When `current_item' Void, must be before or after.
 		require
@@ -35,7 +35,7 @@ feature {NONE}--EV_DYNAMIC_LIST_I} -- Initialization
 			before_assigned: before = before_state
 		end
 
-	make_with_item (an_item: G) is
+	make_with_item (an_item: G)
 			-- Create a cursor pointing to `an_item'.
 		require
 			an_item_not_void: an_item /= Void
@@ -61,7 +61,7 @@ feature {EV_DYNAMIC_LIST_I, EV_TABLE_I} -- Access
 invariant
 	item_void_equals_before_or_after: (item = Void) = (before or after)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

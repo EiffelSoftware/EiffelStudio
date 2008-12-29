@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -32,7 +32,7 @@ create -- Creation procedure
 
 feature -- Basic operations
 
-	connect is
+	connect
 			-- Connect to database.
 		require
 			not_already_connected: not is_connected
@@ -45,7 +45,7 @@ feature -- Basic operations
 			not is_ok or else is_connected
 		end
 
-	disconnect is
+	disconnect
 			-- Disconnect from database.
 		require
 			connection_exists: is_connected
@@ -58,7 +58,7 @@ feature -- Basic operations
 			all_transaction_ended: transaction_count = 0
 		end
 
-	commit is
+	commit
 			-- Commit work.
 		require
 			connection_exists: is_connected
@@ -67,7 +67,7 @@ feature -- Basic operations
 			implementation.commit
 		end
 
-	rollback is
+	rollback
 			-- Rollback work.
 		require
 			connection_exists: is_connected
@@ -76,7 +76,7 @@ feature -- Basic operations
 			implementation.rollback
 		end
 
-	raise_error is
+	raise_error
 			-- Prompt error code and error message on standard output.
 		do
 			if not is_ok then
@@ -91,7 +91,7 @@ feature -- Basic operations
 			end
 		end
 
-	begin is
+	begin
 			-- Start a new transaction.
 		require
 			connection_exists: is_connected
@@ -101,7 +101,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	transaction_count: INTEGER is
+	transaction_count: INTEGER
 			-- Number of started transactions
 		require
 			connection_exists: is_connected
@@ -116,13 +116,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an interface objet to control the active base.
 		do
 			implementation := handle.database.db_control
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate `item' with `n' bytes.
 		require
 			n_non_negative: n >= 0
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			is_shared_set: not is_shared
 		end
 
-	make_from_array (data: ARRAY [NATURAL_8]) is
+	make_from_array (data: ARRAY [NATURAL_8])
 			-- Allocate `item' with `data.count' bytes and copy
 			-- content of `data' into `item'.
 		require
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			is_shared_set: not is_shared
 		end
 
-	make_from_pointer (a_ptr: POINTER; n: INTEGER) is
+	make_from_pointer (a_ptr: POINTER; n: INTEGER)
 			-- Copy `a_count' bytes from `a_ptr' into current.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			is_shared_set: not is_shared
 		end
 
-	share_from_pointer (a_ptr: POINTER; n: INTEGER) is
+	share_from_pointer (a_ptr: POINTER; n: INTEGER)
 			-- Use directly `a_ptr' with count `n' to hold current data.
 		require
 			a_ptr_valid: a_ptr = default_pointer implies n = 0
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_from_pointer (a_ptr: POINTER; n: INTEGER) is
+	set_from_pointer (a_ptr: POINTER; n: INTEGER)
 			-- Use directly `a_ptr' with count `n' to hold current data.
 		require
 			is_shared: is_shared
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered equal to current object?
 		do
 			if count = other.count then
@@ -138,7 +138,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects. If `is_shared'
 			-- and current is not large enough to hold `other' create
@@ -168,7 +168,7 @@ feature -- Duplication
 
 feature -- Access: Platform specific
 
-	read_natural_8 (pos: INTEGER): NATURAL_8 is
+	read_natural_8 (pos: INTEGER): NATURAL_8
 			-- Read NATURAL_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -177,7 +177,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, natural_8_bytes)
 		end
 
-	read_natural_16 (pos: INTEGER): NATURAL_16 is
+	read_natural_16 (pos: INTEGER): NATURAL_16
 			-- Read NATURAL_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -186,7 +186,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, natural_16_bytes)
 		end
 
-	read_natural_32 (pos: INTEGER): NATURAL_32 is
+	read_natural_32 (pos: INTEGER): NATURAL_32
 			-- Read NATURAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -195,7 +195,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, natural_32_bytes)
 		end
 
-	read_natural_64 (pos: INTEGER): NATURAL_64 is
+	read_natural_64 (pos: INTEGER): NATURAL_64
 			-- Read NATURAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -204,7 +204,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, natural_64_bytes)
 		end
 
-	read_integer_8 (pos: INTEGER): INTEGER_8 is
+	read_integer_8 (pos: INTEGER): INTEGER_8
 			-- Read INTEGER_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -213,7 +213,7 @@ feature -- Access: Platform specific
 			Result := read_natural_8 (pos).as_integer_8
 		end
 
-	read_integer_16 (pos: INTEGER): INTEGER_16 is
+	read_integer_16 (pos: INTEGER): INTEGER_16
 			-- Read INTEGER_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -222,7 +222,7 @@ feature -- Access: Platform specific
 			Result := read_natural_16 (pos).as_integer_16
 		end
 
-	read_integer_32 (pos: INTEGER): INTEGER is
+	read_integer_32 (pos: INTEGER): INTEGER
 			-- Read INTEGER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -231,7 +231,7 @@ feature -- Access: Platform specific
 			Result := read_natural_32 (pos).as_integer_32
 		end
 
-	read_integer_64 (pos: INTEGER): INTEGER_64 is
+	read_integer_64 (pos: INTEGER): INTEGER_64
 			-- Read INTEGER_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -240,7 +240,7 @@ feature -- Access: Platform specific
 			Result := read_natural_64 (pos).as_integer_64
 		end
 
-	read_pointer (pos: INTEGER): POINTER is
+	read_pointer (pos: INTEGER): POINTER
 			-- Read POINTER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -249,7 +249,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Pointer_bytes)
 		end
 
-	read_boolean (pos: INTEGER): BOOLEAN is
+	read_boolean (pos: INTEGER): BOOLEAN
 			-- Read BOOLEAN at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -258,7 +258,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Boolean_bytes)
 		end
 
-	read_character (pos: INTEGER): CHARACTER is
+	read_character (pos: INTEGER): CHARACTER
 			-- Read CHARACTER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -267,7 +267,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Character_bytes)
 		end
 
-	read_real (pos: INTEGER): REAL is
+	read_real (pos: INTEGER): REAL
 			-- Read REAL_32 at position `pos'.
 		obsolete "Use read_real_32 instead."
 		require
@@ -277,7 +277,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Real_bytes)
 		end
 
-	read_real_32 (pos: INTEGER): REAL is
+	read_real_32 (pos: INTEGER): REAL
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -286,7 +286,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Real_bytes)
 		end
 
-	read_double (pos: INTEGER): DOUBLE is
+	read_double (pos: INTEGER): DOUBLE
 			-- Read REAL_64 at position `pos'.
 		obsolete "Use read_real_64 instead."
 		require
@@ -296,7 +296,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Double_bytes)
 		end
 
-	read_real_64 (pos: INTEGER): DOUBLE is
+	read_real_64 (pos: INTEGER): DOUBLE
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -305,7 +305,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Double_bytes)
 		end
 
-	read_array (pos, a_count: INTEGER): ARRAY [NATURAL_8] is
+	read_array (pos, a_count: INTEGER): ARRAY [NATURAL_8]
 			-- Read `count' bytes at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -329,7 +329,7 @@ feature -- Access: Platform specific
 
 feature -- Element change: Platform specific
 
-	put_natural_8 (i: NATURAL_8; pos: INTEGER) is
+	put_natural_8 (i: NATURAL_8; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -340,7 +340,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_natural_8 (pos)
 		end
 
-	put_natural_16 (i: NATURAL_16; pos: INTEGER) is
+	put_natural_16 (i: NATURAL_16; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -351,7 +351,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_natural_16 (pos)
 		end
 
-	put_natural_32 (i: NATURAL_32; pos: INTEGER) is
+	put_natural_32 (i: NATURAL_32; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -362,7 +362,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_natural_32 (pos)
 		end
 
-	put_natural_64 (i: NATURAL_64; pos: INTEGER) is
+	put_natural_64 (i: NATURAL_64; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -373,7 +373,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_natural_64 (pos)
 		end
 
-	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
+	put_integer_8 (i: INTEGER_8; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -384,7 +384,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_integer_8 (pos)
 		end
 
-	put_integer_16 (i: INTEGER_16; pos: INTEGER) is
+	put_integer_16 (i: INTEGER_16; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -395,7 +395,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_integer_16 (pos)
 		end
 
-	put_integer_32 (i: INTEGER; pos: INTEGER) is
+	put_integer_32 (i: INTEGER; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -406,7 +406,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_integer_32 (pos)
 		end
 
-	put_integer_64 (i: INTEGER_64; pos: INTEGER) is
+	put_integer_64 (i: INTEGER_64; pos: INTEGER)
 			-- Insert `i' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -417,7 +417,7 @@ feature -- Element change: Platform specific
 			inserted: i = read_integer_64 (pos)
 		end
 
-	put_pointer (p: POINTER; pos: INTEGER) is
+	put_pointer (p: POINTER; pos: INTEGER)
 			-- Insert `p' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -428,7 +428,7 @@ feature -- Element change: Platform specific
 			inserted: p = read_pointer (pos)
 		end
 
-	put_boolean (b: BOOLEAN; pos: INTEGER) is
+	put_boolean (b: BOOLEAN; pos: INTEGER)
 			-- Insert `b' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -439,7 +439,7 @@ feature -- Element change: Platform specific
 			inserted: b = read_boolean (pos)
 		end
 
-	put_character (c: CHARACTER; pos: INTEGER) is
+	put_character (c: CHARACTER; pos: INTEGER)
 			-- Insert `c' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -450,7 +450,7 @@ feature -- Element change: Platform specific
 			inserted: c = read_character (pos)
 		end
 
-	put_real (r: REAL; pos: INTEGER) is
+	put_real (r: REAL; pos: INTEGER)
 			-- Insert `r' at position `pos'.
 		obsolete "Use put_real_32 instead."
 		require
@@ -462,7 +462,7 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_real_32 (r: REAL; pos: INTEGER) is
+	put_real_32 (r: REAL; pos: INTEGER)
 			-- Insert `r' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -473,7 +473,7 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_double (d: DOUBLE; pos: INTEGER) is
+	put_double (d: DOUBLE; pos: INTEGER)
 			-- Insert `d' at position `pos'.
 		obsolete "Use put_real_64 instead."
 		require
@@ -485,7 +485,7 @@ feature -- Element change: Platform specific
 			inserted: d = read_real_64 (pos)
 		end
 
-	put_real_64 (d: DOUBLE; pos: INTEGER) is
+	put_real_64 (d: DOUBLE; pos: INTEGER)
 			-- Insert `d' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -496,7 +496,7 @@ feature -- Element change: Platform specific
 			inserted: d = read_real_64 (pos)
 		end
 
-	put_array (data: ARRAY [NATURAL_8]; pos: INTEGER) is
+	put_array (data: ARRAY [NATURAL_8]; pos: INTEGER)
 			-- Copy content of `data' into `item' at position `pos'.
 		require
 			data_not_void: data /= Void
@@ -513,7 +513,7 @@ feature -- Element change: Platform specific
 
 feature -- Access: Little-endian format
 
-	read_natural_8_le (pos: INTEGER): NATURAL_8 is
+	read_natural_8_le (pos: INTEGER): NATURAL_8
 			-- Read NATURAL_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -522,7 +522,7 @@ feature -- Access: Little-endian format
 			($Result).memory_copy (item + pos, natural_8_bytes)
 		end
 
-	read_natural_16_le (pos: INTEGER): NATURAL_16 is
+	read_natural_16_le (pos: INTEGER): NATURAL_16
 			-- Read NATURAL_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -539,7 +539,7 @@ feature -- Access: Little-endian format
 			end
 		end
 
-	read_natural_32_le (pos: INTEGER): NATURAL_32 is
+	read_natural_32_le (pos: INTEGER): NATURAL_32
 			-- Read NATURAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -556,7 +556,7 @@ feature -- Access: Little-endian format
 			end
 		end
 
-	read_natural_64_le (pos: INTEGER): NATURAL_64 is
+	read_natural_64_le (pos: INTEGER): NATURAL_64
 			-- Read NATURAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -573,7 +573,7 @@ feature -- Access: Little-endian format
 			end
 		end
 
-	read_integer_8_le (pos: INTEGER): INTEGER_8 is
+	read_integer_8_le (pos: INTEGER): INTEGER_8
 			-- Read INTEGER_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -582,7 +582,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_8_le (pos).as_integer_8
 		end
 
-	read_integer_16_le (pos: INTEGER): INTEGER_16 is
+	read_integer_16_le (pos: INTEGER): INTEGER_16
 			-- Read INTEGER_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -591,7 +591,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_16_le (pos).as_integer_16
 		end
 
-	read_integer_32_le (pos: INTEGER): INTEGER is
+	read_integer_32_le (pos: INTEGER): INTEGER
 			-- Read INTEGER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -600,7 +600,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_32_le (pos).as_integer_32
 		end
 
-	read_integer_64_le (pos: INTEGER): INTEGER_64 is
+	read_integer_64_le (pos: INTEGER): INTEGER_64
 			-- Read INTEGER_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -609,7 +609,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_64_le (pos).as_integer_64
 		end
 
-	read_real_32_le (pos: INTEGER): REAL is
+	read_real_32_le (pos: INTEGER): REAL
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -624,7 +624,7 @@ feature -- Access: Little-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_le (pos: INTEGER): DOUBLE is
+	read_real_64_le (pos: INTEGER): DOUBLE
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -641,7 +641,7 @@ feature -- Access: Little-endian format
 
 feature -- Element change: Little-endian format
 
-	put_natural_8_le (i: NATURAL_8; pos: INTEGER) is
+	put_natural_8_le (i: NATURAL_8; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -652,7 +652,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_natural_8_le (pos)
 		end
 
-	put_natural_16_le (i: NATURAL_16; pos: INTEGER) is
+	put_natural_16_le (i: NATURAL_16; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -668,7 +668,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_natural_16_le (pos)
 		end
 
-	put_natural_32_le (i: NATURAL_32; pos: INTEGER) is
+	put_natural_32_le (i: NATURAL_32; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -684,7 +684,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_natural_32_le (pos)
 		end
 
-	put_natural_64_le (i: NATURAL_64; pos: INTEGER) is
+	put_natural_64_le (i: NATURAL_64; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -702,7 +702,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_natural_64_le (pos)
 		end
 
-	put_integer_8_le (i: INTEGER_8; pos: INTEGER) is
+	put_integer_8_le (i: INTEGER_8; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -713,7 +713,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_8_le (pos)
 		end
 
-	put_integer_16_le (i: INTEGER_16; pos: INTEGER) is
+	put_integer_16_le (i: INTEGER_16; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -724,7 +724,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_16_le (pos)
 		end
 
-	put_integer_32_le (i: INTEGER; pos: INTEGER) is
+	put_integer_32_le (i: INTEGER; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -735,7 +735,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_32_le (pos)
 		end
 
-	put_integer_64_le (i: INTEGER_64; pos: INTEGER) is
+	put_integer_64_le (i: INTEGER_64; pos: INTEGER)
 			-- Insert `i' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -746,7 +746,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_64_le (pos)
 		end
 
-	put_real_32_le (v: REAL; pos: INTEGER) is
+	put_real_32_le (v: REAL; pos: INTEGER)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -763,7 +763,7 @@ feature -- Element change: Little-endian format
 			inserted: v = read_real_32_le (pos)
 		end
 
-	put_real_64_le (v: DOUBLE; pos: INTEGER) is
+	put_real_64_le (v: DOUBLE; pos: INTEGER)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -782,7 +782,7 @@ feature -- Element change: Little-endian format
 
 feature -- Access: Big-endian format
 
-	read_natural_8_be (pos: INTEGER): NATURAL_8 is
+	read_natural_8_be (pos: INTEGER): NATURAL_8
 			-- Read NATURAL_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -791,7 +791,7 @@ feature -- Access: Big-endian format
 			($Result).memory_copy (item + pos, natural_8_bytes)
 		end
 
-	read_natural_16_be (pos: INTEGER): NATURAL_16 is
+	read_natural_16_be (pos: INTEGER): NATURAL_16
 			-- Read NATURAL_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -808,7 +808,7 @@ feature -- Access: Big-endian format
 			end
 		end
 
-	read_natural_32_be (pos: INTEGER): NATURAL_32 is
+	read_natural_32_be (pos: INTEGER): NATURAL_32
 			-- Read NATURAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -825,7 +825,7 @@ feature -- Access: Big-endian format
 			end
 		end
 
-	read_natural_64_be (pos: INTEGER): NATURAL_64 is
+	read_natural_64_be (pos: INTEGER): NATURAL_64
 			-- Read NATURAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -842,7 +842,7 @@ feature -- Access: Big-endian format
 			end
 		end
 
-	read_integer_8_be (pos: INTEGER): INTEGER_8 is
+	read_integer_8_be (pos: INTEGER): INTEGER_8
 			-- Read INTEGER_8 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -851,7 +851,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_8_be (pos).as_integer_8
 		end
 
-	read_integer_16_be (pos: INTEGER): INTEGER_16 is
+	read_integer_16_be (pos: INTEGER): INTEGER_16
 			-- Read INTEGER_16 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -860,7 +860,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_16_be (pos).as_integer_16
 		end
 
-	read_integer_32_be (pos: INTEGER): INTEGER is
+	read_integer_32_be (pos: INTEGER): INTEGER
 			-- Read INTEGER at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -869,7 +869,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_32_be (pos).as_integer_32
 		end
 
-	read_integer_64_be (pos: INTEGER): INTEGER_64 is
+	read_integer_64_be (pos: INTEGER): INTEGER_64
 			-- Read INTEGER_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -878,7 +878,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_64_be (pos).as_integer_64
 		end
 
-	read_real_32_be (pos: INTEGER): REAL is
+	read_real_32_be (pos: INTEGER): REAL
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -893,7 +893,7 @@ feature -- Access: Big-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_be (pos: INTEGER): DOUBLE is
+	read_real_64_be (pos: INTEGER): DOUBLE
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -910,7 +910,7 @@ feature -- Access: Big-endian format
 
 feature -- Element change: Big-endian format
 
-	put_natural_8_be (i: NATURAL_8; pos: INTEGER) is
+	put_natural_8_be (i: NATURAL_8; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -921,7 +921,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_natural_8_be (pos)
 		end
 
-	put_natural_16_be (i: NATURAL_16; pos: INTEGER) is
+	put_natural_16_be (i: NATURAL_16; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -937,7 +937,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_natural_16_be (pos)
 		end
 
-	put_natural_32_be (i: NATURAL_32; pos: INTEGER) is
+	put_natural_32_be (i: NATURAL_32; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -953,7 +953,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_natural_32_be (pos)
 		end
 
-	put_natural_64_be (i: NATURAL_64; pos: INTEGER) is
+	put_natural_64_be (i: NATURAL_64; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -971,7 +971,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_natural_64_be (pos)
 		end
 
-	put_integer_8_be (i: INTEGER_8; pos: INTEGER) is
+	put_integer_8_be (i: INTEGER_8; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -982,7 +982,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_8_be (pos)
 		end
 
-	put_integer_16_be (i: INTEGER_16; pos: INTEGER) is
+	put_integer_16_be (i: INTEGER_16; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -993,7 +993,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_16_be (pos)
 		end
 
-	put_integer_32_be (i: INTEGER; pos: INTEGER) is
+	put_integer_32_be (i: INTEGER; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1004,7 +1004,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_32_be (pos)
 		end
 
-	put_integer_64_be (i: INTEGER_64; pos: INTEGER) is
+	put_integer_64_be (i: INTEGER_64; pos: INTEGER)
 			-- Insert `i' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1015,7 +1015,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
-	put_real_32_be (v: REAL; pos: INTEGER) is
+	put_real_32_be (v: REAL; pos: INTEGER)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1032,7 +1032,7 @@ feature -- Element change: Big-endian format
 			inserted: v = read_real_32_be (pos)
 		end
 
-	put_real_64_be (v: DOUBLE; pos: INTEGER) is
+	put_real_64_be (v: DOUBLE; pos: INTEGER)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1051,7 +1051,7 @@ feature -- Element change: Big-endian format
 
 feature -- Concatenation
 
-	append (other: like Current) is
+	append (other: like Current)
 			-- Append `other' at the end of Current.
 		require
 			not_shared: not is_shared
@@ -1070,7 +1070,7 @@ feature -- Concatenation
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Reallocate `item' to hold `n' bytes.
 		require
 			n_non_negative: n >= 0
@@ -1093,7 +1093,7 @@ feature -- Resizing
 
 feature {NONE} -- Disposal
 
-	dispose is
+	dispose
 			-- Release memory pointed by `item'.
 		local
 			null: POINTER
@@ -1111,7 +1111,7 @@ invariant
 	item_not_null: item = default_pointer implies (count = 0 and is_shared)
 	valid_count: count >= 0
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Argument context facility"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ class ARGUMENT_CONTEXT inherit
 
 feature -- Access
 
-	context: like actual_context is
+	context: like actual_context
 			-- Argument context
 		require
 			available: is_context_set
@@ -26,7 +26,7 @@ feature -- Access
 		
 feature -- Status report
 
-	is_context_set: BOOLEAN is
+	is_context_set: BOOLEAN
 			-- Is argument context set?
 		do
 			Result := actual_context /= Void
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_context (c: ANY) is
+	set_context (c: ANY)
 			-- Set context to `c'.
 		require
 			context_exists: c /= Void
@@ -45,7 +45,7 @@ feature -- Status setting
 			context_set: context = c
 		end
 
-	clear_context is
+	clear_context
 			-- Clear context.
 		do
 			actual_context := Void
@@ -62,7 +62,7 @@ invariant
 
 	context_set_definition: is_context_set = (actual_context /= Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

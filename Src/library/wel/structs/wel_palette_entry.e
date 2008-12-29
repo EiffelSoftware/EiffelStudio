@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specifies the color and usage of an entry in a logical %
 		%color palette."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_red, a_green, a_blue, a_flags: INTEGER) is
+	make (a_red, a_green, a_blue, a_flags: INTEGER)
 			-- Make a palette entry with colors
 			-- `a_red', `a_green', `a_blue'
 			-- For `a_flags', see class WEL_PC_FLAGS_CONSTANTS
@@ -40,50 +40,50 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	red: INTEGER is
+	red: INTEGER
 		do
 			Result := cwel_palette_entry_get_red (item)
 		end
 
-	green: INTEGER is
+	green: INTEGER
 		do
 			Result := cwel_palette_entry_get_green (item)
 		end
 
-	blue: INTEGER is
+	blue: INTEGER
 		do
 			Result := cwel_palette_entry_get_blue (item)
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 		do
 			Result := cwel_palette_entry_get_flags (item)
 		end
 
 feature -- Element change
 
-	set_red (a_red: INTEGER) is
+	set_red (a_red: INTEGER)
 		do
 			cwel_palette_entry_set_red (item, a_red)
 		ensure
 			red_set: red = a_red
 		end
 
-	set_green (a_green: INTEGER) is
+	set_green (a_green: INTEGER)
 		do
 			cwel_palette_entry_set_green (item, a_green)
 		ensure
 			green_set: green = a_green
 		end
 
-	set_blue (a_blue: INTEGER) is
+	set_blue (a_blue: INTEGER)
 		do
 			cwel_palette_entry_set_blue (item, a_blue)
 		ensure
 			blue_set: blue = a_blue
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 		do
 			cwel_palette_entry_set_flags (item, a_flags)
 		ensure
@@ -93,7 +93,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_palette_entry
@@ -101,54 +101,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_palette_entry: INTEGER is
+	c_size_of_palette_entry: INTEGER
 		external
 			"C [macro <palentry.h>]"
 		alias
 			"sizeof (PALETTEENTRY)"
 		end
 
-	cwel_palette_entry_set_red (ptr: POINTER; value: INTEGER) is
+	cwel_palette_entry_set_red (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_set_green (ptr: POINTER; value: INTEGER) is
+	cwel_palette_entry_set_green (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_set_blue (ptr: POINTER; value: INTEGER) is
+	cwel_palette_entry_set_blue (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_palette_entry_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_get_red (ptr: POINTER): INTEGER is
+	cwel_palette_entry_get_red (ptr: POINTER): INTEGER
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_get_green (ptr: POINTER): INTEGER is
+	cwel_palette_entry_get_green (ptr: POINTER): INTEGER
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_get_blue (ptr: POINTER): INTEGER is
+	cwel_palette_entry_get_blue (ptr: POINTER): INTEGER
 		external
 			"C [macro <palentry.h>]"
 		end
 
-	cwel_palette_entry_get_flags (ptr: POINTER): INTEGER is
+	cwel_palette_entry_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <palentry.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

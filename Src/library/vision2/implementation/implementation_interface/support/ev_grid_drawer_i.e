@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that draw the EV_GRID widget as required."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_grid (a_grid: EV_GRID_I) is
+	make_with_grid (a_grid: EV_GRID_I)
 			-- Create `Current' associated to `grid' `a_grid'.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	items_spanning_horizontal_span (an_x, a_width: INTEGER): ARRAYED_LIST [INTEGER] is
+	items_spanning_horizontal_span (an_x, a_width: INTEGER): ARRAYED_LIST [INTEGER]
 			-- For a virtual position starting at `an_x' with a width of `a_width',
 			-- return all of the column indexes which intersect this width.
 		require
@@ -109,7 +109,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	items_spanning_vertical_span (a_y, a_height: INTEGER): ARRAYED_LIST [INTEGER] is
+	items_spanning_vertical_span (a_y, a_height: INTEGER): ARRAYED_LIST [INTEGER]
 			-- For a virtual position starting at `a_y' with a height of `a_height',
 			-- return all of the row indexes which intersect this width.
 		require
@@ -264,28 +264,28 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	item_at_virtual_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+	item_at_virtual_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
 			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
 			-- left hand corner of the virtual size.
 		do
 			Result := item_at_position (an_x - grid.internal_client_x + grid.viewport_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
 		end
 
-	row_at_virtual_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I is
+	row_at_virtual_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I
 			-- `Result' is row at virtual y position, `a_y' relative to the top
 			--  of the virtual size.
 		do
 			Result := row_at_position (a_y - grid.internal_client_y + grid.viewport_y_offset, ignore_locked_rows)
 		end
 
-	column_at_virtual_position (a_x: INTEGER): EV_GRID_COLUMN_I is
+	column_at_virtual_position (a_x: INTEGER): EV_GRID_COLUMN_I
 			-- `Result' is row at virtual x position, `a_x' relative to the left
 			--  of the virtual size.
 		do
 			Result := column_at_position (a_x - grid.internal_client_x + grid.viewport_x_offset)
 		end
 
-	item_coordinates_at_position (an_x, a_y: INTEGER): EV_COORDINATE is
+	item_coordinates_at_position (an_x, a_y: INTEGER): EV_COORDINATE
 			-- `Result' is coordinates of item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any. No checking of whether the item at this posibion is `Void'.
@@ -299,7 +299,7 @@ feature -- Basic operations
 			end
 		end
 
-	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. The bounded item
 			-- incorporates the tree node if any.
@@ -325,7 +325,7 @@ feature -- Basic operations
 			end
 		end
 
-	row_at_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I is
+	row_at_position (a_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW_I
 			-- `Result' is row at position `a_y' relative to the top
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -351,7 +351,7 @@ feature -- Basic operations
 			end
 		end
 
-	column_at_position (a_x: INTEGER): EV_GRID_COLUMN_I is
+	column_at_position (a_x: INTEGER): EV_GRID_COLUMN_I
 			-- `Result' is column at position `a_x' relative to the left
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -373,7 +373,7 @@ feature -- Basic operations
 			end
 		end
 
-	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+	item_at_position_strict (an_x, a_y: INTEGER): EV_GRID_ITEM_I
 			-- `Result' is item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed. This version
 			-- returns `Void' if the pointed_part of the item is part of a tree node.
@@ -389,7 +389,7 @@ feature -- Basic operations
 			end
 		end
 
-	locked_item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
+	locked_item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I
 			-- `Result' is locked item at position `an_x', `a_y' relative to the top left corner
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -454,7 +454,7 @@ feature -- Basic operations
 			locked_items.go_to (l_cursor)
 		end
 
-	locked_row_at_position (a_y: INTEGER): EV_GRID_ROW_I is
+	locked_row_at_position (a_y: INTEGER): EV_GRID_ROW_I
 			-- `Result' is locked row at position `a_y' relative to the top
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -490,7 +490,7 @@ feature -- Basic operations
 			locked_items.go_to (l_cursor)
 		end
 
-	locked_column_at_position (an_x: INTEGER): EV_GRID_COLUMN_I is
+	locked_column_at_position (an_x: INTEGER): EV_GRID_COLUMN_I
 			-- `Result' is locked column at position `an_x' relative to the left
 			-- of the `grid.drawable' in which the grid is displayed.
 		local
@@ -523,20 +523,20 @@ feature -- Basic operations
 		end
 
 
-	redraw_area_in_virtual_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
+	redraw_area_in_virtual_coordinates (an_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the virtual area.
 		do
 			redraw_area_in_drawable_coordinates_wrapper (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset, a_width, a_height)
 		end
 
-	redraw_area_in_drawable_coordinates_wrapper (an_x, a_y, a_width, a_height: INTEGER) is
+	redraw_area_in_drawable_coordinates_wrapper (an_x, a_y, a_width, a_height: INTEGER)
 			--
 		do
 			redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height, grid.drawable, grid.viewport, Void)
 		end
 
-	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: EV_GRID_LOCKED_I) is
+	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER; drawable: EV_DRAWABLE; viewport: EV_VIEWPORT; locked: EV_GRID_LOCKED_I)
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the `drawable' widget of `grid'.
 --		require
@@ -1279,7 +1279,7 @@ feature -- Basic operations
 
 feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
 
-	drawable_item_buffer_pixmap: EV_PIXMAP is
+	drawable_item_buffer_pixmap: EV_PIXMAP
 			-- Once access to a pixmap used for drawing into for drawable items.
 			-- We do not use `item_buffer_pixmap' for this as this pixmap is exposed to
 			-- the interface so, must be resized exactly to the size of the item before
@@ -1290,7 +1290,7 @@ feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER is
+	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER
 			-- `Result' is indent of `current_row'.
 		require
 			current_row_not_void: current_row /= Void
@@ -1300,7 +1300,7 @@ feature {NONE} -- Implementation
 			result_non_negative: Result >= 0
 		end
 
-	retrieve_node_index (current_row: EV_GRID_ROW_I): INTEGER is
+	retrieve_node_index (current_row: EV_GRID_ROW_I): INTEGER
 			-- `Result' is index of first non-`Void' item within `current_row'
 			-- or `grid.column_count' if none.
 		require
@@ -1314,7 +1314,7 @@ feature {NONE} -- Implementation
 			valid_result: Result > 0 and Result <= grid.column_count
 		end
 
-	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER) is
+	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER)
 			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
 			-- of `current_column_width' and `current_row_height'.
 		require
@@ -1345,29 +1345,29 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	white: EV_COLOR is
+	white: EV_COLOR
 			-- Once access to the color white.
 		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 
-	black: EV_COLOR is
+	black: EV_COLOR
 			-- Once access to the color black.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 
-	gray: EV_COLOR is
+	gray: EV_COLOR
 			--
 		once
 			Result := (create {EV_STOCK_COLORS}).gray
 		end
 
 
-	horizontal_border_width: INTEGER is 3
+	horizontal_border_width: INTEGER = 3
 		-- Border from edge of text to edge of grid items.
 
-	pre_search_iteration_size: INTEGER is 1000
+	pre_search_iteration_size: INTEGER = 1000
 		-- When searching for an offset in `row_offsets', this is the value
 		-- user to pre-search the data when looking for the first index to start the
 		-- iteration from. By performing an intial loop, we can reduce the number of
@@ -1377,7 +1377,7 @@ feature {NONE} -- Implementation
 		-- The maximum number of iterations is given by (`row_count' / pre_search_iteration_size) + pre_search_iteration_size
 		-- Julian 05/16/05
 
-	item_buffer_pixmap: EV_PIXMAP is
+	item_buffer_pixmap: EV_PIXMAP
 			-- Once access to a pixmap used for buffering the drawing to prevent flicker.
 		once
 			create Result
@@ -1389,13 +1389,13 @@ feature {NONE} -- Implementation
 		-- Prevents the need to keep creating new rectangle objects
 		-- which may be a strain on the debugger as many are created unecessarily.
 
-	drawable_x_to_virtual_x (an_x: INTEGER): INTEGER is
+	drawable_x_to_virtual_x (an_x: INTEGER): INTEGER
 			-- Convert `an_x' in drawable coordinates to a virtual x coordinate.
 		do
 			Result := grid.internal_client_x + an_x - grid.viewport_x_offset
 		end
 
-	drawable_y_to_virtual_y (a_y: INTEGER): INTEGER is
+	drawable_y_to_virtual_y (a_y: INTEGER): INTEGER
 			-- Convert `a_y' in drawable coordinates to a virtual y coordinate.
 		do
 			Result := grid.internal_client_y + a_y - grid.viewport_y_offset
@@ -1405,7 +1405,7 @@ invariant
 	grid_not_void: grid /= Void
 	temp_rectangle_not_void: temp_rectangle /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

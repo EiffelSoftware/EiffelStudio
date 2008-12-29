@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stream format (SF) constants for the rich edit control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	Sf_text: INTEGER is 1
+	Sf_text: INTEGER = 1
 			-- Text with spaces in place of OLE objects.
 
-	Sf_rtf: INTEGER is 2
+	Sf_rtf: INTEGER = 2
 			-- Rich-text format (RTF).
 
-	Sf_rtfnoobjs: INTEGER is 3
+	Sf_rtfnoobjs: INTEGER = 3
 			-- RTF with spaces in place of OLE object.
 
-	Sf_textized: INTEGER is 4
+	Sf_textized: INTEGER = 4
 			-- Text with a text representation of OLE objects.
 
-	Sf_unicode: INTEGER is 16
+	Sf_unicode: INTEGER = 16
 		-- Unicode file of some kind, version 2.0+ only.
 
-	Sff_selection: INTEGER is 32768;
+	Sff_selection: INTEGER = 32768;
 			-- Selection only.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Language Identifiers"
 	author: "Neil Collier"
 	date: "2002/04/08 5:43:43"
@@ -9,7 +9,7 @@ class
 	
 feature {NONE} -- Language Identifiers 
 
-	identifiers: HASH_TABLE [STRING_32, INTEGER] is
+	identifiers: HASH_TABLE [STRING_32, INTEGER]
 			-- Language identifiers.
 			-- The numeric constants are taken from Microsoft documentation at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/intl/nls_238z.asp

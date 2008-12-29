@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	Date: "$Date$"
 	Revision: "$Revision$"
@@ -9,7 +9,7 @@ class STRING_HDL
 
 feature -- Status setting
 
-	clear_all is
+	clear_all
 			-- Remove all mapped keys.
 		require
 			ht_not_void: ht /= Void
@@ -18,7 +18,7 @@ feature -- Status setting
 			ht_order.wipe_out
 		end
 
-	set_map_name (n: ANY; key: STRING) is
+	set_map_name (n: ANY; key: STRING)
 			-- Store item `n' with key `key'.
 			-- `n' can be `Void'.
 		require
@@ -34,7 +34,7 @@ feature -- Status setting
 			mapped: is_mapped (key)
 		end
 
-	unset_map_name (key: STRING) is
+	unset_map_name (key: STRING)
 			-- Remove item associated with key `key'.
 		require
 			ht_not_void: ht /= Void
@@ -50,7 +50,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_mapped (key: STRING): BOOLEAN is
+	is_mapped (key: STRING): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity?
 		require
 			ht_not_void: ht /= Void
@@ -59,7 +59,7 @@ feature -- Status report
 			Result := ht.has (key)
 		end
 
-	mapped_value (key: STRING): ANY is
+	mapped_value (key: STRING): ANY
 			-- Value mapped with `key'
 		require
 			ht_not_void: ht /= Void
@@ -80,7 +80,7 @@ feature -- Status report
 	ht_order: ARRAYED_LIST [STRING];
 		-- Keys of `ht' in order of mapping
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

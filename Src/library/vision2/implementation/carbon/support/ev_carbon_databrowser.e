@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Objects that makes Carbon's DataBrowser control easily accessible"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature -- Creation
 
-		make (an_interface: like interface) is
+		make (an_interface: like interface)
 				--
 		local
 			ptr: POINTER
@@ -67,14 +67,14 @@ feature -- Creation
 			create item_list.make ( 1, 20 )
 		end
 
-	initialize is
+	initialize
 			--
 		do
 
 		end
 
 
-	insert_i_th (v: EV_ANY; i: INTEGER) is
+	insert_i_th (v: EV_ANY; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item: like db_item
@@ -91,7 +91,7 @@ feature -- Creation
 			-- 2nd argument should be: {CONTROLDEFINITIONS_ANON_ENUMS}.kDataBrowserNoItem
 		end
 
-	remove_id (a_id: INTEGER) is
+	remove_id (a_id: INTEGER)
 			-- Remove item at `a_position'
 		local
 			ret: INTEGER
@@ -103,7 +103,7 @@ feature -- Creation
 
 	selected_item_imp: like db_item
 
-	set_selected_item_imp (an_item: like db_item) is
+	set_selected_item_imp (an_item: like db_item)
 			--
 		do
 			selected_item_imp := an_item
@@ -112,7 +112,7 @@ feature -- Creation
 
 feature -- settings
 
-	show_title_row is
+	show_title_row
 			-- Show the row of the titles.
 		local
 			ret: INTEGER
@@ -120,7 +120,7 @@ feature -- settings
 			ret := set_data_browser_list_view_header_btn_height_external (c_object, 15)
 		end
 
-	hide_title_row is
+	hide_title_row
 			-- Hide the row of the titles.
 		local
 			ret: INTEGER
@@ -128,7 +128,7 @@ feature -- settings
 			ret := set_data_browser_list_view_header_btn_height_external (c_object, 0)
 		end
 
-	set_disclosure_column is
+	set_disclosure_column
 			--
 		local
 			ret: INTEGER
@@ -140,7 +140,7 @@ feature -- settings
 
 feature -- internals
 
-	add_list_view_column (an_identity: INTEGER; a_type: INTEGER; a_minwidth: INTEGER; a_maxwidth: INTEGER; a_title_string: STRING): INTEGER is
+	add_list_view_column (an_identity: INTEGER; a_type: INTEGER; a_minwidth: INTEGER; a_maxwidth: INTEGER; a_title_string: STRING): INTEGER
 			-- Add a column to the list view of the data browser
 		local
 			ret: INTEGER
@@ -191,7 +191,7 @@ feature -- internals
 			ret := set_data_browser_property_flags_external (c_object, an_identity , {CONTROLDEFINITIONS_ANON_ENUMS}.kdatabrowserlistviewdefaultcolumnflags)
 		end
 
-	create_list (a_columns: INTEGER) is
+	create_list (a_columns: INTEGER)
 			-- Create the clist with `a_columns' columns.
 		require
 			a_columns_positive: a_columns > 0
@@ -215,7 +215,7 @@ feature -- internals
 			ret := auto_size_data_browser_list_view_columns_external (c_object)
 		end
 
-		column_count: INTEGER is
+		column_count: INTEGER
 			-- Number of columns in the list.
 		local
 			ret, col_list: INTEGER
@@ -224,7 +224,7 @@ feature -- internals
 			Result := col_list
 		end
 
-	do_ugly_things (db_control, a_item_data_dispatcher, a_item_notification_dispatcher: POINTER) is
+	do_ugly_things (db_control, a_item_data_dispatcher, a_item_notification_dispatcher: POINTER)
 			-- move this to the application class or make it somehow unique
 
 		external
@@ -256,7 +256,7 @@ feature -- internals
 			-- `on_callback'. Whenn its C function gets called, the dispatcher
 			-- calls `on_callback' in the connected Eiffel object (`on callback' ~> `get_set_item_data_callback')
 
-	get_set_item_data_callback (a_browser: POINTER; a_item: INTEGER; a_property: INTEGER; a_itemdata: POINTER; a_setvalue: INTEGER): INTEGER is
+	get_set_item_data_callback (a_browser: POINTER; a_item: INTEGER; a_property: INTEGER; a_itemdata: POINTER; a_setvalue: INTEGER): INTEGER
 			-- Through this callback the DataBrowser is requesting information about an item
 		local
 			cfstring: EV_CARBON_CF_STRING
@@ -304,7 +304,7 @@ feature -- internals
 		end
 	end
 
-	get_icon_ref (img: POINTER) : POINTER is
+	get_icon_ref (img: POINTER) : POINTER
 			--
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -398,7 +398,7 @@ feature -- internals
 			-- `on_callback'. Whenn its C function gets called, the dispatcher
 			-- calls `on_callback' in the connected Eiffel object (`on callback' ~> `item_notification_callback')
 
-	item_notification_callback (a_browser: POINTER; a_item: INTEGER; a_message: INTEGER) is
+	item_notification_callback (a_browser: POINTER; a_item: INTEGER; a_message: INTEGER)
 			-- A item has changed
 		local
 			id: INTEGER
@@ -430,7 +430,7 @@ feature -- internals
 			end
 		end
 
-	get_object_from_pointer (a_pointer: POINTER): EV_CARBON_DATABROWSER is
+	get_object_from_pointer (a_pointer: POINTER): EV_CARBON_DATABROWSER
 	-- Doesn't work with 'like Current' since the instance of the class could be of another type,... callback confusion
 			-- Takes a c-pointer to the associated c_object of a object of type EV_TREE_IMP and returns a handle to that.
 		do
@@ -452,7 +452,7 @@ feature -- internals
 			Result ?= tree_list.item.item (1)
 		end
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 		deferred
 		end
 
@@ -468,7 +468,7 @@ feature {EV_CARBON_DATABROWSER, EV_CARBON_DATABROWSER_ITEM} -- Implementation
 
 	item_list: ARRAY[like db_item]
 
-	get_id (a_node: like db_item) : INTEGER is
+	get_id (a_node: like db_item) : INTEGER
 			-- Get a unique ID so we can associate an event by its ID with a control
 		do
 			if free_ids.is_empty then
@@ -483,19 +483,19 @@ feature {EV_CARBON_DATABROWSER, EV_CARBON_DATABROWSER_ITEM} -- Implementation
 			end
 		end
 
-	dispose_id (a_id: INTEGER) is
+	dispose_id (a_id: INTEGER)
 				-- Give an id back (it will be recycled)
 			do
 				item_list.force (void, a_id)
 				free_ids.put_right (a_id)
 			end
 
-	tree_list: LIST [TUPLE] is
+	tree_list: LIST [TUPLE]
 			-- A shared list of all trees created
 		once
 			create {LINKED_LIST [TUPLE]} Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_CARBON_DATABROWSER

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HASH_TABLE with different is_equal that checks the values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		local
 			a, b: like Current
@@ -38,7 +38,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

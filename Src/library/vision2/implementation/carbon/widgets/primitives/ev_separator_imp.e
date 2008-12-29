@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision separator. Carbon implementation"
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the separator control.
 		local
 			rect: RECT_STRUCT
@@ -52,12 +52,12 @@ feature {NONE} -- Initialization
 
 feature -- Layout handling
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- Setup layout binding. This is redefined by vertical/horizontal separator to make sure the control has the right orientation
 		deferred
 		end
 
-	minimum_height, minimum_width: INTEGER is
+	minimum_height, minimum_width: INTEGER
 			-- Minimum height/width that the widget may occupy.
 		do
 			Result := 1 -- Hardcoded value
@@ -67,7 +67,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_SEPARATOR_IMP
 

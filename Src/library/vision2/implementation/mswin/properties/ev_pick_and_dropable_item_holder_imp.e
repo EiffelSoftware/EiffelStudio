@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor of all PND widgets which contain items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 		do
 			inspect
 				press_action
@@ -60,7 +60,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 		end
 
-	escape_pnd is
+	escape_pnd
 			-- Escape the pick and drop.
 		do
 				--| This is redefined so that when escape has been pressed, we
@@ -78,7 +78,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 		end
 
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
@@ -103,14 +103,14 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		-- updated every time entering `on_right_button_down'.
 		-- or `on_left_button_down.
 
-	item_is_in_pnd: BOOLEAN is
+	item_is_in_pnd: BOOLEAN
 		do
 			if pnd_item_source /= Void then
 				Result := pnd_item_source.is_pnd_in_transport or else pnd_item_source.is_dnd_in_transport
 			end
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
@@ -138,7 +138,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			item_is_pnd_source_at_entry := False
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
@@ -182,7 +182,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			press_actions_called := False
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Wmlbuttonup message
 		local
 			pt: WEL_POINT
@@ -211,25 +211,25 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 		end
 
-	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 		do
 			button_double_click_received (keys, x_pos, y_pos, 1)
 		end
 
-	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 		do
 			button_double_click_received (keys, x_pos, y_pos, 2)
 		end
 
-	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 		do
 			button_double_click_received (keys, x_pos, y_pos, 3)
 		end
 
-	button_double_click_received (keys, x_pos, y_pos, a_button: INTEGER) is
+	button_double_click_received (keys, x_pos, y_pos, a_button: INTEGER)
 			-- Handle a double click from button `a_button'.
 		local
 			pt: WEL_POINT
@@ -250,41 +250,41 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 		end
 
-	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
+	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT
 		deferred
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 		deferred
 		end
 
 	internal_propagate_pointer_double_press (
-		keys, x_pos, y_pos, button: INTEGER) is
+		keys, x_pos, y_pos, button: INTEGER)
 		deferred
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		deferred
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset of `Current' relative to screen.
 		deferred
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset of `Current' relative to screen.
 		deferred
 		end
 
-	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		deferred
 		end
 
-	check_dragable_release (x_pos, y_pos: INTEGER) is
+	check_dragable_release (x_pos, y_pos: INTEGER)
 			-- End transport if in drag and drop.
 		deferred
 		end
@@ -302,13 +302,13 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 			--| to be called for that item as we are not pressing the item but
 			--| cancelling the PND instead.
 
-	discard_press_event is
+	discard_press_event
 			-- Assign `True' to `call_press_event'.
 		do
 			call_press_event := False
 		end
 
-	keep_press_event is
+	keep_press_event
 			-- Assign `True' to `call_press_event'.
 		do
 			call_press_event := True
@@ -325,31 +325,31 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
 	item_is_dockable_source: BOOLEAN
 
-	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP) is
+	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP)
 			-- Assign `source' to `pnd_item_source'
 		do
 			pnd_item_source := source
 		end
 
-	set_parent_source_true is
+	set_parent_source_true
 			-- Assign `True' to `parent_is_pnd_source'.
 		do
 			parent_is_pnd_source := True
 		end
 
-	set_parent_source_false is
+	set_parent_source_false
 			-- Assign `False' to `parent_is_pnd_source'.
 		do
 			parent_is_pnd_source := False
 		end
 
-	set_item_source_true is
+	set_item_source_true
 			-- Assign `True' to `item_is_pnd_source'.
 		do
 			item_is_pnd_source := True
 		end
 
-	set_item_source_false is
+	set_item_source_false
 			-- Assign `False' to `item_is_pnd_source'.
 		do
 			item_is_pnd_source := False
@@ -357,60 +357,60 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
 feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 
-	disable_default_processing is
+	disable_default_processing
 			-- Disable default window processing.
 		deferred
 		end
 
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 		deferred
 		end
 
-	set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style (c: EV_POINTER_STYLE)
 		deferred
 		end
 
-	set_capture is
+	set_capture
 			-- Grab user input.
 			-- Works only on current windows thread.
 		deferred
 		end
 
-	release_capture is
+	release_capture
 			-- Release user input.
 			-- Works only on current windows thread.
 		deferred
 		end
 
-	set_heavy_capture is
+	set_heavy_capture
 			-- Grab user input.
 			-- Works on all windows threads.
 		deferred
 		end
 
-	release_heavy_capture is
+	release_heavy_capture
 			-- Release user input
 			-- Works on all windows threads.
 		deferred
 		end
 
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
 		deferred
 		end
 
-	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_release_actions'.
 		deferred
 		end
 
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'. is
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

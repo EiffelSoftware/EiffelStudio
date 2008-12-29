@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A very simple implementation for a EG_LINK_FIGURE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {EG_SIMPLE_LINK}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_SIMPLE_LINK.
 		do
 			Precursor {EG_LINK_FIGURE}
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create reflexive.make_with_positions (0, 0, 10, 10)
 		end
 
-	make_with_model (a_model: EG_LINK) is
+	make_with_model (a_model: EG_LINK)
 			-- Make a link using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -58,13 +58,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_LINK"
 		end
 
-	arrow_size: INTEGER is
+	arrow_size: INTEGER
 			-- Size of the arrow.
 		do
 			Result := line.arrow_size
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_arrow_size (i: INTEGER) is
+	set_arrow_size (i: INTEGER)
 			-- Set `arrow_size' to `i'.
 		require
 			i_positive: i > 0
@@ -84,7 +84,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		local
 			p1, p2: EV_COORDINATE
@@ -132,7 +132,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			is_selected := an_is_selected
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	reflexive: EV_MODEL_ELLIPSE
 			-- The ellipse used when link `is_reflexive'.
 
-	on_is_directed_change is
+	on_is_directed_change
 			-- `model'.`is_directed' changed.
 		do
 			if model.is_directed then
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 invariant
 	line_not_void: line /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

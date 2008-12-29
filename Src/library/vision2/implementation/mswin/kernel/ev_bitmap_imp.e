@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation for EB_BITMAP_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Set up action sequence connections and create graphics context.
 		do
 			create dc.make
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set size with `a_width' and `a_height'.
 		local
 			old_drawable: like drawable
@@ -86,12 +86,12 @@ feature -- Implementation
 	dc: WEL_MEMORY_DC
 			-- Device Context used for performing drawing operations on `drawable'.
 
-	redraw is
+	redraw
 			-- Redraw the entire area.
 		do
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
 			a_default_colors: EV_STOCK_COLORS
@@ -101,23 +101,23 @@ feature -- Implementation
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	destroy is
+	destroy
 			-- Destroy
 		do
 			set_is_destroyed (True)
 		end
 
-	dispose is
+	dispose
 			-- Cleanup
 		do
 		end
 
-	flush is
+	flush
 			-- Force all queued draw to be called.
 		do
 		end
 
-	update_if_needed is
+	update_if_needed
 			-- Update `Current' if needed.
 		do
 		end
@@ -125,7 +125,7 @@ feature -- Implementation
 	interface: EV_BITMAP;
 			-- Interface
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process utilities to go through all processes running on current system"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	process_id_pair_list: LINKED_LIST [TUPLE [parent_id: INTEGER; process_id: INTEGER]] is
+	process_id_pair_list: LINKED_LIST [TUPLE [parent_id: INTEGER; process_id: INTEGER]]
 			-- List of process id pairs taken from a system snapshot.
 			-- first item of a pair is parent process id, second item of a pair is process id.
 		local
@@ -70,7 +70,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	check_nt_platform (a_result, a_succ: TYPED_POINTER [BOOLEAN]) is
+	check_nt_platform (a_result, a_succ: TYPED_POINTER [BOOLEAN])
 			-- If current system is Microsoft NT system, set `a_result' to True, otherwise False.
 			-- If succeeded, set `a_succ' to True.
 		external
@@ -106,19 +106,19 @@ feature -- Access
 
 feature{NONE} -- Initialization
 
-	toolhelp_handle: POINTER is
+	toolhelp_handle: POINTER
 			-- Handle using toolhelp API
 		once
 			Result := (create {WEL_DLL}.make ("Kernel32.dll")).item
 		end
 
-	ntps_handle: POINTER is
+	ntps_handle: POINTER
 			-- PSAPI handle used in NT platform
 		once
 			Result := (create {WEL_DLL}.make ("psapi.dll")).item
 		end
 
-	ntdll_handle: POINTER is
+	ntdll_handle: POINTER
 			-- NTDLL Handle used in NT platform
 		once
 			Result := (create {WEL_DLL}.make ("ntdll.dll")).item
@@ -126,7 +126,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Toolhelp API
 
-	cwin_create_toolhelp32_snapshot (a_toolhelp_handle: POINTER; a_prc_id: INTEGER; a_handle: TYPED_POINTER [POINTER]) is
+	cwin_create_toolhelp32_snapshot (a_toolhelp_handle: POINTER; a_prc_id: INTEGER; a_handle: TYPED_POINTER [POINTER])
 			-- Get system information snapshot and store result in `a_handle'.
 			-- After use, call `cwin_close_handle' to close `a_handle'.
 		require
@@ -150,7 +150,7 @@ feature{NONE} -- Toolhelp API
 			]"
 		end
 
-	cwin_process32_first (a_toolhelp_handle: POINTER; a_snapshot: POINTER; a_prc_entry: TYPED_POINTER [POINTER]; a_succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_process32_first (a_toolhelp_handle: POINTER; a_snapshot: POINTER; a_prc_entry: TYPED_POINTER [POINTER]; a_succ: TYPED_POINTER [BOOLEAN])
 			-- Get information of the first process in `a_snapshot' and store result in `a_prc_entry'.
 			-- If successed, set `a_succ' to True, otherwise to False.
 			-- This feature will create a POINTER object `a_prc_entry' if successful,
@@ -187,7 +187,7 @@ feature{NONE} -- Toolhelp API
 			]"
 		end
 
-	cwin_process32_next (a_toolhelp_handle: POINTER; a_snapshot: POINTER; a_prc_entry: TYPED_POINTER [POINTER]; a_succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_process32_next (a_toolhelp_handle: POINTER; a_snapshot: POINTER; a_prc_entry: TYPED_POINTER [POINTER]; a_succ: TYPED_POINTER [BOOLEAN])
 			-- Get information of the next process in `a_snapshot' and store result in `a_prc_entry'.
 			-- If successed, set `a_succ' to True, otherwise to False.
 			-- After use, call `cwin_free_pointer' to dispose `a_prc_entry'.
@@ -219,7 +219,7 @@ feature{NONE} -- Toolhelp API
 			]"
 		end
 
-	cwin_get_process_id_and_parent_id (a_prc_entry: POINTER; a_pid: TYPED_POINTER [INTEGER]; a_parent_pid: TYPED_POINTER [INTEGER]) is
+	cwin_get_process_id_and_parent_id (a_prc_entry: POINTER; a_pid: TYPED_POINTER [INTEGER]; a_parent_pid: TYPED_POINTER [INTEGER])
 			-- Get process id and its parent process id from `prc_entry'.
 		external
 			"C inline use <Tlhelp32.h>"
@@ -279,7 +279,7 @@ feature{NONE} -- NT API
 			]"
 		end
 
-	cwin_nt_get_process_list (a_ntps_handle: POINTER; a_list: TYPED_POINTER [POINTER]; a_count: TYPED_POINTER [INTEGER]; a_size: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]) is
+	cwin_nt_get_process_list (a_ntps_handle: POINTER; a_list: TYPED_POINTER [POINTER]; a_count: TYPED_POINTER [INTEGER]; a_size: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN])
 			-- Store list of running process ids in `a_list'.
 			-- Length of `a_list' is stored in `a_count' and size of every item is stored in `a_size'.
 			-- If succeed, set `a_succ' to True.
@@ -336,7 +336,7 @@ feature{NONE} -- NT API
 
 feature{NONE} -- Implementation
 
-	cwin_open_process (desired_access: INTEGER; inheritable: BOOLEAN;  prc_id: INTEGER): POINTER is
+	cwin_open_process (desired_access: INTEGER; inheritable: BOOLEAN;  prc_id: INTEGER): POINTER
 			-- After use, call `cwin_close_handle' to close retrieved handle.
 		external
 			"C signature (DWORD, BOOL, DWORD): HANDLE use <Tlhelp32.h>"
@@ -344,7 +344,7 @@ feature{NONE} -- Implementation
 			"OpenProcess"
 		end
 
-	cwin_free_pointer(ptr: POINTER) is
+	cwin_free_pointer(ptr: POINTER)
 			-- Free pointer `ptr'.
 		external
 			"C inline"
@@ -356,7 +356,7 @@ feature{NONE} -- Implementation
 			]"
 		end
 
-	cwin_close_handle (a_handle: POINTER) is
+	cwin_close_handle (a_handle: POINTER)
 			-- SDK CloseHandle.
 		external
 			"C [macro <winbase.h>] (HANDLE)"
@@ -364,7 +364,7 @@ feature{NONE} -- Implementation
 			"CloseHandle"
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

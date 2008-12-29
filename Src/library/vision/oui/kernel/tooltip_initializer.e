@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Initializes focusable elements. Actually the main %
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	tooltip_initialize (widget: COMPOSITE) is
+	tooltip_initialize (widget: COMPOSITE)
 			-- initialize tooltip
 			-- argument should be current widget (one inheriting from TOOLTIP_INITIALIZER)
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Actual realization
 	
-	tooltip_realize is
+	tooltip_realize
 			-- realize tooltip behavior
 		require
 			label_not_void: label /= void
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_tooltip (arg: ANY) is
+	set_tooltip (arg: ANY)
 		do
 			tooltip := arg
 		end;
@@ -58,7 +58,7 @@ feature -- Properties
 	label: FOCUS_LABEL_I;
 			-- Label used to show the explanation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

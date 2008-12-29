@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Infomation about a SD_NOTEBOOK_TAB, used for draw tabs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Query
 	is_tab_before: BOOLEAN
 			-- If after Current, there is a tab?
 
-	is_tab_after_selected: BOOLEAN is
+	is_tab_after_selected: BOOLEAN
 			-- `internal_is_tab_after_selected'
 		require
 			valid: is_tab_after
@@ -24,7 +24,7 @@ feature -- Query
 			Result := internal_is_tab_after_selected
 		end
 
-	is_tab_before_selected: BOOLEAN is
+	is_tab_before_selected: BOOLEAN
 			-- `internal_is_tab_before_selected'
 		require
 			valid: is_tab_before
@@ -34,7 +34,7 @@ feature -- Query
 
 feature -- Setting
 
-	set_tab_after (a_selected_tab_after: BOOLEAN) is
+	set_tab_after (a_selected_tab_after: BOOLEAN)
 			-- Set `is_tab_after'.
 		do
 			is_tab_after := a_selected_tab_after
@@ -42,7 +42,7 @@ feature -- Setting
 			set: is_tab_after = a_selected_tab_after
 		end
 
-	set_tab_before (a_bool: BOOLEAN) is
+	set_tab_before (a_bool: BOOLEAN)
 			-- Set `is_tab_before'
 		do
 			is_tab_before := a_bool
@@ -50,7 +50,7 @@ feature -- Setting
 			set: is_tab_before = a_bool
 		end
 
-	set_tab_after_selected (a_bool: BOOLEAN) is
+	set_tab_after_selected (a_bool: BOOLEAN)
 			-- Set `internal_is_tab_after_selected'
 		require
 			valid: is_tab_after
@@ -60,7 +60,7 @@ feature -- Setting
 			set: internal_is_tab_after_selected = a_bool
 		end
 
-	set_tab_before_selected (a_bool: BOOLEAN) is
+	set_tab_before_selected (a_bool: BOOLEAN)
 			-- Set `internal_is_tab_before_selected'
 		require
 			valid: is_tab_before
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 	internal_is_tab_before_selected: BOOLEAN;
 			-- If tab before selected?
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

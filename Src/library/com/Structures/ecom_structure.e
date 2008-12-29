@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notions of a COM data structure."
 	legal: "See notice at end of class."
 	info: "If allocated by Client, may be deallocated by Server, and the opposite."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item'
 		do
 			item := co_task_mem_alloc (structure_size)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			shared := False
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		require
 			valid_pointer: a_pointer /= default_pointer
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	set_value (source: like Current) is
+	set_value (source: like Current)
 			-- Set Current to 'source'.
 		require
 			non_void: source /= Void
@@ -52,7 +52,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Free `item'
 		do
 			if exists then
@@ -64,7 +64,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	co_task_mem_alloc (a_size: INTEGER): POINTER is
+	co_task_mem_alloc (a_size: INTEGER): POINTER
 			-- Allocates a block of task memory 
 		external
 			"C [macro <objbase.h >] (size_t):EIF_POINTER"
@@ -72,7 +72,7 @@ feature {NONE} -- Externals
 			"CoTaskMemAlloc"
 		end
 
-	co_task_mem_free (ptr: POINTER) is
+	co_task_mem_free (ptr: POINTER)
 			-- Frees a block of task memory  
 		external
 			"C [macro <objbase.h >] (void*)"
@@ -80,7 +80,7 @@ feature {NONE} -- Externals
 			"CoTaskMemFree"
 		end
 
-	co_task_mem_realloc (ptr: POINTER; a_size: INTEGER): POINTER is
+	co_task_mem_realloc (ptr: POINTER; a_size: INTEGER): POINTER
 			-- Changes the size of a previously allocated block of task memory. 
   
 		external
@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

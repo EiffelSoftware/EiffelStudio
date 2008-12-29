@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for GTK implementation (_IMP) classes. %N%
 		%Handles interaction between Eiffel objects and GTK objects %N%
@@ -34,7 +34,7 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_ANY_I} -- Access
 
-	set_c_object (a_c_object: POINTER) is
+	set_c_object (a_c_object: POINTER)
 			-- Assign `a_c_object' to `c_object'.
 			-- Set up Eiffel GC / GTK cooperation.
 			--| (See note at end of class)
@@ -78,7 +78,7 @@ feature {EV_ANY_I} -- Access
 			]"
 		end
 
-	frozen eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
+	frozen eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		external
 			"C inline use %"ev_any_imp.h%""
@@ -86,7 +86,7 @@ feature {EV_ANY_I} -- Access
 			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
 		end
 
-	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN is
+	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -95,7 +95,7 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		do
@@ -109,7 +109,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	signal_connect_true (
 		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE]
-		) is
+		)
 			-- Connect `an_agent' to `a_signal_name'.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
@@ -129,7 +129,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		a_signal_name: STRING_8;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		) is
+		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
 			a_c_object_not_void: a_c_object /= default_pointer
@@ -148,7 +148,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		a_signal_name: STRING_8;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		) is
+		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
 		require
@@ -163,7 +163,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
 		end
 
-	last_signal_connection_id: INTEGER is
+	last_signal_connection_id: INTEGER
 			-- GTK signal connection id of the most recent `signal_connect'.
 		do
 			Result := app_implementation.gtk_marshal.last_signal_connection_id
@@ -171,13 +171,13 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `event_widget' need an event box to receive events?
 		do
 			Result := False
 		end
 
-	dispose is
+	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		local
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
-	c_object_dispose is
+	c_object_dispose
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	process_gdk_event (n_args: INTEGER; args: POINTER) is
+	process_gdk_event (n_args: INTEGER; args: POINTER)
 			-- Process any incoming gdk event.
 		do
 			-- Redefined by descendents.
@@ -237,7 +237,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to the widget viewed by user.
 		do
 			if needs_event_box then
@@ -249,7 +249,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
-	App_implementation: EV_APPLICATION_IMP is
+	App_implementation: EV_APPLICATION_IMP
 			--
 		local
 			env: EV_ENVIRONMENT
@@ -260,14 +260,14 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 
 feature -- Measurement
 
-	NULL: POINTER is
+	NULL: POINTER
 		external
 			"C [macro <stdio.h>]"
 		alias
 			"NULL"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

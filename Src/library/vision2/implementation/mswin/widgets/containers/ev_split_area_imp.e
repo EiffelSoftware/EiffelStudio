@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Contains a maximum of two widgets, one on each side of an adjustable%
 			%separator. If only one widget is contained then the separator is%
@@ -50,14 +50,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface)is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_CONTAINER_IMP}
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Status Setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `item' sensitive to user actions.
 		do
 			if first /= Void and not first_imp.internal_non_sensitive then
@@ -79,7 +79,7 @@ feature {EV_ANY_I} -- Status Setting
 			Precursor {EV_CONTAINER_IMP}
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `item' insensitive to user actions.
 		do
 			if first /= Void then
@@ -93,7 +93,7 @@ feature {EV_ANY_I} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			--
 		do
 			if first /= Void and second /= Void then
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 		-- For a horizontal split area, the position is the left
 		-- of the splitter.
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		do
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove one occurrence of `v' if any.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_split_position (a_position: INTEGER) is
+	set_split_position (a_position: INTEGER)
 			-- Assign `a_position' to split position and layout the
 			-- widgets accordingly.
 		do
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			layout_widgets (True)
 		end
 
-	disable_item_expand (v: like item) is
+	disable_item_expand (v: like item)
 			-- When `Current' is resized, do not resize `v'.
 		do
 			if v = first then
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_item_expand (v: like item) is
+	enable_item_expand (v: like item)
 			-- When `Current' is resized, resize `an_item' respectively.
 		do
 			if v = first then
@@ -186,33 +186,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Minimum position in pixels allowed for the splitter.
 		deferred
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Maximum position in pixels allowed for the splitter.
 		deferred
 		end
 
-	layout_widgets (originator: BOOLEAN) is
+	layout_widgets (originator: BOOLEAN)
 		deferred
 		end
 
-	set_click_position (x_pos, y_pos: INTEGER) is
+	set_click_position (x_pos, y_pos: INTEGER)
 			-- Assign coordinate relative to click position on splitter to
 			-- `click_relative_position'.
 		deferred
 		end
 
-	is_child (v: EV_WIDGET_IMP): BOOLEAN is
+	is_child (v: EV_WIDGET_IMP): BOOLEAN
 			-- Is `v' a child of `Current'?
 		do
 			Result := v.interface = first or v.interface = second
 		end
 
-	update_split_position is
+	update_split_position
 			-- Set splitter to a valid position and redraw if necessary.
 		do
 			internal_split_position := internal_split_position.max (minimum_split_position)
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	first_imp: EV_WIDGET_IMP is
+	first_imp: EV_WIDGET_IMP
 			-- `Result' is implementation of first.
 		do
 			if first /= Void then
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	second_imp: EV_WIDGET_IMP is
+	second_imp: EV_WIDGET_IMP
 			-- `Result' is implementation of second.
 		do
 			if second /= Void then
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		local
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 		end
 
 	invert_rectangle
-		(a_dc: WEL_DC; a_left, a_top, a_right, a_bottom: INTEGER) is
+		(a_dc: WEL_DC; a_left, a_top, a_right, a_bottom: INTEGER)
 			-- Invert the rectangular zone defined by
 			-- `a_left', `a_top', `a_right', `a_bottom'
 			-- on `a_dc'.
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -321,14 +321,14 @@ feature {NONE} -- Implementation
 		-- For a vertical split_area, this contains the last
 		-- height of `Current'.
 
-	splitter_width: INTEGER is 4
+	splitter_width: INTEGER = 4
 			-- `Result' is space in pixels the visible separator should occupy.
 
 	click_relative_position: INTEGER
 		-- Mouse coordinate relative to start of splitter when splitter
 		-- is clicked on.
 
-	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			if first_imp = child then
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	splitter_string_bitmap: STRING is
+	splitter_string_bitmap: STRING
 			-- `Result' is a STRING used to generate the splitter
 			-- brush used in the redrawing of the splitter while
 			-- movement is underway.
@@ -434,13 +434,13 @@ feature {EV_ANY_I}
 
 feature {NONE} -- WEL internal
 
-	Wel_idc_constants: WEL_IDC_CONSTANTS is
+	Wel_idc_constants: WEL_IDC_CONSTANTS
 			-- Default Cursors constants
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

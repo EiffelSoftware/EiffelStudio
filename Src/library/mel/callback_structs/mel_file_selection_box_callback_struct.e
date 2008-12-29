@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the file selection box. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH)
@@ -32,7 +32,7 @@ feature -- Access
 				<<XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH>>
 		end;
 
-	value: MEL_STRING is
+	value: MEL_STRING
 			-- Value of `dir_spec' 
 		do
 			create Result.make_from_existing (c_value (handle));
@@ -42,13 +42,13 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	length: INTEGER is
+	length: INTEGER
 			-- Number of bytes in `value'
 		do
 			Result := c_length (handle)
 		end;
 
-	mask: MEL_STRING is
+	mask: MEL_STRING
 			-- Value of `dir_mask' 
 		do
 			create Result.make_from_existing (c_mask (handle));
@@ -58,13 +58,13 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	mask_length: INTEGER is
+	mask_length: INTEGER
 			-- Number of bytes in `mask'
 		do
 			Result := c_mask_length (handle)
 		end;
 
-	dir: MEL_STRING is
+	dir: MEL_STRING
 			-- Current base directory
 		do
 			create Result.make_from_existing (c_dir (handle));
@@ -74,13 +74,13 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	dir_length: INTEGER is
+	dir_length: INTEGER
 			-- Number of bytes in `dir'
 		do
 			Result := c_dir_length (handle)
 		end;
 
-	pattern: MEL_STRING is
+	pattern: MEL_STRING
 			-- Current search pattern
 		do
 			create Result.make_from_existing (c_pattern (handle));
@@ -90,7 +90,7 @@ feature -- Access
 			Result_is_shared: Result.is_shared
 		end;
 
-	pattern_length: INTEGER is
+	pattern_length: INTEGER
 			-- Number of bytes in `pattern_length'
 		do
 			Result := c_pattern_length (handle)
@@ -98,47 +98,47 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_value (a_callback_struct_ptr: POINTER): POINTER is
+	c_value (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_mask (a_callback_struct_ptr: POINTER): POINTER is
+	c_mask (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_mask_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_mask_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_dir (a_callback_struct_ptr: POINTER): POINTER is
+	c_dir (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_dir_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_dir_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_pattern (a_callback_struct_ptr: POINTER): POINTER is
+	c_pattern (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_pattern_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_pattern_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

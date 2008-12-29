@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Main shell for an application."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (app_name, app_class: STRING; a_screen: MEL_SCREEN) is
+	make (app_name, app_class: STRING; a_screen: MEL_SCREEN)
 			-- Create an application shell.
 		local
 			application, application_class: ANY
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	argc: INTEGER is
+	argc: INTEGER
 			-- Number of command line arguments.
 		require
 			exists: not is_destroyed
@@ -59,7 +59,7 @@ feature -- Status report
 			argc_large_enough: Result >= 0
 		end;
 
-	argv: STRING is
+	argv: STRING
 			-- List of command line arguments.
 		require
 			exists: not is_destroyed
@@ -71,18 +71,18 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	c_get_argv (src_obj: POINTER): STRING is
+	c_get_argv (src_obj: POINTER): STRING
 		external
 			"C"
 		end;
 
 	xt_create_app_shell (appl_name, appl_class_name: POINTER; 
-				display_ptr: POINTER; screen_ptr: POINTER): POINTER is
+				display_ptr: POINTER; screen_ptr: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

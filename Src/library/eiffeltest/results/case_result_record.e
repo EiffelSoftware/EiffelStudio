@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Records storing the result of a single test run of a test case"
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create record.
 		do
 			list_make (0)
@@ -46,7 +46,7 @@ feature -- Access
 	execution_time: TIME_DURATION
 			-- Execution time of test
 			
-	failure_reason (i: INTEGER): STRING is
+	failure_reason (i: INTEGER): STRING
 			-- Failure reason of `i'-th assertion
 		require
 			valid_index: valid_assertion_index (i)
@@ -57,7 +57,7 @@ feature -- Access
 			non_empty_reason: Result /= Void and then not Result.is_empty
 		end
 
-	exception_info (i: INTEGER): EXCEPTION_INFO is
+	exception_info (i: INTEGER): EXCEPTION_INFO
 			-- Exception info of `i'-th assertion
 		require
 			valid_index: valid_assertion_index (i)
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Status report
 
-	passed: BOOLEAN is
+	passed: BOOLEAN
 			-- Is result a pass?
 		require
 			not_empty: not is_empty
@@ -81,7 +81,7 @@ feature -- Status report
 			Result := comparator.compare_range (c, 1, assertion_count, True)
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Was exception thrown in this run?
 		require
 			not_empty: not is_empty
@@ -92,7 +92,7 @@ feature -- Status report
 			Result := comparator.compare_range (c, 1, assertion_count, True)
 		end
 	
-	is_assertion_pass (i: INTEGER): BOOLEAN is
+	is_assertion_pass (i: INTEGER): BOOLEAN
 			-- Is `i'-th assertion a pass?
 		require
 			valid_index: valid_assertion_index (i)
@@ -100,7 +100,7 @@ feature -- Status report
 			Result := i_th (i).passed
 		end
 
-	is_assertion_failure (i: INTEGER): BOOLEAN is
+	is_assertion_failure (i: INTEGER): BOOLEAN
 			-- Is `i'-th assertion a failure?
 		require
 			valid_index: valid_assertion_index (i)
@@ -108,7 +108,7 @@ feature -- Status report
 			Result := i_th (i).is_failure
 		end
 
-	is_assertion_exception (i: INTEGER): BOOLEAN is
+	is_assertion_exception (i: INTEGER): BOOLEAN
 			-- Is `i'-th assertion an exception?
 		require
 			valid_index: valid_assertion_index (i)
@@ -116,13 +116,13 @@ feature -- Status report
 			Result := i_th (i).is_exception
 		end
 
-	insertable (v: G): BOOLEAN is
+	insertable (v: G): BOOLEAN
 			-- Can `v' be inserted?
 		do
 			Result := True
 		end
 
-	has_execution_time: BOOLEAN is
+	has_execution_time: BOOLEAN
 			-- Has execution time been recorded?
 		do
 			Result := execution_time /= Void
@@ -130,7 +130,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_execution_time (t: like execution_time) is
+	set_execution_time (t: like execution_time)
 			-- Set execution time to `t'.
 		do
 			execution_time := t
@@ -142,7 +142,7 @@ invariant
 
 	empty_definition: is_empty = (assertion_count = 0)
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

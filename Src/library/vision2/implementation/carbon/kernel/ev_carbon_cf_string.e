@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that wraps a Carbon CFString. CFStrings are ofteh used for putting text on controls in Carbon."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_unshared (a_ptr: POINTER) is
+	make_unshared (a_ptr: POINTER)
 			-- Set `item' to `a_ptr'
 			-- 'unshared' means if the Current object
 			-- gets collected by the garbage collector,
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			item_set : item = a_ptr
 		end
 
-	make_shared (a_ptr: POINTER) is
+	make_shared (a_ptr: POINTER)
 			-- Set `item' to  `a_ptr'.
 			-- 'shared' means if the Current object
 			-- gets collected by the garbage collector,
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			item_set : item = a_ptr
 		end
 
-	make_unshared_with_eiffel_string (a_string: STRING_GENERAL) is
+	make_unshared_with_eiffel_string (a_string: STRING_GENERAL)
 			-- Create `item' and retain ownership.
 		require
 			a_string_not_void: a_string /= Void
@@ -82,7 +82,7 @@ feature -- Access
 	item: POINTER
 			-- Pointer to the CFString
 
-	string : STRING_32 is
+	string : STRING_32
 			-- Return the wrapped CFString as `STRING_32'
 		local
 			string_ptr : POINTER
@@ -106,7 +106,7 @@ feature -- Access
 		end
 
 
-	length: INTEGER is
+	length: INTEGER
 			-- Length of the CFString
 		do
 			Result := cfstring_get_length_external ( item )
@@ -118,7 +118,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Dispose `Current'.
 		do
 			if not is_shared  then
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 invariant
 	item_not_null : item /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_GTK_C_STRING
 

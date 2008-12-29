@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects that is a model for a graph
 					Use EG_FIGURE_WORLD to create a view.
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an empty graph.
 		do
 			create node_add_actions
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flat_nodes: like nodes is
+	flat_nodes: like nodes
 			-- All nodes in the graph.
 		do
 			Result := nodes.twin
@@ -51,7 +51,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	flat_clusters: like clusters is
+	flat_clusters: like clusters
 			-- All clusters in the graph.
 		do
 			Result := clusters.twin
@@ -59,7 +59,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	flat_links: like links is
+	flat_links: like links
 			-- All links in the graph.
 		do
 			Result := links.twin
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_node (a_node: like node_type): BOOLEAN is
+	has_node (a_node: like node_type): BOOLEAN
 			-- Is `a_node' part of the model?
 		require
 			a_node_not_void: a_node /= Void
@@ -77,7 +77,7 @@ feature -- Status report
 			Result := nodes.has (a_node)
 		end
 
-	has_link (a_link: EG_LINK): BOOLEAN is
+	has_link (a_link: EG_LINK): BOOLEAN
 			-- Is `a_link' part of the model?
 		require
 			a_link_not_void: a_link /= Void
@@ -85,7 +85,7 @@ feature -- Status report
 			Result := links.has (a_link)
 		end
 
-	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN is
+	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN
 			-- Is `a_linkable' part of the model?
 		local
 			node: like node_type
@@ -102,7 +102,7 @@ feature -- Status report
 			end
 		end
 
-	has_cluster (a_cluster: EG_CLUSTER): BOOLEAN is
+	has_cluster (a_cluster: EG_CLUSTER): BOOLEAN
 			-- Is `a_cluster' part of the model?
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -110,7 +110,7 @@ feature -- Status report
 			Result := clusters.has (a_cluster)
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is `Current' empty?
 		do
 			Result := links.is_empty and then nodes.is_empty and then clusters.is_empty
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_node (a_node: EG_NODE) is
+	add_node (a_node: EG_NODE)
 			-- Add `a_node' to the model.
 		require
 			a_node_not_void: a_node /= Void
@@ -132,7 +132,7 @@ feature -- Element change
 			has_a_node: has_node (a_node)
 		end
 
-	add_link (a_link: EG_LINK) is
+	add_link (a_link: EG_LINK)
 			-- Add `a_link' to the model.
 		require
 			a_link_not_void: a_link /= Void
@@ -147,7 +147,7 @@ feature -- Element change
 			has_a_link: has_link (a_link)
 		end
 
-	add_cluster (a_cluster: EG_CLUSTER) is
+	add_cluster (a_cluster: EG_CLUSTER)
 			-- Add `a_cluster' to the model.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -161,7 +161,7 @@ feature -- Element change
 			has_cluster: has_cluster (a_cluster)
 		end
 
-	remove_link (a_link: EG_LINK) is
+	remove_link (a_link: EG_LINK)
 			-- Remove `a_link' from the model.
 		require
 			a_link_not_void: a_link /= Void
@@ -182,7 +182,7 @@ feature -- Element change
 			link_removed_from_target: a_link.target /= Void implies not a_link.target.links.has (a_link)
 		end
 
-	remove_node (a_node: EG_NODE) is
+	remove_node (a_node: EG_NODE)
 			-- Remove `a_node' from the model.
 		require
 			a_node_not_void: a_node /= Void
@@ -198,7 +198,7 @@ feature -- Element change
 			removed_from_cluster: a_node.cluster /= Void implies not a_node.cluster.flat_linkables.has (a_node)
 		end
 
-	remove_cluster (a_cluster: EG_CLUSTER) is
+	remove_cluster (a_cluster: EG_CLUSTER)
 			-- Remove `a_cluster' from the model.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -215,7 +215,7 @@ feature -- Element change
 			removed_from_cluster: old (a_cluster.cluster) /= Void implies not (old (a_cluster.cluster)).flat_linkables.has (a_cluster)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all elements.
 		local
 			i, nb: INTEGER
@@ -288,14 +288,14 @@ feature {EG_FIGURE_WORLD} -- Implementation
 	links: ARRAYED_LIST [EG_LINK]
 			-- All links in the graph.
 
-	node_type: EG_NODE is
+	node_type: EG_NODE
 			-- Type of nodes in `nodes'.
 		do
 		end
 
 feature {EG_ITEM} -- Implementation
 
-	remove_all (a_cluster: EG_CLUSTER) is
+	remove_all (a_cluster: EG_CLUSTER)
 			-- Remove `a_cluster' and all its elements (recursive).
 		require
 			a_cluster /= Void
@@ -324,7 +324,7 @@ feature {EG_ITEM} -- Implementation
 			remove_cluster (a_cluster)
 		end
 
-	remove_links (a_links: LIST [EG_LINK]) is
+	remove_links (a_links: LIST [EG_LINK])
 			-- Remove all links in `links'.
 		require
 			links_not_void: a_links /= Void
@@ -347,7 +347,7 @@ invariant
 	cluster_add_actions_not_void: cluster_add_actions /= Void
 	link_add_actions_not_void: link_add_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

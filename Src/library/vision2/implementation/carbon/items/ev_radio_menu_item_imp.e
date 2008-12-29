@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio menu item. Carbon implementation."
 	-- Note: Carbon does not support radio-buttons in menus. Use check-buttons and emulate the behaviour.
 
@@ -29,21 +29,21 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this menu item checked?
 		do
 		end
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this menu item.
 		do
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	disable_select is
+	disable_select
 			-- Used to deselect is without firing actions.
 		do
 		end
@@ -51,12 +51,12 @@ feature {EV_ANY_I} -- Implementation
 	ignore_select_actions: BOOLEAN
 		-- Should select_actions be called.
 
-	set_radio_group (a_gslist: POINTER) is
+	set_radio_group (a_gslist: POINTER)
 			-- Make current a member of `a_gslist' radio group.
 		do
 		end
 
-		radio_group: LINKED_LIST [like current] is
+		radio_group: LINKED_LIST [like current]
 			-- List of all radio item implementations
 		do
 		end
@@ -64,7 +64,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 
 end -- class EV_RADIO_MENU_ITEM_IMP

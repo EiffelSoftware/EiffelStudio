@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Appearance of a screen pointer cursor, typically moved by a mouse."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, a_y_hotspot: INTEGER) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Create a cursor initialized with `a_pixmap' as
 			-- pixmap and `a_x_hotspot' & `a_y_hotspot' as
 			-- hotspot coordinates
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set_y_hotspot (a_y_hotspot)
 		end
 
-	make_with_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	make_with_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Create from `a_pointer_style'
 		local
 			l_temp: EV_POINTER_STYLE
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_x_hotspot (a_x_hotspot: INTEGER) is
+	set_x_hotspot (a_x_hotspot: INTEGER)
 			-- Set `x_hotspot' to `a_x_hotspot'.
 		require
 			not_destroyed: not is_destroyed
@@ -76,7 +76,7 @@ feature -- Status setting
 			x_hotspot_set: x_hotspot = a_x_hotspot
 		end
 
-	set_y_hotspot (a_y_hotspot: INTEGER) is
+	set_y_hotspot (a_y_hotspot: INTEGER)
 			-- Set `y_hotspot' to `a_y_hotspot'.
 		require
 			not_destroyed: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: like current) is
+	copy (other: like current)
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
@@ -117,7 +117,7 @@ feature -- Duplication
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

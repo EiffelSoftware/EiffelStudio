@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -15,7 +15,7 @@ create -- Creation procedure
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create current instance
 		do
 			unset_immediate
@@ -31,7 +31,7 @@ feature -- Status report
 	is_tracing: BOOLEAN
 			-- Is trace option for SQL queries on?
 
-	trace_output: FILE is
+	trace_output: FILE
 			-- Trace destination file
 		once
 			Result := io.error
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_immediate is
+	set_immediate
 			-- Set `immediate_execution' to `true'.
 			-- Query will be executed with a
 			-- `EXECUTE IMMEDIATE' SQL  statement
@@ -51,7 +51,7 @@ feature -- Status setting
 			execution_status: immediate_execution
 		end
 
-	unset_immediate is
+	unset_immediate
 			-- Set `immediate_execution' to `false'.
 			-- Query will be executed with a
 			-- `PREPARE' and `EXECUTE' SQL statement.
@@ -61,7 +61,7 @@ feature -- Status setting
 			execution_status: not immediate_execution
 		end
 
-	set_trace is
+	set_trace
 			-- Trace queries sent to database server.
 		do
 			is_tracing := true
@@ -69,7 +69,7 @@ feature -- Status setting
 			trace_status: is_tracing
 		end
 
-	unset_trace is
+	unset_trace
 			-- Do not trace queries sent to database server.
 		do
 			is_tracing := false
@@ -77,7 +77,7 @@ feature -- Status setting
 			trace_status: not is_tracing
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

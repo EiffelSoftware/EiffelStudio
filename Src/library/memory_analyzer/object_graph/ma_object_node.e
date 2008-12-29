@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a standard UML object diagram node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create {MA_OBJECT_NODE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_SIMPLE_NODE.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			extend (text_underline)
 		end
 
-	make_with_model (a_model: EG_NODE) is
+	make_with_model (a_model: EG_NODE)
 			-- Create a EG_SIMPLE_NODE using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -61,37 +61,37 @@ feature -- Access
 	model: EG_NODE
 			-- Model `Current' is a view for.
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		do
 			Result := point_x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		do
 			Result := point_y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		do
 			Result := node_figure.bounding_box
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 			Result := node_figure.height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		do
 			Result := node_figure.width
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_NODE"
@@ -99,14 +99,14 @@ feature -- Access
 
 feature -- Element change
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		do
 			P.set_x (port_x)
 			p.set_y (port_y)
 		end
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- update the text and change the figure size to fit the text
 		do
 			Precursor (a_text)
@@ -123,7 +123,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		do
 			is_update_required := False
@@ -131,7 +131,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	figure_size: INTEGER
 			-- Size of figure in pixel.
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the figure.
 		once
 			Result := (create{EV_STOCK_COLORS}).white
@@ -161,19 +161,19 @@ feature {NONE} -- Implementation
 	text_underline: EV_MODEL_LINE
 			-- The underline of the text.
 
-	number_of_figures: INTEGER is 3
+	number_of_figures: INTEGER = 3
 			-- Number of figures used to visualize `Current'.
 			-- (`name_label' and `node_figure')
 
-	left_space: INTEGER is 10
+	left_space: INTEGER = 10
 			-- the space in the figure between left border and the text ( is the same space between right border and the text)
 
-	up_space: INTEGER is 10
+	up_space: INTEGER = 10
 			-- the space in the figure between up border and the text ( is the same space between bottom border and the text)
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 invariant
 	node_figure_not_void: node_figure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component that has to be activated."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Initialization
 
-	activate is
+	activate
 			-- Activate component.
 		require
 			can_be_activated: can_be_activated
@@ -21,17 +21,17 @@ feature -- Initialization
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		deferred
 		end
 
-	is_activated: BOOLEAN is
+	is_activated: BOOLEAN
 			-- Is component activated?
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	enum_objects_user_precondition (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]): BOOLEAN is
+	enum_objects_user_precondition (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_objects'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	lock_container_user_precondition (f_lock: INTEGER): BOOLEAN is
+	lock_container_user_precondition (f_lock: INTEGER): BOOLEAN
 			-- User-defined preconditions for `lock_container'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is
+	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE])
 			-- No description available.
 			-- `grf_flags' [in].  
 			-- `ppenum' [out].  
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			valid_ppenum: ppenum.item /= Void
 		end
 
-	lock_container (f_lock: INTEGER) is
+	lock_container (f_lock: INTEGER)
 			-- No description available.
 			-- `f_lock' [in].  
 		require
@@ -50,7 +50,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

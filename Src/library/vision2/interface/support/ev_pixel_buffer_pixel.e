@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used for describing 32-bit RGBA component values of EV_PIXEL_BUFFER"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize pixel.
 		do
 			if (create {PLATFORM}).is_windows then
@@ -154,7 +154,7 @@ feature -- Element Change
 
 feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation
 
-	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER_I) is
+	set_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER_I)
 			-- Make `Current' for pixel buffer `a_pixel_buffer'.
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
@@ -162,7 +162,7 @@ feature {EV_PIXEL_BUFFER_ITERATOR} -- Implementation
 			internal_pixel_buffer := a_pixel_buffer
 		end
 
-	sync_with_pixel_buffer_value (a_column, a_row: NATURAL_32) is
+	sync_with_pixel_buffer_value (a_column, a_row: NATURAL_32)
 			-- Update `Current' to reflect pixel value (a_column, a_row) or `internal_pixel_buffer'.
 		do
 			current_column_value := a_column
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	alpha_shift: NATURAL_8
 		-- Bit shift values to access color components.
 
-	set_component_value (a_color, a_shift: NATURAL_8) is
+	set_component_value (a_color, a_shift: NATURAL_8)
 			-- Set color component to `a_color' for color requiring `a_shift' bit-shifts.
 		local
 			l_mask: NATURAL_32

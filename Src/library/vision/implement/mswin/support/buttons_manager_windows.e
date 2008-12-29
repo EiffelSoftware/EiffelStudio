@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is a MS_WINDOWS mouse button manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Implementation
 
-	left_button_down_implementation: BOOLEAN_REF is
+	left_button_down_implementation: BOOLEAN_REF
 			-- Implementation for left_button_down
 		once
 			create Result
@@ -18,13 +18,13 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	left_button_down: BOOLEAN is
+	left_button_down: BOOLEAN
 			-- Is the left button down?
 		do
 			Result := left_button_down_implementation.item
 		end
 
-	middle_button_down_implementation: BOOLEAN_REF is
+	middle_button_down_implementation: BOOLEAN_REF
 			-- Implementation for the middle_button_down
 		once
 			create Result
@@ -32,13 +32,13 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	middle_button_down: BOOLEAN is
+	middle_button_down: BOOLEAN
 			-- Is the middle button down?
 		do
 			Result := middle_button_down_implementation.item
 		end
 
-	right_button_down_implementation: BOOLEAN_REF is
+	right_button_down_implementation: BOOLEAN_REF
 			-- Implementation for right_button_down
 		once
 			create Result
@@ -46,13 +46,13 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	right_button_down: BOOLEAN is
+	right_button_down: BOOLEAN
 			-- Is the right button down?
 		do
 			Result := right_button_down_implementation.item
 		end
 
-	buttons_state, buttons: BUTTONS is
+	buttons_state, buttons: BUTTONS
 			-- State of the mouse buttons
 		do
 			create Result.make (5)
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			Result.put (False, 5)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

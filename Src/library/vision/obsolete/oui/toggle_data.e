@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when a toggle button's value has been %
@@ -29,14 +29,14 @@ feature
 	state: BOOLEAN;
 			-- New state of toggle button
 
-	make (a_widget: WIDGET; a_state: BOOLEAN) is
+	make (a_widget: WIDGET; a_state: BOOLEAN)
 			-- Create a context_data for `value changed' action.
 		do
 			widget := a_widget;
 			state := a_state
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

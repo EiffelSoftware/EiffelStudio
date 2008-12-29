@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Default widget for viewing and editing color preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Status Setting
 
-	set_preference (new_preference: like preference) is
+	set_preference (new_preference: like preference)
 			-- Set the preference.
 		do
 			Precursor (new_preference)
@@ -32,7 +32,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identifier.
 		do
 			Result := "COLOR"
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {PREFERENCE_VIEW} -- Commands
 
-	change is
+	change
 			-- Change the value.
 		require
 			preference_exists: preference /= Void
@@ -63,7 +63,7 @@ feature {PREFERENCE_VIEW} -- Commands
 
 feature {NONE} -- Commands
 
-	update_changes is
+	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.
 		require else
 			color_selected : color_tool.color /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Commands
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference is
+	update_preference
 			-- Updates preference.
 		do
 			if last_selected_value /= Void then
@@ -86,13 +86,13 @@ feature {NONE} -- Commands
 			end
 		end
 
-	show is
+	show
 			-- Show the widget in its editable state.
 		do
 			show_change_item_widget
 		end
 
-	refresh is
+	refresh
 		do
 			Precursor {PREFERENCE_WIDGET}
 			if change_item_widget.parent /= Void then
@@ -102,7 +102,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
-	show_change_item_widget is
+	show_change_item_widget
 			-- Show the change color dialog.
 		do
 			change
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_color_item_exposed (area: EV_DRAWABLE) is
+	on_color_item_exposed (area: EV_DRAWABLE)
 			-- Expose part of color preference value item.
 		local
 			l_y: INTEGER
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	color_tool: EV_COLOR_DIALOG;
 			-- Color Palette from which we can select a color.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

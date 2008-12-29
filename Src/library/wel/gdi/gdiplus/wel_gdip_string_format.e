@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GpStringFormat used in GDI+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		local
 			l_result: INTEGER
@@ -32,7 +32,7 @@ feature{NONE} -- Initlization
 
 feature -- Destroy
 
-	destroy_item is
+	destroy_item
 			-- Free Current Gdi+ object memory.
 		local
 			l_null: POINTER
@@ -50,7 +50,7 @@ feature -- Destroy
 
 feature{NONE} -- C externals
 
-	c_gdip_string_format_get_generic_default (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_string_format_get_generic_default (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Get default
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -75,7 +75,7 @@ feature{NONE} -- C externals
 			]"
 		end
 
-	c_gdip_delete_string_format (a_gdiplus_handle, a_format: POINTER): INTEGER is
+	c_gdip_delete_string_format (a_gdiplus_handle, a_format: POINTER): INTEGER
 			-- Get default
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -99,7 +99,7 @@ feature{NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

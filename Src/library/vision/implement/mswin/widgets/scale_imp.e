@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS scale"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -89,7 +89,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			create private_attributes
 			parent ?= oui_parent.implementation
@@ -107,7 +107,7 @@ feature -- Access
 	value: INTEGER
 			-- Return current position of the slider
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -147,7 +147,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
@@ -163,14 +163,14 @@ feature -- Status setting
 			end
 		end
 
-	set_output_only (f: BOOLEAN) is
+	set_output_only (f: BOOLEAN)
 			-- Set current output only
 			-- if `f' and output read else.
 		do
 			is_output_only := f
 		end
 
-	set_text (t: STRING) is
+	set_text (t: STRING)
 			-- Set the text to `t'.
 		do
 			text := t.twin
@@ -179,7 +179,7 @@ feature -- Status setting
 			end
 		end
 
-	realize is
+	realize
 			-- Realize current widget.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -218,7 +218,7 @@ feature -- Status setting
 			end
 		end
 
-	set_value_shown (f: BOOLEAN) is
+	set_value_shown (f: BOOLEAN)
 			-- Show or hide the value.
 		do
 			is_value_shown := f
@@ -231,7 +231,7 @@ feature -- Status setting
 			end
 		end
 
-	show_value (f: BOOLEAN) is
+	show_value (f: BOOLEAN)
 			-- Show or hide the value.
 		do
 			set_value_shown (f)
@@ -239,14 +239,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_granularity (a_granularity: INTEGER) is
+	set_granularity (a_granularity: INTEGER)
 			-- Set amount to move the slider and modifie the slide
 			-- position value when a move action occurs to
 		do
 			granularity := a_granularity
 		end
 
-	set_maximum (a_max: INTEGER) is
+	set_maximum (a_max: INTEGER)
 			-- Set maximum value of slider position to `a_max'.
 		do
 			maximum := a_max
@@ -257,7 +257,7 @@ feature -- Element change
 			maximum = a_max
 		end
 
-	set_minimum (a_min: INTEGER) is
+	set_minimum (a_min: INTEGER)
 			-- Set minimum value of slider position to `a_min'.
 		do
 			minimum := a_min
@@ -266,7 +266,7 @@ feature -- Element change
 			end
 		end
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical if `flag', and at the opposite side otherwise
@@ -274,7 +274,7 @@ feature -- Element change
 			is_maximum_right_bottom := flag
 		end
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set the position of the scroll bar to `a_value'.
 		do
 			value := a_value
@@ -288,7 +288,7 @@ feature -- Element change
 			end
 		end
 
-	set_default is
+	set_default
 			-- Set default values.
 		do
 			set_form_width (100)
@@ -301,7 +301,7 @@ feature -- Element change
 			set_text ("")
 		end
 
-	add_move_action (a_command: COMMAND; arg: ANY) is
+	add_move_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved
 		do
@@ -311,7 +311,7 @@ feature -- Element change
 			end
 		end
 
-	add_value_changed_action (a_command: COMMAND; arg: ANY) is
+	add_value_changed_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		do
@@ -323,14 +323,14 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; arg: ANY) is
+	remove_move_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' to the list of action to execute when slide
 			-- is moved
 		do
 			move_actions.remove (Current, a_command, arg)
 		end
 
-	remove_value_changed_action (a_command: COMMAND; arg: ANY) is
+	remove_value_changed_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
@@ -339,13 +339,13 @@ feature -- Removal
 
 feature
 
-	valid_minimum (a_minimum: INTEGER): BOOLEAN is
+	valid_minimum (a_minimum: INTEGER): BOOLEAN
 			-- Is `a_minimum' valid?
 		do
 			Result := precursor (a_minimum) and a_minimum >= -32768
 		end
 
-	valid_maximum (a_maximum: INTEGER): BOOLEAN is
+	valid_maximum (a_maximum: INTEGER): BOOLEAN
 			-- Is `a_maximum' valid?
 		do
 			Result := precursor (a_maximum) and a_maximum < 32768
@@ -353,7 +353,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	on_size (a_type, a_width, a_height: INTEGER) is
+	on_size (a_type, a_width, a_height: INTEGER)
 			-- Respond to a resize of current window.
 		local
 			resize_data: RESIZE_CONTEXT_DATA
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_vertical_scroll_control (scroll_code, a_position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Vertical scroll is received with a
 			-- `scroll_code' type. `a_position' is
 			-- the new scrollbox position. `bar'
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_horizontal_scroll_control (scroll_code, a_position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Horizontal scroll is received with a
 			-- `scroll_code' type. `a_position' is
 			-- the new scrollbox position. `bar'
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_scroll  (scroll_code, a_position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Horizontal or vertical scroll is received with a
 			-- `scroll_code' type. `a_position' is
 			-- the new scrollbox position. `bar'
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_value_static is
+	update_value_static
 			-- update the text of the value static.
 		require
 			exists: exists
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 	scroll_bar: SCALE_SCROLL_BAR_WINDOWS
 			-- Implementation of the scroll bar
 
-	scroll_bar_id: INTEGER is 100
+	scroll_bar_id: INTEGER = 100
 			-- Identifier of the scroll bar
 
 	value_static: WEL_STATIC
@@ -497,22 +497,22 @@ feature {NONE} -- Implementation
 	text_static: WEL_STATIC
 			-- Static for the text
 
-	text_height: INTEGER is 20
+	text_height: INTEGER = 20
 			-- Default value of statics
 
-	value_height: INTEGER is 20
+	value_height: INTEGER = 20
 			-- Default value of statics
 
-	value_width: INTEGER is 45
+	value_width: INTEGER = 45
 			-- default value of the value static
 
-	scroll_width: INTEGER is
+	scroll_width: INTEGER
 			-- default width of a vertical scroll bar
 		do
 			Result := (width - value_width).max (15)
 		end
 
-	scroll_height: INTEGER is
+	scroll_height: INTEGER
 			-- default width of a vertical scroll bar
 		do
 			Result := (height - 40).max (15)
@@ -520,11 +520,11 @@ feature {NONE} -- Implementation
 
 	wel_font: WEL_FONT
 
-	wel_set_font (f:WEL_FONT) is
+	wel_set_font (f:WEL_FONT)
 		do
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionScale"
@@ -535,7 +535,7 @@ invariant
 	valid_text_static: exists implies (text_static /= Void implies text_static.exists)
 	valid_value_static: exists implies (value_static /= Void implies value_static.exists)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

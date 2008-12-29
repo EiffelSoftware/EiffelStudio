@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision text area. Implementation interface."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	line (i: INTEGER): STRING_32 is
+	line (i: INTEGER): STRING_32
 			-- `Result' is content of the `i'th line.
 		require
 			valid_line: valid_line_index (i)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status report
 
-		has_word_wrapping: BOOLEAN is
+		has_word_wrapping: BOOLEAN
 			-- Is word wrapping enabled?
 			-- If enabled, lines that are too long to be displayed
 			-- in `Current' will be wrapped onto new lines.
@@ -43,7 +43,7 @@ feature -- Status report
 		deferred
 		end
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- `Result'is number of line containing cursor.
 		require
 		deferred
@@ -51,14 +51,14 @@ feature -- Status report
 			valid_line_index: valid_line_index (Result)
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines of text in `Current'.
 		deferred
 		ensure
 			result_greater_zero: Result > 0
 		end
 
-	first_position_from_line_number (i: INTEGER): INTEGER is
+	first_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of the first character on the `i'-th line.
 		require
 			valid_line: valid_line_index (i)
@@ -67,7 +67,7 @@ feature -- Status report
 			valid_caret_position: valid_caret_position (i)
 		end
 
-	last_position_from_line_number (i: INTEGER): INTEGER is
+	last_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of the last character on the `i'-th line.
 		require
 			valid_line: valid_line_index (i)
@@ -76,7 +76,7 @@ feature -- Status report
 			valid_caret_position: valid_caret_position (i)
 		end
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		require
 			valid_caret_position: valid_caret_position (i)
@@ -87,21 +87,21 @@ feature -- Status report
 
 feature -- Basic operation
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Ensure `has_word_wrap' is True.
 		deferred
 		ensure
 			word_wrapping_enabled: has_word_wrapping
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Ensure `has_word_wrap' is False.
 		deferred
 		ensure
 			word_wrapping_disabled: not has_word_wrapping
 		end
 
-	search (str: STRING_GENERAL; start: INTEGER): INTEGER is
+	search (str: STRING_GENERAL; start: INTEGER): INTEGER
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		require
@@ -110,21 +110,21 @@ feature -- Basic operation
 			Result := text.substring_index (str, start)
 		end
 
-	scroll_to_line (i: INTEGER) is
+	scroll_to_line (i: INTEGER)
 			-- Ensure that line `i' is visible in `Current'.
 		require
 			valid_line_index: valid_line_index (i)
 		deferred
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Ensure that the last line is visible in `Current'.
 		deferred
 		end
 
 feature -- Assertions
 
-	valid_line_index (i: INTEGER): BOOLEAN is
+	valid_line_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid line index?
 		require
 		do
@@ -135,7 +135,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

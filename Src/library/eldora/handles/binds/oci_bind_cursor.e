@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bind Variable of type CURSOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	set_value (new_value: OCI_STATEMENT) is
+	set_value (new_value: OCI_STATEMENT)
 			-- Set value of bind-variable to `new_value'
 		local
 			temp: POINTER
@@ -32,7 +32,7 @@ feature -- Basic operations
 			buffer.memory_copy ($temp, Pointer_bytes)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

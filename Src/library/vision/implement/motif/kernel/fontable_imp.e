@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of motif fontable widget."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Current font
 		local
 			font_x: FONT_IMP
@@ -25,26 +25,26 @@ feature -- Access
 			Result := private_font
 		end;
 
-	font_list: MEL_FONT_LIST is
+	font_list: MEL_FONT_LIST
 			-- Motif font list for fontable widget
 		deferred
 		end;
 
-	screen: SCREEN_I is
+	screen: SCREEN_I
 			-- Associated screen
 		deferred
 		end
 
 feature -- Status setting
 
-	set_font_list (a_font_list: MEL_FONT_LIST) is
+	set_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `font_list' to `a_font_list'.
 		require
 			valid_font_list: a_font_list /= Void and then a_font_list.is_valid
 		deferred
 		end;
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set font label to `a_font'.
 		require
 			a_font_exists: a_font /= Void;
@@ -64,7 +64,7 @@ feature -- Status setting
 			set: font = a_font
 		end; 
 
-	font_width_of_string (a_text: STRING): INTEGER is
+	font_width_of_string (a_text: STRING): INTEGER
 			-- Width of string for `font'
 		do
 			Result := font.width_of_string (a_text);
@@ -75,7 +75,7 @@ feature {FONT_IMP} -- Implementation
 	private_font: FONT
 			-- Private font
 
-	update_font is
+	update_font
 			-- Update the X font after a change inside the Eiffel font.
 		local
 			font_implementation: FONT_IMP
@@ -86,7 +86,7 @@ feature {FONT_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_font_from_imp (font_implementation: FONT_IMP) is
+	set_font_from_imp (font_implementation: FONT_IMP)
 			-- Set the font from `a_font_imp'.
 		require
 			valid_font_imp: font_implementation /= Void
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe a keyword (create, loop, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			--
 		do
 			a_visitor.process_editor_token_keyword (Current)
@@ -31,12 +31,12 @@ feature -- Visitor
 
 feature -- Color and font
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			Result := keyword_text_color_id
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			if is_highlighted then
 				Result := highlight_color_id
@@ -45,13 +45,13 @@ feature -- Color and font
 			end
 		end
 
-	font_id: INTEGER is
+	font_id: INTEGER
 			-- Font used in the editor
 		do
 			Result := keyword_font_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

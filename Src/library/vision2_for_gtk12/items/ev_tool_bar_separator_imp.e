@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tool bar separator. Implementation interface."
 	legal: "See notice at end of class."
@@ -27,18 +27,18 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create implementation for `an_interface'
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vseparator_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialize some stuff useless to separators.
 		do
 			Precursor {EV_ITEM_IMP}
@@ -50,7 +50,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

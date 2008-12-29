@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision pick and drop source, GTK implementation."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Handle motion event for `Current'.
 		local
 			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
@@ -73,7 +73,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			end
 		end
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 		deferred
 		end
 
@@ -84,13 +84,13 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	enable_capture is
+	enable_capture
 			-- Grab all the mouse and keyboard events.
 		local
 			l_interface: EV_WIDGET
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_capture is
+	disable_capture
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
@@ -133,13 +133,13 @@ feature {NONE} -- Implementation
 			App_implementation.enable_debugger
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does Current have the keyboard and mouse event capture?
 		do
 			Result := App_implementation.captured_widget = interface or else app_implementation.pick_and_drop_source = Current
 		end
 
-	grab_keyboard_and_mouse is
+	grab_keyboard_and_mouse
 			-- Perform a global mouse and keyboard grab.
 		local
 			i: INTEGER
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			i := {EV_GTK_EXTERNALS}.gdk_keyboard_grab (l_gdk_window, True, 0)
 		end
 
-	release_keyboard_and_mouse is
+	release_keyboard_and_mouse
 			-- Release mouse and keyboard grab.
 		do
 			{EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
@@ -174,26 +174,26 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	draw_rubber_band  is
+	draw_rubber_band
 			-- Erase previously drawn rubber band.
 			-- Draw a rubber band between initial pick point and cursor.
 		do
 			app_implementation.draw_rubber_band
 		end
 
-	erase_rubber_band  is
+	erase_rubber_band
 			-- Erase previously drawn rubber band.
 		do
 			app_implementation.erase_rubber_band
 		end
 
-	enable_transport is
+	enable_transport
 			-- Activate pick/drag and drop mechanism.
  		do
 			is_transport_enabled := True
 		end
 
-	disable_transport is
+	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		do
 			is_transport_enabled := False
@@ -201,7 +201,7 @@ feature -- Implementation
 			is_transport_disabled: not is_transport_enabled
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
 		do
 				-- Force any pending graphics calls.
@@ -227,18 +227,18 @@ feature -- Implementation
 			modify_widget_appearance (True)
 		end
 
-	is_dockable: BOOLEAN is
+	is_dockable: BOOLEAN
 			-- Is `Current' dockable?
 		deferred
 		end
 
-	set_to_drag_and_drop: BOOLEAN is
+	set_to_drag_and_drop: BOOLEAN
 			-- Set `Current' to drag and drop mode.
 		do
 			Result := mode_is_drag_and_drop
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is `Current' able to initiate transport with `a_button'.
 		do
 			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
@@ -250,7 +250,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Handle mouse button events.
 		local
 			app_imp: EV_APPLICATION_IMP
@@ -297,7 +297,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
-		is
+		
 			-- Initialize a pick and drop transport.
 		local
 			l_configure_agent: PROCEDURE [ANY, TUPLE]
@@ -349,13 +349,13 @@ feature -- Implementation
 			Result := interface
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER; a_press: BOOLEAN): BOOLEAN is
+	ready_for_pnd_menu (a_button: INTEGER; a_press: BOOLEAN): BOOLEAN
 			-- Will `Current' display a menu with button `a_button'.
 		do
 			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then not a_press
 		end
 
-	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- End a pick and drop transport.
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
@@ -400,14 +400,14 @@ feature -- Implementation
 			post_drop_steps (a_button)
 		end
 
-	post_drop_steps (a_button: INTEGER)  is
+	post_drop_steps (a_button: INTEGER)
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
 			reset_pebble_function
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 			-- Hole at mouse position
 		local
 			gdkwin: POINTER
@@ -451,14 +451,14 @@ feature -- Implementation
 			end
 		end
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+	create_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Create and initialize `drop_actions' for `Current'
 		do
 			create Result
 			interface.init_drop_actions (Result)
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `Current'.
 		local
 			x, y, s: INTEGER
@@ -473,7 +473,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PICK_AND_DROPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

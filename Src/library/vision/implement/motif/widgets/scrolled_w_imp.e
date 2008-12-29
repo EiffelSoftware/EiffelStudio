@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif scrolled window."
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif scrolled window.
 		local
 			mc: MEL_COMPOSITE
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	working_area: WIDGET is
+	working_area: WIDGET
 			-- Working area of window which will
 			-- be moved using scrollbars
 		local
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_working_area (a_widget: WIDGET) is
+	set_working_area (a_widget: WIDGET)
 			-- Set work area of windon to `a_widget'.
 		local
 			mo: MEL_WIDGET
@@ -77,7 +77,7 @@ feature -- Status setting
 			set_work_window (mo)
 		end;
 
-    set_background_color_from_imp (color_imp: COLOR_IMP) is
+    set_background_color_from_imp (color_imp: COLOR_IMP)
             -- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET
@@ -102,7 +102,7 @@ feature -- Status setting
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

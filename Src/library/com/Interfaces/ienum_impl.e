@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of `IEnumXXXX' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (enumeration: like implementation) is
+	make (enumeration: like implementation)
 			-- Initialization.
 		require
 			non_void_enumeration: enumeration /= Void
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgelt: ARRAY [G]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [G]; pcelt_fetched: INTEGER_REF)
 			-- Retrieves the next `celt' items in 
 			-- the enumeration sequence. 
 			-- If there are fewer than the requested number 
@@ -59,7 +59,7 @@ feature -- Basic Operations
 			pcelt_fetched.set_item (duplicate.count)
 		end
 
-	skip (celt: INTEGER) is
+	skip (celt: INTEGER)
 			-- Skips over the next specified number of 
 			-- elements in the enumeration sequence.
 			-- `celt' [in] Number of elements to be skipped.
@@ -67,13 +67,13 @@ feature -- Basic Operations
 			implementation.move (celt)
 		end
 
-	reset is
+	reset
 			-- Resets the enumeration sequence to the beginning.
 		do
 			implementation.start
 		end
 
-	clone1 (ppenum: CELL [like Current]) is
+	clone1 (ppenum: CELL [like Current])
 			-- Creates another enumerator that contains the 
 			-- same enumeration state as the current one. 
 			-- Using this function, a client can record a 
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	implementation: LIST [G]
 			-- Implementation of enumeration.
 
-	implementation_exists: BOOLEAN is
+	implementation_exists: BOOLEAN
 			-- Does `implementation' exist?
 		do
 			Result := implementation /= Void
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 invariant
 	implementation_exists: implementation_exists
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

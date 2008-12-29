@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision Implementation of a Motif file selection box."
@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_file_selection: FILE_SELEC; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif file selection.
 		local
 			mc: MEL_COMPOSITE
@@ -78,13 +78,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_dir_valid: BOOLEAN is
+	is_dir_valid: BOOLEAN
 			-- Is current search directory valid?
 		do
 			Result := directory_valid
 		end;
 
-	file_list: LINKED_LIST [STRING] is
+	file_list: LINKED_LIST [STRING]
 			-- Items of current file list
 		local
 			c, i: INTEGER;
@@ -107,7 +107,7 @@ feature -- Access
 			end
 		end;
 
-	dir_list: LINKED_LIST [STRING] is
+	dir_list: LINKED_LIST [STRING]
 			-- Items of current directory list
 		local
 			c, i: INTEGER;
@@ -131,13 +131,13 @@ feature -- Access
 			end
 		end;
 
-	dir_count: INTEGER is
+	dir_count: INTEGER
 			-- Number of items in directory list
 		do
 			Result := dir_list_item_count
 		end;
 
-	file_count: INTEGER is
+	file_count: INTEGER
 			-- Number of items in file list
 		do
 			Result := file_list_item_count
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_file: STRING is
+	selected_file: STRING
 			-- Current selected file
 		local
 			ms: MEL_STRING
@@ -155,7 +155,7 @@ feature -- Status report
 			ms.destroy
 		end;
 			
-	filter: STRING is
+	filter: STRING
 			-- Current filter value
 		local
 			ms: MEL_STRING
@@ -165,7 +165,7 @@ feature -- Status report
 			ms.destroy
 		end;
 
-	directory: STRING is
+	directory: STRING
 			-- Base directory used in determining files and directories
 			-- to be displayed
 		local
@@ -176,7 +176,7 @@ feature -- Status report
 			ms.destroy
 		end;
 
-	pattern: STRING is
+	pattern: STRING
 			-- Search pattern used in combination with `directory'
 			-- files and directories to be displayed
 		local
@@ -193,7 +193,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_file_list_label (a_label: STRING) is
+	set_file_list_label (a_label: STRING)
 			-- Set `a_label' as file list label,
 			-- by default this label is `Files'.
 		local
@@ -204,7 +204,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_dir_list_label (a_label: STRING) is
+	set_dir_list_label (a_label: STRING)
 			-- Set `a_label' as dir list label,
 			-- by default this label is `Directories'.
 		local
@@ -215,7 +215,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING)
 			-- Set current filter to `a_filter'.
 		local
 			ms: MEL_STRING
@@ -225,7 +225,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_directory (a_directory_name: STRING) is
+	set_directory (a_directory_name: STRING)
 			-- Set base directory used in determining files and directories
 		   -- to be displayed to `a_directory_name'.
 		local
@@ -236,7 +236,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_pattern (a_pattern: STRING) is
+	set_pattern (a_pattern: STRING)
 			-- Set pattern to `a_pattern'.
 		local
 			ms: MEL_STRING
@@ -246,14 +246,14 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_pattern_name (a_pattern_name: STRING) is
+	set_pattern_name (a_pattern_name: STRING)
 			-- Set pattern_name to `a_pattern'.
 		do 
 			pattern_name := a_pattern_name
 		end
 
 
-	set_filter_label (a_label: STRING) is
+	set_filter_label (a_label: STRING)
 			-- Set `a_label' as filter label,
 			-- by default this label is `Filter'.
 		local
@@ -264,25 +264,25 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_directory_selection is
+	set_directory_selection
 			-- Sets selection to directories only.
 		do
 			use_file_directory_mask
 		end;
 
-	set_file_selection is
+	set_file_selection
 			-- Sets selection to files (default value). 
 		do
 			use_file_regular_mask
 		end;
 
-	set_all_selection is
+	set_all_selection
 		 	-- Sets selection to files and directories.
 		do
 			use_file_any_type_mask
 		end;
 
-	set_file_list_width (new_width: INTEGER) is
+	set_file_list_width (new_width: INTEGER)
 			-- Set `file_list' widget to `new_width'.
 		do
 			list.set_width (new_width)	
@@ -290,77 +290,77 @@ feature -- Status setting
 
 feature -- Display
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			cancel_button.unmanage
 		end; 
 
-	hide_filter_button is
+	hide_filter_button
 			-- Make filter button invisible.
 		do
 			apply_button.unmanage
 		end;
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		do
 			help_button.unmanage
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			ok_button.unmanage
 		end;
 
-	hide_file_selection_list is
+	hide_file_selection_list
 		do
 			list.parent.unmanage
 		end;
 
-	hide_file_selection_label is
+	hide_file_selection_label
 		do
 			list_label.unmanage
 		end;
 			
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		do
 			cancel_button.manage
 		end;
 
-	show_filter_button is
+	show_filter_button
 			-- Make filter button visible.
 		do
 			apply_button.manage
 		end; 
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		do
 			help_button.manage
 		end; 
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		do
 			ok_button.manage
 		end;
 
-	show_file_selection_label is
+	show_file_selection_label
 		do
 			list_label.manage
 		end;
 
-	show_file_selection_list is
+	show_file_selection_list
 		do
 			list.parent.manage
 		end;
 		
 feature -- Element change
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		local
@@ -374,7 +374,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_filter_action (a_command: COMMAND; argument: ANY) is
+	add_filter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- filter button is activated.
 		local
@@ -388,7 +388,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		local
@@ -402,7 +402,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		local
@@ -418,28 +418,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			remove_command (cancel_command, a_command, argument)
 		end; 
 
-	remove_filter_action (a_command: COMMAND; argument: ANY) is
+	remove_filter_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- filter button is activated.
 		do
 			remove_command (apply_command, a_command, argument)
 		end; 
 
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		do
 			remove_command (help_command, a_command, argument)
 		end; 
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -448,7 +448,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	set_foreground_color_from_imp (color_imp: COLOR_IMP) is
+	set_foreground_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		do
 			mel_set_foreground_color (color_imp);
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			mel_dir_list.set_foreground_color (color_imp);
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			l: ARRAYED_LIST [POINTER];
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	text_widget_list: LINKED_LIST [POINTER] is
+	text_widget_list: LINKED_LIST [POINTER]
 			-- Text list includes the two directory list
 		do
 			Result := old_text_widget_list;
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 			Result.extend (mel_dir_list.screen_object);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

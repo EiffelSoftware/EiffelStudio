@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the dimensions and color %
 		%format of a device-independent bitmap (DIB)."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_width, a_height, a_planes, a_bit_count: INTEGER) is
+	make (a_width, a_height, a_planes, a_bit_count: INTEGER)
 		do
 			structure_make
 			cwel_bitmapcoreheader_set_size (item, structure_size)
@@ -37,50 +37,50 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			Result := cwel_bitmapcoreheader_get_width (item)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			Result := cwel_bitmapcoreheader_get_height (item)
 		end
 
-	planes: INTEGER is
+	planes: INTEGER
 		do
 			Result := cwel_bitmapcoreheader_get_planes (item)
 		end
 
-	bit_count: INTEGER is
+	bit_count: INTEGER
 		do
 			Result := cwel_bitmapcoreheader_get_bitcount (item)
 		end
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 		do
 			cwel_bitmapcoreheader_set_width (item, a_width)
 		ensure
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 		do
 			cwel_bitmapcoreheader_set_height (item, a_height)
 		ensure
 			height_set: height = a_height
 		end
 
-	set_planes (a_planes: INTEGER) is
+	set_planes (a_planes: INTEGER)
 		do
 			cwel_bitmapcoreheader_set_planes (item, a_planes)
 		ensure
 			planes_set: planes = a_planes
 		end
 
-	set_bit_count (a_bit_count: INTEGER) is
+	set_bit_count (a_bit_count: INTEGER)
 		do
 			cwel_bitmapcoreheader_set_bitcount (item, a_bit_count)
 		ensure
@@ -89,7 +89,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_bitmapcoreheader
@@ -97,59 +97,59 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_bitmapcoreheader: INTEGER is
+	c_size_of_bitmapcoreheader: INTEGER
 		external
 			"C [macro <bmpcoreh.h>]"
 		alias
 			"sizeof (BITMAPCOREHEADER)"
 		end
 
-	cwel_bitmapcoreheader_set_size (ptr: POINTER; value: INTEGER) is
+	cwel_bitmapcoreheader_set_size (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_set_width (ptr: POINTER; value: INTEGER) is
+	cwel_bitmapcoreheader_set_width (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_set_height (ptr: POINTER; value: INTEGER) is
+	cwel_bitmapcoreheader_set_height (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_set_planes (ptr: POINTER; value: INTEGER) is
+	cwel_bitmapcoreheader_set_planes (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_set_bitcount (ptr: POINTER; value: INTEGER) is
+	cwel_bitmapcoreheader_set_bitcount (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_get_width (ptr: POINTER): INTEGER is
+	cwel_bitmapcoreheader_get_width (ptr: POINTER): INTEGER
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_get_height (ptr: POINTER): INTEGER is
+	cwel_bitmapcoreheader_get_height (ptr: POINTER): INTEGER
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_get_planes (ptr: POINTER): INTEGER is
+	cwel_bitmapcoreheader_get_planes (ptr: POINTER): INTEGER
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-	cwel_bitmapcoreheader_get_bitcount (ptr: POINTER): INTEGER is
+	cwel_bitmapcoreheader_get_bitcount (ptr: POINTER): INTEGER
 		external
 			"C [macro <bmpcoreh.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

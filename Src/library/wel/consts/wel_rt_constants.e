@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Resource Type (RT) constants.
 		
@@ -14,91 +14,91 @@ class
 
 feature -- Access
 
-	Rt_cursor: POINTER is
+	Rt_cursor: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_CURSOR"
 		end
 
-	Rt_bitmap: POINTER is
+	Rt_bitmap: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_BITMAP"
 		end
 
-	Rt_icon: POINTER is
+	Rt_icon: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_ICON"
 		end
 
-	Rt_menu: POINTER is
+	Rt_menu: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_MENU"
 		end
 
-	Rt_dialog: POINTER is
+	Rt_dialog: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_DIALOG"
 		end
 
-	Rt_string: POINTER is
+	Rt_string: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_STRING"
 		end
 
-	Rt_fontdir: POINTER is
+	Rt_fontdir: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_FONTDIR"
 		end
 
-	Rt_font: POINTER is
+	Rt_font: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_FONT"
 		end
 
-	Rt_accelerator: POINTER is
+	Rt_accelerator: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_ACCELERATOR"
 		end
 
-	Rt_rcdata: POINTER is
+	Rt_rcdata: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_RCDATA"
 		end
 
-	Rt_group_cursor: POINTER is
+	Rt_group_cursor: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_GROUP_CURSOR"
 		end
 
-	Rt_group_icon: POINTER is
+	Rt_group_icon: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"RT_GROUP_ICON"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

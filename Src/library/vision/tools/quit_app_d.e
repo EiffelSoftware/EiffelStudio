@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Message dialog to ensure that the user really wants to quit the application"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a predefined question dialog with `a_name' as identifier,
 			-- `a_parent' as parent. When `execute' is called, popup the
 			-- question dialog and ask the user if he's sure to quit the
@@ -40,7 +40,7 @@ feature -- Initialization
 -- FIXME
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

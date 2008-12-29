@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control that looks and acts like a button. But
 		the button looks raised when it isn't pushed or checked,
@@ -29,14 +29,14 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child +
 				Ws_group + Ws_tabstop + Bs_autocheckbox + Bs_pushlike
  		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

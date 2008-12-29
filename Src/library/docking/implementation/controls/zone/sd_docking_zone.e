@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the zone when docking in SD_MULTI_DOCK_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,21 +38,21 @@ inherit
 
 feature -- Command
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set title
 		require
 			not_void: a_title /= Void
 		deferred
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set pixmap
 		require
 			not_void: a_pixmap /= Void
 		do
 		end
 
-	close is
+	close
 			-- Redefine
 		do
 			internal_docking_manager.command.lock_update (Current, False)
@@ -61,26 +61,26 @@ feature -- Command
 			internal_docking_manager.command.unlock_update
 		end
 
-	update_user_widget is
+	update_user_widget
 			-- If `content''s user_widget changed, we update containers.
 		do
 		end
 
 feature -- Query
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title
 		deferred
 		end
 
-	title_area: EV_RECTANGLE is
+	title_area: EV_RECTANGLE
 			-- Title area
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	is_parent_split: BOOLEAN is
+	is_parent_split: BOOLEAN
 			-- Is parent a split area?
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -89,7 +89,7 @@ feature -- Query
 			Result := l_split_area /= Void
 		end
 
-	parent_split_position: INTEGER is
+	parent_split_position: INTEGER
 			-- If parent is split area, get split position.
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -100,7 +100,7 @@ feature -- Query
 
 feature {NONE} -- For redocker.
 
-	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Create a SD_DOCKER_MEDIATOR, start hanlde pointer motion.
 		do
 			debug ("docking")
@@ -116,7 +116,7 @@ feature {NONE} -- For redocker.
 			end
 		end
 
-	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Stop SD_DOCKER_MEDIATOR.
 		do
 			if docker_mediator /= Void then
@@ -127,7 +127,7 @@ feature {NONE} -- For redocker.
 			end
 		end
 
-	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Forward pointer motion data to SD_DOCKER_MEDIATOR.
 		do
 			if docker_mediator /= Void then
@@ -135,7 +135,7 @@ feature {NONE} -- For redocker.
 			end
 		end
 
-	on_cancel_dragging is
+	on_cancel_dragging
 			-- Handle cancel dragging from SD_DOCKER_MEDIATOR.
 		do
 			disable_capture
@@ -146,13 +146,13 @@ feature {NONE} -- For redocker.
 	docker_mediator: SD_DOCKER_MEDIATOR;
 			-- Mediator perform dock.	
 
-	setter: SD_SYSTEM_SETTER is
+	setter: SD_SYSTEM_SETTER
 			-- System setter
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

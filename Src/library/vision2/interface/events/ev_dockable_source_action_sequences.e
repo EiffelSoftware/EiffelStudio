@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_DOCKABLE_SOURCE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-	dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when a dockable source is dragged.
 		do
 			Result := implementation.dock_started_actions
@@ -31,7 +31,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	dock_ended_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed after a dock completes from `Current'.
 			-- Either to a dockable target or a dockable dialog.
 		do
@@ -41,7 +41,7 @@ feature -- Event handling
 		end
 		
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Base class for interactive scrolling widgets.
@@ -27,12 +27,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Contract support
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := not is_tabable_from and not is_tabable_to
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

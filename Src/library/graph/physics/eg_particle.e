@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			An EG_PARTICLE has a mass and a position. Plus three values dx, dy and dt
 			which can be used to solve differential equations.
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (ax, ay: INTEGER; a_mass: like mass) is
+	make (ax, ay: INTEGER; a_mass: like mass)
 			-- Make a particle with `a_mass' at position (`ax', `ay').
 		do
 			internal_x := ax
@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- x position of particle.
 		do
 			Result := internal_x
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- y position of particle.
 		do
 			Result := internal_y
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_delta (a_dx, a_dy: DOUBLE) is
+	set_delta (a_dx, a_dy: DOUBLE)
 			-- Set `dx' to `a_dx' and `dy' to `a_dy'
 		do
 			dx := a_dx
@@ -64,7 +64,7 @@ feature -- Element change
 			set: dx = a_dx and dy = a_dy
 		end
 
-	set_dt (a_dt: DOUBLE) is
+	set_dt (a_dt: DOUBLE)
 			-- Set `dt' to `a_dt'
 		do
 			dt := a_dt
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	internal_y: INTEGER;
 			-- internal `y' position.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

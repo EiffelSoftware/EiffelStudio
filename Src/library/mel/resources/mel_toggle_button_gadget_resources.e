@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Toggle Button Gadget resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNfillOnSelect: POINTER is
+	XmNfillOnSelect: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNfillOnSelect"
 		end;
 
-	XmNindicatorOn: POINTER is
+	XmNindicatorOn: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNindicatorOn"
 		end;
 
-	XmNindicatorSize: POINTER is
+	XmNindicatorSize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNindicatorSize"
 		end;
 
-	XmNindicatorType: POINTER is
+	XmNindicatorType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNindicatorType"
 		end;
 
-	XmNselectColor: POINTER is
+	XmNselectColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNselectColor"
 		end;
 
-	XmNselectInsensitivePixmap: POINTER is
+	XmNselectInsensitivePixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNselectInsensitivePixmap"
 		end;
 
-	XmNselectPixmap: POINTER is
+	XmNselectPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNselectPixmap"
 		end;
 
-	XmNset: POINTER is
+	XmNset: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNset"
 		end;
 
-	XmNspacing: POINTER is
+	XmNspacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNspacing"
 		end;
 
-	XmNvisibleWhenOff: POINTER is
+	XmNvisibleWhenOff: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNvisibleWhenOff"
 		end;
 
-	XmNarmCallback: POINTER is
+	XmNarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNarmCallback"
 		end;
 
-	XmNdisarmCallback: POINTER is
+	XmNdisarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNdisarmCallback"
 		end;
 
-	XmNvalueChangedCallback: POINTER is
+	XmNvalueChangedCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNvalueChangedCallback"
 		end;
 
-	XmN_OF_MANY: INTEGER is
+	XmN_OF_MANY: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_INTEGER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmN_OF_MANY"
 		end;
 
-	XmONE_OF_MANY: INTEGER is
+	XmONE_OF_MANY: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ToggleBG.h>]: EIF_INTEGER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmONE_OF_MANY"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

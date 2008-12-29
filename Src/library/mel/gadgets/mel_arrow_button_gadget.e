@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Arrow Button Gadget."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif arrow button gadget.
 		require
 			name_exists: a_name /= Void;
@@ -54,19 +54,19 @@ feature -- Initialization
 
 feature -- Access
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	arm_command: MEL_COMMAND_EXEC is
+	arm_command: MEL_COMMAND_EXEC
 			-- Command set for the arm callback
 		do
 			Result := motif_command (XmNarmCallback)
 		end;
 
-	disarm_command: MEL_COMMAND_EXEC is
+	disarm_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNdisarmCallback)
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_up: BOOLEAN is
+	is_up: BOOLEAN
 			-- Is the arrow direction up?
 		require
 			exists: not is_destroyed
@@ -82,7 +82,7 @@ feature -- Status report
 			Result := XmARROW_UP = get_xt_unsigned_char (screen_object, XmNarrowDirection)
 		end;
 
-	is_down: BOOLEAN is
+	is_down: BOOLEAN
 			-- Is the arrow direction down?
 		require
 			exists: not is_destroyed
@@ -90,7 +90,7 @@ feature -- Status report
 			Result := XmARROW_DOWN = get_xt_unsigned_char (screen_object, XmNarrowDirection)
 		end;
 
-	is_left: BOOLEAN is
+	is_left: BOOLEAN
 			-- Is the arrow direction left?
 		require
 			exists: not is_destroyed
@@ -98,7 +98,7 @@ feature -- Status report
 			Result := XmARROW_LEFT = get_xt_unsigned_char (screen_object, XmNarrowDirection)
 		end;
 
-	is_right: BOOLEAN is
+	is_right: BOOLEAN
 			-- Is the arrow direction right?
 		require
 			exists: not is_destroyed
@@ -106,7 +106,7 @@ feature -- Status report
 			Result := XmARROW_RIGHT = get_xt_unsigned_char (screen_object, XmNarrowDirection)
 		end;
 
-	is_multiclick_keep: BOOLEAN is
+	is_multiclick_keep: BOOLEAN
 			-- Is the successive button clicks processed?
 		require
 			exists: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_up is
+	set_up
 			-- Set the arrow direction to up.
 		require
 			exists: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Status setting
 			is_up: is_up	
 		end;
 
-	set_down is
+	set_down
 			-- Set the arrow direction to down.
 		require
 			exists: not is_destroyed
@@ -136,7 +136,7 @@ feature -- Status setting
 			is_down: is_down	
 		end;
 
-	set_left is
+	set_left
 			-- Set the arrow direction to left.
 		require
 			exists: not is_destroyed
@@ -146,7 +146,7 @@ feature -- Status setting
 			is_left: is_left	
 		end;
 
-	set_right is
+	set_right
 			-- Set the arrow direction to right.
 		require
 			exists: not is_destroyed
@@ -156,7 +156,7 @@ feature -- Status setting
 			is_right: is_right	
 		end;
 
-	set_multiclick_keep is
+	set_multiclick_keep
 			-- Set the XmNmultiClick resource to XmMULTICLICK_KEEP.
 		require
 			exists: not is_destroyed
@@ -166,7 +166,7 @@ feature -- Status setting
 			is_multiclick_keep: is_multiclick_keep
 		end;
 
-	set_multiclick_discard is
+	set_multiclick_discard
 			-- Set the XmNmultiClick resource to XmMULTICLICK_DISCARD.
 		require
 			exists: not is_destroyed
@@ -178,7 +178,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is
 			-- is pressed and released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -191,7 +191,7 @@ feature -- Element change
 			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -203,7 +203,7 @@ feature -- Element change
 			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is released.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -217,7 +217,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback is
+	remove_activate_callback
 			-- Remove the command for the activate callback.
 		do
 			remove_callback (XmNactivateCallback)
@@ -225,7 +225,7 @@ feature -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_arm_callback is
+	remove_arm_callback
 			-- Remove the command for the arm callback.
 		do
 			remove_callback (XmNarmCallback)
@@ -233,7 +233,7 @@ feature -- Removal
 			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback is
+	remove_disarm_callback
 			-- Remove the command for the disarm callback.
 		do
 			remove_callback (XmNdisarmCallback)
@@ -244,7 +244,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-				resource_name: POINTER): MEL_ARROW_BUTTON_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ARROW_BUTTON_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to the `a_callback_struct_ptr' pointer.
 		do
@@ -253,14 +253,14 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_arrow_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_arrow_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ArrowBG.h> "
 		alias
 			"XmCreateArrowButtonGadget"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

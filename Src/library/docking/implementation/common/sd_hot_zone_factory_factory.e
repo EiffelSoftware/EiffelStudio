@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for SD_HOT_ZONE_ABSTRACT_FACTORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ deferred class
 
 feature -- Hot zone factory
 
-	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
+	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- Hot zone factory which current os should use.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

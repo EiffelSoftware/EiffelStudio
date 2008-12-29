@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision font. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,37 +22,37 @@ inherit
 
 feature -- Access
 
-	family: INTEGER is
+	family: INTEGER
 			-- Preferred font category.
 		deferred
 		end
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Charset
 		deferred
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- Preferred font thickness.
 		deferred
 		end
 
-	shape: INTEGER is
+	shape: INTEGER
 			-- Preferred font slant.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Preferred font height measured in screen pixels.
 		deferred
 		end
 
-	height_in_points: INTEGER is
+	height_in_points: INTEGER
 			-- Preferred font height in pixels.
 		deferred
 		end
 
-	line_height: INTEGER is
+	line_height: INTEGER
 			-- Preferred text editor line height in pixels for `Current'.
 		do
 			Result := ascent + descent + {PLATFORM}.is_windows.to_integer
@@ -65,7 +65,7 @@ feature -- Access
 feature -- Element change
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_families: like preferred_families) is
+		a_preferred_families: like preferred_families)
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_faces' at the same time for speed.
 		require
@@ -95,7 +95,7 @@ feature -- Element change
 			set_height (a_height)
 		end
 
-	set_family (a_family: INTEGER) is
+	set_family (a_family: INTEGER)
 			-- Set `a_family' as preferred font category.
 		require
 			a_family_valid: valid_family (a_family)
@@ -104,7 +104,7 @@ feature -- Element change
 			family_assigned: family = a_family
 		end
 
-	set_weight (a_weight: INTEGER) is
+	set_weight (a_weight: INTEGER)
 			-- Set `a_weight' as preferred font thickness.
 		require
 			a_weight_valid: valid_weight (a_weight)
@@ -113,7 +113,7 @@ feature -- Element change
 			weight_assigned: weight = a_weight
 		end
 
-	set_shape (a_shape: INTEGER) is
+	set_shape (a_shape: INTEGER)
 			-- Set `a_shape' as preferred font slant.
 		require
 			a_shape_valid: valid_shape (a_shape)
@@ -122,7 +122,7 @@ feature -- Element change
 			shape_assigned: shape = a_shape
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `a_height' as preferred font size.
 		require
 			a_height_bigger_than_zero: a_height > 0
@@ -131,7 +131,7 @@ feature -- Element change
 			height_assigned: height = a_height
 		end
 
-	set_height_in_points (a_height: INTEGER) is
+	set_height_in_points (a_height: INTEGER)
 			-- Set `a_height_in_points' to `a_height'.
 		require
 			a_height_bigger_than_zero: a_height > 0
@@ -142,39 +142,39 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Face name chosen by toolkit.
 		deferred
 		end
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character.
 		deferred
 		end
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character.
 		deferred
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Character width of current fixed-width font.
 		deferred
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Width of the smallest character in the font.
 		deferred
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Width of the biggest character in the font.
 		deferred
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		require
 			a_string_not_void: a_string /= Void
@@ -183,22 +183,22 @@ feature -- Status report
 			positive: Result >= 0
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed.
 		deferred
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed.
 		deferred
 		end
 
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 			-- Can characters in the font have different sizes?
 		deferred
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -241,7 +241,7 @@ feature -- Status report
 
 feature {EV_FONT, EV_ANY_I} -- Implementation
 
-	copy_font (other: like interface) is
+	copy_font (other: like interface)
 			-- Update `Current' with all attributes of `other'.
 		require
 			other_not_void: other /= Void
@@ -260,14 +260,14 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT
 
-	update_font_face is
+	update_font_face
 			-- Update the font face according to `preferred_faces' and `family'.
 		deferred
 		ensure
 			name_not_void: name /= Void
 		end
 
-	update_preferred_faces (a_face: STRING_32) is
+	update_preferred_faces (a_face: STRING_32)
 			-- `preferred_faces' has changed, so update `Current' to reflect this,
 			-- possibly selecting a new face name.
 		deferred
@@ -286,7 +286,7 @@ invariant
 	--horizontal_resolution_bigger_than_zero: horizontal_resolution > 0
 	--vertical_resolution_bigger_than_zero: vertical_resolution > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

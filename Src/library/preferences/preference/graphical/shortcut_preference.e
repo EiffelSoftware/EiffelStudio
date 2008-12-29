@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Shortcut preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create {PREFERENCE_FACTORY}
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			-- String representation of `value'.
 		do
 			create Result.make_empty
@@ -37,13 +37,13 @@ feature -- Access
 			end
 		end
 
-	string_type: STRING is
+	string_type: STRING
 			-- String description of this preference type.
 		once
 			Result := "SHORTCUT"
 		end
 
-	key: EV_KEY is
+	key: EV_KEY
 			-- Actual Key
 		local
 			l_key_code: INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	Shortcut_keys: ARRAY [INTEGER] is
+	Shortcut_keys: ARRAY [INTEGER]
 			-- All key codes that are acceptable for use in shortcut preferences.
 		once
 			create Result.make (1, 87)
@@ -154,7 +154,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_value_from_string (a_value: STRING) is
+	set_value_from_string (a_value: STRING)
 			-- Parse the string value `a_value' and set `value'.
 			-- String format: "Alt+Ctrl+Shift+KeyString"		
 		local
@@ -214,31 +214,31 @@ feature -- Status Setting
 
 feature -- Query
 
-	is_alt: BOOLEAN is
+	is_alt: BOOLEAN
 			-- Requires Alt key?
 		do
 			Result := value.alt
 		end
 
-	is_ctrl: BOOLEAN is
+	is_ctrl: BOOLEAN
 			-- Requires Ctrl key?
 		do
 			Result := value.ctrl
 		end
 
-	is_shift: BOOLEAN is
+	is_shift: BOOLEAN
 			-- Requires Shift key?
 		do
 			Result := value.shift
 		end
 
-	valid_value_string (a_string: STRING): BOOLEAN is
+	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
 			Result := a_string /= Void and then a_string.split ('+').count >= 4
 		end
 
-	is_default_value: BOOLEAN is
+	is_default_value: BOOLEAN
 			-- Is this preference value the same as the default value?
 		do
 			if not is_wiped then
@@ -248,7 +248,7 @@ feature -- Query
 
 feature {PREFERENCES} -- Access
 
-	generating_preference_type: STRING is
+	generating_preference_type: STRING
 			-- The generating type of the preference for graphical representation.
 		do
 			Result := "SHORTCUT"
@@ -256,16 +256,16 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	auto_default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING] is
+	auto_default_value: TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
 			Result := [True, False, False, (create {EV_KEY}).out]
 		end
 
-	str_true: STRING is "True"
-	str_false: STRING is "False";
+	str_true: STRING = "True"
+	str_false: STRING = "False";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

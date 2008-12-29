@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Constants for layout using Vision2"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access (button size constants)
 
-	default_button_width: INTEGER is
+	default_button_width: INTEGER
 			-- Default width for buttons
 		once
 			Result := dialog_unit_to_pixels (75)
 		end
 
-	default_button_height: INTEGER is
+	default_button_height: INTEGER
 			-- Default height for buttons
 		once
 			Result := dialog_unit_to_pixels (23)
@@ -24,19 +24,19 @@ feature -- Access (button size constants)
 
 feature -- Access (padding constants)
 
-	default_padding_size: INTEGER is
+	default_padding_size: INTEGER
 			-- Default size for padding
 		once
 			Result := dialog_unit_to_pixels (14)
 		end
 
-	small_padding_size: INTEGER is
+	small_padding_size: INTEGER
 			-- Small size for padding
 		once
 			Result := dialog_unit_to_pixels (10)
 		end
 
-	tiny_padding_size: INTEGER is
+	tiny_padding_size: INTEGER
 			-- Tiny size for padding
 		once
 			Result := dialog_unit_to_pixels (3)
@@ -44,19 +44,19 @@ feature -- Access (padding constants)
 
 feature -- Access (border constants)
 
-	large_border_size: INTEGER is
+	large_border_size: INTEGER
 			-- Default size for borders
 		once
 			Result := dialog_unit_to_pixels (10)
 		end
 
-	default_border_size: INTEGER is
+	default_border_size: INTEGER
 			-- Default size for borders
 		once
 			Result := dialog_unit_to_pixels (7)
 		end
 
-	small_border_size: INTEGER is
+	small_border_size: INTEGER
 			-- Small size for borders
 		once
 			Result := dialog_unit_to_pixels (5)
@@ -64,7 +64,7 @@ feature -- Access (border constants)
 
 feature -- Operation
 
-	set_default_size_for_button (a_button: EV_BUTTON) is
+	set_default_size_for_button (a_button: EV_BUTTON)
 			-- Set the default size for `a_button'.
 		do
 			a_button.set_minimum_size (
@@ -72,7 +72,7 @@ feature -- Operation
 				a_button.minimum_height.max (Default_button_height))
 		end
 
-	set_default_width_for_button (a_button: EV_BUTTON) is
+	set_default_width_for_button (a_button: EV_BUTTON)
 			-- Set the default width for `a_button'.
 		do
 			a_button.set_minimum_width (
@@ -81,7 +81,7 @@ feature -- Operation
 
 feature -- Conversion
 
-	dialog_unit_to_pixels (a_size: INTEGER): INTEGER is
+	dialog_unit_to_pixels (a_size: INTEGER): INTEGER
 			-- Convert `a_size' dialog units into pixels.
 			-- Used to get the same look&feel under all platforms
 		do
@@ -94,13 +94,13 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	resolution: INTEGER is
+	resolution: INTEGER
 			-- Resolution for current display.
 		once
 			Result := (create {EV_SCREEN}).horizontal_resolution
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

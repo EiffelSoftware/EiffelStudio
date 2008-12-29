@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specifies a range of characters in a rich edit control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_minimum, a_maximum: INTEGER) is
+	make (a_minimum, a_maximum: INTEGER)
 			-- Make a char range structure and set `maximum',
 			-- `minimum', with `a_maximum', `a_minimum'
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			maximum_set: maximum = a_maximum
 		end
 
-	make_empty is
+	make_empty
 			-- Make an empty character range structure.
 		do
 			structure_make
@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Index of first intercharacter position
 		do
 			Result := cwel_charrange_get_cpmin (item)
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Index of last intercharacter position
 		do
 			Result := cwel_charrange_get_cpmax (item)
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_range (a_minimum, a_maximum: INTEGER) is
+	set_range (a_minimum, a_maximum: INTEGER)
 			-- Set `minimum' with `a_minimum' and
 			-- `maximum' with `a_maximum'
 		require
@@ -77,7 +77,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := cwel_size_of_charrange
@@ -85,29 +85,29 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	cwel_size_of_charrange: INTEGER is
+	cwel_size_of_charrange: INTEGER
 		external
 			"C [macro <chrrange.h>]"
 		alias
 			"sizeof (CHARRANGE)"
 		end
 
-	cwel_charrange_set_cpmin (ptr: POINTER; value: INTEGER) is
+	cwel_charrange_set_cpmin (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <chrrange.h>]"
 		end
 
-	cwel_charrange_set_cpmax (ptr: POINTER; value: INTEGER) is
+	cwel_charrange_set_cpmax (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <chrrange.h>]"
 		end
 
-	cwel_charrange_get_cpmin (ptr: POINTER): INTEGER is
+	cwel_charrange_get_cpmin (ptr: POINTER): INTEGER
 		external
 			"C [macro <chrrange.h>]"
 		end
 
-	cwel_charrange_get_cpmax (ptr: POINTER): INTEGER is
+	cwel_charrange_get_cpmax (ptr: POINTER): INTEGER
 		external
 			"C [macro <chrrange.h>]"
 		end
@@ -116,7 +116,7 @@ invariant
 	positive_minimum: minimum >= 0
 	valid_minumum_maximum: minimum <= maximum + 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

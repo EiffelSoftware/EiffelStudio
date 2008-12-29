@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is used to load the common controls dll."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- Load the common controls DLL.
 		do
 			make_permanent (common_controls_dll_name)
@@ -26,10 +26,10 @@ feature
 
 feature {NONE} -- Implementation
 
-	common_controls_dll_name: STRING is "comctl32.dll";
+	common_controls_dll_name: STRING = "comctl32.dll";
 			-- Name of the common controls DLL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

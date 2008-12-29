@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main arguments received in the WinMain Windows function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	current_instance: WEL_INSTANCE is
+	current_instance: WEL_INSTANCE
 			-- Current instance argument received in WinMain
 		once
 			create Result.make (cwel_get_module_handle (default_pointer))
@@ -18,7 +18,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	resource_instance: WEL_INSTANCE is
+	resource_instance: WEL_INSTANCE
 			-- Resource instance argument received in WinMain.
 			-- Because resources are linked with the associated shared
 			-- library and not to the assembly, we need to look up the resources
@@ -40,7 +40,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	previous_instance: WEL_INSTANCE is
+	previous_instance: WEL_INSTANCE
 			-- Previous instance argument received in WinMain
 		once
 			create Result.make (default_pointer)
@@ -48,7 +48,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_line: STRING_32 is
+	command_line: STRING_32
 			-- Command line argument received in WinMain
 		once
 			create Result.make_from_cil ({ENVIRONMENT}.command_line)
@@ -56,7 +56,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_show: INTEGER is
+	command_show: INTEGER
 			-- Command show argument received in WinMain
 		once
 			Result := {WEL_SW_CONSTANTS}.Sw_show
@@ -64,21 +64,21 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwel_get_module_handle (name: POINTER): POINTER is
+	cwel_get_module_handle (name: POINTER): POINTER
 		external
 			"C [macro <windows.h>] (LPCTSTR): HMODULE"
 		alias
 			"GetModuleHandle"
 		end
 
-	cwel_load_library (name: POINTER): POINTER is
+	cwel_load_library (name: POINTER): POINTER
 		external
 			"C [macro <windows.h>] (LPCTSTR): HMODULE"
 		alias
 			"LoadLibrary"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

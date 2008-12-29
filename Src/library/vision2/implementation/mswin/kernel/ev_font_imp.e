@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision font. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,7 +58,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	--| cannot be instantiated without arguments.
 	--|----------------------------------------------------------------
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current'.
 		do
 			base_make (an_interface)
@@ -79,7 +79,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 		end
 
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
@@ -90,7 +90,7 @@ feature -- Access
 	family: INTEGER
 			-- Preferred font category.
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Charset
 		do
 			Result := wel_font.log_font.char_set
@@ -102,13 +102,13 @@ feature -- Access
 	shape: INTEGER
 			-- Preferred font slant.
 
-	height: INTEGER is
+	height: INTEGER
 			-- Preferred font height measured in screen pixels.
 		do
 			Result := wel_font.height
 		end
 
-	height_in_points: INTEGER is
+	height_in_points: INTEGER
 			-- Preferred font height measured in points.
 		do
 			Result := wel_font.point.abs
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_family (a_family: INTEGER) is
+	set_family (a_family: INTEGER)
 			-- Set `a_family' as preferred font category.
 		do
 				-- retrieve current values
@@ -129,7 +129,7 @@ feature -- Element change
 			update_font_face
 		end
 
-	set_weight (a_weight: INTEGER) is
+	set_weight (a_weight: INTEGER)
 			-- Set `a_weight' as preferred font thickness.
 		do
 				-- retrieve current values
@@ -154,7 +154,7 @@ feature -- Element change
 			wel_font.set_indirect (Wel_log_font)
 		end
 
-	set_shape (a_shape: INTEGER) is
+	set_shape (a_shape: INTEGER)
 			-- Set `a_shape' as preferred font slant.
 		do
 				-- retrieve current values
@@ -175,21 +175,21 @@ feature -- Element change
 			wel_font.set_indirect (Wel_log_font)
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `a_height' as preferred font size in pixels.
 		do
 			wel_font.set_height (a_height)
 			Wel_log_font.update_by_font (wel_font)
 		end
 
-	set_height_in_points (a_height: INTEGER) is
+	set_height_in_points (a_height: INTEGER)
 			-- Set `a_height_in_points' to `a_height'.
 		do
 			wel_font.set_height_in_points (a_height)
 			wel_log_font.update_by_font (wel_font)
 		end
 
-	copy_font (font: EV_FONT) is
+	copy_font (font: EV_FONT)
 			-- Update `Current' with all attributes of `other'.
 			-- Redefined on Windows as certain properties of fonts
 			-- cannot be specified completely through the interface of
@@ -213,51 +213,51 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Face name chosen by toolkit.
 		do
 			Result := internal_face_name
 		end
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character.
 		do
 			Result := text_metrics.ascent
 		end
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character.
 		do
 			Result := text_metrics.descent
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Character width of current fixed-width font.
 		do
 			Result := wel_font.width
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Width of the smallest character in the font.
 		do
 			Result := wel_font.string_width ("l")
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Width of the biggest character in the font.
 		do
 			Result := wel_font.string_width ("W")
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		do
 			Result := wel_font.string_width (a_string)
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -273,19 +273,19 @@ feature -- Status report
 			Result.right_offset := 0 - Result.right_offset
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed.
 		do
 			Result := text_metrics.digitized_aspect_x
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed.
 		do
 			Result := text_metrics.digitized_aspect_y
 		end
 
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 			-- Can characters in the font have different sizes?
 		do
 			Result := internal_is_proportional
@@ -298,7 +298,7 @@ feature {EV_ANY_I} -- Access
 
 feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP, EV_CHARACTER_FORMAT_IMP, EV_ENVIRONMENT_IMP} -- Access
 
-	set_by_wel_font (wf: WEL_FONT) is
+	set_by_wel_font (wf: WEL_FONT)
 			-- Set state by passing an already created WEL_FONT.
 		do
 			wel_font := wf
@@ -314,13 +314,13 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP, EV_CHARACTER_FORMAT_IMP, EV_ENVIRO
 
 feature {EV_ANY_I} -- Implementation
 
-	Wel_log_font: WEL_LOG_FONT is
+	Wel_log_font: WEL_LOG_FONT
 			-- Structure used to specify font characteristics.
 		once
 			create Result.make_by_font (gui_font)
 		end
 
-	Default_wel_log_font: WEL_LOG_FONT is
+	Default_wel_log_font: WEL_LOG_FONT
 			-- Structure used to initialize fonts.
 		once
 			create Result.make_by_font (gui_font)
@@ -330,7 +330,7 @@ feature {EV_ANY_I} -- Implementation
 			wel_screen_font_pitch := Result.pitch
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wel_font.delete
@@ -338,7 +338,7 @@ feature {EV_ANY_I} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	update_preferred_faces (a_face: STRING_32) is
+	update_preferred_faces (a_face: STRING_32)
 		do
 				-- retrieve current values
 			Wel_log_font.update_by_font(wel_font)
@@ -347,7 +347,7 @@ feature {EV_ANY_I} -- Implementation
 			update_font_face
 		end
 
-	update_font_face is
+	update_font_face
 			-- Find a font face based on properties
 			-- `preferred_face' and `family'.
 		local
@@ -432,7 +432,7 @@ feature {EV_ANY_I} -- Implementation
 			update_internal_is_proportional (Wel_log_font)
 		end
 
-	set_name (str: STRING_GENERAL) is
+	set_name (str: STRING_GENERAL)
 			-- sets the name of the current font
 		do
 				-- retrieve current values
@@ -445,7 +445,7 @@ feature {EV_ANY_I} -- Implementation
 			update_font_face
 		end
 
-	remove_name is
+	remove_name
 			-- Set face name on WEL font to NULL.
 			-- Let toolkit find the best matching name.
 		do
@@ -465,7 +465,7 @@ feature {EV_ANY_I} -- Implementation
 	internal_is_proportional: BOOLEAN
 		-- Is the font proportional? (or fixed).
 
-	update_internal_is_proportional(logfont: Wel_log_font) is
+	update_internal_is_proportional(logfont: Wel_log_font)
 		do
 			if logfont.pitch = Default_pitch then
 				internal_is_proportional := not (logfont.family = Ff_modern)
@@ -478,7 +478,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	maximum_line_width (dc: WEL_DC; str: STRING_GENERAL; number_of_lines: INTEGER): INTEGER is
+	maximum_line_width (dc: WEL_DC; str: STRING_GENERAL; number_of_lines: INTEGER): INTEGER
 			-- Calculate the width of the longest %N delimited string in
 			-- `str' on `dc' given there are `number_of_lines' lines
 		require
@@ -510,7 +510,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	text_metrics: WEL_TEXT_METRIC is
+	text_metrics: WEL_TEXT_METRIC
 			-- Text metric object for current WEL font.
 			--| Used to get `ascent' and `descent', horizontal_resolution
 			--| and vertical_resolution.
@@ -536,7 +536,7 @@ feature {EV_ANY_I} -- Implementation
 			-- to family_screen.
 
 
-	convert_font_family(wel_family: INTEGER; wel_pitch: INTEGER): INTEGER is
+	convert_font_family(wel_family: INTEGER; wel_pitch: INTEGER): INTEGER
 			-- Convert a Windows Font Family into a Vision2 Font Family.
 		do
 			if wel_family = wel_screen_font_family then
@@ -556,7 +556,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	convert_font_weight(wel_weight: INTEGER): INTEGER is
+	convert_font_weight(wel_weight: INTEGER): INTEGER
 			-- Convert `wel_weight' (weight of a WEL_FONT) into
 			-- a vision2 weight constant.
 		do
@@ -574,7 +574,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	convert_font_shape(wel_italic: BOOLEAN): INTEGER is
+	convert_font_shape(wel_italic: BOOLEAN): INTEGER
 			-- Convert `wel_italic' (italic of a WEL_LOG_FONT) into
 			-- a vision2 shape constant.
 		do
@@ -588,7 +588,7 @@ feature {EV_ANY_I} -- Implementation
 feature {EV_TEXTABLE_IMP} -- Implementation
 
 	string_width_and_height_ignore_new_line (a_string: STRING_GENERAL):
-		TUPLE [INTEGER, INTEGER] is
+		TUPLE [INTEGER, INTEGER]
 			-- [width, height] of `a_string'.
 			-- Treat `%N' as a character.
 		require
@@ -606,7 +606,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			Result := [extent.width, extent.height]
 		end
 
-	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP is
+	Font_enumerator: EV_WEL_FONT_ENUMERATOR_IMP
 			-- Enumerate Installed fonts
 		once
 			create Result
@@ -614,7 +614,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 
 feature -- Obsolete
 
-	string_width_and_height (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER] is
+	string_width_and_height (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER]
 			-- [width, height] of `a_string'.
 		obsolete
 			"Use `string_size'."
@@ -624,7 +624,7 @@ feature -- Obsolete
 
 feature {NONE} -- Not used
 
-	set_charset (a_charset: STRING_GENERAL) is
+	set_charset (a_charset: STRING_GENERAL)
 			-- Set the charset to a value based on `a_charset'.
 		do
 			if a_charset.is_equal ("ansi") then
@@ -640,7 +640,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_clip_precision (a_clip_precision: STRING_GENERAL) is
+	set_clip_precision (a_clip_precision: STRING_GENERAL)
 			-- Set the clip precision based on `a_clip_precision'.
 		do
 			if a_clip_precision.is_equal ("character") then
@@ -652,7 +652,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_escapement (an_escapement: STRING_GENERAL) is
+	set_escapement (an_escapement: STRING_GENERAL)
 			-- Set escapement based on value of `an_escapement'.
 		local
 			l_value: STRING_32
@@ -665,7 +665,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_orientation (an_orientation: STRING_GENERAL) is
+	set_orientation (an_orientation: STRING_GENERAL)
 			-- Set the orientation based on the value of `an_orientation'.
 		local
 			l_value: STRING_32
@@ -678,7 +678,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_out_precision (a_precision: STRING_GENERAL) is
+	set_out_precision (a_precision: STRING_GENERAL)
 			-- Set the precision based on the value of `a_precision'.
 		do
 			if a_precision.is_equal ("character") then
@@ -692,7 +692,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_pitch (a_pitch: STRING_GENERAL) is
+	set_pitch (a_pitch: STRING_GENERAL)
 			-- Set pitch based on value in `a_pitch'.
 		do
 			if a_pitch.is_equal ("fixed") then
@@ -704,7 +704,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_quality (a_quality: STRING_GENERAL) is
+	set_quality (a_quality: STRING_GENERAL)
 			-- Set quality based on value in `a_quality'.
 		do
 			if a_quality.is_equal ("draft") then
@@ -716,7 +716,7 @@ feature {NONE} -- Not used
 			end
 		end
 
-	set_styles (styles: STRING_GENERAL) is
+	set_styles (styles: STRING_GENERAL)
 			-- Set the style based on values in `styles'.
 		do
 			Wel_log_font.set_not_italic
@@ -739,7 +739,7 @@ invariant
 	wel_log_font_exists: Wel_log_font /= Void
 	wel_font_exists: wel_font /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

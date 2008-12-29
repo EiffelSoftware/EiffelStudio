@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IAxWinAmbientDispatch' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,13 @@ inherit
 		
 feature -- Access
 
-	allow_windowless_activation: BOOLEAN is
+	allow_windowless_activation: BOOLEAN
 			-- Enable or disable windowless activation
 		do
 			Result := m_allow_windowless_activation
 		end
 
-	back_color: INTEGER is
+	back_color: INTEGER
 			-- Set the background color
 		do
 			if background_color = Void then
@@ -42,7 +42,7 @@ feature -- Access
 			Result := background_color.item
 		end
 
-	fore_color: INTEGER is
+	fore_color: INTEGER
 			-- Set the ambient foreground color
 		do
 			if foreground_color = Void then
@@ -51,62 +51,62 @@ feature -- Access
 			Result := foreground_color.item
 		end
 
-	locale_id: INTEGER is
+	locale_id: INTEGER
 			-- Set the ambient locale
 		do
 			Result := m_locale_id
 		end
 
-	user_mode: BOOLEAN is
+	user_mode: BOOLEAN
 			-- Set the ambient user mode
 		do
 			Result := m_user_mode
 		end
 
-	display_as_default: BOOLEAN is
+	display_as_default: BOOLEAN
 			-- Enable or disable the control as default
 		do
 			Result := m_display_as_default
 		end
 
-	font: FONT_INTERFACE is
+	font: FONT_INTERFACE
 			-- Set the ambient font
 		do
 			Result := m_font
 			-- Put Implementation here.
 		end
 
-	message_reflect: BOOLEAN is
+	message_reflect: BOOLEAN
 			-- Enable or disable message reflection
 		do
 			Result := m_message_reflect
 		end
 
-	doc_host_flags: INTEGER is
+	doc_host_flags: INTEGER
 			-- Set the DOCHOSTUIFLAG flags
 		do
 			Result := m_doc_host_flags
 		end
 
-	doc_host_double_click_flags: INTEGER is
+	doc_host_double_click_flags: INTEGER
 			-- Set the DOCHOSTUIDBLCLK flags
 		do
 			Result := m_doc_host_double_click_flags
 		end
 
-	allow_context_menu: BOOLEAN is
+	allow_context_menu: BOOLEAN
 			-- Enable or disable context menus
 		do
 			Result := m_allow_context_menu
 		end
 
-	allow_show_ui: BOOLEAN is
+	allow_show_ui: BOOLEAN
 			-- Enable or disable UI
 		do
 			Result := m_allow_show_ui
 		end
 
-	option_key_path: STRING is
+	option_key_path: STRING
 			-- Set the option key path
 		do
 			Result := m_option_key_path
@@ -114,14 +114,14 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_allow_windowless_activation (pb_can_windowless_activate: BOOLEAN) is
+	set_allow_windowless_activation (pb_can_windowless_activate: BOOLEAN)
 			-- Enable or disable windowless activation
 			-- `pb_can_windowless_activate' [in].  
 		do
 			m_allow_windowless_activation := pb_can_windowless_activate
 		end
 
-	set_back_color (pclr_background: INTEGER) is
+	set_back_color (pclr_background: INTEGER)
 			-- Set the background color
 			-- `pclr_background' [in].  
 		do
@@ -130,7 +130,7 @@ feature -- Basic Operations
 			invalidate_rect (Void, 0)
 		end
 
-	set_fore_color (pclr_foreground: INTEGER) is
+	set_fore_color (pclr_foreground: INTEGER)
 			-- Set the ambient foreground color
 			-- `pclr_foreground' [in].  
 		do
@@ -138,7 +138,7 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_FORECOLOR)
 		end
 
-	set_locale_id (plcid_locale_id: INTEGER) is
+	set_locale_id (plcid_locale_id: INTEGER)
 			-- Set the ambient locale
 			-- `plcid_locale_id' [in].  
 		do
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_LOCALEID)
 		end
 
-	set_user_mode (pb_user_mode: BOOLEAN) is
+	set_user_mode (pb_user_mode: BOOLEAN)
 			-- Set the ambient user mode
 			-- `pb_user_mode' [in].  
 		do
@@ -154,7 +154,7 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_USERMODE)
 		end
 
-	set_display_as_default (pb_display_as_default: BOOLEAN) is
+	set_display_as_default (pb_display_as_default: BOOLEAN)
 			-- Enable or disable the control as default
 			-- `pb_display_as_default' [in].  
 		do
@@ -162,7 +162,7 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_DISPLAYASDEFAULT)
 		end
 
-	set_font (p_font: FONT_INTERFACE) is
+	set_font (p_font: FONT_INTERFACE)
 			-- Set the ambient font
 			-- `p_font' [in].  
 		do
@@ -170,7 +170,7 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_FONT)
 		end
 
-	set_message_reflect (pb_msg_reflect: BOOLEAN) is
+	set_message_reflect (pb_msg_reflect: BOOLEAN)
 			-- Enable or disable message reflection
 			-- `pb_msg_reflect' [in].  
 		do
@@ -178,21 +178,21 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_AMBIENT_MESSAGEREFLECT)
 		end
 
-	show_grab_handles (pb_show_grab_handles: BOOLEAN_REF) is
+	show_grab_handles (pb_show_grab_handles: BOOLEAN_REF)
 			-- Show or hide grab handles
 			-- `pb_show_grab_handles' [out].  
 		do
 			pb_show_grab_handles.set_item (False)
 		end
 
-	show_hatching (pb_show_hatching: BOOLEAN_REF) is
+	show_hatching (pb_show_hatching: BOOLEAN_REF)
 			-- Are grab handles enabled
 			-- `pb_show_hatching' [out].  
 		do
 			pb_show_hatching.set_item (False)
 		end
 
-	set_doc_host_flags (pdw_doc_host_flags: INTEGER) is
+	set_doc_host_flags (pdw_doc_host_flags: INTEGER)
 			-- Set the DOCHOSTUIFLAG flags
 			-- `pdw_doc_host_flags' [in].  
 		do
@@ -200,28 +200,28 @@ feature -- Basic Operations
 			fire_ambient_property_change (DISPID_UNKNOWN)
 		end
 
-	set_doc_host_double_click_flags (pdw_doc_host_double_click_flags: INTEGER) is
+	set_doc_host_double_click_flags (pdw_doc_host_double_click_flags: INTEGER)
 			-- Set the DOCHOSTUIDBLCLK flags
 			-- `pdw_doc_host_double_click_flags' [in].  
 		do
 			m_doc_host_double_click_flags := pdw_doc_host_double_click_flags
 		end
 
-	set_allow_context_menu (pb_allow_context_menu: BOOLEAN) is
+	set_allow_context_menu (pb_allow_context_menu: BOOLEAN)
 			-- Enable or disable context menus
 			-- `pb_allow_context_menu' [in].  
 		do
 			m_allow_context_menu := pb_allow_context_menu
 		end
 
-	set_allow_show_ui (pb_allow_show_ui: BOOLEAN) is
+	set_allow_show_ui (pb_allow_show_ui: BOOLEAN)
 			-- Enable or disable UI
 			-- `pb_allow_show_ui' [in].  
 		do
 			m_allow_show_ui := pb_allow_show_ui
 		end
 
-	set_option_key_path (pbstr_option_key_path: STRING) is
+	set_option_key_path (pbstr_option_key_path: STRING)
 			-- Set the option key path
 			-- `pbstr_option_key_path' [in].  
 		do
@@ -230,7 +230,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementaion
 
-	fire_ambient_property_change (disp_changed: INTEGER) is
+	fire_ambient_property_change (disp_changed: INTEGER)
 			-- Notify control that ambient property has changed.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -243,7 +243,7 @@ feature {NONE} -- Implementaion
 			end
 		end
 
-	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER) is
+	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER)
 			-- Enables an object to invalidate a specified 
 			-- rectangle of its in-place image on the screen.
 			-- 
@@ -262,7 +262,7 @@ feature {NONE} -- Implementaion
 			-- Put Implementation here.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

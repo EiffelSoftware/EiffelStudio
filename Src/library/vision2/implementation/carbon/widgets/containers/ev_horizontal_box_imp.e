@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision horizontal box. Carbon implementation."
 
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a vertical box.
 		local
 			control_ptr : POINTER
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			err := hiview_add_subview_external ( c_object, dummy_control )
 		end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			local
 		min_width, min_height, i: INTEGER
 		do
@@ -75,11 +75,11 @@ feature {NONE} -- Initialization
 		buffered_minimum_width := min_width.max (internal_minimum_width)
 	end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			do
 				Result := buffered_minimum_height
 			end
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			do
 				Result := buffered_minimum_width
 			end
@@ -90,7 +90,7 @@ feature -- Implementation
 
 
 
-	layout is
+	layout
 			-- Setup positioning constraints for all children
 		local
 			w1: EV_WIDGET_IMP
@@ -181,7 +181,7 @@ feature -- Implementation
 			buffered_minimum_width := internal_minimum_width.max (min_width)
 		end
 
-		setup_binding ( left_control, right_control: POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER ) is
+		setup_binding ( left_control, right_control: POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER )
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -219,7 +219,7 @@ feature -- Implementation
 
 feature {NONE} -- Events
 
-	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT ) is
+	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT )
 			-- Handler for the bounds changed event
 		do
 			layout
@@ -229,7 +229,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_HORIZONTAL_BOX_IMP
 

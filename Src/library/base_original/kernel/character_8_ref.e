@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing a character value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,31 +27,31 @@ feature -- Access
 	item: CHARACTER
 			-- Character value
 
-	code: INTEGER is
+	code: INTEGER
 			-- Associated integer value
 		do
 			Result := item.code
 		end
 
-	natural_32_code: NATURAL_32 is
+	natural_32_code: NATURAL_32
 			-- Associated integer value
 		do
 			Result := code.to_natural_32
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := code
 		end
 
-	Min_value: INTEGER is 0
-	Max_value: INTEGER is 255
+	Min_value: INTEGER = 0
+	Max_value: INTEGER = 255
 			-- Bounds for integer representation of characters (ASCII)
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := item < other.item
@@ -68,7 +68,7 @@ feature -- Comparison
 			definition: Result = (item.code < other.code)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
@@ -77,7 +77,7 @@ feature -- Comparison
 
 feature -- Basic routines
 
-	infix "+" (incr: INTEGER): CHARACTER is
+	infix "+" (incr: INTEGER): CHARACTER
 			-- Add `incr' to the code of `item'
 		require
 			valid_increment: (item.code + incr).is_valid_character_8_code
@@ -87,7 +87,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	infix "-" (decr: INTEGER): CHARACTER is
+	infix "-" (decr: INTEGER): CHARACTER
 			-- Subtract `decr' to the code of `item'
 		require
 			valid_decrement: (item.code - decr).is_valid_character_8_code
@@ -97,7 +97,7 @@ feature -- Basic routines
 			valid_result: item |-| Result = decr
 		end
 
-	infix "|-|" (other: CHARACTER): INTEGER is
+	infix "|-|" (other: CHARACTER): INTEGER
 			-- Difference between the codes of `item' and `other'
 		do
 			Result := item.code - other.code
@@ -105,7 +105,7 @@ feature -- Basic routines
 			valid_result: other + Result = item
 		end
 
-	next: CHARACTER is
+	next: CHARACTER
 			-- Next character
 		require
 			valid_character: (item.code + 1).is_valid_character_8_code
@@ -115,7 +115,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = 1
 		end
 
-	previous: CHARACTER is
+	previous: CHARACTER
 			-- Previous character
 		require
 			valid_character: (item.code - 1).is_valid_character_8_code
@@ -127,7 +127,7 @@ feature -- Basic routines
 
 feature -- Element change
 
-	set_item (c: CHARACTER) is
+	set_item (c: CHARACTER)
 			-- Make `c' the `item' value.
 		do
 			item := c
@@ -135,7 +135,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of character
 		do
 			create Result.make (1)
@@ -144,7 +144,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: CHARACTER_REF) is
+	make_from_reference (v: CHARACTER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: V /= Void
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: CHARACTER_REF is
+	to_reference: CHARACTER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -165,19 +165,19 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	to_character_8: CHARACTER is
+	to_character_8: CHARACTER
 			-- Associated character in 8 bit version.
 		do
 			Result := item.to_character_8
 		end
 
-	to_character_32: WIDE_CHARACTER is
+	to_character_32: WIDE_CHARACTER
 			-- Associated character in 32 bit version.
 		do
 			Result := item.to_character_32
 		end
 
-	as_upper, upper: CHARACTER is
+	as_upper, upper: CHARACTER
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
@@ -188,7 +188,7 @@ feature -- Conversion
 			end
 		end
 
-	as_lower, lower: CHARACTER is
+	as_lower, lower: CHARACTER
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
@@ -201,72 +201,72 @@ feature -- Conversion
 
 feature -- Status report
 
-	is_alpha: BOOLEAN is
+	is_alpha: BOOLEAN
 			-- Is `item' alphabetic?
 			-- Alphabetic is `is_upper' or `is_lower'
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag)) > 0
 		end
 
-	is_upper: BOOLEAN is
+	is_upper: BOOLEAN
 			-- Is `item' uppercase?
 		do
 			Result := (character_types (item.code) & is_upper_flag) > 0
 		end
 
-	is_lower: BOOLEAN is
+	is_lower: BOOLEAN
 			-- Is `item' lowercase?
 		do
 			Result := (character_types (item.code) & is_lower_flag) > 0
 		end
 
-	is_digit: BOOLEAN is
+	is_digit: BOOLEAN
 			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
 			Result := (character_types (item.code) & is_digit_flag) > 0
 		end
 
-	is_hexa_digit: BOOLEAN is
+	is_hexa_digit: BOOLEAN
 			-- Is `item' an hexadecimal digit?
 			-- A digit is one of 0123456789ABCDEFabcedf
 		do
 			Result := (character_types (item.code) & (is_hexa_digit_flag | is_digit_flag)) > 0
 		end
 
-	is_space: BOOLEAN is
+	is_space: BOOLEAN
 			-- Is `item' a white space?
 		do
 			Result := (character_types (item.code) & is_white_space_flag) > 0
 		end
 
-	is_punctuation: BOOLEAN is
+	is_punctuation: BOOLEAN
 			-- Is `item' a punctuation?
 		do
 			Result := (character_types (item.code) & is_punctuation_flag) > 0
 		end
 
-	is_alpha_numeric: BOOLEAN is
+	is_alpha_numeric: BOOLEAN
 			-- Is `item' alphabetic or a digit?
 		do
 			Result := (character_types (item.code) & (is_upper_flag | is_lower_flag | is_digit_flag)) > 0
 		end
 
-	is_printable: BOOLEAN is
+	is_printable: BOOLEAN
 			-- Is `item' a printable character including space?
 		do
 			Result := (character_types (item.code) &
 				(is_upper_flag | is_lower_flag | is_digit_flag | is_punctuation_flag | is_space_flag)) > 0
 		end
 
-	is_graph: BOOLEAN is
+	is_graph: BOOLEAN
 			-- Is `item' a printable character except space?
 		do
 			Result := (character_types (item.code) &
 				(is_upper_flag | is_lower_flag | is_digit_flag | is_punctuation_flag)) > 0
 		end
 
-	is_control: BOOLEAN is
+	is_control: BOOLEAN
 			-- Is `item' a control character?
 		do
 			Result := (character_types (item.code) & is_control_flag) > 0
@@ -274,7 +274,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	character_types (a_code: INTEGER): NATURAL_8 is
+	character_types (a_code: INTEGER): NATURAL_8
 			-- Associated type for character of code `a_code'.
 		do
 				-- For character whose code is above 256, it is as if
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_character_types: SPECIAL [NATURAL_8] is
+	internal_character_types: SPECIAL [NATURAL_8]
 			-- Array which stores the various type for the ASCII characters.
 		once
 			create Result.make (256)
@@ -418,23 +418,23 @@ feature {NONE} -- Implementation
 			Result.put (is_control_flag, 127)
 		end
 
-	is_upper_flag: NATURAL_8 is {NATURAL_8} 0x01
+	is_upper_flag: NATURAL_8 = {NATURAL_8} 0x01
 
-	is_lower_flag: NATURAL_8 is {NATURAL_8} 0x02
+	is_lower_flag: NATURAL_8 = {NATURAL_8} 0x02
 
-	is_digit_flag: NATURAL_8 is {NATURAL_8} 0x04
+	is_digit_flag: NATURAL_8 = {NATURAL_8} 0x04
 
-	is_white_space_flag: NATURAL_8 is {NATURAL_8} 0x08
+	is_white_space_flag: NATURAL_8 = {NATURAL_8} 0x08
 
-	is_punctuation_flag: NATURAL_8 is {NATURAL_8} 0x10
+	is_punctuation_flag: NATURAL_8 = {NATURAL_8} 0x10
 
-	is_control_flag: NATURAL_8 is {NATURAL_8} 0x20
+	is_control_flag: NATURAL_8 = {NATURAL_8} 0x20
 
-	is_hexa_digit_flag: NATURAL_8 is {NATURAL_8} 0x40
+	is_hexa_digit_flag: NATURAL_8 = {NATURAL_8} 0x40
 
-	is_space_flag: NATURAL_8 is {NATURAL_8} 0x80;
+	is_space_flag: NATURAL_8 = {NATURAL_8} 0x80;
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

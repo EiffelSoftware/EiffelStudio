@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scrollable lists"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ create
 
 feature -- Initialization
 
-	make (a_list: SCROLLABLE_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_list: SCROLLABLE_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif list, get screen_object value of srolled
 			-- window which contains current list.
 		local
@@ -102,7 +102,7 @@ feature -- Initialization
 			set_single_select
 		end
 
-	set_widget_default is
+	set_widget_default
 		local
 			a_list: SCROLLABLE_LIST
 		do
@@ -115,7 +115,7 @@ feature -- Access
 	parent: MEL_SCROLLED_WINDOW;
 			-- Dialog shell parent
 
-	main_widget: MEL_SCROLLED_WINDOW is
+	main_widget: MEL_SCROLLED_WINDOW
 			-- Main widget of scroll list (scrolled window)
 		do
 			Result := parent
@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Private routines
 
-	private_add (s: STRING; pos: INTEGER) is
+	private_add (s: STRING; pos: INTEGER)
 		-- Add s in the visual scrollable list
 		local
 			loc_string: MEL_STRING
@@ -137,7 +137,7 @@ feature {NONE} -- Private routines
 
 feature  -- Element change
 
-	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
+	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT])
 			-- Append a copy of s.
 		local
 			list: MEL_STRING_TABLE
@@ -150,14 +150,14 @@ feature  -- Element change
 			ll_append (s);
 		end;
 
-	extend (v: SCROLLABLE_LIST_ELEMENT) is
+	extend (v: SCROLLABLE_LIST_ELEMENT)
 			-- Add a new occurrence of v.
 		do
 			ll_extend (v);
 			private_add (v.value, 0)
 		end;
 
-	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT]) is
+	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT])
 			-- Fill with as many items of other as possible.
 			-- The representations of other and current structure
 			-- need not be the same.
@@ -176,14 +176,14 @@ feature  -- Element change
 			end
 		end;
 
-	force (v: like item) is
+	force (v: like item)
 			-- Add v to end.
 		do
 			ll_force (v);
 			private_add (v.value, 0)
 		end;
 
-	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
 		local
@@ -197,7 +197,7 @@ feature  -- Element change
 			ll_merge_left (other)
 		end;
 
-	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
 		local
@@ -211,7 +211,7 @@ feature  -- Element change
 			ll_merge_right (other)
 		end;
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add v at beginning.
 			-- Do not move cursor.
 		do
@@ -219,7 +219,7 @@ feature  -- Element change
 			private_add (v.value, 1)
 		end;
 
-	put_i_th (v: like item; i: INTEGER) is
+	put_i_th (v: like item; i: INTEGER)
 			-- Replace `i'-th item, if in index interval, by `v'.
 			-- Do not move cursor.
 		local
@@ -231,7 +231,7 @@ feature  -- Element change
 			go_to (pos)
 		end;
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add v to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -239,7 +239,7 @@ feature  -- Element change
 			ll_put_left (v)
 		end;
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add v to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -247,7 +247,7 @@ feature  -- Element change
 			ll_put_right (v)
 		end;
 
-	replace (v: SCROLLABLE_LIST_ELEMENT) is
+	replace (v: SCROLLABLE_LIST_ELEMENT)
 			-- Replace current item by v.
 		local
 			loc_string: MEL_STRING
@@ -262,7 +262,7 @@ feature  -- Element change
 
 feature  -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove first occurrence of v, if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor;
@@ -275,7 +275,7 @@ feature  -- Removal
 			ll_prune (v)
 		end;
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of v.
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -296,7 +296,7 @@ feature  -- Removal
 			end
 		end;
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
@@ -307,7 +307,7 @@ feature  -- Removal
 			ll_remove
 		end;
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -317,7 +317,7 @@ feature  -- Removal
 			ll_remove_left
 		end;
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -327,7 +327,7 @@ feature  -- Removal
 			ll_remove_right
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			if not is_destroyed then
@@ -338,7 +338,7 @@ feature  -- Removal
 
 feature  -- Status report
 
-	selected_item: SCROLLABLE_LIST_ELEMENT is
+	selected_item: SCROLLABLE_LIST_ELEMENT
 			-- Selected item if single or extended selection mode is selected
 			-- Void if nothing is selected
 		local
@@ -350,7 +350,7 @@ feature  -- Status report
 			end
 		end;
 
-	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
+	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
 			-- Selected items
 		local
 			loc_selected_positions: like selected_positions
@@ -367,7 +367,7 @@ feature  -- Status report
 			end
 		end;
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or extended selection mode is
 			-- selected
 			-- Null if nothing is selected
@@ -381,7 +381,7 @@ feature  -- Status report
 		end;
 
 feature  -- Default action callbacks
-		add_default_action (a_command: COMMAND; argument: ANY) is
+		add_default_action (a_command: COMMAND; argument: ANY)
 				-- Add `a_command' to the list of actions to
 				-- execute when items are selected with double
 				-- click or by pressing `RETURN' in current
@@ -397,7 +397,7 @@ feature  -- Default action callbacks
 				list.add_command (a_command, argument)
 			end;
 
-		remove_default_action is
+		remove_default_action
 				-- Remove all actions executed when items are
 				-- selected with double click or by pressing
 				-- `RETURN' in current scroll list.
@@ -408,7 +408,7 @@ feature  -- Default action callbacks
 
 feature  -- Status setting
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when items are
 			-- selected with click selection mode in current scroll list.
 		local
@@ -430,7 +430,7 @@ feature  -- Status setting
 			list.add_command (a_command, argument)
 		end;
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		do
@@ -441,13 +441,13 @@ feature  -- Status setting
 			end
 		end;
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		do
 			select_i_th (index)
 		end;
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the first visible item in the list if
 			-- `index' < `first_visible_item_index'.
 			-- Make `item' the last visible item in the list if
@@ -467,25 +467,25 @@ feature  -- Status setting
 			end
 		end;
 
-	deselect_item is
+	deselect_item
 			-- Deselect item at current position.
 		do
 			deselect_i_th (index)
 		end;
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		do
 			select_pos (i, False)
 		end;
 
-	deselect_i_th (i: INTEGER) is
+	deselect_i_th (i: INTEGER)
 			-- Deselect item at `i'-th position.
 		do
 			deselect_pos (i)
 		end;
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set the selction to multiple items
 		local
 			list: VISION_COMMAND_LIST
@@ -500,7 +500,7 @@ feature  -- Status setting
 			end
 		end;
 
-	set_single_selection is
+	set_single_selection
 			-- Set the selction to multiple items
 		local
 			list: VISION_COMMAND_LIST
@@ -517,7 +517,7 @@ feature  -- Status setting
 
 feature -- Status setting
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -531,7 +531,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
@@ -547,7 +547,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_width (new_width :INTEGER) is
+	set_width (new_width :INTEGER)
 			-- Set width to `new_width'.
 		local
 			was_unmanaged: BOOLEAN
@@ -562,7 +562,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		local
 			was_unmanaged: BOOLEAN;
@@ -577,7 +577,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET
@@ -602,7 +602,7 @@ feature -- Status setting
 
 feature -- Update
 
-	update is
+	update
 			-- Update the content of the scrollable list from
 			-- `list'.
 		local
@@ -623,7 +623,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	make_merge_list (other: SEQUENCE [SCROLLABLE_LIST_ELEMENT]): MEL_STRING_TABLE is
+	make_merge_list (other: SEQUENCE [SCROLLABLE_LIST_ELEMENT]): MEL_STRING_TABLE
 			-- Make a merge list to `merge_left' and `merge_right'.
 		require
 			other_exists: other /= Void
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

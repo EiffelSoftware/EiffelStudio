@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of a pick and drop source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+	create_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		do
 			Result := Precursor
@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	capture_enabled: BOOLEAN is
+	capture_enabled: BOOLEAN
 			-- Is the mouse currently captured?
 			-- See constants Capture_xxxx at the end of the class.
 		do
 			Result := internal_capture_status.item
 		end
 
-	transport_executing: BOOLEAN is
+	transport_executing: BOOLEAN
 			-- Is a pick and drop or drag and drop currently
 			-- being executed?
 		do
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_transport is
+	enable_transport
             -- Activate pick/drag and drop mechanism.
 		do
 			check
@@ -57,7 +57,7 @@ feature -- Status setting
 			is_transport_enabled := True
 		end
 
-	disable_transport is
+	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		do
 			release_action := Ev_pnd_disabled
@@ -66,7 +66,7 @@ feature -- Status setting
 			is_transport_enabled := False
 		end
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		do
@@ -89,7 +89,7 @@ feature -- Status setting
 			end
 		end
 
-	check_drag_and_drop_release (a_x, a_y: INTEGER) is
+	check_drag_and_drop_release (a_x, a_y: INTEGER)
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
 			--| Only called when the left button is released after
@@ -112,7 +112,7 @@ feature -- Status setting
 			end
 		end
 
-	pnd_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pnd_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- If in drag/pick and drop then update.
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
@@ -141,7 +141,7 @@ feature -- Status setting
 			end
 		end
 
-	escape_pnd is
+	escape_pnd
 			-- Escape the pick and drop.
 		do
 			application_imp.clear_transport_just_ended
@@ -159,7 +159,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	start_transport (a_x, a_y, a_button: INTEGER; a_press: BOOLEAN a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
 			-- Initialize the pick/drag and drop mechanism.
 		local
 			l_configure_agent: PROCEDURE [ANY, TUPLE]
@@ -205,7 +205,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	real_start_transport (a_pebble: like pebble; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Actually start the pick/drag and drop mechanism.
 		require
 			not_already_transporting: not is_pnd_in_transport and
@@ -296,7 +296,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Terminate the pick and drop mechanism.
 		local
 			env: EV_ENVIRONMENT
@@ -407,7 +407,7 @@ feature {EV_ANY_I} -- Implementation
 			not_has_capture: internal_capture_status.item = False
 		end
 
-	call_cancel_actions (a_pebble: ANY) is
+	call_cancel_actions (a_pebble: ANY)
 			-- Call `cancel_actions' of application with `a_pebble' as
 			-- event data if the cancel actions exist (i.e. used via interface)
 		require
@@ -419,7 +419,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 			-- Hole at mouse position
 		local
 			wel_point: WEL_POINT
@@ -549,17 +549,17 @@ feature {EV_ANY_I} -- Implementation
 		-- State which is used to describe action on pick/drab and drop
 		-- pointer motion.
 
-	Ev_pnd_disabled: NATURAL_8 is 0
-	Ev_pnd_start_transport: NATURAL_8 is 1
-	Ev_pnd_end_transport: NATURAL_8 is 2
-	Ev_pnd_execute: NATURAL_8 is 3
+	Ev_pnd_disabled: NATURAL_8 = 0
+	Ev_pnd_start_transport: NATURAL_8 = 1
+	Ev_pnd_end_transport: NATURAL_8 = 2
+	Ev_pnd_execute: NATURAL_8 = 3
 		-- Allowable states for use with `press_action', release_action' and
 		-- `motion_action'.
 
 	pnd_stored_cursor: EV_POINTER_STYLE
 			-- Cursor used on the widget before PND started.
 
-	set_pointer_style (new_cursor: EV_POINTER_STYLE) is
+	set_pointer_style (new_cursor: EV_POINTER_STYLE)
 			-- Assign `new_cursor' to cursor used on `Current'.
 			-- Can be called through `interface'.
 		do
@@ -573,32 +573,32 @@ feature {EV_ANY_I} -- Implementation
 			pnd_stored_cursor := new_cursor
 		end
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+	cursor_on_widget: CELL [EV_WIDGET_IMP]
 			-- Cursor of `Current'.
 		deferred
 		end
 
-	draw_rubber_band  is
+	draw_rubber_band
 			-- Erase previously drawn rubber band.
 			-- Draw a rubber band between initial pick point and cursor.
 		do
 			application_imp.draw_rubber_band
 		end
 
-	erase_rubber_band  is
+	erase_rubber_band
 			-- Erase previously drawn rubber band.
 		do
 			application_imp.erase_rubber_band
 		end
 
-	enable_capture is
+	enable_capture
 			-- Enable capture.
 			--| Accessible through the interface of widget.
 		do
 			internal_enable_capture
 		end
 
-	internal_enable_capture is
+	internal_enable_capture
 			-- Grab all user events.
 			--| Not accessible through the interface of widget.
 		local
@@ -622,7 +622,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	disable_capture is
+	disable_capture
 			-- Release all user events.
 		do
 			inspect application_imp.capture_type
@@ -637,7 +637,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 		deferred
 		end
@@ -649,27 +649,27 @@ feature {EV_ANY_I} -- Implementation
 			-- to call `top_level_window_imp' after this has occurred as it
 			-- recursively checks the parents of `Currents'.
 
-	set_heavy_capture is
+	set_heavy_capture
 		deferred
 		end
 
-	has_heavy_capture: BOOLEAN is
+	has_heavy_capture: BOOLEAN
 		deferred
 		end
 
-	release_heavy_capture is
+	release_heavy_capture
 		deferred
 		end
 
-	set_capture is
+	set_capture
 		deferred
 		end
 
-	release_capture is
+	release_capture
 		deferred
 		end
 
-	internal_capture_status: CELL [BOOLEAN] is
+	internal_capture_status: CELL [BOOLEAN]
 			-- System wide once, in order to always get the
 			-- same value.
 			-- True if there is the mouse is currently captured.
@@ -681,7 +681,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 
-	application_imp: EV_APPLICATION_IMP is
+	application_imp: EV_APPLICATION_IMP
 			-- `Result' is implementation of application from environment.
 		once
 			Result ?= environment.application.implementation
@@ -689,7 +689,7 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing 
+note 
         description: "EiffelVision print dialog."
 	legal: "See notice at end of class."
         status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
         
 feature -- Event handling
 
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Print.
 		obsolete
 			"This has been replaced by print_actions"
@@ -34,7 +34,7 @@ feature -- Event handling
 
 feature -- Access
 
-	from_page: INTEGER is
+	from_page: INTEGER
 			-- Value for the starting page edit control.
 		require
 			not_destroyed: not is_destroyed
@@ -44,7 +44,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	to_page: INTEGER is
+	to_page: INTEGER
 			-- Value for the ending page edit control.
 		require
 			not_destroyed: not is_destroyed
@@ -54,7 +54,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	copies: INTEGER is
+	copies: INTEGER
 			-- Number of copies for the Copies edit control.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	maximum_to_page: INTEGER is
+	maximum_to_page: INTEGER
 			-- Maximum value for the page specified
 			-- in the To page edit controls.
 			-- 1 by default.
@@ -76,7 +76,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	minimum_from_page: INTEGER is
+	minimum_from_page: INTEGER
 			-- Minimum value for the page specified
 			-- in the From page edit controls.
 			-- 1 by default.
@@ -88,7 +88,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	output_file_name: STRING_32 is
+	output_file_name: STRING_32
 			-- String representation of the path to output
 			-- the printed area to.
 		require
@@ -99,7 +99,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	printer_name: STRING_32 is
+	printer_name: STRING_32
 			-- String representation of the printer to output
 			-- the printed area to.
 		require
@@ -112,7 +112,7 @@ feature -- Access
 
 feature -- Status report
 
-	all_pages_selected: BOOLEAN is
+	all_pages_selected: BOOLEAN
 			-- Is the "All pages" radio button selected?
 		require
 			not_destroyed: not is_destroyed
@@ -120,7 +120,7 @@ feature -- Status report
 			Result := implementation.all_pages_selected
 		end
 
-	page_numbers_selected: BOOLEAN is
+	page_numbers_selected: BOOLEAN
 			-- Is the "Range" radio button selected?
 		require
 			not_destroyed: not is_destroyed
@@ -128,7 +128,7 @@ feature -- Status report
 			Result := implementation.page_numbers_selected
 		end
 
-	selection_selected: BOOLEAN is
+	selection_selected: BOOLEAN
 			-- Is the "Selection" radio button selected?
 		require
 			not_destroyed: not is_destroyed
@@ -136,7 +136,7 @@ feature -- Status report
 			Result := implementation.selection_selected
 		end
 
-	page_numbers_enabled: BOOLEAN is
+	page_numbers_enabled: BOOLEAN
 			-- Is the "Range" radio button enabled?
 		require
 			not_destroyed: not is_destroyed
@@ -144,7 +144,7 @@ feature -- Status report
 			 Result := implementation.page_numbers_enabled
 		end
 
-	selection_enabled: BOOLEAN is
+	selection_enabled: BOOLEAN
 			-- Is the "Selection" radio button selected?
 		require
 			not_destroyed: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := implementation.selection_enabled
 		end
 
-	collate_checked: BOOLEAN is
+	collate_checked: BOOLEAN
 			-- Is the "Collate" check box checked?
 		require
 			not_destroyed: not is_destroyed
@@ -160,7 +160,7 @@ feature -- Status report
 			Result := implementation.collate_checked
 		end
 
-	print_to_file_enabled: BOOLEAN is
+	print_to_file_enabled: BOOLEAN
 			-- Is the "File" radio button enabled?
 		require
 			not_destroyed: not is_destroyed
@@ -168,7 +168,7 @@ feature -- Status report
 			Result := implementation.print_to_file_enabled
 		end
 
-	print_to_file_shown: BOOLEAN is
+	print_to_file_shown: BOOLEAN
 			-- Is the "File" radio button visible?
 		require
 			not_destroyed: not is_destroyed
@@ -176,7 +176,7 @@ feature -- Status report
 			Result := implementation.print_to_file_shown
 		end
 
-	print_to_file_checked: BOOLEAN is
+	print_to_file_checked: BOOLEAN
 			-- Is the "File" radio button checked?
 		require
 			not_destroyed: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Status report
 			Result := implementation.print_to_file_checked
 		end
 
-	landscape_checked: BOOLEAN is
+	landscape_checked: BOOLEAN
 			-- Is the landscape option selected.
 		require
 			not_destroyed: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status report
 			Result := implementation.landscape_checked
 		end
 
-	print_context: EV_PRINT_CONTEXT is
+	print_context: EV_PRINT_CONTEXT
 			-- Return a print context for the dialog box.
 		require
 			not_destroyed: not is_destroyed
@@ -204,7 +204,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_all_pages is
+	select_all_pages
 			-- Select the "All pages" radio button.
 			-- Selected by default.
 		require
@@ -213,7 +213,7 @@ feature -- Status setting
 			implementation.select_all_pages
 		end
 
-	select_page_numbers is
+	select_page_numbers
 			-- Select the "Page numbers" radio button.
 			-- By default, the "All pages" button is selected.
 		require
@@ -222,7 +222,7 @@ feature -- Status setting
 			implementation.select_page_numbers
 		end
 
-	select_selection is
+	select_selection
 			-- Select the "Selection" radio button.
 			-- By default, the "All pages" button is selected.
 		require
@@ -231,7 +231,7 @@ feature -- Status setting
 			implementation.select_selection
 		end
 
-	enable_page_numbers is
+	enable_page_numbers
 			-- Enable the "Range" radio button.
 		require
 			not_destroyed: not is_destroyed
@@ -239,7 +239,7 @@ feature -- Status setting
 			implementation.enable_page_numbers
 		end
 
-	disable_page_numbers is
+	disable_page_numbers
 			-- Disable the "Range" radio button.
 		require
 			not_destroyed: not is_destroyed
@@ -247,7 +247,7 @@ feature -- Status setting
 			implementation.disable_page_numbers
 		end
 
-	enable_selection is
+	enable_selection
 			-- Enable the "Selection" radio button.
 		require
 			not_destroyed: not is_destroyed
@@ -255,7 +255,7 @@ feature -- Status setting
 			implementation.enable_selection
 		end
 
-	disable_selection is
+	disable_selection
 			-- Disable the "Selection" radio button.
 		require
 			not_destroyed: not is_destroyed
@@ -263,7 +263,7 @@ feature -- Status setting
 			implementation.disable_selection
 		end
 
-	check_collate is
+	check_collate
 			-- Check the "Collate" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -273,7 +273,7 @@ feature -- Status setting
 			collate_checked: collate_checked
 		end
 
-	uncheck_collate is
+	uncheck_collate
 			-- Uncheck the "Collate" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status setting
 			colate_not_checked: not collate_checked
 		end
 
-	enable_print_to_file is
+	enable_print_to_file
 			-- Enable the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -291,7 +291,7 @@ feature -- Status setting
 			implementation.enable_print_to_file
 		end
 
-	disable_print_to_file is
+	disable_print_to_file
 			-- Disable the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -299,7 +299,7 @@ feature -- Status setting
 			implementation.disable_print_to_file
 		end
 
-	show_print_to_file is
+	show_print_to_file
 			-- Show the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -307,7 +307,7 @@ feature -- Status setting
 			implementation.show_print_to_file
 		end
 
-	hide_print_to_file is
+	hide_print_to_file
 			-- Hide the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -315,7 +315,7 @@ feature -- Status setting
 			implementation.hide_print_to_file
 		end
 
-	check_print_to_file is
+	check_print_to_file
 			-- Check the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -325,7 +325,7 @@ feature -- Status setting
 			print_to_file_checked: print_to_file_checked
 		end
 
-	uncheck_print_to_file is
+	uncheck_print_to_file
 			-- Check the "Print to file" check box.
 		require
 			not_destroyed: not is_destroyed
@@ -337,7 +337,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_from_page (value: INTEGER) is
+	set_from_page (value: INTEGER)
 			-- Make `value' the new `from_page' number.
 		require
 			not_destroyed: not is_destroyed
@@ -348,7 +348,7 @@ feature -- Element change
 			from_page_set: from_page = value
 		end
 
-	set_to_page (value: INTEGER) is
+	set_to_page (value: INTEGER)
 			-- Make `value' the new `to_page' number.
 		require
 			not_destroyed: not is_destroyed
@@ -359,7 +359,7 @@ feature -- Element change
 			to_page_set: to_page = value
 		end
 
-	set_copies (value: INTEGER) is
+	set_copies (value: INTEGER)
 			-- Make `value' the new `copies' number.
 		require
 			not_destroyed: not is_destroyed
@@ -370,7 +370,7 @@ feature -- Element change
 			copies_set: copies = value
 		end
 
-	set_maximum_to_page (value: INTEGER) is
+	set_maximum_to_page (value: INTEGER)
 			-- Make `value' the new maximum "to_page" value.
 		require
 			not_destroyed: not is_destroyed
@@ -382,7 +382,7 @@ feature -- Element change
 			maximum_to_page_set: maximum_to_page = value
 		end
 
-	set_minimum_from_page (value: INTEGER) is
+	set_minimum_from_page (value: INTEGER)
 			-- Make `value' the new minimum "from_page" value.
 		require
 			not_destroyed: not is_destroyed
@@ -401,13 +401,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_PRINT_DIALOG_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

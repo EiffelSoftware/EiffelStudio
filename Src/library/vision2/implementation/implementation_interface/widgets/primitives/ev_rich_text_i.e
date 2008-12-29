@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent the implementation interface for rich text widgets.
 		]"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Status report
 
-	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (caret_index: INTEGER): EV_CHARACTER_FORMAT
 			-- `Result' is character format at caret position `caret_index'
 		require
 			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
@@ -33,7 +33,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	selected_character_format: EV_CHARACTER_FORMAT is
+	selected_character_format: EV_CHARACTER_FORMAT
 			-- `Result' is character format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -48,7 +48,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		require
 			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
@@ -61,7 +61,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -76,7 +76,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		require
 			valid_character_index: start_index >= 1 and end_index <= text_length + 1 and
@@ -89,7 +89,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		require
 			valid_character_index: start_position >= 1 and end_position <= text_length + 1 and
@@ -102,7 +102,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -120,7 +120,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_position' to `end_position'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
 			--`end_position' and `False' otherwise.
@@ -144,7 +144,7 @@ feature -- Status report
 	buffer_locked_in_append_mode: BOOLEAN
 			-- Is buffered appending underway?
 
-	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		require
 			position_valid: an_x_position >= 0 and an_x_position <= width and
@@ -158,7 +158,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	position_from_index (an_index: INTEGER): EV_COORDINATE is
+	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		require
 			index_valid: an_index >= 1 and an_index <= text_length
@@ -173,7 +173,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	character_displayed (an_index: INTEGER): BOOLEAN is
+	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		require
 			index_valid: an_index >= 1 and an_index <= text_length
@@ -189,7 +189,7 @@ feature -- Status report
 			-- Width of each tab position in pixels, from left to right.
 			-- All tab positions not included use `tab_width'.
 
-	tab_width: INTEGER is
+	tab_width: INTEGER
 			-- Default width in pixels of each tab in `Current'.
 		deferred
 		ensure
@@ -202,7 +202,7 @@ feature -- Status report
 
 feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status setting
 
-	set_current_format (format: EV_CHARACTER_FORMAT) is
+	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		require
@@ -215,7 +215,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately.
 		require
@@ -229,7 +229,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on.
@@ -244,7 +244,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		require
@@ -259,7 +259,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
@@ -275,7 +275,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_buffer' to apply buffered contents to `Current'.
 			-- `format' is not cloned internally and when buffer is flushed, its reference is
@@ -294,7 +294,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Append `a_text' with format `format' to append buffer.
 			-- To render buffer to `Current', call `flush_buffer' which replaces current content,
 			-- or `flush_buffer_to' which inserts the formatted text.
@@ -315,7 +315,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	flush_buffer is
+	flush_buffer
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
@@ -327,7 +327,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			unselected: not has_selection
 		end
 
-	flush_buffer_to (start_position, end_position: INTEGER) is
+	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
@@ -341,7 +341,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			unselected: not has_selection
 		end
 
-	set_tab_width (a_width: INTEGER) is
+	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' in pixels to `tab_width'.
 		require
 			width_positive: a_width > 0
@@ -354,7 +354,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	save_to_named_file (a_filename: FILE_NAME) is
+	save_to_named_file (a_filename: FILE_NAME)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
@@ -465,7 +465,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	set_with_named_file (a_filename: FILE_NAME) is
+	set_with_named_file (a_filename: FILE_NAME)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
@@ -498,7 +498,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			-- If an invalid RTF file is passed, `Result' is `False'.
 			-- `Result' is undefined if `set_with_named_file' not called.
 
-	next_change_of_character (current_pos: INTEGER; maximum_caret_pos: INTEGER): INTEGER is
+	next_change_of_character (current_pos: INTEGER; maximum_caret_pos: INTEGER): INTEGER
 			-- `Result' is caret position at next change of character from `current_pos',
 			-- checking maximum caret position `maximum_caret_pos'. By passing `maximum_caret_pos' as
 			-- an argument, it prevents querying from the rich text constantly as it can be
@@ -540,10 +540,10 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			Result_valid: Result <= maximum_caret_pos
 		end
 
-	default_step: INTEGER is 8
+	default_step: INTEGER = 8
 		-- Default step used when buffering into RTF.
 
-	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection
 			-- does not need to be restored.
@@ -552,7 +552,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 		deferred
 		end
 
-	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I is
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
@@ -563,14 +563,14 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			result_not_void: Result /= Void
 		end
 
-	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		require
 			valid_character_index: start_position >= 1 and end_position <= text_length + 1 and start_position <= end_position
 		deferred
 		end
 
-	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		require
 			valid_character_index: caret_index >= 1 and caret_index <= text_length + 1
@@ -579,33 +579,33 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			result_not_void: Result /= Void
 		end
 
-	initialize_for_saving is
+	initialize_for_saving
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
 		deferred
 		end
 
-	complete_saving is
+	complete_saving
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
 		deferred
 		end
 
-	initialize_for_loading is
+	initialize_for_loading
 			-- Initialize `Current' for load operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
 		deferred
 		end
 
-	complete_loading is
+	complete_loading
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_loading'.
 		deferred
 		end
 
-	font_char_set (a_font: EV_FONT): INTEGER is
+	font_char_set (a_font: EV_FONT): INTEGER
 			-- `Result' is char set of font `a_font'.
 		require
 			a_font_not_void: a_font /= Void
@@ -616,7 +616,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 
 feature {NONE} -- Implementation
 
-	update_tab_positions (value: INTEGER) is
+	update_tab_positions (value: INTEGER)
 			-- Update tab widths based on contents of `tab_positions'.
 		deferred
 		end
@@ -626,7 +626,7 @@ feature {EV_FONT_I} -- Implementation
 
 	interface: EV_RICH_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

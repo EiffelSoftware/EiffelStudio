@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Color defined by intensity of the red, green, blue color."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a black color
 		do
 			set_rgb (0, 0, 0)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			blue_set: blue = 0
 		end
 
-	make_rgb (a_red, a_green, a_blue: INTEGER) is
+	make_rgb (a_red, a_green, a_blue: INTEGER)
 			-- Set `red', `green', `blue' with
 			-- `a_red', `a_green', `a_blue'
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			blue_set: blue = a_blue
 		end
 
-	make_system (index: INTEGER) is
+	make_system (index: INTEGER)
 			-- Make a system color identified by `index'.
 			-- See WEL_COLOR_CONSTANTS for `index' values.
 		require
@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 			item := cwin_get_sys_color (index)
 		end
 
-	make_by_color (color: INTEGER) is
+	make_by_color (color: INTEGER)
 			-- Set `item' with `color'.
 		do
 			set_color (color)
 		end
 
-	make_by_pointer (color_pointer: POINTER) is
+	make_by_pointer (color_pointer: POINTER)
 			-- Set `item' with `color_pointer'.
 		obsolete
 			"Use `make_by_color' instead. Not implemented here."
@@ -80,19 +80,19 @@ feature -- Access
 	item: INTEGER
 			-- The Current color.
 
-	red: INTEGER is
+	red: INTEGER
 			-- Intensity value for the red component
 		do
 			Result := cwin_get_r_value (item)
 		end
 
-	green: INTEGER is
+	green: INTEGER
 			-- Intensity value for the green component
 		do
 			Result := cwin_get_g_value (item)
 		end
 
-	blue: INTEGER is
+	blue: INTEGER
 			-- Intensity value for the blue component
 		do
 			Result := cwin_get_b_value (item)
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_color (color: INTEGER) is
+	set_color (color: INTEGER)
 			-- Set `item' with `color'.
 		do
 			item := color
@@ -108,7 +108,7 @@ feature -- Element change
 			color_set: item = color
 		end
 
-	set_rgb (a_red, a_green, a_blue: INTEGER) is
+	set_rgb (a_red, a_green, a_blue: INTEGER)
 			-- Set `red', `green', `blue' with
 			-- `a_red', `a_green', `a_blue'
 		require
@@ -126,7 +126,7 @@ feature -- Element change
 			blue_set: blue = a_blue
 		end
 
-	set_red (a_red: INTEGER) is
+	set_red (a_red: INTEGER)
 			-- Set `red' with `a_red'
 		require
 			valid_red_inf: a_red >= 0
@@ -137,7 +137,7 @@ feature -- Element change
 			red_set: red = a_red
 		end
 
-	set_green (a_green: INTEGER) is
+	set_green (a_green: INTEGER)
 			-- Set `green' with `a_green'
 		require
 			valid_green_inf: a_green >= 0
@@ -148,7 +148,7 @@ feature -- Element change
 			green_set: green = a_green
 		end
 
-	set_blue (a_blue: INTEGER) is
+	set_blue (a_blue: INTEGER)
 			-- Set `blue' with `a_blue'
 		require
 			valid_blue_inf: a_blue >= 0
@@ -161,7 +161,7 @@ feature -- Element change
 
 feature {NONE} -- Externals
 
-	cwin_rgb (a_red, a_green, a_blue: INTEGER): INTEGER is
+	cwin_rgb (a_red, a_green, a_blue: INTEGER): INTEGER
 			-- SDK RGB
 		external
 			"C [macro <windows.h>] (BYTE, BYTE, BYTE): COLORREF"
@@ -169,7 +169,7 @@ feature {NONE} -- Externals
 			"RGB"
 		end
 
-	cwin_get_r_value (color: INTEGER): INTEGER is
+	cwin_get_r_value (color: INTEGER): INTEGER
 			-- SDK GetRValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -177,7 +177,7 @@ feature {NONE} -- Externals
 			"GetRValue"
 		end
 
-	cwin_get_g_value (color: INTEGER): INTEGER is
+	cwin_get_g_value (color: INTEGER): INTEGER
 			-- SDK GetGValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -185,7 +185,7 @@ feature {NONE} -- Externals
 			"GetGValue"
 		end
 
-	cwin_get_b_value (color: INTEGER): INTEGER is
+	cwin_get_b_value (color: INTEGER): INTEGER
 			-- SDK GetBValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -193,7 +193,7 @@ feature {NONE} -- Externals
 			"GetBValue"
 		end
 
-	cwin_get_sys_color (index: INTEGER): INTEGER is
+	cwin_get_sys_color (index: INTEGER): INTEGER
 			-- SDK GetSysColor
 		external
 			"C [macro <windows.h>] (int): DWORD"
@@ -209,7 +209,7 @@ invariant
 	valid_blue_inf: blue >= 0
 	valid_blue_sup: blue <= 255
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

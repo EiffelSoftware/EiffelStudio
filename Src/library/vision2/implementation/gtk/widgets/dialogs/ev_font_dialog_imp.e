@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision font selection dialog, implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect `interface' and initialize `c_object'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 					))
 		end
 
-	initialize is
+	initialize
 			-- Initialize the dialog.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Current selected font.
 		local
 			font_imp: EV_FONT_IMP
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Select `a_font'.
 		local
 			a_success_flag: BOOLEAN
@@ -149,14 +149,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"ok_button"
 		end
 
-	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
@@ -167,7 +167,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

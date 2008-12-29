@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision text field. Implementation interface."
 	legal: "See notice at end of class."
@@ -29,21 +29,21 @@ inherit
 
 feature -- Status report
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of characters field can hold.
 		deferred
 		end
 
 feature -- Status setting
 
-	set_capacity (a_capacity: INTEGER) is
+	set_capacity (a_capacity: INTEGER)
 			-- Assign `a_capacity' to `capacity'.
 		require
 			a_capacity_not_negative: a_capacity >= 0
 		deferred
 		end
 
-	hide_border is
+	hide_border
 			-- Hide the border of `Current'.
 		do
 			-- Redefined in EV_TEXT_FIELD_IMP as it is not needed by all EV_TEXT_FIELD_I descendents.
@@ -58,7 +58,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 invariant
 	capacity_not_negative: capacity >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

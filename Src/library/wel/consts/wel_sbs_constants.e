@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ScrollBar style (SBS) messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	Sbs_horz: INTEGER is 0
+	Sbs_horz: INTEGER = 0
 
-	Sbs_vert: INTEGER is 1
+	Sbs_vert: INTEGER = 1
 
-	Sbs_topalign: INTEGER is 2
+	Sbs_topalign: INTEGER = 2
 
-	Sbs_leftalign: INTEGER is 2
+	Sbs_leftalign: INTEGER = 2
 
-	Sbs_bottomalign: INTEGER is 4
+	Sbs_bottomalign: INTEGER = 4
 
-	Sbs_rightalign: INTEGER is 4
+	Sbs_rightalign: INTEGER = 4
 
-	Sbs_sizeboxtopleftalign: INTEGER is 2
+	Sbs_sizeboxtopleftalign: INTEGER = 2
 
-	Sbs_sizeboxbottomrightalign: INTEGER is 4
+	Sbs_sizeboxbottomrightalign: INTEGER = 4
 
-	Sbs_sizebox: INTEGER is 8;
+	Sbs_sizebox: INTEGER = 8;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XGravityEvent."
@@ -19,19 +19,19 @@ create
 
 feature -- Access
 
-    event_widget: MEL_WIDGET is
+    event_widget: MEL_WIDGET
             -- Window that received the event
         do
             Result := retrieve_widget_from_window (event)
         end;
 
-    x: INTEGER is
+    x: INTEGER
 			-- New x position
         do
             Result := c_event_x (handle)
         end;
 
-    y: INTEGER is
+    y: INTEGER
 			-- New y position
         do
             Result := c_event_y (handle)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Pointer access
 
-    event: POINTER is
+    event: POINTER
             -- Window pointer that received the event
         do
             Result := c_event_event (handle)
@@ -47,22 +47,22 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_event (event_ptr: POINTER): POINTER is
+	c_event_event (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XGravityEvent *): EIF_POINTER"
 		end;
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XGravityEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XGravityEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

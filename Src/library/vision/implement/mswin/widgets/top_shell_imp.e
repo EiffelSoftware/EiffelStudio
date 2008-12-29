@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_top_shell: TOP_SHELL) is
+	make (a_top_shell: TOP_SHELL)
 			-- Make a top shell.
 		do
 			create private_attributes
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	child_has_resized is
+	child_has_resized
 			-- Size shell children
 		do
 			if not realizing_children then
@@ -56,13 +56,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "EvisionTopShell"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

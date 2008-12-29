@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Platform independent abstraction of a shared library"
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (lib_name: STRING) is
+	make (lib_name: STRING)
 			-- Load shared library `lib_name'
 		require
 			non_void: lib_name /= Void
@@ -30,19 +30,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	library_name: STRING is
+	library_name: STRING
 			-- Name of shared library
 		deferred
 		end
 
 feature -- Status report
 
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Current status of the library
 		deferred
 		end
 
-	meaningful: BOOLEAN is
+	meaningful: BOOLEAN
 			-- Is the library currently loaded?
 		do
 			Result := error_code = No_error
@@ -51,7 +51,7 @@ feature -- Status report
 invariant
 	meaningful_definition: meaningful = (error_code = No_error)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Implementation of XColormapEvent."
 	legal: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	colormap: MEL_COLORMAP is
+	colormap: MEL_COLORMAP
 			-- Color map 
 		local
 			id: POINTER	
@@ -29,13 +29,13 @@ feature -- Access
 			end
 		end
 
-	new: BOOLEAN is 
+	new: BOOLEAN 
 			-- Did the colormap change?
 		do
 			Result := c_event_new (handle)
 		end
 
-	state: INTEGER is
+	state: INTEGER
 			-- State of colormap
 		do
 			Result := c_event_state (handle)
@@ -44,13 +44,13 @@ feature -- Access
 					is_colormap_uninstalled
 		end;
 
-	is_colormap_installed: BOOLEAN is
+	is_colormap_installed: BOOLEAN
 			-- Was the color map installed?
 		do
 			Result := state = ColormapInstalled
 		end;
 
-	is_colormap_uninstalled: BOOLEAN is
+	is_colormap_uninstalled: BOOLEAN
 			-- Was the color map installed?
 		do
 			Result := state = ColormapUninstalled
@@ -58,22 +58,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_colormap (event_ptr: POINTER): POINTER is
+	c_event_colormap (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XColormapEvent *): EIF_POINTER"
 		end;
 
-	c_event_new (event_ptr: POINTER): BOOLEAN is
+	c_event_new (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XColormapEvent *): EIF_BOOLEAN"
 		end;
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XColormapEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

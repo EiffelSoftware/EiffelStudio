@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that may be selected/unselected."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status setting
 
-	disable_select is
+	disable_select
 			-- Deselect the object.
 		require
 			not_destroyed: not is_destroyed
@@ -29,7 +29,7 @@ feature -- Status setting
 			unselected: action_sequence_call_counter = old action_sequence_call_counter implies not is_selected
 		end
 
-	toggle is
+	toggle
 			-- Change `is_selected'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_SELECTABLE} and not is_selected
@@ -66,7 +66,7 @@ invariant
 		-- cannot be selected unless they are parented.
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

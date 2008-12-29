@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Widgets which define a font"
 	legal: "See notice at end of class.";
@@ -12,14 +12,14 @@ deferred class
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Font name of label
 		deferred
 		end
 
 feature -- Element change
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set font label to `font_name'.
 		require
 			a_font_exists: a_font /= Void
@@ -27,7 +27,7 @@ feature -- Element change
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			make_empty
@@ -109,14 +109,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_in_destroy (True)
 			set_is_destroyed (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision box. Carbon implementation."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			target, h_ret: POINTER
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	is_item_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is `child' expanded to occupy available spare space?
 		local
 			w_imp : EV_WIDGET_IMP
@@ -74,20 +74,20 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 
 feature {EV_ANY, EV_ANY_I} -- Status settings
 
-	set_homogeneous (flag: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN)
 			-- Set whether every child is the same size.
 		do
 			is_homogeneous := flag
 			setup_layout
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			 -- Assign `value' to `border_width'.
 		do
 				border_width := value
 		end
 
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Assign `value' to `padding'.
 		local
 			old_padding: INTEGER
@@ -106,7 +106,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			end
 		end
 
-	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill available spare space.
 		local
 			w_imp : EV_WIDGET_IMP
@@ -130,7 +130,7 @@ feature {NONE} -- Carbon implementation
 
 	expandable_item_count : INTEGER
 
-	setup_binding ( upper_control, lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER ) is
+	setup_binding ( upper_control, lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER )
 			-- Setup Carbon Layout API
 		deferred
 		end
@@ -157,7 +157,7 @@ feature {EV_CONTAINER_IMP}
 
 
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER)
 			-- propagate it to the top (or if we could resize, resize)
 			-- calculate minimum sizes
 		local
@@ -182,7 +182,7 @@ feature {EV_CONTAINER_IMP}
 
 		end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			deferred
 			end
 
@@ -211,7 +211,7 @@ feature --Meassurement
 
 feature -- Event handling
 
-	on_event (a_inhandlercallref, a_inevent, a_inuserdata: POINTER ) : INTEGER is
+	on_event (a_inhandlercallref, a_inevent, a_inuserdata: POINTER ) : INTEGER
 			-- Called when a Carbon event arrives
 		local
 			event_class, event_kind : INTEGER_32
@@ -236,7 +236,7 @@ feature -- Event handling
 			end
 		end
 
-	on_new_item (an_item_imp: EV_WIDGET_IMP) is
+	on_new_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called after a new item is added
 		do
 			Precursor ( an_item_imp )
@@ -245,7 +245,7 @@ feature -- Event handling
 			child_has_resized (current, an_item_imp.minimum_height, an_item_imp.minimum_width)
 		end
 
-	on_removed_item (an_item_imp: EV_WIDGET_IMP) is
+	on_removed_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called just before `an_item' is removed.
 		do
 			Precursor ( an_item_imp )
@@ -268,7 +268,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 invariant
 	expandable_item_count_correct : expandable_item_count >= 0 and expandable_item_count <= count
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_BOX_IMP
 

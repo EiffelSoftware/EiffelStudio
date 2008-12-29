@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_STATE for  SD_AUTO_HIDE_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_direction: INTEGER) is
+	make (a_content: SD_CONTENT; a_direction: INTEGER)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initlization
 			set: direction = a_direction
 		end
 
-	make_with_size (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER) is
+	make_with_size (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER)
 			-- Creation with a size.
 		require
 			a_content_not_void: a_content /= Void
@@ -82,7 +82,7 @@ feature {NONE} -- Initlization
 			set: width_height = max_size_by_zone (a_width_height)
 		end
 
-	make_with_friend (a_content:SD_CONTENT; a_friend: SD_CONTENT) is
+	make_with_friend (a_content:SD_CONTENT; a_friend: SD_CONTENT)
 			-- Make with `a_friend', so tab together.
 		do
 			make (a_content, a_friend.state.direction)
@@ -91,7 +91,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine.
 
-	set_focus (a_content: SD_CONTENT) is
+	set_focus (a_content: SD_CONTENT)
 			-- Redefine
 		do
 			show
@@ -101,7 +101,7 @@ feature -- Redefine.
 			docking_manager.property.set_last_focus_content (content)
 		end
 
-	close is
+	close
 			-- Redefine
 		do
 			Precursor {SD_STATE}
@@ -110,7 +110,7 @@ feature -- Redefine.
 			tab_group_pruned: not auto_hide_panel.has (tab_stub)
 		end
 
-	stick (a_direction: INTEGER) is
+	stick (a_direction: INTEGER)
 			-- Redefine. `a_direction' is useless. This feature used by SD_DOCKING_STATE and SD_CONTENT.set_auto_hide.
 		local
 			l_retried: BOOLEAN
@@ -139,7 +139,7 @@ feature -- Redefine.
 			retry
 		end
 
- 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
+ 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- Redefine
 		do
 			tab_stub.set_text (a_title)
@@ -147,13 +147,13 @@ feature -- Redefine.
 			set: tab_stub.text = a_title
 		end
 
-	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
 			-- Redefine
 		do
 			tab_stub.on_expose (0, 0, tab_stub.width, tab_stub.height)
 		end
 
-	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- Redefine.
 		do
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
@@ -163,7 +163,7 @@ feature -- Redefine.
 			initialized := True
 		end
 
-	record_state is
+	record_state
 			-- Redefine.
 		do
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
@@ -183,7 +183,7 @@ feature -- Redefine.
 --				implies width_height = zone.height
 		end
 
-	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Redefine.
 			-- It's completely same as SD_STATE_VOID, merge?
 		local
@@ -204,7 +204,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -221,7 +221,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	show is
+	show
 			-- Redefine.
 		local
 			l_retried: BOOLEAN
@@ -243,7 +243,7 @@ feature -- Redefine.
 			retry
 		end
 
-	hide is
+	hide
 			-- Redefine.
 		local
 			l_state: SD_STATE_VOID
@@ -263,7 +263,7 @@ feature -- Redefine.
 			end
 		end
 
-	set_user_widget (a_widget: EV_WIDGET) is
+	set_user_widget (a_widget: EV_WIDGET)
 			-- Redefine
 		do
 			if zone /= Void then
@@ -273,7 +273,7 @@ feature -- Redefine.
 
 feature -- Command
 
-	close_animation is
+	close_animation
 			-- Close with animation
 		do
 			animation.close_animation
@@ -281,13 +281,13 @@ feature -- Command
 
 feature -- Query
 
-	is_hide: BOOLEAN is
+	is_hide: BOOLEAN
 			-- If current Hide?
 		do
 			Result := not auto_hide_panel.tab_stubs.has (tab_stub)
 		end
 
-	is_width_height_valid (a_width_height: INTEGER): BOOLEAN is
+	is_width_height_valid (a_width_height: INTEGER): BOOLEAN
 			-- If a_width_height valid?
 		do
 			if direction  = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
@@ -299,7 +299,7 @@ feature -- Query
 
 feature {NONE} -- Implementation functions.
 
-	stick_zones (a_direction: INTEGER) is
+	stick_zones (a_direction: INTEGER)
 			-- Stick zones which should together with current zone.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation functions.
 			state_changed: content.state /= Current
 		end
 
-	internal_close is
+	internal_close
 			-- Prune internal widgets.
 		do
  			animation.remove_close_timer
@@ -367,14 +367,14 @@ feature {NONE} -- Implementation functions.
 			auto_hide_panel.tab_stubs.prune (tab_stub)
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- Redefine
 			-- FIXIT: It's similiar to SD_DOCKING_STATE move_to_docking_zone, merge?
 		do
 			move_to_zone_internal (a_target_zone, a_first)
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER_32) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER_32)
 			-- Redefine
 			-- FIXIT: It's similiar to SD_DOCKING_STATE move_to_tab_zone, merge?
 		do
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN) is
+	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN)
 			-- Move to `a_target_zone'
 		local
 			l_tab_state: SD_TAB_STATE
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation functions.
 
 feature {SD_AUTO_HIDE_ANIMATION} -- Internal issues.
 
-	max_size_by_zone (a_width_height: INTEGER): INTEGER is
+	max_size_by_zone (a_width_height: INTEGER): INTEGER
 			-- Caculate max size
 		require
 			valid: a_width_height >= 0
@@ -449,7 +449,7 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal issues.
 			valid: is_width_height_valid (Result)
 		end
 
-	set_zone (a_zone: SD_AUTO_HIDE_ZONE) is
+	set_zone (a_zone: SD_AUTO_HIDE_ZONE)
 			-- Set `zone'
 		require
 			not_void: a_zone /= Void
@@ -483,7 +483,7 @@ invariant
 	direction_valid: initialized implies direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

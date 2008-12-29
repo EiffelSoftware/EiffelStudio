@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy the current item.
 		do
 			if parent_imp /= Void then
@@ -37,7 +37,7 @@ feature -- Status setting
 			set_is_destroyed (True)
 		end
 
-	set_parent_imp (a_parent_imp: like parent_imp) is
+	set_parent_imp (a_parent_imp: like parent_imp)
 			-- Assign `a_parent_imp' to `parent_imp'.
 		deferred
 		ensure
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_I} -- Status report
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+	cursor_on_widget: CELL [EV_WIDGET_IMP]
 			-- Widget currently under the pointer.
 		do
 			check
@@ -56,13 +56,13 @@ feature {EV_PICK_AND_DROPABLE_I} -- Status report
 
 feature {EV_ITEM_LIST_I} -- Implementation
 
-	on_parented is
+	on_parented
 			-- `Current' has just been put into a container.
 		do
 			-- Does nothing by default.
 		end
 
-	on_orphaned is
+	on_orphaned
 			-- `Current' has just been removed from its container.
 		do
 			-- Does nothing by default.
@@ -70,7 +70,7 @@ feature {EV_ITEM_LIST_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		do
@@ -79,7 +79,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

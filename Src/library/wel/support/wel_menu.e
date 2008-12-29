@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of items which can be selected by the user."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,13 +35,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make an empty menu
 		do
 			item := cwin_create_menu
 		end
 
-	make_track is
+	make_track
 			-- Make an empty track popup menu
 		do
 			item := cwin_create_popup_menu
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	popup_menu (position: INTEGER): WEL_MENU is
+	popup_menu (position: INTEGER): WEL_MENU
 			-- Popup menu at the zero-based relative `position'
 		require
 			exists: exists
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	append_string (a_string: STRING_GENERAL; an_id: INTEGER) is
+	append_string (a_string: STRING_GENERAL; an_id: INTEGER)
 			-- Append `a_string' with the identifier `an_id' to the
 			-- menu.
 		require
@@ -84,7 +84,7 @@ feature -- Element change
 			string_set: id_string (an_id).is_equal (a_string)
 		end
 
-	append_popup (a_menu: WEL_MENU; a_title: STRING_GENERAL) is
+	append_popup (a_menu: WEL_MENU; a_title: STRING_GENERAL)
 			-- Append a popup menu `a_menu' with `a_title' to the
 			-- current menu.
 		require
@@ -104,7 +104,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	append_separator is
+	append_separator
 			-- Append a separator to the current menu.
 		require
 			exists: exists
@@ -114,7 +114,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	append_string_with_break (a_string: STRING_GENERAL; an_id: INTEGER; has_separator: BOOLEAN) is
+	append_string_with_break (a_string: STRING_GENERAL; an_id: INTEGER; has_separator: BOOLEAN)
 			-- Append an item with a break to the menu.
 			-- All the following items will be set in a new column.
 			-- If `has_separator' is True, then a vertical separator
@@ -141,7 +141,7 @@ feature -- Element change
 			string_set: id_string (an_id).is_equal (a_string)
 		end
 
-	append_bitmap (bitmap: WEL_BITMAP; an_id: INTEGER) is
+	append_bitmap (bitmap: WEL_BITMAP; an_id: INTEGER)
 			-- Append `bitmap' with the identifier `an_id' to the
 			-- menu.
 		require
@@ -158,7 +158,7 @@ feature -- Element change
 			item_exists: item_exists (an_id)
 		end
 
-	insert_string (a_string: STRING_GENERAL; a_position, an_id: INTEGER) is
+	insert_string (a_string: STRING_GENERAL; a_position, an_id: INTEGER)
 			-- Insert `a_string' at zero-based `a_position' with
 			-- `an_id'.
 		require
@@ -179,7 +179,7 @@ feature -- Element change
 			string_set: id_string (an_id).is_equal (a_string)
 		end
 
-	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING_GENERAL) is
+	insert_popup (a_menu: WEL_MENU; a_position: INTEGER; a_title: STRING_GENERAL)
 			-- Insert a popup menu `a_menu' at zero-based `a_position'
 			-- with `a_title'.
 		require
@@ -200,7 +200,7 @@ feature -- Element change
 			popup_menu_set: popup_menu (a_position).item = a_menu.item
 		end
 
-	insert_separator (a_position: INTEGER) is
+	insert_separator (a_position: INTEGER)
 			-- Insert a separator at zero-based `a_position'.
 		require
 			exists: exists
@@ -213,7 +213,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	insert_bitmap (bitmap: WEL_BITMAP; a_position, an_id: INTEGER) is
+	insert_bitmap (bitmap: WEL_BITMAP; a_position, an_id: INTEGER)
 			-- Insert `bitmap' at zero-based `a_position' with
 			-- `an_id'.
 		require
@@ -231,7 +231,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	modify_string (a_string: STRING_GENERAL; an_id: INTEGER) is
+	modify_string (a_string: STRING_GENERAL; an_id: INTEGER)
 			-- Modify the menu title identified by `an_id' to
 			-- `a_string'.
 		require
@@ -251,7 +251,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete_item (an_id: INTEGER) is
+	delete_item (an_id: INTEGER)
 			-- Delete `an_id' from the menu.
 		require
 			exists: exists
@@ -264,7 +264,7 @@ feature -- Removal
 			item_not_exists: not item_exists (an_id)
 		end
 
-	delete_position (position: INTEGER) is
+	delete_position (position: INTEGER)
 			-- Delete the item at zero-based `position'.
 		require
 			exists: exists
@@ -276,7 +276,7 @@ feature -- Removal
 			new_count: count = old count - 1
 		end
 
-	remove_position (position: INTEGER) is
+	remove_position (position: INTEGER)
 			-- Remove the item at zero-based `position'.
 		require
 			exists: exists
@@ -290,7 +290,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	hilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
+	hilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER)
 			-- Hilite the item identified by `an_id' in the
 			-- `window''s menu.
 		require
@@ -303,7 +303,7 @@ feature -- Basic operations
 			cwin_hilite_menu_item (window.item, item, an_id, Mf_bycommand + Mf_hilite)
 		end
 
-	unhilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
+	unhilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER)
 			-- unhilite the item identified by `an_id' in the
 			-- `window''s menu.
 		require
@@ -316,7 +316,7 @@ feature -- Basic operations
 			cwin_hilite_menu_item (window.item, item, an_id, Mf_bycommand + Mf_unhilite)
 		end
 
-	show_track (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW) is
+	show_track (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW)
 			-- Show a track popup menu at the `x' and `y' absolute
 			-- position. `window' will receive the selection in
 			-- `on_menu_command'.
@@ -330,7 +330,7 @@ feature -- Basic operations
 		end
 
 	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW;
-				option: INTEGER; rect: WEL_RECT) is
+				option: INTEGER; rect: WEL_RECT)
 			-- Show a track popup menu with `option' at
 			-- the `x' and `y' absolute position.
 			-- `window' will receive the selection in
@@ -373,7 +373,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		require
 			exists: exists
@@ -385,7 +385,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	check_item (an_id: INTEGER) is
+	check_item (an_id: INTEGER)
 			-- Put a check mark for the item identified by `an_id'.
 		require
 			exists: exists
@@ -397,7 +397,7 @@ feature -- Status setting
 			item_checked: item_checked (an_id)
 		end
 
-	uncheck_item (an_id: INTEGER) is
+	uncheck_item (an_id: INTEGER)
 			-- Remove the check mark for the item identified
 			-- by `an_id'.
 		require
@@ -410,7 +410,7 @@ feature -- Status setting
 			item_unchecked: not item_checked (an_id)
 		end
 
-	enable_item (an_id: INTEGER) is
+	enable_item (an_id: INTEGER)
 			-- Enable the item idenfied by `an_id'.
 		require
 			exists: exists
@@ -422,7 +422,7 @@ feature -- Status setting
 			item_enabled: item_enabled (an_id)
 		end
 
-	enable_position (position: INTEGER) is
+	enable_position (position: INTEGER)
 			-- Enable the item at zero-based `position'.
 		require
 			exists: exists
@@ -434,7 +434,7 @@ feature -- Status setting
 			position_enabled: position_enabled (position)
 		end
 
-	disable_item (an_id: INTEGER) is
+	disable_item (an_id: INTEGER)
 			-- Disable the item identified by `an_id'.
 		require
 			exists: exists
@@ -446,7 +446,7 @@ feature -- Status setting
 			item_disabled: not item_enabled (an_id)
 		end
 
-	disable_position (position: INTEGER) is
+	disable_position (position: INTEGER)
 			-- Disable the item at zero-based `position'.
 		require
 			exists: exists
@@ -460,7 +460,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	item_exists (an_id: INTEGER): BOOLEAN is
+	item_exists (an_id: INTEGER): BOOLEAN
 			-- Does `an_id' exist in the menu?
 		require
 			exists: exists
@@ -469,7 +469,7 @@ feature -- Status report
 			Result := cwin_get_menu_state (item, an_id, Mf_bycommand) /= cwel_menu_item_not_found
 		end
 
-	item_checked (an_id: INTEGER): BOOLEAN is
+	item_checked (an_id: INTEGER): BOOLEAN
 			-- Is the item idenfied by `an_id' checked?
 		require
 			exists: exists
@@ -479,7 +479,7 @@ feature -- Status report
 			Result := flag_set (cwin_get_menu_state (item, an_id, Mf_bycommand), Mf_checked)
 		end
 
-	item_enabled (an_id: INTEGER): BOOLEAN is
+	item_enabled (an_id: INTEGER): BOOLEAN
 			-- Is the item idenfied by `an_id' enabled?
 		require
 			exists: exists
@@ -492,7 +492,7 @@ feature -- Status report
 			Result := not flag_set (flags, Mf_grayed) and not flag_set (flags, Mf_disabled)
 		end
 
-	position_enabled (position: INTEGER): BOOLEAN is
+	position_enabled (position: INTEGER): BOOLEAN
 			-- Is the item at zero-based `position' enabled?
 		require
 			exists: exists
@@ -505,7 +505,7 @@ feature -- Status report
 			Result := not flag_set (flags, Mf_grayed) and not flag_set(flags, Mf_disabled)
 		end
 
-	id_string (an_id: INTEGER): STRING_32 is
+	id_string (an_id: INTEGER): STRING_32
 			-- String associated with `an_id'
 		require
 			exists: exists
@@ -522,7 +522,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	popup_exists (position: INTEGER): BOOLEAN is
+	popup_exists (position: INTEGER): BOOLEAN
 			-- Does a popup menu exists at the zero-based position?
 		require
 			exists: exists
@@ -535,7 +535,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	position_to_item_id (position: INTEGER): INTEGER is
+	position_to_item_id (position: INTEGER): INTEGER
 			-- Retrieve the menu item identifier of a menu item at
 			-- the zero-based `position'.
 			-- Return 0 if the item at the zero-based
@@ -550,19 +550,19 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	default_track_option: INTEGER is
+	default_track_option: INTEGER
 			-- Default option used for `show_track'
 		once
 			Result := Tpm_rightbutton
 		end
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 			-- Load menu.
 		do
 			item := cwin_load_menu (hinstance, id)
 		end
 
-	destroy_item is
+	destroy_item
 			-- Destroy menu.
 		local
 			a_default_pointer: POINTER
@@ -571,12 +571,12 @@ feature {NONE} -- Implementation
 			item := a_default_pointer
 		end
 
-	Max_name_length: INTEGER is 255
+	Max_name_length: INTEGER = 255
 			-- Maximum menu name length
 
 feature {NONE} -- Externals
 
-	cwin_draw_menu_bar (hwnd: POINTER) is
+	cwin_draw_menu_bar (hwnd: POINTER)
 			-- SDK drawMenuBar
 		external
 			"C [macro <wel.h>] (HWND)"
@@ -584,7 +584,7 @@ feature {NONE} -- Externals
 			"DrawMenuBar"
 		end
 
-	cwin_create_menu: POINTER is
+	cwin_create_menu: POINTER
 			-- SDK CreateMenu
 		external
 			"C [macro <wel.h>]: EIF_POINTER"
@@ -592,7 +592,7 @@ feature {NONE} -- Externals
 			"CreateMenu()"
 		end
 
-	cwin_create_popup_menu: POINTER is
+	cwin_create_popup_menu: POINTER
 			-- SDK CreatePopupMenu
 		external
 			"C [macro <wel.h>]: EIF_POINTER"
@@ -600,7 +600,7 @@ feature {NONE} -- Externals
 			"CreatePopupMenu()"
 		end
 
-	cwin_append_menu (hmenu: POINTER; flags: INTEGER; new_item, a_item: POINTER) is
+	cwin_append_menu (hmenu: POINTER; flags: INTEGER; new_item, a_item: POINTER)
 			-- SDK AppendMenu
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT_PTR, LPCTSTR)"
@@ -608,7 +608,7 @@ feature {NONE} -- Externals
 			"AppendMenu"
 		end
 
-	cwin_insert_menu (hmenu: POINTER; position, flags: INTEGER; new_item, a_item: POINTER) is
+	cwin_insert_menu (hmenu: POINTER; position, flags: INTEGER; new_item, a_item: POINTER)
 			-- SDK InsertMenu
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCTSTR)"
@@ -616,7 +616,7 @@ feature {NONE} -- Externals
 			"InsertMenu"
 		end
 
-	cwin_get_menu_item_count (hmenu: POINTER): INTEGER is
+	cwin_get_menu_item_count (hmenu: POINTER): INTEGER
 			-- SDK GetMenuItemCount
 		external
 			"C [macro <wel.h>] (HMENU): EIF_INTEGER"
@@ -624,7 +624,7 @@ feature {NONE} -- Externals
 			"GetMenuItemCount"
 		end
 
-	cwin_get_sub_menu (hmenu: POINTER; pos: INTEGER): POINTER is
+	cwin_get_sub_menu (hmenu: POINTER; pos: INTEGER): POINTER
 			-- SDK GetSubMenu
 		external
 			"C [macro <wel.h>] (HMENU, int): EIF_POINTER"
@@ -632,7 +632,7 @@ feature {NONE} -- Externals
 			"GetSubMenu"
 		end
 
-	cwin_check_menu_item (hmenu: POINTER; id, flags: INTEGER) is
+	cwin_check_menu_item (hmenu: POINTER; id, flags: INTEGER)
 			-- SDK CheckMenuItem
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT)"
@@ -640,7 +640,7 @@ feature {NONE} -- Externals
 			"CheckMenuItem"
 		end
 
-	cwin_delete_menu (hmenu: POINTER; id, flags: INTEGER) is
+	cwin_delete_menu (hmenu: POINTER; id, flags: INTEGER)
 			-- SDK DeleteMenu
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT)"
@@ -648,7 +648,7 @@ feature {NONE} -- Externals
 			"DeleteMenu"
 		end
 
-	cwin_remove_menu (hmenu: POINTER; id, flags: INTEGER) is
+	cwin_remove_menu (hmenu: POINTER; id, flags: INTEGER)
 			-- SDK RemoveMenu
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT)"
@@ -656,7 +656,7 @@ feature {NONE} -- Externals
 			"RemoveMenu"
 		end
 
-	cwin_enable_menu_item (hmenu: POINTER; id, flags: INTEGER) is
+	cwin_enable_menu_item (hmenu: POINTER; id, flags: INTEGER)
 			-- SDK EnableMenuItem
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT)"
@@ -664,7 +664,7 @@ feature {NONE} -- Externals
 			"EnableMenuItem"
 		end
 
-	cwin_get_menu_state (hmenu: POINTER; id, flags: INTEGER): INTEGER is
+	cwin_get_menu_state (hmenu: POINTER; id, flags: INTEGER): INTEGER
 			-- SDK GetMenuState
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT): EIF_INTEGER"
@@ -673,7 +673,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_menu_string (hmenu: POINTER; id: INTEGER; buffer: POINTER;
-				max: INTEGER; flags: INTEGER): INTEGER is
+				max: INTEGER; flags: INTEGER): INTEGER
 			-- SDK GetMenuString
 		external
 			"C [macro <wel.h>] (HMENU, UINT, LPTSTR, int, %
@@ -682,7 +682,7 @@ feature {NONE} -- Externals
 			"GetMenuString"
 		end
 
-	cwin_load_menu (hinstance: POINTER; id: POINTER): POINTER is
+	cwin_load_menu (hinstance: POINTER; id: POINTER): POINTER
 			-- SDK LoadMenu
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
@@ -690,7 +690,7 @@ feature {NONE} -- Externals
 			"LoadMenu"
 		end
 
-	cwin_destroy_menu (hmenu: POINTER) is
+	cwin_destroy_menu (hmenu: POINTER)
 			-- SDK DestroyMenu
 		external
 			"C [macro <wel.h>] (HMENU)"
@@ -698,7 +698,7 @@ feature {NONE} -- Externals
 			"DestroyMenu"
 		end
 
-	cwin_modify_menu (hmenu: POINTER; id, flags: INTEGER; new_id, new_name: POINTER) is
+	cwin_modify_menu (hmenu: POINTER; id, flags: INTEGER; new_id, new_name: POINTER)
 			-- SDK ModifyMenu
 		external
 			"C [macro <wel.h>] (HMENU, UINT, UINT, UINT_PTR, LPCTSTR)"
@@ -707,7 +707,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_hilite_menu_item (hwnd: POINTER; hmenu: POINTER;
-			id, flags: INTEGER) is
+			id, flags: INTEGER)
 			-- SDK HiliteMenuItem
 		external
 			"C [macro <wel.h>] (HWND, HMENU, UINT, UINT)"
@@ -715,7 +715,7 @@ feature {NONE} -- Externals
 			"HiliteMenuItem"
 		end
 
-	cwin_get_menu_item_id (hmenu: POINTER; position: INTEGER): INTEGER is
+	cwin_get_menu_item_id (hmenu: POINTER; position: INTEGER): INTEGER
 			-- SDK GetMenuItemID
 		external
 			"C [macro <wel.h>] (HMENU, int): EIF_INTEGER"
@@ -723,14 +723,14 @@ feature {NONE} -- Externals
 			"GetMenuItemID"
 		end
 
-	cwel_menu_item_not_found: INTEGER is
+	cwel_menu_item_not_found: INTEGER
 			-- Value returned by GetMenuState when an item does
 			-- not exist.
 		external
 			"C [macro <wel.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

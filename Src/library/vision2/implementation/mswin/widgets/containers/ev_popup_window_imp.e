@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision popup window. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	disconnect_from_window_manager is
+	disconnect_from_window_manager
 			-- Show popup window disconnected from Window manager.
 			-- By default when shown the window will have full capture
 			-- and be setup so that clicking on an area outside the window
@@ -59,7 +59,7 @@ feature -- Status Setting
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WINDOW_IMP}
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name for current type of window.
 		do
 			if interface.has_shadow then
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Redefine
 		local
 			l_win: WEL_WINDOWS_VERSION
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_flags: INTEGER is
+	show_flags: INTEGER
 		do
 			if is_disconnected_from_window_manager then
 				Result := sw_shownoactivate
@@ -102,14 +102,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of `Current'.
 			-- Set with the option `ws_clipchildren' to avoid flashing.
 		do
 			Result := ws_popup + ws_overlapped + ws_clipchildren + ws_clipsiblings
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Redefine
 			-- Set with `ws_ex_toolwindow' to avoid addition title in taskbar.
 		do
@@ -123,7 +123,7 @@ feature  -- Implementation
 
 	interface: EV_POPUP_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

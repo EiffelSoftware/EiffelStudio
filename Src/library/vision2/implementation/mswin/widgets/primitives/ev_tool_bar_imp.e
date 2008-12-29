@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision toolbar, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -96,7 +96,7 @@ create
 
 feature {NONE} -- Initialization
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -116,14 +116,14 @@ feature {NONE} -- Initialization
 			set_message_return_value (to_lresult (1))
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			create ev_children.make (2)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
@@ -152,7 +152,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	bar: EV_INTERNAL_TOOL_BAR_IMP is
+	bar: EV_INTERNAL_TOOL_BAR_IMP
 			-- WEL container of `Current'
 		do
 			Result ?= wel_parent
@@ -161,7 +161,7 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_TOOL_BAR_ITEM_IMP]
 			-- List of the direct children of `Current'.
 
-	parent_imp: EV_CONTAINER_IMP is
+	parent_imp: EV_CONTAINER_IMP
 			-- Parent container of `Current'.
 		do
 			if bar.parent = default_parent then
@@ -171,7 +171,7 @@ feature -- Access
 			end
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- `Result' is x_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to
 			-- `wel_parent' else `Result' is relative to screen.
@@ -196,7 +196,7 @@ feature -- Access
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- `Result' is y_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to
 			-- `wel_parent' else `Result' is relative to screen.
@@ -221,7 +221,7 @@ feature -- Access
 			end
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Is `Current' displayed in its parent?
 		do
 			Result := flag_set (bar.style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
@@ -232,19 +232,19 @@ feature -- Access
 
 feature -- Status report
 
-	separator_width: INTEGER is
+	separator_width: INTEGER
 			-- Current separator width.
 		do
 			Result := 8
 		end
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is the window shown?
 		do
 			Result := flag_set (bar.style, Ws_visible)
 		end
 
-	has_vertical_button_style: BOOLEAN is
+	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
@@ -254,7 +254,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show is
+	show
 			-- Show `Current'.
 			-- Need to notify the parent.
 		local
@@ -267,7 +267,7 @@ feature -- Status setting
 			end
 		end
 
-	hide is
+	hide
 			-- Hide `Current'.
 		local
 			p_imp: like parent_imp
@@ -279,7 +279,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			if has_vertical_button_style then
@@ -288,7 +288,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
 			if not has_vertical_button_style then
@@ -297,7 +297,7 @@ feature -- Status setting
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -314,21 +314,21 @@ feature -- Status setting
 			set_is_destroyed (True)
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			set_insensitive (False)
 			Precursor
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input.
 		do
 			set_insensitive (True)
 			Precursor
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- If `flag' then make `Current' insensitive. Else
 			-- make `Current' sensitive.
 		local
@@ -362,7 +362,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_item (button: EV_TOOL_BAR_ITEM_IMP; an_index: INTEGER) is
+	insert_item (button: EV_TOOL_BAR_ITEM_IMP; an_index: INTEGER)
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
@@ -455,7 +455,7 @@ feature -- Element change
 			end
 		end
 
-	remove_item (button: EV_TOOL_BAR_ITEM_IMP) is
+	remove_item (button: EV_TOOL_BAR_ITEM_IMP)
 			-- Remove `button' from `current'.
 		local
 			id1: INTEGER
@@ -474,7 +474,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	enable_vertical is
+	enable_vertical
 			-- Enable vertical items layout.
 		local
 			l_wel_button: WEL_TOOL_BAR_BUTTON
@@ -516,7 +516,7 @@ feature -- Basic operation
 
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Disable vertical items layout. Then items will be horizontal layout.
 		local
 			l_wel_button: WEL_TOOL_BAR_BUTTON
@@ -547,14 +547,14 @@ feature -- Basic operation
 
 		end
 
-	internal_get_index (button: EV_TOOL_BAR_ITEM_IMP): INTEGER is
+	internal_get_index (button: EV_TOOL_BAR_ITEM_IMP): INTEGER
 			-- Retrieve the current index of `button'.
 		do
 			Result := {WEL_API}.send_message_result_integer (
 				wel_item, Tb_commandtoindex, to_wparam (button.id), to_lparam (0))
 		end
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Update the minimum-size of `Current'.
 		local
 			num: INTEGER
@@ -570,7 +570,7 @@ feature -- Basic operation
 			end
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Update the minimum-size of `Current'.
 		do
 			if comctl32_version >= version_471 then
@@ -583,7 +583,7 @@ feature -- Basic operation
 
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		do
@@ -591,7 +591,7 @@ feature -- Basic operation
 			compute_minimum_width
 		end
 
-	internal_reset_button (but: EV_TOOL_BAR_ITEM_IMP) is
+	internal_reset_button (but: EV_TOOL_BAR_ITEM_IMP)
 			-- XX To update XX
 			-- This function is used each time we change an attribute of a
 			-- button as the text or the pixmap. Yet, it should only be a
@@ -625,7 +625,7 @@ feature -- Basic operation
 		-- Used to prevent sizing notifications from occurring during `internal_reset_button' which
 		-- calls `remove_item' followed by `insert_item'.
 
-	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
+	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN
 			-- Is `Current' at position `x_pos', `y_pos' a dockable source?
 		local
 			tool_bar_button: EV_TOOL_BAR_BUTTON_IMP
@@ -637,7 +637,7 @@ feature -- Basic operation
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP
 			-- Find the item at `x_pos', `y_pos'.
 			-- Position is relative to `Current'.
 			-- If there is no button at (`x_pos',`y_pos'), the result is Void.
@@ -650,7 +650,7 @@ feature -- Basic operation
 			end
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
 			-- appropriate event item. Called on a pointer button press.
 		local
@@ -716,7 +716,7 @@ feature -- Basic operation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos', `y_pos' and `button' to the
 			-- appropriate event item. Called on a pointer button double click.
 		local
@@ -734,7 +734,7 @@ feature -- Basic operation
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 
-	button_associated_with_id (command_id: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
+	button_associated_with_id (command_id: INTEGER): EV_TOOL_BAR_BUTTON_IMP
 			-- `Result' is button associated with `command_id'.
 		local
 			found: BOOLEAN
@@ -755,7 +755,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			end
 		end
 
-	on_button_clicked (command_id: INTEGER) is
+	on_button_clicked (command_id: INTEGER)
 			-- Execute `select_actions' of EV_TOOL_BAR_BUTTON_IMP associated
 			-- with `command_id'.
 		require
@@ -788,7 +788,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			but.interface.select_actions.call (Void)
 		end
 
-	button_tooltip_text (command_id: INTEGER): STRING_32 is
+	button_tooltip_text (command_id: INTEGER): STRING_32
 			--	`Result' is tooltip text for button with `command_id'.
 		local
 			but: EV_TOOL_BAR_BUTTON_IMP
@@ -805,7 +805,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 	hot_imagelist: EV_IMAGE_LIST_IMP
 			-- "Hot" image list associated with this toolbar.
 
-	setup_image_list (pixmap_width :INTEGER; pixmap_height :INTEGER) is
+	setup_image_list (pixmap_width :INTEGER; pixmap_height :INTEGER)
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		require
@@ -822,7 +822,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 	has_false_image_list: BOOLEAN
 		-- Is an image list associated with `Current' due to an item with a pixmap?
 
-	enable_false_image_list is
+	enable_false_image_list
 			-- Ensure `has_false_image_list' is `True'.
 		do
 			has_false_image_list := True
@@ -830,7 +830,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 			enabled: has_false_image_list = True
 		end
 
-	disable_false_image_list is
+	disable_false_image_list
 			-- Ensure `has_false_image_list' is `False'.
 		do
 			has_false_image_list := False
@@ -838,7 +838,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 			disabled: has_false_image_list = False
 		end
 
-	remove_image_list is
+	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current'.
 		require
@@ -856,7 +856,7 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 
 feature {NONE} -- Implementation
 
-	update_buttons_with_no_text is
+	update_buttons_with_no_text
 			-- Update display of all buttons with empty `text'.
 		local
 			a_cursor: CURSOR
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 			ev_children.go_to (a_cursor)
 		end
 
-	a_child_has_text: BOOLEAN is
+	a_child_has_text: BOOLEAN
 			-- Does a child of `Current' have text set?
 		local
 			a_cursor: CURSOR
@@ -896,7 +896,7 @@ feature {NONE} -- Implementation
 			ev_children.go_to (a_cursor)
 		end
 
-	children_with_text: INTEGER is
+	children_with_text: INTEGER
 			-- How many children of `Current' have text set?
 		local
 			a_cursor: CURSOR
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation
 			ev_children.go_to (a_cursor)
 		end
 
-	separator_count: INTEGER is
+	separator_count: INTEGER
 			-- Number of separators in `Current'.
 			-- Necessary for the implementation of the minimum_width
 			-- of the toolbar. As soon as the message Tb_getmaxsize
@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- WEL Implementation
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
+			repaint: BOOLEAN)
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
@@ -952,7 +952,7 @@ feature {NONE} -- WEL Implementation
 			reposition
 		end
 
-	wel_resize (a_width, a_height: INTEGER) is
+	wel_resize (a_width, a_height: INTEGER)
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
@@ -960,19 +960,19 @@ feature {NONE} -- WEL Implementation
 			reposition
 		end
 
-	wel_move (a_x, a_y: INTEGER) is
+	wel_move (a_x, a_y: INTEGER)
 			-- Move `Current'.
 		do
 			bar.move (a_x, a_y)
 		end
 
-	wel_set_parent (a_parent: WEL_WINDOW) is
+	wel_set_parent (a_parent: WEL_WINDOW)
 			-- Assign `a_parent' as the parent of `Current'.
 		do
 			bar.set_parent (a_parent)
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
 			it: EV_TOOL_BAR_BUTTON_IMP
@@ -992,14 +992,14 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Left mouse button has been double clicked.
 			--| This has been redefined so that if you double click
 			--| on a radio button, we can stop Windows altering the
@@ -1014,7 +1014,7 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_tbn_dropdown (info: WEL_NM_TOOL_BAR) is
+	on_tbn_dropdown (info: WEL_NM_TOOL_BAR)
 			-- Drop down button drop down arrow clicked.
 		local
 			l_button: EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP
@@ -1024,7 +1024,7 @@ feature {NONE} -- WEL Implementation
 			l_button.interface.drop_down_actions.call ([])
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible | Ws_child | Ws_clipchildren | Ws_clipsiblings |
@@ -1042,7 +1042,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_INTERNAL_TOOL_BAR_IMP} -- Implementation
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
    			-- By default there is no background
@@ -1058,7 +1058,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Radio items in `Current'.
 			-- `Current' shares reference with merged containers.
 
-	is_merged (other: EV_TOOL_BAR): BOOLEAN is
+	is_merged (other: EV_TOOL_BAR): BOOLEAN
 			-- Is `Current' merged with `other'?
 		require
 			other_not_void: other /= Void
@@ -1069,13 +1069,13 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			Result := t_imp.radio_group = radio_group
 		end
 
-	set_radio_group (rg: like radio_group) is
+	set_radio_group (rg: like radio_group)
 			-- Set `radio_group' by reference. (Merge)
 		do
 			radio_group := rg
 		end
 
-	add_radio_button (w: EV_ITEM) is
+	add_radio_button (w: EV_ITEM)
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
@@ -1092,7 +1092,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	add_button (w: EV_ITEM) is
+	add_button (w: EV_ITEM)
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
@@ -1109,7 +1109,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_ITEM) is
+	remove_radio_button (w: EV_ITEM)
 			-- Called when `w' has been removed from `Current'.
 		require
 			w_not_void: w /= Void
@@ -1124,7 +1124,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			end
 		end
 
-	add_toggle_button (w: EV_ITEM) is
+	add_toggle_button (w: EV_ITEM)
 			-- Called when `w' has been added to `Current'.
 		require
 			item_not_void: w /= Void
@@ -1142,7 +1142,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is index to left of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button. i.e if over button 1, `Result' is 0.
@@ -1162,7 +1162,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			end
 		end
 
-	block_selection_for_docking is
+	block_selection_for_docking
 			-- Ensure that a tool bar button is not selected as a
 			-- result of the transport ending.
 		do
@@ -1171,7 +1171,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 
-	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is relative xcoor of `button' to `parent_imp'.
 		local
 			button_rectangle: WEL_RECT
@@ -1182,7 +1182,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := button_rectangle.left
 		end
 
-	child_y (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_y (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is relative ycoor of `button' to `parent_imp'.
 		local
 			button_rectangle: WEL_RECT
@@ -1193,7 +1193,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := button_rectangle.top
 		end
 
-	child_x_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_x_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is absolute xcoor of `button'.	
 		local
 			button_rectangle: WEL_RECT
@@ -1204,7 +1204,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := screen_x + button_rectangle.left
 		end
 
-	child_y_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_y_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is absolute ycoor of `button'.	
 		local
 			button_rectangle: WEL_RECT
@@ -1215,7 +1215,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := screen_y + button_rectangle.top
 		end
 
-	child_width (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_width (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is width of `button'.
 		local
 			button_rectangle: WEL_RECT
@@ -1226,7 +1226,7 @@ feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 			Result := button_rectangle.width
 		end
 
-	child_height (button: EV_TOOL_BAR_BUTTON): INTEGER is
+	child_height (button: EV_TOOL_BAR_BUTTON): INTEGER
 			-- `Result' is height of `button'.
 		local
 			button_rectangle: WEL_RECT
@@ -1241,7 +1241,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TOOL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

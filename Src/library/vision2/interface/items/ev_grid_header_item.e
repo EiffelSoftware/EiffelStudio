@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelVision2 header item for EV_GRID_COLUMN."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {EV_GRID_COLUMN_I}
 
 feature {NONE} -- Initialization
 
-	make_with_grid_column (a_column: EV_GRID_COLUMN_I) is
+	make_with_grid_column (a_column: EV_GRID_COLUMN_I)
 			-- Create and associate `Current' with `a_column'
 		require
 			a_column_not_void: a_column /= Void
@@ -34,7 +34,7 @@ invariant
 	column_not_void: column /= Void
 	parented_whilst_in_grid: column.is_show_requested implies column.parent.header = parent
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

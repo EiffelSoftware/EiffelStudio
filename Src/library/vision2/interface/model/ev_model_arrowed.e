@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figure that can have an arrowhead at its start or endpoint."
 	legal: "See notice at end of class."
@@ -29,32 +29,32 @@ feature -- Access
 	arrow_size: INTEGER
 			-- Size of the arrow.
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- Line width.
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_end_arrow is
+	enable_end_arrow
 			-- Set `is_end_arrow' `True'.
 		do
 			is_end_arrow := True
 		end
 
-	disable_end_arrow is
+	disable_end_arrow
 			-- Set `is_end_arrow' `False'.
 		do
 			is_end_arrow := False
 		end
 
-	enable_start_arrow is
+	enable_start_arrow
 			-- Set `is_start_arrow' `True'.
 		do
 			is_start_arrow := True
 		end
 
-	disable_start_arrow is
+	disable_start_arrow
 			-- Set `is_start_arrow' `False'.
 		do
 			is_start_arrow := False
@@ -62,7 +62,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_arrow_size (an_arrow_size: like arrow_size) is
+	set_arrow_size (an_arrow_size: like arrow_size)
 			-- Set `arrow_size' to `an_arrow_size'.
 		require
 			an_arrow_size_positive: an_arrow_size > 0
@@ -74,7 +74,7 @@ feature -- Element change
 
 feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 
-	start_arrow: EV_MODEL_POLYGON is
+	start_arrow: EV_MODEL_POLYGON
 			-- Triangle acting as arrow on `point_a'.
 		local
 			l_angle: DOUBLE
@@ -112,7 +112,7 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 			end
 		end
 
-	end_arrow: EV_MODEL_POLYGON is
+	end_arrow: EV_MODEL_POLYGON
 			-- Triangle acting as arrow on `point_b'.
 		local
 			l_angle: DOUBLE
@@ -151,19 +151,19 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 			end
 		end
 
-	start_point: EV_COORDINATE is
+	start_point: EV_COORDINATE
 			-- Point where `start_arrow' is drawn.
 		deferred
 		end
 
-	end_point: EV_COORDINATE is
+	end_point: EV_COORDINATE
 			-- Point where `end_arrow' is drawn.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	start_angle: DOUBLE is
+	start_angle: DOUBLE
 			-- Angle that line begins on relative to world.
 		local
 			sp, ep: EV_COORDINATE
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			Result := line_angle (sp.x, sp.y, ep.x, ep.y)
 		end
 
-	end_angle: DOUBLE is
+	end_angle: DOUBLE
 			-- Angle that line ends on relative to world.
 		local
 			sp, ep: EV_COORDINATE
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			Result := line_angle (ep.x, ep.y, sp.x, sp.y)
 		end
 
-	set_arrow (arrow: EV_MODEL_POLYGON; angle: DOUBLE; point: EV_COORDINATE) is
+	set_arrow (arrow: EV_MODEL_POLYGON; angle: DOUBLE; point: EV_COORDINATE)
 			-- Set `arrow' pointing to `point' with `angle'
 		local
 			s: INTEGER
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 
 	internal_arrow_size: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

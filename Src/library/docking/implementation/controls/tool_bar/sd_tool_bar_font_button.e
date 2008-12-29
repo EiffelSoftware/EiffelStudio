@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Button on which can use speciall font instead of system theme font."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Command
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Set `font' with `a_font'
 		require
 			not_void: a_font /= Void
@@ -30,7 +30,7 @@ feature -- Command
 			set: font = a_font
 		end
 
-	enable_hot is
+	enable_hot
 			-- Enable hot state.
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.hot
@@ -43,7 +43,7 @@ feature -- Query
 	font: EV_FONT
 		-- Text font
 
-	text_width: INTEGER is
+	text_width: INTEGER
 			-- Redefine
 		local
 			l_font: EV_FONT
@@ -58,13 +58,13 @@ feature -- Query
 			end
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Redefine
 		do
 			Result := Precursor {SD_TOOL_BAR_RADIO_BUTTON} or state = {SD_TOOL_BAR_ITEM_STATE}.hot
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

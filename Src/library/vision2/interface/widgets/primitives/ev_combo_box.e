@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A text field with a button. When the button is pressed, a list of
@@ -59,7 +59,7 @@ create
 
 feature -- Status report
 
-	is_list_shown: BOOLEAN is
+	is_list_shown: BOOLEAN
 			-- Is drop down list currently shown?
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -107,7 +107,7 @@ feature -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TEXT_FIELD} and Precursor {EV_LIST_ITEM_LIST}
@@ -120,13 +120,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_COMBO_BOX_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

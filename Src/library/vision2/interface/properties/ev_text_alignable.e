@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that may have their text aligned to the%
 		%left, center or right."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Current alignment.
 			-- See class EV_TEXT_ALIGNABLE_CONSTANTS for
 			-- possible values.
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Is `Current' left aligned?
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Status report
 			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 		
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Is `Current' center aligned?
 		require
 			not_destroyed: not is_destroyed
@@ -48,7 +48,7 @@ feature -- Status report
 			Result := text_alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Is `Current' right aligned?
 		require
 			not_destroyed: not is_destroyed
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		require
 			not_destroyed: not is_destroyed
@@ -68,7 +68,7 @@ feature -- Status setting
 			alignment_set: is_center_aligned
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -78,7 +78,7 @@ feature -- Status setting
 			alignment_set: is_right_aligned
 		end
         
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		require
 			not_destroyed: not is_destroyed
@@ -96,7 +96,7 @@ invariant
 
 	valid_alignment: (create {EV_TEXT_ALIGNMENT_CONSTANTS}).valid_alignment (text_alignment)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

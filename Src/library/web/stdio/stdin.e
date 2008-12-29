@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Standard input in the Unix understanding."
@@ -22,13 +22,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			make_open_stdin ("stdin")
 			set_read_mode
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item' and initialize `cbSize' field.
 		do
 			Precursor {WEL_STRUCTURE}
@@ -35,7 +35,7 @@ feature -- Access
 	icon: WEL_ICON
 			-- Associated icon displayed in taskbar.
 
-	tooltip_text: STRING_32 is
+	tooltip_text: STRING_32
 			-- Associated tooltip if any.
 		require
 			valid_flags: (uflags & {WEL_NIF_CONSTANTS}.nif_icon) = {WEL_NIF_CONSTANTS}.nif_icon
@@ -48,7 +48,7 @@ feature -- Access
 			tooltip_text_not_void: Result /= Void
 		end
 
-	uflags: INTEGER is
+	uflags: INTEGER
 			-- Flags that indicate which of the other members contain valid data.
 			-- This member can be a combination of the following:
 			-- NIF_ICON: `icon' is valid.
@@ -62,14 +62,14 @@ feature -- Access
 			Result := c_uflags (item)
 		end
 
-	callback_message: INTEGER is
+	callback_message: INTEGER
 		do
 			Result := c_ucallback_message (item)
 		end
 
 feature -- Settings
 
-	set_window (a_window: WEL_WINDOW) is
+	set_window (a_window: WEL_WINDOW)
 			-- Set `window' with `a_window'.
 		do
 			window := a_window
@@ -82,7 +82,7 @@ feature -- Settings
 			window_set: window = a_window
 		end
 
-	set_icon (a_icon: WEL_ICON) is
+	set_icon (a_icon: WEL_ICON)
 			-- Set `icon' with `a_icon'.
 		do
 			icon := a_icon
@@ -95,7 +95,7 @@ feature -- Settings
 			icon_set: icon = a_icon
 		end
 
-	set_tooltip_text (a_str: STRING_GENERAL) is
+	set_tooltip_text (a_str: STRING_GENERAL)
 			-- Set `a_str' as `tooltip_text'.
 		require
 			valid_size: a_str /= Void implies a_str.count < tooltip_text_size
@@ -112,7 +112,7 @@ feature -- Settings
 			tooltip_text_set: equal (a_str, tooltip_text)
 		end
 
-	set_uflags (a_uflags: INTEGER) is
+	set_uflags (a_uflags: INTEGER)
 			-- Set `uflags' with `a_uflags'.
 		do
 			c_set_uflags (item, a_uflags)
@@ -120,7 +120,7 @@ feature -- Settings
 			flags_set: uflags = a_uflags
 		end
 
-	set_callback_message (a_id: INTEGER) is
+	set_callback_message (a_id: INTEGER)
 			-- Set `callback_message' with `a_id'.
 		do
 			c_set_ucallback_message (item, a_id)
@@ -130,7 +130,7 @@ feature -- Settings
 
 feature -- Sizing
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of NOTIFYICONDATA structure
 		external
 			"C inline use <shellapi.h>"
@@ -138,7 +138,7 @@ feature -- Sizing
 			"sizeof(NOTIFYICONDATA)"
 		end
 
-	tooltip_text_size: INTEGER is
+	tooltip_text_size: INTEGER
 			-- Size of tooltip text.
 		do
 			Result := c_sztip_size (item)
@@ -148,28 +148,28 @@ feature -- Sizing
 
 feature {NONE} -- Implementation: Access
 
-	c_ucallback_message (a_ptr: POINTER): INTEGER is
+	c_ucallback_message (a_ptr: POINTER): INTEGER
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->uCallbackMessage"
 		end
 
-	c_uflags (a_ptr: POINTER): INTEGER is
+	c_uflags (a_ptr: POINTER): INTEGER
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->uFlags"
 		end
 
-	c_sztip_size (a_ptr: POINTER): INTEGER is
+	c_sztip_size (a_ptr: POINTER): INTEGER
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"sizeof(((NOTIFYICONDATA *) $a_ptr)->szTip)"
 		end
 
-	c_sztip (a_ptr: POINTER): POINTER is
+	c_sztip (a_ptr: POINTER): POINTER
 		external
 			"C inline use <shellapi.h>"
 		alias
@@ -178,42 +178,42 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation: Settings
 
-	c_set_cbsize (a_ptr: POINTER; a_size: INTEGER) is
+	c_set_cbsize (a_ptr: POINTER; a_size: INTEGER)
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->cbSize = $a_size"
 		end
 
-	c_set_hwnd (a_ptr: POINTER; a_hwnd: POINTER) is
+	c_set_hwnd (a_ptr: POINTER; a_hwnd: POINTER)
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->hWnd = $a_hwnd"
 		end
 
-	c_set_icon (a_ptr: POINTER; a_icon: POINTER) is
+	c_set_icon (a_ptr: POINTER; a_icon: POINTER)
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->hIcon = $a_icon"
 		end
 
-	c_set_uflags (a_ptr: POINTER; a_flags: INTEGER) is
+	c_set_uflags (a_ptr: POINTER; a_flags: INTEGER)
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->uFlags = $a_flags"
 		end
 
-	c_set_ucallback_message (a_ptr: POINTER; a_id: INTEGER) is
+	c_set_ucallback_message (a_ptr: POINTER; a_id: INTEGER)
 		external
 			"C inline use <shellapi.h>"
 		alias
 			"((NOTIFYICONDATA *) $a_ptr)->uCallbackMessage = $a_id"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Handles that allow the user to control certain EV_RELATIVE_POINTs%N%
 		%in an EV_FIGURE_WORLD."
@@ -26,14 +26,14 @@ create {EV_MOVE_HANDLE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize actions.
 		do
 			Precursor
 			initialize
 		end
 
-	initialize is
+	initialize
 			-- Set action sequences.
 		do
 			create start_actions
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_always_shown is
+	enable_always_shown
 			-- Set `is_always_shown' `True'.
 		do
 			if not is_always_shown then
@@ -95,7 +95,7 @@ feature -- Status setting
 			is_always_shown: is_always_shown
 		end
 
-	disable_always_shown is
+	disable_always_shown
 			-- Set `is_always_shown' `False'.
 		do
 			if is_always_shown then
@@ -108,7 +108,7 @@ feature -- Status setting
 			not_always_shown: not is_always_shown
 		end
 
-	enable_snapping is
+	enable_snapping
 			-- Set `is_snapping' `True'.
 		do
 			is_snapping := True
@@ -116,7 +116,7 @@ feature -- Status setting
 			snap_enabled: is_snapping
 		end
 
-	disable_snapping is
+	disable_snapping
 			-- Set `is_snapping' `False'.
 		do
 			is_snapping := False
@@ -124,7 +124,7 @@ feature -- Status setting
 			snap_disabled: not is_snapping
 		end
 
-	snap_to_grid is
+	snap_to_grid
 			-- Move to the most nearby point on the grid.
 		do
 			if is_snapping then
@@ -134,31 +134,31 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_minimum_x (a_x: INTEGER) is
+	set_minimum_x (a_x: INTEGER)
 			-- Assign `a_x' to `minimum_x'.
 		do
 			minimum_x := a_x
 		end
 
-	set_minimum_y (a_y: INTEGER) is
+	set_minimum_y (a_y: INTEGER)
 			-- Assign `a_y' to `minimum_y'.
 		do
 			minimum_y := a_y
 		end
 
-	set_maximum_x (a_x: INTEGER) is
+	set_maximum_x (a_x: INTEGER)
 			-- Assign `a_x' to `maximum_x'.
 		do
 			maximum_x := a_x
 		end
 
-	set_maximum_y (a_y: INTEGER) is
+	set_maximum_y (a_y: INTEGER)
 			-- Assign `a_y' to `maximum_y'.
 		do
 			maximum_y := a_y
 		end
 
-	set_real_position_agent (an_agent: like real_position_agent) is
+	set_real_position_agent (an_agent: like real_position_agent)
 			-- Assign `an_agent' to `real_position_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -181,10 +181,10 @@ feature -- Actions
 
 feature {NONE} -- Events
 
-	Max_integer: INTEGER is 100000
+	Max_integer: INTEGER = 100000
 			-- Highest possible integer value.
 
-	Min_integer: INTEGER is -100000
+	Min_integer: INTEGER = -100000
 			-- Lowest possible integer value.
 
 	show_agent: PROCEDURE [ANY, TUPLE]
@@ -193,19 +193,19 @@ feature {NONE} -- Events
 	hide_agent: PROCEDURE [ANY, TUPLE]
 			-- Connected to `leave_actions'.
 
-	on_enter is
+	on_enter
 		do
 			show
 		end
 
-	on_leave is
+	on_leave
 		do
 			hide
 		end
 
 	rel_x, rel_y: INTEGER
 
-	snapped_x (ax: INTEGER): INTEGER is
+	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		local
 			px, wx: INTEGER
@@ -217,7 +217,7 @@ feature {NONE} -- Events
 			Result := world.x_to_grid (wx + px + ax) - px - wx
 		end
 
-	snapped_y (ay: INTEGER): INTEGER is
+	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		local
 			py, wy: INTEGER
@@ -229,7 +229,7 @@ feature {NONE} -- Events
 			Result := world.y_to_grid (wy + py + ay) - py - wy
 		end
 
-	on_start_resizing (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_start_resizing (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User pressed pointer button on `Current'.
 		do
 			if b = 1 then
@@ -240,7 +240,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_resizing (x, y: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_resizing (x, y: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- Mouse moved over `Current'.
 		local
 			tx, ty: INTEGER
@@ -280,7 +280,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_stop_resizing (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_stop_resizing (x, y, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User release pointer button from `Current'.
 		do
 			if has_capture then
@@ -289,7 +289,7 @@ feature {NONE} -- Events
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

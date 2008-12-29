@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyzes Windows errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Status
 
-	last_error_code: INTEGER is
+	last_error_code: INTEGER
 			-- Integer code corresponding to last error.
 		do
 			Result := cwin_get_last_error_code
 		end
 
-	display_last_error is
+	display_last_error
 			-- Display string corresponding to last
 			-- error in a message dialog box.
 		local
@@ -29,7 +29,7 @@ feature -- Status
 			l_msg_box.information_message_box (Void, l_str, "WEL_ERROR Dialog")
 		end
 
-	text_for_error_code (a_error_code: INTEGER): STRING_32 is
+	text_for_error_code (a_error_code: INTEGER): STRING_32
 			-- Text corresponding to `a_error_code'.
 		require
 			a_error_code_non_negative: a_error_code >= 0
@@ -51,7 +51,7 @@ feature -- Status
 
 feature -- Setting
 
-	reset_last_error_code is
+	reset_last_error_code
 			-- Reset `last_error_code' to `0'.
 		do
 			cwin_set_last_error_code (0)
@@ -61,7 +61,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	cwin_set_last_error_code (i: INTEGER) is
+	cwin_set_last_error_code (i: INTEGER)
 			-- Set new value for `last_error_code'.
 		external
 			"C macro signature (DWORD) use <windows.h>"
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			"SetLastError"
 		end
 
-	cwin_get_last_error_code: INTEGER is
+	cwin_get_last_error_code: INTEGER
 			-- The GetLastError function retrieves the calling thread's
 			-- last-error code value. The last-error code is maintained
 			-- on a per-thread basis. Multiple threads do not overwrite
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			"GetLastError()"
 		end
 
-	cwin_local_free (a_ptr: POINTER) is
+	cwin_local_free (a_ptr: POINTER)
 			-- Free `a_ptr' using LocalFree.
 		external
 			"C inline use <windows.h>"
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			"LocalFree((HLOCAL) $a_ptr);"
 		end
 
-	cwin_error_text (a_code: INTEGER): POINTER is
+	cwin_error_text (a_code: INTEGER): POINTER
 			-- Get text from error `a_code'. It is up to the caller to free
 			-- the returned buffer using `cwin_local_free'.
 		external
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

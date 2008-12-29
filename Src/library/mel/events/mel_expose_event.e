@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the XExposeEvent."
@@ -19,31 +19,31 @@ create
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position of exposed area
 		do
 			Result := c_event_x (handle)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y position of exposed area
 		do
 			Result := c_event_y (handle)
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of exposed area
 		do
 			Result := c_event_width (handle)
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of exposed area
 		do
 			Result := c_event_height (handle)
 		end;
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of expose events to come
 		do
 			Result := c_event_count (handle)
@@ -51,32 +51,32 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_width (event_ptr: POINTER): INTEGER is
+	c_event_width (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_height (event_ptr: POINTER): INTEGER is
+	c_event_height (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_count (event_ptr: POINTER): INTEGER is
+	c_event_count (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XExposeEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

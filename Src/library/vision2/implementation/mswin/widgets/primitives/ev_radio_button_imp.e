@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio button. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -115,7 +115,7 @@ create
 
 feature {NONE} -- Initalization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor
@@ -125,7 +125,7 @@ feature {NONE} -- Initalization
 
 feature -- Status setting
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Reset `Current' to its default minimum size.
 		do
 				-- This extra width only needs to be added if
@@ -141,7 +141,7 @@ feature -- Status setting
 			Precursor {EV_BUTTON_IMP}
 		end
 
-	enable_select is
+	enable_select
 			-- Set `Current' as selected.
 			--| On WEL, this happens automatically in a WEL_CONTROL, but we
 			--| want it to work over multiple controls (see: EV_CONTAINER).
@@ -168,13 +168,13 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Called when `Current' is pressed.
 		do
 			enable_select
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control.
 		once
 			Result := Ws_visible | Ws_child | Ws_tabstop | Bs_radiobutton
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- Encapsulation of the SDK GetNextDlgGroupItem.
 		local
 			l_cur: CURSOR
@@ -218,7 +218,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 feature {NONE} -- Implementation, focus event
 
-	process_navigation_key (virtual_key: INTEGER) is
+	process_navigation_key (virtual_key: INTEGER)
 			-- Process a tab or arrow key press to give the focus to the next
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control need to process this kind of keys.
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	arrow_action (direction: BOOLEAN) is
+	arrow_action (direction: BOOLEAN)
 			-- Go to the next widget that takes the focus throughthe arrow
 			-- keys. If `direction' it goes to the next widget otherwise,
 			-- it goes to the previous one.
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	internal_default_height: INTEGER is
+	internal_default_height: INTEGER
 			-- The default minimum height of `Current' with no text.
 			-- This is used in set_default_size.
 		do
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation, focus event
 			Result := 12
 		end
 
-	update_current_push_button is
+	update_current_push_button
 			-- Update the current push button
 			--
 			-- Current is NOT a push button so we set the current push button
@@ -282,13 +282,13 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	fire_select_actions_on_enter is
+	fire_select_actions_on_enter
 			-- Call select_actions to respond to Enter key press if
 			-- Current supports it.
 		do
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -313,7 +313,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

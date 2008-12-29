@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "This class is an ancestor to all GDI classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Creation
 	
-	make_by_pointer (a_pointer: POINTER) is
+	make_by_pointer (a_pointer: POINTER)
 			-- Set `item' with `a_pointer'.
 			-- Since `item' is shared, it does not need
 			-- to be freed.
@@ -31,7 +31,7 @@ feature {NONE} -- Creation
 			gdi_make
 		end
 
-	gdi_make is
+	gdi_make
 			-- Initialize the GDI part of `Current'.
 			--
 			-- `gdi_make' should be called by all creation procedure.
@@ -43,7 +43,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	gdi_objects_count: INTEGER is
+	gdi_objects_count: INTEGER
 			-- Number of GDI object currently allocated by the
 			-- program.
 			--
@@ -55,14 +55,14 @@ feature -- Access
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Ensure the current gdi object is deleted when
 			-- garbage collected.
 		do
 			delete_gdi_object
 		end
 
-	delete_gdi_object is
+	delete_gdi_object
 			-- Delete the current gdi object
 		local
 			p: POINTER
@@ -87,7 +87,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Implementation
 
-	increase_gdi_objects_count is
+	increase_gdi_objects_count
 			-- Increase the number of GDI objects allocated by this program.
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item + 1)
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decrease_gdi_objects_count is
+	decrease_gdi_objects_count
 			-- Decrease the number of GDI objects allocated by this program.
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item - 1)
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gdi_objects_count_cell: CELL [INTEGER] is
+	gdi_objects_count_cell: CELL [INTEGER]
 			-- Cell to store the number of GDI objects allocated by this progran.
 		once
 			create Result.put (0)
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_delete_object (a_item: POINTER): BOOLEAN is
+	cwin_delete_object (a_item: POINTER): BOOLEAN
 			-- SDK DeleteObject
 		external
 			"C [macro <wel.h>] (HGDIOBJ): BOOL"
@@ -121,7 +121,7 @@ feature {NONE} -- Externals
 			"DeleteObject"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

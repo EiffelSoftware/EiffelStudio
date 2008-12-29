@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Palette entry flag constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Pc_reserved: INTEGER is
+	Pc_reserved: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"PC_RESERVED"
 		end
 
-	Pc_explicit: INTEGER is
+	Pc_explicit: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"PC_EXPLICIT"
 		end
 
-	Pc_nocollapse: INTEGER is
+	Pc_nocollapse: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"PC_NOCOLLAPSE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

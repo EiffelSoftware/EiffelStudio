@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Docking library dependency checker To check if some librarys relied exists."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ deferred class
 
 feature -- Command
 
-	check_dependency (a_parent_window: EV_WINDOW) is
+	check_dependency (a_parent_window: EV_WINDOW)
 			-- Check native library dependency.
 		deferred
 		end
 
-	is_solaris_cde: BOOLEAN is
+	is_solaris_cde: BOOLEAN
 			-- If running in Solaris CDE desktop?
 		deferred
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
         description:
                 "Connexion oriented socket."
@@ -21,12 +21,12 @@ inherit
 
 feature -- Status report
 
-	support_storable: BOOLEAN is True
+	support_storable: BOOLEAN = True
 			-- Can medium be used to store an Eiffel structure?
 
 feature
 
-	listen (queue: INTEGER) is
+	listen (queue: INTEGER)
 			-- Listen on socket for at most `queue' connections.
 		require
 			socket_exists: exists
@@ -36,7 +36,7 @@ feature
 	accepted: like Current
 			-- Last accepted socket.
 
-	accept is
+	accept
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		require
@@ -44,7 +44,7 @@ feature
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

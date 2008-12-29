@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tool bar separator. Implementation interface."
 	legal: "See notice at end of class."
@@ -30,11 +30,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN = False
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a Carbon Separator .
 		local
 			ret: INTEGER
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Statur Report
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Are the buttons in parent toolbar arranged vertically?
 		local
 			tool_bar_imp: EV_TOOL_BAR_IMP
@@ -68,7 +68,7 @@ feature -- Statur Report
 
 feature {EV_ANY_I} -- Implementation
 
-	layout is
+	layout
 			-- Adjust the control to the size of the parent toolbar
 		local
 			rect: RECT_STRUCT
@@ -78,7 +78,7 @@ feature {EV_ANY_I} -- Implementation
 			size_control_external (c_object, rect.right, rect.bottom)
 		end
 
-	get_bounds: RECT_STRUCT is
+	get_bounds: RECT_STRUCT
 			-- Get the bounds for current button
 		local
 			tool_bar_imp: EV_TOOL_BAR_IMP
@@ -104,12 +104,12 @@ feature {EV_ANY_I} -- Implementation
 		Result.set_bottom (r_height)
 	end
 
-	sep_padding: INTEGER is 5;
+	sep_padding: INTEGER = 5;
 
 
 	interface: EV_TOOL_BAR_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

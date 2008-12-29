@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object store for interpreter
 		]"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new store
 		do
 			create storage.make_with_capacity (default_capacity)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_variable_defined (a_index: INTEGER): BOOLEAN is
+	is_variable_defined (a_index: INTEGER): BOOLEAN
 			-- Is the slot at position `a_index' used for store some (possibly Void) variable?
 		require
 			a_index_positive: a_index > 0
@@ -38,7 +38,7 @@ feature -- Status report
 			good_result: Result = (a_index <= storage_flag.count) and then storage_flag.item (a_index)
 		end
 
-	is_expression_defined (an_expression: ITP_EXPRESSION): BOOLEAN is
+	is_expression_defined (an_expression: ITP_EXPRESSION): BOOLEAN
 			-- Is expression defined in the context of this store? An
 			-- expression is defined iff it is a constant or a variable
 			-- which is defined in this store.
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Access
 
-	variable_value (a_index: INTEGER): ANY is
+	variable_value (a_index: INTEGER): ANY
 			-- Value of variable at index `a_index'
 		require
 			a_index_large_enough: a_index > 0
@@ -65,7 +65,7 @@ feature -- Access
 			good_result: Result = storage.item (a_index)
 		end
 
-	expression_value (an_expression: ITP_EXPRESSION): ANY is
+	expression_value (an_expression: ITP_EXPRESSION): ANY
 			-- Value of expression `an_expression' in the context of this store.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Basic routines
 
-	assign_value (a_value: ANY; a_index: INTEGER) is
+	assign_value (a_value: ANY; a_index: INTEGER)
 			-- Assign the value `a_value' to variable named `a_name'.
 		require
 			a_index_large_enough: a_index > 0
@@ -96,7 +96,7 @@ feature -- Basic routines
 			variable_defined: is_variable_defined (a_index)
 		end
 
-	assign_expression (an_expression: ITP_EXPRESSION; a_index: INTEGER) is
+	assign_expression (an_expression: ITP_EXPRESSION; a_index: INTEGER)
 			-- Assign the value of expression `an_expression' to variable at index `a_index'.
 		require
 			an_expression_not_void: an_expression /= Void
@@ -108,7 +108,7 @@ feature -- Basic routines
 			variable_defined: is_variable_defined (a_index)
 		end
 
-	arguments (an_expression_list: ERL_LIST [ITP_EXPRESSION]): ARRAY [ANY] is
+	arguments (an_expression_list: ERL_LIST [ITP_EXPRESSION]): ARRAY [ANY]
 			-- Arguments with the values from `an_expression_list'
 			-- using `variables' to lookup variable values or `Void'
 			-- in case of an error
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	storage_flag: ERL_LIST [BOOLEAN]
 			-- Flag to decide if an object at index is defined.
 
-	default_capacity: INTEGER is 1000
+	default_capacity: INTEGER = 1000
 			-- Default capacity for `storage' and `storage_flag'.
 
 invariant

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					cURL form constants.
 					For more informaton see:
@@ -14,7 +14,7 @@ class
 
 feature -- Query
 
-	curlform_copyname: INTEGER is
+	curlform_copyname: INTEGER
 			-- Declared as CURLFORM_COPYNAME
 		external
 			"C inline use <curl/curl.h>"
@@ -24,7 +24,7 @@ feature -- Query
 			]"
 		end
 
-	curlform_copycontents: INTEGER is
+	curlform_copycontents: INTEGER
 			-- Declared as CURLFORM_COPYCONTENTS
 		external
 			"C inline use <curl/curl.h>"
@@ -34,7 +34,7 @@ feature -- Query
 			]"
 		end
 
-	curlform_end: INTEGER is
+	curlform_end: INTEGER
 			-- Declared as CURLFORM_END
 		external
 			"C inline use <curl/curl.h>"
@@ -44,7 +44,7 @@ feature -- Query
 			]"
 		end
 
-	curlform_file: INTEGER is
+	curlform_file: INTEGER
 			-- Declared as CURLFORM_FILE
 		external
 			"C inline use <curl/curl.h>"
@@ -54,7 +54,7 @@ feature -- Query
 			]"
 		end
 
-	is_valid (a_integer: INTEGER): BOOLEAN is
+	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' valid?
 		do
 			Result := 	a_integer = curlform_copycontents or
@@ -63,7 +63,7 @@ feature -- Query
 						a_integer = curlform_file
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

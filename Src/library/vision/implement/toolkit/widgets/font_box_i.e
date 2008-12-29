@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,7 +14,7 @@ inherit
 	
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Font currently selected by the user
 		deferred
 		ensure
@@ -23,39 +23,39 @@ feature -- Access
 
 feature -- Status setting
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		deferred
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		deferred
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		deferred
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		deferred
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		deferred
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		deferred
 		end;
 
 feature -- Element change
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
+	add_apply_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		require
@@ -63,7 +63,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -71,7 +71,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
@@ -79,7 +79,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Edit `a_font'.
 		require
 			a_font_exists: a_font /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
+	remove_apply_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		require
@@ -96,7 +96,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -104,7 +104,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
@@ -112,7 +112,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

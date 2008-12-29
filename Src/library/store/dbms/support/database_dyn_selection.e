@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_DYN_SELECTION"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create {DATABASE_DYN_SELECTION}
 
 feature
 
-	prepare (s: STRING) is
+	prepare (s: STRING)
 			-- Parse of the sql statement `s'
 		require
 			not_void: s /= Void
@@ -68,7 +68,7 @@ feature
 			prepared_statement: not is_executed
 		end
 
-	execute is
+	execute
 			-- Execute the sql statement
 		require
 			prepared_statement: is_prepared
@@ -88,7 +88,7 @@ feature
 			executed_statement: is_executed
 		end
 
-	reset_cursor is
+	reset_cursor
 		require
 			prepared_statement: is_prepared
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 	sql_string: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

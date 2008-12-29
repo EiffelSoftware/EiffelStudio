@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,31 +14,31 @@ inherit
 	
 feature -- Access
 
-	label_font: FONT is
+	label_font: FONT
 			-- Font specified for labels
 		deferred
 		end;
 
-	button_font: FONT is
+	button_font: FONT
 			-- Font specified for buttons
 		deferred
 		end;
 
-	text_font: FONT is
+	text_font: FONT
 			-- Font specified for text
 		deferred
 		end
 
 feature {TERMINAL_OUI} -- Basic operaitions
 
-	build is
+	build
 			-- Build the terminal.
 		deferred
 		end;
 	
 feature -- Element change
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set font of every labels to `a_font_name'.
 		require
 			font_name_not_void: a_font /= Void;
@@ -46,7 +46,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_button_font (a_font: FONT) is
+	set_button_font (a_font: FONT)
 			-- Set font of every buttons to `a_font'.
 		require
 			font_name_not_void: a_font /= Void;
@@ -54,7 +54,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_text_font (a_font: FONT) is
+	set_text_font (a_font: FONT)
 			-- Set font of every text to `a_font'.
 		require
 			font_name_not_void: a_font /= Void;
@@ -62,7 +62,7 @@ feature -- Element change
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

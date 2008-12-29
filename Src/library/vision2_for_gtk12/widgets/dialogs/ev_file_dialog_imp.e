@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a window with a parent.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create filters.make (0)
 		end
 
-	initialize is
+	initialize
 			-- Setup action sequences.
 		local
 			a_child_list, a_label: POINTER
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 		do
 			if
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Status report
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- `file_name' without its path.
 		do
 			if not file_name.is_empty then
@@ -103,7 +103,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING_32 is
+	file_path: STRING_32
 			-- Path of `file_name'.
 		do
 			if not file_name.is_empty then
@@ -115,13 +115,13 @@ feature -- Status report
 		end
 
 
-	selected_filter_index: INTEGER is
+	selected_filter_index: INTEGER
 		do
 		end
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_32) is
+	set_filter (a_filter: STRING_32)
 			-- Set `a_filter' as new filter.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -131,7 +131,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_file_selection_complete (c_object, a_cs.item)
 		end
 
-	set_file_name (a_name: STRING) is
+	set_file_name (a_name: STRING)
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -140,7 +140,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: STRING) is
+	set_start_directory (a_path: STRING)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -159,7 +159,7 @@ feature -- Element change
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_ok is
+	on_ok
 			-- The user has requested that the dialog be activated.
 		local
 			temp_filename: STRING
@@ -176,7 +176,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN is
+	valid_file_name, valid_file_title (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		do
 			if a_name /= Void then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

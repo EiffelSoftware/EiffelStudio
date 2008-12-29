@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision range. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the range control.
 		local
 			rect : RECT_STRUCT
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Layout handling
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- Setup layout binding. This is redefined by vertical/horizontal range to make sure the control has the right orientation
 		deferred
 		end
@@ -55,7 +55,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RANGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_RANGE_IMP
 

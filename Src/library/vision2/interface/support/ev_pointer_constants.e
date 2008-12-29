@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Constants for use by and with pointer handling actions.
 		
@@ -15,18 +15,18 @@ class
 
 feature -- Constants
 
-	left: INTEGER is 1
+	left: INTEGER = 1
 			-- Left pointer button.
 
-	middle: INTEGER is 2
+	middle: INTEGER = 2
 			-- Middle pointer button.
 
-	right: INTEGER is 3
+	right: INTEGER = 3
 			-- Right pointer button.
 
 feature -- Contract support
 
-	valid_button (a_button: INTEGER): BOOLEAN is
+	valid_button (a_button: INTEGER): BOOLEAN
 			-- If `a_button' valid?
 		do
 			Result := a_button = left or
@@ -34,7 +34,7 @@ feature -- Contract support
 					a_button = right
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

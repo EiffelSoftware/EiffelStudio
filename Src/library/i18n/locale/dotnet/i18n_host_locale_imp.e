@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of I18N_HOST_LOCALE for .NET"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ class
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Default `culture_info' to `System.Globalization.CultureInfo.CurrentCulture'
 		do
 			culture_info := {CULTURE_INFO}.current_culture
 		end
 
-	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
+	create_locale_info_from_user_locale: I18N_LOCALE_INFO
 			-- create locale form the user locale
 		local
 			t_culture_info : CULTURE_INFO
@@ -42,7 +42,7 @@ feature -- Initialization
 			culture_info_exists: culture_info /= Void
 		end
 
-	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO is
+	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- Create locale with a_locale_id
 		do
 			if {l_name: STRING}a_locale_id.name.string then
@@ -116,7 +116,7 @@ feature {NONE} -- Fill
 
 feature -- Element change
 
-	set_locale (a_locale_name : STRING_32) is
+	set_locale (a_locale_name : STRING_32)
 			-- set current locale to `a_locale_name'
 		do
 			if a_locale_name /= Void and then ({l_name: STRING}a_locale_name.string) then
@@ -126,7 +126,7 @@ feature -- Element change
 
 feature -- Informations
 
-	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
+	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN
 			-- I guess it is always true
 		local
 			l_list: LINKED_LIST[I18N_LOCALE_ID]
@@ -142,7 +142,7 @@ feature -- Informations
 			end
 		end
 
-	available_locales : LINKED_LIST[I18N_LOCALE_ID] is
+	available_locales : LINKED_LIST[I18N_LOCALE_ID]
 			-- get list of available locales
 		local
 			l_culture_type : CULTURE_TYPES
@@ -166,7 +166,7 @@ feature -- Informations
 			end
 		end
 
-	current_locale_id : I18N_LOCALE_ID is
+	current_locale_id : I18N_LOCALE_ID
 			-- return the current locale info
 		do
 			create Result.make_from_string (culture_info.current_culture.name)
@@ -177,14 +177,14 @@ feature -- Informations
 
 feature -- Date and time formatting
 
-	get_long_date_format: STRING_32 is
+	get_long_date_format: STRING_32
 		do
 			Result :=  conv.convert_format_string (culture_info.date_time_format.long_date_pattern)
 		ensure
 			result_exists: Result /= Void
 		end
 
-	get_long_time_format : STRING_32 is
+	get_long_time_format : STRING_32
 			--
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.long_time_pattern)
@@ -192,7 +192,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_short_time_format : STRING_32 is
+	get_short_time_format : STRING_32
 			--
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.short_time_pattern)
@@ -200,7 +200,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_short_date_format : STRING_32 is
+	get_short_date_format : STRING_32
 			--
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.short_date_pattern)
@@ -208,7 +208,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_am_suffix  : STRING_32 is
+	get_am_suffix  : STRING_32
 			--
 		do
 			Result := culture_info.date_time_format.am_designator
@@ -216,7 +216,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_pm_suffix : STRING_32 is
+	get_pm_suffix : STRING_32
 			-- No description
 		do
 			Result := culture_info.date_time_format.pm_designator
@@ -224,7 +224,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_date_separator : STRING_32 is
+	get_date_separator : STRING_32
 			-- separator in the date pattern
 		do
 			Result := culture_info.date_time_format.date_separator
@@ -232,7 +232,7 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_time_separator : STRING_32 is
+	get_time_separator : STRING_32
 			-- separator in the time pattern
 		do
 			Result := culture_info.date_time_format.time_separator
@@ -240,39 +240,39 @@ feature -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_date_time_format : STRING_32 is
+	get_date_time_format : STRING_32
 			-- full date time pattern
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.full_date_time_pattern)
 		end
 
-	get_month_day_format : STRING_32 is
+	get_month_day_format : STRING_32
 			-- pattern with month and day
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.month_day_pattern)
 		end
 
-	get_year_month_format : STRING_32 is
+	get_year_month_format : STRING_32
 			-- pattern with year and month
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.month_day_pattern)
 
 		end
 
-	get_rfc1123_format : STRING_32 is
+	get_rfc1123_format : STRING_32
 			-- rfc1123 is: ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.rfc1123_pattern)
 		end
 
-	get_sortable_date_time_format: STRING_32 is
+	get_sortable_date_time_format: STRING_32
 			-- a sortable time pattern
 			-- yyyy'-'MM'-'dd'T'HH':'mm':'ss
 		do
 			Result := conv.convert_format_string (culture_info.date_time_format.sortable_date_time_pattern)
 		end
 
-	get_universal_sortable_date_time_format: STRING_32 is
+	get_universal_sortable_date_time_format: STRING_32
 			-- a sortable pattern
 			-- yyyy'-'MM'-'dd HH':'mm':'ss'Z'
 		do
@@ -281,7 +281,7 @@ feature -- Date and time formatting
 
 feature -- day/months names
 
-	get_day_names: ARRAY[STRING_32] is
+	get_day_names: ARRAY[STRING_32]
 			--
 		local
 			l_array: NATIVE_ARRAY[SYSTEM_STRING]
@@ -302,7 +302,7 @@ feature -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Days_in_week
 		end
 
-	get_month_names: ARRAY[STRING_32] is
+	get_month_names: ARRAY[STRING_32]
 			--
 		local
 			l_array : NATIVE_ARRAY[SYSTEM_STRING]
@@ -323,7 +323,7 @@ feature -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Months_in_year
 		end
 
-	get_abbreviated_day_names: ARRAY[STRING_32] is
+	get_abbreviated_day_names: ARRAY[STRING_32]
 			--
 		local
 			l_array : NATIVE_ARRAY[SYSTEM_STRING]
@@ -344,7 +344,7 @@ feature -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Days_in_week
 		end
 
-	get_abbreviated_month_names: ARRAY[STRING_32] is
+	get_abbreviated_month_names: ARRAY[STRING_32]
 			--
 		local
 			l_array : NATIVE_ARRAY[SYSTEM_STRING]
@@ -367,14 +367,14 @@ feature -- day/months names
 
 feature	-- number formatting
 
-	get_value_decimal_separator: STRING_32 is
+	get_value_decimal_separator: STRING_32
 		do
 			Result := culture_info.number_format.number_decimal_separator
 		ensure
 			result_exists: Result /= Void
 		end
 
-	get_value_numbers_after_decimal_separator: INTEGER is
+	get_value_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := culture_info.number_format.number_decimal_digits
@@ -382,7 +382,7 @@ feature	-- number formatting
 			result_sensible: Result > 0
 		end
 
-	get_value_group_separator: STRING_32 is
+	get_value_group_separator: STRING_32
 			--
 		do
 			Result := culture_info.number_format.number_group_separator
@@ -390,7 +390,7 @@ feature	-- number formatting
 			result_exists: Result /= Void
 		end
 
-	get_value_grouping: ARRAY[INTEGER_32] is
+	get_value_grouping: ARRAY[INTEGER_32]
 			-- grouping rules for values
 		do
 			Result := native_array_to_array (culture_info.number_format.number_group_sizes)
@@ -400,7 +400,7 @@ feature	-- number formatting
 
 feature	-- currency formatting
 
-	get_currency_symbol: STRING_32 is
+	get_currency_symbol: STRING_32
 			--
 		do
 			Result := culture_info.number_format.currency_symbol
@@ -408,7 +408,7 @@ feature	-- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_decimal_separator: STRING_32 is
+	get_currency_decimal_separator: STRING_32
 			--
 		do
 			Result := culture_info.number_format.currency_decimal_separator
@@ -416,7 +416,7 @@ feature	-- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_numbers_after_decimal_separator: INTEGER is
+	get_currency_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := culture_info.number_format.currency_decimal_digits
@@ -424,7 +424,7 @@ feature	-- currency formatting
 			result_sensible: Result > 0
 		end
 
-	get_currency_group_separator: STRING_32 is
+	get_currency_group_separator: STRING_32
 			--
 		do
 			Result := culture_info.number_format.currency_group_separator
@@ -432,7 +432,7 @@ feature	-- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_grouping: ARRAY[INTEGER_32] is
+	get_currency_grouping: ARRAY[INTEGER_32]
 			-- Gropuing rules for currency
 		do
 			Result := native_array_to_array (culture_info.number_format.currency_group_sizes)
@@ -442,7 +442,7 @@ feature	-- currency formatting
 
 feature -- International currency formatting
 
-	get_int_currency_symbol: STRING_32 is
+	get_int_currency_symbol: STRING_32
 			-- get the interational currency symbol
 			-- like "USD"
 		do
@@ -451,7 +451,7 @@ feature -- International currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_int_currency_decimal_separator: STRING_32 is
+	get_int_currency_decimal_separator: STRING_32
 			--
 		do
 			Result := culture_info.invariant_culture.number_format.currency_decimal_separator
@@ -459,7 +459,7 @@ feature -- International currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_int_currency_numbers_after_decimal_separator: INTEGER is
+	get_int_currency_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := culture_info.invariant_culture.number_format.currency_decimal_digits
@@ -467,7 +467,7 @@ feature -- International currency formatting
 			result_sensible: Result > 0
 		end
 
-	get_int_currency_group_separator: STRING_32 is
+	get_int_currency_group_separator: STRING_32
 			--
 		do
 			Result := culture_info.invariant_culture.number_format.currency_group_separator
@@ -475,7 +475,7 @@ feature -- International currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_int_currency_grouping: ARRAY[INTEGER_32] is
+	get_int_currency_grouping: ARRAY[INTEGER_32]
 			-- Gropuing rules for currency
 		do
 			Result := native_array_to_array (culture_info.invariant_culture.number_format.currency_group_sizes)
@@ -485,13 +485,13 @@ feature -- International currency formatting
 
 feature -- General Information
 
-	name : STRING_32 is
+	name : STRING_32
 			-- name of current locale
 		do
 			Result := culture_info.name
 		end
 
-	default_locale_id: I18N_LOCALE_ID is
+	default_locale_id: I18N_LOCALE_ID
 			-- default locale id
 		local
 			l_culture_info: CULTURE_INFO
@@ -500,7 +500,7 @@ feature -- General Information
 			create Result.make_from_string (l_culture_info.name)
 		end
 
-	system_locale_id: I18N_LOCALE_ID is
+	system_locale_id: I18N_LOCALE_ID
 			-- Default system locale id.
 		local
 			l_culture_info: CULTURE_INFO
@@ -519,14 +519,14 @@ feature {NONE} -- Implementation
 
 	culture_info : CULTURE_INFO
 
-	first_day : INTEGER is
+	first_day : INTEGER
 			-- first day of the week
 		do
 			Result := culture_info.date_time_format.first_day_of_week.to_integer
 		end
 feature {NONE} -- Help fuction
 
-	native_array_to_array (a_native_array: NATIVE_ARRAY[INTEGER_32]): ARRAY[INTEGER_32] is
+	native_array_to_array (a_native_array: NATIVE_ARRAY[INTEGER_32]): ARRAY[INTEGER_32]
 			--
 		local
 			i, dif: INTEGER
@@ -543,7 +543,7 @@ feature {NONE} -- Help fuction
 			end
 		end
 
-	format_id_to_dotnet (a_id: !STRING): !STRING is
+	format_id_to_dotnet (a_id: !STRING): !STRING
 			-- Format id to dotnet style.
 			-- Replace "_", "@" and "." with "-"
 		local
@@ -568,7 +568,7 @@ feature {NONE} -- Help fuction
 
 invariant
 	culture_info_exists: culture_info /= Void
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

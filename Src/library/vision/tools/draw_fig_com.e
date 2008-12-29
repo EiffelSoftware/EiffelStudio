@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Command to refresh a figure or a world"
 	legal: "See notice at end of class.";
@@ -19,12 +19,12 @@ inherit
 
 feature -- Status report
 
-	context_data_useful: BOOLEAN is True;
+	context_data_useful: BOOLEAN = True;
 			-- This command need a context data
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Draw a figure.
 		local
 			figure: FIGURE;
@@ -56,7 +56,7 @@ feature -- Basic operations
 			drawing.set_no_clip
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

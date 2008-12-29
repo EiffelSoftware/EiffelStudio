@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Implementation of XUnmapEvent."
 	legal: "See notice at end of class.";
@@ -18,13 +18,13 @@ create
 
 feature -- Access
 
-	event_widget: MEL_WIDGET is
+	event_widget: MEL_WIDGET
 			-- Window that received the event
 		do
 			Result := retrieve_widget_from_window (event)
 		end;
 
-	from_configure: BOOLEAN is
+	from_configure: BOOLEAN
 			-- Was event generated because of parent's `win_gravity'
 			-- was set to `UnmapGravity'
 		do
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	event: POINTER is
+	event: POINTER
 			-- Window that received the event
 		do
 			Result := c_event_event (event)
@@ -41,17 +41,17 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_event (event_ptr: POINTER): POINTER is
+	c_event_event (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XUnmapEvent *): EIF_POINTER"
 		end;
 
-	c_event_from_configure (event_ptr: POINTER): BOOLEAN is
+	c_event_from_configure (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XUnmapEvent *): EIF_BOOLEAN"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

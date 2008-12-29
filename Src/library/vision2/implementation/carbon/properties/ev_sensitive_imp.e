@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision sensitive. Carbon implementation." -- WHAT DOES THIS CLASS DO?
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		do
 			Result := hiview_is_enabled_external ( c_object, null ).to_boolean
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		local
 			ret: INTEGER
@@ -41,7 +41,7 @@ feature -- Status setting
 			ret := hiview_set_enabled_external (c_object, 1)
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set the object to ignore all user input.
 		local
 			ret: INTEGER
@@ -51,17 +51,17 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
 			Result := parent /= Void
 		end
 
-	parent: EV_ANY is
+	parent: EV_ANY
 		deferred
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- (export status {NONE})
 		local
 			sensitive_parent: EV_SENSITIVE
@@ -75,7 +75,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_SENSITIVE;
 			-- Interface object for implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- EV_SENSITIVE_IMP
 

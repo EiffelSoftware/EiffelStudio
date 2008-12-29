@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Undo removing trailing blanks command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: EDITABLE_TEXT) is
+	make (a_text: EDITABLE_TEXT)
 			-- Initialization
 		require
 			a_text_attached: a_text /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Transformation
 
-	add (urc: UNDO_DELETE_CMD) is
+	add (urc: UNDO_DELETE_CMD)
 			-- add the undo command to the list
 		do
 			undo_remove_trailing_blank_list.extend (urc)
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Status change
 
-	set_converse (b: BOOLEAN) is
+	set_converse (b: BOOLEAN)
 			-- Set `converse' with `b'.
 		do
 			converse := b
@@ -50,7 +50,7 @@ feature -- Status change
 
 feature -- Basic Operations
 
-	redo is
+	redo
 			-- undo this command
 		do
 			if not converse then
@@ -60,7 +60,7 @@ feature -- Basic Operations
 			end
 		end
 
-	undo is
+	undo
 			-- redo this command
 		do
 			if not converse then
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	actual_undo is
+	actual_undo
 			-- Actual undo
 		local
 			x_in_characters, y_in_lines : INTEGER
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			text.cursor.make_from_character_pos (x_in_characters, y_in_lines, text)
 		end
 
-	actual_redo is
+	actual_redo
 			-- Actual redo
 		local
 			x_in_characters, y_in_lines : INTEGER
@@ -117,7 +117,7 @@ invariant
 	undo_list_not_void: undo_remove_trailing_blank_list /= Void
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

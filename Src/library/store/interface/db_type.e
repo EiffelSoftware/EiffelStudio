@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$"
@@ -12,14 +12,14 @@ deferred class DB_TYPE inherit
 
 feature -- Status report
 
-	sql_name: STRING is
+	sql_name: STRING
 			-- SQL type name
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	eiffel_name: STRING is
+	eiffel_name: STRING
 			-- Eiffel type name
 		require
 			eiffel_ref_not_void: eiffel_ref /= Void
@@ -27,14 +27,14 @@ feature -- Status report
 			Result := eiffel_ref.generator
 		end
 	
-	eiffel_ref: ANY is
+	eiffel_ref: ANY
 			-- Eiffel reference of the type
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	dynamic: INTEGER is
+	dynamic: INTEGER
 			-- Dynamic type of Eiffel reference?
 		require
 			eiffel_ref_not_void: eiffel_ref /= Void
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same (object: ANY): BOOLEAN is
+	same (object: ANY): BOOLEAN
 			-- Is it the same type that `object'?
 		require
 			object_not_void: object /= Void
@@ -56,7 +56,7 @@ feature -- Comparison
 			Result = (dynamic_type (object) = dynamic)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

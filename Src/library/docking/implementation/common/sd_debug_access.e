@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					 Ancestor for SD_DEBUG_WINDOW which is not belong to docking 
 					 library. So it can access docking library internal classes.
@@ -11,7 +11,7 @@ indexing
 deferred class
 	SD_DEBUG_ACCESS
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

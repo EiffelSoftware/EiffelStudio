@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Linkable cells containing a reference to their right neighbor"
@@ -28,7 +28,7 @@ feature -- Access
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: like Current) is
+	put_right (other: like Current)
 			-- Put `other' to the right of current cell.
 		do
 			right := other
@@ -36,7 +36,7 @@ feature {CELL, CHAIN} -- Implementation
 			chained: right = other
 		end
 
-	forget_right is
+	forget_right
 			-- Remove right link.
 		do
 			right := Void
@@ -44,7 +44,7 @@ feature {CELL, CHAIN} -- Implementation
 			not_chained: right = Void
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

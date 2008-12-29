@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DATE/TIME to STRING conversion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Creation
 
-	make (s: STRING) is
+	make (s: STRING)
 			-- Create code descriptors and hash-table from `s'.
 		require
 			s_exists: s /= Void
@@ -64,7 +64,7 @@ feature -- Attributes
 	value: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			-- Hash-table representing the code string.
 
-	name: STRING is
+	name: STRING
 			-- Name of the code string.
 		local
 			i: INTEGER
@@ -87,7 +87,7 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_date (s: STRING): BOOLEAN is
+	is_date (s: STRING): BOOLEAN
 			-- Does `s' contain a DATE?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := parser.is_date
 		end
 
-	is_time (s: STRING): BOOLEAN is
+	is_time (s: STRING): BOOLEAN
 			-- Does `s' contain a TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -105,7 +105,7 @@ feature -- Status report
 			Result := parser.is_time
 		end
 
-	is_date_time (s: STRING): BOOLEAN is
+	is_date_time (s: STRING): BOOLEAN
 			-- Does `s' contain a DATE_TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -114,7 +114,7 @@ feature -- Status report
 			Result := parser.is_date_time
 		end
 
-	is_value_valid (s: STRING): BOOLEAN is
+	is_value_valid (s: STRING): BOOLEAN
 			-- Does `s' contain a valid date or time as string representation?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -128,7 +128,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_base_century (c: INTEGER) is
+	set_base_century (c: INTEGER)
 			-- Set base century to `c'.
 		require
 			base_valid: c > 0 and (c \\ 100 = 0)
@@ -140,7 +140,7 @@ feature -- Status setting
 
 feature -- Interface
 
-	correspond (s: STRING): BOOLEAN is
+	correspond (s: STRING): BOOLEAN
 			-- Does the user string `s' correspond to the code string?
 		require
 			s_exists: s /= Void
@@ -209,7 +209,7 @@ feature -- Interface
 			end
 		end
 
-	create_string (date_time: DATE_TIME): STRING is
+	create_string (date_time: DATE_TIME): STRING
 			-- Create the output of `date_time' according to the code string.
 		require
 			non_void: date_time /= Void
@@ -345,7 +345,7 @@ feature -- Interface
 			string_correspond: correspond (Result)
 		end
 
-	create_date_string (date: DATE): STRING is
+	create_date_string (date: DATE): STRING
 				-- Create the output of `date' according to the code string.
 		require
 			date_exists: date /= Void
@@ -359,7 +359,7 @@ feature -- Interface
 			string_correspond: correspond (Result)
 		end
 
-	create_time_string (time: TIME): STRING is
+	create_time_string (time: TIME): STRING
 				-- Create the output of `time' according to the code string.
 		require
 			time_exists: time /= Void
@@ -374,7 +374,7 @@ feature -- Interface
 			string_correspond: correspond (Result)
 		end
 
-	create_date_time (s: STRING): DATE_TIME is
+	create_date_time (s: STRING): DATE_TIME
 			-- Create DATE_TIME according to `s'.
 		require
 			s_exist: s /= Void
@@ -397,7 +397,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_date (s: STRING): DATE is
+	create_date (s: STRING): DATE
 			-- Create a DATE according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -443,7 +443,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_time (s: STRING): TIME is
+	create_time (s: STRING): TIME
 			-- Create a TIME according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -490,7 +490,7 @@ feature -- Interface
 		end
 
 
-	precise: BOOLEAN is
+	precise: BOOLEAN
 			-- Is the code string enough precise to create
 			-- nn instance of type DATE_TIME?
 		require
@@ -499,7 +499,7 @@ feature -- Interface
 			Result := precise_date and precise_time
 		end
 
-	precise_date: BOOLEAN is
+	precise_date: BOOLEAN
 			-- Is the code string enough precise to create
 			-- nn instance of type DATE?
 		require
@@ -546,7 +546,7 @@ feature -- Interface
 			Result := has_day and has_month and has_year
 		end
 
-	precise_time: BOOLEAN is
+	precise_time: BOOLEAN
 			-- Is the code string enough precise to create
 			-- an instance of type TIME?
 		require
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?
 
-	build_parser (s: STRING) is
+	build_parser (s: STRING)
 			-- Build parser from `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			parser_created: parser /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

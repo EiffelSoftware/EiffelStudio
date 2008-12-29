@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"[
 			Interactive horizontal range widget. A sliding thumb displays the
@@ -36,13 +36,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of horizontal range.
 		do
 			create {EV_HORIZONTAL_RANGE_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

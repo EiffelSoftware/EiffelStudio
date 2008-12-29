@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"State of the keyboard: Key and modifiers. %
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (nb_modifiers: INTEGER) is
+	make (nb_modifiers: INTEGER)
 			-- Create a database to specify 
 			-- the state of modifier keys.
 		do
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_control_pressed (a_state: BOOLEAN) is
+	set_control_pressed (a_state: BOOLEAN)
 			-- Set `control_pressed' to `a_state'.
 		do
 			control_pressed := a_state
@@ -54,7 +54,7 @@ feature -- Status setting
 			control_pressed = a_state
 		end;
 
-	set_lock_pressed (a_state: BOOLEAN) is
+	set_lock_pressed (a_state: BOOLEAN)
 			-- Set `lock_pressed' to `a_state'.
 		do
 			lock_pressed := a_state
@@ -62,7 +62,7 @@ feature -- Status setting
 			lock_pressed = a_state
 		end;
 
-	set_shift_pressed (a_state: BOOLEAN) is
+	set_shift_pressed (a_state: BOOLEAN)
 			-- Set `shift_pressed' to `a_state'.
 		do
 			shift_pressed := a_state
@@ -70,7 +70,7 @@ feature -- Status setting
 			shift_pressed = a_state
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

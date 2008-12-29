@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The objects available from the operating system"
@@ -13,7 +13,7 @@ class OPERATING_ENVIRONMENT
 
 feature
 
-	Directory_separator: CHARACTER is
+	Directory_separator: CHARACTER
 			-- Character used to separate subdirectories in a path name on this platform.
 			--| To build portable path names, use PATH_NAME and its descendants.
 		local
@@ -22,22 +22,22 @@ feature
 			Result := l_a.directory_separator_char
 		end
 
-	Current_directory_name_representation: STRING is "."
+	Current_directory_name_representation: STRING = "."
 			-- Representation of the current directory.
 
-	home_directory_supported: BOOLEAN is True
+	home_directory_supported: BOOLEAN = True
 			-- Is the notion of home directory supported on this platform?
 
-	root_directory_supported: BOOLEAN is True
+	root_directory_supported: BOOLEAN = True
 			-- Is the notion of root directory supported on this platform?
 
-	case_sensitive_path_names: BOOLEAN is False;
+	case_sensitive_path_names: BOOLEAN = False;
 			-- Are path names case sensitive?
 
 	--| FIXME IEK There seems to be a parsing bug that doesn't allow the file to be saved without
 	--| the semi-colon on case_sensitive_path_names.
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

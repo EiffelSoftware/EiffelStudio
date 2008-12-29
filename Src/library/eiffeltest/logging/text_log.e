@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Log output in text-only"
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ class TEXT_LOG inherit
 
 feature -- Output
 
-	put_evaluation (d: TEST_DRIVER) is
+	put_evaluation (d: TEST_DRIVER)
 			-- Output evaluation from driver `d'.
 		local
 			i: INTEGER
@@ -68,7 +68,7 @@ feature -- Output
 			put_new_line
 		end
 
-	put_test_id (t: TESTABLE) is
+	put_test_id (t: TESTABLE)
 			-- Output test identification for `t'.
 		do
 			put_string ("Test #: ")
@@ -77,7 +77,7 @@ feature -- Output
 			put_string (t.name)
 		end
 
-	put_header (header: STRING) is
+	put_header (header: STRING)
 			-- Output `header' with underlining.
 		local
 			underline: STRING
@@ -91,7 +91,7 @@ feature -- Output
 			put_new_line
 		end
 
-	put_box (s: STRING; c: CHARACTER) is
+	put_box (s: STRING; c: CHARACTER)
 			-- Output `s' surrounded by a box out of `c'.
 		local
 			text: STRING
@@ -112,7 +112,7 @@ feature -- Output
 			put_new_line
 		end
 		
-	put_summary (t: TESTABLE) is
+	put_summary (t: TESTABLE)
 			-- Output result summary of test `t'.
 		local
 			f: FORMAT_INTEGER
@@ -157,7 +157,7 @@ feature -- Output
 			put_new_line
 		end
 					
-	put_container_results (t: TEST_CONTAINER) is
+	put_container_results (t: TEST_CONTAINER)
 			-- Output statistic information about tests contained in `t'.
 		do
 			put_string ("   (Contained tests: " + t.test_count.out + ", ")
@@ -168,7 +168,7 @@ feature -- Output
 			put_new_line
 		end
 
-	put_failure_information (t: SINGLE_TEST; run: INTEGER) is
+	put_failure_information (t: SINGLE_TEST; run: INTEGER)
 			-- Output failure information for `run' of test `t'
 		local
 			e: EXCEPTION_INFO
@@ -221,7 +221,7 @@ feature -- Output
 			res.select_run (old_run)
 		end
 
-	put_timing_information (t: SINGLE_TEST; run: INTEGER) is
+	put_timing_information (t: SINGLE_TEST; run: INTEGER)
 			-- Output timing information for `run' of test `t'.
 		local
 			f: FORMAT_DOUBLE
@@ -241,7 +241,7 @@ feature -- Output
 			res.select_run (old_run)
 		end
 	
-	put_new_line is
+	put_new_line
 			-- Output new line.
 		do
 			output_device.put_new_line
@@ -249,13 +249,13 @@ feature -- Output
 		
 feature {NONE} -- Implementation
 
-	standard_put_string (s: STRING) is
+	standard_put_string (s: STRING)
 			-- Output `s'.
 		do
 			output_device.put_string (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

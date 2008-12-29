@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Column of an EV_GRID, containing EV_GRID_ITEMs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,13 +28,13 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			physical_index := -1
@@ -44,7 +44,7 @@ feature {EV_ANY} -- Initialization
 
 feature {EV_GRID_I} -- Initialization
 
-	set_parent_i (a_grid_i: EV_GRID_I) is
+	set_parent_i (a_grid_i: EV_GRID_I)
 			-- Make `Current' associated with `a_grid_i'.
 		require
 			a_grid_i_not_void: a_grid_i /= Void
@@ -54,7 +54,7 @@ feature {EV_GRID_I} -- Initialization
 			parent_i = a_grid_i
 		end
 
-	set_physical_index (a_index: INTEGER) is
+	set_physical_index (a_index: INTEGER)
 			-- Set the physical index of the column.
 		require
 			valid_index: a_index >= 0
@@ -67,7 +67,7 @@ feature {EV_GRID_I} -- Initialization
 
 feature -- Access
 
-	index_of_first_item: INTEGER is
+	index_of_first_item: INTEGER
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
 		local
@@ -107,7 +107,7 @@ feature -- Access
 			Result := is_show_requested and then parent_i /= Void and then parent_i.is_displayed
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of Current column. Empty if none.
 		require
 			is_parented: parent /= Void
@@ -117,7 +117,7 @@ feature -- Access
 			title_not_void: Result /= Void
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM is
+	item (i: INTEGER): EV_GRID_ITEM
 			-- Item at `i'-th row, Void if none.
 		require
 			i_positive: i > 0
@@ -127,7 +127,7 @@ feature -- Access
 			Result := parent_i.item (index, i)
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid to which current column belongs.
 		do
 			if parent_i /= Void then
@@ -135,7 +135,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 		require
 			is_parented: parent /= Void
@@ -159,7 +159,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- `Result' is width of `Current'.		
 		require
 			is_parented: parent /= Void
@@ -179,7 +179,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
@@ -193,7 +193,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	virtual_x_position_unlocked: INTEGER is
+	virtual_x_position_unlocked: INTEGER
 			-- Horizontal offset of unlocked position of `Current', in relation to the
 			-- virtual area of `parent' grid in pixels.
 			-- If not `is_locked', then `virtual_x_position' = `virtual_y_position_unlocked'.
@@ -227,7 +227,7 @@ feature -- Access
 			-- "Result := parent_i.locked_columns.item (index) /= Void" but this has not been done
 			-- so for performance reasons.
 
-	locked_position: INTEGER is
+	locked_position: INTEGER
 			-- Locked position of `Current' from left edge of viewable area of `parent'.
 			-- `Result' is 0 if not `is_locked'.
 		do
@@ -240,7 +240,7 @@ feature -- Access
 
 feature -- Status setting
 
-	lock_at_position (a_position: INTEGER) is
+	lock_at_position (a_position: INTEGER)
 			-- Ensure `is_locked' is `True' with the horizontal offset from
 			-- the left edge of the viewable area of `parent' set to `a_position'.
 		do
@@ -265,7 +265,7 @@ feature -- Status setting
 			locked_position_set: locked_position = a_position
 		end
 
-	unlock is
+	unlock
 			-- Ensure `is_locked' is `False'.
 		do
 			is_locked := False
@@ -275,7 +275,7 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	hide is
+	hide
 			-- Prevent column from being displayed in `parent'.
 		require
 			is_parented: parent /= Void
@@ -285,7 +285,7 @@ feature -- Status setting
 			not_is_displayed: not is_show_requested
 		end
 
-	show is
+	show
 			-- Allow column to be displayed when `parent' is.
 			-- Does not signify that the column will be visible on screen but that it will be visible within its parent.
 		require
@@ -296,7 +296,7 @@ feature -- Status setting
 			is_displayed: is_show_requested
 		end
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			parented: parent /= Void
@@ -350,7 +350,7 @@ feature -- Status setting
 			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
-	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER is
+	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER
 			-- Result is greatest `required_width' of all items from
 			-- row index `start_row', `end_row'.
 		require
@@ -391,7 +391,7 @@ feature -- Status setting
 			result_non_negative: Result >= 0
 		end
 
-	enable_select is
+	enable_select
 			-- Select `Current' in `parent_i'.
 		do
 			internal_update_selection (True)
@@ -401,7 +401,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect `Current' from `parent_i'.
 		do
 			internal_update_selection (False)
@@ -420,7 +420,7 @@ feature -- Status report
 	index: INTEGER
 			-- Position of Current in `parent'.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current.
 		require
 			is_parented: parent /= Void
@@ -430,7 +430,7 @@ feature -- Status report
 			count_not_negative: count >= 0
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is objects state set to selected?
 		local
 			a_item: EV_GRID_ITEM_I
@@ -464,7 +464,7 @@ feature -- Status report
 
 	internal_is_selected: BOOLEAN
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May the object be selected.
 		do
 			Result := parent_i /= Void
@@ -472,7 +472,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (i: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set item at `i'-th row to be `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -488,7 +488,7 @@ feature -- Element change
 			item_set: item (i) = a_item
 		end
 
-	set_title (a_title: like title) is
+	set_title (a_title: like title)
 			-- a_title_not_void: a_title /= Void.
 		require
 			is_parented: parent /= Void
@@ -498,7 +498,7 @@ feature -- Element change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' with `a_color'.
 		require
 			is_parented: parent /= Void
@@ -509,7 +509,7 @@ feature -- Element change
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' with `a_color'.
 		require
 			is_parented: parent /= Void
@@ -520,7 +520,7 @@ feature -- Element change
 			foreground_color_set: foreground_color = a_color
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		require
 			width_non_negative: a_width >= 0
@@ -543,7 +543,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		require
 			is_parented: parent /= Void
@@ -566,7 +566,7 @@ feature -- Element change
 			end
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Display image of `a_pixmap' on `Current' to left of `title'.
 		require
 			pixmap_not_void: a_pixmap /= Void
@@ -577,7 +577,7 @@ feature -- Element change
 			pixmap_set: pixmap = a_pixmap
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove image displayed on `Current'.
 		do
 			pixmap := Void
@@ -586,7 +586,7 @@ feature -- Element change
 			pixmap_removed: pixmap = Void
 		end
 
-	redraw is
+	redraw
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
 			parented: parent /= Void
@@ -596,7 +596,7 @@ feature -- Element change
 
 feature {EV_GRID_I} -- Implementation
 
-	update_for_removal is
+	update_for_removal
 			-- Update settings in `Current' to reflect the fact that
 			-- it is being removed from `parent_i'.
 		require
@@ -613,7 +613,7 @@ feature {EV_GRID_I} -- Implementation
 			parent_i_unset: parent_i = Void
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			if parent_i /= Void then
@@ -622,7 +622,7 @@ feature {EV_GRID_I} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	set_is_show_requested (a_displayed: BOOLEAN) is
+	set_is_show_requested (a_displayed: BOOLEAN)
 			-- Set `is_show_requested' to `a_displayed'.
 		do
 			is_show_requested := a_displayed
@@ -632,7 +632,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_update_selection (a_selection_state: BOOLEAN) is
+	internal_update_selection (a_selection_state: BOOLEAN)
 			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
 		local
 			a_item: EV_GRID_ITEM_I
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	call_selection_events (a_selection_state: BOOLEAN) is
+	call_selection_events (a_selection_state: BOOLEAN)
 			-- Call the selection events of `Current' for selection state `a_selection_state'.
 		do
 			if a_selection_state then
@@ -691,7 +691,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	unparent is
+	unparent
 			-- Sets` parent_i' to `Void'.
 		do
 			parent_i := Void
@@ -701,7 +701,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 
-	set_internal_is_selected (a_selected: BOOLEAN) is
+	set_internal_is_selected (a_selected: BOOLEAN)
 			-- Set `internal_is_selected' to `a_selected'.
 		do
 			internal_is_selected := a_selected
@@ -709,7 +709,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 			internal_is_selected_set: internal_is_selected = a_selected
 		end
 
-	set_index (a_index: INTEGER) is
+	set_index (a_index: INTEGER)
 			-- Set the internal index of row
 		require
 			a_index_greater_than_zero: a_index > 0
@@ -740,7 +740,7 @@ invariant
 	header_item_not_void: is_initialized implies header_item /= Void
 	physical_index_set: parent /= Void implies physical_index >= 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

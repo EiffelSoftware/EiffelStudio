@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision application, GTK+ implementation."
 	legal: "See notice at end of class."
@@ -28,13 +28,13 @@ inherit
 
 feature -- Initialize
 
-	gtk_dependent_initialize is
+	gtk_dependent_initialize
 			-- Gtk dependent `initialize'
 		do
 			{EV_GTK_EXTERNALS}.gdk_rgb_init
 		end
 
-	gtk_dependent_launch_initialize is
+	gtk_dependent_launch_initialize
 			-- Gtl dependent initialization for `launch'
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
@@ -42,7 +42,7 @@ feature -- Initialize
 			end
 		end
 
-	gdk_cursor_from_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, a_y_hotspot: INTEGER): POINTER is
+	gdk_cursor_from_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, a_y_hotspot: INTEGER): POINTER
 			-- Return a GdkCursor constructed from `a_pixmap'
 		local
 			a_pixmap_imp: EV_PIXMAP_IMP
@@ -74,23 +74,23 @@ feature -- Initialize
 			Result := a_cursor_ptr
 		end
 
-	fg_color: POINTER is
+	fg_color: POINTER
 				--
 		deferred
 		end
 
-	bg_color: POINTER is
+	bg_color: POINTER
 			--
 		deferred
 		end
 
-	default_gdk_window: POINTER is
+	default_gdk_window: POINTER
 			-- Pointer to a default GdkWindow that may be used to
 			-- access default visual information (color depth).
 		deferred
 		end
 
-	default_gtk_settings: POINTER is
+	default_gtk_settings: POINTER
 			-- Default GtkSettings
 		once
 			Result := default_pointer
@@ -98,7 +98,7 @@ feature -- Initialize
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

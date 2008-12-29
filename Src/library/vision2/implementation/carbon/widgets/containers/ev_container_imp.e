@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision container, Carbon implementation."
 	legal: "See notice at end of class."
@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			target, h_ret: POINTER
@@ -53,14 +53,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
 			Result := width - child_offset_left - child_offset_right
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of container
 			-- Redefined in children.
 		do
@@ -72,20 +72,20 @@ feature -- Access
 
 feature -- Element change
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 		deferred
 
 		end
 
-		child_offset_top: INTEGER is
+		child_offset_top: INTEGER
 				-- The offset a child needs to have from this type of container
 			do
 				Result := 2
 			end
 
 
-		setup_layout is
+		setup_layout
 			local
 				w: EV_WIDGET_IMP
 				c: EV_CONTAINER_IMP
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 
 
-		layout  is
+		layout
 				-- Sets the child control's size to the container site minus some spacing
 		local
 			a_rect : CGRECT_STRUCT
@@ -140,7 +140,7 @@ feature -- Element change
 			temp_item := void
 		end
 
-		setup_automatic_layout (a_control, a_container: POINTER; offset_top, offset_bottom, offset_right, offset_left: INTEGER) is
+		setup_automatic_layout (a_control, a_container: POINTER; offset_top, offset_bottom, offset_right, offset_left: INTEGER)
 				-- Make the child follow it's parent when it's reszed
 			external
 				"C inline use <Carbon/Carbon.h>"
@@ -183,13 +183,13 @@ feature -- Element change
 			end
 feature -- Measurement
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- If not set otherwise, the minimum width of a container is equal to the minimum width of 'item'
 		do
 			Result := buffered_minimum_width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- If not set otherwise, the minimum height of a container is equal to the minimum height of 'item'
 		do
 			Result := buffered_minimum_height
@@ -216,52 +216,52 @@ feature -- Measurement
 
 feature -- Status setting
 
-	connect_radio_grouping (a_container: EV_CONTAINER) is
+	connect_radio_grouping (a_container: EV_CONTAINER)
 			-- Join radio grouping of `a_container' to `Current'.
 		do
 		end
 
-	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Remove Join of `a_container' to radio grouping of `Current'.
 		do
 		end
 
-	add_radio_button (a_widget_imp: EV_WIDGET_IMP) is
+	add_radio_button (a_widget_imp: EV_WIDGET_IMP)
 			-- Called every time a widget is added to the container.
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
 		do
 		end
 
-	remove_radio_button (a_widget_imp: EV_WIDGET_IMP) is
+	remove_radio_button (a_widget_imp: EV_WIDGET_IMP)
 			-- Called every time a widget is removed from the container.
 		require
 			a_widget_imp_not_void: a_widget_imp /= Void
 		do
 		end
 
-	internal_set_background_pixmap (a_pixmap: EV_PIXMAP) is
+	internal_set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		do
 		end
 
-	set_background_pixmap (a_pixmap: EV_PIXMAP) is
+	set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		do
 		end
 
-	bg_pixmap (p: POINTER): POINTER is
+	bg_pixmap (p: POINTER): POINTER
 		do
 		end
 
-	remove_background_pixmap is
+	remove_background_pixmap
 			-- Make background pixmap Void.
 		do
 		end
 
 feature -- Basic operations
 
-	propagate_foreground_color is
+	propagate_foreground_color
 			-- Propagate the current foreground color of the
 			-- container to the children.
 		do
@@ -269,7 +269,7 @@ feature -- Basic operations
 
 		end
 
-	propagate_background_color is
+	propagate_background_color
 			-- Propagate the current background color of the
 			-- container to the children.
 		do
@@ -279,7 +279,7 @@ feature -- Basic operations
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Render `Current' unusable.
 		do
 --			if interface.prunable then
@@ -290,13 +290,13 @@ feature -- Command
 
 feature -- Event handling
 
-	on_new_item (an_item_imp: EV_WIDGET_IMP) is
+	on_new_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called after `an_item' is added.
 		do
 			an_item_imp.set_parent_imp (Current)
 		end
 
-	on_removed_item (an_item_imp: EV_WIDGET_IMP) is
+	on_removed_item (an_item_imp: EV_WIDGET_IMP)
 			-- Called just before `an_item' is removed.
 		do
 			an_item_imp.set_parent_imp (Void)
@@ -305,7 +305,7 @@ feature -- Event handling
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER)
 			-- propagate it to the top (or if we could resize, resize)
 			-- calculate minimum sizes for containers with just one element
 		local
@@ -323,13 +323,13 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 		end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			deferred
 			end
 
 
 
-	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP) is
+	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP)
 			--
 		do
 			Precursor {EV_WIDGET_IMP} (a_parent_imp)
@@ -340,7 +340,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT ) is
+	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT )
 			-- Handler for the bounds changed event
 		local
 			a_rect : CGRECT_STRUCT
@@ -369,7 +369,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	on_event (a_inhandlercallref, a_inevent, a_inuserdata: POINTER ) : INTEGER is
+	on_event (a_inhandlercallref, a_inevent, a_inuserdata: POINTER ) : INTEGER
 			-- Called when a Carbon event arrives
 		local
 			event_class, event_kind : INTEGER_32
@@ -401,7 +401,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_CONTAINER_IMP
 

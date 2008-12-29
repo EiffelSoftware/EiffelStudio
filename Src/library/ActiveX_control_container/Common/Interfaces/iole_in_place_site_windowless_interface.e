@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,84 +12,84 @@ inherit
 
 feature -- Status Report
 
-	can_windowless_activate_user_precondition: BOOLEAN is
+	can_windowless_activate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `can_windowless_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_capture_user_precondition: BOOLEAN is
+	get_capture_user_precondition: BOOLEAN
 			-- User-defined preconditions for `get_capture'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_capture_user_precondition (f_capture: INTEGER): BOOLEAN is
+	set_capture_user_precondition (f_capture: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_capture'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_focus_user_precondition: BOOLEAN is
+	get_focus_user_precondition: BOOLEAN
 			-- User-defined preconditions for `get_focus'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_focus_user_precondition (f_focus: INTEGER): BOOLEAN is
+	set_focus_user_precondition (f_focus: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_focus'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_dc_user_precondition (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER]): BOOLEAN is
+	get_dc_user_precondition (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER]): BOOLEAN
 			-- User-defined preconditions for `get_dc'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	release_dc_user_precondition (h_dc: POINTER): BOOLEAN is
+	release_dc_user_precondition (h_dc: POINTER): BOOLEAN
 			-- User-defined preconditions for `release_dc'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	invalidate_rect_user_precondition (p_rect: TAG_RECT_RECORD; f_erase: INTEGER): BOOLEAN is
+	invalidate_rect_user_precondition (p_rect: TAG_RECT_RECORD; f_erase: INTEGER): BOOLEAN
 			-- User-defined preconditions for `invalidate_rect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	invalidate_rgn_user_precondition (h_rgn: POINTER; f_erase: INTEGER): BOOLEAN is
+	invalidate_rgn_user_precondition (h_rgn: POINTER; f_erase: INTEGER): BOOLEAN
 			-- User-defined preconditions for `invalidate_rgn'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	scroll_rect_user_precondition (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD): BOOLEAN is
+	scroll_rect_user_precondition (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `scroll_rect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	adjust_rect_user_precondition (prc: TAG_RECT_RECORD): BOOLEAN is
+	adjust_rect_user_precondition (prc: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `adjust_rect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_def_window_message_user_precondition (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF): BOOLEAN is
+	on_def_window_message_user_precondition (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `on_def_window_message'.
 			-- Redefine in descendants if needed.
 		do
@@ -98,7 +98,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	can_windowless_activate is
+	can_windowless_activate
 			-- No description available.
 		require
 			can_windowless_activate_user_precondition: can_windowless_activate_user_precondition
@@ -106,7 +106,7 @@ feature -- Basic Operations
 
 		end
 
-	get_capture is
+	get_capture
 			-- No description available.
 		require
 			get_capture_user_precondition: get_capture_user_precondition
@@ -114,7 +114,7 @@ feature -- Basic Operations
 
 		end
 
-	set_capture (f_capture: INTEGER) is
+	set_capture (f_capture: INTEGER)
 			-- No description available.
 			-- `f_capture' [in].  
 		require
@@ -123,7 +123,7 @@ feature -- Basic Operations
 
 		end
 
-	get_focus is
+	get_focus
 			-- No description available.
 		require
 			get_focus_user_precondition: get_focus_user_precondition
@@ -131,7 +131,7 @@ feature -- Basic Operations
 
 		end
 
-	set_focus (f_focus: INTEGER) is
+	set_focus (f_focus: INTEGER)
 			-- No description available.
 			-- `f_focus' [in].  
 		require
@@ -140,7 +140,7 @@ feature -- Basic Operations
 
 		end
 
-	get_dc (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER]) is
+	get_dc (p_rect: TAG_RECT_RECORD; grf_flags: INTEGER; ph_dc: CELL [POINTER])
 			-- No description available.
 			-- `p_rect' [in].  
 			-- `grf_flags' [in].  
@@ -156,7 +156,7 @@ feature -- Basic Operations
 			valid_ph_dc: ph_dc.item /= Void
 		end
 
-	release_dc (h_dc: POINTER) is
+	release_dc (h_dc: POINTER)
 			-- No description available.
 			-- `h_dc' [in].  
 		require
@@ -165,7 +165,7 @@ feature -- Basic Operations
 
 		end
 
-	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER) is
+	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER)
 			-- No description available.
 			-- `p_rect' [in].  
 			-- `f_erase' [in].  
@@ -175,7 +175,7 @@ feature -- Basic Operations
 
 		end
 
-	invalidate_rgn (h_rgn: POINTER; f_erase: INTEGER) is
+	invalidate_rgn (h_rgn: POINTER; f_erase: INTEGER)
 			-- No description available.
 			-- `h_rgn' [in].  
 			-- `f_erase' [in].  
@@ -185,7 +185,7 @@ feature -- Basic Operations
 
 		end
 
-	scroll_rect (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD) is
+	scroll_rect (dx: INTEGER; dy: INTEGER; p_rect_scroll: TAG_RECT_RECORD; p_rect_clip: TAG_RECT_RECORD)
 			-- No description available.
 			-- `dx' [in].  
 			-- `dy' [in].  
@@ -201,7 +201,7 @@ feature -- Basic Operations
 
 		end
 
-	adjust_rect (prc: TAG_RECT_RECORD) is
+	adjust_rect (prc: TAG_RECT_RECORD)
 			-- No description available.
 			-- `prc' [in, out].  
 		require
@@ -212,7 +212,7 @@ feature -- Basic Operations
 
 		end
 
-	on_def_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF) is
+	on_def_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF)
 			-- No description available.
 			-- `msg' [in].  
 			-- `w_param' [in].  
@@ -225,7 +225,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Grid items that do not redraw themselves.
 		Implementation interface.
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_required_width (a_required_width: INTEGER) is
+	set_required_width (a_required_width: INTEGER)
 			-- Assign `a_required_width' to `required_width'.
 		require
 			a_required_width_non_negative: a_required_width >= 0
@@ -47,7 +47,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE)
 			-- Redraw `Current'.
 		local
 			pixmap: EV_PIXMAP
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 
-	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
 			-- Actions to be performed when an area needs to be redrawn.
 		do
 			if expose_actions_internal = Void then
@@ -87,7 +87,7 @@ feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	create_expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	create_expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
 			-- Create a expose action sequence.
 		do
 			create Result
@@ -102,7 +102,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

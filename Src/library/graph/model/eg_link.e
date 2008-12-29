@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An EG_LINK connects two EG_LINKABLEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_LINK.
 		do
 			Precursor {EG_ITEM}
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			is_directed_change_actions.compare_objects
 		end
 
-	make_with_source_and_target (a_source, a_target: like source) is
+	make_with_source_and_target (a_source, a_target: like source)
 			-- Make a link connecting `a_source' with `a_target'.
 		require
 			source_not_void: a_source /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			not_is_directed: not is_directed
 		end	
 		
-	make_directed_with_source_and_target (a_source, a_target: like source) is
+	make_directed_with_source_and_target (a_source, a_target: like source)
 			-- 	Make a directed link from `a_source' to `a_target'.
 		require
 			source_not_void: a_source /= Void
@@ -67,7 +67,7 @@ feature -- Status report
 	is_directed: BOOLEAN
 			-- Is the link directed from `source' to `target'?
 			
-	is_reflexive: BOOLEAN is
+	is_reflexive: BOOLEAN
 			-- Is the link reflexive?
 		do
 			Result := source = target
@@ -77,7 +77,7 @@ feature -- Status report
 		
 feature -- Status Settings
 
-	set_is_directed (b: BOOLEAN) is
+	set_is_directed (b: BOOLEAN)
 			-- Set `is_directed' to `b'.
 		do
 			if b /= is_directed then		
@@ -104,7 +104,7 @@ invariant
 	target_not_void: target /= Void
 	is_directed_change_actions_not_void: is_directed_change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

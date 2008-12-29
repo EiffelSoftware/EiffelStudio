@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Manager widget that allows selection from a range of values."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scale.
 		require
 			name_exists: a_name /= Void
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Access
 
-	label: MEL_LABEL_GADGET is
+	label: MEL_LABEL_GADGET
 			-- Label text widget of scale
 		local
 			c_list: FIXED_LIST [POINTER];
@@ -85,7 +85,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end;
 
-	scroll_bar: MEL_SCROLL_BAR is
+	scroll_bar: MEL_SCROLL_BAR
 			-- Scroll bar of scale
 		local
 			c_list: FIXED_LIST [POINTER]	
@@ -109,13 +109,13 @@ feature -- Access
 			non_void_result: Result /= Void
 		end;
 
-	drag_command: MEL_COMMAND_EXEC is
+	drag_command: MEL_COMMAND_EXEC
 			-- Command set for the drag callback
 		do
 			Result := motif_command (XmNdragCallback)
 		end;
 
-	value_changed_command: MEL_COMMAND_EXEC is
+	value_changed_command: MEL_COMMAND_EXEC
 			-- Command set for the drag callback
 		do
 			Result := motif_command (XmNvalueChangedCallback)
@@ -123,7 +123,7 @@ feature -- Access
 
 feature -- Status report
 
-	value: INTEGER is
+	value: INTEGER
 			-- Value of the slider position along the scale
 		require
 			exists: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Status report
 			value_small_enough: Result <= maximum
 		end;
 
-	decimal_points: INTEGER is
+	decimal_points: INTEGER
 			-- Number of decimal places to shift
 		require
 			exists: not is_destroyed
@@ -144,7 +144,7 @@ feature -- Status report
 			decimal_points_larger_enough: Result >= 0
 		end
 
-	is_highlighted_on_entry: BOOLEAN is
+	is_highlighted_on_entry: BOOLEAN
 			-- Is Current highlighted when the input focus enters Current's window?
 		require
 			exists: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNhighlightOnEnter)
 		end
 
-	highlight_thickness: INTEGER is
+	highlight_thickness: INTEGER
 			-- Thickness of the highlighting rectangle
 		require
 			exists: not is_destroyed
@@ -160,7 +160,7 @@ feature -- Status report
 			Result := get_xt_dimension (screen_object, XmNhighlightThickness)
 		end
 
-	scale_width: INTEGER is
+	scale_width: INTEGER
 			-- Width of the slider area
 		require
 			exists: not is_destroyed
@@ -168,7 +168,7 @@ feature -- Status report
 			Result := get_xt_dimension (screen_object, XmNscaleWidth)
 		end
 
-	scale_height: INTEGER is
+	scale_height: INTEGER
 			-- Height of the slider area
 		require
 			exists: not is_destroyed
@@ -176,7 +176,7 @@ feature -- Status report
 			Result := get_xt_dimension (screen_object, XmNscaleHeight)
 		end
 
-	title_string: MEL_STRING is
+	title_string: MEL_STRING
 			-- Scale text
 		require
 			exists: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Status report
 			Result := get_xm_string (screen_object, XmNtitleString)
 		end;
 
-	scale_multiple: INTEGER is
+	scale_multiple: INTEGER
 			-- Distance to move slider when the user moves it by a multiple increment
 		require
 			exists: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNscaleMultiple)
 		end;
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is scale orientation horizontal?
 		require
 			exists: not is_destroyed
@@ -200,7 +200,7 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Is scale orientation vertical?
 		require
 			exists: not is_destroyed
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := orientation = XmVERTICAL
 		end;
 
-	is_maximum_on_top: BOOLEAN is
+	is_maximum_on_top: BOOLEAN
 			-- Is processing direction top?
 		require
 			exists: not is_destroyed;
@@ -217,7 +217,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_TOP
 		end;
 
-	is_maximum_on_bottom: BOOLEAN is
+	is_maximum_on_bottom: BOOLEAN
 			-- Is processing direction bottom?
 		require
 			exists: not is_destroyed;
@@ -226,7 +226,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_BOTTOM
 		end;
 
-	is_maximum_on_left: BOOLEAN is
+	is_maximum_on_left: BOOLEAN
 			-- Is processing direction left?
 		require
 			exists: not is_destroyed;
@@ -235,7 +235,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_LEFT
 		end;
 
-	is_maximum_on_right: BOOLEAN is
+	is_maximum_on_right: BOOLEAN
 			-- Is processing direction right?
 		require
 			exists: not is_destroyed;
@@ -244,7 +244,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_RIGHT
 		end;
 
-	is_value_shown: BOOLEAN is
+	is_value_shown: BOOLEAN
 			-- Is `value' shown on the screen?
 		require
 			exists: not is_destroyed
@@ -252,7 +252,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNshowvalue)
 		end;
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value
 		require
 			exists: not is_destroyed
@@ -262,7 +262,7 @@ feature -- Status report
 			maximum_greater_than_minimum: Result >= minimum
 		end;
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value
 		require
 			exists: not is_destroyed
@@ -274,7 +274,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_decimal_points (a_number : INTEGER) is
+	set_decimal_points (a_number : INTEGER)
 			-- Set `decimal_points' to `a_number'.
 		require
 			exists: not is_destroyed
@@ -285,7 +285,7 @@ feature -- Status setting
 			value_set: decimal_points = a_number
 		end
 
-	set_scale_multiple (a_granularity: INTEGER) is
+	set_scale_multiple (a_granularity: INTEGER)
 			-- Set `scale_multiple' to `a_granularity'.
 		require
 			exists: not is_destroyed
@@ -297,7 +297,7 @@ feature -- Status setting
 			value_set: scale_multiple = a_granularity
 		end;
 
-	set_highlight_on_entry is
+	set_highlight_on_entry
 			-- Set `is_highlighted_on_entry' to True.
 		require
 			exists: not is_destroyed
@@ -307,7 +307,7 @@ feature -- Status setting
 			highlighted_on_enter: is_highlighted_on_entry
 		end;
 
-	no_highlight_on_entry is
+	no_highlight_on_entry
 			-- Set `is_highlighted_on_entry' to False.
 		require
 			exists: not is_destroyed
@@ -317,7 +317,7 @@ feature -- Status setting
 			do_not_highlight_on_enter: not is_highlighted_on_entry 
 		end;
 
-	set_highlight_thickness (a_thickness: INTEGER) is
+	set_highlight_thickness (a_thickness: INTEGER)
 			-- Set `highlight_thickness' to `a_thickness'.
 		require
 			exists: not is_destroyed
@@ -328,7 +328,7 @@ feature -- Status setting
 			thickness_set: highlight_thickness = a_thickness
 		end;
 
-	set_scale_size (a_width, a_height: INTEGER) is
+	set_scale_size (a_width, a_height: INTEGER)
 			-- Set `scale_width' to `a_width' and `scale_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -342,7 +342,7 @@ feature -- Status setting
 			scale_height_set: scale_height = a_height
 		end;
 
-	set_scale_width (a_width: INTEGER) is
+	set_scale_width (a_width: INTEGER)
 			-- Set `scale_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -353,7 +353,7 @@ feature -- Status setting
 			width_set: scale_width = a_width
 		end;
 
-	set_scale_height (a_height: INTEGER) is
+	set_scale_height (a_height: INTEGER)
 			-- Set `scale_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -364,7 +364,7 @@ feature -- Status setting
 			height_set: scale_height = a_height
 		end;
 
-	set_horizontal is
+	set_horizontal
 			-- Set `is_horizontal' to True.
 		require
 			exists: not is_destroyed
@@ -374,7 +374,7 @@ feature -- Status setting
 			is_horizontal: is_horizontal
 		end;
 
-	set_vertical is
+	set_vertical
 			-- Set `is_horizontal' to False.
 		require
 			exists: not is_destroyed
@@ -384,7 +384,7 @@ feature -- Status setting
 			is_vertical: is_vertical 
 		end;
 
-	set_maximum_on_top is
+	set_maximum_on_top
 			-- Set `is_maximum_on_top' to True.
 		require
 			exists: not is_destroyed;
@@ -395,7 +395,7 @@ feature -- Status setting
 			is_maximum_on_top: is_maximum_on_top 
 		end
 
-	set_maximum_on_bottom is
+	set_maximum_on_bottom
 			-- Set `is_maximum_on_bottom' to True.
 		require
 			exists: not is_destroyed;
@@ -406,7 +406,7 @@ feature -- Status setting
 			is_maximum_on_bottom: is_maximum_on_bottom 
 		end
 
-	set_maximum_on_left is
+	set_maximum_on_left
 			-- Set `is_maximum_on_left' to True.
 		require
 			exists: not is_destroyed;
@@ -417,7 +417,7 @@ feature -- Status setting
 			is_maximum_on_left: is_maximum_on_left
 		end
 
-	set_maximum_on_right is
+	set_maximum_on_right
 			-- Set `is_maximum_on_right' to True.
 		require
 			exists: not is_destroyed;
@@ -428,7 +428,7 @@ feature -- Status setting
 			is_maximum_on_right: is_maximum_on_right
 		end
 
-	set_maximum (a_maximum: INTEGER) is
+	set_maximum (a_maximum: INTEGER)
 			-- Set `maximum' to `a_maximum'.
 		require
 			exists: not is_destroyed;
@@ -439,7 +439,7 @@ feature -- Status setting
 			value_set: maximum = a_maximum
 		end;
 
-	set_minimum (a_minimum: INTEGER) is
+	set_minimum (a_minimum: INTEGER)
 			-- Set `minimum' to `a_minimum'.
 		require
 			exists: not is_destroyed;
@@ -450,7 +450,7 @@ feature -- Status setting
 			value_set: minimum = a_minimum
 		end;
 
-	set_title_string (a_compound_string: MEL_STRING) is
+	set_title_string (a_compound_string: MEL_STRING)
 			-- Set `title_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -461,7 +461,7 @@ feature -- Status setting
 			title_set: title_string.is_equal (a_compound_string)
 		end;
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		require
 			exists: not is_destroyed
@@ -473,7 +473,7 @@ feature -- Status setting
 			value_set: value = a_value
 		end;
 
-	show_value is
+	show_value
 			-- Set `is_value_shown' to True.
 		require
 			exists: not is_destroyed
@@ -483,7 +483,7 @@ feature -- Status setting
 			value_is_shown: is_value_shown 
 		end;
 
-	hide_value is
+	hide_value
 			-- Set `is_value_shown' to False.
 		require
 			exists: not is_destroyed
@@ -495,7 +495,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider is
 			-- being dragged.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -508,7 +508,7 @@ feature -- Element change
 			 command_set: command_set (drag_command, a_command, an_argument)
 		end;
 
-	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value changes.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -522,7 +522,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_drag_callback is
+	remove_drag_callback
 			-- Remove the command for the drag callback.
 		do
 			remove_callback (XmNdragCallback)
@@ -530,7 +530,7 @@ feature -- Removal
 			removed: drag_command = Void
 		end;
 
-	remove_value_changed_callback is
+	remove_value_changed_callback
 			-- Remove the command for the value changed callback.
 		do
 			remove_callback (XmNvalueChangedCallback)
@@ -541,7 +541,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER
-			resource_name: POINTER): MEL_SCALE_CALLBACK_STRUCT is
+			resource_name: POINTER): MEL_SCALE_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 	private_sb_widget: MEL_SCROLL_BAR;
 			-- Private Scroll Bar widget
 
-	processing_direction: INTEGER is
+	processing_direction: INTEGER
 			-- Position at which to display the slider's maximum and minimum values
 		require
 			exists: not is_destroyed
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNprocessingDirection)
 		end;
 
-	orientation: INTEGER is
+	orientation: INTEGER
 			-- Direction in which the widget is displayed
 		require
 			exists: not is_destroyed
@@ -572,21 +572,21 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNorientation)
 		end;
 
-	xm_create_scale (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_scale (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Scale.h>"
 		alias
 			"XmCreateScale"
 		end;
 
-	xm_scale_get_value (widget, value_return: POINTER) is
+	xm_scale_get_value (widget, value_return: POINTER)
 		external
 			"C (Widget, int *) | <Xm/Scale.h>"
 		alias
 			"XmScaleGetValue"
 		end
 
-	xm_scale_set_value (widget: POINTER; a_value: INTEGER) is
+	xm_scale_set_value (widget: POINTER; a_value: INTEGER)
 		external
 			"C (Widget, int) | <Xm/Scale.h>"
 		alias
@@ -599,7 +599,7 @@ invariant
 	value_large_enough: not is_destroyed implies value >= minimum;
 	valid_range: not is_destroyed implies minimum <= maximum
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

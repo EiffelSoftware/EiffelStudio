@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The model for a graph item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_ITEM.
 		do
 			create name_change_actions
@@ -30,7 +30,7 @@ feature -- Access
 	graph: EG_GRAPH
 			-- The graph model `Current' is part of (if not Void).
 
-	id: INTEGER is
+	id: INTEGER
 			-- Unique id.
 		do
 			if internal_hash_id = 0  then
@@ -43,7 +43,7 @@ feature -- Access
 	name: STRING
 			-- Name of `Current'.
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		do
 			if a_name /= name then
@@ -59,7 +59,7 @@ feature -- Access
 
 feature {EG_GRAPH} -- Element change.
 
-	set_graph (a_graph: like graph) is
+	set_graph (a_graph: like graph)
 			-- Set `graph' to `a_graph'.
 --		require
 --			a_graph_not_void: a_graph /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 	internal_hash_id: like id
 			-- internal id for the hash code.
 
-	counter: CELL [INTEGER] is
+	counter: CELL [INTEGER]
 			-- Id counter.
 		once
 			create Result.put (0)
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 invariant
 	name_change_actions_not_void: name_change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

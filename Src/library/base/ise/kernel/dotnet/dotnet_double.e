@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of static routines belonging to System.Double"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen is_infinity (d: DOUBLE): BOOLEAN is
+	frozen is_infinity (d: DOUBLE): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
 			-- to negative or positive infinity
@@ -31,7 +31,7 @@ feature -- Statics
 			"IsInfinity"
 		end
 
-	frozen is_positive_infinity (d: DOUBLE): BOOLEAN is
+	frozen is_positive_infinity (d: DOUBLE): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
 			-- to positive infinity.
@@ -48,7 +48,7 @@ feature -- Statics
 			"IsPositiveInfinity"
 		end
 
-	frozen is_negative_infinity (d: DOUBLE): BOOLEAN is
+	frozen is_negative_infinity (d: DOUBLE): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
 			-- to negative infinity.
@@ -65,7 +65,7 @@ feature -- Statics
 			"IsNegativeInfinity"
 		end
 
-	frozen is_nan (d: DOUBLE): BOOLEAN is
+	frozen is_nan (d: DOUBLE): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
 			-- to a value that is not a number (System.Double.NaN).
@@ -82,7 +82,7 @@ feature -- Statics
 
 feature -- Conversion
 
-	frozen from_string_attempt (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER; result_: TYPED_POINTER [DOUBLE]): BOOLEAN is
+	frozen from_string_attempt (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER; result_: TYPED_POINTER [DOUBLE]): BOOLEAN
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- and culture-specific format to its double-precision floating point
@@ -107,7 +107,7 @@ feature -- Conversion
 			"TryParse"
 		end
 
-	frozen from_string (s: SYSTEM_STRING): DOUBLE is
+	frozen from_string (s: SYSTEM_STRING): DOUBLE
 			-- (Static)
 			-- Converts the string representation of a number to its double-precision
 			-- floating point number equivalent.
@@ -130,7 +130,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): DOUBLE is
+	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): DOUBLE
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- to its double-precision floating point number equivalent.
@@ -156,7 +156,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): DOUBLE is
+	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): DOUBLE
 			-- (Static)
 			-- Converts the string representation of a number in a specified
 			-- culture-specific format to its double-precision floating point
@@ -182,7 +182,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): DOUBLE is
+	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): DOUBLE
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- and culture-specific format to its double-precision floating point
@@ -213,7 +213,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

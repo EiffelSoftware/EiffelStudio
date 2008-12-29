@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -19,13 +19,13 @@ create
 
 feature
 
-	make is
+	make
 		do
 		end
 
 feature -- Routines out
 
-	out: STRING is
+	out: STRING
 		do
 			Result := Input_start.twin
 			Result.append (attributes_out)
@@ -33,7 +33,7 @@ feature -- Routines out
 			Result.append (NewLine)
 		end
 
-	attributes_out: STRING is
+	attributes_out: STRING
 		do
 			Result := ""
 			if has_value (type_value) then
@@ -62,7 +62,7 @@ feature -- Routines out
 			end
 		end
 
-    attribute_out (an_attribute, its_value: STRING): STRING is
+    attribute_out (an_attribute, its_value: STRING): STRING
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
             Result := an_attribute.twin
@@ -73,7 +73,7 @@ feature -- Routines out
 
 feature -- Wipe out
 
-	wipe_out is
+	wipe_out
 		do
 			checked_value := False
 			if has_value (type_value) then
@@ -101,50 +101,50 @@ feature -- Wipe out
 
 feature -- Set attributes
 
-	set_checked is
+	set_checked
 		do
 			checked_value := True
 		end
 
-	set_type (s: STRING) is
+	set_type (s: STRING)
 		require
 			s /= Void
 		do
 			type_value := s.twin
 		end
 
-	set_name (s: STRING) is
+	set_name (s: STRING)
 		require
 			s /= Void
 		do
 			name_value := s.twin
 		end
 
-	set_value (s: STRING) is
+	set_value (s: STRING)
 		require
 			s /= Void
 		do
 			value_value := s.twin
 		end
 
-	set_file_src, set_image_src (s: STRING) is
+	set_file_src, set_image_src (s: STRING)
 		require
 			s /= Void
 		do
 			src_value := s.twin
 		end
 
-	set_size (s: INTEGER) is
+	set_size (s: INTEGER)
 		do
 			size_value := s.out;
 		end
 
-	set_maxlength (s: INTEGER) is
+	set_maxlength (s: INTEGER)
 		do
 			maxlength_value := s.out
 		end
 
-	set_image_align (s: STRING) is
+	set_image_align (s: STRING)
 		require
 			s /= Void
 		do
@@ -153,7 +153,7 @@ feature -- Set attributes
 
 feature {NONE}
 
-	has_value (s: STRING): BOOLEAN is
+	has_value (s: STRING): BOOLEAN
 			-- Has the attribute 's' a value ?
 		do
 			if s = Void or else s.is_equal ("") then
@@ -169,7 +169,7 @@ feature {NONE}
 	size_value, maxlength_value, align_value: STRING
 	checked_value: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

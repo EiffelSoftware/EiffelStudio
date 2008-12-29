@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A tree which displays a check box to left
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor {EV_TREE_IMP} (an_interface)
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
+	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- is `tree_item' checked?
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	check_item (tree_item: EV_TREE_NODE) is
+	check_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
@@ -89,7 +89,7 @@ feature -- Status setting
 			end
 		end
 
-	uncheck_item (tree_item: EV_TREE_NODE) is
+	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		local
@@ -114,7 +114,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	on_nm_click is
+	on_nm_click
 			-- Nm_click has been received from Windows. Update checked state of
 			-- pointed check box if any.
 		local
@@ -143,7 +143,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_left_button_down (keys: INTEGER; x_pos: INTEGER; y_pos: INTEGER) is
+	on_left_button_down (keys: INTEGER; x_pos: INTEGER; y_pos: INTEGER)
 			-- Executed when the left button is pressed. Store `x_pos' and `y_pos'
 			-- into `click_original_x_pos' and `click_original_y_pos'.
 		do
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 		-- over the next item before releasing the mouse button. Without doing this, it is
 		-- not possible to correctly respond to the check box states.
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Process all message plus `WM_GETDLGCODE'.
 		local
 			tree_node: EV_TREE_NODE_IMP
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	um_checkable_tree_state_change: INTEGER is
+	um_checkable_tree_state_change: INTEGER
 			-- User defined message constant we send to windows for processing
 			-- when a state icon is clicked in `Current'.
 		once
@@ -204,7 +204,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

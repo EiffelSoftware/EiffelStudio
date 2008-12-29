@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IFont' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ifont20_impl_proxy_from_pointer(cpp_obj)
@@ -27,55 +27,55 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- No description available.
 		do
 			Result := ccom_name (initializer)
 		end
 
-	size: ECOM_CURRENCY is
+	size: ECOM_CURRENCY
 			-- No description available.
 		do
 			Result := ccom_size (initializer)
 		end
 
-	bold: BOOLEAN is
+	bold: BOOLEAN
 			-- No description available.
 		do
 			Result := ccom_bold (initializer)
 		end
 
-	italic: BOOLEAN is
+	italic: BOOLEAN
 			-- No description available.
 		do
 			Result := ccom_italic (initializer)
 		end
 
-	underline: BOOLEAN is
+	underline: BOOLEAN
 			-- No description available.
 		do
 			Result := ccom_underline (initializer)
 		end
 
-	strikethrough: BOOLEAN is
+	strikethrough: BOOLEAN
 			-- No description available.
 		do
 			Result := ccom_strikethrough (initializer)
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- No description available.
 		do
 			Result := ccom_weight (initializer)
 		end
 
-	charset: INTEGER is
+	charset: INTEGER
 			-- No description available.
 		do
 			Result := ccom_charset (initializer)
 		end
 
-	h_font: INTEGER is
+	h_font: INTEGER
 			-- No description available.
 		do
 			Result := ccom_h_font (initializer)
@@ -83,70 +83,70 @@ feature -- Access
 
 feature -- Basic Operations
 
-	set_name (pname: STRING) is
+	set_name (pname: STRING)
 			-- No description available.
 			-- `pname' [in].
 		do
 			ccom_set_name (initializer, pname)
 		end
 
-	set_size (psize: ECOM_CURRENCY) is
+	set_size (psize: ECOM_CURRENCY)
 			-- No description available.
 			-- `psize' [in].
 		do
 			ccom_set_size (initializer, psize.item)
 		end
 
-	set_bold (pbold: BOOLEAN) is
+	set_bold (pbold: BOOLEAN)
 			-- No description available.
 			-- `pbold' [in].
 		do
 			ccom_set_bold (initializer, pbold)
 		end
 
-	set_italic (pitalic: BOOLEAN) is
+	set_italic (pitalic: BOOLEAN)
 			-- No description available.
 			-- `pitalic' [in].
 		do
 			ccom_set_italic (initializer, pitalic)
 		end
 
-	set_underline (punderline: BOOLEAN) is
+	set_underline (punderline: BOOLEAN)
 			-- No description available.
 			-- `punderline' [in].
 		do
 			ccom_set_underline (initializer, punderline)
 		end
 
-	set_strikethrough (pstrikethrough: BOOLEAN) is
+	set_strikethrough (pstrikethrough: BOOLEAN)
 			-- No description available.
 			-- `pstrikethrough' [in].
 		do
 			ccom_set_strikethrough (initializer, pstrikethrough)
 		end
 
-	set_weight (pweight: INTEGER) is
+	set_weight (pweight: INTEGER)
 			-- No description available.
 			-- `pweight' [in].
 		do
 			ccom_set_weight (initializer, pweight)
 		end
 
-	set_charset (pcharset: INTEGER) is
+	set_charset (pcharset: INTEGER)
 			-- No description available.
 			-- `pcharset' [in].
 		do
 			ccom_set_charset (initializer, pcharset)
 		end
 
-	clone1 (ppfont: CELL [IFONT_INTERFACE]) is
+	clone1 (ppfont: CELL [IFONT_INTERFACE])
 			-- No description available.
 			-- `ppfont' [out].
 		do
 			ccom_clone1 (initializer, ppfont)
 		end
 
-	is_equal1 (pfont_other: IFONT_INTERFACE) is
+	is_equal1 (pfont_other: IFONT_INTERFACE)
 			-- No description available.
 			-- `pfont_other' [in].
 		local
@@ -161,7 +161,7 @@ feature -- Basic Operations
 			ccom_is_equal1 (initializer, pfont_other.item)
 		end
 
-	set_ratio (cy_logical: INTEGER; cy_himetric: INTEGER) is
+	set_ratio (cy_logical: INTEGER; cy_himetric: INTEGER)
 			-- No description available.
 			-- `cy_logical' [in].
 			-- `cy_himetric' [in].
@@ -169,14 +169,14 @@ feature -- Basic Operations
 			ccom_set_ratio (initializer, cy_logical, cy_himetric)
 		end
 
-	add_ref_hfont (a_h_font: INTEGER) is
+	add_ref_hfont (a_h_font: INTEGER)
 			-- No description available.
 			-- `a_h_font' [in].
 		do
 			ccom_add_ref_hfont (initializer, a_h_font)
 		end
 
-	release_hfont (a_h_font: INTEGER) is
+	release_hfont (a_h_font: INTEGER)
 			-- No description available.
 			-- `a_h_font' [in].
 		do
@@ -185,7 +185,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ifont20_impl_proxy(initializer)
@@ -193,157 +193,157 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_name (cpp_obj: POINTER): STRING is
+	ccom_name (cpp_obj: POINTER): STRING
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_name (cpp_obj: POINTER; pname: STRING) is
+	ccom_set_name (cpp_obj: POINTER; pname: STRING)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
-	ccom_size (cpp_obj: POINTER): ECOM_CURRENCY is
+	ccom_size (cpp_obj: POINTER): ECOM_CURRENCY
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_size (cpp_obj: POINTER; psize: POINTER) is
+	ccom_set_size (cpp_obj: POINTER; psize: POINTER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](CURRENCY *)"
 		end
 
-	ccom_bold (cpp_obj: POINTER): BOOLEAN is
+	ccom_bold (cpp_obj: POINTER): BOOLEAN
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_bold (cpp_obj: POINTER; pbold: BOOLEAN) is
+	ccom_set_bold (cpp_obj: POINTER; pbold: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_italic (cpp_obj: POINTER): BOOLEAN is
+	ccom_italic (cpp_obj: POINTER): BOOLEAN
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_italic (cpp_obj: POINTER; pitalic: BOOLEAN) is
+	ccom_set_italic (cpp_obj: POINTER; pitalic: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_underline (cpp_obj: POINTER): BOOLEAN is
+	ccom_underline (cpp_obj: POINTER): BOOLEAN
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_underline (cpp_obj: POINTER; punderline: BOOLEAN) is
+	ccom_set_underline (cpp_obj: POINTER; punderline: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_strikethrough (cpp_obj: POINTER): BOOLEAN is
+	ccom_strikethrough (cpp_obj: POINTER): BOOLEAN
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_strikethrough (cpp_obj: POINTER; pstrikethrough: BOOLEAN) is
+	ccom_set_strikethrough (cpp_obj: POINTER; pstrikethrough: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_weight (cpp_obj: POINTER): INTEGER is
+	ccom_weight (cpp_obj: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
-	ccom_set_weight (cpp_obj: POINTER; pweight: INTEGER) is
+	ccom_set_weight (cpp_obj: POINTER; pweight: INTEGER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
-	ccom_charset (cpp_obj: POINTER): INTEGER is
+	ccom_charset (cpp_obj: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
-	ccom_set_charset (cpp_obj: POINTER; pcharset: INTEGER) is
+	ccom_set_charset (cpp_obj: POINTER; pcharset: INTEGER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
-	ccom_h_font (cpp_obj: POINTER): INTEGER is
+	ccom_h_font (cpp_obj: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](): EIF_INTEGER"
 		end
 
-	ccom_clone1 (cpp_obj: POINTER; ppfont: CELL [IFONT_INTERFACE]) is
+	ccom_clone1 (cpp_obj: POINTER; ppfont: CELL [IFONT_INTERFACE])
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_OBJECT)"
 		end
 
-	ccom_is_equal1 (cpp_obj: POINTER; pfont_other: POINTER) is
+	ccom_is_equal1 (cpp_obj: POINTER; pfont_other: POINTER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](IFont *)"
 		end
 
-	ccom_set_ratio (cpp_obj: POINTER; cy_logical: INTEGER; cy_himetric: INTEGER) is
+	ccom_set_ratio (cpp_obj: POINTER; cy_logical: INTEGER; cy_himetric: INTEGER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_add_ref_hfont (cpp_obj: POINTER; a_h_font: INTEGER) is
+	ccom_add_ref_hfont (cpp_obj: POINTER; a_h_font: INTEGER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
-	ccom_release_hfont (cpp_obj: POINTER; a_h_font: INTEGER) is
+	ccom_release_hfont (cpp_obj: POINTER; a_h_font: INTEGER)
 			-- No description available.
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](EIF_INTEGER)"
 		end
 
-	ccom_delete_ifont20_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ifont20_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"]()"
 		end
 
-	ccom_create_ifont20_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ifont20_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [IFont20_impl_proxy %"ecom_IFont20_impl_proxy.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

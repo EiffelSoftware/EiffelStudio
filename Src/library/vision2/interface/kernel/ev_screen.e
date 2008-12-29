@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities for direct drawing on the screen."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer.
 		require
 			not_destroyed: not is_destroyed
@@ -32,7 +32,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET is
+	widget_at_position (x, y: INTEGER): EV_WIDGET
 			-- Widget at position (`x', `y') if any.
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Status report
 			Result := implementation.widget_at_position (x, y)
 		end
 
-	widget_at_mouse_pointer: EV_WIDGET is
+	widget_at_mouse_pointer: EV_WIDGET
 			-- Widget underneath mouse pointer if any.
 		require
 			not_destroyed: not is_destroyed
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	set_pointer_position (x, y: INTEGER) is
+	set_pointer_position (x, y: INTEGER)
 			-- Set `pointer_position' to (`x',`y`).
 		require
 			not_destroyed: not is_destroyed
@@ -58,7 +58,7 @@ feature -- Basic operation
 			implementation.set_pointer_position (x, y)
 		end
 
-	fake_pointer_button_press (a_button: INTEGER) is
+	fake_pointer_button_press (a_button: INTEGER)
 			-- Simulate the user pressing a `a_button' on the pointing device.
 		require
 			not_destroyed: not is_destroyed
@@ -66,7 +66,7 @@ feature -- Basic operation
 			implementation.fake_pointer_button_press (a_button)
 		end
 
-	fake_pointer_button_release (a_button: INTEGER) is
+	fake_pointer_button_release (a_button: INTEGER)
 			-- Simulate the user releasing a `a_button' on the pointing device.
 		require
 			not_destroyed: not is_destroyed
@@ -74,7 +74,7 @@ feature -- Basic operation
 			implementation.fake_pointer_button_release (a_button)
 		end
 
-	fake_pointer_button_click (a_button: INTEGER) is
+	fake_pointer_button_click (a_button: INTEGER)
 			-- Simulate the user clicking `a_button' on the pointing device.
 		require
 			not_destroyed: not is_destroyed
@@ -83,7 +83,7 @@ feature -- Basic operation
 			implementation.fake_pointer_button_release (a_button)
 		end
 
-	fake_pointer_wheel_up is
+	fake_pointer_wheel_up
 			-- Simulate the user rotating the mouse wheel up.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Basic operation
 			implementation.fake_pointer_wheel_up
 		end
 
-	fake_pointer_wheel_down is
+	fake_pointer_wheel_down
 			-- Simulate the user rotating the mouse wheel down.
 		require
 			not_destroyed: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Basic operation
 			implementation.fake_pointer_wheel_down
 		end
 
-	fake_key_press (a_key: EV_KEY) is
+	fake_key_press (a_key: EV_KEY)
 			-- Simulate the user pressing a `key'.
 		require
 			not_destroyed: not is_destroyed
@@ -108,7 +108,7 @@ feature -- Basic operation
 			implementation.fake_key_press (a_key)
 		end
 
-	fake_key_release (a_key: EV_KEY) is
+	fake_key_release (a_key: EV_KEY)
 			-- Simulate the user releasing a `key'.
 		require
 			not_destroyed: not is_destroyed
@@ -117,7 +117,7 @@ feature -- Basic operation
 			implementation.fake_key_release (a_key)
 		end
 
-	fake_key_click (a_key: EV_KEY) is
+	fake_key_click (a_key: EV_KEY)
 			-- Simulate the user clicking a `key'.
 		require
 			not_destroyed: not is_destroyed
@@ -129,7 +129,7 @@ feature -- Basic operation
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
@@ -138,7 +138,7 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			Result := implementation.height
@@ -147,7 +147,7 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Number of pixels per inch along screen height.
 		do
 			Result := implementation.vertical_resolution
@@ -155,7 +155,7 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Number of pixels per inch along screen width.
 		do
 			Result := implementation.horizontal_resolution
@@ -170,13 +170,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_SCREEN_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,17 +14,17 @@ inherit
 
 feature -- Status setting
 
-	set_open_file is
+	set_open_file
 			-- Set the dialog to an open file dialog
 		deferred
 		end
 
-	set_save_file is
+	set_save_file
 			-- Set the dialog to a save file dialog
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

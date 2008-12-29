@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window which displays a state which is neither final nor initial."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Basic Operations
 
-	display is
+	display
 			-- Display Current state.
 		do 
 			build_frame
@@ -22,7 +22,7 @@ feature {NONE} -- Basic Operations
 			build
 		end
 
-	build_frame is
+	build_frame
 			-- Build widgets
 		require
 			main_box_empty: main_box.count=0
@@ -160,7 +160,7 @@ feature {NONE} -- Basic Operations
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
-	pixmap_location: FILE_NAME is
+	pixmap_location: FILE_NAME
 			-- Pixmap location
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")
@@ -169,7 +169,7 @@ feature {NONE} -- Basic Operations
 
 feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
-	current_help_context: WIZARD_HELP_CONTEXT is
+	current_help_context: WIZARD_HELP_CONTEXT
 			-- Help context for this window
 		local
 			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
@@ -183,7 +183,7 @@ feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 	message_box: EV_HORIZONTAL_BOX;		
 			-- Box where is displayed the description of current state (gray background).
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

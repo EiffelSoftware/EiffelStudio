@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision accelerator. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface.
 		do
 			base_make (an_interface)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create key
 		end
 
-	initialize is
+	initialize
 		do
 			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
 			set_is_initialized (True)
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 feature {EV_WINDOW_IMP} -- Implementation
 
-	modifier_mask: INTEGER is
+	modifier_mask: INTEGER
 			-- The mask consisting of alt, shift and control keys.
 		do
 			if control_required then
@@ -62,7 +62,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			end
 		end
 
-	add_accel (a_window_imp: EV_WINDOW_IMP) is
+	add_accel (a_window_imp: EV_WINDOW_IMP)
 			-- Add the current key combination to the invisible button.
 		require
 			a_window_imp_not_void: a_window_imp /= Void
@@ -82,7 +82,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			)
 		end
 
-	remove_accel (a_window_imp: EV_WINDOW_IMP) is
+	remove_accel (a_window_imp: EV_WINDOW_IMP)
 			-- Remove the current key combination to the invisible button.
 		require
 			a_window_imp_not_void: a_window_imp /= Void
@@ -115,49 +115,49 @@ feature -- Access
 
 feature -- Element change
 
-	set_key (a_key: EV_KEY) is
+	set_key (a_key: EV_KEY)
 			-- Set `a_key' as new key that has to be pressed.
 		do
 			key := a_key.twin
 		end
 
-	enable_shift_required is
+	enable_shift_required
 			-- "Shift" must be pressed for the key combination.
 		do
 			shift_required := True
 		end
 
-	disable_shift_required is
+	disable_shift_required
 			-- "Shift" is not part of the key combination.
 		do
 			shift_required := False
 		end
 
-	enable_alt_required is
+	enable_alt_required
 			-- "Alt" must be pressed for the key combination.
 		do
 			alt_required := True
 		end
 
-	disable_alt_required is
+	disable_alt_required
 			-- "Alt" is not part of the key combination.
 		do
 			alt_required := False
 		end
 
-	enable_control_required is
+	enable_control_required
 			-- "Control" must be pressed for the key combination.
 		do
 			control_required := True
 		end
 
-	disable_control_required is
+	disable_control_required
 			-- "Control" is not part of the key combination.
 		do
 			control_required := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

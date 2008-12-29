@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Rectangle which displays a submenu when armed, and also %
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialziation
 
-	make (a_name: STRING; a_parent: MENU) is
+	make (a_name: STRING; a_parent: MENU)
 			-- Create a menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -39,7 +39,7 @@ feature {NONE} -- Initialziation
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: MENU) is
+	make_unmanaged (a_name: STRING; a_parent: MENU)
 			-- Create an unmanaged menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialziation
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: MENU; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: MENU; man: BOOLEAN)
 			-- Create a menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialziation
 
 feature -- Access
 
-	parent: MENU is
+	parent: MENU
 			-- Parent of current menu button
 		do
 			Result ?= widget_manager.parent (Current)
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Element change
 
-	attach_menu (a_menu: MENU_PULL) is
+	attach_menu (a_menu: MENU_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -98,12 +98,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaitno
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default value to current menu button.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

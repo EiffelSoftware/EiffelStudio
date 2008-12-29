@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Records storing the result of a test run"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_pass is
+	make_pass
 			-- Create a pass result.
 		do
 			has_passed := True
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			state_ok: state = Passed_state
 		end
 
-	make_failure is
+	make_failure
 			-- Create a failure result.
 		do
 			failed_tests := 1
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			state_ok: state = Failure_state
 		end
 		
-	make_exception is
+	make_exception
 			-- Create an exception.
 		do
 			is_exception := True
@@ -80,7 +80,7 @@ invariant
 	consistency_rule: not has_passed or not is_exception
 	valid_state: Passed_state <= state and state <= Exception_state
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

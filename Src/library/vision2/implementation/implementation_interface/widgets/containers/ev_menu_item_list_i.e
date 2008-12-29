@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_I
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Widget that starts an operation when it is pressed."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif push button.
 		local
 			widget_name: ANY
@@ -45,19 +45,19 @@ feature -- Initialization
 
 feature -- Access
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	arm_command: MEL_COMMAND_EXEC is
+	arm_command: MEL_COMMAND_EXEC
 			-- Command set for the arm callback
 		do
 			Result := motif_command (XmNarmCallback)
 		end;
 
-	disarm_command: MEL_COMMAND_EXEC is
+	disarm_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNdisarmCallback)
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	arm_color: MEL_PIXEL is
+	arm_color: MEL_PIXEL
 			-- Arm color
 		require
 			exists: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	arm_pixmap: MEL_PIXMAP is
+	arm_pixmap: MEL_PIXMAP
 			-- Arm pixmap
 		require
 			exists: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	default_button_shadow_thickness: INTEGER is
+	default_button_shadow_thickness: INTEGER
 			-- Width of the shadow used to indicate the default push button
 		require
 			exists: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Status report
 			shadow_thickness_large_enough: Result >= 0
 		end;
 
-	is_filled_on_arm: BOOLEAN is
+	is_filled_on_arm: BOOLEAN
 			-- Is `arm_color' used when the button is armed?
 		require
 			exists: not is_destroyed
@@ -107,7 +107,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNfillOnArm)
 		end;
 
-	is_multiclick_kept: BOOLEAN is
+	is_multiclick_kept: BOOLEAN
 			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Status report
 				(screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
 		end;
 
-	is_multiclick_discarded: BOOLEAN is
+	is_multiclick_discarded: BOOLEAN
 			-- Are the successive button clicks discard?
 		require
 			exists: not is_destroyed
@@ -125,7 +125,7 @@ feature -- Status report
 				(screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
 		end;
 
-	show_as_default: INTEGER is
+	show_as_default: INTEGER
 			-- Should Current be shown as the default push button?
 			-- Zero means no. Greater than zero means yes.
 		require
@@ -138,7 +138,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_arm_color (a_color: MEL_PIXEL) is
+	set_arm_color (a_color: MEL_PIXEL)
 			-- Set `arm_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -150,7 +150,7 @@ feature -- Status setting
 			arm_color_set: arm_color.is_equal (a_color)
 		end;
 
-	set_arm_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_arm_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `arm_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -163,7 +163,7 @@ feature -- Status setting
 			arm_pixmap_set: arm_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_default_button_shadow_thickness (a_width: INTEGER) is
+	set_default_button_shadow_thickness (a_width: INTEGER)
 			-- Set `default_button_shadow_thickness' to `a_width'.
 		require
 			exists: not is_destroyed
@@ -174,7 +174,7 @@ feature -- Status setting
 			shadow_thickness_set: default_button_shadow_thickness = a_width
 		end;
 
-	fill_on_arm is
+	fill_on_arm
 			-- Set `filled_on_arm' to True.
 		require
 			exists: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Status setting
 			is_filled_on_arm: is_filled_on_arm 
 		end;
 
-	no_fill_on_arm is
+	no_fill_on_arm
 			-- Set `filled_on_arm' to False.
 		require
 			exists: not is_destroyed
@@ -194,7 +194,7 @@ feature -- Status setting
 			is_not_filled_on_arm: not is_filled_on_arm 
 		end;
 
-	set_multiclick_to_keep is
+	set_multiclick_to_keep
 			-- Set `is_multiclick_kept' to True.
 		require
 			exists: not is_destroyed
@@ -204,7 +204,7 @@ feature -- Status setting
 			keep_successive_clicks: is_multiclick_kept
 		end;
 
-	set_multiclick_to_discard is
+	set_multiclick_to_discard
 			-- Set `is_multiclick_discard' to True.
 		require
 			exists: not is_destroyed
@@ -214,7 +214,7 @@ feature -- Status setting
 			discard_successive_clicks: is_multiclick_discarded
 		end;
 
-	set_show_as_default (a_width: INTEGER) is
+	set_show_as_default (a_width: INTEGER)
 			-- Set `show_as_default' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -227,7 +227,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed
 			-- and released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -240,7 +240,7 @@ feature -- Element change
 			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -252,7 +252,7 @@ feature -- Element change
 			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is released.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -266,7 +266,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback is
+	remove_activate_callback
 			-- Remove the command for the activate callback.
 		do
 			remove_callback (XmNactivateCallback)
@@ -274,7 +274,7 @@ feature -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_arm_callback is
+	remove_arm_callback
 			-- Remove the command for the arm callback.
 		do
 			remove_callback (XmNarmCallback)
@@ -282,7 +282,7 @@ feature -- Removal
 			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback is
+	remove_disarm_callback
 			-- Remove the command for the disarm callback.
 		do
 			remove_callback (XmNdisarmCallback)
@@ -293,7 +293,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-				resource_name: POINTER): MEL_PUSH_BUTTON_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_PUSH_BUTTON_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -302,14 +302,14 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_push_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_push_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/PushB.h>"
 		alias
 			"XmCreatePushButton"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

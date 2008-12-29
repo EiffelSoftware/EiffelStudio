@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Area which arranges children in rows or columns"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a row column with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			--default_row_layout: not is_row_layout
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged row column with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			--default_row_layout: not is_row_layout
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a row column with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_row_layout: BOOLEAN is
+	is_row_layout: BOOLEAN
 			-- Are children laid out in rows?
 		require
 			exists: not destroyed
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_preferred_count (a_number: INTEGER) is
+	set_preferred_count (a_number: INTEGER)
 			-- Set number of columns if column
 			-- layout, or number of rows if row
 			-- layout.
@@ -93,7 +93,7 @@ feature -- Status setting
 			implementation.set_preferred_count (a_number)
 		end;
 
-	set_row_layout is
+	set_row_layout
 			-- Lay the children out in rows.
 		require
 			exists: not destroyed
@@ -103,7 +103,7 @@ feature -- Status setting
 			Row_layout: is_row_layout
 		end;
 
-	set_column_layout is
+	set_column_layout
 			-- Lay the children out in columns.
 		require
 			exists: not destroyed
@@ -113,7 +113,7 @@ feature -- Status setting
 			Column_layout: not is_row_layout
 		end;
 
-	set_free_size is
+	set_free_size
 			-- Set size of items to be free, in vertical layout mode
 			-- only width is set to be the same as the widest one, in
 			-- horizontal layout mode only height is set to be the same
@@ -124,7 +124,7 @@ feature -- Status setting
 			implementation.set_free_size
 		end;
 
-	set_same_size is
+	set_same_size
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
 		require
@@ -135,7 +135,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Amount of blank space between the top edge
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column
@@ -147,7 +147,7 @@ feature -- Measurement
 			Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Amount of blank space between the left edge
 			-- of row column and the first item in each row , and the
 			-- right edge of row column and the last item in each row
@@ -159,7 +159,7 @@ feature -- Measurement
 			Result >= 0
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- Spacing between items
 		require
 			exists: not destroyed
@@ -171,7 +171,7 @@ feature -- Measurement
 
 feature -- Resizing
 
-	set_margin_height (new_margin_height: INTEGER) is
+	set_margin_height (new_margin_height: INTEGER)
 			-- Set amount of blank space between the top edge
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column.
@@ -184,7 +184,7 @@ feature -- Resizing
 			margin_height = new_margin_height
 		end;
 
-	set_margin_width (new_margin_width: INTEGER) is
+	set_margin_width (new_margin_width: INTEGER)
 			-- Set amount of blank space between the left edge
 			-- of row column and the first item in each row , and the
 			-- right edge of row column and the last item in each row.
@@ -197,7 +197,7 @@ feature -- Resizing
 			margin_width = new_margin_width
 		end;
 
-	set_spacing (new_spacing: INTEGER) is
+	set_spacing (new_spacing: INTEGER)
 			-- Set spacing between items to `new_spacing'.
 		require
 			exists: not destroyed;
@@ -215,12 +215,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current row column.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

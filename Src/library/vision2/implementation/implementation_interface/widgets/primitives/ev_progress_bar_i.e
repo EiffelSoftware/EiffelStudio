@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel Vision progress bar. Implementation interface."
 	legal: "See notice at end of class." 
 	status: "See notice at end of class."
@@ -13,28 +13,28 @@ inherit
 
 feature -- Status report
 
-	is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN
 			-- Is display segmented?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_segmentation is
+	enable_segmentation
 			-- Display bar divided into segments.
 		deferred
 		ensure
 			is_segmented: is_segmented
 		end
 
-	disable_segmentation is
+	disable_segmentation
 			-- Display bar without segments.
 		deferred
 		ensure
 			not_is_segmented: not is_segmented
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

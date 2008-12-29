@@ -1,4 +1,4 @@
-indexing
+note
 	Warning: "[
 		If you are precompiling a subset of EiffelBase, it is 
 		preferable NOT to remove this class from the subset. 
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 
 	s8_4: SPECIAL [NATURAL_64];
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

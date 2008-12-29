@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A partial line in the editor.  Unlinke full lines a partial line has not breakpoint and no eol token."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialisation
 
-	make_from_lexer (lexer: EDITOR_SCANNER) is
+	make_from_lexer (lexer: EDITOR_SCANNER)
 			-- Create a line using token from `lexer'
 		local
 			lexer_first_token	: EDITOR_TOKEN
@@ -35,7 +35,7 @@ feature -- Initialisation
 			set_part_of_verbatim_string (lexer.in_verbatim_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

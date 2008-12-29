@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Carbon implementation of dockable target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 	-- There is no implementation in this class, as it is all
 	-- performed platform independently.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

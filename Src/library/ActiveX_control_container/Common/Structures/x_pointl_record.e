@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_pointl_x (item)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_pointl_y (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_pointl
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'.
 		do
 			ccom_x_pointl_set_x (item, a_x)
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'.
 		do
 			ccom_x_pointl_set_y (item, a_y)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_pointl: INTEGER is
+	c_size_of_x_pointl: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__POINTL_s.h%"]"
@@ -77,31 +77,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_POINTL)"
 		end
 
-	ccom_x_pointl_x (a_pointer: POINTER): INTEGER is
+	ccom_x_pointl_x (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__POINTL_s_impl.h%"](ecom_control_library::_POINTL *):EIF_INTEGER"
 		end
 
-	ccom_x_pointl_set_x (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_pointl_set_x (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__POINTL_s_impl.h%"](ecom_control_library::_POINTL *, LONG)"
 		end
 
-	ccom_x_pointl_y (a_pointer: POINTER): INTEGER is
+	ccom_x_pointl_y (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__POINTL_s_impl.h%"](ecom_control_library::_POINTL *):EIF_INTEGER"
 		end
 
-	ccom_x_pointl_set_y (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_pointl_set_y (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__POINTL_s_impl.h%"](ecom_control_library::_POINTL *, LONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

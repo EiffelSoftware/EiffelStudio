@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General mechanisms for building lexical analyzers"
@@ -27,7 +27,7 @@ create
 
 feature  -- Initialization
 
-	make is
+	make
 			-- Set up the analyzer.
 		do
 			array_make (1, 0)
@@ -38,7 +38,7 @@ feature  -- Initialization
 			last_character_set: last_character_code = Last_ascii
 		end;
 
-	make_extended (char_code: INTEGER) is
+	make_extended (char_code: INTEGER)
 			-- Set up the analyzer with `char_code' as 'last_character_code'.
 		require
 			valid_char_code: char_code > 0
@@ -51,7 +51,7 @@ feature  -- Initialization
 			last_character_set: last_character_code = char_code
 		end;
 
-	initialize is
+	initialize
 			-- Set up attributes of `analyzer'.
 		do
 			initialized := True;
@@ -87,7 +87,7 @@ feature -- Access
 	keyword_h_table: HASH_TABLE [INTEGER, STRING];
 			-- Keyword table
 
-	error_list: ERROR_LIST is
+	error_list: ERROR_LIST
 			-- List of error messages
 		once
 			create Result.make
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Status setting	
 
-	ignore_case is
+	ignore_case
 			-- Make letter case not significant in future tools.
 			-- This is the default.
 		do
@@ -122,7 +122,7 @@ feature -- Status setting
 			not case_sensitive
 		end;
 
-	distinguish_case is
+	distinguish_case
 			-- Make letter case significant in future tools.
 			-- Default is ignore case.
 		do
@@ -131,7 +131,7 @@ feature -- Status setting
 			case_sensitive
 		end;
 
-	keywords_ignore_case is
+	keywords_ignore_case
 			-- Make letter case not significant for keywords
 			-- in future tools.
 			-- This is the default.
@@ -143,7 +143,7 @@ feature -- Status setting
 			not keywords_case_sensitive
 		end;
 
-	keywords_distinguish_case is
+	keywords_distinguish_case
 			-- Make letter case not significant for keywords
 			-- in future tools.
 			-- Default is ignore case.
@@ -157,7 +157,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	interval (b, e: CHARACTER) is
+	interval (b, e: CHARACTER)
 			-- Create regular expression `b'..`e', or `b' if `b' = `e'.
 		require
 			not_built: not lexical_frozen;
@@ -209,7 +209,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	any_character is
+	any_character
 			-- Create regular expression $. matching all characters.
 		require
 			not_frozen: not lexical_frozen
@@ -237,7 +237,7 @@ feature -- Element change
 			tool_names.put_right ("$.")
 		end;
 
-	any_printable is
+	any_printable
 			-- Create regular expression $P matching all
 			-- printable characters.
 		require
@@ -266,7 +266,7 @@ feature -- Element change
 			tool_names.put_right ("$P")
 		end;
 
-	difference (r: INTEGER; c: CHARACTER) is
+	difference (r: INTEGER; c: CHARACTER)
 			-- Create regular expression representing
 			-- the difference `r' - `c'.
 			-- `r' must be a simple category, such as `a'..`z',
@@ -303,7 +303,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	append (p, s: INTEGER) is
+	append (p, s: INTEGER)
 			-- Create regular expression `p'`s':
 			-- `s' appended to `p'.
 		require
@@ -341,7 +341,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	append_optional (p, s: INTEGER) is
+	append_optional (p, s: INTEGER)
 			-- Create regular expression `p'[`s']:
 			-- `s' optionally appended to `p'.
 		require
@@ -382,7 +382,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	prepend_optional (p, s: INTEGER) is
+	prepend_optional (p, s: INTEGER)
 			-- Create regular expression [`p']`s':
 			-- `s' appended to optional `p'.
 		require
@@ -423,7 +423,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	case_insensitive (c: INTEGER) is
+	case_insensitive (c: INTEGER)
 			-- Create regular expression ~(`c'):
 			-- like `c', but case-insensitive.
 		require
@@ -451,7 +451,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	optional (c: INTEGER) is
+	optional (c: INTEGER)
 			-- Create regular expression [`c']:
 			-- optional `c'.
 		require
@@ -482,7 +482,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	iteration1 (c: INTEGER) is
+	iteration1 (c: INTEGER)
 			-- Create regular expression +(`c'): one or more
 			-- consecutive occurrences of `c'.
 		require
@@ -514,7 +514,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	iteration (c: INTEGER) is
+	iteration (c: INTEGER)
 			-- Create regular expression *(`c'): zero or more
 			-- consecutive occurrences of `c'.
 		require
@@ -547,7 +547,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	iteration_n (n, c: INTEGER) is
+	iteration_n (n, c: INTEGER)
 			-- Create regular expression `n'(`c'):
 			-- exactly `n' consecutive occurrences of `c'.
 		require
@@ -590,7 +590,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	union2 (a, b: INTEGER) is
+	union2 (a, b: INTEGER)
 			-- Create regular expression `a' | `b': union of
 			-- `a' and `b' (matches an occurrence of `a' or `b')).
 		require
@@ -653,7 +653,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	union (a, b: INTEGER) is
+	union (a, b: INTEGER)
 			-- Create regular expression for the multiple union
 			-- `a' | `a'+1 | .. | `b': matches any occurrence of
 			-- `a', or `a'+1, .., or `b'.
@@ -744,7 +744,7 @@ feature -- Element change
 			tool_names.put_right (c_name)
 		end;
 
-	set_word (word: STRING) is
+	set_word (word: STRING)
 			-- Create regular expression for `word':
 			-- synonym for concatenation (`w' `o' `r' `d').
 		require
@@ -781,7 +781,7 @@ feature -- Element change
 			tool_names.put_right (tool_name)
 		end;
 
-	up_to (word: STRING) is
+	up_to (word: STRING)
 			-- Create regular expression ->"`word'", which is a
 			-- set of any number of any characters ended by "`word'".
 			-- Example: "/* C comment */" matches (->"*/").
@@ -846,7 +846,7 @@ feature -- Element change
 			tool_names.put_right (r_name)
 		end;
 
-	put_keyword (s: STRING; exp: INTEGER) is
+	put_keyword (s: STRING; exp: INTEGER)
 			-- Declare `s' as a keyword described by
 			-- the regular expression of code `exp'.
 			--| Do not check if `s' is recognized by `exp'.
@@ -871,7 +871,7 @@ feature -- Element change
 			end
 		end;
 
-	select_tool (i: INTEGER) is
+	select_tool (i: INTEGER)
 			-- Select the `i'_th tool for inclusion in the main
 			-- regular expression.
 		require
@@ -894,7 +894,7 @@ feature -- Element change
 			i_selected: selected_tools.has (i)
 		end;
 
-	associate (t, n: INTEGER) is
+	associate (t, n: INTEGER)
 			-- Associate the `t'-th tool with token type `n'.
 			-- If this routine is not used, the default value is `t'.
 		require
@@ -922,7 +922,7 @@ feature -- Element change
 			end
 		end;
 
-	recognize (s: STRING): INTEGER is
+	recognize (s: STRING): INTEGER
 			-- Token_type of `s'; 0 if not recognized
 		local
 			i: INTEGER;
@@ -943,7 +943,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove the last regular expression
 			-- from the tool list.
 		require
@@ -959,7 +959,7 @@ feature -- Removal
 
 feature -- Input
 
-	retrieve_analyzer (file_name: STRING) is
+	retrieve_analyzer (file_name: STRING)
 			-- Retrieve `analyzer' from file named `file_name'.
 		local
 			retrieved_file: RAW_FILE
@@ -971,7 +971,7 @@ feature -- Input
 
 feature -- Output
 
-	store_analyzer (file_name: STRING) is
+	store_analyzer (file_name: STRING)
 			-- Store `analyzer' in file named `file_name'.
 		require
 			initialized: initialized
@@ -996,7 +996,7 @@ feature {NONE} -- Implementation
 	last_declared_keyword: INTEGER;
 			-- Identification number of the last keyword declared
 
-	readable_form (c: CHARACTER): STRING is
+	readable_form (c: CHARACTER): STRING
 			-- "\n" if c = '\n' ...
 		do
 			if c = '%N' then
@@ -1013,7 +1013,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	freeze_lexical is
+	freeze_lexical
 			-- Build the main PDFA, and then the DFA which is
 			-- used to recognize a language.
 		require
@@ -1032,7 +1032,7 @@ feature {NONE} -- Implementation
 			not_frozen: lexical_frozen
 		end;
 
-	creation_with_all_inputs is
+	creation_with_all_inputs
 			-- Create main PDFA, including all the selected tools.
 			-- Very important: for each tool this routine assumes
 			-- that the initial state in the first one, and the
@@ -1073,7 +1073,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	build_categories_table is
+	build_categories_table
 			-- Build categories_table.
 			-- The purpose of this table is to bring together
 			-- all the inputs with the same "behavior" in the
@@ -1114,7 +1114,7 @@ feature {NONE} -- Implementation
 			set_tree := Void
 		end;
 
-	creation_with_categories is
+	creation_with_categories
 			-- Re-Create main PDFA, using categories_table,
 			-- and bringing together the inputs of the same category.
 			-- This routine do not deal with the epsilon transitions,
@@ -1140,7 +1140,7 @@ feature {NONE} -- Implementation
 			input_array := new_input_array
 		end;
 
-	copy_keywords is
+	copy_keywords
 			-- Copy the keywords in the hash table.
 		local
 			k_list: LINKED_LIST [STRING];
@@ -1177,7 +1177,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	recognized (kwd: STRING; token_type: INTEGER): BOOLEAN is
+	recognized (kwd: STRING; token_type: INTEGER): BOOLEAN
 			-- Is `kwd' recognized by the regular
 			-- expression number `token_type'?
 		require
@@ -1208,7 +1208,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	dfa_set_final (s, new_final: INTEGER) is
+	dfa_set_final (s, new_final: INTEGER)
 			-- Set the attribute `final' of state `s' to `new_final'.
 		local
 			old_final: INTEGER;
@@ -1222,7 +1222,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	error_common_part (first, second: INTEGER) is
+	error_common_part (first, second: INTEGER)
 			-- Create an error message when a regular expression can
 			-- be recognized by the first and the second token type.
 			-- Example "aa" is recognized by +(a..z) and 2(a).
@@ -1250,7 +1250,7 @@ feature {NONE} -- Implementation
 			error_list.add_message (message)
 		end;
 
-	error_keyword (t: INTEGER; k: STRING) is
+	error_keyword (t: INTEGER; k: STRING)
 			-- Create an error message when a keyword k is not
 			-- recognized by the corresponding tool.
 		local
@@ -1270,7 +1270,7 @@ invariant
 
 	last_created: tool_list = Void or else last_created_tool = tool_list.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

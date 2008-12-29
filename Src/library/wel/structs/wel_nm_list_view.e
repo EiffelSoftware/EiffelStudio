@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a list view notification %
 				%message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nm_listview_get_hdr (item))
@@ -37,20 +37,20 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	iitem: INTEGER is
+	iitem: INTEGER
 			-- Information about the list view item or -1 if
 			-- not used.
 		do
 			Result := cwel_nm_listview_get_iitem (item)
 		end
 
-	isubitem: INTEGER is
+	isubitem: INTEGER
 			-- Information about the subitem or 0 if none.
 		do
 			Result := cwel_nm_listview_get_isubitem (item)
 		end
 
-	unewstate: INTEGER is
+	unewstate: INTEGER
 			-- Information about the new item state or 0 if
 			-- not used.
 			-- See class WEL_LVIS_CONSTANTS.
@@ -58,21 +58,21 @@ feature -- Access
 			Result := cwel_nm_listview_get_unewstate (item)
 		end
 
-	uoldstate: INTEGER is
+	uoldstate: INTEGER
 			-- Information about the old item state or 0 if
 			-- not used.		
 		do
 			Result := cwel_nm_listview_get_uoldstate (item)
 		end
 
-	uchanged: INTEGER is
+	uchanged: INTEGER
 			-- Information about the item attributes that
 			-- has changed.
 		do
 			Result := cwel_nm_listview_get_uchanged (item)
 		end
 
-	position: WEL_POINT is
+	position: WEL_POINT
 			-- Location at which the event occurred.
 			-- valid argument only for the Lvn_begindrag and
 			-- Lvn_beginrdrag notification messages.
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_listview
@@ -90,54 +90,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_listview: INTEGER is
+	c_size_of_nm_listview: INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		alias
 			"sizeof (NM_LISTVIEW)"
 		end
 
-	cwel_nm_listview_get_hdr (ptr: POINTER): POINTER is
+	cwel_nm_listview_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmlv.h%"] (NM_LISTVIEW*): EIF_POINTER"
 		end
 
-	cwel_nm_listview_get_iitem (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_iitem (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-	cwel_nm_listview_get_isubitem (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_isubitem (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-	cwel_nm_listview_get_unewstate (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_unewstate (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-	cwel_nm_listview_get_uoldstate (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_uoldstate (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-	cwel_nm_listview_get_uchanged (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_uchanged (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-	cwel_nm_listview_get_ptaction (ptr: POINTER): POINTER is
+	cwel_nm_listview_get_ptaction (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmlv.h%"] (NM_LISTVIEW*): EIF_POINTER"
 		end
 
-	cwel_nm_listview_get_lparam (ptr: POINTER): INTEGER is
+	cwel_nm_listview_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmlv.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

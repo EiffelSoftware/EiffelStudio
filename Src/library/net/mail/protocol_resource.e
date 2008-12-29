@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,14 +14,14 @@ inherit
 
 feature -- Basic operations
 
-	initiate_protocol is
+	initiate_protocol
 			-- initiate the protocol with the server.
 		deferred
 		ensure
 			protocol_initiated: is_initiated
 		end
 
-	close_protocol is
+	close_protocol
 			-- Close the protocol.
 		require
 			is_initiated: is_initiated
@@ -32,13 +32,13 @@ feature -- Basic operations
 
 feature -- Implementation (EMAIL_RESOURCE)
 
-	can_be_sent: BOOLEAN is False
+	can_be_sent: BOOLEAN = False
 		-- Can a protocol resource be send?
 
-	can_be_received: BOOLEAN is False;
+	can_be_received: BOOLEAN = False;
 		-- Can a protocol be received?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

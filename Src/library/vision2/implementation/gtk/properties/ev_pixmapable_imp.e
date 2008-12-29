@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision pixmapable. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	pixmapable_imp_initialize is
+	pixmapable_imp_initialize
 			-- Create a GtkHBox to hold a GtkPixmap.
 		do
 			pixmap_box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap shown in `Current'
 		do
 			if internal_pixmap /= Void then
@@ -36,14 +36,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			internal_pixmap ?= a_pixmap.twin.implementation
 			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Assign Void to `pixmap'.
 		do
 			internal_pixmap := Void
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
 			--
 		local
 			gtk_pix_wid: POINTER
@@ -69,7 +69,7 @@ feature {EV_ANY_I} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)
 		end
 
-	internal_remove_pixmap is
+	internal_remove_pixmap
 			-- Remove pixmap from Current
 		local
 			p: POINTER
@@ -86,7 +86,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	gtk_pixmap: POINTER is
+	gtk_pixmap: POINTER
 			-- Pointer to the GtkPixmap widget.
 		local
 			a_child_list, l_null: POINTER
@@ -105,7 +105,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

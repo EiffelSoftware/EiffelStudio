@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Fundamental widget class that controls interaction between %
@@ -37,7 +37,7 @@ inherit
 
 feature -- Initialization
 
-	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE)
 			-- Create a mel widget from existing widget `a_screen_object'.
 		do
 			screen_object := a_screen_object;
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Access
 
-	wm_protocol_command (an_atom: MEL_ATOM): MEL_COMMAND_EXEC is
+	wm_protocol_command (an_atom: MEL_ATOM): MEL_COMMAND_EXEC
 			-- Command set for the wm protocol `an_atom'
 		require
 			valid_atom: an_atom /= Void
@@ -63,13 +63,13 @@ feature -- Access
 			end
 		end;
 
-	popup_command: MEL_COMMAND_EXEC is
+	popup_command: MEL_COMMAND_EXEC
 			-- Command set for the popup callback
 		do
 			Result := motif_command (XmNpopupCallback)
 		end;
 
-	popdown_command: MEL_COMMAND_EXEC is
+	popdown_command: MEL_COMMAND_EXEC
 			-- Command set for the popdown callback
 		do
 			Result := motif_command (XmNpopdownCallback)
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Status report
 
-	allow_shell_to_resize: BOOLEAN is
+	allow_shell_to_resize: BOOLEAN
 			-- Can Current be resized?
 		require
 			exists: not is_destroyed
@@ -85,7 +85,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNallowShellResize)
 		end;
 
-	geometry: STRING is
+	geometry: STRING
 			-- Geometry
 		require
 			exists: not is_destroyed
@@ -93,7 +93,7 @@ feature -- Status report
 			Result := get_xt_string_no_free (screen_object, XmNgeometry)
 		end;
 
-	is_override_redirect: BOOLEAN is
+	is_override_redirect: BOOLEAN
 			-- Is Current a temporary window used to redirect the keyboard focus?
 		require
 			exists: not is_destroyed
@@ -101,7 +101,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNoverrideRedirect)
 		end;
 
-	is_save_under: BOOLEAN is
+	is_save_under: BOOLEAN
 			-- Are obscured screen contents saved?
 		require
 			exists: not is_destroyed
@@ -109,7 +109,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNsaveUnder)
 		end;
 
-	visual is
+	visual
 			-- Visual server, used when creating the widget.
 		require
 			exists: not is_destroyed
@@ -117,13 +117,13 @@ feature -- Status report
 		ensure
 		end;
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Horizontal position relative to root window
 		do
 			Result := x
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Vertical position relative to root window
 		do
 			Result := y
@@ -131,7 +131,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_shell_resize is
+	allow_shell_resize
 			-- Set `allow_shell_to_resize' to True.
 		do
 			set_xt_boolean (screen_object, XmNallowShellResize, True)
@@ -139,7 +139,7 @@ feature -- Status setting
 			shell_resize_allowed: allow_shell_to_resize
 		end;
 
-	forbid_shell_resize is
+	forbid_shell_resize
 			-- Set `allow_shell_to_resize' to False.
 		do
 			set_xt_boolean (screen_object, XmNallowShellResize, False)
@@ -147,7 +147,7 @@ feature -- Status setting
 			shell_resize_forbidden: not allow_shell_to_resize
 		end;
 
-	set_geometry (a_string: STRING) is
+	set_geometry (a_string: STRING)
 			-- Set `geometry' to `a_string'.
 		require
 			exists: not is_destroyed;
@@ -158,7 +158,7 @@ feature -- Status setting
 			geometry_set: geometry.is_equal (a_string)
 		end;
 
-	set_geometry_position (new_x, new_y: INTEGER) is
+	set_geometry_position (new_x, new_y: INTEGER)
 			-- Set the geometry position to `new_x' and
 			-- `new_y'.
 		local
@@ -176,7 +176,7 @@ feature -- Status setting
 			set_geometry (geo)
 		end;
 
-	enable_override_redirect is
+	enable_override_redirect
 			-- Set `is_override_redirect' to True.
 		require
 			exists: not is_destroyed
@@ -186,7 +186,7 @@ feature -- Status setting
 			override_redirect_enabled: is_override_redirect 
 		end;
 
-	disable_override_redirect is
+	disable_override_redirect
 			-- Set `is_override_redirect' to False.
 		require
 			exists: not is_destroyed
@@ -196,7 +196,7 @@ feature -- Status setting
 			override_redirect_disabled: not is_override_redirect 
 		end;
 
-	enable_save_under is
+	enable_save_under
 			-- Set `is_save_under' to True.
 		require
 			exists: not is_destroyed
@@ -206,7 +206,7 @@ feature -- Status setting
 			save_under_enabled: is_save_under 
 		end;
 
-	disable_save_under is
+	disable_save_under
 			-- Set `is_save_under' to False.
 		require
 			exists: not is_destroyed
@@ -218,7 +218,7 @@ feature -- Status setting
 
 feature -- Display
 
-	popup_none is
+	popup_none
 			-- Popup without mouse pointer grab.
 		require
 			exists: not is_destroyed
@@ -226,7 +226,7 @@ feature -- Display
 			xt_popup (screen_object, XtGrabNone)
 		end;
 
-	popup_non_exclusive is
+	popup_non_exclusive
 			-- Popup with non exclusive mouse pointer grab.
 		require
 			exists: not is_destroyed
@@ -234,7 +234,7 @@ feature -- Display
 			xt_popup (screen_object, XtGrabNonexclusive)
 		end;
 
-	popup_exclusive is
+	popup_exclusive
 			-- Popup with exclusive mouse pointer grab.
 		require
 			exists: not is_destroyed
@@ -242,7 +242,7 @@ feature -- Display
 			xt_popup (screen_object, XtGrabExclusive)
 		end;
 
-	popdown is
+	popdown
 			-- Popdown.
 		require
 			exists: not is_destroyed
@@ -252,7 +252,7 @@ feature -- Display
 
 feature -- Element change
 
-	set_popup_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_popup_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the shell
 			-- is popped up using `popup'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -265,7 +265,7 @@ feature -- Element change
 			command_set: command_set (popup_command, a_command, an_argument)
 		end;
 
-	set_popdown_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_popdown_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the shell
 			-- is popped down using `popdown'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -278,7 +278,7 @@ feature -- Element change
 			command_set: command_set (popdown_command, a_command, an_argument)
 		end;
 
-	set_wm_protocol_callback (an_atom: MEL_ATOM; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_wm_protocol_callback (an_atom: MEL_ATOM; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed specified by protocol `an_atom'.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -299,7 +299,7 @@ feature -- Element change
 					(wm_protocol_command (an_atom), a_command, an_argument)
 		end;
 
-	add_wm_protocol (an_atom: MEL_ATOM) is
+	add_wm_protocol (an_atom: MEL_ATOM)
 			-- Register protocol `an_atom'.
 		require
 			valid_atom: an_atom /= Void;
@@ -309,7 +309,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_popup_callback is
+	remove_popup_callback
 			-- Remove the command for the popup callback.
 		do
 			remove_callback (XmNpopupCallback)
@@ -317,7 +317,7 @@ feature -- Removal
 			removed: popup_command = Void
 		end;
 
-	remove_popdown_callback is
+	remove_popdown_callback
 			-- Remove the command for the popdown callback.
 		do
 			remove_callback (XmNpopdownCallback)
@@ -325,7 +325,7 @@ feature -- Removal
 			removed: popdown_command = Void
 		end;
 
-	remove_wm_protocol_callback (an_atom: MEL_ATOM) is
+	remove_wm_protocol_callback (an_atom: MEL_ATOM)
 			-- Remove the command for `an_atom'.
 		require
 			valid_atom: an_atom /= Void;
@@ -340,7 +340,7 @@ feature -- Removal
 			removed: wm_protocol_command (an_atom) = Void
 		end;
 
-	destroy is
+	destroy
 			-- Destroy the associated screen object.
 		do
 			comp_destroy;
@@ -351,57 +351,57 @@ feature -- Removal
 
 feature {NONE} -- External features
 
-	xm_add_wm_protocol (w: POINTER; an_atom: POINTER) is
+	xm_add_wm_protocol (w: POINTER; an_atom: POINTER)
 		external
 			"C"
 		end;
 
-	c_add_wm_protocol_callback (scr_obj: POINTER; atom: POINTER) is
+	c_add_wm_protocol_callback (scr_obj: POINTER; atom: POINTER)
 		external
 			"C"
 		end;
 
-	c_remove_wm_protocol_callback (scr_obj: POINTER; atom: POINTER) is
+	c_remove_wm_protocol_callback (scr_obj: POINTER; atom: POINTER)
 		external
 			"C"
 		end;
 
-	xt_popup (a_popup_shell: POINTER; grab_kind: INTEGER) is
+	xt_popup (a_popup_shell: POINTER; grab_kind: INTEGER)
 		external
 			"C (Widget, XtGrabKind) | <X11/Intrinsic.h>"
 		alias
 			"XtPopup"
 		end;
 
-	xt_popdown (a_popup_shell: POINTER) is
+	xt_popdown (a_popup_shell: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtPopdown"
 		end;
 
-	XtGrabNone: INTEGER is
+	XtGrabNone: INTEGER
 		external
 			"C [macro <X11/Intrinsic.h>] : EIF_INTEGER"
 		alias
 			"XtGrabNone"
 		end;
 
-	XtGrabNonexclusive: INTEGER is
+	XtGrabNonexclusive: INTEGER
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"XtGrabNonexclusive"
 		end;
 
-	XtGrabExclusive: INTEGER is
+	XtGrabExclusive: INTEGER
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"XtGrabExclusive"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

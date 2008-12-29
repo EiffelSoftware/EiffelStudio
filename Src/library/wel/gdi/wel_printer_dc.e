@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Device context associated to a printer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,17 +16,17 @@ create
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		do
 		end
 
-	release is
+	release
 			-- Release the device context
 		do
 		end
 
-	start_document (title: STRING_GENERAL) is
+	start_document (title: STRING_GENERAL)
 			-- Start the job `title' on the printer.
 		require
 			exists: exists
@@ -38,7 +38,7 @@ feature -- Basic operations
 			cwin_start_doc (item, doc_info.item)
 		end
 
-	start_document_info (doc_info: WEL_DOC_INFO) is
+	start_document_info (doc_info: WEL_DOC_INFO)
 			-- Start the job using information from `doc_info'.
 		require
 			exists: exists
@@ -47,7 +47,7 @@ feature -- Basic operations
 			cwin_start_doc (item, doc_info.item)
 		end
 
-	start_page is
+	start_page
 			-- Prepare the printer driver to accept data.
 		require
 			exists: exists
@@ -55,7 +55,7 @@ feature -- Basic operations
 			cwin_start_page (item)
 		end
 
-	end_page is
+	end_page
 			-- Informs the device that the application has
 			-- finished writing to a page. This procedure is
 			-- typically used to direct the device driver to
@@ -66,7 +66,7 @@ feature -- Basic operations
 			cwin_end_page (item)
 		end
 
-	end_document is
+	end_document
 			-- End the job on the printer.
 		require
 			exists: exists
@@ -74,7 +74,7 @@ feature -- Basic operations
 			cwin_end_doc (item)
 		end
 
-	abort_document is
+	abort_document
 			-- Stops the current print job and erases everything
 			-- drawn since the last call to `start_doc'.
 		require
@@ -85,7 +85,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	new_frame is obsolete "Use ``end_page''"
+	new_frame obsolete "Use ``end_page''"
 		require
 			exists: exists
 		do
@@ -94,7 +94,7 @@ feature -- Obsolete
 
 feature {NONE} -- Externals
 
-	cwin_start_doc (dc: POINTER; docinfo: POINTER) is
+	cwin_start_doc (dc: POINTER; docinfo: POINTER)
 			-- SDK StartDoc
 		external
 			"C [macro <wel.h>] (HDC, DOCINFO *)"
@@ -102,7 +102,7 @@ feature {NONE} -- Externals
 			"StartDoc"
 		end
 
-	cwin_end_doc (dc: POINTER) is
+	cwin_end_doc (dc: POINTER)
 			-- SDK EndDoc
 		external
 			"C [macro <wel.h>] (HDC)"
@@ -110,7 +110,7 @@ feature {NONE} -- Externals
 			"EndDoc"
 		end
 
-	cwin_abort_doc (dc: POINTER) is
+	cwin_abort_doc (dc: POINTER)
 			-- SDK AbortDoc
 		external
 			"C [macro <wel.h>] (HDC)"
@@ -118,7 +118,7 @@ feature {NONE} -- Externals
 			"AbortDoc"
 		end
 
-	cwin_start_page (dc: POINTER) is
+	cwin_start_page (dc: POINTER)
 			-- SDK StartPage
 		external
 			"C [macro <wel.h>] (HDC)"
@@ -126,7 +126,7 @@ feature {NONE} -- Externals
 			"StartPage"
 		end
 
-	cwin_end_page (dc: POINTER) is
+	cwin_end_page (dc: POINTER)
 			-- SDK EndPage
 		external
 			"C [macro <wel.h>] (HDC)"
@@ -134,7 +134,7 @@ feature {NONE} -- Externals
 			"EndPage"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

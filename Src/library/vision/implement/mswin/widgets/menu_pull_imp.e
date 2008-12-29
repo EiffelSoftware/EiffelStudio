@@ -1,4 +1,4 @@
-indexing
+note
     status: "See notice at end of class.";
     date: "$Date$";
     revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: MENU) is
+	make (a_pulldown: MENU_PULL; man: BOOLEAN; oui_parent: MENU)
 			-- Create a menu_pull.
 		do
 			create private_attributes
@@ -38,7 +38,7 @@ feature -- Initialization
 			menu_button.attach_menu (a_pulldown)
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current widget.
 		local
 			mw: MENU_IMP
@@ -57,7 +57,7 @@ feature -- Initialization
 			end
 		end
 
-	create_menu is
+	create_menu
 			-- Create the menu.
 		do
 			wel_make
@@ -65,7 +65,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- Is Current insensitive?
 		do
 			Result := private_attributes.insensitive
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_button (b: BUTTON_IMP; b_id: INTEGER) is
+	insert_button (b: BUTTON_IMP; b_id: INTEGER)
 			-- Insert a button in the menu.
 		require
 			button_not_void: b /= Void
@@ -81,7 +81,7 @@ feature -- Element change
 			insert_string (b.text, index_of (b) - unmanaged_count (b) - 1, b_id)
 		end
 
-	set_text (t: STRING) is
+	set_text (t: STRING)
 			-- Set `text' to `t'
 		do
 			text := t
@@ -94,7 +94,7 @@ feature -- Element change
 
 feature -- Measurement
 
- 	real_x: INTEGER is
+ 	real_x: INTEGER
  		require else
  			parent: parent /= Void
 		local
@@ -119,26 +119,26 @@ feature -- Measurement
 			end
 		end
  
- 	real_y: INTEGER is
+ 	real_y: INTEGER
  		require else
  			parent: parent /= Void
  		do
  			Result := parent.real_y
  		end
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			Result := menu_button.width
 		end	
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			Result := menu_button.height
 		end	
 
 feature -- Removal
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy Current.
 		local
 			ww: WIDGET_IMP
@@ -162,14 +162,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	set_default_size is
+	set_default_size
 			-- Useless here
 		do
 		end
 
 	text: STRING; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

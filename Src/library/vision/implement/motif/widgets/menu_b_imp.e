@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif menu cascade button."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU) is
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU)
 			-- Create a motif menu button.
 		local
 			mc: MEL_ROW_COLUMN
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Element change
 
-	attach_menu (a_menu: MENU_PULL) is
+	attach_menu (a_menu: MENU_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -77,31 +77,31 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a Motif list which is rectangle %
@@ -45,19 +45,19 @@ feature -- Access
 	index: INTEGER;
 			-- Current cursor index, 0 if empty
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is the chain empty?
 		do
 			Result := (count = 0)
 		end;
 
-	first: STRING is
+	first: STRING
 			-- Item at first position
 		do
 			Result := items.item (1).to_eiffel_string
 		end;
 
-	first_visible_item_position: INTEGER is
+	first_visible_item_position: INTEGER
 			-- Position of the first visible item in the list
 		do
 			if not empty then
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end;
 
-	has (an_item: STRING): BOOLEAN is
+	has (an_item: STRING): BOOLEAN
 			-- Does `an_item' exist in current scroll list?
 		local
 			ms: MEL_STRING
@@ -78,13 +78,13 @@ feature -- Access
 			ms.destroy
 		end; 
 
-	i_th (i: INTEGER): STRING is
+	i_th (i: INTEGER): STRING
 			-- Item at `i'-th position
 		do
 			Result := items.item (i).to_eiffel_string
 		end;
 
-	index_of (an_item: STRING; i: INTEGER): INTEGER is
+	index_of (an_item: STRING; i: INTEGER): INTEGER
 			-- Index of `i'-th item `v'; 0 if none
 		local
 			ms: MEL_STRING
@@ -94,25 +94,25 @@ feature -- Access
 			ms.destroy
 		end;
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position in the chain?
 		do
 			Result := (index = 1)
 		end;
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position in the chain?
 		do
 			Result := (index = count) and (not empty)
 		end;
 
-	item: STRING is
+	item: STRING
 			-- Item at cursor position
 		do
 			Result := items.item (index).to_eiffel_string
 		end;
 
-	last: STRING is
+	last: STRING
 			-- Item at last position
 		do
 			Result := items.item (count).to_eiffel_string
@@ -120,25 +120,25 @@ feature -- Access
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off?
 		do
 			Result := (index = 0) or else (index = count + 1)
 		end;
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is cursor off left edge?
 		do
 			Result := (index = 0)
 		end;
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor off right edge?
 		do
 			Result := (count = 0) or (index = count + 1)
 		end;
 
-	selected_item: STRING is
+	selected_item: STRING
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		local
@@ -150,7 +150,7 @@ feature -- Status report
 			end
 		end;
 
-	selected_items: LINKED_LIST [STRING] is
+	selected_items: LINKED_LIST [STRING]
 			-- Selected items
 		local
 			c, i: INTEGER;
@@ -173,7 +173,7 @@ feature -- Status report
 			end
 		end;
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- Null if nothing is selected
@@ -187,7 +187,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_single_action (a_command: COMMAND; argument: ANY) is
+	add_single_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with single selection mode in current scroll list.
 		local
@@ -201,7 +201,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end; 
 
-	put_left (an_item: STRING) is
+	put_left (an_item: STRING)
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		local
@@ -218,7 +218,7 @@ feature -- Element change
 			ms.destroy;
 		end; 
 
-	put_right (an_item: STRING) is
+	put_right (an_item: STRING)
 			-- Put `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -233,7 +233,7 @@ feature -- Element change
 			ms.destroy
 		end; 
 
-	merge_left (other: LIST [STRING]) is
+	merge_left (other: LIST [STRING])
 			-- Merge `other' into the current list before
 			-- cursor position.
 			-- Do not move cursor.
@@ -264,7 +264,7 @@ feature -- Element change
 			end;
 		end;
 
-	merge_right (other: LIST [STRING]) is
+	merge_right (other: LIST [STRING])
 			-- Merge `other' into the current list after
 			-- cursor position.
 			-- Do not move cursor.
@@ -289,7 +289,7 @@ feature -- Element change
 			end;
 		end;
 
-	put (an_item: STRING) is
+	put (an_item: STRING)
 			-- Put `an_item' at cursor position.
 		local
 			ms: MEL_STRING
@@ -299,7 +299,7 @@ feature -- Element change
 			ms.destroy
 		end;
 
-	put_i_th (an_item: STRING; i: INTEGER) is
+	put_i_th (an_item: STRING; i: INTEGER)
 			-- Put `an_item' at `i'-th position.
 		local
 			ms: MEL_STRING
@@ -309,7 +309,7 @@ feature -- Element change
 			ms.destroy
 		end;
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		local
@@ -327,7 +327,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): LINKED_LIST [STRING] is
+	duplicate (n: INTEGER): LINKED_LIST [STRING]
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 		local
@@ -357,7 +357,7 @@ feature -- Duplication
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			if not empty then
@@ -365,32 +365,32 @@ feature -- Cursor movement
 			end
 		end;
 
-	finish is
+	finish
 			-- Move cursor to last position
 			-- (no effect if chain is empty).
 		do
 			index := count
 		end; 
 
-	back is
+	back
 			-- Move cursor backward one position.
 		do
 			index := index - 1
 		end; 
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		do
 			index := index + 1
 		end;
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to position `i'.
 		do
 			index := i
 		end; 
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		require else
 			stay_right: index + i >= 0;
@@ -400,7 +400,7 @@ feature -- Cursor movement
 			index := index + i
 		end;
 
-	search_equal (an_item: STRING) is
+	search_equal (an_item: STRING)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where item is equal to `an_item' (shallow equality);
@@ -418,7 +418,7 @@ feature -- Cursor movement
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Make list empty
 		do
 			if not empty then
@@ -429,7 +429,7 @@ feature -- Removal
 			end
 		end
 
-	remove_right (n: INTEGER) is
+	remove_right (n: INTEGER)
 			-- Remove min (`n', count - position) items
 			-- to the right of cursor position.
 			-- Do not move cursor.
@@ -450,7 +450,7 @@ feature -- Removal
 			end;
 		end;
 
-	remove_left (n: INTEGER) is
+	remove_left (n: INTEGER)
 			-- Remove min (`n', index - 1) items
 			-- to the left of cursor index.
 			-- Do not move cursor
@@ -472,7 +472,7 @@ feature -- Removal
 			end;
 		end; 
 
-	remove is
+	remove
 			-- Remove item at cursor index
 			-- and move cursor to its right neighbor
 			-- (or after if no right neighbor).
@@ -480,7 +480,7 @@ feature -- Removal
 			delete_pos (index);
 		end;
 
-	prune_all (an_item: STRING) is
+	prune_all (an_item: STRING)
 			-- Remove all items `an_item' from list.
 			-- Put cursor after.
 		local
@@ -497,7 +497,7 @@ feature -- Removal
 			index := count + 1;
 		end;
 
-	remove_single_action (a_command: COMMAND; argument: ANY) is
+	remove_single_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items
 			-- are selected with single selection mode in current scroll list.
 		do
@@ -506,7 +506,7 @@ feature -- Removal
 
 feature -- Update display
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the first visible item in the list if
 			-- `index' < `first_visible_item_index'.
 			-- Make `item' the last visible item in the list if
@@ -526,25 +526,25 @@ feature -- Update display
 			end
 		end;
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		do
 			select_pos (index, False)
 		end;
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		do
 			select_pos (i, False)
 		end;
 
-	show_current is
+	show_current
 			-- Make item at current position the first visible item.
 		do
 			set_pos (index)
 		end;
 
-	show_first is
+	show_first
 			-- Make first item the first visible item.
 		do
 			if not empty then
@@ -552,13 +552,13 @@ feature -- Update display
 			end
 		end;
 
-	show_i_th (i: INTEGER) is
+	show_i_th (i: INTEGER)
 			-- Make item at `i'-th position the first visible item.
 		do
 			set_pos (i)
 		end;
 
-	show_last is
+	show_last
 			-- Make last item the last visible item.
 		local
 			count_local, visible_item_count_local: INTEGER
@@ -577,7 +577,7 @@ feature -- Update display
 
 feature -- Status setting
 
-	set_browse_selection is
+	set_browse_selection
 			-- Set selection mode of current list to
 			-- browse. At most only one item can be selected
 			-- at a time but dragging select button moves
@@ -586,7 +586,7 @@ feature -- Status setting
 			set_browse_select
 		end;
 
-	set_extended_selection is
+	set_extended_selection
 			-- Set selection mode of current list to
 			-- extended. Any number of items can be selected
 			-- at any time using dragging mode, otherwise
@@ -596,7 +596,7 @@ feature -- Status setting
 			set_extended_select
 		end;
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set selection mode of current list to
 			-- multiple. Any item can be selected at any
 			-- time in this mode.
@@ -604,7 +604,7 @@ feature -- Status setting
 			set_multiple_select
 		end;
 
-	set_single_selection is
+	set_single_selection
 			-- Set selection mode of current list to
 			-- single. At most only one item can be selected
 			-- at a time.
@@ -614,7 +614,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	make_merge_list (other: LIST [STRING]): MEL_STRING_TABLE is
+	make_merge_list (other: LIST [STRING]): MEL_STRING_TABLE
 			-- Make a merge list to `merge_left' and `merge_right'.
 		require
 			other_exists: other /= Void
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Obsolete features
 
-	add_browse_action (a_command: COMMAND; argument: ANY) is
+	add_browse_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with browse selection mode in current scroll list.
 		local
@@ -654,7 +654,7 @@ feature {NONE} -- Obsolete features
 			list.add_command (a_command, argument)
 		end;
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		local
@@ -668,7 +668,7 @@ feature {NONE} -- Obsolete features
 			list.add_command (a_command, argument)
 		end;
 
-	add_extended_action (a_command: COMMAND; argument: ANY) is
+	add_extended_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with extended selection mode in current scroll list.
 		local
@@ -682,7 +682,7 @@ feature {NONE} -- Obsolete features
 			list.add_command (a_command, argument)
 		end;
 
-	add_multiple_action (a_command: COMMAND; argument: ANY) is
+	add_multiple_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when items are
 			-- selected with multiple selection mode in current scroll list.
 		local
@@ -696,35 +696,35 @@ feature {NONE} -- Obsolete features
 			list.add_command (a_command, argument)
 		end;
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		do
 			remove_command (default_action_command, a_command, argument)
 		end;
 
-	remove_extended_action (a_command: COMMAND; argument: ANY) is
+	remove_extended_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with extended selection mode in current scroll list.
 		do
 			remove_command (extended_selection_command, a_command, argument)
 		end;
 
-	remove_multiple_action (a_command: COMMAND; argument: ANY) is
+	remove_multiple_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with multiple selection mode in current scroll list.
 		do
 			remove_command (multiple_selection_command, a_command, argument)
 		end;
 
-	remove_browse_action (a_command: COMMAND; argument: ANY) is
+	remove_browse_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with browse selection mode in current scroll list.
 		do
 			remove_command (browse_selection_command, a_command, argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:"[
  					Object that to export update_for_pick_and_drop feature
 					which is in implementation.
@@ -40,14 +40,14 @@ feature -- Initialize
 
 feature {NONE} -- Implementation
 
-	Gdk_events_mask: INTEGER is
+	Gdk_events_mask: INTEGER
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
 			Result := Precursor | {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 				-- This is needed so that we only retrieve motion events when requested.
 		end
 
-	update_for_pick_and_drop (a_starting: BOOLEAN) is
+	update_for_pick_and_drop (a_starting: BOOLEAN)
 			-- Redefine
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	interface: SD_DRAWING_AREA;
 			-- Redefine
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

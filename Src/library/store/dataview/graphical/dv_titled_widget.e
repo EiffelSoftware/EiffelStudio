@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text component with a title. Can be displayed vertically or horizontally"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make_vertical_with_title (txt: STRING) is
+	make_vertical_with_title (txt: STRING)
 			-- Initialization
 		require
 			not_void: txt /= Void
@@ -24,7 +24,7 @@ feature -- Initialization
 			is_vertical := True
 		end
 
-	make_horizontal_with_title (txt: STRING) is
+	make_horizontal_with_title (txt: STRING)
 			-- Initialization
 		require
 			not_void: txt /= Void
@@ -49,7 +49,7 @@ feature -- Status report
 	is_vertical: BOOLEAN
 			-- Is the display vertical?
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is the display horizontal?
 		do
 			Result := not is_vertical
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	change_field (new_field: EV_WIDGET) is
+	change_field (new_field: EV_WIDGET)
 			-- Replace `field' with `new_field'.
 		do
 				-- Remove field.
@@ -70,7 +70,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	build_with_title (txt: STRING) is
+	build_with_title (txt: STRING)
 			-- Build the titled text field vertically or horizontally,
 			-- according to `box'. Set title to `txt'.
 		do
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			box.extend (field)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

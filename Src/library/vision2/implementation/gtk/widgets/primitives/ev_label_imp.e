@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision label, gtk implementation."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk label.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -57,7 +57,7 @@ feature -- Access
 	angle: REAL
 		-- Amount text is rotated counter-clockwise from horizontal plane in radians.
 
-	set_angle (a_angle: REAL) is
+	set_angle (a_angle: REAL)
 			--
 		do
 			{EV_GTK_EXTERNALS}.gtk_label_set_angle (text_label, a_angle / 3.14 * 180)
@@ -66,14 +66,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 			-- Does `a_widget' need an event box?
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LABEL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

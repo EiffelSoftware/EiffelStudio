@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Rectangular figures with rounded corners."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with `radius' 20.
 		local
 			i: INTEGER
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			end
 		end
 		
-	make_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	make_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y') 
 			-- and `width' `a_width' and `height' `a_height'
 		do
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_radius (a_radius: INTEGER) is
+	set_radius (a_radius: INTEGER)
 			-- Assign `a_radius' to `radius'.
 		require
 			a_radius_non_negative: a_radius >= 0
@@ -77,28 +77,28 @@ feature -- Element change
 			radius_assigned: radius = a_radius
 		end
 		
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			Precursor {EV_MODEL_RECTANGLE} (a_width)
 			set_rounded_points
 		end
 	
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		do
 			Precursor {EV_MODEL_RECTANGLE} (a_height)
 			set_rounded_points
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_RECTANGLE} (ax, ay)
 			set_rounded_points
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_RECTANGLE} (ax, ay)
@@ -107,7 +107,7 @@ feature -- Element change
 		
 feature -- Events
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
 			
@@ -159,7 +159,7 @@ feature -- Events
 
 feature {EV_MODEL_GROUP} -- Transformation
 		
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -170,10 +170,10 @@ feature {EV_MODEL_GROUP} -- Transformation
 		
 feature {NONE} -- Implementation
 
-	radius_offset: DOUBLE is 0.2928932188134
+	radius_offset: DOUBLE = 0.2928932188134
 			-- 1 - (sqrt (2)) / 2
 
-	set_rounded_points is
+	set_rounded_points
 			-- Set the points needed to discribe the rounded edges.
 		local
 			ax, ay, bx, by, v1, v2: DOUBLE
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			l_point_array.item (7).set_precise (ax + r, by - r)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for interpreter"
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	none_type_name: STRING is "NONE"
+	none_type_name: STRING = "NONE"
 			-- Name for {NONE} type
 
 end

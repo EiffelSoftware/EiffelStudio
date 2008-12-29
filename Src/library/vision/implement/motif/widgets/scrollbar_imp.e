@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implmentation of a Motif scrollbar."
@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif scrollbar.
 		local
 			mc: MEL_COMPOSITE
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_maximum_right_bottom: BOOLEAN is
+	is_maximum_right_bottom: BOOLEAN
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
@@ -85,7 +85,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical if `flag', and at the opposite side otherwise.
@@ -107,7 +107,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
+	add_move_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
 		local
@@ -121,7 +121,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end; 
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		local
@@ -137,21 +137,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
+	remove_move_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
 			remove_command (drag_command, a_command, argument)
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
 			remove_command (value_changed_command, a_command, argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

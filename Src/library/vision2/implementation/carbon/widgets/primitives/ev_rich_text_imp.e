@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set up `Current'
 		do
 			create tab_positions
@@ -44,24 +44,24 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_IMP}
 		end
 
-	initialize_buffer_events is
+	initialize_buffer_events
 			-- Initialize `text_buffer' events
 		do
 		end
 
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a caret move action sequence.
 		do
 
 		end
 
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a selection change action sequence.
 		do
 
 		end
 
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a file access action sequence.
 		do
 
@@ -69,12 +69,12 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
+	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER
 		do
 
 		end
 
-	initialize_for_saving is
+	initialize_for_saving
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -82,14 +82,14 @@ feature {NONE} -- Implementation
 
 		end
 
-	complete_saving is
+	complete_saving
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
 		do
 
 		end
 
-	initialize_for_loading is
+	initialize_for_loading
 			-- Initialize `Current' for load operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -97,14 +97,14 @@ feature {NONE} -- Implementation
 
 		end
 
-	complete_loading is
+	complete_loading
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_loading'.
 		do
 
 		end
 
-	font_char_set (a_font: EV_FONT): INTEGER is
+	font_char_set (a_font: EV_FONT): INTEGER
 			-- `Result' is char set of font `a_font'.
 		do
 
@@ -112,12 +112,12 @@ feature {NONE} -- Implementation
 
 feature -- Status Report
 
-	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			--  Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		do
 		end
 
-	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -126,7 +126,7 @@ feature -- Status Report
 		do
 		end
 
-	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consistent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -136,7 +136,7 @@ feature -- Status Report
 
 		end
 
-	paragraph_format_range_information (start_index, end_index: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	paragraph_format_range_information (start_index, end_index: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -146,13 +146,13 @@ feature -- Status Report
 
 		end
 
-	paragraph_format_contiguous, internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	paragraph_format_contiguous, internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from line `start_position' to `end_position' contiguous?
 		do
 
 		end
 
-	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection
 			-- does not need to be restored.
@@ -160,13 +160,13 @@ feature -- Status Report
 
 		end
 
-	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		do
 
 		end
 
-	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -174,45 +174,45 @@ feature -- Status Report
 
 		end
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		do
 
 		end
 
-	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting from caret positions `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		do
 
 		end
 
-	paragraph_format, internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format, internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		do
 
 		end
 
-	selected_character_format: EV_CHARACTER_FORMAT is
+	selected_character_format: EV_CHARACTER_FORMAT
 			-- Format of the character which starts the selection
 		do
 
 		end
 
-	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		do
 
 		end
 
-	position_from_index (an_index: INTEGER): EV_COORDINATE is
+	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		do
 
 		end
 
-	character_displayed (an_index: INTEGER): BOOLEAN is
+	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		do
 
@@ -220,7 +220,7 @@ feature -- Status Report
 
 feature -- Status report
 
-	character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (pos: INTEGER): EV_CHARACTER_FORMAT
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
@@ -228,7 +228,7 @@ feature -- Status report
 			create Result.default_create
 		end
 
-	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP is
+	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP
 			-- `Result' is character format of character `character_index'.
 		do
 
@@ -236,7 +236,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_current_format (format: EV_CHARACTER_FORMAT) is
+	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		do
@@ -246,20 +246,20 @@ feature -- Status setting
 	current_format: EV_CHARACTER_FORMAT
 		-- Format to be applied to next typed characters
 
-	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		do
 		end
 
-	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
 		do
 
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Apply `a_text' with format `format' to append buffer.
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.
@@ -270,7 +270,7 @@ feature -- Status setting
 	--temp_start_iter, temp_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		-- Reusable GtkTextIter objects
 
-	flush_buffer is
+	flush_buffer
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
@@ -278,7 +278,7 @@ feature -- Status setting
 
 		end
 
-	flush_buffer_to (start_position, end_position: INTEGER) is
+	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
@@ -286,7 +286,7 @@ feature -- Status setting
 
 		end
 
-	set_tab_width (a_width: INTEGER) is
+	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' to `tab_width'.
 		do
 			tab_width := a_width
@@ -300,13 +300,13 @@ feature -- Status setting
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		do
 
 		end
 
-	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
+	on_text_mark_changed (a_text_iter, a_text_mark: POINTER)
 			-- Called when a text mark within `text_buffer' has been set.
 		do
 
@@ -321,26 +321,26 @@ feature {NONE} -- Implementation
 
 
 
-	modify_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format_imp: EV_CHARACTER_FORMAT_IMP; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format_imp: EV_CHARACTER_FORMAT_IMP; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		do
 
 		end
 
-	modify_paragraph_internal (start_position, end_position: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph_internal (start_position, end_position: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Apply paragraph formatting `format' from position `start_position' to `end_position' based on `applicable_attributes'
 		do
 
 		end
 
-	update_tab_positions (value: INTEGER) is
+	update_tab_positions (value: INTEGER)
 			-- Update tab widths based on contents of `tab_positions'.
 		do
 
 		end
 
-	dispose_append_buffer is
+	dispose_append_buffer
 			-- Clean up `append_buffer'.
 		do
 		end
@@ -352,7 +352,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RICH_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

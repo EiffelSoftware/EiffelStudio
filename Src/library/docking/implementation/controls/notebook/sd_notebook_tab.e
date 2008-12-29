@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tabs in SD_NOTEBOOK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_notebook: SD_NOTEBOOK; a_top: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_notebook: SD_NOTEBOOK; a_top: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			not_void: a_notebook /= Void
@@ -45,7 +45,7 @@ feature {NONE}  -- Initlization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-	init_drawing_style (a_top: BOOLEAN) is
+	init_drawing_style (a_top: BOOLEAN)
 			-- Init `internal_tab_style'
 		do
 			is_draw_top_tab := a_top
@@ -54,7 +54,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
+	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE)
 			-- Set drop actions to Current.
 		require
 			not_destroyed: not is_destroyed
@@ -65,7 +65,7 @@ feature -- Command
 			set: drop_actions = a_actions
 		end
 
-	set_width_not_enough_space (a_width: INTEGER) is
+	set_width_not_enough_space (a_width: INTEGER)
 			-- Set current width.
 		require
 			not_destroyed: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Command
 			set: is_enough_space = False
 		end
 
-	set_enough_space is
+	set_enough_space
 			-- Set current is enought space to show.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Command
 	is_enough_space: BOOLEAN
 			-- If Current have enough space?
 
-	set_draw_pixmap is
+	set_draw_pixmap
 			-- Set `internal_draw_pixmap'.
 		require
 			not_destroyed: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Command
 			internal_draw_pixmap := True
 		end
 
-	set_tool_tip (a_text: STRING_GENERAL) is
+	set_tool_tip (a_text: STRING_GENERAL)
 			-- Set `tool_tip' with `a_text'
 		require
 			not_destroyed: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Command
 			set: a_text /= Void implies tool_tip.is_equal (a_text.as_string_32)
 		end
 
-	clear_pressed_flag is
+	clear_pressed_flag
 			-- Set `is_pointer_pressed' to False
 		require
 			not_destroyed: not is_destroyed
@@ -121,7 +121,7 @@ feature -- Command
 			is_pointer_pressed := False
 		end
 
-	hide is
+	hide
 			-- Hide
 		require
 			not_destroyed: not is_destroyed
@@ -129,7 +129,7 @@ feature -- Command
 			is_displayed := False
 		end
 
-	show is
+	show
 			-- Show
 		require
 			not_destroyed: not is_destroyed
@@ -137,7 +137,7 @@ feature -- Command
 			is_displayed := True
 		end
 
-	destroy is
+	destroy
 			-- Destory
 		do
 			if parent /= Void then
@@ -159,7 +159,7 @@ feature -- Query
 	internal_draw_pixmap: BOOLEAN
 			-- If draw `pixmap'?
 
-	prefered_size: INTEGER is
+	prefered_size: INTEGER
 			-- If current is displayed, size should take.
 		require
 			not_destroyed: not is_destroyed
@@ -185,7 +185,7 @@ feature -- Query
 	is_pointer_pressed: BOOLEAN
 			-- If pointer button pressed?
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position relative to parent box.
 		require
 			not_destroyed: not is_destroyed
@@ -194,7 +194,7 @@ feature -- Query
 			Result := parent.item_x (Current)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width
 		require
 			not_destroyed: not is_destroyed
@@ -204,7 +204,7 @@ feature -- Query
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height
 		require
 			not_destroyed: not is_destroyed
@@ -215,7 +215,7 @@ feature -- Query
 	tool_tip: STRING_32
 			-- Tool tip
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Screen x position
 		require
 			not_destroyed: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Query
 			Result := x + parent.screen_x
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Screen y position
 		require
 			not_destroyed: not is_destroyed
@@ -233,7 +233,7 @@ feature -- Query
 			Result := parent.screen_y
 		end
 
-	rectangle: EV_RECTANGLE is
+	rectangle: EV_RECTANGLE
 			-- Current tab rectangle relative to `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -259,7 +259,7 @@ feature -- Query
 	parent: SD_NOTEBOOK_TAB_BOX
 			-- Parent tab box
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := text.hash_code
@@ -270,7 +270,7 @@ feature -- Properties
 	text: STRING_32
 			-- Text shown on Current.
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -285,7 +285,7 @@ feature -- Properties
 	pixmap: EV_PIXMAP
 			-- Pixmap shown on Current.
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set `a_pixmap'.
 		require
 			not_destroyed: not is_destroyed
@@ -303,7 +303,7 @@ feature -- Properties
 	is_focused: BOOLEAN
 			-- If Current focused?
 
-	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
+	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN)
 			-- Set `selected'.
 		require
 			not_destroyed: not is_destroyed
@@ -319,7 +319,7 @@ feature -- Properties
 			set: is_selected = a_selected
 		end
 
-	set_selection_color (a_focused: BOOLEAN) is
+	set_selection_color (a_focused: BOOLEAN)
 			-- Set color of selection color to focused selection color or non-focused color.
 		require
 			not_destroyed: not is_destroyed
@@ -334,7 +334,7 @@ feature -- Properties
 	font: EV_FONT
 			-- Font
 
-	set_font (a_font: like font) is
+	set_font (a_font: like font)
 			-- Set `font' with `a_font'
 		require
 			not_destroyed: not is_destroyed
@@ -345,7 +345,7 @@ feature -- Properties
 			set: font = a_font
 		end
 
-	on_expose is
+	on_expose
 			-- Handle expose actions.
 		require
 			not_destroyed: not is_destroyed
@@ -355,7 +355,7 @@ feature -- Properties
 
 feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' with `a_parent'
 		require
 			not_destroyed: not is_destroyed
@@ -365,7 +365,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			set: parent = a_parent
 		end
 
-	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Hanlde pointer motion.
 		require
 			not_destroyed: not is_destroyed
@@ -419,7 +419,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			end
 		end
 
-	on_pointer_motion_for_tooltip (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion_for_tooltip (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer motion actions for setting tooltips.
 		require
 			not_destroyed: not is_destroyed
@@ -433,7 +433,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			end
 		end
 
-	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer press.
 		require
 			not_destroyed: not is_destroyed
@@ -471,7 +471,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			end
 		end
 
-	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer release.
 		require
 			not_destroyed: not is_destroyed
@@ -497,7 +497,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			end
 		end
 
-	on_pointer_enter is
+	on_pointer_enter
 			-- Handle pointer enter actions.
 		require
 			not_destroyed: not is_destroyed
@@ -508,7 +508,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			set: is_hot = True
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Handle pointer leave actions.
 		require
 			not_destroyed: not is_destroyed
@@ -522,7 +522,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
-	redraw_selected is
+	redraw_selected
 			-- Redraw selected.
 		require
 			not_destroyed: not is_destroyed
@@ -535,7 +535,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 			end
 		end
 
-	draw_focus_rect is
+	draw_focus_rect
 			-- Draw focus rectangle.
 		require
 			not_destroyed: not is_destroyed
@@ -552,7 +552,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command
 
 feature {NONE}  -- Implementation agents
 
-	on_expose_with_width (a_width: INTEGER) is
+	on_expose_with_width (a_width: INTEGER)
 			-- Handle expose with `a_width'. `a_width' is total width current should be.
 		require
 			not_destroyed: not is_destroyed
@@ -578,7 +578,7 @@ feature {NONE}  -- Implementation agents
 
 feature {NONE}  -- Implementation functions.
 
-	update_minmum_size is
+	update_minmum_size
 			-- Update minmum size of Current.
 		require
 			not_destroyed: not is_destroyed
@@ -600,7 +600,7 @@ feature {NONE}  -- Implementation functions.
 			end
 		end
 
-	show_right_click_menu (a_pointer_release_action: BOOLEAN; a_relative_x, a_relative_y: INTEGER) is
+	show_right_click_menu (a_pointer_release_action: BOOLEAN; a_relative_x, a_relative_y: INTEGER)
 			-- Show right click menu
 			-- We will use pointer release action to show the menu only in the future. Larry 2007-6-7
 		require
@@ -618,13 +618,13 @@ feature {NONE}  -- Implementation functions.
 
 feature {NONE}  -- Implementation attributes
 
-	focus_rect_padding: INTEGER is 2
+	focus_rect_padding: INTEGER = 2
 			-- Padding with of focus rectangle.
 
 	internal_width: INTEGER
 			-- Width
 
-	drawing_width: INTEGER is
+	drawing_width: INTEGER
 			-- Width showig on the screen.
 		require
 			not_destroyed: not is_destroyed
@@ -661,7 +661,7 @@ feature {NONE}  -- Implementation attributes
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
 
-	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
+	internal_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I
 			-- Drawer of Current
 		require
 			not_destroyed: not is_destroyed
@@ -686,7 +686,7 @@ invariant
 	info_not_void: info /= Void
 	close_actions_not_void: close_actions /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "a ARRAYED_LIST with STOREABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,14 +26,14 @@ create {MA_ARRAYED_LIST_STORABLE}
 
 feature {NONE} -- Initlization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Creation method
 		do
 			Precursor {ARRAYED_LIST} (n)
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

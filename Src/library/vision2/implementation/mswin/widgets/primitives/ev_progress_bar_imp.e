@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision progress bar. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -93,14 +93,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, -1)
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN
 			-- Is display segmented?
 		do
 			Result := not flag_set (style, Pbs_smooth)
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_segmentation is
+	enable_segmentation
 			-- Display `Current' with segments.
 			-- Only works with Win95+IE3 or above.
 		local
@@ -145,7 +145,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_segmentation is
+	disable_segmentation
 			-- Display `Current' without segments.
 			-- Only works with Win95+IE3 or above.
 		local
@@ -165,7 +165,7 @@ feature -- Status setting
 			end
 		end
 
-	recreate_current (a_new_style: INTEGER) is
+	recreate_current (a_new_style: INTEGER)
 			-- Re create `Current' with `a_new_style'.
 		local
 			wel_imp: WEL_WINDOW
@@ -200,7 +200,7 @@ feature -- Status setting
 				-- Previous attributes have now been restored.
 		end
 
-	wel_set_step (a_step: INTEGER) is
+	wel_set_step (a_step: INTEGER)
 			-- Set `step ' to `a_step'.
 		do
 			Precursor (a_step)
@@ -209,7 +209,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	wel_set_leap (a_leap: INTEGER) is
+	wel_set_leap (a_leap: INTEGER)
 		do
 			leap := a_leap
 		end
@@ -218,7 +218,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -19,14 +19,14 @@ create
 
 feature
 
-	make is
+	make
 		do
 			create options.make
 		end
 
 feature -- Routines out
 
-	out: STRING is
+	out: STRING
 		do
 			Result := Form_start.twin
 			Result.append (attributes_out)
@@ -37,7 +37,7 @@ feature -- Routines out
 			Result.append (NewLine)
 		end;
 
-	body_out: STRING is
+	body_out: STRING
 		do
 			Result := ""
 			from
@@ -51,7 +51,7 @@ feature -- Routines out
 			end
 		end
 
-	attributes_out: STRING is
+	attributes_out: STRING
 		do
 			Result := ""
 			if has_value (name_value) then
@@ -70,7 +70,7 @@ feature -- Routines out
 			end
 		end
 
-    attribute_out (an_attribute, its_value: STRING): STRING is
+    attribute_out (an_attribute, its_value: STRING): STRING
             -- String representation for the pair 'an_attribute' and 'its_value'
         do
             Result := an_attribute.twin
@@ -81,7 +81,7 @@ feature -- Routines out
 
 feature -- Wipe out
 
-	wipe_out is
+	wipe_out
 		do
 			if has_value (name_value) then
 				name_value.wipe_out
@@ -100,7 +100,7 @@ feature -- Wipe out
 
 feature -- Add new options
 
-	add_option (an_option: STRING) is
+	add_option (an_option: STRING)
 		require
 			an_option /= Void
 		do
@@ -109,28 +109,28 @@ feature -- Add new options
 
 feature -- Set attributes
 
-	set_name (s: STRING) is
+	set_name (s: STRING)
 		require
 			s /= Void
 		do
 			name_value := s.twin
 		end
 
-	set_action (s: STRING) is
+	set_action (s: STRING)
 		require
 			s /= Void
 		do
 			action_value := s.twin
 		end
 
-	set_method (s: STRING) is
+	set_method (s: STRING)
 		require
 			s /= Void
 		do
 			method_value := s.twin
 		end
 
-	set_enctype (s: STRING) is
+	set_enctype (s: STRING)
 		require
 			s /= Void
 		do
@@ -139,7 +139,7 @@ feature -- Set attributes
 
 feature {NONE}
 
-	has_value (s: STRING): BOOLEAN is
+	has_value (s: STRING): BOOLEAN
 			-- Has the attribute 's' a value ?
 		do
 			if s = Void or else s.is_equal ("") then
@@ -154,7 +154,7 @@ feature {NONE}
 	name_value, action_value, method_value, enctype_value: STRING
 	options: LINKED_LIST [STRING];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

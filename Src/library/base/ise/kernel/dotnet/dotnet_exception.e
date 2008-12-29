@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		.NET exception
 		]"
@@ -44,6 +44,6 @@ feature
 
 feature {NONE}
 
-	internal_meaning: STRING_8 is ".NET exception."
+	internal_meaning: STRING_8 = ".NET exception."
 
 end

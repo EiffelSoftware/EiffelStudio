@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sensitive check."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,34 +10,34 @@ deferred class
 
 feature -- Access
 
-	checked: BOOLEAN is
+	checked: BOOLEAN
 			-- Is property checked?
 		deferred
 		end
 
 feature -- Basic operations
 
-	enable_checked is
+	enable_checked
 			-- Check property.
 		deferred
 		end
 
-	disable_checked is
+	disable_checked
 			-- Uncheck property.
 		deferred
 		end
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		deferred
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

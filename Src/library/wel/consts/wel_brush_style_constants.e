@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Brush style (BS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,38 +10,38 @@ class
 
 feature -- Access
 
-	Bs_solid: INTEGER is 0
+	Bs_solid: INTEGER = 0
 			-- Solid brush.
 
-	Bs_null: INTEGER is 1
+	Bs_null: INTEGER = 1
 			-- Same as `Bs_hollow'.
 
-	Bs_hollow: INTEGER is 1
+	Bs_hollow: INTEGER = 1
 			-- Hollow brush.
 
-	Bs_hatched: INTEGER is 2
+	Bs_hatched: INTEGER = 2
 			-- Hatched brush.
 
-	Bs_pattern: INTEGER is 3
+	Bs_pattern: INTEGER = 3
 			-- Pattern brush defined by a memory bitmap.
 
-	Bs_indexed: INTEGER is 4
+	Bs_indexed: INTEGER = 4
 
-	Bs_dibpattern: INTEGER is 5
+	Bs_dibpattern: INTEGER = 5
 			-- A pattern brush defined by a device-independent
 			-- bitmap (DIB) specification.
 
-	Bs_dibpatternpt: INTEGER is 6
+	Bs_dibpatternpt: INTEGER = 6
 			-- A pattern brush defined by a device-independent
 			-- bitmap (DIB) specification
 
-	Bs_pattern8x8: INTEGER is 7
+	Bs_pattern8x8: INTEGER = 7
 			-- Same as `Bs_pattern'.
 
-	Bs_dibpattern8x8: INTEGER is 8;
+	Bs_dibpattern8x8: INTEGER = 8;
 			-- Same as `Bs_dibpattern'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

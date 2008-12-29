@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The objects available from the environment at time of execution"
@@ -13,19 +13,19 @@ class EXECUTION_ENVIRONMENT
 
 feature -- Access
 
-	command_line: ARGUMENTS is
+	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
 		once
 			create Result
 		end
 
-	current_working_directory: STRING is
+	current_working_directory: STRING
 			-- Directory of current execution
 		do
 			Result := {ENVIRONMENT}.current_directory
 		end
 
-	default_shell: STRING is
+	default_shell: STRING
 			-- Default shell
 		once
 			Result := get ("SHELL")
@@ -34,7 +34,7 @@ feature -- Access
 			end
 		end
 
-	get (s: STRING): STRING is
+	get (s: STRING): STRING
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	home_directory_name: STRING is
+	home_directory_name: STRING
 			-- Directory name corresponding to the home directory.
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
@@ -62,7 +62,7 @@ feature -- Access
 			Result := {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.local_application_data)
 		end
 
-	root_directory_name: STRING is
+	root_directory_name: STRING
 			-- Directory name corresponding to the root directory.
 		require
 			root_directory_supported: Operating_environment.root_directory_supported
@@ -72,7 +72,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	environment_variables: HASH_TABLE [STRING, STRING] is
+	environment_variables: HASH_TABLE [STRING, STRING]
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		local
@@ -107,13 +107,13 @@ feature -- Status
 
 feature -- Status setting
 
-	change_working_directory (path: STRING) is
+	change_working_directory (path: STRING)
 			-- Set the current directory to `path'
 		do
 			{ENVIRONMENT}.set_current_directory (path)
 		end
 
-	put (value, key: STRING) is
+	put (value, key: STRING)
 			-- Set the environment variable `key' to `value'.
 		require
 			key_exists: key /= Void
@@ -127,7 +127,7 @@ feature -- Status setting
 				(equal (value, get (key)) or else (value.is_empty and then (get (key) = Void)))
 		end
 
-	system (s: STRING) is
+	system (s: STRING)
 			-- Pass to the operating system a request to execute `s'.
 			-- If `s' is empty, use the default shell as command.
 		require
@@ -136,7 +136,7 @@ feature -- Status setting
 			internal_launch (s, True)
 		end
 
-	launch (s: STRING) is
+	launch (s: STRING)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If `s' is empty, use the default shell as command.
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			-- Handle to last launched process through `launch'. Used by `system'
 			-- to wait until process is finished.
 
-	internal_launch (s: STRING; should_wait: BOOLEAN) is
+	internal_launch (s: STRING; should_wait: BOOLEAN)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If the current directory is a volume, then use the old
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_launch_from_local_volume (s: STRING; should_wait: BOOLEAN) is
+	internal_launch_from_local_volume (s: STRING; should_wait: BOOLEAN)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If `s' is empty, use the default shell as command.
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fully_qualified_program_name (a_cmd: STRING): STRING is
+	fully_qualified_program_name (a_cmd: STRING): STRING
 			-- If `a_cmd' can be found, then return a fully qualified
 			-- path to it. Otherwise returns a Void string
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	executable_extensions: ARRAYED_LIST [STRING] is
+	executable_extensions: ARRAYED_LIST [STRING]
 			-- List of legal executable extensions
 		local
 			l_extensions: STRING
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			executable_extensions_not_void: Result /= Void
 		end
 
-	search_directories: ARRAYED_LIST [STRING] is
+	search_directories: ARRAYED_LIST [STRING]
 			-- While it would be more efficient to make this a
 			-- "once" feature, it's also possible that the caller
 			-- could manually modify environment variables between
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	merge_env_vars (evsd: SYSTEM_DLL_STRING_DICTIONARY) is
+	merge_env_vars (evsd: SYSTEM_DLL_STRING_DICTIONARY)
 			-- Merge user environment variable set in `user_environment_variables'
 			-- to the system one.
 		require
@@ -338,13 +338,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	user_environment_variables: HASH_TABLE [STRING, STRING] is
+	user_environment_variables: HASH_TABLE [STRING, STRING]
 			-- User-defined environment variables.
 		once
 			create Result.make (10)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

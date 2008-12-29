@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General notion of a cursor manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	cursor_widget: WIDGET_IMP is
+	cursor_widget: WIDGET_IMP
 			-- widget at mouse position, Void if none
 		do
 			Result := cursor_widget_implementation.item
@@ -21,7 +21,7 @@ feature -- Access
 
 feature {NONE} --Implementation
 
-	cursor_widget_implementation: CELL [WIDGET_IMP] is
+	cursor_widget_implementation: CELL [WIDGET_IMP]
 			-- Implementation for cursor_widget
 		once
 			create Result.put (Void)
@@ -29,7 +29,7 @@ feature {NONE} --Implementation
 			result_exists: Result /= Void
 		end;
 
-	set_cursor_widget (c: like cursor_widget) is
+	set_cursor_widget (c: like cursor_widget)
 			-- replace `cursor_widget' by `c'
 		do
 			cursor_widget_implementation.replace (c)
@@ -37,7 +37,7 @@ feature {NONE} --Implementation
 			cursor_widget_set: cursor_widget = c
 		end;
 
-	widget_pointed: WIDGET is
+	widget_pointed: WIDGET
 			-- Widget pointed, void if none
 		local
 			a_point: WEL_POINT
@@ -51,7 +51,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

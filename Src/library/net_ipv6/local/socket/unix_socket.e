@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An unix socket."
@@ -27,7 +27,7 @@ inherit
 
 feature -- Initialization
 
-	create_from_descriptor (fd: INTEGER) is
+	create_from_descriptor (fd: INTEGER)
 			-- Create socket from descriptor `fd'.
 		local
 			retried: BOOLEAN
@@ -58,7 +58,7 @@ feature
 	descriptor: INTEGER;
 			-- Socket descriptor of current socket
 
-	make_socket is
+	make_socket
 			-- Create socket descriptor.
 		do
 			descriptor := c_socket (family, type, protocol);
@@ -68,7 +68,7 @@ feature
 			end
 		end
 
-	bind is
+	bind
 			-- Bind socket to local address in `address'.
 		local
 			retried: BOOLEAN
@@ -85,7 +85,7 @@ feature
 			end
 		end
 
-	connect is
+	connect
 			-- Connect socket to peer address.
 		local
 			retried: BOOLEAN
@@ -104,12 +104,12 @@ feature
 			end
 		end;
 
-	shutdown is
+	shutdown
 		do
 			c_shutdown (descriptor, 2)
 		end
 
-	close_socket is
+	close_socket
 			-- Close socket for current context.
 		do
 			c_close_socket (descriptor);
@@ -119,7 +119,7 @@ feature
 			is_open_write := False
 		end
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is socket closed?
 		do
 			Result := descriptor = -2
@@ -130,7 +130,7 @@ feature -- Status Report
 	address: UNIX_SOCKET_ADDRESS;
 			-- Local address of socket
 
-	cleanup is
+	cleanup
 			-- Close socket and unlink it from file system.
 		do
 			close;
@@ -139,7 +139,7 @@ feature -- Status Report
 			end
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Socket name
 		require else
 			valid_address: address /= Void
@@ -150,7 +150,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	unlink is
+	unlink
 			-- Remove associate name from file system.
 		require else
 			name_address: address /= void
@@ -163,55 +163,55 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
+	c_socket (add_family, a_type, protoc: INTEGER): INTEGER
 			-- External c routine to create the socket descriptor
 		external
 			"C"
 		end
 
-	c_bind (soc: INTEGER; addr: POINTER; length: INTEGER) is
+	c_bind (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine to bind the socket descriptor
 			-- to a local address
 		external
 			"C"
 		end
 
-	c_connect (soc: INTEGER; addr: POINTER; length: INTEGER) is
+	c_connect (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine that connect the socket
 			-- to the peer address
 		external
 			"C blocking"
 		end
 
-	c_unlink (nam: POINTER) is
+	c_unlink (nam: POINTER)
 			-- External c routine to remove socket file from file
 			-- system
 		external
 			"C"
 		end
 
-	c_shutdown (s: INTEGER; how: INTEGER) is
+	c_shutdown (s: INTEGER; how: INTEGER)
 			-- Shut down socket `s' with `how' modality
 			-- (0 no more receive, 1 no more send, 2 no more both)
 		external
 			"C blocking"
 		end
 
-	c_close_socket (s: INTEGER) is
+	c_close_socket (s: INTEGER)
 			-- External c routine to close the socket identified
 			-- by the descriptor `s'
 		external
 			"C"
 		end
 
-	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER) is
+	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine that returns the socket name.
 		external
 			"C"
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision sensitive. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		do
 			-- Shift to put bit in least significant place then take mod 2
@@ -29,7 +29,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Allow the object to be sensitive to user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
@@ -39,7 +39,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set the object to ignore all user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
@@ -55,17 +55,17 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
 			Result := parent /= Void
 		end
 
-	parent: EV_ANY is
+	parent: EV_ANY
 		deferred
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- Is `parent' sensitive?
 		local
 			sensitive_parent: EV_SENSITIVE
@@ -79,7 +79,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_SENSITIVE;
 			-- Interface object for implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

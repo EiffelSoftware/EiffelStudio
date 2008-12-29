@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XmStringTable. "
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_existing (a_table: POINTER; a_count: INTEGER) is
+	make_from_existing (a_table: POINTER; a_count: INTEGER)
 			-- Create the XmString Table.
 		require
 			table_not_null: a_table /= default_pointer;
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			exists: not is_destroyed
 		end;
 
-	make (size: INTEGER) is
+	make (size: INTEGER)
 			-- Allocate a table of XmString with size `size'.
 		require
 			positive_size: size > 0
@@ -51,7 +51,7 @@ feature -- Access
 	count: INTEGER;
 			-- Number of elements in table
 
-	item (i: INTEGER): MEL_STRING is
+	item (i: INTEGER): MEL_STRING
 			-- Get a string value (that is shared, i.e will not be
 			-- collected automatically) at position `i'
 		require
@@ -62,7 +62,7 @@ feature -- Access
 			non_void_result: Result /= Void and then Result.is_shared
 		end;
 
-	item_string (i: INTEGER): STRING is
+	item_string (i: INTEGER): STRING
 			-- Eiffel string at position `i' (string value return
 			-- will not be freed)
 		require
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (ms: MEL_STRING; i: INTEGER) is
+	put (ms: MEL_STRING; i: INTEGER)
 			-- Put a motif string `ms' at position `i'
 			-- in current table.
 			--| `ms' will not be collected automatically.
@@ -92,7 +92,7 @@ feature -- Element change
 			xm_list_put (handle, ms.handle, i)
 		end;
 
-	put_string (str: STRING; i: INTEGER) is
+	put_string (str: STRING; i: INTEGER)
 			-- Put an eiffel string `str' at position `i'
 			-- in current table.
 			--| A mel string with `shared' set to True is created.
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the memory used by the xmStringTable and its
 			-- string contents using XmStringFree.
 		do
@@ -121,22 +121,22 @@ feature -- Removal
 
 feature {NONE} -- External features
 
-	create_xm_string_table (c: INTEGER): POINTER is
+	create_xm_string_table (c: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	free_xm_string_table (obj: POINTER; c: INTEGER) is
+	free_xm_string_table (obj: POINTER; c: INTEGER)
 		external
 			"C"
 		end;
 
-	get_i_th_table (table: POINTER; value: INTEGER): POINTER is
+	get_i_th_table (table: POINTER; value: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	xm_list_put (table, ms: POINTER; a_pos: INTEGER) is
+	xm_list_put (table, ms: POINTER; a_pos: INTEGER)
 		external
 			"C"
 		end;
@@ -145,7 +145,7 @@ invariant
 
 	count_large_enough: not is_destroyed implies count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

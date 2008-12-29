@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create character format
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Do nothing
 		do
 			set_is_initialized (True)
@@ -31,25 +31,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of the current format
 		do
 			create Result
 		end
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the current format
 		do
 			create Result
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color of the current format
 		do
 			create Result
 		end
 
-	effects: EV_CHARACTER_FORMAT_EFFECTS is
+	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'
 		do
 			create Result
@@ -57,22 +57,22 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Make `value' the new font
 		do
 		end
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Make `value' the new color
 		do
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Make `value' the new color
 		do
 		end
 
-	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Make `an_effect' the new `effects'
 		do
 		end
@@ -118,13 +118,13 @@ feature {NONE} -- Implementation
 	bcolor: INTEGER
 			-- background color RGB packed into 24 bit.
 
-	destroy is
+	destroy
 			--
 		do
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

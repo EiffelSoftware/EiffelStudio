@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -14,14 +14,14 @@ inherit
 		
 feature -- Access
 
-	type: INTEGER is
+	type: INTEGER
 			-- Predefined type of current cursor
 		deferred
 		end
 
 feature -- Element change
 
-	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
+	set_pixmap (pixmap: PIXMAP; mask: PIXMAP)
 			-- Set `pixmap' as the new shape of the cursor.
 			-- `mask' is the pixel of pixmap that are to be displayed.
 			-- If `mask' is void, a suitable mask is drawn from `pixmap'.
@@ -37,7 +37,7 @@ feature -- Element change
 			set: type = User_defined_pixmap
 		end;
 
-	set_type (new_type: INTEGER) is
+	set_type (new_type: INTEGER)
 			-- Set type of current cursor to `new_type'.
 			-- This new type must be a predefined one.
 		require
@@ -51,7 +51,7 @@ invariant
 
 	valid: ((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

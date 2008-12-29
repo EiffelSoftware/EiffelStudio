@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All resources"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	header (h: STRING): HEADER is
+	header (h: STRING): HEADER
 			-- Retrieve the content of the header 'h'
 		do
 			Result:= headers.item (h)
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	transfer (resource: EMAIL_RESOURCE) is
+	transfer (resource: EMAIL_RESOURCE)
 			-- Transfer the Current email resource to 'resource'.
 		require
 			resource_exists: resource /= Void
@@ -38,33 +38,33 @@ feature -- Basic operations
 
 feature -- Status report
 
-	can_receive: BOOLEAN is
+	can_receive: BOOLEAN
 			-- Can resource receive?
 		deferred
 		end
 
-	can_send: BOOLEAN is
+	can_send: BOOLEAN
 			-- Can resource send?
 		deferred
 		end
 
-	can_be_received: BOOLEAN is
+	can_be_received: BOOLEAN
 			-- Can resource be received?
 		deferred
 		end
 
-	can_be_sent: BOOLEAN is
+	can_be_sent: BOOLEAN
 			-- Can resource be sent?
 		deferred
 		end
 
-	transfer_error: TRANSFER_ERROR is
+	transfer_error: TRANSFER_ERROR
 			-- Transfer error handling
 		once
 			create Result
 		end
 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Is there an error?
 		do
 			Result:= transfer_error.transfer_error
@@ -75,7 +75,7 @@ feature -- Status report
 --	transfer_error_message: STRING
 			-- Error message.
 
-	is_header_valid: BOOLEAN is
+	is_header_valid: BOOLEAN
 		-- Is the email resource's header valid?
 		do
 		end
@@ -85,37 +85,37 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_transfer_error is
+	enable_transfer_error
 			-- Enable transfer error.
 		do
 			transfer_error.enable_transfer_error
 		end
 
-	disable_transfer_error is
+	disable_transfer_error
 			-- Disable transfer error.	
 		do
 			transfer_error.disable_transfer_error
 		end
 
-	set_transfer_error_message (s: STRING) is
+	set_transfer_error_message (s: STRING)
 			-- Set transfer error message to 's'.
 		do
 			transfer_error.set_transfer_error_message (s)
 		end
 
-	enable_initiated is
+	enable_initiated
 			-- Set is_initiated.
 		do
 			is_initiated:= True
 		end
 
-	disable_initiated is
+	disable_initiated
 			-- Unset is_initiated.
 		do
 			is_initiated:= False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision deselectable. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Status setting
 
-	disable_select is
+	disable_select
 			-- Deselect the object.
 		require
 			is_selectable: is_selectable
@@ -33,7 +33,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

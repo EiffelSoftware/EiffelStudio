@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which used for start/shutdown GDI+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Command
 
-	gdi_plus_init is
+	gdi_plus_init
 			-- Initialize Gdi+.
 		local
 			l_token: POINTER
@@ -20,7 +20,7 @@ feature -- Command
 			end
 		end
 
-	gdi_plus_shutdown is
+	gdi_plus_shutdown
 			-- Shutdown Gdi+.
 		once
 			if is_gdi_plus_installed then
@@ -28,13 +28,13 @@ feature -- Command
 			end
 		end
 
-	gdi_plus_handle: POINTER is
+	gdi_plus_handle: POINTER
 			-- Handle for `gdiplus.dll' if present.
 		once
 			Result := c_load_gdip_dll
 		end
 
-	gdi_plus_token: POINTER is
+	gdi_plus_token: POINTER
 			-- Token for GDI+ startup.
 		once
 			if is_gdi_plus_installed then
@@ -44,7 +44,7 @@ feature -- Command
 
 feature -- Command
 
-	is_gdi_plus_installed: BOOLEAN is
+	is_gdi_plus_installed: BOOLEAN
 			-- If gdiplus.dll can be fount on user's machine?
 		do
 			Result := gdi_plus_handle /= default_pointer
@@ -52,7 +52,7 @@ feature -- Command
 
 feature {NONE} -- Externals
 
-	c_load_gdip_dll: POINTER is
+	c_load_gdip_dll: POINTER
 			-- Try to load gdiplus.dll, if fount return 1.
 		external
 			"C inline use <windows.h>"
@@ -60,7 +60,7 @@ feature {NONE} -- Externals
 			"return (EIF_POINTER) LoadLibrary (L%"gdiplus.dll%");"
 		end
 
-	c_gdi_plus_startup (a_gdiplus_handle: POINTER): POINTER is
+	c_gdi_plus_startup (a_gdiplus_handle: POINTER): POINTER
 			-- Before any GDI+ call, we should call this function.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -84,7 +84,7 @@ feature {NONE} -- Externals
    			]"
    		end
 
-	c_gdi_plus_shutdown (a_gdiplus_handle, a_token: POINTER) is
+	c_gdi_plus_shutdown (a_gdiplus_handle, a_token: POINTER)
 			-- After delete all Gdi+ objects, we should call this function.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -103,7 +103,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

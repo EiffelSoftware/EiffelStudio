@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent source of a dockable transport. The dockable
 		mechanism allows a component to be dragged by a user to an EV_DOCKABLE_TARGET
@@ -29,7 +29,7 @@ inherit
 
 feature -- Status report
 
-	is_dockable: BOOLEAN is		
+	is_dockable: BOOLEAN		
 			-- Is `Current' dockable?
 			-- If `True', then `Current' may be dragged
 			-- from its current parent. 
@@ -41,7 +41,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_dockable
 		end
 		
-	real_source: EV_DOCKABLE_SOURCE is
+	real_source: EV_DOCKABLE_SOURCE
 			-- `Result' is source to be dragged
 			--  when a docking drag occurs on `Current'.
 			-- If `Void', `Current' is dragged.
@@ -53,7 +53,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.real_source
 		end
 		
-	is_external_docking_enabled: BOOLEAN is
+	is_external_docking_enabled: BOOLEAN
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of transport?
@@ -65,7 +65,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_external_docking_enabled
 		end
 		
-	is_external_docking_relative: BOOLEAN is
+	is_external_docking_relative: BOOLEAN
 			-- Will dockable dialog displayed when `Current' is docked externally
 			-- be displayed relative to parent window of `Current'?
 			-- Otherwise displayed as a standard window.
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_dockable is
+	enable_dockable
 			-- Ensure `Current' is dockable.
 		require
 			not_destroyed: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status setting
 			is_dockable: is_dockable
 		end
 		
-	disable_dockable is
+	disable_dockable
 			-- Ensure `Current' is not dockable.
 		require
 			not_destroyed: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Status setting
 			not_is_dockable: not is_dockable
 		end
 
-	set_real_source (dockable_source: EV_DOCKABLE_SOURCE) is
+	set_real_source (dockable_source: EV_DOCKABLE_SOURCE)
 			-- Assign `dockable_source' to `real_source'.
 		require
 			not_destroyed: not is_destroyed
@@ -112,7 +112,7 @@ feature -- Status setting
 			real_source_assigned: real_source = dockable_source
 		end
 		
-	remove_real_source is
+	remove_real_source
 			-- Ensure `real_source' is `Void'.
 		require
 			not_destroyed: not is_destroyed
@@ -122,7 +122,7 @@ feature -- Status setting
 			real_source_void: real_source = Void
 		end
 		
-	enable_external_docking is
+	enable_external_docking
 			-- Assign `True' to `is_external_docking_enabled'.
 			-- Allows `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -136,7 +136,7 @@ feature -- Status setting
 			is_externally_dockable: is_external_docking_enabled
 		end
 		
-	disable_external_docking is
+	disable_external_docking
 			-- Assign `False' to `is_external_docking_enabled'.
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
@@ -150,7 +150,7 @@ feature -- Status setting
 			not_externally_dockable: not is_external_docking_enabled
 		end
 		
-	enable_external_docking_relative is
+	enable_external_docking_relative
 			-- Assign `True' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
 			-- is displayed relative to the top level window.
@@ -163,7 +163,7 @@ feature -- Status setting
 			external_docking_not_relative: is_external_docking_relative
 		end
 		
-	disable_external_docking_relative is
+	disable_external_docking_relative
 			-- Assign `False' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
 			-- is displayed as a standard window.
@@ -178,13 +178,13 @@ feature -- Status setting
 
 feature -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := not is_dockable and is_external_docking_relative and real_source = Void
 		end
 
-	source_has_current_recursive (source: EV_DOCKABLE_SOURCE): BOOLEAN is
+	source_has_current_recursive (source: EV_DOCKABLE_SOURCE): BOOLEAN
 			-- Does `source' recursively contain `Current'?
 			-- As seen by parenting structure.
 		require
@@ -214,7 +214,7 @@ feature -- Contract support
 			end
 		end
 		
-	parent_of_source_allows_docking: BOOLEAN is
+	parent_of_source_allows_docking: BOOLEAN
 			-- Does parent of source to be transported
 			-- allow current to be dragged out? (See `real_source')
 			-- Not all Vision2 containers are currently supported by this
@@ -246,7 +246,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	parent_permits_docking: is_dockable implies parent_of_source_allows_docking
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

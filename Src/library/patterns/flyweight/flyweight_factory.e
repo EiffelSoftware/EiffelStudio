@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create and Manage flyweight objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Initialization
 	
-	make is
+	make
 		-- Initialize
 		do
 			create list.make(20)
@@ -19,7 +19,7 @@ feature -- Initialization
 
 feature -- Operations
 
-	add (unshared: ANY; shared: ANY;key: HASHABLE) is
+	add (unshared: ANY; shared: ANY;key: HASHABLE)
 			-- Add a flyweight to the list.
 		require
 			not_void: unshared /= Void and then shared /= Void and key /= Void
@@ -33,7 +33,7 @@ feature -- Operations
 			increment_list: list.count = old list.count + 1
 		end
 	
-	remove(key: HASHABLE) is
+	remove(key: HASHABLE)
 			-- Remove a flyweight from the list.
 			-- Do nothing if it is not found.
 		require
@@ -42,7 +42,7 @@ feature -- Operations
 			list.remove(key)
 		end
 
-	has_item(a_flyweight: FLYWEIGHT[ANY,ANY]): BOOLEAN is
+	has_item(a_flyweight: FLYWEIGHT[ANY,ANY]): BOOLEAN
 		-- Return TRUE if the flyweight is managed by Current.
 		require
 			not_void: a_flyweight /= Void
@@ -50,7 +50,7 @@ feature -- Operations
 			Result := has_item(a_flyweight)
 		end
 
-	has(key: HASHABLE): BOOLEAN is
+	has(key: HASHABLE): BOOLEAN
 		-- Return TRUE if a flyweight is managed by Current.
 		require
 			not_void: key /= Void
@@ -58,7 +58,7 @@ feature -- Operations
 			Result := has(key)
 		end
 
-	get_flyweight(key: HASHABLE): FLYWEIGHT[ANY,ANY] is
+	get_flyweight(key: HASHABLE): FLYWEIGHT[ANY,ANY]
 			-- Return flyweight corresponding to the key 'any'.
 			-- Return Void if not found.
 		require
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 invariant
 	FLYWEIGHT_FACTORY_list_exists: list /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

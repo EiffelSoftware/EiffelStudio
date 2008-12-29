@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Composite for command entry."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create Current with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	command: MEL_STRING is
+	command: MEL_STRING
 			-- The text currently displayed on the command line
 		require
 			exists: not is_destroyed
@@ -55,7 +55,7 @@ feature -- Status report
 			command_not_void: Result /= Void
 		end;
 
-	history_items: MEL_STRING_TABLE is
+	history_items: MEL_STRING_TABLE
 			-- The items in the history list
 		require
 			exists: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	history_item_count: INTEGER is
+	history_item_count: INTEGER
 			-- The number of strings in the history_items list
 		require
 			exists: not is_destroyed
@@ -79,7 +79,7 @@ feature -- Status report
 			history_item_count_large_enough: Result >= 0
 		end;
 
-	history_max_items: INTEGER is
+	history_max_items: INTEGER
 			-- Maximum number of items `history_items'
 		require
 			exists: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Status report
 			history_max_items_large_enough: Result >= 0
 		end;
 
-	history_visible_item_count: INTEGER is
+	history_visible_item_count: INTEGER
 			-- Number of history list commands that will
 			-- be displayed at one time
 		require
@@ -100,7 +100,7 @@ feature -- Status report
 			history_visible_item_count_large_enough: Result >= 0
 		end;
 
-	prompt_string: MEL_STRING is
+	prompt_string: MEL_STRING
 			-- The command line prompt
 		require
 			exists: not is_destroyed
@@ -112,13 +112,13 @@ feature -- Status report
 
 feature -- Access
 
-	command_changed_command: MEL_COMMAND_EXEC is
+	command_changed_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNcommandChangedCallback)
 		end;
 
-	command_entered_command: MEL_COMMAND_EXEC is
+	command_entered_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNcommandEnteredCallback)
@@ -126,7 +126,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_command (a_compound_string: MEL_STRING) is
+	set_command (a_compound_string: MEL_STRING)
 			-- Set the text currently displayed in the command line to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -137,7 +137,7 @@ feature -- Status setting
 			command_set: command.is_equal (a_compound_string)
 		end;
 
-	set_history_items (a_list: MEL_STRING_TABLE) is
+	set_history_items (a_list: MEL_STRING_TABLE)
 			-- Set `history_items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -146,7 +146,7 @@ feature -- Status setting
 			set_xm_string_table (screen_object, XmNhistoryItems, a_list.handle)
 		end;
 
-	set_history_item_count (a_count: INTEGER) is
+	set_history_item_count (a_count: INTEGER)
 			-- Set `history_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -157,7 +157,7 @@ feature -- Status setting
 			history_item_count_set: history_item_count = a_count
 		end;
 
-	set_history_max_items (a_count: INTEGER) is
+	set_history_max_items (a_count: INTEGER)
 			-- Set `history_max_items' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -168,7 +168,7 @@ feature -- Status setting
 			history_max_items_set: history_max_items = a_count
 		end;
 
-	set_history_visible_item_count (a_count: INTEGER) is
+	set_history_visible_item_count (a_count: INTEGER)
 			-- Set `history_visible_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -179,7 +179,7 @@ feature -- Status setting
 			history_visible_item_count_set: history_visible_item_count = a_count
 		end;
 
-	set_prompt_string (a_compound_string: MEL_STRING) is
+	set_prompt_string (a_compound_string: MEL_STRING)
 			-- Set `prompt_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -192,7 +192,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_command_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_command_changed_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the value of command changes.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -205,7 +205,7 @@ feature -- Element change
 				(command_changed_command, a_command, an_argument)
 		end;
 
-	set_command_entered_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_command_entered_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when a command is entered in the widget.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -220,7 +220,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_command_changed_callback is
+	remove_command_changed_callback
 			-- Remove the command for the command changed callback.
 		do
 			remove_callback (XmNcommandChangedCallback)
@@ -228,7 +228,7 @@ feature -- Removal
 			removed: command_changed_command = Void
 		end;
 
-	remove_command_entered_callback is
+	remove_command_entered_callback
 			-- Remove the command for the command entered callback.
 		do
 			remove_callback (XmNcommandEnteredCallback)
@@ -239,7 +239,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr, 
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -261,14 +261,14 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_command (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_command (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Command.h>"
 		alias
 			"XmCreateCommand"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

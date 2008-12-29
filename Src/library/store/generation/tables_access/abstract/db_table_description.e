@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a table."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,46 +13,46 @@ inherit
 	
 feature -- Initialization
 
-	make is
+	make
 			-- Enable to ensure unicity of object.
 		do
 		end
 
 feature -- Access (table description)
 
-	Table_name: STRING is
+	Table_name: STRING
 			-- Database table name.
 		deferred
 		end
 
-	Table_code: INTEGER is
+	Table_code: INTEGER
 			-- Eiffel table code, matches IDs definition in LOG_TABLE.
 		deferred
 		end
 
-	Attribute_number: INTEGER is
+	Attribute_number: INTEGER
 			-- Number of attributes in the table.
 		deferred
 		end
 
-	attribute_code_list: ARRAYED_LIST [INTEGER] is
+	attribute_code_list: ARRAYED_LIST [INTEGER]
 			-- Feature code list.
 		deferred
 		end
 
-	description_list: ARRAYED_LIST [STRING] is
+	description_list: ARRAYED_LIST [STRING]
 			-- Feature name list. Can be interpreted as a list
 			-- or a hash-table.
 		deferred
 		end
 
-	type_list: ARRAYED_LIST [INTEGER] is
+	type_list: ARRAYED_LIST [INTEGER]
 			-- Feature type list. Can be interpreted as a list
 			-- or a hash-table.
 		deferred
 		end
 
-	printable_type_table: HASH_TABLE [STRING, INTEGER] is
+	printable_type_table: HASH_TABLE [STRING, INTEGER]
 			-- Default string associated to attributes possible
 			-- types.
 		once
@@ -67,7 +67,7 @@ feature -- Access (table description)
 			Result.extend ("date_time", Date_time_type)
 		end
 
-	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+	to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 			-- List of tables depending on this one and their
 			-- foreign key for this table.
 			-- Deletion on this table may imply deletions on
@@ -75,7 +75,7 @@ feature -- Access (table description)
 		deferred
 		end
 
-	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is
+	to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER]
 			-- List of associated necessary tables and the  
 			-- linking foreign keys.
 			-- Creation on this table may imply creations on
@@ -83,52 +83,52 @@ feature -- Access (table description)
 		deferred
 		end
 
-	id_name: STRING is
+	id_name: STRING
 			-- Table ID attribute name.
 		do
 			Result := description_list.i_th (Id_code)
 		end
 
-	Id_code: INTEGER is
+	Id_code: INTEGER
 			-- Table ID attribute code.
 			--| 1 in general.
 		deferred
 		end
 		
-	identity_column: INTEGER is
+	identity_column: INTEGER
 			-- Column ID for IDENTITY column of table (0 if there is no IDENTITY column, default)
 		do
 			Result := 0
 		end		
 
-	No_id: INTEGER is 0
+	No_id: INTEGER = 0
 			-- `Id_code' value when no ID exists or ID constraint is not
 			-- located to a single attribute.
 
-	Character_type: INTEGER is 2;
+	Character_type: INTEGER = 2;
 
-	Boolean_type: INTEGER is 3;
+	Boolean_type: INTEGER = 3;
 
-	Integer_type: INTEGER is 4;
+	Integer_type: INTEGER = 4;
 
-	Real_type: INTEGER is 5;
+	Real_type: INTEGER = 5;
 
-	Double_type: INTEGER is 6;
+	Double_type: INTEGER = 6;
 
-	String_type: INTEGER is 20;
+	String_type: INTEGER = 20;
 	
-	Date_time_type: INTEGER is 21;
+	Date_time_type: INTEGER = 21;
 
 feature -- Access (table row values)
 
-	attribute (code: INTEGER): ANY is
+	attribute (code: INTEGER): ANY
 			-- Value of attribute with `code'.
 		require
 			valid_code: valid (code)
 		deferred
 		end
 
-	printable_attribute (code: INTEGER): STRING is
+	printable_attribute (code: INTEGER): STRING
 			-- String value of attribute with `code'.
 		require
 			valid_code: valid (code)
@@ -145,19 +145,19 @@ feature -- Access (table row values)
 			result_not_void: Result /= Void
 		end
 
-	id: ANY is
+	id: ANY
 			-- Table row ID.
 		do
 			Result := attribute (Id_code)
 		end
 
-	printable_id: STRING is
+	printable_id: STRING
 			-- String value of table row ID.
 		do
 			Result := id.out
 		end
 
-	attribute_list: ARRAYED_LIST [ANY] is
+	attribute_list: ARRAYED_LIST [ANY]
 			-- Table row attribute values.
 		do			
 			create Result.make (Attribute_number)
@@ -173,7 +173,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	printable_attribute_list: ARRAYED_LIST [STRING] is
+	printable_attribute_list: ARRAYED_LIST [STRING]
 			-- Table row attribute string values.
 		do
 			create Result.make (Attribute_number)
@@ -189,7 +189,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	selected_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [ANY] is
+	selected_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [ANY]
 			-- Table row attribute values which codes are in `list'.
 		require
 			not_void: list /= Void
@@ -207,7 +207,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	selected_printable_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [STRING] is
+	selected_printable_attribute_list (list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [STRING]
 			-- Table row attribute values which codes are in `list'.
 		require
 			not_void: list /= Void
@@ -225,7 +225,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING] is
+	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING]
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
 		do			
@@ -243,7 +243,7 @@ feature -- Access (table row values)
 
 feature -- Status report
 
-	valid (code: INTEGER): BOOLEAN is
+	valid (code: INTEGER): BOOLEAN
 			-- Is `code' a valid attribute code?
 		do
 			Result := code > 0 and then code <= Attribute_number
@@ -251,7 +251,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_attribute (code: INTEGER; value: ANY) is
+	set_attribute (code: INTEGER; value: ANY)
 			-- Set attribute with `code' to `value'.
 			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
 			-- DOUBLE or DATE_TIME. References are made automatically from
@@ -261,7 +261,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	set_id (value: ANY) is
+	set_id (value: ANY)
 			-- Set ID of table row to `value'.
 			-- `value' must be of type STRING, INTEGER
 			-- (reference created automatically) or DATE_TIME.
@@ -269,7 +269,7 @@ feature -- Basic operations
 			set_attribute (Id_code, value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

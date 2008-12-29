@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Biggest ellipse fitting in imaginary rectangle defined by%N%
 		%`point_a' and `point_b'."
@@ -25,7 +25,7 @@ create
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		local
 			m: like metrics
@@ -40,31 +40,31 @@ feature -- Events
 
 feature -- Status report
 
-	center: EV_COORDINATE is
+	center: EV_COORDINATE
 			-- Center point of ellipse.
 		do
 			create Result.set (center_x, center_y)
 		end
 
-	center_x: INTEGER is
+	center_x: INTEGER
 			-- Horizontal position of center point.
 		do
 			Result := (point_a.x_abs + point_b.x_abs) // 2
 		end
 
-	center_y: INTEGER is
+	center_y: INTEGER
 			-- Vertical position of center point.
 		do
 			Result := (point_a.y_abs + point_b.y_abs) // 2
 		end
 
-	radius1: INTEGER is
+	radius1: INTEGER
 			-- Horizontal component of radius.
 		do
 			Result := ((point_a.x_abs - point_b.x_abs) // 2).abs
 		end
 
-	radius2: INTEGER is
+	radius2: INTEGER
 			-- Vertical component of radius.
 		do
 			Result := ((point_a.y_abs - point_b.y_abs) // 2).abs
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 
-	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			-- [`x', `y', `width', `height']
 		local
 			ay, ax, bx, by: INTEGER
@@ -89,7 +89,7 @@ feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 			]
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

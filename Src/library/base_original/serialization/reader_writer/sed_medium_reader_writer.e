@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize/Deserialize data from a medium."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_medium: IO_MEDIUM) is
+	make (a_medium: IO_MEDIUM)
 			-- Initialize current to read or write from `a_medium'.
 		require
 			a_medium_not_void: a_medium /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			buffer_size_set: buffer_size = default_buffer_size
 		end
 
-	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER) is
+	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
 			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
 			-- when writing.
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Header/Footer
 
-	read_header is
+	read_header
 			-- Retrieve configuration of how data was stored.
 		do
 				-- Read data from medium
@@ -69,7 +69,7 @@ feature -- Header/Footer
 			stored_pointer_bytes := read_integer_32
 		end
 
-	write_header is
+	write_header
 			-- Store configuration on how data will be stored.
 		do
 				-- Before doing any writing we need to setup the attributes
@@ -83,7 +83,7 @@ feature -- Header/Footer
 			write_integer_32 (pointer_bytes)
 		end
 
-	write_footer is
+	write_footer
 			-- Store last buffered data.
 		do
 			flush_buffer_to_medium
@@ -91,14 +91,14 @@ feature -- Header/Footer
 
 feature -- Status report
 
-	is_ready_for_reading: BOOLEAN is
+	is_ready_for_reading: BOOLEAN
 			-- Is Current ready for future read operations?
 		do
 			Result := is_for_reading and then
 				medium.exists and then medium.is_open_read and then medium.support_storable
 		end
 
-	is_ready_for_writing: BOOLEAN is
+	is_ready_for_writing: BOOLEAN
 			-- Is Current ready for future write operations?
 		do
 			Result := not is_for_reading and then
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Buffer update
 
-	check_buffer (n: INTEGER) is
+	check_buffer (n: INTEGER)
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
 			-- Otherwise, read/write to `medium' to free some space.
 		do
@@ -125,7 +125,7 @@ feature {NONE} -- Buffer update
 			end
 		end
 
-	read_buffer_from_medium is
+	read_buffer_from_medium
 			-- Read next chunk of data.
 		require
 			is_ready: is_ready_for_reading
@@ -159,7 +159,7 @@ feature {NONE} -- Buffer update
 			end
 		end
 
-	flush_buffer_to_medium is
+	flush_buffer_to_medium
 			-- Write next chunk of data to `medium'.
 		require
 			is_ready: is_ready_for_writing
@@ -176,7 +176,7 @@ feature {NONE} -- Buffer update
 invariant
 	medium_not_void: medium /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

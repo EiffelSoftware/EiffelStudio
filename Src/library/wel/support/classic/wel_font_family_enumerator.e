@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Font family enumerator. The user must inherit from this
 		class and define the routine `action'.
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (dc: WEL_DC; family: STRING_GENERAL) is
+	make (dc: WEL_DC; family: STRING_GENERAL)
 			-- Enumerate the fonts in the font `family' that are
 			-- available on the `dc'.
 			-- If `family' is Void, Windows randomly selects and
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
+	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
 			-- `elf', `tm' and `font_type' contain informations
 			-- about the font.
@@ -54,13 +54,13 @@ feature -- Basic operations
 		deferred
 		end
 
-	init_action is
+	init_action
 			-- Called before the enumeration.
 			-- May be redefined to make special operations.
 		do
 		end
 
-	finish_action is
+	finish_action
 			-- Called after the enumeration.
 			-- May be redefined to make special operations.
 		do
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	enumerate (dc: WEL_DC; family: STRING_GENERAL) is
+	enumerate (dc: WEL_DC; family: STRING_GENERAL)
 			-- Enumerate `family' on `dc'
 		require
 			dc_not_void: dc /= Void
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			finish_action
 		end
 
-	update_current (lpelf, lpntm: POINTER; font_type: INTEGER; extra: POINTER) is
+	update_current (lpelf, lpntm: POINTER; font_type: INTEGER; extra: POINTER)
 			-- Convert Windows pointers into Eiffel objects and
 			-- call `action'.
 		local
@@ -100,34 +100,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Memory management
 
-	dispose is
+	dispose
 		do
 			cwel_release_font_family_enumerator_object
 		end
 
 feature {NONE} -- Externals
 
-	cwel_set_enum_font_fam_procedure_address (address: POINTER) is
+	cwel_set_enum_font_fam_procedure_address (address: POINTER)
 		external
 			"C [macro %"enumfont.h%"]"
 		end
 
-	cwel_set_font_family_enumerator_object (object: ANY) is
+	cwel_set_font_family_enumerator_object (object: ANY)
 		external
 			"C [macro %"enumfont.h%"]"
 		end
 
-	cwel_release_font_family_enumerator_object is
+	cwel_release_font_family_enumerator_object
 		external
 			"C [macro %"enumfont.h%"]"
 		end
 
-	cwel_enum_font_fam_procedure: POINTER is
+	cwel_enum_font_fam_procedure: POINTER
 		external
 			"C [macro %"enumfont.h%"] :EIF_POINTER"
 		end
 
-	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER) is
+	cwin_enum_font_families (hdc, family, enum_proc, data: POINTER)
 			-- SDK EnumFontFamilies
 		external
 			"C [macro %"windows.h%"] (HDC, LPCTSTR, FONTENUMPROC, LPARAM)"
@@ -135,7 +135,7 @@ feature {NONE} -- Externals
 			"EnumFontFamilies"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

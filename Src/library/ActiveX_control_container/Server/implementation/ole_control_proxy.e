@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Proxy of OLE control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 	unknown_control: ECOM_INTERFACE
 	
-	dispatch: ECOM_AUTOMATION_INTERFACE is
+	dispatch: ECOM_AUTOMATION_INTERFACE
 			-- IDispatch interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -36,7 +36,7 @@ feature -- Access
 			retry
 		end
 
-	quick_activate: IQUICK_ACTIVATE_IMPL_PROXY is
+	quick_activate: IQUICK_ACTIVATE_IMPL_PROXY
 			-- IQuickActivate interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			retry
 		end
 			
-	ole_object: IOLE_OBJECT_IMPL_PROXY is
+	ole_object: IOLE_OBJECT_IMPL_PROXY
 			-- IOleObject interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -72,7 +72,7 @@ feature -- Access
 			retry
 		end
 
-	object_with_site: IOBJECT_WITH_SITE_IMPL_PROXY is
+	object_with_site: IOBJECT_WITH_SITE_IMPL_PROXY
 			-- IObjectWithSite interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -90,7 +90,7 @@ feature -- Access
 			retry
 		end
 
-	persist_memory: IPERSIST_MEMORY_IMPL_PROXY is
+	persist_memory: IPERSIST_MEMORY_IMPL_PROXY
 			-- IPersistMemory interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -108,7 +108,7 @@ feature -- Access
 			retry
 		end
 
-	persist_stream_init: IPERSIST_STREAM_INIT_IMPL_PROXY is
+	persist_stream_init: IPERSIST_STREAM_INIT_IMPL_PROXY
 			-- IPersistStreamInit interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -126,7 +126,7 @@ feature -- Access
 			retry
 		end
 
-	ole_control: IOLE_CONTROL_IMPL_PROXY is
+	ole_control: IOLE_CONTROL_IMPL_PROXY
 			-- IOleControl interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -144,7 +144,7 @@ feature -- Access
 			retry
 		end
 			
-	ole_in_place_object: IOLE_IN_PLACE_OBJECT_IMPL_PROXY is
+	ole_in_place_object: IOLE_IN_PLACE_OBJECT_IMPL_PROXY
 			-- IOleInPlaceObject interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -162,7 +162,7 @@ feature -- Access
 			retry
 		end
 
-	ole_in_place_object_windowless: IOLE_IN_PLACE_OBJECT_WINDOWLESS_IMPL_PROXY is
+	ole_in_place_object_windowless: IOLE_IN_PLACE_OBJECT_WINDOWLESS_IMPL_PROXY
 			-- IOleInPlaceObjectWindowless interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -180,7 +180,7 @@ feature -- Access
 			retry
 		end
 
-	ole_in_place_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_IMPL_PROXY is
+	ole_in_place_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_IMPL_PROXY
 			-- IOleInPlaceActiveObject interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -198,7 +198,7 @@ feature -- Access
 			retry
 		end
 
-	ole_cache: IOLE_CACHE_IMPL_PROXY is
+	ole_cache: IOLE_CACHE_IMPL_PROXY
 			-- IOleCache interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -216,7 +216,7 @@ feature -- Access
 			retry
 		end
 
-	view_object: IVIEW_OBJECT_IMPL_PROXY is
+	view_object: IVIEW_OBJECT_IMPL_PROXY
 			-- IViewObject interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -234,7 +234,7 @@ feature -- Access
 			retry
 		end
 
-	view_object2: IVIEW_OBJECT2_IMPL_PROXY is
+	view_object2: IVIEW_OBJECT2_IMPL_PROXY
 			-- IViewObject2 interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -252,7 +252,7 @@ feature -- Access
 			retry
 		end
 
-	view_object_ex: IVIEW_OBJECT_EX_IMPL_PROXY is
+	view_object_ex: IVIEW_OBJECT_EX_IMPL_PROXY
 			-- IViewObjectEx interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -270,7 +270,7 @@ feature -- Access
 			retry
 		end
 
-	data_object: IDATA_OBJECT_IMPL_PROXY is
+	data_object: IDATA_OBJECT_IMPL_PROXY
 			-- IDataObject interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -288,7 +288,7 @@ feature -- Access
 			retry
 		end
 
-	persist_property_bag: IPERSIST_PROPERTY_BAG_IMPL_PROXY is
+	persist_property_bag: IPERSIST_PROPERTY_BAG_IMPL_PROXY
 			-- IPersistPropertyBag interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -306,7 +306,7 @@ feature -- Access
 			retry
 		end
 
-	specify_property_pages: ISPECIFY_PROPERTY_PAGES_IMPL_PROXY is
+	specify_property_pages: ISPECIFY_PROPERTY_PAGES_IMPL_PROXY
 			-- ISpecifyPropertyPages interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -324,7 +324,7 @@ feature -- Access
 			retry
 		end
 
-	per_property_browsing: IPER_PROPERTY_BROWSING_IMPL_PROXY is
+	per_property_browsing: IPER_PROPERTY_BROWSING_IMPL_PROXY
 			-- IPerPropertyBrowsing interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -342,7 +342,7 @@ feature -- Access
 			retry
 		end
 
-	persist: IPERSIST_IMPL_PROXY is
+	persist: IPERSIST_IMPL_PROXY
 			-- IPersist interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -360,7 +360,7 @@ feature -- Access
 			retry
 		end
 
-	persist_storage: IPERSIST_STORAGE_IMPL_PROXY is
+	persist_storage: IPERSIST_STORAGE_IMPL_PROXY
 			-- IPersistStorage interface of control.
 		require
 			non_void_control_unknown: unknown_control /= Void
@@ -380,7 +380,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	release_all is
+	release_all
 			-- Release all interfaces.
 		do
 			if 
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 	m_persist_storage: IPERSIST_STORAGE_IMPL_PROXY;
 			-- IPersistStorage interface of control.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,77 +12,77 @@ inherit
 
 feature -- Status Report
 
-	set_page_site_user_precondition (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE): BOOLEAN is
+	set_page_site_user_precondition (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_page_site'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	activate_user_precondition (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER): BOOLEAN is
+	activate_user_precondition (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER): BOOLEAN
 			-- User-defined preconditions for `activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	deactivate_user_precondition: BOOLEAN is
+	deactivate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `deactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_page_info_user_precondition (p_page_info: TAG_PROPPAGEINFO_RECORD): BOOLEAN is
+	get_page_info_user_precondition (p_page_info: TAG_PROPPAGEINFO_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_page_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_objects_user_precondition (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE]): BOOLEAN is
+	set_objects_user_precondition (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `set_objects'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	show_user_precondition (n_cmd_show: INTEGER): BOOLEAN is
+	show_user_precondition (n_cmd_show: INTEGER): BOOLEAN
 			-- User-defined preconditions for `show'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	move_user_precondition (p_rect: TAG_RECT_RECORD): BOOLEAN is
+	move_user_precondition (p_rect: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `move'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_page_dirty_user_precondition: BOOLEAN is
+	is_page_dirty_user_precondition: BOOLEAN
 			-- User-defined preconditions for `is_page_dirty'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	apply_user_precondition: BOOLEAN is
+	apply_user_precondition: BOOLEAN
 			-- User-defined preconditions for `apply'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	help_user_precondition (psz_help_dir: STRING): BOOLEAN is
+	help_user_precondition (psz_help_dir: STRING): BOOLEAN
 			-- User-defined preconditions for `help'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_accelerator_user_precondition (p_msg: TAG_MSG_RECORD): BOOLEAN is
+	translate_accelerator_user_precondition (p_msg: TAG_MSG_RECORD): BOOLEAN
 			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
@@ -91,7 +91,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	set_page_site (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE) is
+	set_page_site (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE)
 			-- No description available.
 			-- `p_page_site' [in].  
 		require
@@ -100,7 +100,7 @@ feature -- Basic Operations
 
 		end
 
-	activate (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER) is
+	activate (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER)
 			-- No description available.
 			-- `hwnd_parent' [in].  
 			-- `p_rect' [in].  
@@ -113,7 +113,7 @@ feature -- Basic Operations
 
 		end
 
-	deactivate is
+	deactivate
 			-- No description available.
 		require
 			deactivate_user_precondition: deactivate_user_precondition
@@ -121,7 +121,7 @@ feature -- Basic Operations
 
 		end
 
-	get_page_info (p_page_info: TAG_PROPPAGEINFO_RECORD) is
+	get_page_info (p_page_info: TAG_PROPPAGEINFO_RECORD)
 			-- No description available.
 			-- `p_page_info' [out].  
 		require
@@ -132,7 +132,7 @@ feature -- Basic Operations
 
 		end
 
-	set_objects (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE]) is
+	set_objects (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `c_objects' [in].  
 			-- `ppunk' [in].  
@@ -144,7 +144,7 @@ feature -- Basic Operations
 
 		end
 
-	show (n_cmd_show: INTEGER) is
+	show (n_cmd_show: INTEGER)
 			-- No description available.
 			-- `n_cmd_show' [in].  
 		require
@@ -153,7 +153,7 @@ feature -- Basic Operations
 
 		end
 
-	move (p_rect: TAG_RECT_RECORD) is
+	move (p_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `p_rect' [in].  
 		require
@@ -164,7 +164,7 @@ feature -- Basic Operations
 
 		end
 
-	is_page_dirty is
+	is_page_dirty
 			-- No description available.
 		require
 			is_page_dirty_user_precondition: is_page_dirty_user_precondition
@@ -172,7 +172,7 @@ feature -- Basic Operations
 
 		end
 
-	apply is
+	apply
 			-- No description available.
 		require
 			apply_user_precondition: apply_user_precondition
@@ -180,7 +180,7 @@ feature -- Basic Operations
 
 		end
 
-	help (psz_help_dir: STRING) is
+	help (psz_help_dir: STRING)
 			-- No description available.
 			-- `psz_help_dir' [in].  
 		require
@@ -189,7 +189,7 @@ feature -- Basic Operations
 
 		end
 
-	translate_accelerator (p_msg: TAG_MSG_RECORD) is
+	translate_accelerator (p_msg: TAG_MSG_RECORD)
 			-- No description available.
 			-- `p_msg' [in].  
 		require
@@ -200,7 +200,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

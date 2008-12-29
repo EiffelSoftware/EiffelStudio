@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -22,14 +22,14 @@ feature -- Status report
 	is_connected: BOOLEAN
 			-- Has connection to the data base server succeeded?
 
-	is_error_updated: BOOLEAN is
+	is_error_updated: BOOLEAN
 			-- Has an Oracle/ODBC function been called since last update which may have
 			-- updated error status?
 		do
 			Result := implementation.is_error_updated
 		end
 
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Error code prompted by database server
 		do
 			if not is_error_updated then
@@ -38,14 +38,14 @@ feature -- Status report
 			Result := error_code_stored
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Is there any record matching the last
 			-- selection condition used ?
 		do
 			Result := implementation.found
 		end
 
-	error_message: STRING is
+	error_message: STRING
 			-- SQL error message prompted by database server
 		do
 			if not handle.status.is_error_updated then
@@ -54,7 +54,7 @@ feature -- Status report
 			Result := error_message_stored
 		end
 
-	warning_message: STRING is
+	warning_message: STRING
 			-- SQL warning message prompted by database server
 		do
 			if not handle.status.is_error_updated then
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_connect (new_value: BOOLEAN) is
+	set_connect (new_value: BOOLEAN)
 			-- Change state of connection.
 		do
 			is_connected := new_value
@@ -73,7 +73,7 @@ feature -- Status setting
 			is_connected_reset: is_connected = new_value
 		end
 
-	reset is
+	reset
 			-- Reset database error status.
 
 		do
@@ -102,7 +102,7 @@ feature {NONE} -- error status implementation
 	error_code_stored: INTEGER
 			-- error code
 
-	update_error_status is
+	update_error_status
 			-- set `error_message_stored', `error_code_stored', `warning_message_stored' with
 			-- error_status from the database server.
 		do
@@ -115,7 +115,7 @@ feature {NONE} -- error status implementation
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create `implementation' handle.
 		do
 			implementation := handle.database.db_status
@@ -125,7 +125,7 @@ invariant
 
 	has_handle: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

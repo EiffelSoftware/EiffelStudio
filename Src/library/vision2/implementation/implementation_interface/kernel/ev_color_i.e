@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision color. Implementation interface.%N%
 		%See ev_color.e"
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create zero intinsity color.
 		deferred
 		ensure then
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {EV_COLOR} -- Access
 
-	red: REAL is
+	red: REAL
 			-- Intensity of red component.
 			-- Range: [0,1]
 		deferred
@@ -39,7 +39,7 @@ feature {EV_COLOR} -- Access
 			within_range: Result >= 0 and Result <= 1
 		end
 
-	green: REAL is
+	green: REAL
 			-- Intensity of green component.
 			-- Range: [0,1]
 		deferred
@@ -47,7 +47,7 @@ feature {EV_COLOR} -- Access
 			within_range: Result >= 0 and Result <= 1
 		end
 
-	blue: REAL is
+	blue: REAL
 			-- Intensity of blue component.
 			-- Range: [0,1]
 		deferred
@@ -55,7 +55,7 @@ feature {EV_COLOR} -- Access
 			within_range: Result >= 0 and Result <= 1
 		end
 
-	name: STRING_32 is
+	name: STRING_32
 			-- A textual description.
 		deferred
 		ensure
@@ -64,7 +64,7 @@ feature {EV_COLOR} -- Access
 
 feature {EV_COLOR} -- Element change
 
-	set_red (a_red: REAL) is
+	set_red (a_red: REAL)
 			-- Assign `a_red' to `red'.
 		require
 			within_range: a_red >= 0 and a_red <= 1
@@ -73,7 +73,7 @@ feature {EV_COLOR} -- Element change
 			red_assigned: (red - a_red).abs <= delta
 		end
 
-	set_green (a_green: REAL) is
+	set_green (a_green: REAL)
 			-- Assign `a_green' to `green'.
 		require
 			within_range: a_green >= 0 and a_green <= 1
@@ -82,7 +82,7 @@ feature {EV_COLOR} -- Element change
 			green_assigned: (green - a_green).abs <= delta
 		end
 
-	set_blue (a_blue: REAL) is
+	set_blue (a_blue: REAL)
 			-- Assign `a_blue' to `blue'.
 		require
 			blue_within_range: a_blue >= 0 and a_blue <= 1
@@ -91,7 +91,7 @@ feature {EV_COLOR} -- Element change
 			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
-	set_name (a_name: STRING_GENERAL) is
+	set_name (a_name: STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		require
 			name_not_void: a_name /= Void
@@ -102,7 +102,7 @@ feature {EV_COLOR} -- Element change
 
 feature {EV_COLOR} -- Conversion
 
-	rgb_24_bit: INTEGER is
+	rgb_24_bit: INTEGER
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		deferred
@@ -110,7 +110,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and result <= interface.Max_24_bit
 		end
 
-	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
+	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER)
 			-- Set intensities from `a_24_bit_rgb' value
 			-- with blue in the least significant 8 bits.
 		require
@@ -121,7 +121,7 @@ feature {EV_COLOR} -- Conversion
 			rgb_assigned: rgb_24_bit = a_24_bit_rgb
 		end
 
-	red_8_bit: INTEGER is
+	red_8_bit: INTEGER
 			-- Intensity of `red' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -130,7 +130,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_8_bit
 		end
 
-	green_8_bit: INTEGER is
+	green_8_bit: INTEGER
 			-- Intensity of `green' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -139,7 +139,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_8_bit
 		end
 
-	blue_8_bit: INTEGER is
+	blue_8_bit: INTEGER
 			-- Intensity of `blue' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -148,7 +148,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_8_bit
 		end
 
-	set_red_with_8_bit (an_8_bit_red: INTEGER) is
+	set_red_with_8_bit (an_8_bit_red: INTEGER)
 			-- Set `red' from `an_8_bit_red' intinsity.
 		require
 			within_range: an_8_bit_red >= 0 and
@@ -158,7 +158,7 @@ feature {EV_COLOR} -- Conversion
 			red_assigned: red_8_bit = an_8_bit_red
 		end
 
-	set_green_with_8_bit (an_8_bit_green: INTEGER) is
+	set_green_with_8_bit (an_8_bit_green: INTEGER)
 			-- Set `green' from `an_8_bit_green' intinsity.
 		require
 			within_range: an_8_bit_green >= 0 and
@@ -168,7 +168,7 @@ feature {EV_COLOR} -- Conversion
 			green_assigned: green_8_bit = an_8_bit_green
 		end
 
-	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
+	set_blue_with_8_bit (an_8_bit_blue: INTEGER)
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		require
 			within_range: an_8_bit_blue >= 0 and
@@ -178,7 +178,7 @@ feature {EV_COLOR} -- Conversion
 			blue_assigned: blue_8_bit = an_8_bit_blue
 		end
 
-	red_16_bit: INTEGER is
+	red_16_bit: INTEGER
 			-- Intensity of red component
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
@@ -187,7 +187,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_16_bit
 		end
 
-	green_16_bit: INTEGER is
+	green_16_bit: INTEGER
 			-- Intensity of green component
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
@@ -196,7 +196,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_16_bit
 		end
 
-	blue_16_bit: INTEGER is
+	blue_16_bit: INTEGER
 			-- Intensity of blue component
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
@@ -205,7 +205,7 @@ feature {EV_COLOR} -- Conversion
 			within_range: Result >= 0 and Result <= interface.Max_16_bit
 		end
 
-	set_red_with_16_bit (a_16_bit_red: INTEGER) is
+	set_red_with_16_bit (a_16_bit_red: INTEGER)
 			-- Set `red' from `a_8_bit_red' intinsity.
 		require
 			within_range: a_16_bit_red >= 0 and
@@ -215,7 +215,7 @@ feature {EV_COLOR} -- Conversion
 			red_assigned: red_16_bit = a_16_bit_red
 		end
 
-	set_green_with_16_bit (a_16_bit_green: INTEGER) is
+	set_green_with_16_bit (a_16_bit_green: INTEGER)
 			-- Set `green' from `a_16_bit_green' intinsity.
 		require
 			within_range: a_16_bit_green >= 0 and
@@ -225,7 +225,7 @@ feature {EV_COLOR} -- Conversion
 			green_assigned: green_16_bit = a_16_bit_green
 		end
 
-	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
+	set_blue_with_16_bit (a_16_bit_blue: INTEGER)
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		require
 			within_range: a_16_bit_blue >= 0 and
@@ -235,7 +235,7 @@ feature {EV_COLOR} -- Conversion
 			blue_assigned: blue_16_bit = a_16_bit_blue
 		end
 
-	set_with_other (other: EV_COLOR) is
+	set_with_other (other: EV_COLOR)
 			-- Take on the appearance of `other'.
 		do
 			set_red (other.red)
@@ -245,13 +245,13 @@ feature {EV_COLOR} -- Conversion
 
 feature --{EV_COLOR_I, EV_COLOR} -- Implementation
 
-	Default_name: STRING is "noname"
+	Default_name: STRING = "noname"
 			-- To be used as `name' when none is supplied.
 
 	interface: EV_COLOR
 			-- Interface of the current color.
 
-	delta: REAL is
+	delta: REAL
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
 		deferred
@@ -282,7 +282,7 @@ invariant
 	blue_8_bit_conversion: ((blue * interface.Max_8_bit) - blue_8_bit).abs < delta * interface.Max_8_bit
 	name_not_void: name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

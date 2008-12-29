@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Draw history of the memory useage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_default  is
+	make_default
 			-- Creation method
 		do
 			graph_height := 80
@@ -34,14 +34,14 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	draw_graph (a_used_percent, a_overhead_percent: DOUBLE) is
+	draw_graph (a_used_percent, a_overhead_percent: DOUBLE)
 			-- Do draw_history graph and draw_history_grid.
 		do
 			save_history (a_used_percent, a_overhead_percent)
 			update_graph
 		end
 
-	update_graph is
+	update_graph
 			-- Update the graph, because size may changed.
 		do
 			internal_pixmap.clear
@@ -58,7 +58,7 @@ feature -- Command
 
 feature {NONE} -- Control
 
-	control_graph_size is
+	control_graph_size
 			-- Control the graph history size, so the graph will not so big.
 		require
 			two_history_same_size: graph_used_history.count = graph_overhead_history.count
@@ -78,20 +78,20 @@ feature {NONE} -- Control
 
 feature {NONE} -- Implemention
 
-	history_size: INTEGER is
+	history_size: INTEGER
 			-- Ths size of ARRAYED_LIST which contain the history of the graph.
 		do
 			Result := 1000
 		end
 
-	history_show_size: INTEGER is
+	history_show_size: INTEGER
 			-- Size of ARRAYED_LIST which will be used for show current's width.
 		do
 			Result := graph_width // step
 		end
 
 
-	draw_history_graph_line (a_history: like graph_used_history; a_color: EV_COLOR; a_width: INTEGER) is
+	draw_history_graph_line (a_history: like graph_used_history; a_color: EV_COLOR; a_width: INTEGER)
 			-- Only draw the graph of used/overhead history.
 		require
 			a_history_not_void: a_history /= Void
@@ -134,7 +134,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	draw_history_grid  is
+	draw_history_grid
 			-- Draw the grid on the history graph.
 		local
 			i : INTEGER
@@ -162,7 +162,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	save_history (used_percent, overhead_percent:DOUBLE)is
+	save_history (used_percent, overhead_percent:DOUBLE)
 			-- Save the used, overhead graph internal_pixmap data.
 		require
 			used_percent_valid: used_percent >= 0 and used_percent <= 1
@@ -178,16 +178,16 @@ feature {NONE} -- Implemention
 
 feature {NONE} -- Fields
 
-	step: INTEGER is 6
+	step: INTEGER = 6
 			-- The x step between update graph.
 
-	line_used_width: INTEGER is 3
+	line_used_width: INTEGER = 3
 			-- Used line width.
 
-	line_overhead_width: INTEGER is 2
+	line_overhead_width: INTEGER = 2
 			-- Overhead line width.
 
-	line_grid_width: INTEGER is 1
+	line_grid_width: INTEGER = 1
 			-- Grid line width.
 
 	reduced_x: INTEGER
@@ -216,7 +216,7 @@ invariant
 	graph_used_history_not_void: graph_used_history /= Void
 	graph_overhead_history_not_void: graph_overhead_history /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

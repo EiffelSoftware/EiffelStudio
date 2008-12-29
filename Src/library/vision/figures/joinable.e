@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Joinable figure (polyline...)"
 	legal: "See notice at end of class.";
@@ -12,21 +12,21 @@ class
 
 feature -- Element change 
 
-	set_bevel_join is
+	set_bevel_join
 			-- Specifies CapButt endpoint styles, with the triangular notch
 			-- filled.
 		do
 			join_style := JoinBevel
 		end;
 
-	set_miter_join is
+	set_miter_join
 			-- Specifies that the outer edges of the two lines would extend to
 			-- meet at an angle.
 		do
 			join_style := JoinMiter
 		end;
 
-	set_round_join is
+	set_round_join
 			-- Specifies that lines should be joined by a circular arc with
 			-- diameter equal to `line_width', centered on the join point.
 		do
@@ -35,20 +35,20 @@ feature -- Element change
 
 feature -- Status report
 
-	is_bevel_join: BOOLEAN is
+	is_bevel_join: BOOLEAN
 			-- Is CapButt endpoint styles, with the triangular notch filled ?
 		do
 			Result := join_style = JoinBevel
 		end;
 
-	is_miter_join: BOOLEAN is
+	is_miter_join: BOOLEAN
 			-- Are the outer edges of the two lines would extend to meet at
 			-- an angle ?
 		do
 			Result := join_style = JoinMiter
 		end;
 
-	is_round_join: BOOLEAN is
+	is_round_join: BOOLEAN
 			-- Are lines joined by a circular arc with diameter equal to
 			-- `line_width', centered on the join point ?
 		do
@@ -60,16 +60,16 @@ feature {NONE} -- Access
 	join_style: INTEGER;
 			-- How corners are drawn for wide lines drawn
 
-	JoinBevel: INTEGER is 2;
+	JoinBevel: INTEGER = 2;
 			-- Code to define join bevel way
 
-	JoinMiter: INTEGER is 0;
+	JoinMiter: INTEGER = 0;
 			-- Code to define join miter way
 
-	JoinRound: INTEGER is 1;;
+	JoinRound: INTEGER = 1;;
 			-- Code to define join round way
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

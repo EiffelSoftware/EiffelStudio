@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision multi-column-list, Carbon implementation."
 	legal: "See notice at end of class."
@@ -70,7 +70,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (0)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 			-- Call appropriate selection and deselection action sequences
 		do
 		end
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		-- Previous selection of `Current'
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call the selections actions for `clicked_row'
 		do
 			if not previous_selection.has (clicked_row.interface) then
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Call deselect actions for `deselected_row'
 		do
 				if deselected_row.deselect_actions_internal /= Void then
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	resize_model_if_needed (a_columns: INTEGER) is
+	resize_model_if_needed (a_columns: INTEGER)
 			--
 		do
 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 
 
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 		local
 			a_row_number: INTEGER
 			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			--
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
@@ -184,31 +184,31 @@ feature -- Access
 
 
 
-	model_column_count: INTEGER is
+	model_column_count: INTEGER
 			-- Number of columns in GtkTreeModel
 		do
 
 		end
 
-	rows, count: INTEGER is
+	rows, count: INTEGER
 			-- Number of rows in the list.
 		do
 			Result := ev_children.count
 		end
 
-	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW
 			-- `i_th' row in `Current'
 		do
 			Result := (ev_children @ i).interface
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+	selected_item: EV_MULTI_COLUMN_LIST_ROW
 			-- Item which is currently selected
 		do
 			Result ?= selected_item_imp.interface
 		end
 
-	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
@@ -220,19 +220,19 @@ feature -- Access
 
 feature -- Status report
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is at least one item selected ?
 		do
 
 		end
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- True if the user can choose several items
 			-- False otherwise.
 		do
 		end
 
-	title_shown: BOOLEAN is
+	title_shown: BOOLEAN
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
@@ -241,44 +241,44 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy screen widget implementation and EV_LIST_ITEM objects.
 		do
 			wipe_out
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS.
 		do
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS.
 		do
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		do
 
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		do
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the selection of the list.
 		do
 		end
 
-	resize_column_to_content (a_column: INTEGER) is
+	resize_column_to_content (a_column: INTEGER)
 			-- Resize column `a_column' to width of its widest text.
 		do
 		end
@@ -288,7 +288,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER) is
+	column_title_changed (a_txt: STRING_GENERAL; a_column: INTEGER)
 			-- Make `a_txt' the title of the column number.
 
 		local
@@ -303,7 +303,7 @@ feature -- Element change
 			ret := set_data_browser_list_view_header_desc_external (c_object, a_column, listviewheaderdesc.item)
 		end
 
-	column_width_changed (value: INTEGER; a_column: INTEGER) is
+	column_width_changed (value: INTEGER; a_column: INTEGER)
 			-- Make `value' the new width of the column number
 			-- `a_column'.
 		local
@@ -312,7 +312,7 @@ feature -- Element change
 			ret := set_data_browser_table_view_named_column_width_external (c_object, a_column, value)
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER)
 			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		local
 			ret, alignment: INTEGER_32
@@ -344,7 +344,7 @@ feature -- Element change
 			ret := set_data_browser_list_view_header_desc_external (c_object, a_column, listviewheaderdesc.item)
 		end
 
-	set_row_height (value: INTEGER) is
+	set_row_height (value: INTEGER)
 			-- Make `value' the new height of all the rows.
 		require
 			positive_value: value >= 0
@@ -354,7 +354,7 @@ feature -- Element change
 			ret := set_data_browser_table_view_row_height_external (c_object, value)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -379,13 +379,13 @@ feature -- Element change
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		do
 			Result := 74 -- Hardcoded, TODO calculate a meaningful height depending on the content
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := 55 -- Hardcoded, TODO calculate a meaningful width depending on the content
@@ -393,7 +393,7 @@ feature -- Minimum size
 
 feature -- Implementation
 
-	set_to_drag_and_drop: BOOLEAN is
+	set_to_drag_and_drop: BOOLEAN
 			-- Set transport mode to drag and drop.
 		do
 			if pnd_row_imp /= Void then
@@ -403,7 +403,7 @@ feature -- Implementation
 			end
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
 			if pnd_row_imp /= Void then
@@ -415,7 +415,7 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
 			if pnd_row_imp /= Void then
@@ -425,14 +425,14 @@ feature -- Implementation
 			end
 		end
 
-	disable_transport is
+	disable_transport
 			-- Disable PND transport
 		do
 			Precursor
 			update_pnd_status
 		end
 
-	update_pnd_status is
+	update_pnd_status
 			-- Update PND status of list and its children.
 		local
 			a_enable_flag: BOOLEAN
@@ -448,7 +448,7 @@ feature -- Implementation
 			update_pnd_connection (a_enable_flag)
 		end
 
-	update_pnd_connection (a_enable: BOOLEAN) is
+	update_pnd_connection (a_enable: BOOLEAN)
 			-- Update the PND connection of `Current' if needed.
 		do
 			if not is_transport_enabled then
@@ -465,7 +465,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Initialize a pick and drop transport.
 		local
 			a_row_index: INTEGER
@@ -497,7 +497,7 @@ feature -- Implementation
 
 	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			temp_pebble := pebble
@@ -513,7 +513,7 @@ feature -- Implementation
 			end
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
 		do
 			temp_accept_cursor := accept_cursor
@@ -567,7 +567,7 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER)  is
+	post_drop_steps (a_button: INTEGER)
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
@@ -595,7 +595,7 @@ feature -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
-	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+	row_index_from_y_coord (a_y: INTEGER): INTEGER
 			-- Returns the row index at relative coordinate `a_y'.
 		local
 			a_tree_path, a_tree_column: POINTER
@@ -606,7 +606,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 		end
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER
@@ -619,13 +619,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL)
 			--
 		do
 
 		end
 
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -637,14 +637,14 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 --			a_list_iter := ev_children.i_th (a_row).list_iter.item
 		end
 
-	remove_row_pixmap (a_row: INTEGER) is
+	remove_row_pixmap (a_row: INTEGER)
 			-- Remove pixmap from `a_row'
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER)
 			-- Update `child'.
 		require
 			child_exists: child /= Void
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			list.go_to (cur)
 		end
 
-	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
+	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `a_item' is visible on the screen.
 		local
 			list_item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			list_item_imp ?= a_item.implementation
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -728,7 +728,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove at position `i'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			update_pnd_status
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height of rows in `Current'
 		local
 			a_column_ptr: POINTER
@@ -757,7 +757,7 @@ feature {NONE} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
-	expand_column_count_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER)
 			-- Expand the number of columns to `a_columns'
 		do
 			create_list (a_columns)
@@ -765,7 +765,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to on-screen interactive widget
 		do
 		end
@@ -775,7 +775,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_MULTI_COLUMN_LIST_IMP
 

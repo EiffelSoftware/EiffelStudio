@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif dialog shell."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE) is
+	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE)
 			-- Create a dialog shell.
 		local
 			mc: MEL_COMPOSITE
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			initialize (Current)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

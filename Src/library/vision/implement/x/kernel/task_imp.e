@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"A tasking manager."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			ll_make;	
 			compare_objects
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_action (a_command: COMMAND; an_argument: ANY) is
+	add_action (a_command: COMMAND; an_argument: ANY)
 			-- Add `a_command' with `argument' to the list of action to execute 
 			-- while the system is waiting for user events.
 		local
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_action (a_command: COMMAND; an_argument: ANY) is
+	remove_action (a_command: COMMAND; an_argument: ANY)
 			-- Remove `a_command' with `argument' to the list of action to
 			-- execute while the system is waiting for user events.
 		local
@@ -80,7 +80,7 @@ feature -- Removal
 
 feature {NONE} -- Execution
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Call the command.
 		do
 			from
@@ -95,7 +95,7 @@ feature {NONE} -- Execution
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

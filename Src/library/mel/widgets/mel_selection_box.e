@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Widget for selecting one of a list of alternatives."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create motif selection box with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	apply_button: MEL_PUSH_BUTTON_GADGET is
+	apply_button: MEL_PUSH_BUTTON_GADGET
 			-- Apply button
 		local
 			w: POINTER
@@ -56,7 +56,7 @@ feature -- Access
 			end
 		end;
 
-	cancel_button: MEL_PUSH_BUTTON_GADGET is
+	cancel_button: MEL_PUSH_BUTTON_GADGET
 			-- Cancel button
 		local
 			w: POINTER
@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end;
 
-	help_button: MEL_PUSH_BUTTON_GADGET is
+	help_button: MEL_PUSH_BUTTON_GADGET
 			-- Help button
 		local
 			w: POINTER
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end;
 
-	ok_button: MEL_PUSH_BUTTON_GADGET is
+	ok_button: MEL_PUSH_BUTTON_GADGET
 			-- Ok button
 		local
 			w: POINTER
@@ -98,7 +98,7 @@ feature -- Access
 			end
 		end;
 
-	list: MEL_SCROLLED_LIST is
+	list: MEL_SCROLLED_LIST
 			-- List in box
 		local
 			w: POINTER
@@ -112,7 +112,7 @@ feature -- Access
 			end
 		end;
 
-	list_label: MEL_LABEL_GADGET is
+	list_label: MEL_LABEL_GADGET
 			-- Label of `list'
 		local
 			w: POINTER
@@ -126,7 +126,7 @@ feature -- Access
 			end
 		end;
 
-	selection_label: MEL_LABEL_GADGET is
+	selection_label: MEL_LABEL_GADGET
 			-- Label to show selection
 		local
 			w: POINTER
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end;
 
-	separator: MEL_SEPARATOR_GADGET is
+	separator: MEL_SEPARATOR_GADGET
 			-- Separator used
 		local
 			w: POINTER
@@ -154,7 +154,7 @@ feature -- Access
 			end
 		end;
 
-	text: MEL_TEXT_FIELD is
+	text: MEL_TEXT_FIELD
 			-- Text
 		local
 			w: POINTER
@@ -168,7 +168,7 @@ feature -- Access
 			end
 		end;
 
-	work_area: MEL_WIDGET is
+	work_area: MEL_WIDGET
 			-- Work area of box
 		local
 			w: POINTER
@@ -182,7 +182,7 @@ feature -- Access
 			end
 		end;
 
-	default_button: MEL_PUSH_BUTTON_GADGET is
+	default_button: MEL_PUSH_BUTTON_GADGET
 			-- Default button
 		local
 			ptr: POINTER
@@ -196,25 +196,25 @@ feature -- Access
 			end;
 		end;
 
-	apply_command: MEL_COMMAND_EXEC is
+	apply_command: MEL_COMMAND_EXEC
 			-- Command set for the apply callback
 		do
 			Result := motif_command (XmNapplyCallback)
 		end;
 
-	cancel_command: MEL_COMMAND_EXEC is
+	cancel_command: MEL_COMMAND_EXEC
 			-- Command set for the cancel callback
 		do
 			Result := motif_command (XmNcancelCallback)
 		end;
 
-	ok_command: MEL_COMMAND_EXEC is
+	ok_command: MEL_COMMAND_EXEC
 			-- Command set for the ok callback
 		do
 			Result := motif_command (XmNokCallback)
 		end;
 
-	no_match_command: MEL_COMMAND_EXEC is
+	no_match_command: MEL_COMMAND_EXEC
 			-- Command set for the no match callback
 		do
 			Result := motif_command (XmNnoMatchCallback)
@@ -222,7 +222,7 @@ feature -- Access
 
 feature -- Status report
 
-	apply_label_string: MEL_STRING is
+	apply_label_string: MEL_STRING
 			-- Label of `apply_button'
 		require
 			exists: not is_destroyed
@@ -232,7 +232,7 @@ feature -- Status report
 			apply_label_string_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	cancel_label_string: MEL_STRING is
+	cancel_label_string: MEL_STRING
 			-- Label of `cancel_button'
 		require
 			exists: not is_destroyed
@@ -242,7 +242,7 @@ feature -- Status report
 			cancel_label_string_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	help_label_string: MEL_STRING is
+	help_label_string: MEL_STRING
 			-- Label of `help_button'
 		require
 			exists: not is_destroyed
@@ -252,7 +252,7 @@ feature -- Status report
 			help_label_string_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	ok_label_string: MEL_STRING is
+	ok_label_string: MEL_STRING
 			-- Label of `ok_button'
 		require
 			exists: not is_destroyed
@@ -262,7 +262,7 @@ feature -- Status report
 			ok_label_string_exists: Result /= Void and then not Result.is_destroyed
 		end;
 
-	is_work_area_above_selection: BOOLEAN is
+	is_work_area_above_selection: BOOLEAN
 			-- Is `work_area' displayed above `text'?
 		require
 			exists: not is_destroyed
@@ -270,7 +270,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_ABOVE_SELECTION
 		end;
 
-	 is_work_area_below_selection: BOOLEAN is
+	 is_work_area_below_selection: BOOLEAN
 			-- Is `work_area' displayed below `text'?
 		require
 			exists: not is_destroyed
@@ -278,7 +278,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_BELOW_SELECTION
 		end;
 
-	is_work_area_on_top: BOOLEAN is
+	is_work_area_on_top: BOOLEAN
 			-- Is `work_area' displayed above `list'?
 		require
 			exists: not is_destroyed
@@ -286,7 +286,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_TOP
 		end;
 
-	is_prompt_dialog: BOOLEAN is
+	is_prompt_dialog: BOOLEAN
 			-- Is the dialog type "prompt dialog"?
 		require
 			exists: not is_destroyed
@@ -294,7 +294,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_PROMPT
 		end;
 
-	is_selection_dialog: BOOLEAN is
+	is_selection_dialog: BOOLEAN
 			-- Is the dialog type "selection dialog"?
 		require
 			exists: not is_destroyed
@@ -302,7 +302,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_SELECTION
 		end;
 
-	is_command_dialog: BOOLEAN is
+	is_command_dialog: BOOLEAN
 			-- Is the dialog type "command dialog"?
 		require
 			exists: not is_destroyed
@@ -310,7 +310,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_COMMAND
 		end;
 
-	is_file_selection_dialog: BOOLEAN is
+	is_file_selection_dialog: BOOLEAN
 			-- Is the dialog type "file selection dialog"?
 		require
 			exists: not is_destroyed
@@ -318,7 +318,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_FILE_SELECTION
 		end;
 
-	list_item_count: INTEGER is
+	list_item_count: INTEGER
 			-- Number of items in `list_items'
 		require
 			exists: not is_destroyed
@@ -328,7 +328,7 @@ feature -- Status report
 			list_item_count_large_enough: Result >= 0
 		end;
 
-	list_items: MEL_STRING_TABLE is
+	list_items: MEL_STRING_TABLE
 			-- Items in `list'
 		require
 			exists: not is_destroyed
@@ -342,7 +342,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	list_label_string: MEL_STRING is
+	list_label_string: MEL_STRING
 			-- Label of `list'
 		require
 			exists: not is_destroyed
@@ -352,7 +352,7 @@ feature -- Status report
 			Result_not_void: Result /= Void and then Result.is_destroyed
 		end;
 
-	list_visible_item_count: INTEGER is
+	list_visible_item_count: INTEGER
 			-- Number of visible items in `list'
 		require
 			exists: not is_destroyed
@@ -362,7 +362,7 @@ feature -- Status report
 			Result_large_enough: Result >= 0
 		end;
 
-	buttons_minimized: BOOLEAN is
+	buttons_minimized: BOOLEAN
 			-- Keep the buttons their preferred size?
 		require
 			exists: not is_destroyed
@@ -370,7 +370,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNminimizeButtons)
 		end;
 
-	must_match: BOOLEAN is
+	must_match: BOOLEAN
 			-- Must the typed selection match an item in `list'?
 		require
 			exists: not is_destroyed
@@ -378,7 +378,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNmustMatch)
 		end;
 
-	text_accelerators is
+	text_accelerators
 			-- The translations to add to `text'.
 		require
 			exists: not is_destroyed
@@ -386,7 +386,7 @@ feature -- Status report
 		ensure
 		end;
 
-	text_columns: INTEGER is
+	text_columns: INTEGER
 			-- Number of columns in `text'
 		require
 			exists: not is_destroyed
@@ -396,7 +396,7 @@ feature -- Status report
 			text_columns_large_enough: Result >= 0
 		end;
 
-	text_string: MEL_STRING is
+	text_string: MEL_STRING
 			-- String in `text'
 		require
 			exists: not is_destroyed
@@ -408,7 +408,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_apply_label_string (a_compound_string: MEL_STRING) is
+	set_apply_label_string (a_compound_string: MEL_STRING)
 			-- Set `apply_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -419,7 +419,7 @@ feature -- Status setting
 			apply_label_string_set: apply_label_string.is_equal (a_compound_string)
 		end;
 
-	set_cancel_label_string (a_compound_string: MEL_STRING) is
+	set_cancel_label_string (a_compound_string: MEL_STRING)
 			-- Set `cancel_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -430,7 +430,7 @@ feature -- Status setting
 			cancel_label_string_set: cancel_label_string.is_equal (a_compound_string)
 		end;
 
-	set_help_label_string (a_compound_string: MEL_STRING) is
+	set_help_label_string (a_compound_string: MEL_STRING)
 			-- Set `help_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -441,7 +441,7 @@ feature -- Status setting
 			help_label_string_set: help_label_string.is_equal (a_compound_string)
 		end;
 
-	set_ok_label_string (a_compound_string: MEL_STRING) is
+	set_ok_label_string (a_compound_string: MEL_STRING)
 			-- Set `ok_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -452,7 +452,7 @@ feature -- Status setting
 			ok_label_string_set: ok_label_string.is_equal (a_compound_string)
 		end;
 
-	place_work_area_above_selection is
+	place_work_area_above_selection
 			-- Set `is_work_area_above_selection'.
 		require
 			exists: not is_destroyed
@@ -462,7 +462,7 @@ feature -- Status setting
 			work_area_is_placed_above_selection: is_work_area_above_selection
 		end;
 
-	 place_work_area_below_selection is
+	 place_work_area_below_selection
 			-- Set `is_work_area_below_selection'.
 		require
 			exists: not is_destroyed
@@ -472,7 +472,7 @@ feature -- Status setting
 			work_area_is_placed_below_selection: is_work_area_below_selection
 		end;
 
-	place_work_area_on_top is
+	place_work_area_on_top
 			-- Set `is_work_area_on_top'.
 		require
 			exists: not is_destroyed
@@ -482,7 +482,7 @@ feature -- Status setting
 			work_area_is_placed_on_top: is_work_area_on_top
 		end;
 
-	set_prompt_dialog is
+	set_prompt_dialog
 			-- Set `is_prompt_dialog'.
 		require
 			exists: not is_destroyed
@@ -492,7 +492,7 @@ feature -- Status setting
 			dialog_prompt_set: is_prompt_dialog
 		end;
 
-	set_selection_dialog is
+	set_selection_dialog
 			-- Set `is_selection_dialog'.
 		require
 			exists: not is_destroyed
@@ -502,7 +502,7 @@ feature -- Status setting
 			dialog_selection_set: is_selection_dialog
 		end;
 
-	set_command_dialog is
+	set_command_dialog
 			-- Set `is_command_dialog'.
 		require
 			exists: not is_destroyed
@@ -512,7 +512,7 @@ feature -- Status setting
 			dialog_command_set: is_command_dialog
 		end;
 
-	set_file_selection_dialog is
+	set_file_selection_dialog
 			-- Set `is_file_selection_dialog'
 		require
 			exists: not is_destroyed
@@ -522,7 +522,7 @@ feature -- Status setting
 			dialog_file_selection_set: is_file_selection_dialog
 		end;
 
-	set_list_item_count (a_count: INTEGER) is
+	set_list_item_count (a_count: INTEGER)
 			-- Set `list_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -533,7 +533,7 @@ feature -- Status setting
 			list_item_count_set: list_item_count = a_count
 		end;
 
-	set_list_items (a_list: MEL_STRING_TABLE) is
+	set_list_items (a_list: MEL_STRING_TABLE)
 			-- Set `list_items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -542,7 +542,7 @@ feature -- Status setting
 			set_xm_string_table (screen_object, XmNlistItems, a_list.handle)
 		end;
 
-	set_list_label_string (a_compound_string: MEL_STRING) is
+	set_list_label_string (a_compound_string: MEL_STRING)
 			-- Set `list_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -553,7 +553,7 @@ feature -- Status setting
 			list_label_string_set: list_label_string.is_equal (a_compound_string)
 		end;
 
-	set_list_visible_item_count (a_count: INTEGER) is
+	set_list_visible_item_count (a_count: INTEGER)
 			-- Set `list_visible_item_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -564,7 +564,7 @@ feature -- Status setting
 			list_visible_item_count_set: list_visible_item_count = a_count
 		end;
 
-	minimize_button is
+	minimize_button
 			-- Set `buttons_minimized' to True.
 		require
 			exists: not is_destroyed
@@ -574,7 +574,7 @@ feature -- Status setting
 			buttons_minimized: buttons_minimized
 		end;
 
-	maximize_button is
+	maximize_button
 			-- Set `buttons_minimized' to False.
 		require
 			exists: not is_destroyed
@@ -584,7 +584,7 @@ feature -- Status setting
 			buttons_maximized: not buttons_minimized
 		end;
 
-	enable_must_match is
+	enable_must_match
 			-- Set `must_match' to True.
 		require
 			exists: not is_destroyed
@@ -594,7 +594,7 @@ feature -- Status setting
 			must_match_enabled: must_match 
 		end;
 
-	disable_must_match is
+	disable_must_match
 			-- Set `must_match' to False.
 		require
 			exists: not is_destroyed
@@ -604,7 +604,7 @@ feature -- Status setting
 			must_match_disabled: not must_match 
 		end;
 
-	set_text_columns (a_number: INTEGER) is
+	set_text_columns (a_number: INTEGER)
 			-- Set `text_columns' to `a_number'.
 		require
 			exists: not is_destroyed;
@@ -615,7 +615,7 @@ feature -- Status setting
 			text_columns_set: text_columns = a_number
 		end;
 
-	set_text_string (a_compound_string: MEL_STRING) is
+	set_text_string (a_compound_string: MEL_STRING)
 			-- Set `text_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -628,7 +628,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user selects
 			-- the `apply_button'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -641,7 +641,7 @@ feature -- Element change
 			command_set: command_set (apply_command, a_command, an_argument)
 		end;
 
-	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user selects
 			-- the `cancel_button'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -654,7 +654,7 @@ feature -- Element change
 			command_set: command_set (cancel_command, a_command, an_argument)
 		end;
 
-	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user selects
 			-- the `ok_button'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -667,7 +667,7 @@ feature -- Element change
 			command_set: command_set (ok_command, a_command, an_argument)
 		end;
 
-	set_no_match_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_no_match_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user types a selection
 			-- in the text area that does not match an item in the list.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -682,7 +682,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_callback is
+	remove_apply_callback
 			-- Remove the command for the apply callback.
 		do
 			remove_callback (XmNapplyCallback)
@@ -690,7 +690,7 @@ feature -- Removal
 			removed: apply_command = Void
 		end;
 
-	remove_cancel_callback is
+	remove_cancel_callback
 			-- Remove the command for the cancel callback.
 		do
 			remove_callback (XmNcancelCallback)
@@ -698,7 +698,7 @@ feature -- Removal
 			removed: cancel_command = Void
 		end;
 
-	remove_ok_callback is
+	remove_ok_callback
 			-- Remove the command for the ok callback.
 		do
 			remove_callback (XmNokCallback)
@@ -706,7 +706,7 @@ feature -- Removal
 			removed: ok_command = Void
 		end;
 
-	remove_no_match_callback is
+	remove_no_match_callback
 			-- Remove the command for the no match callback.
 		do
 			remove_callback (XmNnoMatchCallback)
@@ -717,7 +717,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr, 
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -734,21 +734,21 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- External Features
 
-	xm_create_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/SelectioB.h>"
 		alias
 			"XmCreateSelectionBox"
 		end;
 
-	xm_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
+	xm_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER
 		external
 			"C (Widget, unsigned char): EIF_POINTER | <Xm/SelectioB.h>"
 		alias
 			"XmSelectionBoxGetChild"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

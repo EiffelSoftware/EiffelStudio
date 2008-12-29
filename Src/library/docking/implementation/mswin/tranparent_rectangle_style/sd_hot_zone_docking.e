@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for SD_DOCKING_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_zone: SD_DOCKING_ZONE; a_rect: EV_RECTANGLE) is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_zone: SD_DOCKING_ZONE; a_rect: EV_RECTANGLE)
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		local
 			l_caller: SD_ZONE
@@ -64,7 +64,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine.
 		do
 			if a_dockable then
@@ -91,7 +91,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		do
 			if internal_shared.show_all_feedback_indicator then
@@ -105,7 +105,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 			if not internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
@@ -115,7 +115,7 @@ feature -- Redefine
 			end
 		end
 
-	show_indicator is
+	show_indicator
 			-- Show indicators if possible.
 		do
 			if not internal_indicator.exists then
@@ -123,7 +123,7 @@ feature -- Redefine
 			end
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Clear indicators.
 		do
 			if internal_indicator.exists then
@@ -131,7 +131,7 @@ feature -- Redefine
 			end
 		end
 
-	build_indicator is
+	build_indicator
 			-- Build indicator
 		do
 			create internal_indicator.make (internal_shared.icons.arrow_indicator_center, internal_shared.feedback.feedback_rect)
@@ -141,13 +141,13 @@ feature -- Redefine
 
 feature -- Query
 
-	docking_zone_of (a_zone: SD_ZONE): SD_DOCKING_ZONE is
+	docking_zone_of (a_zone: SD_ZONE): SD_DOCKING_ZONE
 			-- Type convertion.
 		do
 			Result ?= a_zone
 		end
 
-	zone_type_valid (a_zone: SD_ZONE): BOOLEAN is
+	zone_type_valid (a_zone: SD_ZONE): BOOLEAN
 			-- If `a_zone''s type fit for current class?
 		require
 			not_void: a_zone /= Void
@@ -157,7 +157,7 @@ feature -- Query
 
 feature {NONE} -- Implementation functions.
 
-	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE) is
+	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE)
 			-- Update the feedback when pointer in or out the five rectangle area.
 		require
 			a_rect_not_void: a_rect /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	draw_drag_window_indicator (a_screen_x, a_screen_y: INTEGER) is
+	draw_drag_window_indicator (a_screen_x, a_screen_y: INTEGER)
 			-- Draw dragged window feedback which represent window position.
 		local
 			l_shared: like internal_shared
@@ -213,13 +213,13 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Does `internal_rectangle' has `a_screen_x' and `a_screen_y'?
 		do
 			Result := internal_rectangle.has_x_y (a_screen_x, a_screen_y)
 		end
 
-	set_rectangle (a_rect: like internal_rectangle) is
+	set_rectangle (a_rect: like internal_rectangle)
 			-- Set the rectangle which allow user to dock.
 		require
 			a_rect_not_void: a_rect /= Void
@@ -252,10 +252,10 @@ feature {NONE} -- Implementation functions.
 
 feature {NONE} -- Implementation attributes.
 
-	pixmap_center_width: INTEGER is 34
+	pixmap_center_width: INTEGER = 34
 			-- Width and height of the area in center figure area.
 
-	pixmap_corner_width: INTEGER is 36
+	pixmap_corner_width: INTEGER = 36
 			-- Width and height of the area in four corner figure areas.
 
 	internal_rectangle: EV_RECTANGLE
@@ -275,7 +275,7 @@ invariant
 	internal_rectangle_not_void: internal_rectangle /= Void
 	not_void: internal_indicator /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

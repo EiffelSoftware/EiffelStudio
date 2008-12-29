@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe one or several tabulations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialisation
 
-	make (number: INTEGER) is
+	make (number: INTEGER)
 		require
 			number_valid: number > 0
 		do
@@ -35,12 +35,12 @@ feature -- Initialisation
 
 feature -- Status report
 
-	is_tabulation: BOOLEAN is True
+	is_tabulation: BOOLEAN = True
 			-- Is current a tabulation token?
 
 feature -- Width & Height
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixel of the entire token.
 		local
 			l_tab_width: INTEGER
@@ -54,7 +54,7 @@ feature -- Width & Height
 			Result := Result + (l_tab_width * (length - 1))
 		end
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
@@ -73,7 +73,7 @@ feature -- Width & Height
 			end
 		end
 
-	retrieve_position_by_width (a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local
@@ -92,7 +92,7 @@ feature -- Width & Height
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_tabulation (Current)
@@ -100,7 +100,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
+	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER
 		local
 			the_text_color: EV_COLOR
 			the_background_color: EV_COLOR
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private characteristics & constants
 
-	tabulation_width: INTEGER is
+	tabulation_width: INTEGER
 			-- Compute the number of pixels represented by a tabulation based on
 			-- user preferences number of spaces per tabulation.
 		do
@@ -184,16 +184,16 @@ feature {NONE} -- Private characteristics & constants
 			end
 		end
 
-	tabulation_symbol_width: INTEGER is
+	tabulation_symbol_width: INTEGER
 			-- Compute the number of pixels represented by the tabulation symbol.
 		do
 			Result := font.string_width (tabulation_symbol)
 		end
 
-	tabulation_symbol: STRING is "»";
+	tabulation_symbol: STRING = "»";
 			-- Symbol for tabulation when formatting marks are shown.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tool bar dropdown button. Implementation interface."
 	date: "$Date$"

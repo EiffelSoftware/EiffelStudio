@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that describes an entry from a list that enumerates the threads executing in the system when a snapshot was taken"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	make
 
 feature{NONE} -- Initialization
-	make (owner_id: INTEGER; t_id: INTEGER; base_pri: INTEGER) is
+	make (owner_id: INTEGER; t_id: INTEGER; base_pri: INTEGER)
 			--
 		do
 			owner_process_id := owner_id
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Thread priority level
 
-	cwin_thread_priority_idle: INTEGER is
+	cwin_thread_priority_idle: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -49,7 +49,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_IDLE"
 		end
 
-	cwin_thread_priority_lowest: INTEGER is
+	cwin_thread_priority_lowest: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -57,7 +57,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_LOWEST"
 		end
 
-	cwin_thread_priority_below_normal: INTEGER is
+	cwin_thread_priority_below_normal: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -65,7 +65,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_BELOW_NORMAL"
 		end
 
-	cwin_thread_priority_normal: INTEGER is
+	cwin_thread_priority_normal: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -73,7 +73,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_NORMAL"
 		end
 
-	cwin_thread_priority_above_normal: INTEGER is
+	cwin_thread_priority_above_normal: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -81,7 +81,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_ABOVE_NORMAL"
 		end
 
-	cwin_thread_priority_highest: INTEGER is
+	cwin_thread_priority_highest: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -89,7 +89,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_HIGHEST"
 		end
 
-	cwin_thread_priority_time_critical: INTEGER is
+	cwin_thread_priority_time_critical: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -97,7 +97,7 @@ feature -- Thread priority level
 			"THREAD_PRIORITY_TIME_CRITICAL"
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

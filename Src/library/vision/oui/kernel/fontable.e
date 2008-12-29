@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Widget which can change its font"
 	legal: "See notice at end of class.";
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Font name of label
 		require
 			exists: not destroyed
@@ -22,14 +22,14 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is current object destroyed
 		deferred
 		end;
 
 feature -- Element change
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set font label to `font_name'.
 		require
 			exists: not destroyed;
@@ -39,7 +39,7 @@ feature -- Element change
 			implementation.set_font (a_font)
 		end;
 
-	set_font_name (a_font_name: STRING) is
+	set_font_name (a_font_name: STRING)
 			-- Set font label to `a_font_name'.
 		require
 			exists: not destroyed;
@@ -59,7 +59,7 @@ feature {G_ANY, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {G_ANY, WIDGET_I, TOOLKIT} -- Implementation
 
-	set_font_imp (an_implementation: FONTABLE_I) is
+	set_font_imp (an_implementation: FONTABLE_I)
 			-- Set `implementation' to `an_implementation'.
 		require
 			an_implementation_exists: an_implementation /= Void
@@ -67,7 +67,7 @@ feature {G_ANY, WIDGET_I, TOOLKIT} -- Implementation
 			implementation := an_implementation
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

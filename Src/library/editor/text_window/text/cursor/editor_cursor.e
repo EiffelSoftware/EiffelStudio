@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cursor in editors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Element change
 
-	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
+	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER)
 			-- Make `a_token' be the new value for `token'.
 			-- Set the value of `pos_in_token' to `a_position'.
 			-- Update `x_in_pixels' accordingly.
@@ -33,7 +33,7 @@ feature -- Element change
 
 feature {EDITABLE_TEXT} -- Implementation
 
-	update_current_char is
+	update_current_char
 			-- Update the current token and the the position in it.
 			-- It is required that the cursor is not in the left margin.
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	text: EDITABLE_TEXT;
 			-- Text that contains `current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

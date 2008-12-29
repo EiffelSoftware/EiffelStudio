@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation (hidden window)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Implementation
 
-	update_style is
+	update_style
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.
@@ -43,13 +43,13 @@ feature {NONE} -- Implementation
 			set_style (new_style)
 		end
 
-	extra_minimum_height: INTEGER is
+	extra_minimum_height: INTEGER
 			-- Compute extra minimum height that does not count `item'.
 		do
 			Result := Precursor {EV_DIALOG_IMP} - title_bar_height
 		end
 
-	has_title_bar: BOOLEAN is False
+	has_title_bar: BOOLEAN = False
 			-- Does Current have a title bar?
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -59,7 +59,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	promote_to_modal_dialog is
+	promote_to_modal_dialog
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP_MODAL which allows modality
 		local
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (modal_dialog_imp)
 		end
 
-	promote_to_modeless_dialog is
+	promote_to_modeless_dialog
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP_MODELESS which allows modality
 		local
@@ -79,12 +79,12 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	common_dialog_imp: EV_UNTITLED_DIALOG_IMP_COMMON is
+	common_dialog_imp: EV_UNTITLED_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

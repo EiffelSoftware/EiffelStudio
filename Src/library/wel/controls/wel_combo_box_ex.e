@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		WEL Combo Box Ex. A more powerfull combo-box
 		that handles bitmaps.
@@ -28,7 +28,7 @@ inherit
 
 feature -- Status report
 
-	get_item_info (index: INTEGER): WEL_COMBO_BOX_EX_ITEM is
+	get_item_info (index: INTEGER): WEL_COMBO_BOX_EX_ITEM
 			-- Retrieves the information about the zero-based
 			-- `index' item.
 		require
@@ -49,7 +49,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Cbem_getitem, to_wparam (0), Result.item)
 		end
 
-	list_shown: BOOLEAN is
+	list_shown: BOOLEAN
 			-- Is the drop down list shown?
 		require
 			exists: exists
@@ -58,7 +58,7 @@ feature -- Status report
 				Cb_getdroppedstate, to_wparam (0), to_lparam (0)) = 1
 		end
 
-	get_image_list: WEL_IMAGE_LIST is
+	get_image_list: WEL_IMAGE_LIST
        		-- Get the image list associated with this combination box.
        		-- Returns Void if none.\
        	local
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_item_info (index: INTEGER; an_item: WEL_COMBO_BOX_EX_ITEM) is
+	set_item_info (index: INTEGER; an_item: WEL_COMBO_BOX_EX_ITEM)
 			-- Sets the information about the zero-based
 			-- `index' item.
 		require
@@ -86,7 +86,7 @@ feature -- Status setting
 			an_item_updated: an_item.index = index
 		end
 
-	show_list is
+	show_list
 			-- Show the drop down list.
 		require
 			exists: exists
@@ -96,7 +96,7 @@ feature -- Status setting
 			list_shown: list_shown
 		end
 
-	hide_list is
+	hide_list
 			-- Hide the drop down list.
 		require
 			exists: exists
@@ -106,7 +106,7 @@ feature -- Status setting
 			list_not_shown: not list_shown
 		end
 
-	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+	set_image_list(an_imagelist: WEL_IMAGE_LIST)
     		-- Set the current image list to `an_imagelist'.
        		-- If `an_imagelist' is set to Void, it removes
        		-- the current associated image list (if any).
@@ -122,13 +122,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL) is
+	add_string (a_string: STRING_GENERAL)
 			-- Add `a_string' in the combo box.
 		do
 			insert_string_at (a_string, count)
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'.
 		local
 			citem: WEL_COMBO_BOX_EX_ITEM
@@ -138,7 +138,7 @@ feature -- Element change
 			insert_item (citem)
 		end
 
-	insert_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
+	insert_item (an_item: WEL_COMBO_BOX_EX_ITEM)
 			-- Insert `an_item' in the combo-box.
 		require
 			exists: exists
@@ -152,7 +152,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	delete_item (index: INTEGER) is
+	delete_item (index: INTEGER)
 			-- Delete the zero-based `index' item.
 		require
 			exists: exists
@@ -166,31 +166,31 @@ feature -- Element change
 
 feature -- Notification
 
-	on_cben_beginedit_item is
+	on_cben_beginedit_item
 			-- The user activated the drop-down list or clicked in the
 			-- control's edit box.
 		do
 		end
 
-	on_cben_endedit_item (info: WEL_NM_COMBO_BOX_EX_ENDEDIT) is
+	on_cben_endedit_item (info: WEL_NM_COMBO_BOX_EX_ENDEDIT)
 			-- The user has concluded an operation within the edit box
 			-- or has selected an item from the control's drop-down list.
 		do
 		end
 
- 	on_cben_insert_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
+ 	on_cben_insert_item (an_item: WEL_COMBO_BOX_EX_ITEM)
  			-- An item has been inserted in the control.
 		do
  		end
 
- 	on_cben_delete_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
+ 	on_cben_delete_item (an_item: WEL_COMBO_BOX_EX_ITEM)
  			-- An item has been deleted from the control.
 		do
  		end
 
 feature -- Inapplicable
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -202,7 +202,7 @@ feature -- Inapplicable
 			end
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL)
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -215,7 +215,7 @@ feature -- Inapplicable
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -240,10 +240,10 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	buffer_size: INTEGER is 30
+	buffer_size: INTEGER = 30
 			-- Windows text retrieval buffer size
 
-	combo_item: POINTER is
+	combo_item: POINTER
 			-- Return the child combo-box that composes the
 			-- current control. Corresponds to a WEL_COMBO_BOX.
 		require
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			Result := {WEL_API}.send_message_result (item, Cbem_getcombocontrol, to_wparam (0), to_lparam (0))
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_comboex_class)).string
@@ -260,14 +260,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_comboex_class: POINTER is
+	cwin_comboex_class: POINTER
 		external
 			"C [macro %"cctrl.h%"] : EIF_POINTER"
 		alias
 			"WC_COMBOBOXEX"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

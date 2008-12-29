@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cell consisting of only of a checkbox, a optional pixmap and text label. Implementation Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_GRID_LABEL_ITEM_I}
@@ -38,7 +38,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status
 
 feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input
 		require
 			not_destroyed: not is_destroyed
@@ -48,7 +48,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status setting
 			is_sensitive: (parent = Void or parent.is_sensitive) implies is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input
 		require
 			not_destroyed: not is_destroyed
@@ -60,7 +60,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Status setting
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 		do
@@ -75,7 +75,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
 	is_checked: BOOLEAN
 			-- Is current cell checked ?
 
-	set_is_checked (b: BOOLEAN) is
+	set_is_checked (b: BOOLEAN)
 			-- Set Current cell checked if `b' is True
 		do
 			is_checked := b
@@ -85,7 +85,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
 			checked_changed_actions.call ([interface])
 		end
 
-	toggle_is_checked is
+	toggle_is_checked
 			-- Toggle selected status
 		do
 			set_is_checked (not is_checked)
@@ -93,7 +93,7 @@ feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
 
 feature {EV_GRID_DRAWER_I} -- Implementation
 
-	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP)
 			-- Redraw `Current'.
 		local
 			l_interface: like interface
@@ -275,7 +275,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	checkbox_handled (a_x, a_y, a_but: INTEGER; r1,r2,r3: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
+	checkbox_handled (a_x, a_y, a_but: INTEGER; r1,r2,r3: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
 			-- Checkbox clicked
 		do
 			if a_but = 1 and is_sensitive then
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_check_box (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER) is
+	draw_check_box (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER)
 			-- Draw check box on `a_drawable'
 		local
 			l_data: like section_data
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			a_drawable.set_line_width (lw)
 		end
 
-	section_data: ARRAYED_LIST [EV_COORDINATE] is
+	section_data: ARRAYED_LIST [EV_COORDINATE]
 			-- Coordinate used to draw a check
 		once
 			create Result.make (7)
@@ -332,13 +332,13 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	check_figure_size: INTEGER is 12
+	check_figure_size: INTEGER = 12
 			-- The width/height of the check box.
 
-	check_figure_line_width: INTEGER is 1
+	check_figure_line_width: INTEGER = 1
 			-- The line width on the sign figure.
 
-	check_box_line_width: INTEGER is
+	check_box_line_width: INTEGER
 			-- Line width for drawing check box.
 		do
 			if {PLATFORM}.is_windows then
@@ -354,7 +354,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

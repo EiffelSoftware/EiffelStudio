@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 	
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		require
 			node_not_void: node /= Void
@@ -27,7 +27,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		deferred
 		ensure
@@ -37,7 +37,7 @@ feature -- Access
 		
 feature -- Element change
 		
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		require
 			node_not_void: node /= Void
@@ -46,7 +46,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
-	boolean_representation (a_boolean: BOOLEAN): STRING is
+	boolean_representation (a_boolean: BOOLEAN): STRING
 			-- Optimized string representation of `a_boolean'.
 		do
 			if a_boolean then
@@ -56,12 +56,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	xml_namespace: XM_NAMESPACE is
+	xml_namespace: XM_NAMESPACE
 		once
 			create Result.make_default
 		end
 
-	Xml_routines: XML_GRAPH_ROUTINES is
+	Xml_routines: XML_GRAPH_ROUTINES
 			-- Access the common xml routines.
 		once
 			create Result.default_create
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			non_void_Xml_routines: Xml_routines /= Void
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	label_font: FONT is
+	label_font: FONT
 			-- Font specified for labels
 		require
 			exists: not destroyed
@@ -25,7 +25,7 @@ feature -- Access
 			Result := implementation.label_font
 		end;
 
-	button_font: FONT is
+	button_font: FONT
 			-- Font specified for buttons
 		require
 			exists: not destroyed
@@ -33,7 +33,7 @@ feature -- Access
 			Result := implementation.button_font
 		end;
 
-	text_font: FONT is
+	text_font: FONT
 			-- Font specified for text
 		require
 			exists: not destroyed
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set font of every labels to `a_font'.
 		require
 			exists: not destroyed;
@@ -53,7 +53,7 @@ feature -- Element change
 			implementation.set_label_font (a_font);
 		end; 
 
-	set_button_font (a_font: FONT) is
+	set_button_font (a_font: FONT)
 			-- Set font of every buttons to `a_font'.
 		require
 			exists: not destroyed;
@@ -63,7 +63,7 @@ feature -- Element change
 			implementation.set_button_font (a_font);
 		end;
 
-	set_text_font (a_font: FONT) is
+	set_text_font (a_font: FONT)
 			-- Set font of every text to `a_font'.
 		require
 			exists: not destroyed;
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default value and build the terminal
 		do
 			implementation.build
@@ -86,7 +86,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: TERMINAL_I;;
 			-- Implementation of terminal widget
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

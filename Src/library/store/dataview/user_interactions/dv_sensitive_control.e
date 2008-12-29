@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable the user to%
 			%perform an action at runtime."
 	legal: "See notice at end of class."
@@ -11,27 +11,27 @@ deferred class
 
 feature -- Basic operations
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable control sensitive.
 		deferred
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable control sensitive.
 		deferred
 		end
 
-	set_action (action: PROCEDURE [ANY, TUPLE]) is
+	set_action (action: PROCEDURE [ANY, TUPLE])
 			-- Set action performed by control.
 		deferred
 		end
 
-	activate is
+	activate
 			-- Activate control.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

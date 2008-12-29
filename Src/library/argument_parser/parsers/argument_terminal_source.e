@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			An argument parser's arguments from the terminal.
 		]"
@@ -77,7 +77,7 @@ feature -- Status report
 			Result := argument_count = 0
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

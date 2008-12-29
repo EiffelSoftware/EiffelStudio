@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_GRID_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Event handling
 
-	item_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]] is
+	item_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, ANY]]
 			-- Actions to be performed when a pebble is dropped here.
 		do
 			if item_drop_actions_internal = Void then
@@ -24,7 +24,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+	item_deactivate_actions: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deactivated.
 		do
 			if item_deactivate_actions_internal = Void then
@@ -35,7 +35,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+	item_select_actions: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when an item is selected.
 		do
 			if item_select_actions_internal = Void then
@@ -46,7 +46,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE is
+	item_deselect_actions: EV_GRID_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 		do
 			if item_deselect_actions_internal = Void then
@@ -57,7 +57,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	row_select_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions to be performed when a row is selected.
 		do
 			if row_select_actions_internal = Void then
@@ -68,7 +68,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	row_deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions to be performed when a row is deselected.
 		do
 			if row_deselect_actions_internal = Void then
@@ -79,7 +79,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	column_select_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
+	column_select_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
 			-- Actions to be performed when a column is selected.
 		do
 			if column_select_actions_internal = Void then
@@ -90,7 +90,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	column_deselect_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]] is
+	column_deselect_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_COLUMN]]
 			-- Actions to be performed when a column is deselected.
 		do
 			if column_deselect_actions_internal = Void then
@@ -101,7 +101,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	row_expand_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	row_expand_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions to be performed when a row is expanded.
 		do
 			if row_expand_actions_internal = Void then
@@ -112,7 +112,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	row_collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	row_collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions to be performed when a row is collapsed.
 		do
 			if row_collapse_actions_internal = Void then
@@ -123,7 +123,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_motion_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Actions to be performed when a screen pointer moves over a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -139,7 +139,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	item_activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]] is
+	item_activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_POPUP_WINDOW]]
 			-- Actions to be performed to setup an item that is currently activated.
 			-- Overrides default setup of activatable items.
 			-- Arguments of TUPLE (with names for clarity):
@@ -153,7 +153,7 @@ feature -- Event handling
 			Result := item_activate_actions_internal
 		end
 
-	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -170,7 +170,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_double_press_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer double press event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -187,7 +187,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]] is
+	pointer_button_release_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer release event is received by a grid.
 			-- Arguments (with names for clarity):
 			--
@@ -204,7 +204,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_enter_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer enter event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -223,7 +223,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]] is
+	pointer_leave_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [BOOLEAN, EV_GRID_ITEM]]
 			-- Actions to be performed when a pointer leave event is received by a grid or grid item
 			-- Arguments (with names for clarity):
 			--
@@ -241,7 +241,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 
-	virtual_position_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+	virtual_position_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
 			-- Actions to be performed upon next idle after `virtual_x_position' or `virtual_y_position' changed in grid.
 			-- Arguments (with names for clarity)
 			--
@@ -254,7 +254,7 @@ feature -- Event handling
 			Result := virtual_position_changed_actions_internal
 		end
 
-	virtual_size_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]] is
+	virtual_size_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER]]
 			-- Actions to be performed upon next idle after `virtual_width' or `virtual_height' changed in grid.
 			-- Arguments (with names for clarity)
 			--
@@ -267,7 +267,7 @@ feature -- Event handling
 			Result := virtual_size_changed_actions_internal
 		end
 
-	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]] is
+	pre_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed before the features of an item cell in `Current' have been drawn but after the background of
 			-- the cell has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn background.
@@ -291,7 +291,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]] is
+	post_draw_overlay_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, EV_GRID_ITEM, INTEGER, INTEGER]]
 			-- Actions to be performed after an item cell in `Current'  has been drawn. The four pieces of event data are:
 			-- drawable: EV_DRAWABLE The drawable into which you may draw to overlay onto the already drawn item.
 			-- grid_item: EV_GRID_ITEM The item which has just been drawn, may be Void in the case that an
@@ -314,7 +314,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	fill_background_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]] is
+	fill_background_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Actions to be performed when part of the background area of the grid that is outside of the
 			-- area filled by `row_count' and `column_count' needs to be redrawn.
 			-- By default, the grid fills the area in its `background_color'. If one or more agents are
@@ -408,7 +408,7 @@ feature {EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 	fill_background_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE, INTEGER, INTEGER, INTEGER, INTEGER]];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

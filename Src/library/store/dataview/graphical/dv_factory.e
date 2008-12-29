@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can easily create display objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Gives access.
 		do
 		end
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	sensitive_field (a_minimum_width, a_code: INTEGER) is
+	sensitive_field (a_minimum_width, a_code: INTEGER)
 			-- Display field adapted to display
 			-- a typed database table row.
 			-- Field is sensitive.
@@ -45,7 +45,7 @@ feature -- Basic operations
 			view.extend (text_field)
 		end
 
-	insensitive_field (a_minimum_width, a_code: INTEGER) is
+	insensitive_field (a_minimum_width, a_code: INTEGER)
 			-- Display field adapted to display
 			-- a typed database table row.
 			-- Field is insensitive.
@@ -62,7 +62,7 @@ feature -- Basic operations
 			view.extend (text_field)
 		end
 
-	sensitive_area (a_minimum_width, a_code: INTEGER) is
+	sensitive_area (a_minimum_width, a_code: INTEGER)
 			-- Display field adapted to display
 			-- a typed database table row.
 			-- Field is sensitive.
@@ -78,7 +78,7 @@ feature -- Basic operations
 			view.extend (text)
 		end
 
-	insensitive_area (a_minimum_width, a_code: INTEGER) is
+	insensitive_area (a_minimum_width, a_code: INTEGER)
 			-- Display field adapted to display
 			-- a typed database table row.
 			-- Field is insensitive.
@@ -95,7 +95,7 @@ feature -- Basic operations
 			view.extend (text)
 		end
 
-	sensitive_combo_box (a_minimum_width, a_code: INTEGER; combo_box: DV_COMBO_BOX) is
+	sensitive_combo_box (a_minimum_width, a_code: INTEGER; combo_box: DV_COMBO_BOX)
 			-- Display combo box adapted to display
 			-- a typed database table row.
 			-- Field is sensitive.
@@ -108,7 +108,7 @@ feature -- Basic operations
 			view.extend (combo_box)
 		end
 
-	insensitive_combo_box (a_minimum_width, a_code: INTEGER; combo_box: DV_COMBO_BOX) is
+	insensitive_combo_box (a_minimum_width, a_code: INTEGER; combo_box: DV_COMBO_BOX)
 			-- Display combo box adapted to display
 			-- a typed database table row.
 			-- Field is insensitive.
@@ -124,7 +124,7 @@ feature -- Basic operations
 
 feature -- Settings
 
-	fill_column_selecting_cbox (cbox: DV_COMBO_BOX; table_description: DB_TABLE_DESCRIPTION) is
+	fill_column_selecting_cbox (cbox: DV_COMBO_BOX; table_description: DB_TABLE_DESCRIPTION)
 			-- Fill `cbox' with existing columns of table described by `table_description'.
 		require
 			not_void: cbox /= Void
@@ -147,7 +147,7 @@ feature -- Settings
 			end
 		end
 
-	fill_basic_qualifying_cbox (cbox: DV_COMBO_BOX; db_handler: ABSTRACT_DB_TABLE_MANAGER) is
+	fill_basic_qualifying_cbox (cbox: DV_COMBO_BOX; db_handler: ABSTRACT_DB_TABLE_MANAGER)
 			-- Fill `cbox' with existing columns of table described by `table_description'.
 		require
 			combo_box_not_void: cbox /= Void
@@ -164,7 +164,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	create_tbox (a_minimum_width, a_code: INTEGER; sensitive_string: DV_SENSITIVE_STRING) is
+	create_tbox (a_minimum_width, a_code: INTEGER; sensitive_string: DV_SENSITIVE_STRING)
 			-- Display field adapted to display
 			-- a typed database table row.
 			-- Set field minimum width to `a_minimum_width'.
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 			view := vbox
 		end
 
-	Type_color: EV_COLOR is
+	Type_color: EV_COLOR
 			-- Color for type labels.
 		once
 				-- Medium grey.
 			create Result.make_with_8_bit_rgb (150, 150, 150)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

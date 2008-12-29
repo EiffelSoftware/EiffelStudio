@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects represent mappings of addresses. [referrer, referee]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_referee_count: INTEGER) is
+	make (a_referee_count: INTEGER)
 			-- Init with `a_referee_count'
 		do
 			create relations.make (a_referee_count)
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	references_by_referee (a_referee: H): HASH_TABLE [TUPLE [referee: H; data: ANY], G] is
+	references_by_referee (a_referee: H): HASH_TABLE [TUPLE [referee: H; data: ANY], G]
 			-- All relations by referee.
 		require
 			a_referee_not_void: a_referee /= Void
@@ -32,13 +32,13 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	referee_count: INTEGER is
+	referee_count: INTEGER
 			-- Count for referees
 		do
 			Result := relations.count
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count for all references.
 		local
 			l_relations: like relations
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element change
 
-	extend (a_referrer: G; a_referee: H; data: ANY) is
+	extend (a_referrer: G; a_referee: H; data: ANY)
 			-- Add new relations
 		require
 			a_referrer_not_void: a_referrer /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (a_referrer: G; a_referee: H) is
+	remove (a_referrer: G; a_referee: H)
 			-- Remove relation between `'a_referrer' and `a_referee'.
 		require
 			a_referrer_not_void: a_referrer /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 
 	relations: HASH_TABLE [like references_by_referee, H];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

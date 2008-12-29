@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check box which has 3 states (on, off, indeterminate)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Status setting
 
-	set_indeterminate is
+	set_indeterminate
 			-- Set the indeterminate state.
 		require
 			exists: exists
@@ -32,7 +32,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	indeterminate: BOOLEAN is
+	indeterminate: BOOLEAN
 			-- Is the state indeterminate?
 		require
 			exists: exists
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 invariant
 	consistent_state: exists and then checked implies not indeterminate
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Ancestor of all exception classes.
 		]"
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tag_and_trace (a_tag, a_trace_string: STRING) is
+	make_with_tag_and_trace (a_tag, a_trace_string: STRING)
 			-- Make `Current' with `tag' set to `a_tag'.
 		obsolete
 			"Use `default_create' and `set_message' instead."
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Raise
 
-	raise is
+	raise
 			-- Raise current exception
 		require
 			is_raisable: is_raisable
@@ -55,7 +55,7 @@ feature -- Raise
 
 feature -- Access
 
-	meaning: STRING is
+	meaning: STRING
 			-- A message in English describing what `except' is
 		do
 			Result := internal_meaning
@@ -64,13 +64,13 @@ feature -- Access
 	message: STRING
 			-- A message in English describing what `except' is
 
-	exception_trace: STRING is
+	exception_trace: STRING
 			-- String representation of current exception trace
 		do
 			create Result.make_from_cil (stack_trace)
 		end
 
-	frozen original: EXCEPTION is
+	frozen original: EXCEPTION
 			-- The original exception caused current exception
 		do
 			if throwing_exception = Current or else throwing_exception = Void then
@@ -82,7 +82,7 @@ feature -- Access
 			original_not_void: Result /= Void
 		end
 
-	code: INTEGER is
+	code: INTEGER
 			-- Code of the exception.
 		do
 		end
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Access obselete
 
-	tag: STRING is
+	tag: STRING
 			-- Exception tag of `Current'
 		obsolete
 			"Use `message' instead."
@@ -111,7 +111,7 @@ feature -- Access obselete
 			Result := message
 		end
 
-	trace_as_string: STRING is
+	trace_as_string: STRING
 			-- Exception trace represented as a string
 		obsolete
 			"Use `exception_trace' instead."
@@ -121,7 +121,7 @@ feature -- Access obselete
 
 feature -- Status settings
 
-	set_message (a_message: like message) is
+	set_message (a_message: like message)
 			-- Set `message' with `a_message'.
 		do
 			message := a_message
@@ -131,7 +131,7 @@ feature -- Status settings
 
 feature -- Status report
 
-	frozen is_ignorable: BOOLEAN is
+	frozen is_ignorable: BOOLEAN
 			-- Is current exception ignorable?
 		local
 			l_internal: INTERNAL
@@ -142,7 +142,7 @@ feature -- Status report
 			Result := exception_manager.is_ignorable (l_type)
 		end
 
-	frozen is_raisable: BOOLEAN is
+	frozen is_raisable: BOOLEAN
 			-- Is current exception raisable by `raise'?
 		local
 			l_internal: INTERNAL
@@ -153,7 +153,7 @@ feature -- Status report
 			Result := exception_manager.is_raisable (l_type)
 		end
 
-	frozen is_ignored: BOOLEAN is
+	frozen is_ignored: BOOLEAN
 			-- If set, no exception is raised.
 		local
 			l_internal: INTERNAL
@@ -167,7 +167,7 @@ feature -- Status report
 			not_is_caught: Result = not is_caught
 		end
 
-	frozen is_caught: BOOLEAN is
+	frozen is_caught: BOOLEAN
 			-- If set, exception is raised.
 		do
 			Result := not is_ignored
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 		do
@@ -189,7 +189,7 @@ feature -- Output
 
 feature {EXCEPTION_MANAGER} -- Implementation
 
-	frozen set_throwing_exception (a_exception: EXCEPTION) is
+	frozen set_throwing_exception (a_exception: EXCEPTION)
 			-- Set `throwing_exception' with `a_exception'.
 		require
 			not_throwing_a_exception: a_exception /= Void implies not is_throwing (a_exception)
@@ -199,7 +199,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			throwing_exception_set: throwing_exception = a_exception
 		end
 
-	frozen is_throwing (a_exception: EXCEPTION): BOOLEAN is
+	frozen is_throwing (a_exception: EXCEPTION): BOOLEAN
 			-- Is current exception throwing `a_exception'?
 			-- If the throwing exception is current, return False.
 		require
@@ -222,19 +222,19 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			end
 		end
 
-	frozen set_type_name (a_type: like type_name) is
+	frozen set_type_name (a_type: like type_name)
 			-- Set `type_name' with `a_type'
 		do
 			type_name := a_type
 		end
 
-	frozen set_recipient_name (a_name: like recipient_name) is
+	frozen set_recipient_name (a_name: like recipient_name)
 			-- Set `recipient_name' with `a_name'
 		do
 			recipient_name := a_name
 		end
 
-	frozen set_line_number (a_number: like line_number) is
+	frozen set_line_number (a_number: like line_number)
 			-- Set `line_number' with `a_number'.
 		do
 			line_number := a_number
@@ -243,13 +243,13 @@ feature {EXCEPTION_MANAGER} -- Implementation
 	frozen internal_is_ignorable: BOOLEAN
 			-- Internal `is_ignorable'
 
-	internal_meaning: STRING is
+	internal_meaning: STRING
 			-- Internal `meaning'
 		once
 			Result := "General exception."
 		end
 
-	exception_message: STRING is
+	exception_message: STRING
 		do
 			Result := internal_meaning
 			if Result /= Void then
@@ -262,7 +262,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			end
 		end
 
-	frozen dotnet_message: SYSTEM_STRING is
+	frozen dotnet_message: SYSTEM_STRING
 			-- Message for the .NET runtime.
 		do
 			Result := exception_message

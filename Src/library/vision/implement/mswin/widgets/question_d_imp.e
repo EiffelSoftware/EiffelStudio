@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -24,19 +24,19 @@ create
 
 feature {NONE} -- Implementation
 
-	icon: WEL_ICON is
+	icon: WEL_ICON
 			-- The windows standard question icon
 		once
 			create Result.make_by_predefined_id (Idi_question)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionQuestionDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

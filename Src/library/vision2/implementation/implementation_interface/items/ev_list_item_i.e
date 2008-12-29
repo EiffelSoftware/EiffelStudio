@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision list item. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Status report
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May `Current' be selected?
 		do
 				--| FIXME We check that `parent.is_sensitive' due to
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Access
 
-	parent: EV_LIST_ITEM_LIST is
+	parent: EV_LIST_ITEM_LIST
 			-- List containing `interface'.
 		do
 			Result ?= Precursor
@@ -57,7 +57,7 @@ feature -- Access
 		
 feature -- Contract support
 
-	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		local
 			scaled_pixmap: EV_PIXMAP
@@ -89,7 +89,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

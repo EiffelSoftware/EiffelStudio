@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DOCHOSTUIDBLCLK enumeration. From <mshtmhst.h>"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 	
 feature -- Accsss
 
-	Dochostuidblclk_default         : INTEGER is 0
+	Dochostuidblclk_default         : INTEGER = 0
 
-	Dochostuidblclk_showproperties  : INTEGER is 1
+	Dochostuidblclk_showproperties  : INTEGER = 1
 
-	Dochostuidblclk_showcode        : INTEGER is 2;
+	Dochostuidblclk_showcode        : INTEGER = 2;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

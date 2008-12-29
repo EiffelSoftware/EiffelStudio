@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Execution of a list of commands as a result of callbacks."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			list_make;
 			compare_objects
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_command (command: COMMAND; argument: ANY) is
+	add_command (command: COMMAND; argument: ANY)
 			-- Add `command' with `argument' to list of commands.
 		require
 			command_not_void: command /= Void
@@ -65,7 +65,7 @@ feature -- Element change
 			extend (exec)
 		end
 
-	insert_command (command: COMMAND; argument: ANY) is
+	insert_command (command: COMMAND; argument: ANY)
 			-- Insert `command' with `argument' to list of commands.
 		require
 			command_not_void: command /= Void
@@ -78,7 +78,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_command (command: COMMAND; argument: ANY) is
+	remove_command (command: COMMAND; argument: ANY)
 			-- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
@@ -95,7 +95,7 @@ feature -- Removal
 
 feature -- Execution
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute list of commands
 		local
 			context_data: CONTEXT_DATA;
@@ -141,7 +141,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	find_vision_parent (a_widget: MEL_OBJECT): WIDGET_IMP is
+	find_vision_parent (a_widget: MEL_OBJECT): WIDGET_IMP
 			-- Find `a_widget' parent that is recorded in EiffelVision
 		require
 			valid_widget: a_widget /= Void;
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			found: Result /= Void
 		end;
 
-	create_context_data (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA is
+	create_context_data (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA
 			-- Context data associated with Current motif callback
 		local
 			reason: INTEGER
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
  
-	browse_data (widget_oui: WIDGET): SINGLE_DATA is
+	browse_data (widget_oui: WIDGET): SINGLE_DATA
 			-- Context data for `browse' action
 		local
 			c_struct: MEL_LIST_CALLBACK_STRUCT;
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 					str)
 		end;
  
-	click_data (widget_oui: WIDGET): CLICK_DATA is
+	click_data (widget_oui: WIDGET): CLICK_DATA
 			-- Context data for `click' action
 		local
 			c_struct: MEL_LIST_CALLBACK_STRUCT;
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 					str)
 		end;
 
-	single_data (widget_oui: WIDGET): SINGLE_DATA is
+	single_data (widget_oui: WIDGET): SINGLE_DATA
 			-- Context data for `single' action
 		local
 			c_struct: MEL_LIST_CALLBACK_STRUCT;
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 					str)
 		end;
  
-	modify_data (widget_oui: WIDGET): MODIFY_DATA is
+	modify_data (widget_oui: WIDGET): MODIFY_DATA
 			-- Context data for `modify' action
 		local
 			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT;
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 					c_struct.text_string)
 		end;
  
-	motion_data (widget_oui: WIDGET): MOTION_DATA is
+	motion_data (widget_oui: WIDGET): MOTION_DATA
 			-- Context data for `motion' action
 		local
 			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 					c_struct.new_insert);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

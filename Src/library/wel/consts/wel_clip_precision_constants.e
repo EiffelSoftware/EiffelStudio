@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Clipping precision (CLIP) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,24 +10,24 @@ class
 
 feature -- Access
 
-	Clip_default_precis: INTEGER is 0
+	Clip_default_precis: INTEGER = 0
 
-	Clip_character_precis: INTEGER is 1
+	Clip_character_precis: INTEGER = 1
 
-	Clip_stroke_precis: INTEGER is 2
+	Clip_stroke_precis: INTEGER = 2
 
-	Clip_mask: INTEGER is 15
+	Clip_mask: INTEGER = 15
 
-	Clip_lh_angles: INTEGER is 16
+	Clip_lh_angles: INTEGER = 16
 			-- Declared in Windows as CLIP_LH_ANGLES
 
-	Clip_tt_always: INTEGER is 32
+	Clip_tt_always: INTEGER = 32
 			-- Declared in Windows as CLIP_TT_ALWAYS
 
-	Clip_embedded: INTEGER is 128;
+	Clip_embedded: INTEGER = 128;
 			-- Declared in Windows as CLIP_EMBEDDED
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

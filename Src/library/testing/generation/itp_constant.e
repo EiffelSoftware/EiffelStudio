@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing constants.
 		]"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 			-- Create new constant.
 		do
 			value := a_value
@@ -33,7 +33,7 @@ feature -- Access
 	value: ANY
 		-- Value
 
-	type_name: STRING is
+	type_name: STRING
 			-- Type name of constant
 		do
 			if value = Void then
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ITP_EXPRESSION_PROCESSOR) is
+	process (a_processor: ITP_EXPRESSION_PROCESSOR)
 		do
 			a_processor.process_constant (Current)
 		end

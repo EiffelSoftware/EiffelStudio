@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text Alignment (TA) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Ta_noupdatecp: INTEGER is
+	Ta_noupdatecp: INTEGER
 			-- The current position is not updated after each text output call.
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"TA_NOUPDATECP"
 		end
 
-	Ta_updatecp: INTEGER is
+	Ta_updatecp: INTEGER
 			-- The current position is updated after each text output call.
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"TA_UPDATECP"
 		end
 
-	Ta_left: INTEGER is
+	Ta_left: INTEGER
 			-- The reference point is on the left edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"TA_LEFT"
 		end
 
-	Ta_right: INTEGER is
+	Ta_right: INTEGER
 				-- The reference point is on the right edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"TA_RIGHT"
 		end
 
-	Ta_center: INTEGER is
+	Ta_center: INTEGER
 			-- The reference point is aligned horizontally with the center of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"TA_CENTER"
 		end
 
-	Ta_top: INTEGER is
+	Ta_top: INTEGER
 			-- The reference point is on the top edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"TA_TOP"
 		end
 
-	Ta_bottom: INTEGER is
+	Ta_bottom: INTEGER
 			-- The reference point is on the bottom edge of the bounding rectangle.
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"TA_BOTTOM"
 		end
 
-	Ta_baseline: INTEGER is
+	Ta_baseline: INTEGER
 			-- The reference point is on the base line of the text.
 		external
 			"C [macro %"wel.h%"]"
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Vertical text alignement
 
-	Vta_baseline: INTEGER is
+	Vta_baseline: INTEGER
 			-- The reference point is on the base line of the text.
 		external
 			"C [macro <windows.h>]"
@@ -84,7 +84,7 @@ feature -- Vertical text alignement
 			"VTA_BASELINE"
 		end
 		
-	Vta_center: INTEGER is
+	Vta_center: INTEGER
 			-- The reference point is aligned vertically with the center of the bounding rectangle.
 		external
 			"C [macro <windows.h>]"
@@ -94,7 +94,7 @@ feature -- Vertical text alignement
 
 feature -- Status report
 
-	valid_text_alignment_constant (c: INTEGER): BOOLEAN is
+	valid_text_alignment_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant?
 		do
 			Result := c = Ta_noupdatecp or else
@@ -107,7 +107,7 @@ feature -- Status report
 				c = Ta_baseline
 		end
 		
-	valid_text_alignement_constant (c: INTEGER): BOOLEAN is
+	valid_text_alignement_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant?
 		obsolete
 			"Use valid_text_alignment_constant instead."
@@ -116,7 +116,7 @@ feature -- Status report
 		end
 		
 		
-	valid_htext_alignment_constant (c: INTEGER): BOOLEAN is
+	valid_htext_alignment_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant for horizontal positioning?
 		do
 			Result := c = Ta_left or else
@@ -124,7 +124,7 @@ feature -- Status report
 				c = Ta_center
 		end
 		
-	valid_vtext_alignment_constant (c: INTEGER): BOOLEAN is
+	valid_vtext_alignment_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant for vertical positioning?
 		do
 			Result := c = Ta_top or else
@@ -132,7 +132,7 @@ feature -- Status report
 				c = Ta_baseline
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

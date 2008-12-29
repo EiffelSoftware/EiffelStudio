@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,7 +33,7 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	width: ARRAY [INTEGER] is
+	width: ARRAY [INTEGER]
 			-- No description available.
 		do
 			Result := ccom_tag_ole_menu_group_widths_width (item)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_ole_menu_group_widths
@@ -49,7 +49,7 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_width (a_width: ARRAY [INTEGER]) is
+	set_width (a_width: ARRAY [INTEGER])
 			-- Set `width' with `a_width'.
 		require
 			non_void_a_width: a_width /= Void
@@ -62,7 +62,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_ole_menu_group_widths: INTEGER is
+	c_size_of_tag_ole_menu_group_widths: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagOleMenuGroupWidths_s.h%"]"
@@ -70,19 +70,19 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagOleMenuGroupWidths)"
 		end
 
-	ccom_tag_ole_menu_group_widths_width (a_pointer: POINTER): ARRAY [INTEGER] is
+	ccom_tag_ole_menu_group_widths_width (a_pointer: POINTER): ARRAY [INTEGER]
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOleMenuGroupWidths_s_impl.h%"](ecom_control_library::tagOleMenuGroupWidths *):EIF_REFERENCE"
 		end
 
-	ccom_tag_ole_menu_group_widths_set_width (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_ole_menu_group_widths_set_width (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagOleMenuGroupWidths_s_impl.h%"](ecom_control_library::tagOleMenuGroupWidths *, EIF_POINTER)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for a selection-sensitive database %
 			%table row list structure"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {DV_COMPONENT} -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of currently selected item.
 			--| Index refers to last refreshed table rows list.
 		deferred
@@ -22,65 +22,65 @@ feature {DV_COMPONENT} -- Access
 
 feature {DV_COMPONENT} -- Status report
 
-	information_set: BOOLEAN is
+	information_set: BOOLEAN
 			-- Is information necessary to
 			-- build the object set?
 		deferred
 		end
 
-	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN is
+	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		deferred
 		end
 
-	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN is
+	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		deferred
 		end
 
 feature {DV_COMPONENT} -- Basic operations
 
-	build is
+	build
 			-- Build component.
 		require
 			information_set: information_set
 		deferred
 		end
 
-	set_tablecode (tablecode: INTEGER) is
+	set_tablecode (tablecode: INTEGER)
 			-- Set `tablecode' to `table_code'.
 		require
 			is_valid_code: is_valid_code (tablecode)
 		deferred
 		end
 
-	extend_select_actions (action: PROCEDURE [ANY, TUPLE]) is
+	extend_select_actions (action: PROCEDURE [ANY, TUPLE])
 			-- extend list of actions executed when an item is selected
 			-- with `action'.
 		deferred
 		end
 
-	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE]) is
+	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE])
 			-- extend list of actions executed when an item is deselected
 			-- with `action'.
 		deferred
 		end
 
-	refresh (al: ARRAYED_LIST [DB_TABLE]) is
+	refresh (al: ARRAYED_LIST [DB_TABLE])
 			-- Update display with `al'.
 		require
 			not_void: al /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multiple Document Interface (MDI) tile constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Mditile_vertical: INTEGER is
+	Mditile_vertical: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_VERTICAL"
 		end
 
-	Mditile_horizontal: INTEGER is
+	Mditile_horizontal: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_HORIZONTAL"
 		end
 
-	Mditile_skipdisabled: INTEGER is
+	Mditile_skipdisabled: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MDITILE_SKIPDISABLED"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

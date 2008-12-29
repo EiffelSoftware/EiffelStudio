@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPropertyNotifySink' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Basic Operations
 
-	on_changed (disp_id: INTEGER) is
+	on_changed (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		do
 			-- No Implementation.
 		end
 
-	on_request_edit (disp_id: INTEGER) is
+	on_request_edit (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		do
@@ -30,7 +30,7 @@ feature -- Basic Operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

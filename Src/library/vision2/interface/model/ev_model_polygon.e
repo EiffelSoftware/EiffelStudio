@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Filled area's defined by any number of `points'."
 	legal: "See notice at end of class."
@@ -28,14 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Polygon with no points.
 		do
 			create point_array.make (0)
 			Precursor {EV_MODEL_CLOSED}
 		end
 		
-	make_with_coordinates (coords: ARRAY [EV_COORDINATE]) is
+	make_with_coordinates (coords: ARRAY [EV_COORDINATE])
 			-- Initialize with points in `coords'.
 		require
 			coords_exist: coords /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	side_count: INTEGER is
+	side_count: INTEGER
 			-- Returns number of sides this polyline has.
 		do
 			Result := point_count - 1
@@ -67,18 +67,18 @@ feature -- Status report
 			Result_not_bigger_than_point_count: Result <= point_count
 		end
 
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is rotatable? Yes.
 			
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? Yes.
 			
-	is_transformable: BOOLEAN is True
+	is_transformable: BOOLEAN = True
 			-- Is transformable? Yes.
 
 feature -- Access
 
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- Angle to rotate for upright position
 		do
 			Result := 0
@@ -86,13 +86,13 @@ feature -- Access
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is (`a_x', `a_y') contained in this figure?
 		do
 			Result := point_on_polygon (a_x, a_y, point_array)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision viewport. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Initialize.
 		local
 			ret: INTEGER
@@ -76,19 +76,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		do
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		do
 		end
 
 feature -- Element change
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 		local
 			w: EV_WIDGET_IMP
@@ -158,13 +158,13 @@ feature -- Element change
 			setup_layout
 		end
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32)
 			--
 		do
 			setup_layout
 		end
 
-	setup_layout  is
+	setup_layout
 
 				-- set the container size to at least the size of the viewport
 				-- Sets the child control's size to the container size minus some spacing
@@ -226,42 +226,42 @@ feature -- Element change
 			end
 		end
 
-	block_resize_actions is
+	block_resize_actions
 			-- Block any resize actions that may occur.
 		do
 		end
 
-	unblock_resize_actions is
+	unblock_resize_actions
 			-- Unblock all resize actions.
 		do
 		end
 
-	set_x_offset (a_x: INTEGER) is
+	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
 			internal_set_offset (a_x, -1)
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
 		do
 		 internal_set_offset (-1, a_y)
 		end
 
-	set_item_size (a_width, a_height: INTEGER) is
+	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		do
 			internal_set_item_size (a_width, a_height)
 		end
 
-	set_item_width (a_width: INTEGER) is
+	set_item_width (a_width: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 		do
 			internal_set_item_size (a_width, -1)
 		end
 
-	set_item_height (a_height: INTEGER) is
+	set_item_height (a_height: INTEGER)
 			-- Set `a_widget.height' to `a_height'.
 		do
 			internal_set_item_size (-1, a_height)
@@ -269,7 +269,7 @@ feature -- Element change
 
 feature --meassures
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 		local
 			a,b: INTEGER
 		do
@@ -281,7 +281,7 @@ feature --meassures
 
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 		local
 			a,b: INTEGER
 		do
@@ -297,7 +297,7 @@ feature --meassures
 
 feature {NONE} -- Implementation
 
-	alligne_to_child_size (a_child ,a_control : POINTER) is
+	alligne_to_child_size (a_child ,a_control : POINTER)
 			-- Auto allignes the child to its control
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	unset_child_size (a_control, a_child : POINTER) is
+	unset_child_size (a_control, a_child : POINTER)
 			-- What does this do?
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -352,12 +352,12 @@ feature {NONE} -- Implementation
 	container_widget: POINTER
 			-- Pointer to the event box
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			--
 		do
 		end
 
-	internal_set_offset (a_x, a_y: INTEGER) is
+	internal_set_offset (a_x, a_y: INTEGER)
 		local
 			item_width, item_height: INTEGER
 			w_imp: EV_WIDGET_IMP
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			ret := hiview_set_frame_external (container, a_rect.item)
 		end
 
-	internal_set_item_size (a_width, a_height: INTEGER) is
+	internal_set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			ret := hiview_set_frame_external (w_imp.c_object, a_rect.item)
 		end
 
-	on_removed_item (an_item_imp: EV_WIDGET_IMP) is
+	on_removed_item (an_item_imp: EV_WIDGET_IMP)
 			-- Reset minimum size.
 		do
 			an_item_imp.set_parent_imp (Void)
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 
 	internal_x_offset, internal_y_offset: INTEGER
 
-	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER) is
+	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
 			-- Set `value' of adjustment `l_adj' to `a_value'.
 		require
 			l_adj_not_null: l_adj /= default_pointer
@@ -460,7 +460,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VIEWPORT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

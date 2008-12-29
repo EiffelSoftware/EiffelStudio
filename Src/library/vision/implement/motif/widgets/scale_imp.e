@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif scale."
@@ -94,7 +94,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scale: SCALE; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif scale.
 		local
 			mc: MEL_COMPOSITE
@@ -107,37 +107,37 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	real_x: INTEGER is
+	real_x: INTEGER
 		do
 			Result := scroll_bar.real_x
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 		do
 			Result := scroll_bar.real_y
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 		do
 			Result := p_x + scroll_bar.x
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 		do
 			Result := p_y + scroll_bar.y
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			Result := scroll_bar.height
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			Result := scroll_bar.width
 		end;
 
-	is_maximum_right_bottom: BOOLEAN is
+	is_maximum_right_bottom: BOOLEAN
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
@@ -146,13 +146,13 @@ feature -- Status report
 				not is_maximum_on_top
 		end;
 
-	is_output_only: BOOLEAN is
+	is_output_only: BOOLEAN
 			-- Is scale mode output only mode?
 		do
 			Result := not is_sensitive
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Scale text
 		local
 			ms: MEL_STRING
@@ -168,7 +168,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 		local
@@ -179,7 +179,7 @@ feature -- Status setting
 			list.add_command (a_command, argument)
 		end;
 
-	set_value_shown (flag: BOOLEAN) is
+	set_value_shown (flag: BOOLEAN)
 		do
 			if flag then	
 				show_value
@@ -188,7 +188,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		local
@@ -215,7 +215,7 @@ feature -- Status setting
 			end;   
 		end;
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical if `flag', and at the opposite side otherwise.
@@ -235,14 +235,14 @@ feature -- Status setting
 			end
 		end;
 
-	set_output_only (flag: BOOLEAN) is
+	set_output_only (flag: BOOLEAN)
 			-- Set scale mode to output only if `flag' and to input/output
 			-- otherwise.
 		do
 			set_insensitive (flag)
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set scale text to `a_text'.
 		local
 			ms: MEL_STRING
@@ -254,7 +254,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set size to `new_width' and `new_height'.
 		local
 			tw, nw, nh: INTEGER;
@@ -289,7 +289,7 @@ feature -- Status setting
 			set_scale_size (nw, nh);
 		end;
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set `width' to `new_width'.
 		local
 			tw, nw: INTEGER;
@@ -317,7 +317,7 @@ feature -- Status setting
 			set_scale_width (nw);
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set `height' to `new_height'.
 		local
 			nh: INTEGER;
@@ -339,19 +339,19 @@ feature -- Status setting
 			set_scale_height (nh);
 		end;
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Set `x' to `new_x'.
 		do
 			p_set_x (new_x - scroll_bar.x)
 		end;
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Set `y' to `new_y'.
 		do
 			p_set_y (new_y - scroll_bar.y)
 		end;
 
-	set_x_y (new_x, new_y: INTEGER) is
+	set_x_y (new_x, new_y: INTEGER)
 			-- Set `x' and `y' to `new_x' and `new_y'.
 		do
 			set_x (new_x);
@@ -360,7 +360,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
+	add_move_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
 		local
@@ -374,7 +374,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		local
@@ -388,7 +388,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
 		local
@@ -402,7 +402,7 @@ feature -- Element change
 			list.add_command (number, a_command, argument)
 	   end;
 
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
 		local
@@ -416,7 +416,7 @@ feature -- Element change
 			list.add_command (number, a_command, argument)
 		end;
 
-	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
@@ -440,42 +440,42 @@ feature -- Element change
 			end
 		end;
 
-	add_enter_action (a_command: COMMAND; argument: ANY) is
+	add_enter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer enter the window.
 		do
 			add_scrollbar_xt_event_command (EnterWindowMask, a_command, argument)
 		end;
 
-	add_key_press_action (a_command: COMMAND; argument: ANY) is
+	add_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
 			add_scrollbar_xt_event_command (KeyPressMask, a_command, argument)
 		end;
 
-	add_key_release_action (a_command: COMMAND; argument: ANY) is
+	add_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when a key
 			-- is released.
 		do
 			add_scrollbar_xt_event_command (KeyReleaseMask, a_command, argument)
 		end;
 
-	add_leave_action (a_command: COMMAND; argument: ANY) is
+	add_leave_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer leave the window.
 		do
 			add_scrollbar_xt_event_command (LeaveWindowMask, a_command, argument)
 		end;
 
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
 			add_scrollbar_xt_event_command (PointerMotionMask, a_command, argument)
 		end;
 
-	grab (a_cursor: SCREEN_CURSOR) is
+	grab (a_cursor: SCREEN_CURSOR)
 			-- Grab the mouse and the keyboard.
 			-- If `cursor' is not void, the pointer will have the shape
 			-- set by cursor during the grab.
@@ -489,7 +489,7 @@ feature -- Element change
 			scroll_bar.grab_pointer (cursor_implementation)
 		end;
 
-	ungrab is
+	ungrab
 			-- Release the mouse and the keyboard from an earlier grab.
 		do
 			scroll_bar.ungrab_pointer
@@ -497,21 +497,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
+	remove_move_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		do
 			remove_command (drag_command, a_command, argument)
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
 			remove_command (value_changed_command, a_command, argument)
 		end;
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
@@ -519,7 +519,7 @@ feature -- Removal
 		end;
 
 	remove_button_motion_action (number: INTEGER; a_command: COMMAND;
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
@@ -544,7 +544,7 @@ feature -- Removal
 		end;
 
 	remove_button_press_action (number: INTEGER; a_command: COMMAND;
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
 		local
@@ -557,7 +557,7 @@ feature -- Removal
 		end;
 
 	remove_button_release_action (number: INTEGER; a_command: COMMAND;
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
 		local
@@ -569,7 +569,7 @@ feature -- Removal
 			end
 		end;
 
-	remove_enter_action (a_command: COMMAND; argument: ANY) is
+	remove_enter_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer enter the window.
 		do
@@ -577,28 +577,28 @@ feature -- Removal
 					a_command, argument)
 		end;
 
-	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+	remove_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
 			remove_command (scroll_bar.event_command (KeyPressMask), a_command, argument)
 		end;
 
-	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+	remove_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is released.
 		do
 			remove_command (scroll_bar.event_command (KeyReleaseMask), a_command, argument)
 		end;
 
-	remove_leave_action (a_command: COMMAND; argument: ANY) is
+	remove_leave_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer leave the window.
 		do
 			remove_command (scroll_bar.event_command (LeaveWindowMask), a_command, argument)
 		end;
 
-	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
@@ -607,7 +607,7 @@ feature -- Removal
 
 feature -- Color
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		do
 			mel_set_background_color (color_imp);
@@ -621,7 +621,7 @@ feature -- Color
 feature {NONE} -- Implementation
 
 	add_scrollbar_xt_event_command (a_mask: INTEGER; 
-					a_command: COMMAND; an_argument: ANY) is
+					a_command: COMMAND; an_argument: ANY)
 			-- Add the EiffelVision command to the mel command list
 			-- for event mask `mask' for `scroll_bar'.
 		local
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			list.add_command (a_command, an_argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

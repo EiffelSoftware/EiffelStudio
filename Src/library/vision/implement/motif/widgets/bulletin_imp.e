@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementaiton of a Motif bulletin."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif bulletin.
 		local
 			mc: MEL_COMPOSITE
@@ -57,7 +57,7 @@ feature {NONE} -- Creation
 
 feature -- Status setting
 
-	set_default_position (flag: BOOLEAN) is
+	set_default_position (flag: BOOLEAN)
 			-- Enable or disable default position according
 			-- to `flag'.
 		do	
@@ -68,14 +68,14 @@ feature -- Status setting
 			end
 		end
 
-	allow_recompute_size is	
+	allow_recompute_size	
 			-- Allow Current bulletin to recompute its size
 			-- according to its children.
 		do
 			set_resize_any
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid Current bulletin to recompute its size
 			-- according to its children.
 		do
@@ -84,19 +84,19 @@ feature -- Status setting
 
 feature -- Element change
 
-	circulate_up is
+	circulate_up
 			-- Circulate the children of this widget up.
 		do
 			x_circulate_up (display.handle, window)
 		end;
 
-	circulate_down is
+	circulate_down
 			-- Circulate the children of this widget down.
 		do
 			x_circulate_down (display.handle, window)
 		end;
 
-	restack_children (s_child_list: ARRAY [STACKABLE]) is
+	restack_children (s_child_list: ARRAY [STACKABLE])
 			-- The stackable's in the array have to have the
 			-- same parent.
 		local
@@ -118,7 +118,7 @@ feature -- Element change
 			x_restack_windows (mel_screen.display.handle, $arg1, s_child_list.count);
 		end;
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

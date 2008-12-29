@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Shared instance of widget manager for MEL. %
@@ -14,7 +14,7 @@ class
 
 feature -- Access
 
-	Mel_widgets: MEL_WIDGET_MANAGER is
+	Mel_widgets: MEL_WIDGET_MANAGER
 			-- MEL widget manager
 		once
 			create Result.make
@@ -22,7 +22,7 @@ feature -- Access
 			valid_result: Result /= void
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

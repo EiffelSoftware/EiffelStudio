@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Tool bar that support SD_TOOL_BAR_WIDGET_ITEM.
 					A decorator for SD_TOOL_BAR.
@@ -110,7 +110,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_tool_bar: SD_TOOL_BAR) is
+	make (a_tool_bar: SD_TOOL_BAR)
 			-- Creation method.
 		require
 			not_void: a_tool_bar /= Void
@@ -135,7 +135,7 @@ feature {NONE} -- Initlization
 			set: tool_bar = a_tool_bar
 		end
 
-	initialize is
+	initialize
 			-- Redefine
 		do
 			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, True)
@@ -143,7 +143,7 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			--  Height of row.
 		local
 			l_tool_bar: SD_TOOL_BAR
@@ -172,7 +172,7 @@ feature -- Properties
 
 feature -- Command
 
-	extend (a_item: SD_TOOL_BAR_ITEM) is
+	extend (a_item: SD_TOOL_BAR_ITEM)
 			-- Extend `a_item'.
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
@@ -187,7 +187,7 @@ feature -- Command
 			is_need_calculate_size := True
 		end
 
-	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER) is
+	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER)
 			-- Extend `a_item' at `a_index'
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
@@ -201,7 +201,7 @@ feature -- Command
 			is_need_calculate_size := True
 		end
 
-	prune (a_item: SD_TOOL_BAR_ITEM) is
+	prune (a_item: SD_TOOL_BAR_ITEM)
 			-- Prune `a_item'
 		local
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
@@ -220,7 +220,7 @@ feature -- Command
 			is_need_calculate_size := True
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Compute minimum size.
 		do
 			tool_bar.compute_minimum_size
@@ -229,25 +229,25 @@ feature -- Command
 			set_item_size (tool_bar, minimum_width, minimum_height)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out.
 		do
 			tool_bar.wipe_out
 		end
 
-	enable_capture is
+	enable_capture
 			-- Enable capture.
 		do
 			tool_bar.enable_capture
 		end
 
-	disable_capture is
+	disable_capture
 			-- Disable capture.
 		do
 			tool_bar.disable_capture
 		end
 
-	in_main_window: BOOLEAN is
+	in_main_window: BOOLEAN
 			-- If docking in main window?
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -258,7 +258,7 @@ feature -- Command
 			end
 		end
 
-	resize is
+	resize
 			-- Recalculate items sizes in the row.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -269,7 +269,7 @@ feature -- Command
 			end
 		end
 
-	resize_for_sizeble_item is
+	resize_for_sizeble_item
 			--	Call `resize' when no hidden items exist.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -288,7 +288,7 @@ feature -- Command
 			end
 		end
 
-	screen_x_end_row: INTEGER is
+	screen_x_end_row: INTEGER
 			-- Maximum x position.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -321,7 +321,7 @@ feature -- Command
 			end
 		end
 
-	update_size is
+	update_size
 			-- Update `tool_bar' size if Current width changed.
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -355,13 +355,13 @@ feature -- Command
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			tool_bar.set_tooltip (a_tooltip)
 		end
 
-	destroy is
+	destroy
 			-- Redefine
 		do
 			content := Void
@@ -375,7 +375,7 @@ feature -- Command
 
 feature -- Query
 
-	items: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All items in Current.
 		do
 			if tool_bar /= Void then
@@ -385,7 +385,7 @@ feature -- Query
 			end
 		end
 
-	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
+	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN
 			-- If Current has `a_item'?
 		local
 			l_tool_bar: like tool_bar
@@ -398,55 +398,55 @@ feature -- Query
 			end
 		end
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE	is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Pointer motion actions.
 		do
 			Result := tool_bar.pointer_motion_actions
 		end
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Pointer button release actions.
 		do
 			Result := tool_bar.pointer_button_release_actions
 		end
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Pointer button press actions.
 		do
 			Result := tool_bar.pointer_button_press_actions
 		end
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Pointer button double press actions.
 		do
 			Result := tool_bar.pointer_double_press_actions
 		end
 
-	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Expose actions.
 		do
 			Result := tool_bar.expose_actions
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip.
 		do
 			Result := tool_bar.tooltip
 		end
 
-	is_bridge_ok (a_string: STRING_32): BOOLEAN is
+	is_bridge_ok (a_string: STRING_32): BOOLEAN
 			-- Fake implementation for decorator pattern.
 		do
 			Result := True
 		end
 
-	is_cloned (a_string: STRING_32): BOOLEAN is
+	is_cloned (a_string: STRING_32): BOOLEAN
 			-- Fake implementation for decorator pattern.
 		do
 			Result := True
 		end
 
-	items_have_texts: BOOLEAN is
+	items_have_texts: BOOLEAN
 			-- Redefine.
 		do
 			Result := tool_bar.items_have_texts
@@ -454,19 +454,19 @@ feature -- Query
 
 feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 
-	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' at `a_x', `a_y'.
 		do
 			tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
 		end
 
-	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Clear rectangle area.
 		do
 			tool_bar.clear_rectangle (a_x, a_y, a_width, a_height)
 		end
 
-	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw rectangle area.
 		do
 			tool_bar.redraw_rectangle (a_x, a_y, a_width, a_height)
@@ -474,31 +474,31 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 
 feature -- Contract support
 
-	is_parent_set (a_item: SD_TOOL_BAR_ITEM): BOOLEAN is
+	is_parent_set (a_item: SD_TOOL_BAR_ITEM): BOOLEAN
 			-- If `a_item' parent equal `tool_bar'?
 		do
 			Result := a_item.tool_bar = Current
 		end
 
-	is_start_x_set (a_x: INTEGER): BOOLEAN is
+	is_start_x_set (a_x: INTEGER): BOOLEAN
 			-- If `a_x' equal `start_x' of `tool_bar'?
 		do
 			Result := tool_bar.is_start_x_set (a_x)
 		end
 
-	is_start_y_set (a_y: INTEGER): BOOLEAN is
+	is_start_y_set (a_y: INTEGER): BOOLEAN
 			-- If `a_y' equal `start_y' of `tool_bar'?
 		do
 			Result := tool_bar.is_start_y_set (a_y)
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- If Current displayed?
 		do
 			Result := tool_bar.is_displayed
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- If Current has capture?
 		do
 			Result := tool_bar.has_capture
@@ -506,50 +506,50 @@ feature -- Contract support
 
 feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issues
 
-	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER is
+	item_x (a_item: SD_TOOL_BAR_ITEM): INTEGER
 			-- Item x position on Current.
 		do
 			Result := tool_bar.item_x (a_item)
 		end
 
-	item_y (a_item: SD_TOOL_BAR_ITEM): INTEGER is
+	item_y (a_item: SD_TOOL_BAR_ITEM): INTEGER
 			-- Item y position on Current.
 		do
 			Result := tool_bar.item_y (a_item)
 		end
 
-	update is
+	update
 			-- Redraw item(s) which `is_need_redraw'
 		do
 			tool_bar.update
 			on_expose (0, 0, width, height)
 		end
 
-	set_start_x (a_x: INTEGER) is
+	set_start_x (a_x: INTEGER)
 			-- Set `start_x'
 		do
 			tool_bar.set_start_x (a_x)
 		end
 
-	set_start_y (a_y: INTEGER) is
+	set_start_y (a_y: INTEGER)
 			-- Set `start_y'
 		do
 			tool_bar.set_start_y (a_y)
 		end
 
-	start_x: INTEGER is
+	start_x: INTEGER
 			-- Set `internal_start_x' of `tool_bar'.
 		do
 			Result := tool_bar.start_x
 		end
 
-	start_y: INTEGER is
+	start_y: INTEGER
 			-- Set `internal_start_y' of `tool_bar'.
 		do
 			Result := tool_bar.start_y
 		end
 
-	item_at_position (a_screen_x, a_screen_y: INTEGER_32): SD_TOOL_BAR_ITEM is
+	item_at_position (a_screen_x, a_screen_y: INTEGER_32): SD_TOOL_BAR_ITEM
 			-- Redefine
 		do
 			Result := tool_bar.item_at_position (a_screen_x, a_screen_y)
@@ -557,7 +557,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 
 feature {NONE} -- Implementation
 
-	redraw_item (a_item: SD_TOOL_BAR_ITEM) is
+	redraw_item (a_item: SD_TOOL_BAR_ITEM)
 			-- Redraw `a_item'
 		do
 		end
@@ -572,12 +572,12 @@ feature {NONE} -- Implementation
 			Result.set_tool_bar (tool_bar)
 		end
 
-	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Redefine
 		do
 		end
 
-	on_expose (a_x, a_y, a_width, a_height: INTEGER_32) is
+	on_expose (a_x, a_y, a_width, a_height: INTEGER_32)
 			-- Redefine.
 		local
 			l_items: like internal_items
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_tool_bar_expose_actions (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_tool_bar_expose_actions (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle tool bar expose actions.
 		local
 			l_item: SD_TOOL_BAR_WIDGET_ITEM
@@ -634,19 +634,19 @@ feature {NONE} -- Implementation
 
 feature -- Contract support
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- Redefine `line_width' from {EV_DRAWABLE} to make sure invariant not broken.
 			-- See bug#13387.
 		do
 		end
 
-	drawing_mode: INTEGER is
+	drawing_mode: INTEGER
 			-- Redefine `drawing_mode' from {EV_DRAWABLE} to make sure invariant not broken.
 			-- See bug#13387.
 		do
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

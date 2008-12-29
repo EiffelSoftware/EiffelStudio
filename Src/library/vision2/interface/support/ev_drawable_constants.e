@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Constants for use by and with EV_DRAWABLE.
 
@@ -18,7 +18,7 @@ class
 
 feature -- Constants
 
-	Drawing_mode_copy: INTEGER is 0
+	Drawing_mode_copy: INTEGER = 0
 			-- Normal drawing mode.
 			--
 			-- T\S | 0 | 1 |
@@ -27,7 +27,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 0 | 1 |
 
-	Drawing_mode_xor: INTEGER is 1
+	Drawing_mode_xor: INTEGER = 1
 			-- Drawing mode where bitwise XOR is performed when a
 			-- pixel is drawn.
 			--
@@ -37,7 +37,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 1 | 0 |
 
-	Drawing_mode_invert: INTEGER is 2
+	Drawing_mode_invert: INTEGER = 2
 			-- Drawing mode where bits are inverted before drawn.
 			--
 			-- T\S | 0 | 1 |
@@ -46,7 +46,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 1 | 0 |
 
-	Drawing_mode_and: INTEGER is 3
+	Drawing_mode_and: INTEGER = 3
 			-- Drawing mode where bitwise AND is performed when a
 			-- pixel is drawn.
 			--
@@ -56,7 +56,7 @@ feature -- Constants
 			-- -------------
 			--   1 | 0 | 1 |
 
-	Drawing_mode_or: INTEGER is 4
+	Drawing_mode_or: INTEGER = 4
 			-- Drawing mode where bitwise OR is performed when a
 			-- pixel is drawn.
 			--
@@ -68,7 +68,7 @@ feature -- Constants
 
 feature -- Contract support
 
-	valid_drawing_mode (a_mode: INTEGER): BOOLEAN is
+	valid_drawing_mode (a_mode: INTEGER): BOOLEAN
 			-- Is `a_mode' a valid drawing mode?
 		do
 			Result := a_mode = Drawing_mode_copy or else
@@ -78,7 +78,7 @@ feature -- Contract support
 				a_mode = Drawing_mode_or
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

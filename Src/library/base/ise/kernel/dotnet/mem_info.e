@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Properties of the memory management mechanism.
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make, update (memory: INTEGER) is
+	make, update (memory: INTEGER)
 			-- Update Current for `memory' type.
 		do
 			mem_stat (memory)
@@ -41,21 +41,21 @@ feature -- Access
 
 feature -- Measurement
 
-	total: INTEGER is
+	total: INTEGER
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
 		do
 			Result := total64.as_integer_32
 		end
 
-	used: INTEGER is
+	used: INTEGER
 			-- Number of bytes used for `type'
 			-- before last call to `update'
 		do
 			Result := used64.as_integer_32
 		end
 
-	free: INTEGER is
+	free: INTEGER
 			-- Number of bytes still free for `type'
 			-- before last call to `update'
 		do
@@ -64,7 +64,7 @@ feature -- Measurement
 			Computed: Result = total - used - overhead
 		end
 
-	overhead: INTEGER is
+	overhead: INTEGER
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
 		do
@@ -84,7 +84,7 @@ feature -- Extended measurement
 			-- Number of bytes used for `type'
 			-- before last call to `update'
 
-	free64: NATURAL_64 is
+	free64: NATURAL_64
 			-- Number of bytes still free for `type'
 			-- before last call to `update'
 		do
@@ -97,7 +97,7 @@ feature -- Extended measurement
 
 feature {NONE} -- Implementation
 
-	mem_stat (mem: INTEGER) is
+	mem_stat (mem: INTEGER)
 			-- Retrieve the statistics.
 		do
 		end
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 invariant
 	consistent_memory: total64 = free64 + used64 + overhead64
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

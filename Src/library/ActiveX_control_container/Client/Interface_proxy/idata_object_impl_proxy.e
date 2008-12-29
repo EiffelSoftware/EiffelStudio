@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IDataObject' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_idata_object_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
+	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `pformatetc_in' [in].  
 			-- `p_medium' [out].  
@@ -35,7 +35,7 @@ feature -- Basic Operations
 			ccom_get_data (initializer, pformatetc_in.item, p_medium.item)
 		end
 
-	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
+	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_medium' [in, out].  
@@ -43,14 +43,14 @@ feature -- Basic Operations
 			ccom_get_data_here (initializer, p_formatetc.item, p_medium.item)
 		end
 
-	query_get_data (p_formatetc: TAG_FORMATETC_RECORD) is
+	query_get_data (p_formatetc: TAG_FORMATETC_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 		do
 			ccom_query_get_data (initializer, p_formatetc.item)
 		end
 
-	get_canonical_format_etc (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD) is
+	get_canonical_format_etc (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD)
 			-- No description available.
 			-- `pformatect_in' [in].  
 			-- `pformatetc_out' [out].  
@@ -58,7 +58,7 @@ feature -- Basic Operations
 			ccom_get_canonical_format_etc (initializer, pformatect_in.item, pformatetc_out.item)
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
@@ -67,7 +67,7 @@ feature -- Basic Operations
 			ccom_set_data (initializer, p_formatetc.item, pmedium.item, f_release)
 		end
 
-	enum_format_etc (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]) is
+	enum_format_etc (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE])
 			-- No description available.
 			-- `dw_direction' [in].  
 			-- `ppenum_format_etc' [out].  
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			ccom_enum_format_etc (initializer, dw_direction, ppenum_format_etc)
 		end
 
-	dadvise (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF) is
+	dadvise (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `advf' [in].  
@@ -97,14 +97,14 @@ feature -- Basic Operations
 			ccom_dadvise (initializer, p_formatetc.item, advf, p_adv_sink_item, pdw_connection)
 		end
 
-	dunadvise (dw_connection: INTEGER) is
+	dunadvise (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		do
 			ccom_dunadvise (initializer, dw_connection)
 		end
 
-	enum_dadvise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_dadvise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_advise' [out].  
 		do
@@ -113,7 +113,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_idata_object_impl_proxy(initializer)
@@ -121,79 +121,79 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_data (cpp_obj: POINTER; pformatetc_in: POINTER; p_medium: POINTER) is
+	ccom_get_data (cpp_obj: POINTER; pformatetc_in: POINTER; p_medium: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *)"
 		end
 
-	ccom_get_data_here (cpp_obj: POINTER; p_formatetc: POINTER; p_medium: POINTER) is
+	ccom_get_data_here (cpp_obj: POINTER; p_formatetc: POINTER; p_medium: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *)"
 		end
 
-	ccom_query_get_data (cpp_obj: POINTER; p_formatetc: POINTER) is
+	ccom_query_get_data (cpp_obj: POINTER; p_formatetc: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *)"
 		end
 
-	ccom_get_canonical_format_etc (cpp_obj: POINTER; pformatect_in: POINTER; pformatetc_out: POINTER) is
+	ccom_get_canonical_format_etc (cpp_obj: POINTER; pformatect_in: POINTER; pformatetc_out: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,ecom_control_library::tagFORMATETC *)"
 		end
 
-	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER) is
+	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *,EIF_INTEGER)"
 		end
 
-	ccom_enum_format_etc (cpp_obj: POINTER; dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]) is
+	ccom_enum_format_etc (cpp_obj: POINTER; dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_dadvise (cpp_obj: POINTER; p_formatetc: POINTER; advf: INTEGER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF) is
+	ccom_dadvise (cpp_obj: POINTER; p_formatetc: POINTER; advf: INTEGER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_INTEGER,::IAdviseSink *,EIF_OBJECT)"
 		end
 
-	ccom_dunadvise (cpp_obj: POINTER; dw_connection: INTEGER) is
+	ccom_dunadvise (cpp_obj: POINTER; dw_connection: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_enum_dadvise (cpp_obj: POINTER; ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	ccom_enum_dadvise (cpp_obj: POINTER; ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_idata_object_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_idata_object_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_idata_object_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_idata_object_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

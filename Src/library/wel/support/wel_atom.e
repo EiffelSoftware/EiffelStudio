@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Atom associated to a string."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING_GENERAL) is
+	make (a_name: STRING_GENERAL)
 			-- Make an atom named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Atom name
 		local
 			a_wel_string: WEL_STRING
@@ -51,7 +51,7 @@ feature -- Access
 			result_not_empty: not Result.is_empty
 		end
 
-	Max_name_length: INTEGER is 80
+	Max_name_length: INTEGER = 80
 			-- Maximum atom name length
 
 	item: INTEGER
@@ -59,7 +59,7 @@ feature -- Access
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Delete atom.
 		do
 			item := cwin_delete_atom (item)
@@ -68,7 +68,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_add_atom (str: POINTER): INTEGER is
+	cwin_add_atom (str: POINTER): INTEGER
 			-- SDK AddAtom
 		external
 			"C [macro <wel.h>] (LPCTSTR): EIF_INTEGER"
@@ -76,7 +76,7 @@ feature {NONE} -- Externals
 			"AddAtom"
 		end
 
-	cwin_delete_atom (atom: INTEGER): INTEGER is
+	cwin_delete_atom (atom: INTEGER): INTEGER
 			-- SDK DeleteAtom
 		external
 			"C [macro <wel.h>] (ATOM): EIF_INTEGER"
@@ -84,7 +84,7 @@ feature {NONE} -- Externals
 			"DeleteAtom"
 		end
 
-	cwin_get_atom_name (atom: INTEGER; buffer: POINTER; length: INTEGER): INTEGER is
+	cwin_get_atom_name (atom: INTEGER; buffer: POINTER; length: INTEGER): INTEGER
 			-- SDK GetAtomName
 		external
 			"C [macro <wel.h>] (ATOM, LPTSTR, int): EIF_INTEGER"
@@ -92,7 +92,7 @@ feature {NONE} -- Externals
 			"GetAtomName"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

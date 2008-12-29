@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Contains two widgets, each on either side of an adjustable separator.
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	first: EV_WIDGET is
+	first: EV_WIDGET
 			-- First item.
 		require
 			not_destroyed: not is_destroyed
@@ -31,7 +31,7 @@ feature -- Access
 			Result := implementation.first
 		end
 
-	second: EV_WIDGET is
+	second: EV_WIDGET
 			-- Second item.
 		require
 			not_destroyed: not is_destroyed
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: EV_WIDGET): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN
 			-- Does structure include `v'?
 		do
 			check
@@ -50,7 +50,7 @@ feature -- Status report
 			Result := implementation.has (v)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		do
 			Result := implementation.count
@@ -59,7 +59,7 @@ feature -- Status report
 			count_valid: count <= 2
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		do
 			check
@@ -68,7 +68,7 @@ feature -- Status report
 			Result := first = Void and second = Void
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- Is structure not full yet?
 		do
 			check
@@ -77,7 +77,7 @@ feature -- Status report
 			Result := first = Void or else second = Void
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			check
@@ -86,22 +86,22 @@ feature -- Status report
 			Result := first /= Void and then second /= Void
 		end
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := item /= Void
 		end
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		do
 			Result := item /= Void
 		end
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 			-- Items may be removed.
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Offset of splitter from left or top.
 		require
 			not_destroyed: not is_destroyed
@@ -115,7 +115,7 @@ feature -- Status report
 			-- Last spliter position REMEMBERED
 			-- This is NOT current split bar proportion displayed if `update_proportion' have not been called
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Minimum position splitter can have.
 		require
 			not_destroyed: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Status report
 			non_negative: Result >= 0
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Maximum position splitter can have.
 		require
 			not_destroyed: not is_destroyed
@@ -137,7 +137,7 @@ feature -- Status report
 			non_negative: Result >= 0
 		end
 
-	is_item_expanded (an_item: EV_WIDGET): BOOLEAN is
+	is_item_expanded (an_item: EV_WIDGET): BOOLEAN
 			-- Is `an_item' expanded relative to `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -149,7 +149,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_item_expanded (an_item)
 		end
 
-	splitter_width: INTEGER is
+	splitter_width: INTEGER
 			-- Width of splitter in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -161,7 +161,7 @@ feature -- Status report
 
 feature -- Element change
 
-	 extend (an_item: EV_WIDGET) is
+	 extend (an_item: EV_WIDGET)
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
@@ -174,7 +174,7 @@ feature -- Element change
 			has_an_item: has (an_item)
 		end
 
-	put (an_item: EV_WIDGET) is
+	put (an_item: EV_WIDGET)
 			-- Replace `item' with `an_item'.
 		do
 			implementation.put (an_item)
@@ -183,7 +183,7 @@ feature -- Element change
 			has_an_item: has (an_item)
 		end
 
-	set_first (an_item: EV_WIDGET) is
+	set_first (an_item: EV_WIDGET)
 			-- Assign `an_item' to `first'.
 		require
 			not_destroyed: not is_destroyed
@@ -198,7 +198,7 @@ feature -- Element change
 			an_item_not_expanded: not is_item_expanded (an_item)
 		end
 
-	set_second (an_item: EV_WIDGET) is
+	set_second (an_item: EV_WIDGET)
 			-- Assign `an_item' to `second'.
 		require
 			not_destroyed: not is_destroyed
@@ -215,7 +215,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	go_to_first is
+	go_to_first
 			-- Make `first' current `item'.
 		require
 			not_destroyed: not is_destroyed
@@ -226,7 +226,7 @@ feature -- Status setting
 			item_is_first: item = first
 		end
 
-	go_to_second is
+	go_to_second
 			-- Make `first' current `item'.
 		require
 			not_destroyed: not is_destroyed
@@ -237,7 +237,7 @@ feature -- Status setting
 			item_is_second: item = second
 		end
 
-	enable_item_expand (an_item: EV_WIDGET) is
+	enable_item_expand (an_item: EV_WIDGET)
 			-- When `Current' is resized, resize `an_item' respectively.
 		require
 			not_destroyed: not is_destroyed
@@ -249,7 +249,7 @@ feature -- Status setting
 			an_item_expanded: is_item_expanded (an_item)
 		end
 
-	disable_item_expand (an_item: EV_WIDGET) is
+	disable_item_expand (an_item: EV_WIDGET)
 			-- When `Current' is resized, do not resize `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Status setting
 			not_an_item_expanded: not is_item_expanded (an_item)
 		end
 
-	set_split_position (a_split_position: INTEGER) is
+	set_split_position (a_split_position: INTEGER)
 			-- Make `a_split_position' position of splitter in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -278,7 +278,7 @@ feature -- Status setting
 			split_position_assigned: split_position = a_split_position
 		end
 
-	set_proportion (a_proportion: REAL) is
+	set_proportion (a_proportion: REAL)
 			-- Position `split_position' between minimum and maximum determined
 			-- by `a_proportion'.
 		require
@@ -325,7 +325,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	prune (v: EV_WIDGET) is
+	prune (v: EV_WIDGET)
 			-- Remove one occurrence of `v' if any.
 		do
 			check
@@ -339,7 +339,7 @@ feature -- Removal
 					second /= Void and is_item_expanded (second)))
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			check
@@ -350,7 +350,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: LINEAR [EV_WIDGET] is
+	linear_representation: LINEAR [EV_WIDGET]
 			-- Representation as a linear structure
 		do
 			check
@@ -374,7 +374,7 @@ invariant
 	splitter_in_valid_position_maximum:
 		full implies split_position <= maximum_split_position
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

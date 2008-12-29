@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about character formatting in a %
 		%rich edit control."
 	legal: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a char format structure.
 		do
 			structure_make
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Character set value. Can be one of the values
 			-- specified for the `char_set' function of the
 			-- WEL_LOG_FONT structure.
@@ -66,7 +66,7 @@ feature -- Access
 			Result := cwel_charformat_get_bcharset (item)
 		end
 
-	face_name: STRING_32 is
+	face_name: STRING_32
 			-- Font face name
 		local
 			l_str: WEL_STRING
@@ -77,20 +77,20 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Character height
 		obsolete "Use height in twips instead."
 		do
 			Result := cwel_charformat_get_yheight (item)
 		end
 		
-	height_in_points: INTEGER is
+	height_in_points: INTEGER
 			-- Character height in points.
 		do
 			Result := height_in_twips // 20
 		end
 		
-	height_in_pixels: INTEGER is
+	height_in_pixels: INTEGER
 			-- Character height in pixels
 		local
 			logical_pixels: INTEGER
@@ -104,13 +104,13 @@ feature -- Access
 			Result := mul_div (logical_pixels, height_in_twips, 1440)
 		end
 		
-	height_in_twips: INTEGER is
+	height_in_twips: INTEGER
 			-- Character height in twips.
 		do
 			Result := cwel_charformat_get_yheight (item)
 		end
 
-	offset: INTEGER is
+	offset: INTEGER
 			-- Character offset from the baseline. If the value
 			-- is positive, the character is a superscript; if it
 			-- is negative, the character is a subscript.
@@ -118,14 +118,14 @@ feature -- Access
 			Result := cwel_charformat_get_yoffset (item)
 		end
 
-	pitch_and_family: INTEGER is
+	pitch_and_family: INTEGER
 			-- Font pitch and family. This value is the same as
 			-- `pitch_and_family' of the WEL_LOG_FONT structure.
 		do
 			Result := cwel_charformat_get_bpitchandfamily (item)
 		end
 
-	text_color: WEL_COLOR_REF is
+	text_color: WEL_COLOR_REF
 			-- Text color
 		do
 			create Result.make_by_color (
@@ -134,13 +134,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Max_face_name_length: INTEGER is
+	Max_face_name_length: INTEGER
 			-- Maximum face name length
 		once
 			Result := Lf_facesize
 		end
 		
-	log_font: WEL_LOG_FONT is
+	log_font: WEL_LOG_FONT
 			-- Log font representing `Current'.
 		local
 			logical_pixels: INTEGER
@@ -162,7 +162,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Valid information or attributes to set.
 			-- See class WEL_CFM_CONSTANTS for values.
 			-- This attribut is automatically set by the
@@ -171,7 +171,7 @@ feature -- Access
 			Result := cwel_charformat_get_dwmask (item)
 		end
 
-	effects: INTEGER is
+	effects: INTEGER
 			-- Character effects.
 			-- See class WEL_CFE_CONSTANTS for values.
 		do
@@ -180,7 +180,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_default_format is
+	set_default_format
 			-- Set Current to default formatting.
 		do
 			unset_bold
@@ -189,7 +189,7 @@ feature -- Element change
 			unset_underline
 		end
 
-	set_char_set (a_char_set: INTEGER) is
+	set_char_set (a_char_set: INTEGER)
 			-- Set `char_set' with `a_char_set'.
 		do
 			add_mask (Cfm_charset)
@@ -198,7 +198,7 @@ feature -- Element change
 			char_set_set: char_set = a_char_set
 		end
 
-	set_face_name (a_face_name: STRING_GENERAL) is
+	set_face_name (a_face_name: STRING_GENERAL)
 			-- Set `face_name' with `a_face_name'.
 		require
 			a_face_name_not_void: a_face_name /= Void
@@ -214,7 +214,7 @@ feature -- Element change
 			face_name_set: face_name.is_equal (a_face_name)
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height' (height specified in points).
 			Obsolete "Use `set_height_in_points' instead"
 		do
@@ -226,7 +226,7 @@ feature -- Element change
 			height_set: height = a_height * 20
 		end
 
-	set_height_in_pixels (a_height: INTEGER) is
+	set_height_in_pixels (a_height: INTEGER)
 			-- Set `height_in_pixels' to `a_height' in pixels.
 		local
 			logical_pixels: INTEGER
@@ -241,7 +241,7 @@ feature -- Element change
 			height_set: height_in_pixels = a_height
 		end
 		
-	set_height_in_points (a_height: INTEGER) is
+	set_height_in_points (a_height: INTEGER)
 			-- Set `height_in_points' to `a_height' in points.
 		do
 			set_height_in_twips (a_height * 20)
@@ -249,7 +249,7 @@ feature -- Element change
 			height_set: height_in_points = a_height
 		end
 		
-	set_height_in_twips (a_height: INTEGER) is
+	set_height_in_twips (a_height: INTEGER)
 			-- Set `height_in_twips' to `a_height' twips.
 		do
 			add_mask (Cfm_size)
@@ -258,7 +258,7 @@ feature -- Element change
 			height_set: height_in_twips = a_height	
 		end
 
-	set_offset (an_offset: INTEGER) is
+	set_offset (an_offset: INTEGER)
 			-- Set `offset' with `an_offset'.
 		do
 			add_mask (Cfm_offset)
@@ -267,7 +267,7 @@ feature -- Element change
 			offset_set: offset = an_offset
 		end
 
-	set_pitch_and_family (a_pitch_and_family: INTEGER) is
+	set_pitch_and_family (a_pitch_and_family: INTEGER)
 			-- Set `pitch_and_family' with `a_pitch_and_family'.
 		do
 			cwel_charformat_set_bpitchandfamily (item,
@@ -276,7 +276,7 @@ feature -- Element change
 			pitch_and_family_set: pitch_and_family = a_pitch_and_family
 		end
 
-	set_text_color (a_color: WEL_COLOR_REF) is
+	set_text_color (a_color: WEL_COLOR_REF)
 			-- Set `text_color' with `a_text_color'.
 		do
 			add_mask (Cfm_color)
@@ -285,77 +285,77 @@ feature -- Element change
 			text_color_set: text_color.item = a_color.item
 		end
 
-	set_bold is
+	set_bold
 			-- Set bold characters.
 		do
 			add_mask (Cfm_bold)
 			add_effects (Cfe_bold)
 		end
 
-	unset_bold is
+	unset_bold
 			-- Unset bold characters.
 		do
 			add_mask (Cfm_bold)
 			remove_effects (Cfe_bold)
 		end
 
-	set_italic is
+	set_italic
 			-- Set italic characters.
 		do
 			add_mask (Cfm_italic)
 			add_effects (Cfe_italic)
 		end
 
-	unset_italic is
+	unset_italic
 			-- Unset italic characters.
 		do
 			add_mask (Cfm_italic)
 			remove_effects (Cfe_italic)
 		end
 
-	set_strike_out is
+	set_strike_out
 			-- Set strike out characters.
 		do
 			add_mask (Cfm_strikeout)
 			add_effects (Cfe_strikeout)
 		end
 
-	unset_strike_out is
+	unset_strike_out
 			-- Unset strike out characters.
 		do
 			add_mask (Cfm_strikeout)
 			remove_effects (Cfe_strikeout)
 		end
 
-	set_underline is
+	set_underline
 			-- Set underline characters.
 		do
 			add_mask (Cfm_underline)
 			add_effects (Cfe_underline)
 		end
 
-	unset_underline is
+	unset_underline
 			-- Unset underline characters.
 		do
 			add_mask (Cfm_underline)
 			remove_effects (Cfe_underline)
 		end
 
-	set_protected is
+	set_protected
 			-- Set protected characters.
 		do
 			add_mask (Cfm_protected)
 			add_effects (Cfe_protected)
 		end
 
-	unset_protected is
+	unset_protected
 			-- Unset protected characters.
 		do
 			add_mask (Cfm_protected)
 			remove_effects (Cfe_protected)
 		end
 
-	set_mask (a_mask: INTEGER) is
+	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
 		do
@@ -364,7 +364,7 @@ feature -- Element change
 			mask_set: mask = a_mask
 		end
 
-	add_mask (a_mask: INTEGER) is
+	add_mask (a_mask: INTEGER)
 			-- Add `a_mask' to `mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
 		do
@@ -373,7 +373,7 @@ feature -- Element change
 			has_mask: has_mask (a_mask)
 		end
 
-	remove_mask (a_mask: INTEGER) is
+	remove_mask (a_mask: INTEGER)
 			-- Remove `a_mask' from `mask'.
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
 		do
@@ -382,7 +382,7 @@ feature -- Element change
 			has_not_mask: not has_mask (a_mask)
 		end
 
-	set_effects (an_effects: INTEGER) is
+	set_effects (an_effects: INTEGER)
 			-- Set `effects' with `an_effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
 		do
@@ -391,7 +391,7 @@ feature -- Element change
 			effects_set: effects = an_effects
 		end
 
-	add_effects (an_effects: INTEGER) is
+	add_effects (an_effects: INTEGER)
 			-- Add `an_effects' to `effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
 		do
@@ -400,7 +400,7 @@ feature -- Element change
 			has_effects: has_effects (an_effects)
 		end
 
-	remove_effects (an_effects: INTEGER) is
+	remove_effects (an_effects: INTEGER)
 			-- Remove `an_effects' from `effects'.
 			-- See class WEL_CFE_CONSTANTS for `a_mask' values.
 		do
@@ -409,7 +409,7 @@ feature -- Element change
 			has_not_effects: not has_effects (an_effects)
 		end
 
-	set_all_masks is
+	set_all_masks
 			-- Set `mask' with all possible values.
 		do
 			set_mask (Cfm_bold + Cfm_color + Cfm_face +
@@ -420,14 +420,14 @@ feature -- Element change
 
 feature -- Status report
 
-	has_mask (a_mask: INTEGER): BOOLEAN is
+	has_mask (a_mask: INTEGER): BOOLEAN
 			-- Is `a_mask' set in `mask'?
 			-- See class WEL_CFM_CONSTANTS for `a_mask' values.
 		do
 			Result := flag_set (mask, a_mask)
 		end
 
-	has_effects (an_effects: INTEGER): BOOLEAN is
+	has_effects (an_effects: INTEGER): BOOLEAN
 			-- Is `an_effects' set in `effects'?
 			-- See class WEL_CFE_CONSTANTS for `an_effects' values.
 		do
@@ -436,7 +436,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_charformat
@@ -444,106 +444,106 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_charformat: INTEGER is
+	c_size_of_charformat: INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		alias
 			"sizeof (CHARFORMAT)"
 		end
 
-	cwel_charformat_set_cbsize (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_cbsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_dwmask (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_dwmask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_dweffects (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_dweffects (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_yheight (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_yheight (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_yoffset (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_yoffset (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_crtextcolor (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_crtextcolor (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_bcharset (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_bcharset (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_bpitchandfamily (ptr: POINTER; value: INTEGER) is
+	cwel_charformat_set_bpitchandfamily (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_set_szfacename (ptr: POINTER; value: POINTER) is
+	cwel_charformat_set_szfacename (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_dwmask (ptr: POINTER): INTEGER is
+	cwel_charformat_get_dwmask (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_dweffects (ptr: POINTER): INTEGER is
+	cwel_charformat_get_dweffects (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_yheight (ptr: POINTER): INTEGER is
+	cwel_charformat_get_yheight (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_yoffset (ptr: POINTER): INTEGER is
+	cwel_charformat_get_yoffset (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_crtextcolor (ptr: POINTER): INTEGER is
+	cwel_charformat_get_crtextcolor (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_bcharset (ptr: POINTER): INTEGER is
+	cwel_charformat_get_bcharset (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_bpitchandfamily (ptr: POINTER): INTEGER is
+	cwel_charformat_get_bpitchandfamily (ptr: POINTER): INTEGER
 		external
 			"C [macro <charfmt.h>]"
 		end
 
-	cwel_charformat_get_szfacename (ptr: POINTER): POINTER is
+	cwel_charformat_get_szfacename (ptr: POINTER): POINTER
 		external
 			"C [macro <charfmt.h>] (CHARFORMAT*): EIF_POINTER"
 		end
 
-	Lf_facesize: INTEGER is
+	Lf_facesize: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"LF_FACESIZE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

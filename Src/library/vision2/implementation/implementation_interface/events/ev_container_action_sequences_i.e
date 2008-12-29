@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_CONTAINER_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when a new item is added.
 		do
 			if new_item_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	create_new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Create a new_item action sequence.
 		deferred
 		end
@@ -35,7 +35,7 @@ feature {EV_ANY_I} -- Implementation
 	new_item_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE;
 			-- Implementation of once per object `new_item_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

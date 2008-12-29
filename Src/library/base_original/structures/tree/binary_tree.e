@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Binary tree: each node may have a left child and a right child"
@@ -41,7 +41,7 @@ create
 
 feature -- Initialization
 
-	make (v: like item) is
+	make (v: like item)
 			-- Create a root node with value `v'.
 		do
 			item := v
@@ -65,7 +65,7 @@ feature -- Access
 	right_child: like parent
 			-- Right child, if any
 
-	left_item: like item is
+	left_item: like item
 			-- Value of left child
 		require
 			has_left: left_child /= Void
@@ -73,7 +73,7 @@ feature -- Access
 			Result := left_child.item
 		end
 
-	right_item: like item is
+	right_item: like item
 			-- Value of right child
 		require
 			has_right: right_child /= Void
@@ -81,19 +81,19 @@ feature -- Access
 			Result := right_child.item
 		end
 
-	first_child: like parent is
+	first_child: like parent
 			-- Left child
 		do
 			Result := left_child
 		end
 
-	last_child: like parent is
+	last_child: like parent
 			-- Right child
 		do
 			Result := right_child
 		end
 
-	child: like parent is
+	child: like parent
 			-- Child at cursor position
 		do
 			inspect
@@ -107,13 +107,13 @@ feature -- Access
 			end
 		end
 
-	child_cursor: ARRAYED_LIST_CURSOR is
+	child_cursor: ARRAYED_LIST_CURSOR
 			-- Current cursor position
 		do
 			create Result.make (child_index)
 		end
 
-	left_sibling: like parent is
+	left_sibling: like parent
 			-- Left neighbor, if any
 		do
 			if parent.right_child = Current then
@@ -121,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	right_sibling: like parent is
+	right_sibling: like parent
 			-- Right neighbor, if any
 		do
 			if parent.left_child = Current then
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Measurement
 
-	arity: INTEGER is
+	arity: INTEGER
 			-- Number of children
 		do
 			if has_left then
@@ -144,24 +144,24 @@ feature -- Measurement
 			valid_arity: Result <= child_capacity
 		end
 
-	child_capacity: INTEGER is 2
+	child_capacity: INTEGER = 2
 			-- Maximum number of children
 
 feature -- Status report
 
-	child_after: BOOLEAN is
+	child_after: BOOLEAN
 			-- Is there no valid child position to the right of cursor?
 		do
 			Result := child_index >= child_capacity + 1
 		end
 
-	is_leaf, has_none: BOOLEAN is
+	is_leaf, has_none: BOOLEAN
 			-- Are there no children?
 		do
 			Result := left_child = Void and right_child = Void
 		end
 
-	has_left: BOOLEAN is
+	has_left: BOOLEAN
 			-- Has current node a left child?
 		do
 			Result := left_child /= Void
@@ -169,7 +169,7 @@ feature -- Status report
 			Result = (left_child /= Void)
 		end
 
-	has_right: BOOLEAN is
+	has_right: BOOLEAN
 			-- Has current node a right child?
 		do
 			Result := right_child /= Void
@@ -177,7 +177,7 @@ feature -- Status report
 			Result = (right_child /= Void)
 		end
 
-	has_both: BOOLEAN is
+	has_both: BOOLEAN
 			-- Has current node two children?
 		do
 			Result := left_child /= Void and right_child /= Void
@@ -187,13 +187,13 @@ feature -- Status report
 
 feature	-- Cursor movement
 
-	child_go_to (p: ARRAYED_LIST_CURSOR) is
+	child_go_to (p: ARRAYED_LIST_CURSOR)
 			-- Move cursor to child remembered by `p'.
 		do
 			child_index := p.index
 		end
 
-	child_start is
+	child_start
 			-- Move to first child.
 		do
 			if has_left then
@@ -205,25 +205,25 @@ feature	-- Cursor movement
 			end
 		end
 
-	child_finish is
+	child_finish
 			-- Move cursor to last child.
 		do
 			child_index := arity
 		end
 
-	child_forth is
+	child_forth
 			-- Move cursor to next child.
 		do
 			child_index := child_index + 1
 		end
 
-	child_back is
+	child_back
 			-- Move cursor to previous child.
 		do
 			child_index := child_index - 1
 		end
 
-	child_go_i_th (i: INTEGER) is
+	child_go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th child.
 		do
 			child_index := i
@@ -231,7 +231,7 @@ feature	-- Cursor movement
 
 feature -- Element change
 
-	put_left_child (n: like parent) is
+	put_left_child (n: like parent)
 			-- Set `left_child' to `n'.
 		require
 			no_parent: n = Void or else n.is_root
@@ -252,7 +252,7 @@ feature -- Element change
 			left_child := n
 		end
 
-	put_right_child (n: like parent) is
+	put_right_child (n: like parent)
 			-- Set `right_child' to `n'.
 		require
 			no_parent: n = Void or else n.is_root
@@ -273,7 +273,7 @@ feature -- Element change
 			right_child := n
 		end
 
-	child_put, child_replace (v: like item) is
+	child_put, child_replace (v: like item)
 			-- Put `v' at current child position.
 		local
 			node: like Current
@@ -294,7 +294,7 @@ feature -- Element change
 			end
 		end
 
-	put_child, replace_child (n: like parent) is
+	put_child, replace_child (n: like parent)
 			-- Put `n' at current child position.
 		do
 			if object_comparison then
@@ -318,7 +318,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_left_child is
+	remove_left_child
 			-- Remove left child.
 		do
 			if left_child /= Void then
@@ -329,7 +329,7 @@ feature -- Removal
 			not has_left
 		end
 
-	remove_right_child is
+	remove_right_child
 			-- Remove right child.
 		do
 			if right_child /= Void then
@@ -340,7 +340,7 @@ feature -- Removal
 			not has_right
 		end
 
-	child_remove is
+	child_remove
 			-- Remove current child.
 		do
 			inspect
@@ -354,7 +354,7 @@ feature -- Removal
 			end
 		end
 
-	prune (n: like parent) is
+	prune (n: like parent)
 			-- Prune `n' from child nodes.
 		do
 			if left_child = n then
@@ -364,14 +364,14 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all children.
 		do
 			remove_left_child
 			remove_right_child
 		end
 
-	forget_left is
+	forget_left
 			-- Forget left sibling.
 		do
 			if not is_root and then parent.right_child = Current then
@@ -379,7 +379,7 @@ feature -- Removal
 			end
 		end
 
-	forget_right is
+	forget_right
 			-- Forget right sibling.
 		do
 			if not is_root and then parent.left_child = Current then
@@ -389,7 +389,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
@@ -403,7 +403,7 @@ feature -- Duplication
 			end
 		end
 
-	duplicate_all: like Current is
+	duplicate_all: like Current
 		do
 			Result := new_tree
 			if has_left then
@@ -416,7 +416,7 @@ feature -- Duplication
 
 feature {BINARY_TREE} -- Implementation
 
-	fill_list (al: ARRAYED_LIST [G]) is
+	fill_list (al: ARRAYED_LIST [G])
 			-- Fill `al' with all the children's items.
 		do
 			if left_child /= Void then
@@ -431,14 +431,14 @@ feature {BINARY_TREE} -- Implementation
 
 feature {BINARY_TREE} -- Implementation
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
 			create Result.make (n.item)
 			Result.copy_node (n)
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		do
 			standard_copy (n)
@@ -450,7 +450,7 @@ feature {BINARY_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	subtree_has (v: G): BOOLEAN is
+	subtree_has (v: G): BOOLEAN
 			-- Does subtree contain `v'?
 		do
 			if left_child /= Void then
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	subtree_count: INTEGER is
+	subtree_count: INTEGER
 			-- Number of items in subtree
 		do
 			if left_child /= Void then
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_subtree (other: TREE [G]) is
+	fill_subtree (other: TREE [G])
 			-- Copy `other' to subtree.
 		local
 			l_other: like Current
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- New tree node
 		do
 			create Result.make (item)
@@ -501,7 +501,7 @@ invariant
 
 	tree_is_binary: child_capacity = 2
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for choosing fonts for Windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -56,7 +56,7 @@ create
 
 feature -- Initialization
 
-	make (a_font_box_d: FONT_BOX_D; oui_parent: COMPOSITE) is
+	make (a_font_box_d: FONT_BOX_D; oui_parent: COMPOSITE)
 			-- Create a font box
 		do
 			wel_make
@@ -68,7 +68,7 @@ feature -- Initialization
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Selected font
 		local
 			font_windows: FONT_IMP
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (f: FONT) is
+	set_font (f: FONT)
 			-- Edit `a_font'.			
 		local
 			fontw: FONT_IMP
@@ -94,7 +94,7 @@ feature -- Status setting
 			set_log_font (fontw.wel_log_font)
 		end
 
-	realize is
+	realize
 			-- Realize current widget.
 		do
 			realized := True
@@ -104,7 +104,7 @@ feature -- Status setting
 			end
 		end
 
-	dialog_realize is
+	dialog_realize
 			-- Display a file selection dialog box
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -119,19 +119,19 @@ feature -- Status setting
 			end
 		end
 
-	popdown is
+	popdown
 			-- Pop down the font dialog, no effect under Windows
 		do
 			is_popped_up := False
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealizes the font dialog, no effect under Windows.
 		do
 			realized := False
 		end
 
-	popup is
+	popup
 			-- Popup a popup shell.
 		do
 			dialog_realize
@@ -147,28 +147,28 @@ feature -- Status report
 
 feature -- Element change
 
-	add_ok_action (a_command: COMMAND; arg: ANY) is
+	add_ok_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	add_cancel_action (a_command: COMMAND; arg: ANY) is
+	add_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.add (Current, a_command, arg)
 		end
 
-	add_apply_action (a_command: COMMAND; arg: ANY) is
+	add_apply_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -178,7 +178,7 @@ feature -- Element change
 			end
 		end
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -188,7 +188,7 @@ feature -- Element change
 			end
 		end
 
-	hide_ok_button is
+	hide_ok_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -198,7 +198,7 @@ feature -- Element change
 			end
 		end
 
-	show_apply_button is
+	show_apply_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -208,7 +208,7 @@ feature -- Element change
 			end
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -218,7 +218,7 @@ feature -- Element change
 			end
 		end
 
-	show_ok_button is
+	show_ok_button
 			-- Always visible
 		do
 			debug ("WINDOWS")
@@ -230,21 +230,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; arg: ANY) is
+	remove_apply_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
 			apply_actions.remove (Current, a_command, arg)
 		end
 
-	remove_cancel_action (a_command: COMMAND; arg: ANY) is
+	remove_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.remove (Current, a_command, arg)
 		end
 
-	remove_ok_action (a_command: COMMAND; arg: ANY) is
+	remove_ok_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -253,7 +253,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionFontBoxDialog"
@@ -261,20 +261,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	build is
+	build
 		do
 		end
 
-	default_style: INTEGER is
-		do
-			debug ("WINDOWS")
-				check
-					inapplicable: False
-				end
-			end
-		end
-
-	children_count: INTEGER is
+	default_style: INTEGER
 		do
 			debug ("WINDOWS")
 				check
@@ -283,7 +274,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	set_label_font, set_text_font, set_button_font (f: FONT) is
+	children_count: INTEGER
 		do
 			debug ("WINDOWS")
 				check
@@ -292,7 +283,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	text_font, label_font, button_font : FONT is
+	set_label_font, set_text_font, set_button_font (f: FONT)
 		do
 			debug ("WINDOWS")
 				check
@@ -301,7 +292,16 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-indexing
+	text_font, label_font, button_font : FONT
+		do
+			debug ("WINDOWS")
+				check
+					inapplicable: False
+				end
+			end
+		end
+
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

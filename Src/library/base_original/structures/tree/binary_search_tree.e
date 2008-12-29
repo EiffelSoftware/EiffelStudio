@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"[
@@ -36,7 +36,7 @@ create {BINARY_SEARCH_TREE}
 
 feature {NONE} -- Initialization
 
-	make (v: like item) is
+	make (v: like item)
 			-- Create single node with item `v'.
 		require
 			v_not_void: v /= Void
@@ -54,7 +54,7 @@ feature -- Access
 	parent: BINARY_SEARCH_TREE [G]
 			-- Parent of current node
 
- 	has (v: like item): BOOLEAN is
+ 	has (v: like item): BOOLEAN
 			-- Does tree contain a node whose item
 			-- is equal to `v' (object comparison)?
 		require else
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Measurement
 
-	min: like item is
+	min: like item
 			-- Minimum item in tree
 		do
 			if has_left then
@@ -90,7 +90,7 @@ feature -- Measurement
 			-- smallest: For every item `it' in tree, `Result' <= it
 		end
 
-	max: like item is
+	max: like item
 			-- Maximum item in tree
 		do
 			if has_right then
@@ -105,7 +105,7 @@ feature -- Measurement
 
 feature	-- Status report
 
-	sorted: BOOLEAN is
+	sorted: BOOLEAN
 			-- Is tree sorted?
 		do
 			Result := True
@@ -124,7 +124,7 @@ feature	-- Status report
 			end
 		end
 
-	sorted_and_less (i: like item): BOOLEAN is
+	sorted_and_less (i: like item): BOOLEAN
 			-- Is tree sorted and all its elements less then i
 		do
 			Result := True
@@ -146,7 +146,7 @@ feature	-- Status report
 
 feature -- Cursor movement
 
-	node_action (v: like item) is
+	node_action (v: like item)
 			-- Operation on node item,
 			-- to be defined by descendant classes.
 			-- Here it is defined as an empty operation.
@@ -155,7 +155,7 @@ feature -- Cursor movement
 		do
 		end
 
-	preorder is
+	preorder
 			-- Apply `node_action' to every node's item
 			-- in tree, using pre-order.
 		do
@@ -168,7 +168,7 @@ feature -- Cursor movement
 			end
 		end
 
-	i_infix is
+	i_infix
 			-- Apply node_action to every node's item
 			-- in tree, using infix order.
 		do
@@ -181,7 +181,7 @@ feature -- Cursor movement
 			end
 		end
 
-	postorder is
+	postorder
 			-- Apply node_action to every node's item
 			-- in tree, using post-order.
 		do
@@ -196,7 +196,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put, extend (v: like item) is
+	put, extend (v: like item)
 			-- Put `v' at proper position in tree
 			-- (unless `v' exists already).
 			-- (Reference or object equality,
@@ -227,7 +227,7 @@ feature -- Element change
 
 feature -- Transformation
 
-	sort is
+	sort
 			-- Sort tree.
 			--| Uses heapsort.
 			--| The reason for the `external sort' is that
@@ -271,7 +271,7 @@ feature -- Transformation
 feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 
-	is_subset (other: like Current): BOOLEAN is
+	is_subset (other: like Current): BOOLEAN
 			-- Is Current a subset of other
 		do
 			Result := other.has (item)
@@ -283,7 +283,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	intersect (other: BINARY_SEARCH_TREE [G]) is
+	intersect (other: BINARY_SEARCH_TREE [G])
 			-- Remove all items not in `other'.
 		do
 			if right_child /= Void then
@@ -297,7 +297,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	subtract (other: BINARY_SEARCH_TREE [G]) is
+	subtract (other: BINARY_SEARCH_TREE [G])
 			-- Remove all items also in `other'.
 		require
 			set_exists: other /= Void
@@ -313,7 +313,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Add all items of `other'.
 		do
 			if other.right_child /= Void then
@@ -325,7 +325,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			extend (other.item)
 		end
 
-	remove_node is
+	remove_node
 			-- Remove current node from the tree.
 		require
 			is_not_root: not is_root
@@ -361,7 +361,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	pruned (v: like item; par: like Current): like Current is
+	pruned (v: like item; par: like Current): like Current
 			-- Prune `v'.
 			-- (`par' is the parent node of the current node, needed to update
 			-- `parent' correctly.)
@@ -397,7 +397,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	min_node: like Current is
+	min_node: like Current
 			-- Node containing min
 		do
 			if has_left then
@@ -407,7 +407,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	max_node: like Current is
+	max_node: like Current
 			-- Node containing max
 		do
 			if has_right then
@@ -419,7 +419,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 feature {NONE} -- Implementation
 
-	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER) is
+	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER)
 			-- Put values from `t' into tree in such an order that
 			-- the tree will be balanced if `t' is sorted.
 		local
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	items_equal (src, dest: like item): BOOLEAN is
+	items_equal (src, dest: like item): BOOLEAN
 			-- Are `src' and `dest' equal?
 			-- (depending on `object_comparison')
 		do
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_comparison_mode (t: like Current) is
+	set_comparison_mode (t: like Current)
 			-- Set comparison mode of `t' to the same mode as `Current'.
 		require
 			not_void: t /= Void
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 			mode_set: object_comparison = t.object_comparison
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

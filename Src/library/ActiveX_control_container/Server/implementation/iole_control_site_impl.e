@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleControlSite' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,27 +17,27 @@ inherit
 
 feature -- Basic Operations
 
-	on_control_info_changed is
+	on_control_info_changed
 			-- No description available.
 		do
 			-- No Implementation.
 		end
 
-	lock_in_place_active (f_lock: INTEGER) is
+	lock_in_place_active (f_lock: INTEGER)
 			-- No description available.
 			-- `f_lock' [in].  
 		do
 			-- No Implementation.
 		end
 
-	get_extended_control (pp_disp: CELL [ECOM_INTERFACE]) is
+	get_extended_control (pp_disp: CELL [ECOM_INTERFACE])
 			-- Requests an IDispatch pointer to the extended control.
 			-- `pp_disp' [out].  
 		do
 			pp_disp.put (dispatch)
 		end
 
-	transform_coords (p_ptl_himetric: X_POINTL_RECORD; p_ptf_container: TAG_POINTF_RECORD; dw_flags: INTEGER) is
+	transform_coords (p_ptl_himetric: X_POINTL_RECORD; p_ptf_container: TAG_POINTF_RECORD; dw_flags: INTEGER)
 			-- No description available.
 			-- `p_ptl_himetric' [in, out].  
 			-- `p_ptf_container' [in, out].  
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	translate_accelerator (p_msg: TAG_MSG_RECORD; grf_modifiers: INTEGER) is
+	translate_accelerator (p_msg: TAG_MSG_RECORD; grf_modifiers: INTEGER)
 			-- No description available.
 			-- `p_msg' [in].  
 			-- `grf_modifiers' [in].  
@@ -54,14 +54,14 @@ feature -- Basic Operations
 			trigger (S_false)
 		end
 
-	on_focus (f_got_focus: INTEGER) is
+	on_focus (f_got_focus: INTEGER)
 			-- No description available.
 			-- `f_got_focus' [in].  
 		do
 			-- No Implementation.
 		end
 
-	show_property_frame is
+	show_property_frame
 			-- No description available.
 		do
 			trigger (E_notimpl)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

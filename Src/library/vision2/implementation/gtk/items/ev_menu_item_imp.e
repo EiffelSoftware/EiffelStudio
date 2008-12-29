@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu.
 		do
 			base_make (an_interface)
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			box: POINTER
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			l_split_text: STRING_32
@@ -117,9 +117,9 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	accelerators_enabled: BOOLEAN is True
+	accelerators_enabled: BOOLEAN = True
 
-	on_activate is
+	on_activate
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
 		do
@@ -138,7 +138,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

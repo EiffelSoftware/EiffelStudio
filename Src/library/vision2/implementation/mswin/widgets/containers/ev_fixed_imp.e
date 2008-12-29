@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision fixed. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
@@ -97,7 +97,7 @@ feature -- Status setting
 			notify_change (Nc_minsize, wel_win)
 		end
 
-	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER)
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
@@ -113,7 +113,7 @@ feature -- Status setting
 			notify_change (Nc_minsize, wel_win)
 		end
 
-	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
@@ -135,7 +135,7 @@ feature {EV_ANY_I} -- Implementation
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Assign `a_window' to `top_level_window_imp'.
 		do
 			top_level_window_imp := a_window
@@ -149,7 +149,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		do
 			Result := Ws_child | Ws_visible | Ws_clipchildren | Ws_clipsiblings
 		end
@@ -160,7 +160,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Compute both to avoid duplicate code.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Compute both to avoid duplicate code.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute the minimum size of the object.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (v, i)
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
+	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width, a_height: INTEGER)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- And we reajust size of all children.
@@ -279,7 +279,7 @@ feature {NONE} -- WEL Implementation
 			ev_children.go_i_th (cur)
 		end
 
-	ev_apply_new_size (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- And we reajust size of all children.
@@ -302,7 +302,7 @@ feature {NONE} -- WEL Implementation
 			ev_children.go_i_th (cur)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 		local
 			main_region: WEL_REGION
 			tmp_region, new_region: WEL_REGION
@@ -360,13 +360,13 @@ feature {NONE} -- WEL Implementation
 			main_region.delete
 		end
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' currently contained in `Current'.
 		do
 			Result := a_child = item.implementation
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

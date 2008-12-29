@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	on_view_status_change_user_precondition (dw_view_status: INTEGER): BOOLEAN is
+	on_view_status_change_user_precondition (dw_view_status: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_view_status_change'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_view_status_change (dw_view_status: INTEGER) is
+	on_view_status_change (dw_view_status: INTEGER)
 			-- No description available.
 			-- `dw_view_status' [in].  
 		require
@@ -30,7 +30,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

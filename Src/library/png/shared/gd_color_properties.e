@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Color Facilities relative to a GD-image."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	color(red,green,blue: INTEGER):INTEGER is
+	color(red,green,blue: INTEGER):INTEGER
 			-- Index of Color obtained in rgb mode for Current Image.
 		require
 			red_possible: red >=0 and red <256
@@ -27,7 +27,7 @@ feature -- Access
 			result_possible: Result >= 0
 		end
 
-	color_index_of (r,g,b: INTEGER): INTEGER is
+	color_index_of (r,g,b: INTEGER): INTEGER
 		--It  searches the colors which have been defined thus far in the image 
 		-- specified and returns the index of the first color with RGB values
 		-- which exactly match those of the request. 
@@ -39,7 +39,7 @@ feature -- Access
 			Result := gdImageColorAllocate(image, r,g,b )
 		end
 
-	has_color (r,g,b: INTEGER): BOOLEAN is
+	has_color (r,g,b: INTEGER): BOOLEAN
 		-- Does current image palette contains the color defined with r,g,b ?
 			require
 			rgb_possibles: r>=0 and r<256 and g>=0 and g<256 and b>=0 and b<256
@@ -47,7 +47,7 @@ feature -- Access
 			Result := (gdImageColorAllocate(image, r,g,b )/=-1)
 		end
 
-	color_index_bound: INTEGER is
+	color_index_bound: INTEGER
 		-- Return the number of color indexes currently associated with the image.
 		do
 			Result := c_image_color_total(image)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_background_color(r,g,b: INTEGER) is
+	set_background_color(r,g,b: INTEGER)
 		-- Set the background color of Current.
 		-- This has to be set before any other color operations.
 		do
@@ -67,7 +67,7 @@ feature -- Settings
 
 feature -- Implementation
 	
-	image: POINTER is deferred end
+	image: POINTER deferred end
 		-- Image Current is relative to.
 
 	background_color_allocated: BOOLEAN
@@ -78,28 +78,28 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-    gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER is
+    gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorAllocate"
 		end
 
-	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER is
+	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorExact"
 		end
 
-	c_image_color_total (p: POINTER): INTEGER is
+	c_image_color_total (p: POINTER): INTEGER
 		external	
 			"c[macro <eiffel_png.h>]"
 		alias
 			"c_get_colors_total"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

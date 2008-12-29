@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Drawn Button resources."
@@ -11,7 +11,7 @@ class MEL_DRAWN_BUTTON_RESOURCES
 		
 feature -- Implementation
 
-	XmNmultiClick: POINTER is
+	XmNmultiClick: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -19,7 +19,7 @@ feature -- Implementation
 			"XmNmultiClick"
 		end;
 
-	XmNpushButtonEnabled: POINTER is
+	XmNpushButtonEnabled: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -27,7 +27,7 @@ feature -- Implementation
 			"XmNpushButtonEnabled"
 		end;
 
-	XmNshadowType: POINTER is
+	XmNshadowType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -35,7 +35,7 @@ feature -- Implementation
 			"XmNshadowType"
 		end;
 
-	XmNactivateCallback: POINTER is
+	XmNactivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -43,7 +43,7 @@ feature -- Implementation
 			"XmNactivateCallback"
 		end;
 
-	XmNarmCallback: POINTER is
+	XmNarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -51,7 +51,7 @@ feature -- Implementation
 			"XmNarmCallback"
 		end;
 
-	XmNdisarmCallback: POINTER is
+	XmNdisarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -59,7 +59,7 @@ feature -- Implementation
 			"XmNdisarmCallback"
 		end;
 
-	XmNexposeCallback: POINTER is
+	XmNexposeCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -67,7 +67,7 @@ feature -- Implementation
 			"XmNexposeCallback"
 		end;
 
-	XmNresizeCallback: POINTER is
+	XmNresizeCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_POINTER"
@@ -75,7 +75,7 @@ feature -- Implementation
 			"XmNresizeCallback"
 		end;
 
-	XmMULTICLICK_DISCARD: INTEGER is
+	XmMULTICLICK_DISCARD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -83,7 +83,7 @@ feature -- Implementation
 			"XmMULTICLICK_DISCARD"
 		end;
 
-	XmMULTICLICK_KEEP: INTEGER is
+	XmMULTICLICK_KEEP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -91,7 +91,7 @@ feature -- Implementation
 			"XmMULTICLICK_KEEP"
 		end;
 
-	XmSHADOW_IN: INTEGER is
+	XmSHADOW_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -99,7 +99,7 @@ feature -- Implementation
 			"XmSHADOW_IN"
 		end;
 
-	XmSHADOW_OUT: INTEGER is
+	XmSHADOW_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -107,7 +107,7 @@ feature -- Implementation
 			"XmSHADOW_OUT"
 		end;
 
-	XmSHADOW_ETCHED_IN: INTEGER is
+	XmSHADOW_ETCHED_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -115,7 +115,7 @@ feature -- Implementation
 			"XmSHADOW_ETCHED_IN"
 		end;
 
-	XmSHADOW_ETCHED_OUT: INTEGER is
+	XmSHADOW_ETCHED_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/DrawnB.h>] : EIF_INTEGER"
@@ -123,7 +123,7 @@ feature -- Implementation
 			"XmSHADOW_ETCHED_OUT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	Description: "Objects that enable to access tags used in template%
 			%describing how to generate a class related to a specific%
 			%database table."
@@ -14,52 +14,52 @@ class
 
 feature -- Access
 
-	Upper_class_name: STRING is "<CN:U>"
+	Upper_class_name: STRING = "<CN:U>"
 			-- Tag to replace by the name of the table in upper case.
 			
-	Initcap_class_name: STRING is "<CN:I>"
+	Initcap_class_name: STRING = "<CN:I>"
 			-- Tag to replace by the name of the table in lower case
 			-- except for the initial character.
 			
-	Lower_class_name: STRING is "<CN:L>"
+	Lower_class_name: STRING = "<CN:L>"
 			-- Tag to replace by the name of the table in lower case.
 
-	Upper_attribute_name: STRING is "<AN:U>"
+	Upper_attribute_name: STRING = "<AN:U>"
 			-- Tag to replace by the name of the attribute in upper case.
 			
-	Initcap_attribute_name: STRING is "<AN:I>"
+	Initcap_attribute_name: STRING = "<AN:I>"
 			-- Tag to replace by the name of the attribute in lower case
 			-- except for the initial character.
 			
-	Lower_attribute_name: STRING is "<AN:L>"
+	Lower_attribute_name: STRING = "<AN:L>"
 			-- Tag to replace by the name of the attribute in lower case.
 
-	Iterator: STRING is "<IT>"
+	Iterator: STRING = "<IT>"
 			-- Tag to replace by the position of the attribute.
 	
-	Tag_close: CHARACTER is '>'
+	Tag_close: CHARACTER = '>'
 			-- Character closing a tag.
 
-	Attribute_block: STRING is "<A:"
+	Attribute_block: STRING = "<A:"
 			-- Tag to indicate a block to write for every table attribute.
 
-	Attribute_block_end: STRING is "</A>"
+	Attribute_block_end: STRING = "</A>"
 			-- Tag to indicate the end of a block for every table attribute.
 
-	Attribute_count: STRING is "<ACNT>"
+	Attribute_count: STRING = "<ACNT>"
 			-- Tag to replace by the number of attributes.
 
-	Upper_type_name: STRING is "<TN:U>"
+	Upper_type_name: STRING = "<TN:U>"
 			-- Tag to replace by the attribute type name (in uppercase).
 			
-	Lower_type_name: STRING is "<TN:L>"
+	Lower_type_name: STRING = "<TN:L>"
 			-- Tag to replace by the attribute type name (in lowercase).
 			
-	Initcap_type_name: STRING is "<TN:I>"
+	Initcap_type_name: STRING = "<TN:I>"
 			-- Tag to replace by the attribute type name (in lowercase except
 			-- for the initial character).
 			
-	Type_default_value: STRING is "<TDV>"		
+	Type_default_value: STRING = "<TDV>"		
 			-- Tag to replace by the attribute type default value.
 			
 feature -- Status report
@@ -67,7 +67,7 @@ feature -- Status report
 	is_valid_attribute_tag: BOOLEAN
 			-- Is last parsed tag a valid attribute tag?
 
-	has_all_type_option: BOOLEAN is
+	has_all_type_option: BOOLEAN
 			-- Does last parsed tag have the "all types" option?
 		do
 			Result := has_integer_type_option and then 
@@ -96,7 +96,7 @@ feature -- Status report
 	has_double_type_option: BOOLEAN
 			-- Does last parsed tag have the "double type" option?
 			
-	has_all_attribute_option: BOOLEAN is
+	has_all_attribute_option: BOOLEAN
 			-- Does last parsed tag have the "all attributes" option?
 		do
 			Result := has_first_attribute_option and then
@@ -115,7 +115,7 @@ feature -- Status report
 				
 feature -- Status setting
 
-	reset is
+	reset
 			-- Reset status indicators.
 		do
 			is_valid_attribute_tag := False
@@ -132,7 +132,7 @@ feature -- Status setting
 		
 feature -- Basic operations
 
-	parse_tag (tag: STRING) is
+	parse_tag (tag: STRING)
 			-- Parse `tag' to have information on it.
 		local
 			index: INTEGER
@@ -182,54 +182,54 @@ feature -- Basic operations
 	
 feature {NONE} -- Implementation
 
-	At_all_attr: CHARACTER is 'A'
+	At_all_attr: CHARACTER = 'A'
 			-- Attribute tag "all attributes" option: tag content is added
 			-- for all database table attributes. 
 	
-	At_intmd_attr: CHARACTER is 'I'
+	At_intmd_attr: CHARACTER = 'I'
 			-- Attribute tag "intermediate attributes" option: tag content is added
 			-- for all database table attributes first and last excepted. 
 	
-	At_first_attr: CHARACTER is 'F'
+	At_first_attr: CHARACTER = 'F'
 			-- Attribute tag "first attribute" option: tag content is added
 			-- for first database table attribute. 
 	
-	At_last_attr: CHARACTER is 'L'
+	At_last_attr: CHARACTER = 'L'
 			-- Attribute tag "all attributes" option: tag content is added
 			-- for last database table attribute. 
 
-	At_all_type: CHARACTER is 'A'
+	At_all_type: CHARACTER = 'A'
 			-- Attribute tag "all types" option: tag content is added for
 			-- database table attributes of all types.
 
-	At_int_type: CHARACTER is 'I'
+	At_int_type: CHARACTER = 'I'
 			-- Attribute tag "integer type" option: tag content is added for
 			-- database table attributes of integer type.
 
-	At_str_type: CHARACTER is 'S'
+	At_str_type: CHARACTER = 'S'
 			-- Attribute tag "string type" option: tag content is added for
 			-- database table attributes of string type.
 
-	At_date_type: CHARACTER is 'D'
+	At_date_type: CHARACTER = 'D'
 			-- Attribute tag "date type" option: tag content is added for
 			-- database table attributes of date type.
 
-	At_boolean_type: CHARACTER is 'B'
+	At_boolean_type: CHARACTER = 'B'
 			-- Attribute tag "boolean type" option: tag content is added for
 			-- database table attributes of boolean type.
 
-	At_character_type: CHARACTER is 'C'
+	At_character_type: CHARACTER = 'C'
 			-- Attribute tag "character type" option: tag content is added for
 			-- database table attributes of character type.
 
-	At_double_type: CHARACTER is 'F'
+	At_double_type: CHARACTER = 'F'
 			-- Attribute tag "double type" option: tag content is added for
 			-- database table attributes of double type.
 
-	Separator: CHARACTER is ':'
+	Separator: CHARACTER = ':'
 			-- Options separator.
 
-	set_all_types is
+	set_all_types
 			-- Set "all types" option.
 		do
 			has_integer_type_option := True
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			has_double_type_option := True
 		end
 
-	set_all_attributes is
+	set_all_attributes
 			-- Set "all attributes" option.
 		do
 			has_first_attribute_option := True
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			has_intermediate_attribute_option := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

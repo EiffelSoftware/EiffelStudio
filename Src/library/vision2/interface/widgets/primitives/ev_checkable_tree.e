@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 	"[
 			A tree which displays a check box to left
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	checked_items: DYNAMIC_LIST [EV_TREE_NODE] is
+	checked_items: DYNAMIC_LIST [EV_TREE_NODE]
 			-- All items checked in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -38,7 +38,7 @@ feature -- Access
 			bridge_ok: lists_equal (Result, implementation.checked_items)
 		end
 		
-	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
+	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- Is `tree_item' currently checked?
 		require
 			not_destroyed: not is_destroyed
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (tree_item: EV_TREE_NODE) is
+	check_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		require
@@ -61,7 +61,7 @@ feature -- Status setting
 			item_is_checked: is_item_checked (tree_item)
 		end
 		
-	uncheck_item (tree_item: EV_TREE_NODE) is
+	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure `tree_item' is not checked.
 		require
 			not_destroyed: not is_destroyed
@@ -79,7 +79,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CHECKABLE_TREE_IMP} implementation.make (Current)
@@ -90,7 +90,7 @@ invariant
 	checked_items_consistent: checked_items.for_all (agent is_item_checked)
 	checked_items_valid: checked_items.count >= 0 and checked_items.count <= count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

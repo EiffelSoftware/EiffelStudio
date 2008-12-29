@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General shell implementation"
 	legal: "See notice at end of class.";
@@ -16,23 +16,23 @@ inherit
 	
 feature -- Status setting
 
-	set_override (flag: BOOLEAN) is
+	set_override (flag: BOOLEAN)
 		deferred
 		end;
 
-	allow_resize is
+	allow_resize
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		deferred
 		end;
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

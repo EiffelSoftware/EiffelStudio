@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif frame widget."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_frame: FRAME; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_frame: FRAME; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif frame.
 		local
 			mc: MEL_COMPOSITE
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			mel_frame_make (a_frame.identifier, mc, man);
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

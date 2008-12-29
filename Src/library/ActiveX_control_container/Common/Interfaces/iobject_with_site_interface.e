@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	set_site_user_precondition (p_unk_site: ECOM_INTERFACE): BOOLEAN is
+	set_site_user_precondition (p_unk_site: ECOM_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_site'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_site_user_precondition (riid: ECOM_GUID; ppv_site: CELL [POINTER]): BOOLEAN is
+	get_site_user_precondition (riid: ECOM_GUID; ppv_site: CELL [POINTER]): BOOLEAN
 			-- User-defined preconditions for `get_site'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	set_site (p_unk_site: ECOM_INTERFACE) is
+	set_site (p_unk_site: ECOM_INTERFACE)
 			-- No description available.
 			-- `p_unk_site' [in].  
 		require
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 		end
 
-	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER]) is
+	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER])
 			-- No description available.
 			-- `riid' [in].  
 			-- `ppv_site' [out].  
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			valid_ppv_site: ppv_site.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

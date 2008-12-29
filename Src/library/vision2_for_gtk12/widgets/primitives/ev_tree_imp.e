@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision Tree, gtk implementation"
 	legal: "See notice at end of class."
@@ -58,9 +58,9 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty Tree.
 		local
 			a_scrolled_window: POINTER
@@ -99,9 +99,9 @@ feature {NONE} -- Initialization
 	timer: EV_TIMEOUT
 		-- Timer used for refresh hack.
 
-	timer_interval: INTEGER is 50
+	timer_interval: INTEGER = 50
 
-	on_time_out is
+	on_time_out
 			-- Called on a timer, needed to correctly refresh tree widget.
 		local
 			a_wid: INTEGER
@@ -114,13 +114,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Visible widget on screen.
 		do
 			Result := list_widget
 		end
 
-	initialize is
+	initialize
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -158,13 +158,13 @@ feature {NONE} -- Initialization
 			)
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
 		end
 
-	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
+	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER]
 			-- Tuple containing integer value from first of `args'.
 		do
 			(App_implementation.gtk_marshal).pointer_tuple.put ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
@@ -210,7 +210,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER)
 			-- Handle motion events on 'Current'
 		local
 			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	expand_callback (a_tree_item: POINTER) is
+	expand_callback (a_tree_item: POINTER)
 			-- Expand callback passing expanded `a_tree_item' node pointer.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
@@ -257,7 +257,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	collapse_callback (a_tree_item: POINTER) is
+	collapse_callback (a_tree_item: POINTER)
 			-- Collapse callback passing collapsed `a_tree_item' node pointer.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
@@ -273,7 +273,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	selected_node: EV_TREE_NODE_IMP
 
-	select_callback (a_tree_item: POINTER) is
+	select_callback (a_tree_item: POINTER)
 			-- Called when a tree item is selected
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
@@ -294,7 +294,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	deselect_callback (a_tree_item: POINTER) is
+	deselect_callback (a_tree_item: POINTER)
 			-- Called when a tree item is deselected.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
@@ -313,7 +313,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Status report
 
-	selected_item: EV_TREE_NODE is
+	selected_item: EV_TREE_NODE
 			-- Item which is currently selected.
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
@@ -324,7 +324,7 @@ feature -- Status report
 			end
 		end
 
-	selected_item_imp: EV_TREE_NODE_IMP is
+	selected_item_imp: EV_TREE_NODE_IMP
 			-- Item which is currently selected.
 		local
 			temp_item_ptr: POINTER
@@ -337,7 +337,7 @@ feature -- Status report
 			end
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is one item selected?
 		do
 			Result := selected_item /= Void
@@ -345,7 +345,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	set_to_drag_and_drop: BOOLEAN is
+	set_to_drag_and_drop: BOOLEAN
 		do
 			if pnd_row_imp /= Void then
 				Result := pnd_row_imp.mode_is_drag_and_drop
@@ -354,7 +354,7 @@ feature -- Implementation
 			end
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
 			if pnd_row_imp /= Void then
@@ -366,7 +366,7 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
 			if pnd_row_imp /= Void then
@@ -376,13 +376,13 @@ feature -- Implementation
 			end
 		end
 
-	disable_transport is
+	disable_transport
 		do
 			Precursor
 			update_pnd_status
 		end
 
-	update_pnd_status is
+	update_pnd_status
 			-- Update PND status of list and its children.
 		local
 			a_enable_flag: BOOLEAN
@@ -401,7 +401,7 @@ feature -- Implementation
 			update_pnd_connection (a_enable_flag)
 		end
 
-	update_pnd_connection (a_enable: BOOLEAN) is
+	update_pnd_connection (a_enable: BOOLEAN)
 			-- Update the PND connection status for `Current'.
 		do
 			if not is_transport_enabled then
@@ -418,7 +418,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Initialize a pick and drop transport.
 		do
 			pnd_row_imp := item_from_coords (a_x, a_y)
@@ -445,7 +445,7 @@ feature -- Implementation
 
 	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			temp_pebble := pebble
@@ -461,7 +461,7 @@ feature -- Implementation
 			end
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
 		do
 			temp_accept_cursor := accept_cursor
@@ -515,7 +515,7 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER)  is
+	post_drop_steps (a_button: INTEGER)
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
@@ -543,7 +543,7 @@ feature -- Implementation
 
 feature {EV_TREE_NODE_IMP}
 
-	item_from_coords (a_x, a_y: INTEGER): EV_TREE_NODE_IMP is
+	item_from_coords (a_x, a_y: INTEGER): EV_TREE_NODE_IMP
 		local
 			temp_row_ptr: POINTER
 		do
@@ -555,7 +555,7 @@ feature {EV_TREE_NODE_IMP}
 
 feature {NONE} -- Implementation
 
-	ensure_item_visible (an_item: EV_TREE_ITEM) is
+	ensure_item_visible (an_item: EV_TREE_ITEM)
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
@@ -582,25 +582,25 @@ feature {NONE} -- Implementation
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of children
 		do
 			Result := ev_children.count
 		end
 
-	i_th (i: INTEGER): EV_TREE_NODE is
+	i_th (i: INTEGER): EV_TREE_NODE
 			-- `i'_th child of Current.
 		do
 			Result := (ev_children @ i).interface
 		end
 
-	append (s: SEQUENCE [EV_TREE_ITEM]) is
+	append (s: SEQUENCE [EV_TREE_ITEM])
 			-- Add 's' to 'Current'
 		do
 			Precursor (s)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			update_pnd_status
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -682,16 +682,16 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	spacing: INTEGER is 3
+	spacing: INTEGER = 3
 			-- Spacing between pixmap and text.
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height of rows in tree
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget)
 		end
 
-	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
+	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER
 			-- Insert 'a_item_imp' in 'par_node' above 'a_sibling' sibling node.
 		local
 			text_ptr: POINTER
@@ -722,7 +722,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -732,14 +732,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	frozen gtk_ctree_lines_dotted_enum: INTEGER is
+	frozen gtk_ctree_lines_dotted_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GTK_CTREE_LINES_DOTTED"
 		end
 
-	frozen gtk_ctree_expander_square_enum: INTEGER is
+	frozen gtk_ctree_expander_square_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -750,7 +750,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

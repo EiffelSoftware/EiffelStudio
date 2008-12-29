@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A tasking manager. %
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a task.
 		do
 			create {TASK_IMP} implementation.make 
@@ -36,12 +36,12 @@ feature -- Initialization
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			Result := implementation = Void
 		end;
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 		require
 			exists: not destroyed
 		do
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is 
+	destroy 
 			-- Destroy Current.
 		require
 			exists: not destroyed
@@ -63,7 +63,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_action (a_command: COMMAND; an_argument: ANY) is
+	add_action (a_command: COMMAND; an_argument: ANY)
 			-- Add `a_command' with `argument' to the list of action to execute
 			-- while the system is waiting for user events.
 		require
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_action (a_command: COMMAND; an_argument: ANY) is
+	remove_action (a_command: COMMAND; an_argument: ANY)
 			-- Remove `a_command' with `argument' to the list of action to
 			-- execute while the system is waiting for user events.
 		require
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	implementation: TASK_I;;
 			-- Implementation of task
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sets whose items may be compared according to a partial order relation
@@ -49,7 +49,7 @@ create {PART_SORTED_SET}
 
 feature -- Element change
 
-	extend, put (v: G) is
+	extend, put (v: G)
 			-- Ensure that structure includes `v'.
 		do
 			search_after (v)
@@ -58,7 +58,7 @@ feature -- Element change
 			end
 		end
 
-	merge (other: TRAVERSABLE_SUBSET [G]) is
+	merge (other: TRAVERSABLE_SUBSET [G])
 			-- Add all items of `other'.
 		do
 			from
@@ -90,7 +90,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 		-- Remove `v' if present.
 		do
 			start
@@ -99,7 +99,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-set beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
 		local
@@ -120,7 +120,7 @@ feature -- Duplication
 			go_to (pos)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

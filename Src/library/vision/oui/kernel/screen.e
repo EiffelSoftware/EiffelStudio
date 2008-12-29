@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Screen. An object of this class must be created before any other %
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_screen_name: STRING) is
+	make (a_screen_name: STRING)
 			-- Create a screen specified by `a_screen_name'.
 		do
 			if a_screen_name /= Void then
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Access
 
-	buttons: BUTTONS is
+	buttons: BUTTONS
 			-- Current state of the mouse buttons
 		require
 			exists: not destroyed
@@ -56,7 +56,7 @@ feature -- Access
 	screen_name: STRING;
 			-- Screen name
 
-	widget_pointed: WIDGET is
+	widget_pointed: WIDGET
 			-- Widget currently pointed by the pointer
 		require
 			exists: not destroyed
@@ -66,12 +66,12 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			Result := implementation = Void
 		end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current screen created?
 		require
 			exists: not destroyed
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of screen (in pixel)
 		require
 			exists: not destroyed
@@ -91,7 +91,7 @@ feature -- Measurement
 			height_large_enough: Result >= 0
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of screen (in pixel)
 		require
 			exists: not destroyed
@@ -101,7 +101,7 @@ feature -- Measurement
 			width_large_enough: Result >= 0
 		end;
 
-	visible_height: INTEGER is
+	visible_height: INTEGER
 			-- Height of screen (in pixel)
 		require
 			exists: not destroyed
@@ -111,7 +111,7 @@ feature -- Measurement
 			visible_height_large_enough: Result >= 0
 		end;
 
-	visible_width: INTEGER is
+	visible_width: INTEGER
 			-- Width of screen (in pixel)
 		require
 			exists: not destroyed
@@ -121,7 +121,7 @@ feature -- Measurement
 			visible_width_large_enough: Result >= 0
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- Current absolute horizontal coordinate of the mouse
 		require
 			exists: not destroyed
@@ -132,7 +132,7 @@ feature -- Measurement
 			position_small_enough: Result < width
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Current absolute vertical coordinate of the mouse
 		require
 			exists: not destroyed
@@ -145,7 +145,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	same (other: like Current): BOOLEAN is
+	same (other: like Current): BOOLEAN
 			-- Does the current screen and `other' representing the
 			-- same screen ?
 		require else
@@ -160,7 +160,7 @@ feature -- Implementation
 	implementation: SCREEN_I;;
 			-- Implementation of current screen
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

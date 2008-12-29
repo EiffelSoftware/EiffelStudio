@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision frame. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -99,7 +99,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with the default options.
 			-- Assign `Ev_frame_etched_in' to `frame_style'.
 		do
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -123,25 +123,25 @@ feature -- Access
 	frame_style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
 
-	client_x: INTEGER is
+	client_x: INTEGER
 			-- Left of the client area.
 		do
 			Result := Border_width
 		end
 
-	client_y: INTEGER is
+	client_y: INTEGER
 			-- Top of the client area.
 		do
 			Result := text_height.max (Border_width)
 		end
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area.
 		do
 			Result := (ev_width - client_x - Border_width).max (0)
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area.
 		do
 			Result := (height - client_y - Border_width).max (0)
@@ -149,7 +149,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
@@ -158,28 +158,28 @@ feature -- Element change
 			invalidate
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `item' sensitive to user actions.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 			invalidate
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `item' insensitive to user actions.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
 			invalidate
 		end
 
-	set_frame_style (a_style: INTEGER) is
+	set_frame_style (a_style: INTEGER)
 			-- Assign `a_style' to `frame_style'.
 		do
 			frame_style := a_style
 			invalidate
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			if a_text.is_empty then
@@ -194,7 +194,7 @@ feature -- Element change
 			invalidate
 		end
 
-	update_text_size is
+	update_text_size
 			-- Update `text_width' and `text_size' based on
 			-- current font.
 		local
@@ -224,27 +224,27 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
 			ev_set_minimum_size (2 * Text_padding, 2 * Border_width)
 		end
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
 			invalidate
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		do
 			Precursor {EV_TEXT_ALIGNABLE_IMP}
@@ -253,7 +253,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -265,7 +265,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation for automatic size compute.
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			minwidth: INTEGER
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			ev_set_minimum_width (minwidth)
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_height of `Current'.
 		local
 			minheight: INTEGER
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			ev_set_minimum_height (minheight)
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		local
@@ -311,7 +311,7 @@ feature {NONE} -- WEL Implementation
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Number of pixels taken up by border.
 		do
 			inspect frame_style
@@ -322,7 +322,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	Text_padding: INTEGER is 7
+	Text_padding: INTEGER = 7
 			-- Number of pixels left and right of `text'.
 
 	text_height: INTEGER
@@ -331,7 +331,7 @@ feature {NONE} -- WEL Implementation
 	text_width: INTEGER
 			-- Width of `text' displayed at top.
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -342,7 +342,7 @@ feature {NONE} -- WEL Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Redraw `Current' with `frame_style'.
 		local
 			wel_style: INTEGER
@@ -473,7 +473,7 @@ feature {NONE} -- WEL Implementation
 			disable_default_processing
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (size_type, a_width, a_height)
@@ -481,7 +481,7 @@ feature {NONE} -- WEL Implementation
 			invalidate_without_background
 		end
 
-	on_wm_theme_changed is
+	on_wm_theme_changed
 			-- `Wm_themechanged' message received by Windows so update current theming.
 		do
 			application_imp.theme_drawer.close_theme_data (open_theme)
@@ -497,7 +497,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FRAME;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

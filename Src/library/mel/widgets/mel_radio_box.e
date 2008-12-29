@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN that contains MEL_TOGGLE_BUTTONs."
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif radio box.
 		local
 			widget_name: ANY
@@ -50,7 +50,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	enable_always_one is
+	enable_always_one
 			-- Set `is_radio_always_one' to True.
 		require
 			exists: not is_destroyed
@@ -60,7 +60,7 @@ feature -- Status setting
 			radio_always_one: is_radio_always_one 
 		end;
 
-	disable_always_one is
+	disable_always_one
 			-- Set `is_radio_always_one' to False.
 		require
 			exists: not is_destroyed
@@ -72,14 +72,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xm_create_radio_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_radio_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreateRadioBox"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Features to convert the date/time formatting strings from the NLS format to our format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Interface
 
-	translate_date_format(in: STRING_32): STRING_32 is
+	translate_date_format(in: STRING_32): STRING_32
 		--
 		require
 			in_not_null: in /= Void
@@ -18,7 +18,7 @@ feature -- Interface
 			Result := translate_picture_string(in, agent is_date_code_character, agent process_date_code)
 		end
 
-	translate_time_format(in: STRING_32): STRING_32 is
+	translate_time_format(in: STRING_32): STRING_32
 			--
 		require
 			in_not_null: in /= Void
@@ -32,7 +32,7 @@ feature -- Do the work through the power of agents
 	translate_picture_string(in:STRING_32;
 							is_code_character: FUNCTION[ANY, TUPLE[CHARACTER_32], BOOLEAN];
 							process_code: FUNCTION[ANY, TUPLE[STRING_32], STRING_32]
-										): STRING_32 is
+										): STRING_32
 		-- Transforms an NLS "date format picture string" into somthing suitable for I18N_FORMAT_STRING
 		-- An NLS format string is a sequence of format codes, spaces and user strings
 		-- (between single quotes). Anything else we ignore.
@@ -98,7 +98,7 @@ feature -- Do the work through the power of agents
 
 feature -- Helper functions
 
-	is_date_code_character(c: CHARACTER_32): BOOLEAN is
+	is_date_code_character(c: CHARACTER_32): BOOLEAN
 			--
 		require
 			c /= Void
@@ -106,7 +106,7 @@ feature -- Helper functions
 			Result := c = 'd' or  c = 'M' or c = 'y' or c = 'g'
 		end
 
-	is_time_code_character(c: CHARACTER_32): BOOLEAN is
+	is_time_code_character(c: CHARACTER_32): BOOLEAN
 			--
 		require
 			c /= Void
@@ -115,7 +115,7 @@ feature -- Helper functions
 		end
 
 
-	process_date_code(code:STRING_32): STRING_32 is
+	process_date_code(code:STRING_32): STRING_32
 		-- Transforms a format code.
 		require
 			argument_not_void: code /= Void
@@ -164,7 +164,7 @@ feature -- Helper functions
 			Result_not_void: Result /= Void
 		end
 
-	process_time_code(code:STRING_32): STRING_32 is
+	process_time_code(code:STRING_32): STRING_32
 			-- Transforms a time format code.
 		require
 			argument_not_void: code /= Void
@@ -207,7 +207,7 @@ feature -- Helper functions
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

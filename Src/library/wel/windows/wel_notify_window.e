@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window used to receive NotifyIcon notification."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make is
+	make
 			-- Initialize current.
 		do
 			make_top (Void)
@@ -50,7 +50,7 @@ feature -- Access
 	notify_uid: INTEGER
 			-- Identifier for notify icon.
 
-	notify_icon_actions: ACTION_SEQUENCE [TUPLE [INTEGER]] is
+	notify_icon_actions: ACTION_SEQUENCE [TUPLE [INTEGER]]
 			-- Actions being called when context menu is requested.
 		do
 			Result := internal_notify_icon_actions
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_icon (a_icon: WEL_ICON) is
+	set_icon (a_icon: WEL_ICON)
 			-- Set `a_icon' to `notify_icon_data'.
 		do
 			if a_icon = Void then
@@ -76,7 +76,7 @@ feature -- Setting
 			icon_set: notify_icon_data.icon = a_icon
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Set `a_tooltip' to `notify_icon_data'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
@@ -92,19 +92,19 @@ feature -- Setting
 			tooltip_set: notify_icon_data.tooltip_text.string.is_equal (a_tooltip)
 		end
 
-	add_notify_icon is
+	add_notify_icon
 			-- Add notify icon to taskbar.
 		do
 			notify_icon ({WEL_NIM_CONSTANTS}.nim_add, notify_icon_data)
 		end
 
-	update_notify_icon is
+	update_notify_icon
 			-- Update notify icon with recent changes made to `notify_icon_data'.
 		do
 			notify_icon ({WEL_NIM_CONSTANTS}.nim_modify, notify_icon_data)
 		end
 
-	remove_notify_icon is
+	remove_notify_icon
 			-- Remove notify icon to taskbar.
 		do
 			notify_icon ({WEL_NIM_CONSTANTS}.nim_delete, notify_icon_data)
@@ -112,7 +112,7 @@ feature -- Setting
 
 feature {NONE} -- Messaging
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam: POINTER; lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam: POINTER; lparam: POINTER): POINTER
 			-- Process message of Current window.
 		local
 			l_action: like internal_notify_icon_actions
@@ -130,7 +130,7 @@ feature {NONE} -- Messaging
 	internal_notify_icon_actions: ACTION_SEQUENCE [TUPLE [INTEGER]]
 			-- Actions being called when context menu is requested.
 
-	notify_uid_counter: CELL [INTEGER] is
+	notify_uid_counter: CELL [INTEGER]
 			-- Counter for generating identifier.
 		once
 			create Result.put (1)
@@ -138,7 +138,7 @@ feature {NONE} -- Messaging
 			notify_uid_counter_not_void: Result /= Void
 		end
 
-	notify_icon (a_message: INTEGER; a_notify_icon_data: WEL_NOTIFY_ICON_DATA) is
+	notify_icon (a_message: INTEGER; a_notify_icon_data: WEL_NOTIFY_ICON_DATA)
 			-- Sends a message to the taskbar's status area.
 		require
 			a_notify_icon_data_not_void: a_notify_icon_data /= Void
@@ -152,7 +152,7 @@ invariant
 	notify_icon_data_not_void: notify_icon_data /= Void
 	notify_message_name_not_void: notify_message_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

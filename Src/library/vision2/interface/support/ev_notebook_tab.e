@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a tab associated with a notebook item. These objects may
 		not be created directly but instead returned from a notebook via `item_tab'.
@@ -48,7 +48,7 @@ create {EV_NOTEBOOK_I}
 	
 feature {EV_NOTEBOOK_I, EV_NOTEBOOK_TAB} -- Initialization
 
-	make_with_widgets (a_notebook: EV_NOTEBOOK; a_widget: EV_WIDGET) is
+	make_with_widgets (a_notebook: EV_NOTEBOOK; a_widget: EV_WIDGET)
 			-- Create `Current' with `notebook' `a_notebook' and `widget' `a_widget'.
 			-- Not exported as you may only query  a notebook tab from a notebook
 			-- via `item_tab'.
@@ -66,7 +66,7 @@ feature {EV_NOTEBOOK_I, EV_NOTEBOOK_TAB} -- Initialization
 
 feature -- Access
 
-	notebook: EV_NOTEBOOK is
+	notebook: EV_NOTEBOOK
 			-- Notebook in which `Current' is displayed.
 		require
 			not_destroyed: not is_destroyed
@@ -76,7 +76,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget to which `Current' is associated.
 		require
 			not_destroyed: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
 		do
 			Result := implementation.is_destroyed or else not notebook.has (widget)	
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature {NONE} -- Contract Support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TEXTABLE} and Precursor {EV_PIXMAPABLE}
@@ -109,7 +109,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_NOTEBOOK_TAB_IMP} implementation.make (Current)
@@ -119,7 +119,7 @@ invariant
 	notebook_not_void: is_usable implies notebook /= Void
 	widget_not_void: is_usable implies widget /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

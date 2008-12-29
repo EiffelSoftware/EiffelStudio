@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Array list for EV_GRID that allows insertion to any position."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create {EV_GRID_ARRAYED_LIST}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create EV_GRID arrayed list and initialize to hold zero values.
 		do
 			lower := 1
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 
-	shift_items (i, j, n: INTEGER) is
+	shift_items (i, j, n: INTEGER)
 			-- Shift `n' items starting at index `i' to index `j'.
 		require
 			i_valid: i > 0 and then i <= count
@@ -75,7 +75,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			index := l_original_index
 		end
 
-	move_items (i, j, n: INTEGER) is
+	move_items (i, j, n: INTEGER)
 			-- Move `n' items starting at index `i' immediately before index `j'.
 		require
 			i_valid: i > 0 and then i <= count
@@ -116,7 +116,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			index := l_original_index
 		end
 
-	resize (new_capacity: INTEGER) is
+	resize (new_capacity: INTEGER)
 			-- Resize list so that it can contain
 			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'
 		require
@@ -151,7 +151,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 
 feature {NONE} -- Implementation
 
-	grow (i: INTEGER) is
+	grow (i: INTEGER)
 			-- Change the capacity to at least `i'.
 		do
 			if i > count then
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

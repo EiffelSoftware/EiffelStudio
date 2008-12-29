@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container only contain SD_NOTEBOOK_TABs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method
 		do
 			default_create
@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	update_size is
+	update_size
 			--Update minimum height.
 		do
 			set_minimum_height (internal_shared.Notebook_tab_height)
 		end
 
-	extend (a_tab: SD_NOTEBOOK_TAB) is
+	extend (a_tab: SD_NOTEBOOK_TAB)
 			-- Extend `a_tab' into Current
 		require
 			not_void: a_tab /= Void
@@ -84,7 +84,7 @@ feature -- Command
 			has: has (a_tab)
 		end
 
-	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]) is
+	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB])
 			-- Extend `a_tabs'.
 			-- This feature is faster than extend one by one.
 		require
@@ -103,7 +103,7 @@ feature -- Command
 			end
 		end
 
-	prune (a_tab: SD_NOTEBOOK_TAB) is
+	prune (a_tab: SD_NOTEBOOK_TAB)
 			-- Prune a tab from Current
 		do
 			if has (a_tab) then
@@ -115,7 +115,7 @@ feature -- Command
 			pruned: not has (a_tab)
 		end
 
-	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER) is
+	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER)
 			-- Set `a_tab' at position `a_index'.		
 		do
 			internal_tabs.start
@@ -125,7 +125,7 @@ feature -- Command
 			on_expose (0, 0, width, height)
 		end
 
-	swap (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB) is
+	swap (a_tab_1, a_tab_2: SD_NOTEBOOK_TAB)
 			-- Swap position of `a_tab_1' and `a_tab_2'.
 		require
 			has: has (a_tab_1) and has (a_tab_2)
@@ -140,7 +140,7 @@ feature -- Command
 			on_expose (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 		end
 
-	enable_capture (a_tab: SD_NOTEBOOK_TAB) is
+	enable_capture (a_tab: SD_NOTEBOOK_TAB)
 			-- Enable user input capture
 		require
 			has: has (a_tab)
@@ -151,7 +151,7 @@ feature -- Command
 			set: captured_tab = a_tab
 		end
 
-	disable_capture (a_tab: SD_NOTEBOOK_TAB) is
+	disable_capture (a_tab: SD_NOTEBOOK_TAB)
 			-- Disable user input capture.
 		require
 			has: has (a_tab)
@@ -167,7 +167,7 @@ feature -- Command
 
 feature -- Query
 
-	item_x (a_tab: SD_NOTEBOOK_TAB): INTEGER is
+	item_x (a_tab: SD_NOTEBOOK_TAB): INTEGER
 			-- x position of `a_tab'
 		require
 			has: has (a_tab)
@@ -184,7 +184,7 @@ feature -- Query
 			not_negative: Result >= 0
 		end
 
-	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER is
+	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER
 			-- Index of `a_tab'
 		require
 			not_void: a_tab /= Void
@@ -194,7 +194,7 @@ feature -- Query
 
 		end
 
-	i_th (a_index: INTEGER): SD_NOTEBOOK_TAB is
+	i_th (a_index: INTEGER): SD_NOTEBOOK_TAB
 			-- Tab at `a_index'.
 		require
 			valid: is_tab_index_valid (a_index)
@@ -202,19 +202,19 @@ feature -- Query
 			Result := internal_tabs.i_th (a_index)
 		end
 
-	has (a_tab: SD_NOTEBOOK_TAB): BOOLEAN is
+	has (a_tab: SD_NOTEBOOK_TAB): BOOLEAN
 			-- If Current has `a_tab'?
 		do
 			Result := internal_tabs.has (a_tab)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count
 		do
 			Result := internal_tabs.count
 		end
 
-	tabs: like internal_tabs is
+	tabs: like internal_tabs
 			-- All tabs in Current.
 		do
 			Result := internal_tabs.twin
@@ -223,7 +223,7 @@ feature -- Query
 	captured_tab: SD_NOTEBOOK_TAB
 			-- Tab which enabled capture
 
-	is_tab_index_valid (a_index: INTEGER): BOOLEAN is
+	is_tab_index_valid (a_index: INTEGER): BOOLEAN
 			-- If `a_index' valid?
 		do
 			Result := internal_tabs.valid_index (a_index)
@@ -231,7 +231,7 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_expose (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32) is
+	on_expose (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 			-- Handle expose actions.
 		local
 			l_target: EV_RECTANGLE
@@ -253,7 +253,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer motion actions.
 		local
 			l_snapshot: like internal_tabs
@@ -284,7 +284,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer press actions.
 		local
 			l_snapshot: like internal_tabs
@@ -313,7 +313,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_release (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle pointer release actions.
 		local
 			l_snapshot: like internal_tabs
@@ -337,7 +337,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_enter is
+	on_pointer_enter
 			-- Handle pointer enter actions
 		local
 			l_screen: EV_SCREEN
@@ -368,7 +368,7 @@ feature {NONE} -- Agents
 			set: pointer_entered
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Handle pointer leave actions
 		local
 			l_found: BOOLEAN
@@ -401,7 +401,7 @@ feature {NONE} -- Agents
 			cleared: pointer_entered = False
 		end
 
-	on_drop_action (a_pebble: ANY) is
+	on_drop_action (a_pebble: ANY)
 			-- Handle drop actions.
 		local
 			l_tab: SD_NOTEBOOK_TAB
@@ -413,7 +413,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_drop_actions_veto_pebble (a_pebble: ANY): BOOLEAN is
+	on_drop_actions_veto_pebble (a_pebble: ANY): BOOLEAN
 			-- Handle veto pebble drop actions.
 		local
 			l_tab: SD_NOTEBOOK_TAB
@@ -424,7 +424,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_key (a_key: EV_KEY) is
+	on_key (a_key: EV_KEY)
 			-- Handle left/right navigation actions.
 		local
 			l_notebook: SD_NOTEBOOK
@@ -459,7 +459,7 @@ feature {NONE} -- Agents
 
 feature{NONE} -- Implementation
 
-	extend_tab_imp (a_tab: SD_NOTEBOOK_TAB) is
+	extend_tab_imp (a_tab: SD_NOTEBOOK_TAB)
 			-- Set information for `a_tab'
 		require
 			not_void: a_tab /= Void
@@ -476,7 +476,7 @@ feature{NONE} -- Implementation
 			-- If pointer enter actions called?
 			-- We have this flag for the same reason as SD_TOOL_BAR's pointer_entered.
 
-	update_focus_rectangle is
+	update_focus_rectangle
 			-- Draw or clear focus rectangle base on if Current has focus.
 		local
 			l_notebook: SD_NOTEBOOK
@@ -489,7 +489,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	notebook: SD_NOTEBOOK is
+	notebook: SD_NOTEBOOK
 			-- Parent notebook
 		local
 			l_tab_area: SD_NOTEBOOK_TAB_AREA
@@ -501,7 +501,7 @@ feature{NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB is
+	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB
 			--  Tab at `a_x' which is relative position
 		require
 			valid: a_x >= 0 and a_x <= width
@@ -525,7 +525,7 @@ feature{NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	tab_under_pointer: SD_NOTEBOOK_TAB is
+	tab_under_pointer: SD_NOTEBOOK_TAB
 			-- Tab at `a_screen_x'.
 		local
 			l_screen: EV_SCREEN
@@ -538,7 +538,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	clear_pressed_flag is
+	clear_pressed_flag
 			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called.
 		local
 			l_tabs: like tabs
@@ -563,7 +563,7 @@ invariant
 
 	not_void: internal_tabs /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM Decimal Structure.  Wrapping COM DECIMAL type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -37,13 +37,13 @@ feature {NONE} -- Initialization
 
 feature -- Initialiazation
 
-	make is
+	make
 		do
 			structure_make
 			ccom_decimal_value_zero (item)
 		end
 
-	make_from_double (dbl_value: DOUBLE) is
+	make_from_double (dbl_value: DOUBLE)
 			-- Create with value 'dbl_value'
 		do
 			structure_make
@@ -52,21 +52,21 @@ feature -- Initialiazation
 
 feature  -- Access
 
-	zero: ECOM_DECIMAL is
+	zero: ECOM_DECIMAL
 			-- Neutral element for `+' operation
 		do
 			create Result.make;
 			ccom_decimal_value_zero (Result.item)
 		end
 
-	one: ECOM_DECIMAL is
+	one: ECOM_DECIMAL
 			-- Neutral element for `*' operation
 		do
 			create Result.make;
 			ccom_decimal_value_one (Result.item)
 		end
 
-	scale: INTEGER is
+	scale: INTEGER
 			-- Scale of value.  e.g. 123.45 has a scale of 2
 		require
 			valid_item: item /= default_pointer
@@ -76,20 +76,20 @@ feature  -- Access
 
 feature -- status report
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is 'other' equal to Current object?
 			-- Not implemented yet.
 		do
 			Result := True
 		end
 
-	divisible (other: ECOM_DECIMAL): BOOLEAN is
+	divisible (other: ECOM_DECIMAL): BOOLEAN
 			-- Is divisible by `other'?
 		do
 			Result := not (other = zero)
 		end
 
-	exponentiable (other: ECOM_DECIMAL): BOOLEAN is
+	exponentiable (other: ECOM_DECIMAL): BOOLEAN
 			-- Is exponentiable by `other'?
 		do
 			Result := false
@@ -97,7 +97,7 @@ feature -- status report
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of DECIMAL (DECIMAL) structure
 		do
 			Result := c_size_of_decimal 
@@ -105,7 +105,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	rounded (value: INTEGER): ECOM_DECIMAL is
+	rounded (value: INTEGER): ECOM_DECIMAL
 			-- Round value with `value' decimal places
 		require
 			valid_value: value >= 0
@@ -117,7 +117,7 @@ feature -- Conversion
 			non_void_result: Result /= Void
 		end
 
-	ceiled_integer_portion: ECOM_DECIMAL is
+	ceiled_integer_portion: ECOM_DECIMAL
 			-- Integer portion of decimal value. 
 			-- The first negative integer >= to the value is returned if the value is negative.
 		require
@@ -129,7 +129,7 @@ feature -- Conversion
 			non_void_result: Result /= Void
 		end
 
-	truncated_to_integer_portion: ECOM_DECIMAL is
+	truncated_to_integer_portion: ECOM_DECIMAL
 			-- Integer portion of a decimal value. The first negative integer 
 			-- <= to the value is returned if the value is negative.
 		require
@@ -141,7 +141,7 @@ feature -- Conversion
 			valid_result: Result /= Void
 		end
 
-	absolute: ECOM_DECIMAL is
+	absolute: ECOM_DECIMAL
 			-- Absolute value of decimal
 		require
 			valid_item: item /= default_pointer
@@ -152,7 +152,7 @@ feature -- Conversion
 			non_void_result: Result /= Void
 		end
 
-	truncated_to_double: DOUBLE is
+	truncated_to_double: DOUBLE
 			-- Double value
 		do
 			Result := ccom_decimal_to_double (item)
@@ -160,7 +160,7 @@ feature -- Conversion
 
 feature -- Basic operations
 	
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Negative value of decimal
 		require else
 			valid_item: item /= default_pointer
@@ -169,7 +169,7 @@ feature -- Basic operations
 			ccom_decimal_negative (item, Result.item)
 		end 
 	
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Subtract with `other'
 		require else
 			valid_item: item /= default_pointer
@@ -178,7 +178,7 @@ feature -- Basic operations
 			ccom_decimal_subtract (item, other.item, Result.item)
 		end
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Add with `other'
 		require else
 			valid_item: item /= default_pointer
@@ -187,7 +187,7 @@ feature -- Basic operations
 			ccom_decimal_add (item, other.item, Result.item)
 		end 
 
-	product alias "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -196,7 +196,7 @@ feature -- Basic operations
 			ccom_decimal_multiply (item, other.item, Result.item)
 		end
 
-	quotient alias "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -205,14 +205,14 @@ feature -- Basic operations
 			ccom_decimal_divide (item, other.item, Result.item)
 		end
 
-	identity alias "+": like Current is
+	identity alias "+": like Current
 			-- Unary plus
 		require else
 			valid_item: item /= default_pointer
 		do
 		end
 
-	power alias "^" (other: like Current): like Current is
+	power alias "^" (other: like Current): like Current
 			-- Current objects to the power 'other'
 		require else
 			valid_item: item /= default_pointer
@@ -221,86 +221,86 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
-	ccom_decimal_to_double (a_ptr: POINTER): DOUBLE is
+	ccom_decimal_to_double (a_ptr: POINTER): DOUBLE
 		external
 			"C (DECIMAL *):EIF_DOUBLE|%"E_Decimal.h%""
 		end
 
-	ccom_decimal_from_double (dbl_value: DOUBLE; a_ptr: POINTER) is
+	ccom_decimal_from_double (dbl_value: DOUBLE; a_ptr: POINTER)
 		external
 			"C [macro <oleauto.h>](EIF_DOUBLE, DECIMAL *)"
 		alias
 			"VarDecFromR8"
 		end
 
-	ccom_decimal_scale (a_ptr: POINTER): INTEGER is
+	ccom_decimal_scale (a_ptr: POINTER): INTEGER
 		external
 			"C [macro %"E_Decimal.h%"] (DECIMAL *): EIF_INTEGER"
 		end
 
-	ccom_decimal_value_zero (a_ptr: POINTER) is
+	ccom_decimal_value_zero (a_ptr: POINTER)
 		external
 			"C (DECIMAL *)|%"E_Decimal.h%""
 		end
 
-	ccom_decimal_value_one (a_ptr: POINTER) is
+	ccom_decimal_value_one (a_ptr: POINTER)
 		external
 			"C (DECIMAL *)|%"E_Decimal.h%""
 		end
 
-	ccom_decimal_divide (a_ptr, b_ptr, c_ptr: POINTER) is
+	ccom_decimal_divide (a_ptr, b_ptr, c_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
-	ccom_decimal_round (a_ptr: POINTER; a_value: INTEGER; b_ptr:POINTER) is
+	ccom_decimal_round (a_ptr: POINTER; a_value: INTEGER; b_ptr:POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, EIF_INTEGER, DECIMAL *)"
 		end
 		
-	ccom_decimal_negative (a_ptr, b_ptr: POINTER) is
+	ccom_decimal_negative (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
-	ccom_decimal_integer (a_ptr, b_ptr: POINTER) is
+	ccom_decimal_integer (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
-	ccom_decimal_fix (a_ptr, b_ptr: POINTER) is
+	ccom_decimal_fix (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
-	ccom_decimal_absolute (a_ptr, b_ptr: POINTER) is
+	ccom_decimal_absolute (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
 		end
 
-	c_size_of_decimal: INTEGER is
+	c_size_of_decimal: INTEGER
 		external 
 			"C [macro <wtypes.h>]"
 		alias
 			"sizeof(DECIMAL)"
 		end
 
-	ccom_decimal_add (ptr_1, ptr_2, ptr_3: POINTER) is
+	ccom_decimal_add (ptr_1, ptr_2, ptr_3: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
-	ccom_decimal_multiply (ptr_1, ptr_2, ptr_3: POINTER) is
+	ccom_decimal_multiply (ptr_1, ptr_2, ptr_3: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 	
-	ccom_decimal_subtract (ptr_1, ptr_2, ptr_3: POINTER) is
+	ccom_decimal_subtract (ptr_1, ptr_2, ptr_3: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"] (DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

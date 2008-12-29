@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text field. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-		make (an_interface: like interface) is
+		make (an_interface: like interface)
 			-- Create Textfield on a user_pane
 		local
 			ret: INTEGER
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	initialize is
+	initialize
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		local
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 
 feature {NONE}--binding
 
-		text_binding (a_control : POINTER) is
+		text_binding (a_control : POINTER)
 			-- What does this do?
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -146,7 +146,7 @@ feature {NONE}--binding
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in field.
 		local
 			ret, size: INTEGER
@@ -161,7 +161,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_minimum_width_in_characters (nb: INTEGER) is
+	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make `nb' characters visible on one line.
 		local
 			ret : INTEGER
@@ -181,7 +181,7 @@ feature -- Status setting
 			ret := hiview_set_frame_external (c_object, rect.item)
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			str: C_STRING
@@ -192,23 +192,23 @@ feature -- Status setting
 
 		end
 
-	append_text (a_text: STRING_GENERAL) is
+	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		do
 		end
 
-	prepend_text (a_text: STRING_GENERAL) is
+	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		do
 		end
 
-	set_capacity (len: INTEGER) is
+	set_capacity (len: INTEGER)
 			-- Set the maximum number of characters that `Current' can hold to `len'.
 		do
 
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
@@ -238,7 +238,7 @@ feature -- Status Report
 	text_alignment: INTEGER
 		-- Text alignment of `Current'.
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of the caret.
 		do
 
@@ -246,14 +246,14 @@ feature -- Status Report
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create an initialize return actions for `Current'.
 		do
 			create Result
 		end
 
 feature
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			local
 				a_rect: CGRECT_STRUCT
 				a_size: CGSIZE_STRUCT
@@ -270,7 +270,7 @@ feature
 
 			end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			local
 				a_rect: CGRECT_STRUCT
 				a_size: CGSIZE_STRUCT
@@ -288,14 +288,14 @@ feature
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
 			Result := (get_control_data_boolean (entry_widget, {CONTROLDEFINITIONS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kControlEditTextLockedTag) = 0)
 
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is something selected?
 
 
@@ -303,20 +303,20 @@ feature -- Status report
 
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		do
 
 
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		do
 
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 
@@ -324,13 +324,13 @@ feature -- Status report
 
 feature -- status settings
 
-	hide_border is
+	hide_border
 			-- Hide the border of `Current'.
 		do
 
 		end
 
-	set_editable (a_editable: BOOLEAN) is
+	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.
 		local
 			ret: INTEGER
@@ -339,7 +339,7 @@ feature -- status settings
 
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 
@@ -347,44 +347,44 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at the current position.
 		do
 
 		end
 
-	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER) is
+	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER)
 			-- Insert `txt' at the current position at position `a_pos'
 		do
 
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
 
 		end
 
-	select_from_start_pos (start_pos, end_pos: INTEGER) is
+	select_from_start_pos (start_pos, end_pos: INTEGER)
 			-- Hack to select region from change actions
 		do
 
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard
 			-- to paste it later.
@@ -394,7 +394,7 @@ feature -- Basic operation
 
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the `selected_region' in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
@@ -403,7 +403,7 @@ feature -- Basic operation
 
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
@@ -414,7 +414,7 @@ feature -- Basic operation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			create Result
 		end
@@ -424,7 +424,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- between old and new text.
 
 
-	on_change_actions is
+	on_change_actions
 			-- A change action has occurred.
 		local
 			new_text: STRING_32
@@ -449,7 +449,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	last_key_backspace: BOOLEAN
 		-- Was the last key pressed a backspace, used for select region hack for EiffelStudio.
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- A key event has occurred
 		do
 			if a_key_press then
@@ -463,7 +463,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 feature {NONE} -- Implementation
 
 
-on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind: INTEGER
@@ -493,7 +493,7 @@ on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER
 		end
 
 
-	frozen typeUnicodeText: INTEGER is
+	frozen typeUnicodeText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -501,7 +501,7 @@ on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER
 		"typeUnicodeText"
 	end
 
-	frozen kEventParamTextInputSendText: INTEGER is
+	frozen kEventParamTextInputSendText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -513,7 +513,7 @@ on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER
 	entry_widget: POINTER
 		-- A pointer on the text field
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to the widget shown on screen.
 		do
 			Result := c_object
@@ -525,7 +525,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_TEXT_FIELD_IMP
 

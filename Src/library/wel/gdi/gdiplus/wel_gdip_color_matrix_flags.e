@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ color matrix flags enumeration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,18 +10,18 @@ class
 
 feature -- Enumeration
 
-    ColorMatrixFlagsDefault: INTEGER is 0
+    ColorMatrixFlagsDefault: INTEGER = 0
     		-- ColorMatrixFlagsDefault
 
-    ColorMatrixFlagsSkipGrays: INTEGER is 1
+    ColorMatrixFlagsSkipGrays: INTEGER = 1
     		-- ColorMatrixFlagsSkipGrays
 
-    ColorMatrixFlagsAltGray: INTEGER is 2
+    ColorMatrixFlagsAltGray: INTEGER = 2
     		-- ColorMatrixFlagsAltGray
 
 feature -- Query
 
-	is_valid (a_flag: INTEGER): BOOLEAN is
+	is_valid (a_flag: INTEGER): BOOLEAN
 			-- If `a_flag' valid?
 		do
 			Result := a_flag = ColorMatrixFlagsDefault or
@@ -29,7 +29,7 @@ feature -- Query
 				a_flag = ColorMatrixFlagsAltGray
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

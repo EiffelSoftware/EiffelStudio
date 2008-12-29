@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision Split Area, GTK+ implementation."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for Eiffel Vision implementation interface. %N%
 		%Eiffel Vision uses the bridge pattern. See notes in ev_any.e) %N%
@@ -26,7 +26,7 @@ deferred class
 
 feature {EV_ANY_I} -- Initialization
 
-	frozen base_make (an_interface: like interface) is
+	frozen base_make (an_interface: like interface)
 			-- Assign `an_interface' to `interface'
 			--| Must be called from `make'.
 			--| See notes on initialization in ev_any.e
@@ -43,7 +43,7 @@ feature {EV_ANY_I} -- Initialization
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: EV_ANY) is
+	make (an_interface: EV_ANY)
 			-- Create underlying native toolkit objects.
 			-- Every descendant should exactly one a creation procedure `make'.
 			-- Must call `base_make'.
@@ -55,7 +55,7 @@ feature {EV_ANY} -- Initialization
 			base_make_called: base_make_called
 		end
 
-	initialize is
+	initialize
 			-- Do post creation initialization.
 			-- While make must be redefined in each descendant,
 			-- initialize may remain more general.
@@ -67,7 +67,7 @@ feature {EV_ANY} -- Initialization
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	frozen safe_destroy is
+	frozen safe_destroy
 			-- Protection against multiple calls of destroy whilst in the process of destruction
 			-- Called directly from `interface'.destroy
 		do
@@ -77,7 +77,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit objects.
 			-- Render `Current' unusable.
 			-- Any feature calls after a call to destroy are
@@ -90,7 +90,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature -- Status report
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
 		do
 			Result := get_state_flag (is_destroyed_flag)
@@ -117,12 +117,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- bit_test (4) returns `interface.default_create_called'
 		-- bit_test (5) returns `interface.is_initialized'
 
-	base_make_called_flag: INTEGER_8 is 0
-	is_initialized_flag: INTEGER_8 is 1
-	is_destroyed_flag: INTEGER_8 is 2
-	is_in_destroy_flag: INTEGER_8 is 3
-	interface_default_create_called_flag: INTEGER_8 is 4
-	interface_is_initialized_flag: INTEGER_8 is 5
+	base_make_called_flag: INTEGER_8 = 0
+	is_initialized_flag: INTEGER_8 = 1
+	is_destroyed_flag: INTEGER_8 = 2
+	is_in_destroy_flag: INTEGER_8 = 3
+	interface_default_create_called_flag: INTEGER_8 = 4
+	interface_is_initialized_flag: INTEGER_8 = 5
 		-- Flag positions used for setting state of `Current' and `interface'.
 
 	set_state_flag (a_flag: INTEGER_8; a_value: BOOLEAN)
@@ -141,26 +141,26 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			Result := state_flags.bit_test (a_flag)
 		end
 
-	base_make_called: BOOLEAN is
+	base_make_called: BOOLEAN
 			-- Was `base_make' called?
 		do
 			Result := get_state_flag (base_make_called_flag)
 		end
 
-	is_initialized: BOOLEAN is
+	is_initialized: BOOLEAN
 			-- Has `Current' been initialized properly?
 		do
 			Result := get_state_flag (is_initialized_flag)
 		end
 
-	is_in_destroy: BOOLEAN is
+	is_in_destroy: BOOLEAN
 			-- Is `Current' in the process of being destroyed?
 			-- Needed for call protection when in the process of `destroy' to prevent multiple calls as a result of destruction.
 		do
 			Result := get_state_flag (is_in_destroy_flag)
 		end
 
-	set_is_initialized (flag: BOOLEAN) is
+	set_is_initialized (flag: BOOLEAN)
 			-- Set `is_initialized' to `flag'.
 		do
 			set_state_flag (is_initialized_flag, flag)
@@ -168,7 +168,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_initialized_set: get_state_flag (is_initialized_flag) = flag
 		end
 
-	set_is_destroyed (flag: BOOLEAN) is
+	set_is_destroyed (flag: BOOLEAN)
 			-- Set `is_destroyed' to `flag'.
 		do
 			set_state_flag (is_destroyed_flag, flag)
@@ -176,7 +176,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_destroyed_set: is_destroyed = flag
 		end
 
-	set_is_in_destroy (flag: BOOLEAN) is
+	set_is_in_destroy (flag: BOOLEAN)
 			-- Set `is_in_destroy' to `flag'.
 		do
 			set_state_flag (is_in_destroy_flag, flag)
@@ -184,7 +184,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_in_destroy_set: is_in_destroy = flag
 		end
 
-	set_interface (an_interface: like interface) is
+	set_interface (an_interface: like interface)
 			-- Assign `an_interface' to `interface'.
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
@@ -197,7 +197,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			interface_assigned: interface = an_interface
 		end
 
-	enable_initialized is
+	enable_initialized
 			-- Set the implementation to be initialized
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
@@ -210,7 +210,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			is_initialized: get_state_flag (is_initialized_flag)
 		end
 
-	disable_initialized is
+	disable_initialized
 			-- Set the implementation to be un-initialized
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
@@ -225,7 +225,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Contract support
 
-	is_usable: BOOLEAN is
+	is_usable: BOOLEAN
 			-- Is `Current' usable?
 		do
 			Result := get_state_flag (is_initialized_flag) and not is_destroyed
@@ -236,7 +236,7 @@ invariant
 		interface /= Void and then interface.implementation = Current
 	base_make_called: base_make_called
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

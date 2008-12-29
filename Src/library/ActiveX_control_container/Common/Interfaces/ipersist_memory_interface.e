@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	is_dirty_user_precondition: BOOLEAN is
+	is_dirty_user_precondition: BOOLEAN
 			-- User-defined preconditions for `is_dirty'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	load_user_precondition (p_mem: CHARACTER_REF; cb_size: INTEGER): BOOLEAN is
+	load_user_precondition (p_mem: CHARACTER_REF; cb_size: INTEGER): BOOLEAN
 			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_user_precondition (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER): BOOLEAN is
+	save_user_precondition (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER): BOOLEAN
 			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_size_max_user_precondition (pcb_size: INTEGER_REF): BOOLEAN is
+	get_size_max_user_precondition (pcb_size: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_size_max'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	init_new_user_precondition: BOOLEAN is
+	init_new_user_precondition: BOOLEAN
 			-- User-defined preconditions for `init_new'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	is_dirty is
+	is_dirty
 			-- No description available.
 		require
 			is_dirty_user_precondition: is_dirty_user_precondition
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 		end
 
-	load (p_mem: CHARACTER_REF; cb_size: INTEGER) is
+	load (p_mem: CHARACTER_REF; cb_size: INTEGER)
 			-- No description available.
 			-- `p_mem' [in].  
 			-- `cb_size' [in].  
@@ -68,7 +68,7 @@ feature -- Basic Operations
 
 		end
 
-	save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
+	save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER)
 			-- No description available.
 			-- `p_mem' [out].  
 			-- `f_clear_dirty' [in].  
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-	get_size_max (pcb_size: INTEGER_REF) is
+	get_size_max (pcb_size: INTEGER_REF)
 			-- No description available.
 			-- `pcb_size' [out].  
 		require
@@ -90,7 +90,7 @@ feature -- Basic Operations
 
 		end
 
-	init_new is
+	init_new
 			-- No description available.
 		require
 			init_new_user_precondition: init_new_user_precondition
@@ -98,7 +98,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

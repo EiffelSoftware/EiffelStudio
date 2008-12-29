@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This class allows to get the contents of a rich edit
 		control. Used internally by WEL.
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create `text'.
 		do
 			Precursor {WEL_RICH_EDIT_STREAM_OUT}
@@ -41,7 +41,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	write_buffer is
+	write_buffer
 			-- Append `a_buffer' in `text'.
 		local
 			l_uni_str: WEL_STRING
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 invariant
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

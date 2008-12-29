@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent commonly requested utility functions for EiffelVision2.
 		Inherit this class to use these features in your system.
@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	parent_window (a_widget: EV_WIDGET): EV_WINDOW is
+	parent_window (a_widget: EV_WIDGET): EV_WINDOW
 			-- Returns top level window containing `a_widget', or
 			-- Void if none.
 		require
@@ -33,7 +33,7 @@ feature -- Access
 			shown_implies_result_not_void: a_widget.is_displayed implies Result /= Void
 		end
 
-	parent_dialog (a_widget: EV_WIDGET): EV_DIALOG is
+	parent_dialog (a_widget: EV_WIDGET): EV_DIALOG
 			-- `Result' is top level dialog containing `a_widget' or
 			-- `Void' if none.
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

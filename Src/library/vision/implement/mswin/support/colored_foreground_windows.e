@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of widget foreground colors for Windows"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature 
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of current widget
 		local
 			color_ref: COLOR_IMP
@@ -30,7 +30,7 @@ feature
 	private_foreground_color: COLOR
 			-- Implementation of the foreground color
 
-	set_foreground_color (c: COLOR) is
+	set_foreground_color (c: COLOR)
 			-- Set the foreground color of current widget.
 		do
 			private_foreground_color := c
@@ -39,22 +39,22 @@ feature
 			end
 		end
 
-	update_foreground_color is
+	update_foreground_color
 			-- Update the foregreound color of current widget.
 		do
 		end
 
-	invalidate is
+	invalidate
 			-- Invalidate the window
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the Widget exist?
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

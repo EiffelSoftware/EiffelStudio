@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Core implementation for root class of test executor. The test evaluator is used by the
 		testing tool to run tests and retrieve results. Any descendant of this class should be used as
@@ -22,14 +22,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	frozen make is
+	frozen make
 			-- Initialize `Current'
 		do
 			create arguments.make
 			arguments.execute (agent start)
 		end
 
-	start is
+	start
 			-- Initialize output and start processing commands.
 		require
 			arguments_valid: arguments.is_successful
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature {NONE} -- Status setting
 
-	initialize_stream is
+	initialize_stream
 			-- Initialize `stream'.
 		local
 			l_rescued: BOOLEAN
@@ -132,7 +132,7 @@ feature {NONE} -- Status setting
 			is_stream_invalid := True
 		end
 
-	close_stream is
+	close_stream
 			-- Close `stream' unless standard out
 		do
 			if not stream.is_closed then

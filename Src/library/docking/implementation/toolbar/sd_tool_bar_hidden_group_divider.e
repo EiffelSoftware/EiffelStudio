@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG.
 					We use this class to make sure items grouping looks nice.
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	make (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Creation method.
 		require
 			not_void: a_items /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initlization
 			set: internal_items = a_items
 		end
 
-	init_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	init_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Initlization items width.
 		require
 			not_void: a_items /= Void
@@ -54,7 +54,7 @@ feature -- Properties
 	max_width_allowed: INTEGER
 			-- Maximum width allowed.
 
-	set_max_width_allowed (a_max_width: INTEGER) is
+	set_max_width_allowed (a_max_width: INTEGER)
 			-- Set `max_width_allowed'
 		require
 			valid: 0 < a_max_width
@@ -66,7 +66,7 @@ feature -- Properties
 
 feature -- Query
 
-	grouped_items is
+	grouped_items
 			-- Grouped items by `max_width_allowed'
 		require
 			set: max_width_allowed > 0
@@ -114,7 +114,7 @@ invariant
 	not_void: algorithm /= Void
 	not_void: internal_items /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

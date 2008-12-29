@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Service Context"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_server (value: OCI_SERVER) is
+	set_server (value: OCI_SERVER)
 			-- Set associated server context handle
 		require
 			allocated: value.is_allocated
@@ -53,7 +53,7 @@ feature -- Basic operations
 			definition: server /= Void and then server.is_equal (value)
 		end
 
-	set_session (value: OCI_SESSION) is
+	set_session (value: OCI_SESSION)
 			-- Set associated user session handle
 		require
 			allocated: value.is_allocated
@@ -66,7 +66,7 @@ feature -- Basic operations
 			definition: session /= Void and then session.is_equal (value)
 		end
 
-	set_transaction (value: OCI_TRANSACTION) is
+	set_transaction (value: OCI_TRANSACTION)
 			-- Set associated transaction handle
 		require
 			allocated: value.is_allocated
@@ -79,7 +79,7 @@ feature -- Basic operations
 			definition: transaction /= Void and then transaction.is_equal (value)
 		end
 
-	set_timeout (value: INTEGER_16) is
+	set_timeout (value: INTEGER_16)
 			-- Set transaction timeout
 		require
 			valid_argument: value >= 0
@@ -89,7 +89,7 @@ feature -- Basic operations
 			definition: timeout = value
 		end
 
-	logon (env: OCI_ENVIRONMENT; errh: OCI_ERROR_HANDLER; username, password, dbname: STRING) is
+	logon (env: OCI_ENVIRONMENT; errh: OCI_ERROR_HANDLER; username, password, dbname: STRING)
 			-- Simple logon; server context and user session are created implicitly
 		require
 			not_allocated: not is_allocated
@@ -125,7 +125,7 @@ feature -- Basic operations
 			simple_logon: (not failed) implies simple_logon
 		end
 
-	logoff is
+	logoff
 			-- Terminate simple connection created by `logon'
 		require
 			simple_logon: simple_logon
@@ -148,7 +148,7 @@ feature -- Basic operations
 			deallocated: (not failed) implies (not is_allocated)
 		end
 
-	break is
+	break
 			-- Immediate (asynchronous) abort of any currently executing OCI function that is 
 			-- associated with the server
 		require
@@ -161,7 +161,7 @@ feature -- Basic operations
 			error_handler.check_error (status)
 		end
 
-	start_transaction is
+	start_transaction
 			-- Start a new transaction
 		require
 			allocated: is_allocated
@@ -178,7 +178,7 @@ feature -- Basic operations
 			transaction_active: transaction /= Void and then transaction.is_allocated
 		end
 
-	resume_transaction is
+	resume_transaction
 			-- Resume current `transaction'
 		require
 			allocated: is_allocated
@@ -190,7 +190,7 @@ feature -- Basic operations
 			error_handler.check_error (status)
 		end
 
-	commit is
+	commit
 			-- Commit current `transaction'
 		require
 			allocated: is_allocated
@@ -202,7 +202,7 @@ feature -- Basic operations
 			error_handler.check_error (status)
 		end
 
-	rollback is
+	rollback
 			-- Rollback current `transaction'
 		require
 			allocated: is_allocated
@@ -216,7 +216,7 @@ feature -- Basic operations
 	
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_svcctx
@@ -226,56 +226,56 @@ feature {NONE} -- Externals
 
 	oci_logon (envhp: POINTER; errhp: POINTER; svchp: POINTER; 
 			username: POINTER; uname_len: INTEGER; password: POINTER; passwd_len: INTEGER; 
-			dbname: POINTER; dbname_len: INTEGER): INTEGER_16 is
+			dbname: POINTER; dbname_len: INTEGER): INTEGER_16
 		external
 			"C (OCIEnv *, OCIError *, OCISvcCtx **, text *, ub4, text *, ub4, text *, ub4): sword | %"oci.h%""
 		alias
 			"OCILogon"
 		end
 
-	oci_logoff (svchp: POINTER; errhp: POINTER): INTEGER_16 is
+	oci_logoff (svchp: POINTER; errhp: POINTER): INTEGER_16
 		external
 			"C (OCISvcCtx *, OCIError *): sword | %"oci.h%""
 		alias
 			"OCILogoff"
 		end
 
-	oci_break (svchp: POINTER; errhp: POINTER): INTEGER_16 is
+	oci_break (svchp: POINTER; errhp: POINTER): INTEGER_16
 		external
 			"C (dvoid *, OCIError *): sword | %"oci.h%""
 		alias
 			"OCIBreak"
 		end
 
-	oci_trans_start (svchp: POINTER; errhp: POINTER; time_out: INTEGER_16; flags: INTEGER): INTEGER_16 is
+	oci_trans_start (svchp: POINTER; errhp: POINTER; time_out: INTEGER_16; flags: INTEGER): INTEGER_16
 		external
 			"C (OCISvcCtx *, OCIError *, uword, ub4): sword | %"oci.h%""
 		alias
 			"OCITransStart"
 		end
 
-	oci_trans_detach (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16 is
+	oci_trans_detach (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16
 		external
 			"C (OCISvcCtx *, OCIError *, ub4): sword | %"oci.h%""
 		alias
 			"OCITransDetach"
 		end
 
-	oci_trans_commit (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16 is
+	oci_trans_commit (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16
 		external
 			"C (OCISvcCtx *, OCIError *, ub4): sword | %"oci.h%""
 		alias
 			"OCITransCommit"
 		end
 
-	oci_trans_rollback (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16 is
+	oci_trans_rollback (svchp: POINTER; errhp: POINTER; flags: INTEGER): INTEGER_16
 		external
 			"C (OCISvcCtx *, OCIError *, ub4): sword | %"oci.h%""
 		alias
 			"OCITransRollback"
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

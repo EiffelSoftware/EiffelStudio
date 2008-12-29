@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Curves capabilities (CC) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Cc_none: INTEGER is
+	Cc_none: INTEGER
 			-- Supports curves
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"CC_NONE"
 		end
 
-	Cc_circles: INTEGER is
+	Cc_circles: INTEGER
 			-- Supports circles
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"CC_CIRCLES"
 		end
 
-	Cc_pie: INTEGER is
+	Cc_pie: INTEGER
 			-- Supports pie wedges
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"CC_PIE"
 		end
 
-	Cc_chord: INTEGER is
+	Cc_chord: INTEGER
 			-- Supports chords
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"CC_CHORD"
 		end
 
-	Cc_ellipses: INTEGER is
+	Cc_ellipses: INTEGER
 			-- Supports ellipses
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"CC_ELLIPSES"
 		end
 
-	Cc_wide: INTEGER is
+	Cc_wide: INTEGER
 			-- Supports wide borders
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"CC_WIDE"
 		end
 
-	Cc_styled: INTEGER is
+	Cc_styled: INTEGER
 			-- Supports styled borders
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"CC_STYLED"
 		end
 
-	Cc_wide_styled: INTEGER is
+	Cc_wide_styled: INTEGER
 			-- Supports wide, styled borders
 		external
 			"C [macro %"wel.h%"]"
@@ -74,7 +74,7 @@ feature -- Access
 			"CC_WIDESTYLED"
 		end
 
-	Cc_interiors: INTEGER is
+	Cc_interiors: INTEGER
 			-- Supports interiors
 		external
 			"C [macro %"wel.h%"]"
@@ -82,7 +82,7 @@ feature -- Access
 			"CC_INTERIORS"
 		end
 
-	Cc_round_rect: INTEGER is
+	Cc_round_rect: INTEGER
 			-- Supports rectangles with rounded corners
 		external
 			"C [macro %"wel.h%"]"
@@ -90,7 +90,7 @@ feature -- Access
 			"CC_ROUNDRECT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

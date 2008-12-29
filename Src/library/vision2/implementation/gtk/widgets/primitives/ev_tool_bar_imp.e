@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision2 toolbar, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,20 +40,20 @@ create
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := True
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -70,13 +70,13 @@ feature {NONE} -- Implementation
 			disable_vertical
 		end
 
-	list_widget: POINTER is
+	list_widget: POINTER
 			--
 		do
 			Result := visual_widget
 		end
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_container_imp)
@@ -95,28 +95,28 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
 			has_vertical_button_style := True
 			update_toolbar_style
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			has_vertical_button_style := False
 			update_toolbar_style
 		end
 
-	enable_vertical is
+	enable_vertical
 			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_orientation (list_widget, 1)
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
@@ -125,7 +125,7 @@ feature -- Status setting
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	block_selection_for_docking is
+	block_selection_for_docking
 			--
 		do
 			-- For now, do nothing.
@@ -154,7 +154,7 @@ feature -- Implementation
 			end
 		end
 
-	update_toolbar_style is
+	update_toolbar_style
 			-- Set the style of `Current' relative to items
 		local
 			tbb_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -192,7 +192,7 @@ feature -- Implementation
 			end
 		end
 
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is index - 1 of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
@@ -210,7 +210,7 @@ feature -- Implementation
 			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
@@ -233,7 +233,7 @@ feature -- Implementation
 			end
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			imp: EV_ITEM_IMP
@@ -272,7 +272,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

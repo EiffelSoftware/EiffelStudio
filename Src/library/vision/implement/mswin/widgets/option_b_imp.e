@@ -1,4 +1,4 @@
-indexing
+note
 	decription: "OPTION_B_IMPfor Windows - this delegates to an OPTION_PULL"
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (an_option_button: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (an_option_button: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create an option_b
 		do
 			create private_attributes
@@ -31,7 +31,7 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 		end
 
-	set_option_pull (opw: OPT_PULL_I) is
+	set_option_pull (opw: OPT_PULL_I)
 			-- Set the option pull to `opw'
 		do
 			opt_pull := opw
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature
 
-	set_widget_default is
+	set_widget_default
    			-- Set the defaults for current widget.
    		do
  			if managed and then parent.realized then
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 			-- Button which is selected.
 		do
 			if opt_pull /= Void then
@@ -86,12 +86,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	realize is
+	realize
 		do
 			realized := true
 		end
 
-	set_selected_button (a_button: BUTTON) is
+	set_selected_button (a_button: BUTTON)
 			-- Set the selected button to `a_button'
 		do
 			if opt_pull /= Void then
@@ -99,7 +99,7 @@ feature -- Status setting
 			end
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 		do
 			if a_title /= Void then
 				title := a_title.twin
@@ -108,14 +108,14 @@ feature -- Status setting
 			end
 		end
 
-	unrealize is
+	unrealize
 		do
 			realized := false
 		end
 
 feature -- Element change
 
-	attach_menu (a_menu: OPT_PULL) is
+	attach_menu (a_menu: OPT_PULL)
 			-- Implemented with parent in make
 		do
 			opt_pull ?= a_menu.implementation
@@ -123,53 +123,53 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_title is
+	remove_title
 		do
 		end
 
 feature {NONE} -- Inapplicable
 
-	process_notification (n: INTEGER) is
+	process_notification (n: INTEGER)
 		do
 		end
 
 	wel_destroy, wel_hide, wel_set_focus, enable, disable, invalidate,
-	wel_release_capture, wel_set_capture, wel_show  is
+	wel_release_capture, wel_set_capture, wel_show
 		do
 		end
 
-	wel_set_menu (wel_menu: WEL_MENU) is
+	wel_set_menu (wel_menu: WEL_MENU)
 		do
 		end
 
 	wel_parent: WEL_COMPOSITE_WINDOW
-	wel_set_text (s: STRING) is do end
+	wel_set_text (s: STRING) do end
 	client_rect: WEL_RECT
 	wel_shown, enabled, exists: BOOLEAN
 	wel_children: LINKED_LIST [WEL_WINDOW]
-	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) is do end
+	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) do end
 	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
 	wel_text: STRING_32
-	resize, wel_move (new_width, new_height: INTEGER) is
+	resize, wel_move (new_width, new_height: INTEGER)
 		do
 		end
 
-	set_z_order (flags: POINTER) is
+	set_z_order (flags: POINTER)
 		do
 		end
 
 	wel_item: POINTER
 	wel_font: WEL_FONT
 
- 	wel_set_font (f:WEL_FONT) is
+ 	wel_set_font (f:WEL_FONT)
 		do
 		end
 
-	disable_default_processing is
+	disable_default_processing
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

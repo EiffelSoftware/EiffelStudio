@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XNoExposeEvent."
@@ -19,19 +19,19 @@ create
 
 feature -- Access
 
-	drawable: POINTER is
+	drawable: POINTER
 			-- Destination of copy operation
 		do
 			Result := c_event_drawable (handle)
 		end;
 
-	major_code: INTEGER is
+	major_code: INTEGER
 			-- Major code
 		do
 			Result := c_event_major_code (handle)
 		end;
 
-	minor_code: INTEGER is
+	minor_code: INTEGER
 			-- Minor code
 		do
 			Result := c_event_minor_code (handle)
@@ -39,22 +39,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_drawable (event_ptr: POINTER): POINTER is
+	c_event_drawable (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XNoExposeEvent *): EIF_POINTER"
 		end;
 
-	c_event_major_code (event_ptr: POINTER): INTEGER is
+	c_event_major_code (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XNoExposeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_minor_code (event_ptr: POINTER): INTEGER is
+	c_event_minor_code (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XNoExposeEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

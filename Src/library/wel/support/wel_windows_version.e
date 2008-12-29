@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that allow the user to know about Windows versions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Exact Windows Versions
 
-	is_windows_95: BOOLEAN is
+	is_windows_95: BOOLEAN
 			-- Is the current program running under Windows 95
 			-- (OSR1, OSR2 or OSR2.5)?
 		do
@@ -19,7 +19,7 @@ feature -- Exact Windows Versions
 			windows95_is_9x: Result implies is_windows_9x
 		end
 
-	is_windows_98: BOOLEAN is
+	is_windows_98: BOOLEAN
 			-- Is the current program running under Windows 98
 			-- (1st or 2nd edition)?
 		do
@@ -28,7 +28,7 @@ feature -- Exact Windows Versions
 			windows98_is_9x: Result implies is_windows_9x
 		end
 
-	is_windows_me: BOOLEAN is
+	is_windows_me: BOOLEAN
 			-- Is the current program running under Windows Millenium Edition?
 		do
 			Result := is_windows_9x and (major_version = 4) and (minor_version >= 90)
@@ -36,7 +36,7 @@ feature -- Exact Windows Versions
 			windows_me_is_9x: Result implies is_windows_9x
 		end
 
-	is_windows_nt4: BOOLEAN is
+	is_windows_nt4: BOOLEAN
 			-- Is the current program running under Windows NT4?
 		do
 			Result := is_windows_nt and major_version = 4
@@ -44,7 +44,7 @@ feature -- Exact Windows Versions
 			windows_nt4_is_nt: Result implies is_windows_nt
 		end
 
-	is_windows_2000: BOOLEAN is
+	is_windows_2000: BOOLEAN
 			-- Is the current program running under Windows 2000?
 		do
 			Result := is_windows_nt and major_version = 5 and minor_version = 0
@@ -52,7 +52,7 @@ feature -- Exact Windows Versions
 			windows2000_is_nt: Result implies is_windows_nt
 		end
 
-	is_windows_xp: BOOLEAN is
+	is_windows_xp: BOOLEAN
 			-- Is the current program running under Windows XP (Home or Professional)?
 		do
 			Result := is_windows_nt and major_version = 5 and minor_version = 1
@@ -60,7 +60,7 @@ feature -- Exact Windows Versions
 			windows_xp_is_nt: Result implies is_windows_nt
 		end
 
-	is_windows_vista: BOOLEAN is
+	is_windows_vista: BOOLEAN
 			-- If the current program running under Windows Vista?
 		do
 			Result := is_windows_nt and major_version = 6 and minor_version = 0
@@ -68,14 +68,14 @@ feature -- Exact Windows Versions
 
 feature -- Compatible Windows Versions
 
-	is_windows_9x: BOOLEAN is
+	is_windows_9x: BOOLEAN
 			-- Is the current program running under Windows 9x
 			-- (Windows 95, Windows 98, Windows Me, ...)?
 		do
 			Result := (internal_version & 0x80000000) /= 0
 		end
 
-	is_windows_nt: BOOLEAN is
+	is_windows_nt: BOOLEAN
 			-- Is the current program running under a version of
 			-- windows belonging to the NT family?
 			-- (Windows NT 3.51, Windows NT4, Windows 2000,
@@ -84,31 +84,31 @@ feature -- Compatible Windows Versions
 			Result := (internal_version & 0x80000000) = 0
 		end
 
-	is_windows_nt4_compatible: BOOLEAN is
+	is_windows_nt4_compatible: BOOLEAN
 			-- Is the current program running under Windows NT4 or above?
 		do
 			Result := is_windows_nt and major_version >= 4
 		end
 
-	is_windows_98_compatible: BOOLEAN is
+	is_windows_98_compatible: BOOLEAN
 			-- Is the current program running under Windows 98 or above?
 		do
 			Result := (is_windows_98 or is_windows_me) or else is_windows_2000_compatible
 		end
 
-	is_windows_me_compatible: BOOLEAN is
+	is_windows_me_compatible: BOOLEAN
 			-- Is the current program running under Windows Me or above?
 		do
 			Result := is_windows_me or else is_windows_xp_compatible
 		end
 
-	is_windows_2000_compatible: BOOLEAN is
+	is_windows_2000_compatible: BOOLEAN
 			-- Is the current program running under Windows 2000 or above?
 		do
 			Result := is_windows_NT and major_version >= 5
 		end
 
-	is_windows_xp_compatible: BOOLEAN is
+	is_windows_xp_compatible: BOOLEAN
 			-- Is the current program running under Windows XP or above?
 		do
 			Result := is_windows_nt and
@@ -117,19 +117,19 @@ feature -- Compatible Windows Versions
 
 feature -- Current Windows Version
 
-	major_version: INTEGER is
+	major_version: INTEGER
 			-- Major version of current operating system
 		do
 			Result := (internal_version & 0x000000FF)
 		end
 
-	minor_version: INTEGER is
+	minor_version: INTEGER
 			-- Minor version of current operating system
 		do
 			Result := (internal_version & 0x0000FF00) |>> 8
 		end
 
-	build_number: INTEGER is
+	build_number: INTEGER
 			-- Build number of current operating system
 		require
 			windows_nt_family: is_windows_nt
@@ -139,7 +139,7 @@ feature -- Current Windows Version
 
 feature -- Windows Versions (output)
 
-	version_number_string: STRING is
+	version_number_string: STRING
 			-- String representing the version number using the following format
 			--   <major_version>.<minor_version>.<build_number> for Windows NT, 2000, XP
 			--   <major_version>.<minor_version> for Windows 95, 98, Me
@@ -170,19 +170,19 @@ feature -- "Shell and Common controls" Versions
 	 --| 5.81    | Comctl32.dll | Microsoft Internet Explorer 5.5                 |
 	 --|--------------------------------------------------------------------------|
 
-	comctl32_version: INTEGER is
+	comctl32_version: INTEGER
 			-- Version of Comctl32.dll
 		once
 			Result := cwin_get_comctl32dll_version
 		end
 
-	shell32_version: INTEGER is
+	shell32_version: INTEGER
 			-- Version of Shell32.dll
 		once
 			Result := cwin_get_shell32dll_version
 		end
 
-	shlwapi_version: INTEGER is
+	shlwapi_version: INTEGER
 			-- Version of Shlwapi.dll
 		once
 			Result := cwin_get_shlwapidll_version
@@ -190,34 +190,34 @@ feature -- "Shell and Common controls" Versions
 
 feature -- Version Constants
 
-	version_400: INTEGER is 0x00040000
+	version_400: INTEGER = 0x00040000
 			-- version_400 <=> Microsoft Windows 95/Windows NT 4.0
 
-	version_470: INTEGER is 0x00040046
+	version_470: INTEGER = 0x00040046
 			-- version_470 <=> Microsoft Internet Explorer 3.x
 
-	version_471: INTEGER is 0x00040047
+	version_471: INTEGER = 0x00040047
 			-- version_471 <=> Microsoft Internet Explorer 4.0
 
-	version_472: INTEGER is 0x00040048
+	version_472: INTEGER = 0x00040048
 			-- version_472 <=> Microsoft Internet Explorer 4.01 & Windows 98
 
-	version_500: INTEGER is 0x00050000
+	version_500: INTEGER = 0x00050000
 			-- version_500 (Shlwapi.dll) <=> Microsoft Internet Explorer 5
 			-- version_500 (Shell32.dll) <=> Microsoft Windows 2000
 
-	version_580: INTEGER is 0x00050050
+	version_580: INTEGER = 0x00050050
 			-- version_580 (Comctl32.dll) <=> Microsoft Internet Explorer 5
 
-	version_581: INTEGER is 0x00050051
+	version_581: INTEGER = 0x00050051
 			-- version_581 (Comctl32.dll)<=> Microsoft Windows 2000
 
-	version_600: INTEGER is 0x00060000
+	version_600: INTEGER = 0x00060000
 			-- version_600 (Comctl32.dll)<=> Microsoft Windows XP
 
 feature {NONE} -- Implementation
 
-	internal_version: INTEGER is
+	internal_version: INTEGER
 			-- Internal version as returned by Windows.
 		once
 			Result := cwin_get_version
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	cwin_get_version: INTEGER is
+	cwin_get_version: INTEGER
 			-- Return the version number of the current OS.
 			-- The version number is packed.
 		external
@@ -234,35 +234,35 @@ feature {NONE} -- External
 			"GetVersion"
 		end
 
-	cwin_get_dll_version (dll_name: POINTER): INTEGER is
+	cwin_get_dll_version (dll_name: POINTER): INTEGER
 			-- Return the version number of the specified DLL.
 			-- The version number is packed.
 		external
 			"C (LPCTSTR): DWORD | %"wel_dynload.h%""
 		end
 
-	cwin_get_shell32dll_version: INTEGER is
+	cwin_get_shell32dll_version: INTEGER
 			-- Return the version number of the "shell32.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""
 		end
 
-	cwin_get_comctl32dll_version: INTEGER is
+	cwin_get_comctl32dll_version: INTEGER
 			-- Return the version number of the "Comctl32.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""
 		end
 
-	cwin_get_shlwapidll_version: INTEGER is
+	cwin_get_shlwapidll_version: INTEGER
 			-- Return the version number of the "Shlwapi.dll" DLL.
 			-- The version number is packed.
 		external
 			"C (): DWORD | %"wel_dynload.h%""
 		end
 
-	pack_version(major: INTEGER; minor: INTEGER): INTEGER is
+	pack_version(major: INTEGER; minor: INTEGER): INTEGER
 		external
 			"C [ macro %"wel_dynload.h%"] "
 		alias
@@ -271,25 +271,25 @@ feature {NONE} -- External
 
 feature -- Obsolete
 
-	is_windows95: BOOLEAN is
+	is_windows95: BOOLEAN
 		obsolete "use `is_windows_95' instead"
 		do
 			Result := is_windows_95
 		end
 
-	is_windows98: BOOLEAN is
+	is_windows98: BOOLEAN
 		obsolete "use `is_windows_98' instead"
 		do
 			Result := is_windows_98
 		end
 
-	is_windows2000: BOOLEAN is
+	is_windows2000: BOOLEAN
 		obsolete "use `is_windows_2000' instead"
 		do
 			Result := is_windows_2000
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

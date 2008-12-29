@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,17 +11,17 @@ deferred class
 
 feature
 	
-	on_tree_path_toggle (a_tree_path_str: POINTER) is
+	on_tree_path_toggle (a_tree_path_str: POINTER)
 			-- A tree path has been checked or unchecked
 		deferred
 		end
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' destroyed?
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

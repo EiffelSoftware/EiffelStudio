@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Button widget that provides a graphics area."
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif draw button widget.
 		local
 			widget_name: ANY
@@ -47,31 +47,31 @@ feature -- Initialization
 
 feature -- Access
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	arm_command: MEL_COMMAND_EXEC is
+	arm_command: MEL_COMMAND_EXEC
 			-- Command set for the arm callback
 		do
 			Result := motif_command (XmNarmCallback)
 		end;
 
-	disarm_command: MEL_COMMAND_EXEC is
+	disarm_command: MEL_COMMAND_EXEC
 			-- Command set for the disarm callback
 		do
 			Result := motif_command (XmNdisarmCallback)
 		end;
 
-	expose_command: MEL_COMMAND_EXEC is
+	expose_command: MEL_COMMAND_EXEC
 			-- Command set for the expose callback
 		do
 			Result := motif_command (XmNexposeCallback)
 		end;
 
-	resize_command: MEL_COMMAND_EXEC is
+	resize_command: MEL_COMMAND_EXEC
 			-- Command set for the resize callback
 		do
 			Result := motif_command (XmNresizeCallback)
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_multiclick_kept: BOOLEAN is
+	is_multiclick_kept: BOOLEAN
 			-- Are the successive button clicks processed?
 		require
 			exists: not is_destroyed
@@ -87,7 +87,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
 		end;
 
-	is_multiclick_discarded: BOOLEAN is
+	is_multiclick_discarded: BOOLEAN
 			-- Are the successive button clicks discard?
 		require
 			exists: not is_destroyed
@@ -96,7 +96,7 @@ feature -- Status report
 				(screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
 		end;
 
-	is_push_button_enabled: BOOLEAN is
+	is_push_button_enabled: BOOLEAN
 			-- Does Current appear three dimensional?
 		require
 			exists: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNpushButtonEnabled)
 		end;
 
-	is_shadow_in: BOOLEAN is
+	is_shadow_in: BOOLEAN
 			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_IN)
 		end;
 
-	is_shadow_out: BOOLEAN is
+	is_shadow_out: BOOLEAN
 			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
@@ -122,7 +122,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_OUT)
 		end;
 
-	is_shadow_etched_in: BOOLEAN is
+	is_shadow_etched_in: BOOLEAN
 			-- Does Current appear with a double line shadow inset?
 		require
 			exists: not is_destroyed
@@ -131,7 +131,7 @@ feature -- Status report
 						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN)
 		end;
 
-	is_shadow_etched_out: BOOLEAN is
+	is_shadow_etched_out: BOOLEAN
 			-- Does Current appear with a double line shadow raised?
 		require
 			exists: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Status report
 
 feature -- Satus setting
 
-	set_multiclick_to_keep is
+	set_multiclick_to_keep
 			-- Set `is_multiclick_keep' to True.
 		require
 			exists: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Satus setting
 			keep_successive_clicks: is_multiclick_kept
 		end;
 
-	set_multiclick_to_discard is
+	set_multiclick_to_discard
 			-- Set `is_multiclick_keep' to True.
 		require
 			exists: not is_destroyed
@@ -162,7 +162,7 @@ feature -- Satus setting
 			discard_successive_clicks: is_multiclick_discarded
 		end;
 
-	enable_push_button is
+	enable_push_button
 			-- Set `is_push_button_enabled' to True.
 		require
 			exists: not is_destroyed
@@ -172,7 +172,7 @@ feature -- Satus setting
 			push_button_is_enabled: is_push_button_enabled 
 		end;
 
-	disable_push_button is
+	disable_push_button
 			-- Set `is_push_button_enabled' to False.
 		require
 			exists: not is_destroyed
@@ -182,7 +182,7 @@ feature -- Satus setting
 			push_button_is_disabled: not is_push_button_enabled 
 		end;
 
-	set_shadow_in is
+	set_shadow_in
 			-- Set `is_shadow_in' to True.
 		require
 			exists: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Satus setting
 			is_shadow_in: is_shadow_in
 		end;
 
-	set_shadow_out is
+	set_shadow_out
 			-- Set `is_shadow_in' to False.
 		require
 			exists: not is_destroyed
@@ -202,7 +202,7 @@ feature -- Satus setting
 			is_shadow_out: is_shadow_out
 		end;
 
-	set_shadow_etched_in is
+	set_shadow_etched_in
 			-- Set `is_shadow_etched_in' to True.
 		require
 			exists: not is_destroyed
@@ -212,7 +212,7 @@ feature -- Satus setting
 			is_shadow_etched_in: is_shadow_etched_in
 		end;
 
-	set_shadow_etched_out is
+	set_shadow_etched_out
 			-- Set `is_shadow_etched_out' to True.
 		require
 			exists: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Satus setting
 
 feature -- Element change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is pressed and released.
 		require
@@ -235,7 +235,7 @@ feature -- Element change
 			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is pressed.
 		require
@@ -246,7 +246,7 @@ feature -- Element change
 			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is released.
 		require
@@ -257,7 +257,7 @@ feature -- Element change
 			command_set: command_set (disarm_command, a_command, an_argument)
 		end;
 
-	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button receives an exposure
 			-- event.
@@ -269,7 +269,7 @@ feature -- Element change
 			command_set: command_set (expose_command, a_command, an_argument)
 		end;
 
-	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button receives a resize
 			-- event.
@@ -283,7 +283,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is pressed and released.
 		do
@@ -292,7 +292,7 @@ feature -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_arm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is pressed.
 		do
@@ -301,7 +301,7 @@ feature -- Removal
 			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is released.
 		do
@@ -310,7 +310,7 @@ feature -- Removal
 			removed: disarm_command = Void
 		end;
 
-	remove_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_expose_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button receives an exposure
 			-- event.
@@ -320,7 +320,7 @@ feature -- Removal
 			removed: expose_command = Void
 		end;
 
-	remove_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_resize_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button receives a resize
 			-- event.
@@ -333,7 +333,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-				resouce_name: POINTER): MEL_DRAWN_BUTTON_CALLBACK_STRUCT is
+				resouce_name: POINTER): MEL_DRAWN_BUTTON_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -342,14 +342,14 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_drawn_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_drawn_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/DrawnB.h>"
 		alias
 			"XmCreateDrawnButton"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

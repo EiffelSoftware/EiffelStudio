@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allows to acces a C struct of type lconv defined in locale.h"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature --Struct localeconv
 
-	localeconv: POINTER is
+	localeconv: POINTER
 			-- Pointer to `struct lconv' area.
 			--the C localeconv() function shall set the components of an object with
 			-- the type struct lconv with the values appropriate for the formatting
@@ -24,7 +24,7 @@ feature --Struct localeconv
 
 feature -- Information
 
-	lconv_structure_size: INTEGER is
+	lconv_structure_size: INTEGER
 			-- Size of `struct tm'.
 		external
 			"C macro use <locale.h>"
@@ -34,14 +34,14 @@ feature -- Information
 
 feature -- Access
 
-	decimal_point (p: POINTER): POINTER is
+	decimal_point (p: POINTER): POINTER
 			-- Get `p->decimal_point'
 			-- The radix character used to format non-monetary quantities.
 		external
 			"C struct struct lconv access decimal_point use <locale.h>"
 		end
 
-	thousands_sep (p: POINTER): POINTER is
+	thousands_sep (p: POINTER): POINTER
 			-- Get `p->thousands_sep'
 			-- The character used to separate groups of digits
 			-- before the decimal-point character in formatted non-monetary quantities.
@@ -49,7 +49,7 @@ feature -- Access
 			"C struct struct lconv access thousands_sep use <locale.h>"
 		end
 
-	grouping (p: POINTER): POINTER is
+	grouping (p: POINTER): POINTER
 			-- Get `p->grouping'
 			-- A string whose elements taken as one-byte integer values indicate
 			-- the size of each group of digits in formatted non-monetary quantities.
@@ -57,7 +57,7 @@ feature -- Access
 			"C struct struct lconv access grouping use <locale.h>"
 		end
 
-	int_curr_symbol (p: POINTER): POINTER is
+	int_curr_symbol (p: POINTER): POINTER
 			-- Get `p->int_curr_symbol'
 			-- The international currency symbol applicable to the current locale.
 			-- The first three characters contain the alphabetic international currency symbol
@@ -68,21 +68,21 @@ feature -- Access
 			"C struct struct lconv access int_curr_symbol use <locale.h>"
 		end
 
-	currency_symbol (p: POINTER): POINTER is
+	currency_symbol (p: POINTER): POINTER
 			-- Get `p->currency_symbol'
 			-- The local currency symbol applicable to the current locale.
 		external
 			"C struct struct lconv access currency_symbol use <locale.h>"
 		end
 
-	mon_decimal_point (p: POINTER): POINTER is
+	mon_decimal_point (p: POINTER): POINTER
 			-- Get `p->mon_decimal_point'
 			--  The radix character used to format monetary quantities.
 		external
 			"C struct struct lconv access mon_decimal_point use <locale.h>"
 		end
 
-	mon_thousands_sep (p: POINTER): POINTER is
+	mon_thousands_sep (p: POINTER): POINTER
 			-- Get `p->mon_thousands_sep'
 			-- The separator for groups of digits before
 			-- the decimal-point in formatted monetary quantities.
@@ -90,7 +90,7 @@ feature -- Access
 			"C struct struct lconv access mon_thousands_sep use <locale.h>"
 		end
 
-	mon_grouping (p: POINTER): POINTER is
+	mon_grouping (p: POINTER): POINTER
 			-- Get `p->mon_grouping'
 			-- A string whose elements taken as one-byte
 			-- integer values indicate the size of each group of digits
@@ -99,7 +99,7 @@ feature -- Access
 			"C struct struct lconv access mon_grouping use <locale.h>"
 		end
 
-	positive_sign (p: POINTER): POINTER is
+	positive_sign (p: POINTER): POINTER
 			-- Get `p->positive_sign'
 			-- The string used to indicate a non-negative
 			-- valued formatted monetary quantity.
@@ -107,7 +107,7 @@ feature -- Access
 			"C struct struct lconv access positive_sign use <locale.h>"
 		end
 
-	negative_sign (p: POINTER): POINTER is
+	negative_sign (p: POINTER): POINTER
 			-- Get `p->negative_sign'
 			-- The string used to indicate a negative
 			-- valued formatted monetary quantity.
@@ -115,7 +115,7 @@ feature -- Access
 			"C struct struct lconv access negative_sign use <locale.h>"
 		end
 
-	int_frac_digits (p: POINTER): CHARACTER is
+	int_frac_digits (p: POINTER): CHARACTER
 			-- Get `p->int_frac_digits'
 			-- The number of fractional digits (those after the decimal-point)
 			-- to be displayed in an internationally formatted monetary quantity.
@@ -125,7 +125,7 @@ feature -- Access
 			"C struct struct lconv access int_frac_digits use <locale.h>"
 		end
 
-	frac_digits (p: POINTER): CHARACTER is
+	frac_digits (p: POINTER): CHARACTER
 			-- Get `p->frac_digits'
 			-- The number of fractional digits (those after the decimal-point)
 			-- to be displayed in a formatted monetary quantity.
@@ -135,7 +135,7 @@ feature -- Access
 			"C struct struct lconv access frac_digits use <locale.h>"
 		end
 
-	p_cs_precedes (p: POINTER): CHARACTER is
+	p_cs_precedes (p: POINTER): CHARACTER
 			-- Get `p->p_cs_precedes'
 			-- Set to 1 if the currency_symbol precedes the value
 			-- for a non-negative formatted monetary quantity.
@@ -145,7 +145,7 @@ feature -- Access
 			"C struct struct lconv access p_cs_precedes use <locale.h>"
 		end
 
-	p_sep_by_space (p: POINTER): CHARACTER is
+	p_sep_by_space (p: POINTER): CHARACTER
 			-- Get `p->p_sep_by_space'
 			-- Set to a value indicating the separation of the currency_symbol,
 			-- the sign string, and the value for a non-negative formatted monetary quantity.
@@ -154,7 +154,7 @@ feature -- Access
 			"C struct struct lconv access p_sep_by_space use <locale.h>"
 		end
 
-	n_cs_precedes (p: POINTER): CHARACTER is
+	n_cs_precedes (p: POINTER): CHARACTER
 			-- Get `p->n_cs_precedes'
 			-- Set to 1 if the currency_symbol precedes the value
 			-- for a negative formatted monetary quantity.
@@ -164,7 +164,7 @@ feature -- Access
 			"C struct struct lconv access n_cs_precedes use <locale.h>"
 		end
 
-	n_sep_by_space (p: POINTER): CHARACTER is
+	n_sep_by_space (p: POINTER): CHARACTER
 			-- Get `p->n_sep_by_space'
 			-- Set to 1 if the currency_symbol precedes the value
 			-- for a negative formatted monetary quantity.
@@ -174,7 +174,7 @@ feature -- Access
 			"C struct struct lconv access n_sep_by_space use <locale.h>"
 		end
 
-	p_sign_posn (p: POINTER): CHARACTER is
+	p_sign_posn (p: POINTER): CHARACTER
 			-- Get `p->p_sign_posn'
 			-- Set to a value indicating the positioning of the positive_sign
 			-- for a non-negative formatted monetary quantity.
@@ -183,7 +183,7 @@ feature -- Access
 			"C struct struct lconv access p_sign_posn use <locale.h>"
 		end
 
-	n_sign_posn (p: POINTER): CHARACTER is
+	n_sign_posn (p: POINTER): CHARACTER
 			-- Get `p->n_sign_posn'
 			-- Set to a value indicating the positioning of the negative_sign
 			-- for a negative formatted monetary quantity.
@@ -239,7 +239,7 @@ feature -- Access
 --		external
 --			"C struct struct lconv access int_n_sign_posn use <locale.h>"
 --		end
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays a single widget that may be larger than the container.
@@ -39,7 +39,7 @@ create
 
 feature -- Access
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		require
 			not_destroyed: not is_destroyed
@@ -49,7 +49,7 @@ feature -- Access
 			bridge_ok: Result = implementation.x_offset
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		require
 			not_destroyed: not is_destroyed
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (an_x: INTEGER) is
+	set_x_offset (an_x: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Element change
 			assigned: x_offset = an_x
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Assign `a_y' to `y_offset'.
 		require
 			not_destroyed: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Element change
 			assigned: y_offset = a_y
 		end
 
-	set_offset (an_x, a_y: INTEGER) is
+	set_offset (an_x, a_y: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
 		require
@@ -93,7 +93,7 @@ feature -- Element change
 			assigned: y_offset = a_y
 		end
 		
-	set_item_width (a_width: INTEGER) is
+	set_item_width (a_width: INTEGER)
 			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
@@ -106,7 +106,7 @@ feature -- Element change
 			an_item_width_assigned: item.width = a_width
 		end
 
-	set_item_height (a_height: INTEGER) is
+	set_item_height (a_height: INTEGER)
 			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
@@ -119,7 +119,7 @@ feature -- Element change
 			an_item_height_assigned: item.height = a_height
 		end
 
-	set_item_size (a_width, a_height: INTEGER) is
+	set_item_size (a_width, a_height: INTEGER)
 			-- Assign `_width' to `a_widget.width'.
 			-- Assign `a_height' to `a_widget.height'.
 		require
@@ -138,7 +138,7 @@ feature -- Element change
 		
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and x_offset = 0 and
@@ -152,7 +152,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_VIEWPORT_IMP} implementation.make (Current)
@@ -163,7 +163,7 @@ invariant
 	item_void_means_offset_zero: is_usable implies
 		(item = Void implies x_offset = 0 and y_offset = 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

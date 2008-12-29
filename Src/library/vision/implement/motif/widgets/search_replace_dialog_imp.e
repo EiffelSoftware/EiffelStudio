@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dialog to ask for search or search and replace information"
@@ -73,7 +73,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_search_replace: SEARCH_REPLACE_DIALOG; oui_parent: COMPOSITE) is
+	make (a_search_replace: SEARCH_REPLACE_DIALOG; oui_parent: COMPOSITE)
 			-- Create a search_replace_dialog
 		local
 			mc: MEL_COMPOSITE
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Status report
 
-	case_sensitive: BOOLEAN is
+	case_sensitive: BOOLEAN
 			-- Is search and replace to be case sensitive?	
 		do
 			Result := case_sensitive_t.is_managed and then
@@ -99,25 +99,25 @@ feature -- Status report
 				case_sensitive_t.state
 		end
 
-	replace_mode: BOOLEAN is
+	replace_mode: BOOLEAN
 			-- Is this dialog to do a replace?
 		do
 			Result := replace_form.is_managed
 		end
 
-	replace_text: STRING is
+	replace_text: STRING
 			-- Text to replace `search_text' with.
 		do
 			Result := replace_tf.string
 		end
 
-	search_text: STRING is 
+	search_text: STRING 
 			-- Text to search for
 		do
 			Result := find_tf.string
 		end
 
-	search_upwards: BOOLEAN is
+	search_upwards: BOOLEAN
 			-- Do this search from the bottom up?
 		do
 			Result := find_backwards_t.is_managed and then
@@ -127,55 +127,55 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_direction_request is
+	show_direction_request
 			-- Show the direction requestor
 		do
 			find_backwards_t.manage
 		end
 
-	hide_direction_request is
+	hide_direction_request
 			-- Hide the direction requestor.
 		do
 			find_backwards_t.unmanage
 		end
 
-	enable_direction_request is
+	enable_direction_request
 			-- Enable the direction requestor
 		do
 			find_backwards_t.set_sensitive 
 		end
 
-	disable_direction_request is
+	disable_direction_request
 			-- Disable the direction requestor
 		do
 			find_backwards_t.set_insensitive
 		end
 
-	show_match_case is
+	show_match_case
 			-- Show match case requestor
 		do
 			case_sensitive_t.manage
 		end;
 
-	hide_match_case is
+	hide_match_case
 			-- Hide match case requestor
 		do
 			case_sensitive_t.unmanage
 		end
 
-	enable_match_case is
+	enable_match_case
 			-- Enable match case requestor
 		do
 			case_sensitive_t.set_sensitive
 		end
 
-	disable_match_case is
+	disable_match_case
 			-- Disable match case requestor
 		do
 			case_sensitive_t.set_insensitive
 		end
 
-	set_replace is
+	set_replace
 			-- Set dialog to search and replace.
 		do
 			if not replace_form.is_managed then
@@ -185,13 +185,13 @@ feature -- Status setting
 			end
 		end
 
-	set_replace_text (a_text: STRING)  is
+	set_replace_text (a_text: STRING)
 			-- Set `replace_text' to `a_text'
 		do
 			replace_tf.set_string (a_text)
 		end
 
-	set_search is
+	set_search
 			-- Set dialog to search.
 		do
 			if replace_form.is_managed then
@@ -201,7 +201,7 @@ feature -- Status setting
 			end
 		end
 
-	set_search_text (a_text: STRING) is
+	set_search_text (a_text: STRING)
 			-- Set `search_text' to `a_text'
 		do
 			find_tf.set_string (a_text)
@@ -209,7 +209,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_find_action (a_command: COMMAND; argument: ANY) is
+	add_find_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects find option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -226,7 +226,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects cancel option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -242,7 +242,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_replace_action (a_command: COMMAND; argument: ANY) is
+	add_replace_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -259,7 +259,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_replace_all_action (a_command: COMMAND; argument: ANY) is
+	add_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace all option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -277,7 +277,7 @@ feature -- Element change
 
 feature -- Update
 
-	popup is
+	popup
 			-- Popup the dialog
 		do
 			find_b.set_show_as_default (1);
@@ -286,7 +286,7 @@ feature -- Update
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the cancel option.
 		local
@@ -298,7 +298,7 @@ feature -- Removal
 			end;
 		end;
 
-	remove_find_action (a_command: COMMAND; argument: ANY) is
+	remove_find_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the find option.
 		local
@@ -312,7 +312,7 @@ feature -- Removal
 			end;
 		end;
 
-	remove_replace_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace option.
 		local
@@ -326,7 +326,7 @@ feature -- Removal
 			end;
 		end;
 
-	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace all option.
 		local
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 	find_tf, replace_tf: MEL_TEXT_FIELD
 			-- Text fields for find and replace text
 
-	set_default is
+	set_default
 			-- Create and attach the widgets.
 		local
 			rc: MEL_ROW_COLUMN;
@@ -450,14 +450,14 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-    children_list: LIST [POINTER] is
+    children_list: LIST [POINTER]
             -- List of children C widget points to be used
             -- for resouce settting
         do
             Result := descendants
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

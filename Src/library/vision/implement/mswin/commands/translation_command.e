@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (s: STRING; c: COMMAND; a: ANY) is
+	make (s: STRING; c: COMMAND; a: ANY)
 		require
 			s_exists: s /= Void
 			s_meaningful: not s.is_empty
@@ -39,7 +39,7 @@ feature
 	argument: ANY
 			-- Argument for set_action
 
-	context_data_useful: BOOLEAN is
+	context_data_useful: BOOLEAN
 			-- Should the context data be available
 			-- when Current command is invoked as a
 			-- callback
@@ -47,7 +47,7 @@ feature
 			Result := true
 		end
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Execute Current command.
 			-- `argument' is automatically passed by
 			-- EiffelVision when Current command is
@@ -94,7 +94,7 @@ feature
 
 feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 
-	parse (s: STRING) is
+	parse (s: STRING)
 		local
 			m : CHARACTER
 			modifier, action: STRING
@@ -238,7 +238,7 @@ feature {WIDGET_IMP, ACCELERABLE_WINDOWS} -- Implementation
 
 feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 
-	equiv (other: TRANSLATION_COMMAND) : BOOLEAN is
+	equiv (other: TRANSLATION_COMMAND) : BOOLEAN
 		do
 			Result :=
 				alt_required = other.alt_required and then
@@ -250,7 +250,7 @@ feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 					 (other.mouse_button = 0))
 		end
 
-	conditions_met: BOOLEAN is
+	conditions_met: BOOLEAN
 		local
 			bd: BUTTON_DATA
 			kd: KEY_DATA
@@ -332,18 +332,18 @@ feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 
 feature {WIDGET_ACTIONS}
 
-	set_exact_to_execute is
+	set_exact_to_execute
 		do
 			executing_exact.set_item (true)
 			exact_to_execute := true
 		end
 
-	executing_exact: BOOLEAN_REF is
+	executing_exact: BOOLEAN_REF
 		once
 			create Result
 		end
 
-	set_no_execute_now is
+	set_no_execute_now
 		do
 			executing_exact.set_item (false)
 			exact_to_execute := false
@@ -393,25 +393,25 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 	other_action: BOOLEAN
 			-- Is this action independent of the mouse and keyboard
 
-	configure_action: BOOLEAN is
+	configure_action: BOOLEAN
 			-- Is this action a `Configure' action?
 		do
 			Result := special_translation_number = 4
 		end
 
-	visible_action: BOOLEAN is
+	visible_action: BOOLEAN
 			-- Is this action a `Configure' action?
 		do
 			Result := special_translation_number = 3
 		end
 
-	map_action: BOOLEAN is
+	map_action: BOOLEAN
 			-- Is this action a `map' action?
 		do
 			Result := special_translation_number = 2
 		end
 
-	unmap_action: BOOLEAN is
+	unmap_action: BOOLEAN
 			-- Is this action an `unmap' action?
 		do
 			Result := special_translation_number = 1
@@ -423,7 +423,7 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 	special_translation_number : INTEGER
 			-- Number of matched special translation
 
-	special_translations : ARRAY [STRING] is
+	special_translations : ARRAY [STRING]
 			-- Translations we will specifically allow and deal with
 		once
 			Result := <<
@@ -433,7 +433,7 @@ feature {WIDGET_IMP, TRANSLATION_COMMAND, WIDGET_ACTIONS, ACCELERABLE_WINDOWS}
 				"<Configure>">>		-- WM_MOVE and WM_SIZE message.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of comparator facility"
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ class
 feature -- Basic operations
 
 	compare_range (c: COMPARATOR; low, high: INTEGER; 
-				state: BOOLEAN): BOOLEAN is
+				state: BOOLEAN): BOOLEAN
 			-- Does `c' return `state' for all items in range from `low' to
 			-- `high'?
 		require
@@ -36,7 +36,7 @@ feature -- Basic operations
 		end
 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

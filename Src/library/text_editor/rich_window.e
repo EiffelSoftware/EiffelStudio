@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The demo that goes with the button demo"
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER)
 			-- Create the demo in `par'.
 		do
 			make_scanner
@@ -52,7 +52,7 @@ feature -- Command execution
 
 feature {NONE}
 
-	update_highlighting (first_pos, last_pos: INTEGER) is
+	update_highlighting (first_pos, last_pos: INTEGER)
 			-- This function updates all startin from 
 			-- `first_pos' to `last_pos' according to 
 			-- it's syntax.
@@ -101,7 +101,7 @@ feature {NONE}
 
 	highlight_position_offset: INTEGER
 
-	on_token_found is
+	on_token_found
 			-- called by Eiffel analyzer whenever a 
 			-- token has been recognized.
 		local
@@ -232,7 +232,7 @@ end
 
 feature {NONE} -- Implementation
 
-	is_class_identifier (s: STRING): BOOLEAN is
+	is_class_identifier (s: STRING): BOOLEAN
 			-- Does `s' consist of upper case characters
 			-- only?
 		local
@@ -258,19 +258,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	courrier_font: EV_FONT is
+	courrier_font: EV_FONT
 		once
 			create Result.make_by_name ("Courier New")
 			Result.set_height (8)
 		end
 
-	times_font: EV_FONT is
+	times_font: EV_FONT
 		once
 			create Result.make_by_name ("Times New Roman")
 			Result.set_height (9)
 		end
 
-	keyword_char_format: EV_CHARACTER_FORMAT is
+	keyword_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (blue)
@@ -278,21 +278,21 @@ feature {NONE} -- Implementation
 			Result.set_bold (True)
 		end	
 
-	string_char_format: EV_CHARACTER_FORMAT is
+	string_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (red)
 			Result.set_font (times_font)
 		end	
 
-	comment_char_format: EV_CHARACTER_FORMAT is
+	comment_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (red)
 			Result.set_font (courrier_font)
 		end	
 
-	general_identifier_char_format: EV_CHARACTER_FORMAT is
+	general_identifier_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (dark_green)
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			Result.set_italic (True)
 		end	
 
-	class_identifier_char_format: EV_CHARACTER_FORMAT is
+	class_identifier_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (magenta)
@@ -308,28 +308,28 @@ feature {NONE} -- Implementation
 			Result.set_italic (True)
 		end	
 
-	number_char_format: EV_CHARACTER_FORMAT is
+	number_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (red)
 			Result.set_font (times_font)
 		end	
 
-	symbol_char_format: EV_CHARACTER_FORMAT is
+	symbol_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (dark_red)
 			Result.set_font (times_font)
 		end	
 
-	default_char_format: EV_CHARACTER_FORMAT is
+	default_char_format: EV_CHARACTER_FORMAT
 		once
 			create Result.make
 			Result.set_color (black)
 			Result.set_font (courrier_font)
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

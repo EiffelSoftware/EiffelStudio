@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					libcurl library opt constants
 					For more informaton see:
@@ -14,7 +14,7 @@ class
 
 feature -- Enumerations.
 
-	curlopt_httpheader: INTEGER is
+	curlopt_httpheader: INTEGER
 			-- Declared as CURLOPT_HTTPHEADER.
 		external
 			"C inline use <curl/curl.h>"
@@ -24,7 +24,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_writedata: INTEGER is
+	curlopt_writedata: INTEGER
 			-- Declared as CURLOPT_WRITEDATA.
 		external
 			"C inline use <curl/curl.h>"
@@ -34,7 +34,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_writeheader: INTEGER is
+	curlopt_writeheader: INTEGER
 			-- Declared as CURLOPT_WRITEHEADER.
 		external
 			"C inline use <curl/curl.h>"
@@ -44,7 +44,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_debugfunction: INTEGER is
+	curlopt_debugfunction: INTEGER
 			-- Declared as CURLOPT_DEBUGFUNCTION.
 		external
 			"C inline use <curl/curl.h>"
@@ -54,7 +54,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_followlocation: INTEGER is
+	curlopt_followlocation: INTEGER
 			-- Declared as CURLOPT_FOLLOWLOCATION
 		external
 			"C inline use <curl/curl.h>"
@@ -64,7 +64,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_verbose: INTEGER is
+	curlopt_verbose: INTEGER
 			-- Declared as CURLOPT_VERBOSE.
 		external
 			"C inline use <curl/curl.h>"
@@ -74,7 +74,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_useragent: INTEGER is
+	curlopt_useragent: INTEGER
 			-- Declared as CURLOPT_USERAGENT.
 		external
 			"C inline use <curl/curl.h>"
@@ -84,7 +84,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_url: INTEGER is
+	curlopt_url: INTEGER
 			-- Declared as CURLOPT_URL.
 		external
 			"C inline use <curl/curl.h>"
@@ -94,7 +94,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_cookiefile: INTEGER is
+	curlopt_cookiefile: INTEGER
 			-- Declared as CURLOPT_COOKIEFILE.
 		external
 			"C inline use <curl/curl.h>"
@@ -104,7 +104,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_ssl_verifypeer: INTEGER is
+	curlopt_ssl_verifypeer: INTEGER
 			-- Declared as CURLOPT_SSL_VERIFYPEER.
 		external
 			"C inline use <curl/curl.h>"
@@ -114,7 +114,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_cookie: INTEGER is
+	curlopt_cookie: INTEGER
 			-- Declared as CURLOPT_COOKIE.
 		external
 			"C inline use <curl/curl.h>"
@@ -124,7 +124,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_post: INTEGER is
+	curlopt_post: INTEGER
 			-- Declared as CURLOPT_POST.
 		external
 			"C inline use <curl/curl.h>"
@@ -134,7 +134,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_postfields: INTEGER is
+	curlopt_postfields: INTEGER
 			-- Declared as CURLOPT_POSTFIELDS.
 		external
 			"C inline use <curl/curl.h>"
@@ -144,7 +144,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_httppost: INTEGER is
+	curlopt_httppost: INTEGER
 			-- Declared as CURLOPT_HTTPPOST.
 		external
 			"C inline use <curl/curl.h>"
@@ -154,7 +154,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_writefunction: INTEGER is
+	curlopt_writefunction: INTEGER
 			-- Declared as CURLOPT_WRITEFUNCTION.
 		external
 			"C inline use <curl/curl.h>"
@@ -164,7 +164,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_progressfunction: INTEGER is
+	curlopt_progressfunction: INTEGER
 			-- Declared as CURLOPT_PROGRESSFUNCTION
 		external
 			"C inline use <curl/curl.h>"
@@ -174,7 +174,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_noprogress: INTEGER is
+	curlopt_noprogress: INTEGER
 			-- Declared as CURLOPT_NOPROGRESS
 		external
 			"C inline use <curl/curl.h>"
@@ -184,7 +184,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_progressdata: INTEGER is
+	curlopt_progressdata: INTEGER
 			-- Declared as CURLOPT_PROGRESSDATA
 		external
 			"C inline use <curl/curl.h>"
@@ -194,7 +194,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_referer: INTEGER is
+	curlopt_referer: INTEGER
 			-- Declared as CURLOPT_REFERER
 		external
 			"C inline use <curl/curl.h>"
@@ -204,7 +204,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	curlopt_httpget: INTEGER is
+	curlopt_httpget: INTEGER
 			-- Declared as CURLOPT_HTTPGET
 			-- Pass a long. If the long is non-zero, this forces the HTTP request to get back to GET. usable if a POST, HEAD, PUT or a custom request have been used previously using the same curl handle.
 			-- When setting CURLOPT_HTTPGET to a non-zero value, it will automatically set CURLOPT_NOBODY to 0 (since 7.14.1).
@@ -216,7 +216,7 @@ feature -- Enumerations.
 			]"
 		end
 
-	is_valid (a_integer: INTEGER): BOOLEAN is
+	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' value vaild?
 		do
 			Result := 	a_integer = curlopt_cookie or
@@ -241,7 +241,7 @@ feature -- Enumerations.
 						a_integer = curlopt_httpget
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

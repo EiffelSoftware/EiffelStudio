@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the list. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is
+	reasons_list: ARRAY [INTEGER]
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH)
@@ -33,7 +33,7 @@ feature -- Access
 				XmCR_MULTIPLE_SELECT, XmCR_SINGLE_SELECT>>
 		end;
 
-	item: MEL_STRING is
+	item: MEL_STRING
 			-- Item selected
 		local
 			ptr: POINTER
@@ -47,19 +47,19 @@ feature -- Access
             Result_is_shared: Result /= Void implies Result.is_shared
 		end;
 
-	item_length: INTEGER is
+	item_length: INTEGER
 			-- Number of bytes in `item'
 		do
 			Result := c_item_length (handle)
 		end;
 
-	item_position: INTEGER is
+	item_position: INTEGER
 			-- Item's position within `items' table
 		do
 			Result := c_item_position (handle)
 		end;
 
-	selected_items: MEL_STRING_TABLE is
+	selected_items: MEL_STRING_TABLE
 			-- Selected items
 		do
 			create Result.make_from_existing (c_selected_items (handle), selected_item_count)
@@ -67,19 +67,19 @@ feature -- Access
 			valid_result: Result /= Void 
 		end;
 
-	selected_item_count: INTEGER is
+	selected_item_count: INTEGER
 			-- Number of selected items
 		do
 			Result := c_selected_item_count (handle)
 		end;
 
-	selected_item_positions: POINTER is
+	selected_item_positions: POINTER
 			-- Integer array of selected positions
 		do
 			Result := c_selected_item_positions (handle)
 		end;
 
-	selection_type: INTEGER is
+	selection_type: INTEGER
 			-- Type of most recent selection
 		do
 			Result := c_item_length (handle)
@@ -87,63 +87,63 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_item (a_callback_struct_ptr: POINTER): POINTER is
+	c_item (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_item_length (a_callback_struct_ptr: POINTER): INTEGER is
+	c_item_length (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_item_position (a_callback_struct_ptr: POINTER): INTEGER is
+	c_item_position (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_selected_items (a_callback_struct_ptr: POINTER): POINTER is
+	c_selected_items (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_selected_item_count (a_callback_struct_ptr: POINTER): INTEGER is
+	c_selected_item_count (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_selected_item_positions (a_callback_struct_ptr: POINTER): POINTER is
+	c_selected_item_positions (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_selection_type (a_callback_struct_ptr: POINTER): INTEGER is
+	c_selection_type (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
-	XmINITIAL: INTEGER is
+	XmINITIAL: INTEGER
 		external
 			"C [macro <Xm/List.h>]: EIF_INTEGER"
 		alias
 			"XmINITIAL"
 		end;
 
-	XmMODIFICATION: INTEGER is
+	XmMODIFICATION: INTEGER
 		external
 			"C [macro <Xm/List.h>]: EIF_INTEGER"
 		alias
 			"XmMODIFICATION"
 		end;
 
-	XmADDITION: INTEGER is
+	XmADDITION: INTEGER
 		external
 			"C [macro <Xm/List.h>]: EIF_INTEGER"
 		alias
 			"XmADDITION"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Responce produced from executing an eiffel test
 		
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		end
 
 	make (a_setup_response: like setup_response; a_test_response: like test_response;
-	      a_teardown_response: like teardown_response; a_date: like date) is
+	      a_teardown_response: like teardown_response; a_date: like date)
 			-- Initialize `Current' with responses for all three stages.
 		require
 			a_setup_response_clean: not a_setup_response.is_exceptional

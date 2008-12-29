@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"DLL for Win32"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (lib_name: STRING) is
+	make (lib_name: STRING)
 			-- Load DLL `lib_name'
 		local
 			c_lib_name: ANY
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Removal
 
-	free is
+	free
 			-- Release the library
 		require
 			meaningful: meaningful
@@ -64,7 +64,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Release the library at time of collection if not already done
 		do
 			if module_handle /= default_pointer then
@@ -79,7 +79,7 @@ feature {DLL_32_ROUTINE} -- Implementation
 
 feature {NONE} -- Externals
 
-	win_free_library (p: POINTER) is
+	win_free_library (p: POINTER)
 			-- Free library
 		external
 			"C [macro <windows.h>] (HINSTANCE)"
@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 			"FreeLibrary"
 		end
 
-	win_load_library (p: POINTER): POINTER is
+	win_load_library (p: POINTER): POINTER
 			-- Load library
 		external
 			"C [macro <windows.h>] (LPCTSTR): EIF_POINTER"
@@ -95,7 +95,7 @@ feature {NONE} -- Externals
 			"LoadLibraryA"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

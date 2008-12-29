@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common Status Types that may be returned to the browser."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	success_status: INTEGER is 200
+	success_status: INTEGER = 200
 
-	no_response_status: INTEGER is 204
+	no_response_status: INTEGER = 204
 
-	document_moved_status: INTEGER is 301
+	document_moved_status: INTEGER = 301
 
-	unauthorized_status: INTEGER is 401
+	unauthorized_status: INTEGER = 401
 
-	forbidden_status: INTEGER is 403
+	forbidden_status: INTEGER = 403
 
-	not_found_status: INTEGER is 404
+	not_found_status: INTEGER = 404
 
-	internal_server_error_status: INTEGER is 500
+	internal_server_error_status: INTEGER = 500
 
-	not_implemented_status: INTEGER is 501;
+	not_implemented_status: INTEGER = 501;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a combo-box-ex%
 			% notification message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nm_comboboxex_get_hdr (item))
@@ -37,7 +37,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	comboboxex_item: WEL_COMBO_BOX_EX_ITEM is
+	comboboxex_item: WEL_COMBO_BOX_EX_ITEM
 			-- Information about the notification-specific action flag.
 			-- See class WEL_TVAF_CONSTANTS for the meaning of this parameter.
 		local
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_comboboxex
@@ -60,24 +60,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_comboboxex: INTEGER is
+	c_size_of_nm_comboboxex: INTEGER
 		external
 			"C [macro %"nmcomboboxex.h%"]"
 		alias
 			"sizeof (NMCOMBOBOXEX)"
 		end
 
-	cwel_nm_comboboxex_get_hdr (ptr: POINTER): POINTER is
+	cwel_nm_comboboxex_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmcomboboxex.h%"] (NMCOMBOBOXEX*): EIF_POINTER"
 		end
 
-	cwel_nm_comboboxex_get_ceitem (ptr: POINTER): POINTER is
+	cwel_nm_comboboxex_get_ceitem (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmcomboboxex.h%"] (NMCOMBOBOXEX*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

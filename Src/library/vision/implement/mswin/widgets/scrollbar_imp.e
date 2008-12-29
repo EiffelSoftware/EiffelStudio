@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Implementation of a scrollbar widget on Windows"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -78,7 +78,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scrollbar: SCROLLBAR; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a scrollbar with `a_scrollbar' as identifier,
 			-- `oui_parent' as parent managed or unmanaged and call `set_default'.
 		do
@@ -124,7 +124,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	realize is
+	realize
 			-- Create a scrollbar and display it
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -150,14 +150,14 @@ feature -- Status setting
 			end
 		end
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum to be on bottom or right if 'flag'
 			-- set maximum to be on left or top otherwise
 		do
 			is_maximum_right_bottom := flag
 		end
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		local
@@ -183,7 +183,7 @@ feature -- Status setting
 			end
 		end
 
-	set_initial_delay (a_time: INTEGER) is
+	set_initial_delay (a_time: INTEGER)
 			-- Set the amount of time to wait (milliseconds) before
 			-- starting continuous slider movement to `new_delay'.
 
@@ -191,20 +191,20 @@ feature -- Status setting
 			initial_delay := a_time
 		end
 
-	set_repeat_delay (a_time: INTEGER) is
+	set_repeat_delay (a_time: INTEGER)
 			-- Set the amount of time to wait (milliseconds) between
 			-- subsequent movements after the initial delay to 'new_delay'.
 		do
 			repeat_delay := a_time
 		end
 
-	set_slider_size (a_size: INTEGER) is
+	set_slider_size (a_size: INTEGER)
 			-- Set size of slider to 'a_size'.
 		do
 			slider_size := a_size
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set the height to `new_height'
 		do
 			has_height := True
@@ -216,7 +216,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height : INTEGER) is
+	set_size (new_width, new_height : INTEGER)
 				-- Set the height to `new_height' 
 				-- and the width to `new_width'.
 		do
@@ -232,7 +232,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set the width to `new_width'
 		do
 			has_width := True
@@ -244,7 +244,7 @@ feature -- Status setting
 			end
 		end
 
-	set_minimum (m: INTEGER) is
+	set_minimum (m: INTEGER)
 			-- Set minimum value of the scrollbar
 		do
 			minimum := m
@@ -253,7 +253,7 @@ feature -- Status setting
 			end
 		end
 
-	set_maximum (m: INTEGER) is
+	set_maximum (m: INTEGER)
 			-- Set maximum value of the scrollbar
 		do
 			maximum := m
@@ -264,7 +264,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_position (p: INTEGER) is
+	set_position (p: INTEGER)
 			-- Set scrollbar position
 		do
 			position := p
@@ -277,41 +277,41 @@ feature -- Element change
 			end
 		end;
 
-	set_line_increment (inc: INTEGER) is
+	set_line_increment (inc: INTEGER)
 			-- Set amount (distance) to move when arrow is pressed
 		do
 			line_increment := inc
 		end
 
-	set_page_increment (inc: INTEGER) is
+	set_page_increment (inc: INTEGER)
 			--Set amount (distance) to move for page down or up
 		do
 			page_increment := inc
 		end
 
-	add_move_action (c: COMMAND; arg: ANY) is
+	add_move_action (c: COMMAND; arg: ANY)
 		do
 			move_actions.add (Current, c, arg)
 		end
 
-	add_value_changed_action (c: COMMAND; arg: ANY) is
+	add_value_changed_action (c: COMMAND; arg: ANY)
 		do
 			value_changed_actions.add (Current, c, arg)
 		end
 
- 	remove_move_action (c: COMMAND; arg: ANY) is
+ 	remove_move_action (c: COMMAND; arg: ANY)
 		do
 			move_actions.remove (Current, c, arg)
 		end
 
-	remove_value_changed_action (c: COMMAND; arg: ANY) is
+	remove_value_changed_action (c: COMMAND; arg: ANY)
 		do
 			value_changed_actions.remove (Current, c, arg)
 		end	
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 		do
 			set_maximum (100)
 			set_minimum (0)
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 
 	identifier: STRING
 
-	on_scroll (notification_code, a_position: INTEGER) is
+	on_scroll (notification_code, a_position: INTEGER)
 		do
 			if is_maximum_right_bottom then 
 				if notification_code = Sb_pagedown then
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			end
 		end;	
 
-	on_position_change (a_code, a_position: INTEGER) is
+	on_position_change (a_code, a_position: INTEGER)
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			value_changed_actions.execute (Current, cd)
 		end
 
-	on_track (a_code, a_position: INTEGER) is
+	on_track (a_code, a_position: INTEGER)
 		local
 			cd: SCROLLING_DATA_WINDOWS
 		do
@@ -400,17 +400,17 @@ feature {NONE} -- Implementation
 			move_actions.execute (Current, cd)
 		end
 
-	wel_set_maximum (m: INTEGER) is
+	wel_set_maximum (m: INTEGER)
 		do
 			set_range (minimum, m)
 		end
 
-	wel_set_minimum (m: INTEGER) is
+	wel_set_minimum (m: INTEGER)
 		do
 			set_range (m, maximum)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

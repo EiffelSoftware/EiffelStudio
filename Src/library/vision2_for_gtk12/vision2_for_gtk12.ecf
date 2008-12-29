@@ -9,7 +9,7 @@
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option>
+		<option syntax_level="1">
 			<assertions precondition="true"/>
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/vision2/spec/include">

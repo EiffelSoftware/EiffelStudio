@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General message box implementation"
 	legal: "See notice at end of class.";
@@ -14,7 +14,7 @@ inherit
 	
 feature -- Access
 
-	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_I is
+	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_I
 			-- Toolkit implementation of `an_io_handler'
 		deferred
 		ensure
@@ -22,7 +22,7 @@ feature -- Access
 		end;
 
 	label_g (a_label_gadget: LABEL; managed: BOOLEAN;
-		oui_parent: COMPOSITE): LABEL_G_I is
+		oui_parent: COMPOSITE): LABEL_G_I
 			-- Toolkit implementation of `a_label_gadget'
 		deferred
 		ensure
@@ -30,7 +30,7 @@ feature -- Access
 		end;
 
 	prompt (a_prompt: PROMPT; managed: BOOLEAN;
-		oui_parent: COMPOSITE): PROMPT_I is
+		oui_parent: COMPOSITE): PROMPT_I
 			-- Toolkit implementation of `a_prompt'
 		deferred
 		ensure
@@ -38,7 +38,7 @@ feature -- Access
 		end;
 
 	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN;
-		oui_parent: COMPOSITE): SCROLL_L_I is
+		oui_parent: COMPOSITE): SCROLL_L_I
 			-- Toolkit implementation of `a_list'
 		deferred
 		ensure
@@ -46,7 +46,7 @@ feature -- Access
 		end;
 
 	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN;
-		oui_parent: COMPOSITE): TOGGLE_BG_I is
+		oui_parent: COMPOSITE): TOGGLE_BG_I
 			-- Toolkit implementation of `a_toggle_b_gadget'
 		deferred
 		ensure
@@ -54,7 +54,7 @@ feature -- Access
 		end;
 
 	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN;
-		oui_parent: COMPOSITE): PUSH_BG_I is
+		oui_parent: COMPOSITE): PUSH_BG_I
 			-- Toolkit implementation of `a_push_b_gadget'
 		deferred
 		ensure
@@ -62,7 +62,7 @@ feature -- Access
 		end;
 
 	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN;
-		oui_parent: COMPOSITE): SEPARATO_G_I is
+		oui_parent: COMPOSITE): SEPARATO_G_I
 			-- Toolkit implementation of `a_separator_gadget'
 		deferred
 		ensure
@@ -70,14 +70,14 @@ feature -- Access
 		end;
 
 	message (a_message: MESSAGE; managed: BOOLEAN;
-		oui_parent: COMPOSITE): MESSAGE_I is
+		oui_parent: COMPOSITE): MESSAGE_I
 			-- Toolkit implementation of `a_message'
 		deferred
 		ensure
 			widget_exists: Result /= Void
 		end;
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

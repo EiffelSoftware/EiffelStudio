@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -7,20 +7,20 @@ class
 
 feature -- Access
 
-	Tymed_hglobal: INTEGER is 1 
+	Tymed_hglobal: INTEGER = 1 
 			-- The storage medium is a global memory handle
 			-- (HGLOBAL). Allocate the global handle with the
 			-- GMEM_SHARE flag. If the STGMEDIUM punkForRelease
 			-- member is NULL, the destination process should
 			-- use GlobalFree to release the memory
 
-	Tymed_file: INTEGER is 2
+	Tymed_file: INTEGER = 2
 			-- The storage medium is a disk file identified 
 			-- by a path. If the STGMEDIUM punkForRelease 
 			-- member is NULL, the destination process should 
 			-- use OpenFile to delete the file. 
 
-	Tymed_istream: INTEGER is 4 
+	Tymed_istream: INTEGER = 4 
 			-- The storage medium is a stream object identified 
 			-- by an IStream pointer. Use 
 			-- ISequentialStream::Read to read the data. 
@@ -29,7 +29,7 @@ feature -- Access
 			-- use IStream::Release to release the stream
 			-- component.
 
-	Tymed_istorage: INTEGER is 8 
+	Tymed_istorage: INTEGER = 8 
 			-- The storage medium is a storage component 
 			-- identified by an IStorage pointer. The data 
 			-- is in the streams and storages contained by 
@@ -38,13 +38,13 @@ feature -- Access
 			-- process should use IStorage::Release to release 
 			-- the storage component.
 
-	Tymed_gdi: INTEGER is 16
+	Tymed_gdi: INTEGER = 16
 			-- The storage medium is a GDI component (HBITMAP). 
 			-- If the STGMEDIUM punkForRelease member is NULL, 
 			-- the destination process should use DeleteObject 
 			-- to delete the bitmap. 
 
-	Tymed_mfpict: INTEGER is 32
+	Tymed_mfpict: INTEGER = 32
 			-- The storage medium is a metafile (HMETAFILE). 
 			-- Use the Windows or WIN32 functions to access 
 			-- the metafile's data. If the STGMEDIUM 
@@ -52,18 +52,18 @@ feature -- Access
 			-- process should use DeleteMetaFile to delete 
 			-- the bitmap. 
 
-	Tymed_enhmf: INTEGER is 64
+	Tymed_enhmf: INTEGER = 64
 			-- The storage medium is an enhanced metafile. 
 			-- If the STGMEDIUM punkForRelease member is NULL, 
 			-- the destination process should use 
 			-- DeleteEnhMetaFile to delete the bitmap. 
 
 
-	Tymed_null: INTEGER is 0; 
+	Tymed_null: INTEGER = 0; 
 			-- No data is being passed. 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

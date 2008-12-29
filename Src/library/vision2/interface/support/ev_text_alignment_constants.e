@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for use by and with EV_TEXT_ALIGNABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,18 +10,18 @@ class
 
 feature -- Constants
 
-	Ev_text_alignment_left: INTEGER is 1
+	Ev_text_alignment_left: INTEGER = 1
 		-- Aligned left.
 		
-	Ev_text_alignment_center: INTEGER is 2
+	Ev_text_alignment_center: INTEGER = 2
 		-- Aligned center.
 		
-	Ev_text_alignment_right: INTEGER is 3
+	Ev_text_alignment_right: INTEGER = 3
 		-- Aligned right.
 		
 feature -- Contract support
 
-	valid_alignment (an_alignment: INTEGER): BOOLEAN is
+	valid_alignment (an_alignment: INTEGER): BOOLEAN
 			-- Is `an_alignment' a valid alignment?
 		do
 			Result := an_alignment = Ev_text_alignment_left or else
@@ -29,7 +29,7 @@ feature -- Contract support
 				an_alignment = Ev_text_alignment_right	
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that may be parented."
 	legal: "See notice at end of class."
@@ -17,12 +17,12 @@ inherit
 
 feature -- Status report
 
-	parent: EV_CONTAINABLE is
+	parent: EV_CONTAINABLE
 			-- The parent that `Current' is contained within, if any.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

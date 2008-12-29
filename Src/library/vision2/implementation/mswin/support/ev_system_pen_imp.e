@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of default pens used by the system. %
 		%Mswindows implementation. Make sure you call `delete' on WEL_PEN%
 		%object when we are done with them to save GDI objects."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Access
 
-	window_frame_pen: WEL_PEN is
+	window_frame_pen: WEL_PEN
 			-- `Result' is a pen with the window frame color.
 		local
 			color: WEL_COLOR_REF
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			result_not_void: Result /= Void
 		end
 
-	face_pen: WEL_PEN is
+	face_pen: WEL_PEN
 			-- `Result' is a pen with the face color.
 		local
 			color: WEL_COLOR_REF
@@ -53,7 +53,7 @@ feature {NONE} -- Access
 			result_exists: Result.exists
 		end
 	
-	shadow_pen: WEL_PEN is
+	shadow_pen: WEL_PEN
 			-- `Result' is a pen with the shadow color.
 		local
 			color: WEL_COLOR_REF
@@ -65,7 +65,7 @@ feature {NONE} -- Access
 			result_exists: Result.exists
 		end
 
-	highlight_pen: WEL_PEN is
+	highlight_pen: WEL_PEN
 			-- `Result' is a pen with the highlight color.
 		local
 			color: WEL_COLOR_REF
@@ -77,7 +77,7 @@ feature {NONE} -- Access
 			result_exists: Result.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

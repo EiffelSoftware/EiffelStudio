@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Records the scope of a file. 
 				Eventually we want to support domains, and then this will be a bit more useful
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_with_locale (a_locale: I18N_LOCALE_ID ) is
+	make_with_locale (a_locale: I18N_LOCALE_ID )
 			--
 		require
 			a_locale_not_void: a_locale /= Void
@@ -27,7 +27,7 @@ feature -- Initialization
 		end
 
 
-	make_with_language (a_language: I18N_LANGUAGE_ID) is
+	make_with_language (a_language: I18N_LANGUAGE_ID)
 			--
 		require
 			language_not_void: a_language /= Void
@@ -40,13 +40,13 @@ feature -- Scope
 
 	scope: INTEGER
 
-	scope_locale_specific:INTEGER is 1
-	scope_language_specific: INTEGER is 2
+	scope_locale_specific:INTEGER = 1
+	scope_language_specific: INTEGER = 2
 	--scope_domain_specific: INTEGER is 3 -- unused, poss. for future development.
 
 feature -- Retrieval
 
-	get_locale:I18N_LOCALE_ID is
+	get_locale:I18N_LOCALE_ID
 			--
 		require
 			scope = scope_locale_specific
@@ -54,7 +54,7 @@ feature -- Retrieval
 			Result := locale
 		end
 
-	get_language: I18N_LANGUAGE_ID is
+	get_language: I18N_LANGUAGE_ID
 			--
 		require
 			scope = scope_language_specific
@@ -67,7 +67,7 @@ feature {NONE} -- Information
 	locale: I18N_LOCALE_ID
 	language: I18N_LANGUAGE_ID;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

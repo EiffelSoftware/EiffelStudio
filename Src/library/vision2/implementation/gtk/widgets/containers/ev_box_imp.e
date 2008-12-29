@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision box. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -27,13 +27,13 @@ inherit
 
 feature -- Access
 
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Are all children restricted to be the same size?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_box_struct_homogeneous (container_widget) /= 0
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of border around container in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
@@ -41,7 +41,7 @@ feature -- Access
 				)
 		end
 
-	padding: INTEGER is
+	padding: INTEGER
 			-- Space between children in pixels.		
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_box_struct_spacing (container_widget)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	is_item_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is `child' expanded to occupy available spare space?
 		local
 			fill: INTEGER
@@ -70,25 +70,25 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 
 feature {EV_ANY, EV_ANY_I} -- Status settings
 
-	set_homogeneous (flag: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN)
 			-- Set whether every child is the same size.
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_set_homogeneous (container_widget, flag)
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			 -- Assign `value' to `border_width'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, value)
 		end
 
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Assign `value' to `padding'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_set_spacing (container_widget, value)
 		end
 
-	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill available spare space.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
@@ -115,7 +115,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 feature {EV_ANY_I} -- Implementation
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := True
@@ -136,7 +136,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

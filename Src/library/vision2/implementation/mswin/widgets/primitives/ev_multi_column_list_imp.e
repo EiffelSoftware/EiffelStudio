@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision multi column list. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -141,7 +141,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Make with `an_interface'.
 		do
 			base_make (an_interface)
@@ -152,7 +152,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+	selected_item: EV_MULTI_COLUMN_LIST_ROW
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
@@ -200,7 +200,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- Currently selected items.
 		do
 			if not internal_selected_items_uptodate then
@@ -220,7 +220,7 @@ feature -- Status report
 	multiple_selection_enabled: BOOLEAN
 			-- Can more that one item be selected?
 
-	title_shown: BOOLEAN is
+	title_shown: BOOLEAN
 			-- Is a row displaying column titles shown?
 		do
 			Result := not flag_set (style, Lvs_nocolumnheader)
@@ -228,7 +228,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `an_item' is visible in `Current'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -240,19 +240,19 @@ feature -- Status setting
 			ensure_visible (internal_get_index (item_imp) - 1)
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at `an_index'.
 		do
 			(ev_children @ an_index).enable_select
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at `an_index'.
 		do
 			(ev_children @ an_index).disable_select
 		end
 
-	clear_selection is
+	clear_selection
 			-- Make `selected_items' empty.
 			-- Unselect any selected items.
 		local
@@ -269,7 +269,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one item to be selected.
 		do
 			if not multiple_selection_enabled then
@@ -289,7 +289,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		local
 			old_selected_item: EV_MULTI_COLUMN_LIST_ROW
@@ -320,7 +320,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -328,7 +328,7 @@ feature -- Status setting
 			update
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object desensitive to user input.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -336,7 +336,7 @@ feature -- Status setting
 			update
 		end
 
-	show_title_row is
+	show_title_row
 			-- Show row displaying column titles.
 		do
 			if not has_headers then
@@ -348,7 +348,7 @@ feature -- Status setting
 			end
 		end
 
-	hide_title_row is
+	hide_title_row
 			-- Hide row displaying column titles.
 		do
 			if has_headers then
@@ -362,7 +362,7 @@ feature -- Status setting
 		end
 
 	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT;
-		a_column: INTEGER) is
+		a_column: INTEGER)
 			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		do
 			if an_alignment.is_left_aligned then
@@ -375,7 +375,7 @@ feature -- Status setting
 			invalidate
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -387,7 +387,7 @@ feature -- Status setting
 			end
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
@@ -400,21 +400,21 @@ feature -- Status setting
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	column_count: INTEGER is
+	column_count: INTEGER
 		do
 			Result := wel_column_count
 		end
 
 feature {NONE} -- Implementation
 
-	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING_GENERAL) is
+	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING_GENERAL)
 			-- Set the label of the cell with coordinates `a_x', `a_y'
 			-- with `txt'.
 		do
 			set_cell_text (a_x - 1, a_y - 1, a_text)
 		end
 
-	expand_column_count_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER)
 			-- Set `columns' to `a_columns'.
 		do
 			resize_first_column
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_first_column is
+	resize_first_column
 			-- Resize first column of `Current'.
 			--| As the first column is always inserted, we need to resize
 			--| the first column when there is a column in `Current'
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_column is
+	add_column
 			-- Append new column to `Current' at end of columns.
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 			insert_column (wel_column, col_index)
 		end
 
-	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER) is
+	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER)
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
 		do
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	column_width_changed (a_width, a_column: INTEGER) is
+	column_width_changed (a_width, a_column: INTEGER)
 			-- Replace width of `a_column' with `a_width' if column present.
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_column_to_content (a_column: INTEGER) is
+	resize_column_to_content (a_column: INTEGER)
 			-- Resize column `a_column' to width of its widest text.
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 feature -- Access
 
 	find_item_at_position (x_pos, y_pos: INTEGER):
-		EV_MULTI_COLUMN_LIST_ROW_IMP is
+		EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Find the item at the given position`x_pos', 1y_pos'
 			-- relative to `Current'.
 		local
@@ -551,7 +551,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_headers: BOOLEAN is
+	has_headers: BOOLEAN
 			-- True if there is a header line to give titles
 			-- to columns.
 		do
@@ -560,7 +560,7 @@ feature -- Status report
 
 feature -- Element change
 
-	clear_items is
+	clear_items
 			-- Clear all rows of `Current'.
 		local
 			c: like ev_children
@@ -580,7 +580,7 @@ feature -- Element change
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
-	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at `an_index' row.
 		local
 			list: ARRAYED_LIST [STRING_32]
@@ -627,7 +627,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			invalidate
 		end
 
-	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
+	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER)
 			-- Move `item_imp' to position `an_index'.
 		local
 			bool: BOOLEAN
@@ -640,7 +640,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Remove `item_imp' from `Current'.
 		local
 			an_index: INTEGER
@@ -652,7 +652,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 				-- scroll bar to be hidden.
 		end
 
-	set_item_text (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_32; item_index: INTEGER) is
+	set_item_text (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_32; item_index: INTEGER)
 			-- Assign `an_item' text to row `row' at position `item_index'.
 		require
 			row_not_void: row /= Void
@@ -669,7 +669,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 		end
 
-	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index' in row `row.
 		local
 			current_index: INTEGER
@@ -690,7 +690,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			end
 		end
 
-	on_item_removed_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_removed_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index' in row `row'.
 		local
 			current_index: INTEGER
@@ -706,13 +706,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			set_item_text (row, "", row.interface.count + 1)
 		end
 
-	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
+	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER
 			-- Return the index of `item_imp' in `Current'.
 		do
 			Result := ev_children.index_of (item_imp, 1)
 		end
 
-	internal_is_selected (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): BOOLEAN is
+	internal_is_selected (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): BOOLEAN
 			-- Is `item_imp' selected in `Current'?
 		local
 			i: INTEGER
@@ -722,7 +722,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			Result := flag_set (i, Lvis_selected)
 		end
 
-	internal_select (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	internal_select (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Select `item_imp' in `Current'.
 		local
 			i: INTEGER
@@ -735,7 +735,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
-	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP)
 			-- Deselect `item_imp' in `Current'.
 		local
 			i: INTEGER
@@ -748,7 +748,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		local
@@ -763,7 +763,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- Implementation, Pixmap handling
 
-	setup_image_list is
+	setup_image_list
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		do
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation, Pixmap handling
 			image_list_not_void: image_list /= Void
 		end
 
-	remove_image_list is
+	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current'.
 		require
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation, Pixmap handling
 			image_list_is_void: image_list = Void
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		local
@@ -839,7 +839,7 @@ feature {NONE} -- Implementation, Pixmap handling
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
 			image_index		: INTEGER
@@ -867,7 +867,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 			invalidate
 		end
 
-	remove_row_pixmap (a_row: INTEGER) is
+	remove_row_pixmap (a_row: INTEGER)
 			-- Remove any associated pixmap with row `a_row'.
 		local
 			wel_row: WEL_LIST_VIEW_ITEM
@@ -889,7 +889,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation, Pixmap handling
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 			-- Redefined for speed optimization.
 		local
@@ -927,7 +927,7 @@ feature {NONE} -- Selection implementation
 	internal_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- Cached version of all selected items.
 
-	retrieve_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	retrieve_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- Current selected items (non cached version)
 		local
 			i: INTEGER
@@ -954,7 +954,7 @@ feature {NONE} -- Selection implementation
 feature {NONE} -- WEL Implementation
 
 	internal_propagate_pointer_press
-		(event_id, x_pos, y_pos, button: INTEGER) is
+		(event_id, x_pos, y_pos, button: INTEGER)
 			-- Propagate `event_id' and `button' to item at position
 			-- `x_pos', `y_pos'. Called on pointer press.
 		local
@@ -1027,7 +1027,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(event_id, x_pos, y_pos, button: INTEGER) is
+		(event_id, x_pos, y_pos, button: INTEGER)
 			-- Propagate `event_id' and `button' to item at position
 			-- `x_pos', `y_pos'. Called on pointer press.
 		local
@@ -1043,7 +1043,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	relative_y (a_row: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
+	relative_y (a_row: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER
 			-- `Result' is relative y_position of `a_row' to `Current'.
 		local
 			point: WEL_POINT
@@ -1052,7 +1052,7 @@ feature {NONE} -- WEL Implementation
 			Result := point.y
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		do
@@ -1064,7 +1064,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_notify (a_control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (a_control_id: INTEGER; info: WEL_NMHDR)
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
 		do
@@ -1087,7 +1087,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	column_width_update_and_fire_actions (info: WEL_NMHDR) is
+	column_width_update_and_fire_actions (info: WEL_NMHDR)
 			-- Call `update_column_width' and fire
 			-- `column_resized_actions_internal', based on information
 			-- in `info'.
@@ -1105,7 +1105,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 
-	on_wm_vscroll is
+	on_wm_vscroll
 		do
 			smart_resize := False
 		end
@@ -1116,7 +1116,7 @@ feature {NONE} -- WEL Implementation
 		--| on_erase_background.
 		--| If `False' windows re-draws the background for us.
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			--| If `smart_resize' then disable the default windows processing
 			--| as this causes flickering when showing `Current' while
@@ -1197,7 +1197,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
@@ -1209,7 +1209,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Style of `Current'.
 		do
 			Result := Ws_child + Ws_visible + Ws_group
@@ -1218,19 +1218,19 @@ feature {NONE} -- WEL Implementation
 				+ Ws_clipsiblings + Lvs_shareimagelists
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 		do
 			Result := Lvs_ex_infotip
 		end
 
-	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
+	on_lvn_columnclick (info: WEL_NM_LIST_VIEW)
 			-- A column was tapped.
 		do
 			interface.column_title_click_actions.call ([info.isubitem + 1])
 			disable_default_processing
 		end
 
-	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 			--| For example, one of the items has been selected or deselected.
 		local
@@ -1266,14 +1266,14 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' is being resized.
 		do
 			smart_resize:= True
@@ -1281,7 +1281,7 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_PRIMITIVE_IMP} (size_type, a_width, a_height)
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Mouse moved on `Current'.
 		local
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -1302,7 +1302,7 @@ feature {NONE} -- WEL Implementation
 	default_row_height: INTEGER
 			-- Default height of each row
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wipe_out
@@ -1318,7 +1318,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: EV_MULTI_COLUMN_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

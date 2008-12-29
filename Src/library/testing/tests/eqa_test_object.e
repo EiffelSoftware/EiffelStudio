@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Dummy object for test routines in {EQA_EXTRACTION_TESTS}
 	]"

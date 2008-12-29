@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common control Track Bar Message (TBM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,76 +10,76 @@ class
 
 feature -- Access
 
-	Tbm_getpos: INTEGER is 1024
+	Tbm_getpos: INTEGER = 1024
 			-- Declared in Windows as TBM_GETPOS
 
-	Tbm_getrangemin: INTEGER is 1025
+	Tbm_getrangemin: INTEGER = 1025
 			-- Declared in Windows as TBM_GETRANGEMIN
 
-	Tbm_getrangemax: INTEGER is 1026
+	Tbm_getrangemax: INTEGER = 1026
 			-- Declared in Windows as TBM_GETRANGEMAX
 
-	Tbm_gettic: INTEGER is 1027
+	Tbm_gettic: INTEGER = 1027
 			-- Declared in Windows as TBM_GETTIC
 
-	Tbm_settic: INTEGER is 1028
+	Tbm_settic: INTEGER = 1028
 			-- Declared in Windows as TBM_SETTIC
 
-	Tbm_setpos: INTEGER is 1029
+	Tbm_setpos: INTEGER = 1029
 			-- Declared in Windows as TBM_SETPOS
 
-	Tbm_setrange: INTEGER is 1030
+	Tbm_setrange: INTEGER = 1030
 			-- Declared in Windows as TBM_SETRANGE
 
-	Tbm_setrangemin: INTEGER is 1031
+	Tbm_setrangemin: INTEGER = 1031
 			-- Declared in Windows as TBM_SETRANGEMIN
 
-	Tbm_setrangemax: INTEGER is 1032
+	Tbm_setrangemax: INTEGER = 1032
 			-- Declared in Windows as TBM_SETRANGEMAX
 
-	Tbm_cleartics: INTEGER is 1033
+	Tbm_cleartics: INTEGER = 1033
 			-- Declared in Windows as TBM_CLEARTICS
 
-	Tbm_setsel: INTEGER is 1034
+	Tbm_setsel: INTEGER = 1034
 			-- Declared in Windows as TBM_SETSEL
 
-	Tbm_setselstart: INTEGER is 1035
+	Tbm_setselstart: INTEGER = 1035
 			-- Declared in Windows as TBM_SETSELSTART
 
-	Tbm_setselend: INTEGER is 1036
+	Tbm_setselend: INTEGER = 1036
 			-- Declared in Windows as TBM_SETSELEND
 
-	Tbm_getptics: INTEGER is 1038
+	Tbm_getptics: INTEGER = 1038
 			-- Declared in Windows as TBM_GETPTICS
 
-	Tbm_getticpos: INTEGER is 1039
+	Tbm_getticpos: INTEGER = 1039
 			-- Declared in Windows as TBM_GETTICPOS
 
-	Tbm_getnumtics: INTEGER is 1040
+	Tbm_getnumtics: INTEGER = 1040
 			-- Declared in Windows as TBM_GETNUMTICS
 
-	Tbm_getselstart: INTEGER is 1041
+	Tbm_getselstart: INTEGER = 1041
 			-- Declared in Windows as TBM_GETSELSTART
 
-	Tbm_getselend: INTEGER is 1042
+	Tbm_getselend: INTEGER = 1042
 			-- Declared in Windows as TBM_GETSELEND
 
-	Tbm_clearsel: INTEGER is 1043
+	Tbm_clearsel: INTEGER = 1043
 			-- Declared in Windows as TBM_CLEARSEL
 
-	Tbm_getlinesize: INTEGER is 1048
+	Tbm_getlinesize: INTEGER = 1048
 			-- Declared in Windows as TBM_GETLINESIZE
 
-	Tbm_getpagesize: INTEGER is 1046
+	Tbm_getpagesize: INTEGER = 1046
 			-- Declared in Windows as TBM_GETPAGESIZE
 
-	Tbm_setlinesize: INTEGER is 1047
+	Tbm_setlinesize: INTEGER = 1047
 			-- Declared in Windows as TBM_SETLINESIZE
 
-	Tbm_setpagesize: INTEGER is 1045;
+	Tbm_setpagesize: INTEGER = 1045;
 			-- Declared in Windows as TBM_SETPAGESIZE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

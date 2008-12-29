@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common control ReBar (RB) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,77 +10,77 @@ class
 
 feature -- Access
 
-	Rb_deleteband: INTEGER is
+	Rb_deleteband: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_DELETEBAND"
 		end
 
-	Rb_getbandinfo: INTEGER is
+	Rb_getbandinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_GETBANDINFO"
 		end
 
-	Rb_getbarinfo: INTEGER is
+	Rb_getbarinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_GETBARINFO"
 		end
 
-	Rb_getbandcount: INTEGER is
+	Rb_getbandcount: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_GETBANDCOUNT"
 		end
 
-	Rb_getrowcount: INTEGER is
+	Rb_getrowcount: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_GETROWCOUNT"
 		end
 
-	Rb_getrowheight: INTEGER is
+	Rb_getrowheight: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_GETROWHEIGHT"
 		end
 
-	Rb_insertband: INTEGER is
+	Rb_insertband: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_INSERTBAND"
 		end
 
-	Rb_setbandinfo: INTEGER is
+	Rb_setbandinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_SETBANDINFO"
 		end
 
-	Rb_setbarinfo: INTEGER is
+	Rb_setbarinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_SETBARINFO"
 		end
 
-	Rb_setparent: INTEGER is
+	Rb_setparent: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RB_SETPARENT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of transfer manager builder"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create transfer manager builder.
 		do
 			create transactions.make (1)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	manager: TRANSFER_MANAGER is
+	manager: TRANSFER_MANAGER
 			-- The built manager
 		require
 			built: manager_built
@@ -43,7 +43,7 @@ feature -- Access
 			Result := transfer_manager
 		end
 
-	transaction (n: INTEGER): TRANSACTION is
+	transaction (n: INTEGER): TRANSACTION
 			-- `n'-th transaction
 		require
 			not_empty: not is_empty
@@ -56,7 +56,7 @@ feature -- Access
 		
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of transactions in builder
 		do
 			Result := transactions.count
@@ -64,26 +64,26 @@ feature -- Measurement
 		
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- No transaction stored in builder?
 		do
 			Result := transactions.is_empty
 		end
 
-	manager_built: BOOLEAN is
+	manager_built: BOOLEAN
 			-- Has manager been built?
 		do
 			Result := transfer_manager /= Void and then 
 				not transfer_manager.is_empty
 		end
 
-	is_mode_valid (mode: INTEGER): BOOLEAN is
+	is_mode_valid (mode: INTEGER): BOOLEAN
 			-- Is `mode' valid?
 		do
 			Result := (Readable <= mode and mode <= Writable)
 		end
 		
-	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN is
+	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN
 			-- Is address `addr' correct considering `mode'?
 			-- (`mode' is `Readable' or `Writable')
 		require
@@ -124,19 +124,19 @@ feature -- Status report
 			end
 		end
 	
-	transfer_finished: BOOLEAN is
+	transfer_finished: BOOLEAN
 			-- Has a transfer occurred?
 		do
 			Result := manager_built and then manager.transfer_finished
 		end
 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Has an error occurred?
 		do
 			Result := manager_built and then manager.error
 		end
 
-	error_reason: STRING is
+	error_reason: STRING
 			-- Reason of most recent error
 		require
 			error_occurred: error
@@ -146,7 +146,7 @@ feature -- Status report
 			non_empty_string: Result /= Void and then not Result.is_empty
 		end
 
-	transfer_succeeded: BOOLEAN is
+	transfer_succeeded: BOOLEAN
 			-- Has the last transfer succeeded?
 		do
 			Result := manager_built and then manager.transactions_succeeded
@@ -162,7 +162,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_timeout (s: INTEGER) is
+	set_timeout (s: INTEGER)
 			-- Set timeout to `s' seconds.
 			-- (This feature must be called *before* adding transactions in
 			-- order to affect the added transactions.)
@@ -178,7 +178,7 @@ feature -- Status setting
 			timeout_set: timeout.item = s
 		end
 			
-	set_source_proxy (host: STRING; port: INTEGER) is
+	set_source_proxy (host: STRING; port: INTEGER)
 			-- Set source proxy host to `host' and port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -191,7 +191,7 @@ feature -- Status setting
 			port_set: source_proxy.port = port
 		end
 
-	set_target_proxy (host: STRING; port: INTEGER) is
+	set_target_proxy (host: STRING; port: INTEGER)
 			-- Set target proxy host to `host' and port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -204,7 +204,7 @@ feature -- Status setting
 			port_set: target_proxy.port = port
 		end
 
-	set_proxies (host: STRING; port: INTEGER) is
+	set_proxies (host: STRING; port: INTEGER)
 			-- Set source and target proxy host to `host' and 
 			-- port to `port'.
 		require
@@ -220,7 +220,7 @@ feature -- Status setting
 			proxies_equal: source_proxy = target_proxy
 		end
 
-	reset_source_proxy is
+	reset_source_proxy
 			-- Reset source proxy.
 		do
 			source_proxy := Void
@@ -228,7 +228,7 @@ feature -- Status setting
 			no_source_proxy_set: source_proxy = Void
 		end
 
-	reset_target_proxy is
+	reset_target_proxy
 			-- Reset target proxy.
 		do
 			target_proxy := Void
@@ -236,7 +236,7 @@ feature -- Status setting
 			no_target_proxy_set: target_proxy = Void
 		end
 
-	reset_proxies is
+	reset_proxies
 			-- Reset source and target proxy.
 		do
 			source_proxy := Void
@@ -248,7 +248,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_transaction (s, t: STRING) is
+	add_transaction (s, t: STRING)
 			-- Add transaction from source `s' to target `t'.
 		require
 			source_exists: s /= Void
@@ -311,7 +311,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_transaction (n: INTEGER) is
+	remove_transaction (n: INTEGER)
 			-- Remove `n'-th transaction.
 		require
 			not_empty: not is_empty
@@ -338,7 +338,7 @@ feature -- Removal
 				implies (transactions.index = old transactions.index - 1)
 		end
 			
-	wipe_out is
+	wipe_out
 			-- Clear manager.
 		do
 			transactions.wipe_out
@@ -355,7 +355,7 @@ feature -- Removal
 		
 feature -- Basic operations
 
-	build_manager is
+	build_manager
 			-- Build manager.
 		require
 			not_empty: not is_empty
@@ -366,7 +366,7 @@ feature -- Basic operations
 			manager_ready: manager_built
 		end
 
-	transfer is
+	transfer
 			-- Start transfer.
 		require
 			manager_built: manager_built
@@ -378,8 +378,8 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Readable: INTEGER is 1
-	Writable: INTEGER is 2
+	Readable: INTEGER = 1
+	Writable: INTEGER = 2
 			-- Mode constants
 			
 feature {NONE} -- Implementation
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 	target_proxy: PROXY_INFORMATION
 			-- Information about proxy for the target resource
 
-	optimized_count: INTEGER is
+	optimized_count: INTEGER
 			-- Number of optimized transactions
 		do
 			if optimized_transactions /= Void and then not
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_transactions is
+	optimize_transactions
 			-- Optimize registered transactions.
 		require
 			not_empty: not is_empty
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 					optimized_transactions.is_empty
 		end
 
-	setup_manager is
+	setup_manager
 			-- Setup transfer manager.
 		require
 			no_manager: not manager_built
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_reference (s: SET [STRING]; r: DATA_RESOURCE;
-				f: FUNCTION [DATA_RESOURCE, TUPLE, BOOLEAN]): BOOLEAN is
+				f: FUNCTION [DATA_RESOURCE, TUPLE, BOOLEAN]): BOOLEAN
 			-- Add `r' into `s' if `f' is true.
 		require
 			set_exists: s /= Void
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			inserted: Result implies s.has (r.location)
 		end
 
-	remove_reference (s: SET [STRING]; r: DATA_RESOURCE) is
+	remove_reference (s: SET [STRING]; r: DATA_RESOURCE)
 			-- Remove `r' from `s'.
 		require
 			set_exists: s /= Void
@@ -547,7 +547,7 @@ invariant
 	success_constraint: transfer_succeeded implies transfer_finished
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

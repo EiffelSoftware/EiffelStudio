@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -24,19 +24,19 @@ create {INET_ADDRESS_FACTORY}
 
 feature -- Constants
 
-	INADDRSZ: INTEGER is 16
+	INADDRSZ: INTEGER = 16
 
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8]) is
+	make_from_host_and_address (a_hostname: STRING; an_address: ARRAY [NATURAL_8])
 		do
 			family := ipv6
 			the_host_name := a_hostname
 			the_address := an_address
 		end
 
-	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING) is
+	make_from_host_and_address_and_interface_name (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
 		do
 			-- TODO Implement scope check
 			the_scope_ifname := an_iface_name
@@ -44,7 +44,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			is_scope_ifname_set := True
 		end
 
-	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER) is
+	make_from_host_and_address_and_scope (a_hostname: STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
 		do
 			make_from_host_and_address (a_hostname, an_address)
 			if a_scope_id >= 0 then
@@ -53,7 +53,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			end
 		end
 
-	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER) is
+	make_from_host_and_pointer (a_hostname: STRING; a_pointer: POINTER)
 		local
 			ptr: POINTER
 			addr: ARRAY [NATURAL_8]
@@ -78,7 +78,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 
 feature -- Access
 
-	host_address: STRING is
+	host_address: STRING
 		do
 			Result := numeric_to_text (the_address)
 			if is_scope_ifname_set and then the_scope_ifname /= Void then -- must check this first
@@ -90,12 +90,12 @@ feature -- Access
 			end
 		end
 
-	is_multicast_address: BOOLEAN is
+	is_multicast_address: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff)
 		end
 
-	is_any_local_address: BOOLEAN is
+	is_any_local_address: BOOLEAN
 		local
 			test: NATURAL_8
 			i: INTEGER
@@ -112,7 +112,7 @@ feature -- Access
 			Result := (test = 0)
 		end
 
-	is_loopback_address: BOOLEAN is
+	is_loopback_address: BOOLEAN
 		local
 			test: NATURAL_8
 			i: INTEGER
@@ -129,49 +129,49 @@ feature -- Access
 			Result := (test = 0) and (the_address[16] = 1)
 		end
 
-	is_link_local_address: BOOLEAN is
+	is_link_local_address: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xfe and (the_address[2] & 0xc0) = 0x80)
 		end
 
-	is_site_local_address: BOOLEAN is
+	is_site_local_address: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xfe and (the_address[2] & 0xc0) = 0xc0)
 		end
 
-	is_mc_global: BOOLEAN is
+	is_mc_global: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x0e)
 		end
 
-	is_mc_node_local: BOOLEAN is
+	is_mc_node_local: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x01)
 		end
 
-	is_mc_link_local: BOOLEAN is
+	is_mc_link_local: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x02)
 		end
 
-	is_mc_site_local: BOOLEAN is
+	is_mc_site_local: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x05)
 		end
 
-	is_mc_org_local: BOOLEAN is
+	is_mc_org_local: BOOLEAN
 		do
 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x08)
 		end
 
-	raw_address: ARRAY [NATURAL_8] is
+	raw_address: ARRAY [NATURAL_8]
 		do
 			Result := the_address.twin
 		end
 
 feature {NETWORK_SOCKET_ADDRESS}
 
-	sockaddr (a_port: INTEGER): MANAGED_POINTER is
+	sockaddr (a_port: INTEGER): MANAGED_POINTER
 		local
 			a: ANY
 		do
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		-- This will be set to true when the scope_id field contains a valid
 		-- integer scope_id.
 
-	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING is
+	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING
 		require
 			addr /= Void and then addr.count = INADDRSZ
 		local
@@ -220,28 +220,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	fill_ipv6 (data_ptr: POINTER; address: POINTER; port: INTEGER; scopeid: INTEGER) is
+	fill_ipv6 (data_ptr: POINTER; address: POINTER; port: INTEGER; scopeid: INTEGER)
 		external
 			"C"
 		alias
 			"en_socket_address_fill_ipv6"
 		end
 
-	c_sockaddr_get_ipv6_address (a_pointer: POINTER): POINTER is
+	c_sockaddr_get_ipv6_address (a_pointer: POINTER): POINTER
 		external
 			"C"
 		alias
 			"en_sockaddr_get_ipv6_address"
 		end
 
-	c_sockaddr_get_ipv6_address_scope (a_pointer: POINTER): INTEGER is
+	c_sockaddr_get_ipv6_address_scope (a_pointer: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_sockaddr_get_ipv6_address_scope"
 		end
 
-	c_get_addr_element (ptr: POINTER; index: INTEGER): NATURAL_8 is
+	c_get_addr_element (ptr: POINTER; index: INTEGER): NATURAL_8
 		external
 			"C inline"
 		alias

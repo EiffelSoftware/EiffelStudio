@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a file selection dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -50,13 +50,13 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_open_file is
+	set_open_file
 			-- Set the dialog to be a file open dialog
 		do
 			implementation.set_open_file
 		end
 
-	set_save_file is
+	set_save_file
 			-- Set the dialog to be a file save dialog
 		do
 			implementation.set_save_file
@@ -67,7 +67,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: FILE_SEL_D_I;
 			-- Implementation of current file selection dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

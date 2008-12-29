@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision toggle button. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			--
 		do
 			Precursor {EV_BUTTON_IMP}
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Ensure `is_selected' is True.
 		do
 			is_selected := True
@@ -57,7 +57,7 @@ feature -- Status setting
 			is_selected = True
 		end
 
-	disable_select is
+	disable_select
 			-- Ensure `is_selected' is False.
 		do
 			is_selected := False
@@ -69,7 +69,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation, focus event
 
-	has_pushed_appearence (state: INTEGER): BOOLEAN is
+	has_pushed_appearence (state: INTEGER): BOOLEAN
 			-- Should `Current' have the appearence of being
 			-- pressed?
 			-- As `Current' is a toggle, button, it must be displayed as
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Bn_clicked message received from Windows,
 			-- so toggle `is_selected', redraw `Current' and
 			-- fire `select_actions'.
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation, focus event
 			state_changed: old is_selected = not is_selected
 		end
 
-	on_bn_double_clicked is
+	on_bn_double_clicked
 			-- Bn_clicked message received from Windows,
 			-- so toggle `is_selected', redraw `Current' and
 			-- fire `select_actions'.
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation, focus event
 			state_changed: old is_selected = not is_selected
 		end
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 			-- Process any windows notification messages.
 			-- In this case, it is redefined to handle
 			-- BN_doubleclick.
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	update_current_push_button is
+	update_current_push_button
 			-- Update the current push button
 			--
 			-- Current is NOT a push button so we set the current push button
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
- 	internal_background_brush: WEL_BRUSH is
+ 	internal_background_brush: WEL_BRUSH
  			-- `Result' is brush used for redrawing background of `Current'.
  		do
  			if not is_selected then
@@ -143,13 +143,13 @@ feature {NONE} -- Implementation, focus event
 	 		Result_not_void: Result /= Void
  		end
 
-	fire_select_actions_on_enter is
+	fire_select_actions_on_enter
 			-- Call select_actions to respond to Enter key press if
 			-- Current supports it.
 		do
 		end
 
- 	splitter_brush: WEL_BRUSH is
+ 	splitter_brush: WEL_BRUSH
 			-- Create the brush used to draw the invert splitter.
 		local
 			l_helper: WEL_BITMAP_HELPER
@@ -163,7 +163,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

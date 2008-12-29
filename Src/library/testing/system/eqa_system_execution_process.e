@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that launch an instance of {PROCESS} and redirect in- and output in a thread safe manner.
 	]"

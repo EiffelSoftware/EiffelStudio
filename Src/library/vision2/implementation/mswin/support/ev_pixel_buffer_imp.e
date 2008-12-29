@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
 		do
 			if is_gdi_plus_installed then
@@ -41,13 +41,13 @@ feature {NONE} -- Initlization
 			set: is_gdi_plus_installed implies initial_height = a_height
 		end
 
-	make (an_interface: EV_PIXEL_BUFFER) is
+	make (an_interface: EV_PIXEL_BUFFER)
 			-- Creation method.
 		do
 			base_make (an_interface)
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Creation method.
 		local
 			l_source_graphics: WEL_GDIP_GRAPHICS
@@ -69,7 +69,7 @@ feature {NONE} -- Initlization
 			l_source_graphics.release_dc (l_source_dc)
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			if is_gdi_plus_installed then
@@ -81,7 +81,7 @@ feature {NONE} -- Initlization
 			set_is_initialized (True)
 		end
 
-	destroy is
+	destroy
 			-- Destory
 		do
 			set_is_in_destroy (True)
@@ -99,7 +99,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING) is
+	set_with_named_file (a_file_name: STRING)
 			-- Load pixel datas from a file.
 		do
 			if is_gdi_plus_installed then
@@ -109,7 +109,7 @@ feature -- Command
 			end
 		end
 
-	set_from_icon (a_wel_icon: WEL_ICON) is
+	set_from_icon (a_wel_icon: WEL_ICON)
 			-- Load pixel data from `a_wel_icon'.
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP
@@ -182,7 +182,7 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: STRING) is
+	save_to_named_file (a_file_name: STRING)
 			-- Save pixel datas to `a_file_name'
 		local
 			l_file_name: FILE_NAME
@@ -196,7 +196,7 @@ feature -- Command
 			end
 		end
 
-	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Create asub pixmap from Current.
 		local
 			l_temp_buffer: EV_PIXEL_BUFFER
@@ -212,7 +212,7 @@ feature -- Command
 			Result := Result.twin
 		end
 
-	draw_to_drawable (a_drawable: EV_DRAWABLE) is
+	draw_to_drawable (a_drawable: EV_DRAWABLE)
 			-- Draw Current to `a_drawable'
 		local
 			l_pixmap: EV_PIXMAP
@@ -228,7 +228,7 @@ feature -- Command
 			end
 		end
 
-	draw_to_drawable_with_dest_rect_src_rect (a_drawable: EV_DRAWABLE; a_dest_rect, a_src_rect: WEL_RECT) is
+	draw_to_drawable_with_dest_rect_src_rect (a_drawable: EV_DRAWABLE; a_dest_rect, a_src_rect: WEL_RECT)
 			-- Draw Current to `a_drawable'
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
@@ -246,7 +246,7 @@ feature -- Command
 			end
 		end
 
-	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
+	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -275,7 +275,7 @@ feature -- Command
 			end
 		end
 
-	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -303,7 +303,7 @@ feature -- Command
 			end
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
 			-- Draw `a_text' with `a_font' at `a_rect'.
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
@@ -330,7 +330,7 @@ feature -- Command
 			end
 		end
 
-	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Get the RGBA pixel value at `a_x', `a_y'.
 		do
 			if is_gdi_plus_installed then
@@ -340,7 +340,7 @@ feature -- Command
 			end
 		end
 
-	set_pixel (a_x, a_y, rgba: NATURAL_32) is
+	set_pixel (a_x, a_y, rgba: NATURAL_32)
 			-- Set the RGBA pixel value at `a_x', `a_y' to `rgba'.
 		do
 			if is_gdi_plus_installed then
@@ -350,7 +350,7 @@ feature -- Command
 			end
 		end
 
-	unlock is
+	unlock
 			-- Redefine
 		do
 			Precursor {EV_PIXEL_BUFFER_I}
@@ -364,7 +364,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width
 		do
 			if is_gdi_plus_installed then
@@ -374,7 +374,7 @@ feature -- Query
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height
 		do
 			if is_gdi_plus_installed then
@@ -384,7 +384,7 @@ feature -- Query
 			end
 		end
 
-	mask_bitmap (a_rect: EV_RECTANGLE): EV_BITMAP is
+	mask_bitmap (a_rect: EV_RECTANGLE): EV_BITMAP
 			-- Maks bitmap of `a_rect'
 		require
 			not_void: a_rect /= Void
@@ -428,7 +428,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	is_gdi_plus_installed: BOOLEAN is
+	is_gdi_plus_installed: BOOLEAN
 			-- If GDI+ installed?
 		local
 			l_starter: WEL_GDIP_STARTER
@@ -443,7 +443,7 @@ feature -- Query
 	gdip_bitmap: WEL_GDIP_BITMAP
 			-- If `is_gdi_plus_installed' then we use this to function.
 
-	data_ptr: POINTER is
+	data_ptr: POINTER
 			-- Pointer address of image raw data.
 			-- Don't forget call `unlock' after operations on result pointer.
 			-- This feature is NOT platform independent. Because pixel orders are different.
@@ -472,7 +472,7 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 --			l_matrix := mask_color_matrix
 --		end
 
-	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX) is
+	draw_to_drawable_with_matrix (a_drawable: EV_DRAWABLE; a_color_matrix: WEL_COLOR_MATRIX)
 			-- Draw Current to `a_drawable' with `a_color_matrix'.
 		require
 			not_void: a_drawable /= Void
@@ -515,7 +515,7 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			end
 		end
 
-	mask_color_matrix: WEL_COLOR_MATRIX is
+	mask_color_matrix: WEL_COLOR_MATRIX
 			-- Color matrix used for make a EV_BITMAP base on image's alpha data.
 			-- See www.codeproject.com: "ColorMatrix Basics - Simple Image Color Adjustment" to know how color matrix works.
 		require
@@ -537,7 +537,7 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 
 feature -- Obsolete
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -565,7 +565,7 @@ feature -- Obsolete
 feature {NONE} -- Externals
 
 	cwin_get_di_bits (hdc, bitmap: POINTER;start_line, no_scanlines: INTEGER;
-			 bits, info: POINTER; mode: INTEGER) is
+			 bits, info: POINTER; mode: INTEGER)
 			-- SDK GetDIBits
 		external
 			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
@@ -574,7 +574,7 @@ feature {NONE} -- Externals
 			"GetDIBits"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

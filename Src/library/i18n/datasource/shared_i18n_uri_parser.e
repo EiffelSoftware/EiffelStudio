@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Singleton that provides an I18N_URI_PARSER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature	-- Access
 
-	parser: I18N_URI_PARSER is
+	parser: I18N_URI_PARSER
 			-- Shared I18N_URI_PARSER
 		once
 			create Result
@@ -18,7 +18,7 @@ feature	-- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

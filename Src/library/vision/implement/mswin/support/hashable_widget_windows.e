@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Hashing routines for a Widget"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -18,7 +18,7 @@ feature -- Access
 
 feature {ACTIONS_MANAGER}
 
-	set_hash_code is
+	set_hash_code
 			-- Set the hash code of the widget		
 		do
 			if hash_code = 0 then
@@ -29,13 +29,13 @@ feature {ACTIONS_MANAGER}
 
 feature {NONE} -- Implemementation
 
-	hash_code_generator: INTEGER_GENERATOR_WINDOWS is
+	hash_code_generator: INTEGER_GENERATOR_WINDOWS
 			-- Generator for hash code values
 		once
 			create Result.make (1, 32767 * 32766)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process creation startup information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make is
+	make
 			-- Allocate `item'.
 		do
 			Precursor {WEL_STRUCTURE}
@@ -43,7 +43,7 @@ feature {NONE} -- Initialize
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Console application title
 		do
 			if internal_title /= Void then
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- X offset, in pixels, of upper left corner of window
 			-- if a new window is created.
 		require
@@ -62,7 +62,7 @@ feature -- Access
 			Result := cwel_startup_info_x_offset (item)
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Y offset, in pixels, of upper left corner of window
 			-- if a new window is created.
 		require
@@ -71,7 +71,7 @@ feature -- Access
 			Result := cwel_startup_info_y_offset (item)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of new window if any
 		require
 			flag_has_startf_use_size: flag_set (flags, Startf_use_size)
@@ -79,7 +79,7 @@ feature -- Access
 			Result := cwel_startup_info_width (item)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of new window if any
 		require
 			flag_has_startf_use_size: flag_set (flags, Startf_use_size)
@@ -87,7 +87,7 @@ feature -- Access
 			Result := cwel_startup_info_height (item)
 		end
 
-	x_character_count: INTEGER is
+	x_character_count: INTEGER
 			-- Console application screen buffer in character columns
 		require
 			flag_has_startf_use_count_chars: flag_set (flags, Startf_use_count_chars)
@@ -95,7 +95,7 @@ feature -- Access
 			Result := cwel_startup_info_x_char_count (item)
 		end
 
-	y_character_count: INTEGER is
+	y_character_count: INTEGER
 			-- Console application screen buffer in character lines
 		require
 			flag_has_startf_use_count_chars: flag_set (flags, Startf_use_count_chars)
@@ -103,7 +103,7 @@ feature -- Access
 			Result := cwel_startup_info_y_char_count (item)
 		end
 
-	fill_attributes: INTEGER is
+	fill_attributes: INTEGER
 			-- Color used for background and text of a console application
 			-- See class WEL_FILL_ATTRIBUTE_CONSTANTS for possible value.
 		require
@@ -112,14 +112,14 @@ feature -- Access
 			Result := cwel_startup_info_fill_attribute (item)
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Valid fields
 			-- See WEL_STARTUP_FLAGS for possible values.
 		do
 			Result := cwel_startup_info_flags (item)
 		end
 
-	show_command: INTEGER is
+	show_command: INTEGER
 			-- Default show command used for a GUI application
 		require
 			flag_has_startf_use_show_window: flag_set (flags, Startf_use_show_window)
@@ -127,7 +127,7 @@ feature -- Access
 			Result := cwel_startup_info_show_command (item)
 		end
 
-	std_input: POINTER is
+	std_input: POINTER
 			-- Standard input process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -135,7 +135,7 @@ feature -- Access
 			Result := cwel_startup_info_std_input (item)
 		end
 
-	std_output: POINTER is
+	std_output: POINTER
 			-- Standard output process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -143,7 +143,7 @@ feature -- Access
 			Result := cwel_startup_info_std_output (item)
 		end
 
-	std_error: POINTER is
+	std_error: POINTER
 			-- Standard error output process handle
 		require
 			flag_has_startf_use_std_handles: flag_set (flags, Startf_use_std_handles)
@@ -153,7 +153,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title'.
 		require
 			non_void_title: a_title /= Void
@@ -164,7 +164,7 @@ feature -- Element Change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_x_offset (an_offset: like x_offset) is
+	set_x_offset (an_offset: like x_offset)
 			-- Set `x_offset' with `an_offset'.
 		do
 			add_flag (Startf_use_position)
@@ -173,7 +173,7 @@ feature -- Element Change
 			offset_set: x_offset = an_offset
 		end
 
-	set_y_offset (an_offset: like y_offset) is
+	set_y_offset (an_offset: like y_offset)
 			-- Set `y_offset' with `an_offset'.
 		do
 			add_flag (Startf_use_position)
@@ -182,7 +182,7 @@ feature -- Element Change
 			offset_set: y_offset = an_offset
 		end
 
-	set_width (a_width: like width) is
+	set_width (a_width: like width)
 			-- Set `width' with `a_width'.
 		require
 			valid_width: a_width > 0
@@ -193,7 +193,7 @@ feature -- Element Change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: like height) is
+	set_height (a_height: like height)
 			-- Set `height' with `a_height'.
 		require
 			valid_height: a_height > 0
@@ -204,7 +204,7 @@ feature -- Element Change
 			height_set: height = a_height
 		end
 
-	set_x_character_count (a_character_count: like x_character_count) is
+	set_x_character_count (a_character_count: like x_character_count)
 			-- Set `character_count' with `a_character_count'.
 		require
 			valid_count: a_character_count > 0
@@ -215,7 +215,7 @@ feature -- Element Change
 			character_count_set: x_character_count = a_character_count
 		end
 
-	set_y_character_count (a_character_count: like y_character_count) is
+	set_y_character_count (a_character_count: like y_character_count)
 			-- Set `character_count' with `a_character_count'.
 		require
 			valid_count: a_character_count > 0
@@ -226,7 +226,7 @@ feature -- Element Change
 			character_count_set: y_character_count = a_character_count
 		end
 
-	set_fill_attributes (a_fill_attributes: like fill_attributes) is
+	set_fill_attributes (a_fill_attributes: like fill_attributes)
 			-- Set `fill_attributes' with `a_fill_attributes'.
 			-- See class `WEL_FILL_ATTRIBUTES_CONSTANTS' for possible `a_fill_attributes' value.
 		require
@@ -238,7 +238,7 @@ feature -- Element Change
 			fill_attributes_set: fill_attributes = a_fill_attributes
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'
 		require
 			valid_flags: is_valid_startup_flags (a_flags)
@@ -248,7 +248,7 @@ feature -- Element Change
 			flags_set: flags = a_flags
 		end
 
-	add_flag (a_flag: INTEGER) is
+	add_flag (a_flag: INTEGER)
 			-- Add `a_flag' to `flags'.
 			-- See class WEL_STARTUP_FLAGS for possible `a_flag' value.
 		require
@@ -263,7 +263,7 @@ feature -- Element Change
 			flags_set: flag_set (flags, a_flag)
 		end
 
-	set_show_command (a_command: like show_command) is
+	set_show_command (a_command: like show_command)
 			-- Set `show_command' with `a_command'.
 		do
 			cwel_startup_info_set_show_command (item, a_command)
@@ -271,7 +271,7 @@ feature -- Element Change
 			show_command_set: show_command = a_command
 		end
 
-	set_std_input (an_input: POINTER) is
+	set_std_input (an_input: POINTER)
 			-- Set `std_input' with `an_input'.
 		do
 			cwel_startup_info_set_std_input (item, an_input)
@@ -279,7 +279,7 @@ feature -- Element Change
 			std_input_set: std_input = an_input
 		end
 
-	set_std_output (an_output: POINTER) is
+	set_std_output (an_output: POINTER)
 			-- Set `std_output' with `an_output'.
 		do
 			cwel_startup_info_set_std_output (item, an_output)
@@ -287,7 +287,7 @@ feature -- Element Change
 			std_output_set: std_output = an_output
 		end
 
-	set_std_error (an_error_output: POINTER) is
+	set_std_error (an_error_output: POINTER)
 			-- Set `std_error' with `an_error_output'.
 		do
 			cwel_startup_info_set_std_error (item, an_error_output)
@@ -297,7 +297,7 @@ feature -- Element Change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		do
 			Result := c_size_of_startup_info
@@ -310,14 +310,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_startup_info: INTEGER is
+	c_size_of_startup_info: INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"]"
 		alias
 			"sizeof (STARTUPINFO)"
 		end
 
-	cwel_init (ptr: POINTER) is
+	cwel_init (ptr: POINTER)
 			-- Initialize structure size of `ptr'.
 		external
 			"C inline use <windows.h>"
@@ -325,137 +325,137 @@ feature {NONE} -- Externals
 			"((LPSTARTUPINFO)$ptr)->cb = sizeof (STARTUPINFO)"
 		end
 
-	cwel_startup_info_title (ptr: POINTER): POINTER is
+	cwel_startup_info_title (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_POINTER"
 		end
 
-	cwel_startup_info_x_offset (ptr: POINTER): INTEGER is
+	cwel_startup_info_x_offset (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_y_offset (ptr: POINTER): INTEGER is
+	cwel_startup_info_y_offset (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_width (ptr: POINTER): INTEGER is
+	cwel_startup_info_width (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_height (ptr: POINTER): INTEGER is
+	cwel_startup_info_height (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_x_char_count (ptr: POINTER): INTEGER is
+	cwel_startup_info_x_char_count (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_y_char_count (ptr: POINTER): INTEGER is
+	cwel_startup_info_y_char_count (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_fill_attribute (ptr: POINTER): INTEGER is
+	cwel_startup_info_fill_attribute (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_flags (ptr: POINTER): INTEGER is
+	cwel_startup_info_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_show_command (ptr: POINTER): INTEGER is
+	cwel_startup_info_show_command (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): EIF_INTEGER"
 		end
 
-	cwel_startup_info_std_input (ptr: POINTER): POINTER is
+	cwel_startup_info_std_input (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
-	cwel_startup_info_std_output (ptr: POINTER): POINTER is
+	cwel_startup_info_std_output (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
-	cwel_startup_info_std_error (ptr: POINTER): POINTER is
+	cwel_startup_info_std_error (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO): HANDLE"
 		end
 
-	cwel_startup_info_set_title (ptr, a_title: POINTER) is
+	cwel_startup_info_set_title (ptr, a_title: POINTER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, LPTSTR)"
 		end
 
-	cwel_startup_info_set_x_offset (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_x_offset (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_y_offset (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_y_offset (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_width (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_width (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_height (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_height (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_x_char_count (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_x_char_count (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_y_char_count (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_y_char_count (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_fill_attributes (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_fill_attributes (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_flags (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_flags (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_show_command (ptr: POINTER; an_integer: INTEGER) is
+	cwel_startup_info_set_show_command (ptr: POINTER; an_integer: INTEGER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, DWORD)"
 		end
 
-	cwel_startup_info_set_std_input (ptr: POINTER; an_integer: POINTER) is
+	cwel_startup_info_set_std_input (ptr: POINTER; an_integer: POINTER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
-	cwel_startup_info_set_std_output (ptr: POINTER; an_integer: POINTER) is
+	cwel_startup_info_set_std_output (ptr: POINTER; an_integer: POINTER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
-	cwel_startup_info_set_std_error (ptr: POINTER; an_integer: POINTER) is
+	cwel_startup_info_set_std_error (ptr: POINTER; an_integer: POINTER)
 		external
 			"C [macro %"wel_startup_info.h%"] (LPSTARTUPINFO, HANDLE)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

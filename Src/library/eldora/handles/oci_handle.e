@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI handle wrapper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Status report
 	is_external: BOOLEAN
 		-- Was it allocated externally ?
 	
-	valid_error_handle (error_handle: OCI_HANDLE): BOOLEAN is
+	valid_error_handle (error_handle: OCI_HANDLE): BOOLEAN
 			-- Is `error_handle' a valid OCI error handle?
 		do
 			Result := error_handle /= Void and then 
@@ -34,7 +34,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	allocate (parent: OCI_HANDLE) is
+	allocate (parent: OCI_HANDLE)
 			-- Allocate handle
 		require
 			not_yet_allocated: not is_allocated
@@ -51,7 +51,7 @@ feature -- Status setting
 			not_external: not is_external
 		end
 		
-	free is
+	free
 			-- Free the handle
 		require
 			allocated: is_allocated
@@ -70,7 +70,7 @@ feature -- Status setting
 		
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Equality relation for OCI handles
 		do
 			Result := handle.is_equal (other.handle)
@@ -81,12 +81,12 @@ feature {OCI_HANDLE, OCI_TYPE, OCI_OBJECT} -- Implementation
 	handle: POINTER
 		-- Actual OCI handle
 	
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		deferred
 		end
 		
-	make_by_handle (value: POINTER) is
+	make_by_handle (value: POINTER)
 			-- Initialize using a pre-allocated OCI handle
 		do
 			handle := value
@@ -101,14 +101,14 @@ feature {OCI_HANDLE, OCI_TYPE, OCI_OBJECT} -- Implementation
 feature {NONE} -- Externals
 
 	oci_handle_alloc (parenth: POINTER; hndlpp: POINTER; type: INTEGER; xtramem_sz: INTEGER; 
-			usrmempp: POINTER): INTEGER_16 is
+			usrmempp: POINTER): INTEGER_16
 		external
 			"C (void *, void **, int, int, void **): short | %"oci.h%""
 		alias
 			"OCIHandleAlloc"
 		end
 		
-	oci_handle_free (hndlp: POINTER; type: INTEGER): INTEGER_16 is
+	oci_handle_free (hndlp: POINTER; type: INTEGER): INTEGER_16
 		external
 			"C (void *, int): short | %"oci.h%""
 		alias
@@ -116,14 +116,14 @@ feature {NONE} -- Externals
 		end
 		
 	oci_error_get (hndlp: POINTER; recordno: INTEGER; sqlstate: POINTER; errcodep: POINTER; 
-			bufp: POINTER; bufsiz: INTEGER; type: INTEGER): INTEGER_16 is
+			bufp: POINTER; bufsiz: INTEGER; type: INTEGER): INTEGER_16
 		external
 			"C (void *, ub4, text *, sb4 *, text *, ub4, ub4): sword | %"oci.h%""
 		alias
 			"OCIErrorGet"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

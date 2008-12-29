@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XSelectionEvent."
@@ -19,19 +19,19 @@ create
 
 feature -- Access
 
-	time: INTEGER is
+	time: INTEGER
 			-- Time when data was stored
 		do
 			Result := c_event_time (handle)
 		end;
 
-	requestor_widget: MEL_WIDGET is
+	requestor_widget: MEL_WIDGET
 			-- Widget requesting information
 		do
 			Result := retrieve_widget_from_window (requestor)
 		end
 
-	selection: MEL_ATOM is
+	selection: MEL_ATOM
 			-- Name of selection
 		do
 			create Result.make_from_existing (c_event_selection (handle))	
@@ -39,7 +39,7 @@ feature -- Access
 			result_non_void: Result /= Void
 		end;
 
-	target: MEL_ATOM is
+	target: MEL_ATOM
 			-- Data type of value in `property'
 		local
 			p: POINTER
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end;
 
-	property: MEL_ATOM is
+	property: MEL_ATOM
 			-- Property where data has been place
 		local
 			p: POINTER
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	requestor: POINTER is
+	requestor: POINTER
 			-- Window requesting information
 		do
 			Result := c_event_requestor (handle)
@@ -71,32 +71,32 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_requestor (event_ptr: POINTER): POINTER is
+	c_event_requestor (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionEvent *): EIF_POINTER"
 		end;
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XSelectionEvent *): EIF_INTEGER"
 		end;
 
-	c_event_selection (event_ptr: POINTER): POINTER is
+	c_event_selection (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionEvent *): EIF_POINTER"
 		end;
 
-	c_event_target (event_ptr: POINTER): POINTER is
+	c_event_target (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionEvent *): EIF_POINTER"
 		end;
 
-	c_event_property (event_ptr: POINTER): POINTER is
+	c_event_property (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

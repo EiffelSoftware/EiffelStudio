@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision timeout. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,13 +30,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Call base make only.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
@@ -50,7 +50,7 @@ feature -- Access
 			-- Time between calls to `timeout_actions' in milliseconds.
 			-- Zero when disabled.
 
-	set_interval (an_interval: INTEGER) is
+	set_interval (an_interval: INTEGER)
 			-- Assign `an_interval' in milliseconds to `interval'.
 			-- Zero disables.
 		do
@@ -73,7 +73,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 	interface: EV_TIMEOUT
 		-- Interface object.
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	destroy is
+	destroy
 			-- Render `Current' unusable.
 		do
 			set_interval (0)
@@ -103,7 +103,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Clean up
 		do
 			if timeout_connection_id > 0 then
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

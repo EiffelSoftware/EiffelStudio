@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,33 +21,33 @@ inherit
 
 feature -- Status Report
 
-	is_closeable: BOOLEAN is
+	is_closeable: BOOLEAN
 			-- Is the window closeable by the user?
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4)
 		deferred
 		end
 
-	is_modal: BOOLEAN is
+	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
 		deferred
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		deferred
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 
 		deferred
 		end
 
-	default_push_button: EV_BUTTON is
+	default_push_button: EV_BUTTON
 			-- Default pushed button. This is the button that
 			-- is pushed if the user press the enter key unless
 			-- a push button is currently focused.
@@ -55,7 +55,7 @@ feature -- Status Report
 			Result := internal_default_push_button
 		end
 
-	default_cancel_button: EV_BUTTON is
+	default_cancel_button: EV_BUTTON
 			-- Default cancel button. This is the button that
 			-- is pushed if the user press the escape key or
 			-- close the window using the close icon.
@@ -65,7 +65,7 @@ feature -- Status Report
 			Result := internal_default_cancel_button
 		end
 
-	current_push_button: EV_BUTTON is
+	current_push_button: EV_BUTTON
 			-- Currently focused push button.
 			-- This is the button that is pushed when the user
 			-- press the enter key when a push button is focused.
@@ -79,7 +79,7 @@ feature -- Status Report
 
 feature {EV_ANY, EV_ANY_I} -- Status Setting
 
-	set_default_push_button (a_button: EV_BUTTON) is
+	set_default_push_button (a_button: EV_BUTTON)
 			-- Set the default push button to `a_button'.
 			-- This is the button that is pushed if the user presses
 			-- the enter key.
@@ -114,7 +114,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 				default_push_button = a_button
 		end
 
-	remove_default_push_button is
+	remove_default_push_button
 			-- Remove the default push button of this dialog.
 		require
 			has_default_push_button: default_push_button /= Void
@@ -138,7 +138,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 			not_has_default_push_button: default_push_button = Void
 		end
 
-	set_default_cancel_button (a_button: EV_BUTTON) is
+	set_default_cancel_button (a_button: EV_BUTTON)
 			-- Assign `a_button' to default_cancel_button.This is the button
 			-- that is pushed if the user press the escape key or
 			-- close the window using the close icon.
@@ -155,7 +155,7 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 				default_cancel_button = a_button
 		end
 
-	remove_default_cancel_button is
+	remove_default_cancel_button
 			-- Remove the default cancel button of this dialog.
 		require
 			has_default_cancel_button: default_cancel_button /= Void
@@ -166,14 +166,14 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 			not_has_default_cancel_button: default_cancel_button = Void
 		end
 
-	enable_closeable is
+	enable_closeable
 			-- Set the window to be closeable by the user.
 		deferred
 		ensure
 			closeable: is_closeable
 		end
 
-	disable_closeable is
+	disable_closeable
 			-- Set the window not to be closeable by the user.
 		deferred
 		ensure
@@ -182,20 +182,20 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 
 feature -- Basic operations
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until window is closed.
 			-- `Current' is show modal with respect to `a_window'.
 		deferred
 		end
 
-	show_relative_to_window (a_window: EV_WINDOW) is
+	show_relative_to_window (a_window: EV_WINDOW)
 			-- Show `Current' with respect to `a_window'.
 		deferred
 		end
 
 feature {EV_DIALOG} -- Implementation
 
-	dialog_key_press_action (a_key: EV_KEY) is
+	dialog_key_press_action (a_key: EV_KEY)
 		local
 			a_key_code: INTEGER
 			l_app_i: EV_APPLICATION_I
@@ -256,7 +256,7 @@ feature {EV_DIALOG, EV_DIALOG_I, EV_WIDGET_I} -- Implementation
 
 feature {EV_WIDGET_I} -- Implementation
 
-	set_current_push_button (a_button: EV_BUTTON) is
+	set_current_push_button (a_button: EV_BUTTON)
 			-- Set the push button to be `a_button'. `a_button' can
 			-- be Void if there are no more current push button
 		do
@@ -317,7 +317,7 @@ invariant
 	only_one_button_is_enabled:
 		-- Only one button of Current has the `is_default_push_button' flag set.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

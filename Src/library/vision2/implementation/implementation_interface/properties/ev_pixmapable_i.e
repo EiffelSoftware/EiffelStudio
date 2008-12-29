@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision pixmapable. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,28 +18,28 @@ inherit
 	
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		require
 			pixmap_not_void: a_pixmap /= Void
 		deferred
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Make `pixmap' `Void'.
 		deferred
 		ensure
 			pixmap_removed: pixmap = Void
 		end
 		
-	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		do
 			Result := a_pixmap.is_equal (pixmap)
@@ -51,7 +51,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

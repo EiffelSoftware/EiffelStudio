@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Enumeration the type of point in a GraphicsPath object.
 					Please see MSDN:
@@ -14,33 +14,33 @@ class
 
 feature -- Enumeration
 
-	Start: INTEGER is 0
+	Start: INTEGER = 0
 			-- Specifies the starting point of a GraphicsPath.
 
-	Line: INTEGER is 1
+	Line: INTEGER = 1
 			-- Specifies a line segment.
 
-	Bezier: INTEGER is 3
+	Bezier: INTEGER = 3
 			-- Specifies a default Bezier curve.
 
-	Bezier3: INTEGER is 3
+	Bezier3: INTEGER = 3
 			-- Specifies a cubic Bezier curve.
 
-	PathTypeMask: INTEGER is 7
+	PathTypeMask: INTEGER = 7
 			-- Specifies a mask point.
 
-	DashMode: INTEGER is 0x10
+	DashMode: INTEGER = 0x10
 			-- Specifies that the corresponding segment is dashed.
 
-	PathMarker: INTEGER is 0x20
+	PathMarker: INTEGER = 0x20
 			-- Specifies a path marker.
 
-	CloseSubpath: INTEGER is 0x80
+	CloseSubpath: INTEGER = 0x80
 			-- Specifies the ending point of a subpath.
 
 feature -- Query
 
-	is_valid (a_int: INTEGER): BOOLEAN is
+	is_valid (a_int: INTEGER): BOOLEAN
 			-- If `a_int' valid?
 		do
 			Result := a_int = Start
@@ -53,7 +53,7 @@ feature -- Query
 				or a_int = Closesubpath
 		end
 
-	is_valid_array (a_array: ARRAYED_LIST [INTEGER]): BOOLEAN is
+	is_valid_array (a_array: ARRAYED_LIST [INTEGER]): BOOLEAN
 			-- If all items in `a_array' valid?
 		require
 			not_void: a_array /= Void
@@ -69,7 +69,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

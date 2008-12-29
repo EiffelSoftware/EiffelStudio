@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Figure made of a number of subfigures. %
@@ -71,7 +71,7 @@ create
 
 feature -- Initialization 
 
-	make is
+	make
 		do
 			notify_make;
 			linked_list_make;
@@ -82,7 +82,7 @@ feature -- Initialization
 			is_empty
 		end;
 
-	make_fig is
+	make_fig
 			-- Create a world as a figure with f as a figure 
 			-- for visual modification notification
 		do
@@ -90,7 +90,7 @@ feature -- Initialization
 			make;
 		end;
 
-	make_fig_with_plane (plane_number: INTEGER) is
+	make_fig_with_plane (plane_number: INTEGER)
 		do
 			max_plane := plane_number;
 			make_fig 
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 		require else
@@ -118,7 +118,7 @@ feature -- Duplication
 
 feature -- Element change 
 
-	add (v: like first) is
+	add (v: like first)
 			-- Append `v' to list.
 		do
 			v.set_conf_not_notify;
@@ -129,7 +129,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	put_left (v: like first) is
+	put_left (v: like first)
 			-- Put item `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -141,7 +141,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	put_right (v: like first) is
+	put_right (v: like first)
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -153,7 +153,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into the current list before
 			-- cursor position.
 			-- Do not move cursor.
@@ -171,7 +171,7 @@ feature -- Element change
 			set_conf_modified_with (other.surround_box)
 		end;
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into the current list after
 			-- cursor position.
 			-- Do not move cursor.
@@ -189,7 +189,7 @@ feature -- Element change
 			set_conf_modified_with (other.surround_box)
 		end;
 
-	put (v: like first) is
+	put (v: like first)
 			-- Put item `v' at cursor position.
 		require else
 			not_off: not off
@@ -199,7 +199,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	put_i_th (v: like first; i: INTEGER) is
+	put_i_th (v: like first; i: INTEGER)
 			-- Put item `v' at `i'-th position.
 		do
 			v.attach_drawing_imp_with_parent (Current, drawing);
@@ -207,7 +207,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	set_origin (p: like origin) is
+	set_origin (p: like origin)
 			-- Set `origin' to `p'.
 		do
 			origin := p
@@ -215,7 +215,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_fig (fig: FIGURE) is
+	remove_fig (fig: FIGURE)
 			-- Search for 'fig' and remove it
 		do
 			complexe_mark;
@@ -230,7 +230,7 @@ feature -- Removal
 
 feature -- Output
 
-	clip_draw (clip: CLIP) is
+	clip_draw (clip: CLIP)
 			-- Draw in the 'clip' area
 		do
 			if conf_modified then
@@ -255,7 +255,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_no_origin is
+	set_no_origin
 			-- Erase definition of `origin'.
 		do
 			origin := Void
@@ -263,17 +263,17 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Cursor movement
 
-	complexe_mark is
+	complexe_mark
 		do
 			linked_list_cursor := cursor
 		end;
 
-	complexe_return is
+	complexe_return
 		do
 			go_to (linked_list_cursor)
 		end;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

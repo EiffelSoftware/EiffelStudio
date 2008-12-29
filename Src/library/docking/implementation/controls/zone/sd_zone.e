@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold SD_CONTENT's user widgets."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Command
 
-	on_normal_max_window is
+	on_normal_max_window
 			-- Normal or max `Current'.
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -62,7 +62,7 @@ feature -- Command
 			internal_docking_manager.command.unlock_update
 		end
 
-	close is
+	close
 			-- Close window.
 		do
 			internal_docking_manager.command.lock_update (Current, False)
@@ -75,7 +75,7 @@ feature -- Command
 			internal_docking_manager.command.unlock_update
 		end
 
-	recover_to_normal_state is
+	recover_to_normal_state
 			-- If Current maximized, then normal Current.
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -106,22 +106,22 @@ feature -- Command
 			end
 		end
 
-	set_max (a_max: BOOLEAN) is
+	set_max (a_max: BOOLEAN)
 			-- Set if current is maximized.
 		do
 		end
 
-	set_focus_color (a_focus: BOOLEAN) is
+	set_focus_color (a_focus: BOOLEAN)
 			-- Set title bar focuse color.
 		do
 		end
 
-	set_non_focus_selection_color is
+	set_non_focus_selection_color
 			-- Set title bar non-focuse color.
 		do
 		end
 
-	set_last_floating_width (a_width: INTEGER) is
+	set_last_floating_width (a_width: INTEGER)
 			-- Set `last_floating_width' of zone's state.
 		require
 			vaild: a_width >= 0
@@ -131,7 +131,7 @@ feature -- Command
 			set: content.state.last_floating_width = a_width
 		end
 
-	set_last_floating_height (a_height: INTEGER) is
+	set_last_floating_height (a_height: INTEGER)
 			-- Set `last_floating_height' of a zone's state
 		require
 			valid: a_height >= 0
@@ -141,14 +141,14 @@ feature -- Command
 			set: content.state.last_floating_height = a_height
 		end
 
-	update_mini_tool_bar_size is
+	update_mini_tool_bar_size
 			-- Update mini tool bar size since client programmers mini tool bar widget size changed.
 		do
 		end
 
 feature {SD_DOCKING_STATE, SD_TAB_STATE} -- Maximize state initlization
 
-	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
+	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER)
 			-- Set widget and main area which used for normal window.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -165,7 +165,7 @@ feature {SD_DOCKING_STATE, SD_TAB_STATE} -- Maximize state initlization
 
 feature -- Query
 
-	state: SD_STATE is
+	state: SD_STATE
 			-- State which `Current' is.
 		do
 			Result := content.state
@@ -173,40 +173,40 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	content: SD_CONTENT is
+	content: SD_CONTENT
 			-- Content which `Current' holded.
 		deferred
 		ensure
 			not_void: not is_floating_zone implies Result /= Void
 		end
 
-	extend (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT)
 			-- Set `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 		deferred
 		end
 
-	type: INTEGER is
+	type: INTEGER
 			-- type.
 		do
 			Result := content.type
 		end
 
-	has (a_content: SD_CONTENT): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN
 			-- `Current' has `a_content'?
 		require
 			a_content_not_void: a_content /= Void
 		deferred
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- If current maximized?
 		do
 			Result := False
 		end
 
-	is_floating_zone: BOOLEAN is
+	is_floating_zone: BOOLEAN
 			-- If current an instance of SD_FLOATNG_ZONE?
 		local
 			l_floating_zone: SD_FLOATING_ZONE
@@ -217,7 +217,7 @@ feature -- Query
 
 feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config.
 
-	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA)
 			-- save content(s) title(s) to `a_config_data'.
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -226,7 +226,7 @@ feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config.
 
 feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 
-	on_focus_out is
+	on_focus_out
 			-- Handle focus out.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -240,7 +240,7 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
 
-	on_focus_in (a_content: SD_CONTENT) is
+	on_focus_in (a_content: SD_CONTENT)
 			-- Handle focus in.
 		require
 			has: a_content /= Void implies has (a_content)
@@ -268,7 +268,7 @@ feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maxi
 	internal_parent: EV_CONTAINER
 			-- Parent.
 
-	restore_from_maximized is
+	restore_from_maximized
 			-- Restore to normal size if current maximized
 		do
 			if is_maximized then
@@ -278,7 +278,7 @@ feature {SD_TAB_STATE_ASSISTANT, SD_TAB_STATE, SD_DOCKING_MANAGER_QUERY} -- Maxi
 
 feature {NONE} -- Implementation
 
-	on_close_request is
+	on_close_request
 			-- Handle close request actions.
 		do
 			content.close_request_actions.call (Void)
@@ -294,7 +294,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

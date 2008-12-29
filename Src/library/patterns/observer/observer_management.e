@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class responsible for managing the observers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 	
-	make is
+	make
 		-- Initialize.
 		do
 			create data_observer_list.make
@@ -22,7 +22,7 @@ feature -- Initialization
 
 feature -- Operations
 
-	add_observer (d: ANY; w: OBSERVER) is
+	add_observer (d: ANY; w: OBSERVER)
 			-- Add an observer w to the list of d.
 		require
 			data_exists: d /= Void
@@ -40,7 +40,7 @@ feature -- Operations
 			end
 		end
 
-	remove_observer (d: ANY; w: OBSERVER) is
+	remove_observer (d: ANY; w: OBSERVER)
 		-- Remove the observer 'd' from the list of observed data.
 		require
 			data_exists: d /= Void
@@ -68,7 +68,7 @@ feature -- Operations
 			end
 		end
 
-	clear_observer (o: OBSERVER) is
+	clear_observer (o: OBSERVER)
 		-- Remove the observer o from the list of all the subjects. 
 		require
 			observer_exists: o /= Void
@@ -92,7 +92,7 @@ feature -- Operations
 		end
 
 
-	update_observer (d: ANY) is
+	update_observer (d: ANY)
 			-- Update the observer of data 'd'
 		require
 			data_exists: d /= Void
@@ -108,7 +108,7 @@ feature -- Operations
 
 feature -- Access
 
-	get_data_observer (d: ANY) : DATA_OBSERVER is
+	get_data_observer (d: ANY) : DATA_OBSERVER
 			-- Return the observer of the data 'd', if any.
 			-- If none, return Void
 		require
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 invariant
 	OBSERVER_MANAGEMENT_data_observer_list_exists: data_observer_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

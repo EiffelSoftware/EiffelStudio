@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision standard dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of dialog shown in title bar.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		do
 			user_clicked_ok := False
@@ -65,7 +65,7 @@ feature -- Status setting
 			end
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set the title of the dialog.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature {EV_GTK_WIDGET_IMP} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		do
 			if a_key /= Void then
@@ -92,16 +92,16 @@ feature {EV_GTK_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	user_can_resize: BOOLEAN is False
+	user_can_resize: BOOLEAN = False
 		-- By default the user cannot resize standard dialogs.
 
-	blocking_condition: BOOLEAN is
+	blocking_condition: BOOLEAN
 			-- Condition which causes blocking to cease if enabled.
 		do
 			Result := is_destroyed or else selected_button /= Void or else app_implementation.is_destroyed
 		end
 
-	enable_closeable is
+	enable_closeable
 			-- Set the window to be closeable by the user
 		local
 			close_fct: INTEGER
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call `on_cancel' if user wants to quit dialog.
 		do
 			on_cancel
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_STANDARD_DIALOG
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_ok is
+	on_ok
 			-- Close window and call action sequence.
 		do
 			user_clicked_ok := True
@@ -142,14 +142,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			hide
 		end
 
-	on_cancel is
+	on_cancel
 			-- Close window and call action sequence.
 		do
 			selected_button := ev_cancel
 			hide
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

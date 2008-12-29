@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
@@ -27,7 +27,7 @@ create
 feature -- Access
 
 	get (a_dashed_mode: INTEGER; a_width: INTEGER;
-			a_color: WEL_COLOR_REF): WEL_PEN is
+			a_color: WEL_COLOR_REF): WEL_PEN
 			-- `Result' is WEL_PEN with `a_dashed_mode' as mode, `a_width' as
 			-- width, and `a_color' as color.
 			--| If an identical pen exists in our system then we return that
@@ -65,7 +65,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

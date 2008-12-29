@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	on_window_message_user_precondition (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF): BOOLEAN is
+	on_window_message_user_precondition (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `on_window_message'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_drop_target_user_precondition (pp_drop_target: CELL [IDROP_TARGET_INTERFACE]): BOOLEAN is
+	get_drop_target_user_precondition (pp_drop_target: CELL [IDROP_TARGET_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_drop_target'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF) is
+	on_window_message (msg: INTEGER; w_param: INTEGER; l_param: INTEGER; pl_result: INTEGER_REF)
 			-- No description available.
 			-- `msg' [in].  
 			-- `w_param' [in].  
@@ -41,7 +41,7 @@ feature -- Basic Operations
 
 		end
 
-	get_drop_target (pp_drop_target: CELL [IDROP_TARGET_INTERFACE]) is
+	get_drop_target (pp_drop_target: CELL [IDROP_TARGET_INTERFACE])
 			-- No description available.
 			-- `pp_drop_target' [out].  
 		require
@@ -53,7 +53,7 @@ feature -- Basic Operations
 			valid_pp_drop_target: pp_drop_target.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

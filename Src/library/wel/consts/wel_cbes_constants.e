@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "ComboBoxEx Style (CBES) messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,18 +10,18 @@ class
 
 feature -- Access
 
-	Cbes_ex_noeditimage: INTEGER is 1
+	Cbes_ex_noeditimage: INTEGER = 1
 			-- The edit box will not display an item image.
 			--
 			-- Declared in Windows as CBES_EX_NOEDITIMAGE
 
-	Cbes_ex_noeditimageindent: INTEGER is 2;
+	Cbes_ex_noeditimageindent: INTEGER = 2;
 			-- The edit box will not indend text to make room
 			-- for an item image.
 			--
 			-- Declared in Windows as CBES_EX_NOEDITIMAGEINDENT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

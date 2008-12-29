@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "Picture with colors"
 	legal: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a pixmap.
 		do
 			create {PIXMAP_IMP} implementation.make (Current)
 		end;
 
-	make_for_screen (a_screen: SCREEN) is
+	make_for_screen (a_screen: SCREEN)
 			-- Create a pixmap for `a_screen'.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -40,13 +40,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the pixmap valid and usable ?
 		do
 			Result := implementation.is_valid
 		end;
 
-	last_operation_correct: BOOLEAN is
+	last_operation_correct: BOOLEAN
 			-- Is the last operation correctly performed ?
 		do
 			Result := implementation.last_operation_correct
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	copy_from (a_widget: WIDGET; x, y, p_width, p_height: INTEGER) is
+	copy_from (a_widget: WIDGET; x, y, p_width, p_height: INTEGER)
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
 			-- `a_widget' into the pixmap.
 			-- Set `last_operation_correct'.
@@ -72,7 +72,7 @@ feature -- Basic operations
 			last_operation_correct implies is_valid
 		end;
 
-	read_from_file (a_file_name: STRING) is
+	read_from_file (a_file_name: STRING)
 			-- Load the bitmap described in `a_file_name'.
 			-- Set `last_operation_correct'.
 		require
@@ -83,7 +83,7 @@ feature -- Basic operations
 			valid_when_correct: last_operation_correct implies is_valid;
 		end;
 
-	retrieve (a_file_name: STRING) is
+	retrieve (a_file_name: STRING)
 			-- Retrieve the pixmap from a file named `a_file_name'.
 			-- Set `last_operation_correct'.
 		obsolete
@@ -96,7 +96,7 @@ feature -- Basic operations
 			valid_when_correct: last_operation_correct implies is_valid
 		end;
 
-	store (a_file_name: STRING) is
+	store (a_file_name: STRING)
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
@@ -109,7 +109,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Depth of pixmap (Number of colors)
 		require
 			is_valid: is_valid
@@ -119,7 +119,7 @@ feature -- Measurement
 			valid_result: Result >= 1
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pixmap
 		require
 			is_valid
@@ -129,7 +129,7 @@ feature -- Measurement
 			valid_reuslt: Result >= 1
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of pixmap
 		require
 			is_valid: is_valid
@@ -139,7 +139,7 @@ feature -- Measurement
 			valid_result: Result >= 1
 		end;
 
-	hot_x: INTEGER is
+	hot_x: INTEGER
 			-- Horizontal position of "hot" point
 		require
 			is_valid: is_valid
@@ -149,7 +149,7 @@ feature -- Measurement
 			non_negative_result: Result >= 0
 		end;
 
-	hot_y : INTEGER is
+	hot_y : INTEGER
 			-- Vertical position of "hot" point
 		require
 			iis_valid: is_valid
@@ -173,7 +173,7 @@ invariant
 	is_valid implies ((hot_x >= 0) and (hot_x < width));
 	is_valid implies ((hot_y >= 0) and (hot_y < height))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

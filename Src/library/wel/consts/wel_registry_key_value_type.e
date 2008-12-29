@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry keys value types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,58 +10,58 @@ class
 		
 feature -- Access
 
-	Reg_binary: INTEGER is 3
+	Reg_binary: INTEGER = 3
 			-- General binary value
 			--
 			-- Declared in Windows as REG_BINARY
 
-	Reg_dword: INTEGER is 4
+	Reg_dword: INTEGER = 4
 			-- Double word value
 			--
 			-- Declared in Windows as REG_DWORD
 
-	Reg_dword_little_endian: INTEGER is 4
+	Reg_dword_little_endian: INTEGER = 4
 			-- Synonym of `Reg_dword'
 			--
 			-- Declared in Windows as REG_DWORD_LITTLE_ENDIAN
 
-	Reg_dword_big_endian: INTEGER is 5
+	Reg_dword_big_endian: INTEGER = 5
 			-- Double word value in big-endian format
 			--
 			-- Declared in Windows as REG_DWORD_BIG_ENDIAN
 
-	Reg_expand_sz: INTEGER is 2
+	Reg_expand_sz: INTEGER = 2
 			-- C-String that contains unexpanded references to environment
 			-- variables
 			--
 			-- Declared in Windows as REG_EXPAND_SZ
 
-	Reg_sz: INTEGER is 1
+	Reg_sz: INTEGER = 1
 			-- C-String
 			--
 			-- Declared in Windows as REG_SZ
 
-	Reg_link: INTEGER is 6
+	Reg_link: INTEGER = 6
 			-- Unicode symbolic link
 			--
 			-- Declared in Windows as REG_LINK
 
-	Reg_multi_sz: INTEGER is 7
+	Reg_multi_sz: INTEGER = 7
 			-- Array of C-strings, terminated by two null characters
 			--
 			-- Declared in Windows as REG_MULTI_SZ
 
-	Reg_none: INTEGER is 0
+	Reg_none: INTEGER = 0
 			-- No defined value type
 			--
 			-- Declared in Windows as REG_NONE
 
-	Reg_resource_list: INTEGER is 8;
+	Reg_resource_list: INTEGER = 8;
 			-- Device-driver resource list
 			--
 			-- Declared in Windows as REG_RESOURCE_LIST
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Up-down control notification (UDN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Udn_deltapos: INTEGER is
+	Udn_deltapos: INTEGER
 			-- The operating system sends the UDN_DELTAPOS
 			-- notification message to the parent window of an
 			-- up-down control when the position of the control is
@@ -21,7 +21,7 @@ feature -- Access
 			"UDN_DELTAPOS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

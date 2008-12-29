@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figure that is a line segment between 2 points."
 	legal: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_positions (x1, y1, x2, y2: INTEGER) is
+	make_with_positions (x1, y1, x2, y2: INTEGER)
 			-- Create on (x1, y1) - (x2, y2).
 		do
 			default_create
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_line_width (width: INTEGER) is
+	set_line_width (width: INTEGER)
 			-- Set line-width to `width'.
 		do
 			Precursor {EV_ATOMIC_FIGURE} (width)
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			Result := point_on_segment (x, y,
@@ -73,7 +73,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.		
 		local
 			p: EV_RELATIVE_POINT
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

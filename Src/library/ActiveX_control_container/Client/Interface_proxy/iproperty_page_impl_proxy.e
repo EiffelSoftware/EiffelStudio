@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPropertyPage' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iproperty_page_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	set_page_site (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE) is
+	set_page_site (p_page_site: IPROPERTY_PAGE_SITE_INTERFACE)
 			-- No description available.
 			-- `p_page_site' [in].  
 		local
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			ccom_set_page_site (initializer, p_page_site_item)
 		end
 
-	activate (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER) is
+	activate (hwnd_parent: POINTER; p_rect: TAG_RECT_RECORD; b_modal: INTEGER)
 			-- No description available.
 			-- `hwnd_parent' [in].  
 			-- `p_rect' [in].  
@@ -55,20 +55,20 @@ feature -- Basic Operations
 			ccom_activate (initializer, hwnd_parent, p_rect.item, b_modal)
 		end
 
-	deactivate is
+	deactivate
 			-- No description available.
 		do
 			ccom_deactivate (initializer)
 		end
 
-	get_page_info (p_page_info: TAG_PROPPAGEINFO_RECORD) is
+	get_page_info (p_page_info: TAG_PROPPAGEINFO_RECORD)
 			-- No description available.
 			-- `p_page_info' [out].  
 		do
 			ccom_get_page_info (initializer, p_page_info.item)
 		end
 
-	set_objects (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE]) is
+	set_objects (c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `c_objects' [in].  
 			-- `ppunk' [in].  
@@ -76,40 +76,40 @@ feature -- Basic Operations
 			ccom_set_objects (initializer, c_objects, ppunk)
 		end
 
-	show (n_cmd_show: INTEGER) is
+	show (n_cmd_show: INTEGER)
 			-- No description available.
 			-- `n_cmd_show' [in].  
 		do
 			ccom_show (initializer, n_cmd_show)
 		end
 
-	move (p_rect: TAG_RECT_RECORD) is
+	move (p_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `p_rect' [in].  
 		do
 			ccom_move (initializer, p_rect.item)
 		end
 
-	is_page_dirty is
+	is_page_dirty
 			-- No description available.
 		do
 			ccom_is_page_dirty (initializer)
 		end
 
-	apply is
+	apply
 			-- No description available.
 		do
 			ccom_apply (initializer)
 		end
 
-	help (psz_help_dir: STRING) is
+	help (psz_help_dir: STRING)
 			-- No description available.
 			-- `psz_help_dir' [in].  
 		do
 			ccom_help (initializer, psz_help_dir)
 		end
 
-	translate_accelerator (p_msg: TAG_MSG_RECORD) is
+	translate_accelerator (p_msg: TAG_MSG_RECORD)
 			-- No description available.
 			-- `p_msg' [in].  
 		do
@@ -118,7 +118,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iproperty_page_impl_proxy(initializer)
@@ -126,91 +126,91 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_set_page_site (cpp_obj: POINTER; p_page_site: POINTER) is
+	ccom_set_page_site (cpp_obj: POINTER; p_page_site: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](::IPropertyPageSite *)"
 		end
 
-	ccom_activate (cpp_obj: POINTER; hwnd_parent: POINTER; p_rect: POINTER; b_modal: INTEGER) is
+	ccom_activate (cpp_obj: POINTER; hwnd_parent: POINTER; p_rect: POINTER; b_modal: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](EIF_POINTER,ecom_control_library::tagRECT *,EIF_INTEGER)"
 		end
 
-	ccom_deactivate (cpp_obj: POINTER) is
+	ccom_deactivate (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_get_page_info (cpp_obj: POINTER; p_page_info: POINTER) is
+	ccom_get_page_info (cpp_obj: POINTER; p_page_info: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](ecom_control_library::tagPROPPAGEINFO *)"
 		end
 
-	ccom_set_objects (cpp_obj: POINTER; c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE]) is
+	ccom_set_objects (cpp_obj: POINTER; c_objects: INTEGER; ppunk: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_show (cpp_obj: POINTER; n_cmd_show: INTEGER) is
+	ccom_show (cpp_obj: POINTER; n_cmd_show: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_move (cpp_obj: POINTER; p_rect: POINTER) is
+	ccom_move (cpp_obj: POINTER; p_rect: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](ecom_control_library::tagRECT *)"
 		end
 
-	ccom_is_page_dirty (cpp_obj: POINTER) is
+	ccom_is_page_dirty (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_apply (cpp_obj: POINTER) is
+	ccom_apply (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_help (cpp_obj: POINTER; psz_help_dir: STRING) is
+	ccom_help (cpp_obj: POINTER; psz_help_dir: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_translate_accelerator (cpp_obj: POINTER; p_msg: POINTER) is
+	ccom_translate_accelerator (cpp_obj: POINTER; p_msg: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](ecom_control_library::tagMSG *)"
 		end
 
-	ccom_delete_iproperty_page_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iproperty_page_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iproperty_page_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iproperty_page_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

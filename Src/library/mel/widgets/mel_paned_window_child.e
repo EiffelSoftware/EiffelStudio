@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Child of a paned window"
@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	skip_adjustment: BOOLEAN is
+	skip_adjustment: BOOLEAN
 			-- Skip the resizing of Current widget in paned window?
 		require
 			exists: not is_destroyed;
@@ -30,7 +30,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNskipAdjust)
 		end;
 
-	allow_pane_to_resize: BOOLEAN is
+	allow_pane_to_resize: BOOLEAN
 			-- Is Current widget allowed to resize in the paned window?
 		require
 			exists: not is_destroyed;
@@ -39,7 +39,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNallowResize)
 		end;
 
-	pane_minimum: INTEGER is
+	pane_minimum: INTEGER
 			-- Minimal dimensions for resizing of `a_widget'
 		require
 			exists: not is_destroyed;
@@ -50,7 +50,7 @@ feature -- Status report
 			pane_minimum_large_enough: Result >= 0
 		end;
 
-	pane_maximum: INTEGER is
+	pane_maximum: INTEGER
 			-- Maximal dimensions for resizing of `a_widget'
 		require
 			exists: not is_destroyed;
@@ -61,7 +61,7 @@ feature -- Status report
 			pane_maximum_large_enough: Result >= 0
 		end;
 
-	pane_position_index: INTEGER is
+	pane_position_index: INTEGER
 			-- Position of widget in its parent (paned window) list of children
 		require
 			exists: not is_destroyed;
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_pane_resize is
+	allow_pane_resize
 			-- Set `allow_pane_to_resize' to True.
 		require
 			exists: not is_destroyed;
@@ -86,7 +86,7 @@ feature -- Status setting
 			allowed_to_resize: allow_pane_to_resize 
 		end;
 
-	forbid_pane_resize is
+	forbid_pane_resize
 			-- Set `allow_pane_to_resize' to False.
 		require
 			exists: not is_destroyed;
@@ -97,7 +97,7 @@ feature -- Status setting
 			forbidden_to_resize: not allow_pane_to_resize 
 		end;
 
-	set_pane_minimum (a_dimension: INTEGER) is
+	set_pane_minimum (a_dimension: INTEGER)
 			-- Set `pane_minimum' to `a_dimension'.
 		require
 			exists: not is_destroyed;
@@ -110,7 +110,7 @@ feature -- Status setting
 			pane_minimum_set: pane_minimum = a_dimension
 		end;
 
-	set_pane_maximum (a_dimension: INTEGER) is
+	set_pane_maximum (a_dimension: INTEGER)
 			-- Set `pane_maximum' to `a_dimension'.
 		require
 			exists: not is_destroyed;
@@ -123,7 +123,7 @@ feature -- Status setting
 			pane_maximum_set: pane_maximum = a_dimension
 		end;
 
-	set_pane_position_index (a_position: INTEGER) is
+	set_pane_position_index (a_position: INTEGER)
 			-- Set `pane_position_index' to `a_position'.
 		require
 			exists: not is_destroyed;
@@ -136,7 +136,7 @@ feature -- Status setting
 			position_index_set: pane_position_index = a_position;
 		end;
 
-	set_at_last_position (a_widget: MEL_RECT_OBJ) is
+	set_at_last_position (a_widget: MEL_RECT_OBJ)
 			-- Set the position in the RowColumn's list of Paned window
 			-- to the last position.
 		require
@@ -148,7 +148,7 @@ feature -- Status setting
 			is_at_the_end: pane_position_index = parent.children_count
 		end;
 
-	enable_skip_adjustment is
+	enable_skip_adjustment
 			-- Set `skip_adjustment' to True.
 		require
 			exists: not is_destroyed;
@@ -159,7 +159,7 @@ feature -- Status setting
 			skip_adjustment_enabled: skip_adjustment 
 		end;
 
-	disable_skip_adjustment is
+	disable_skip_adjustment
 			-- Set `skip_adjustment' to False.
 		require
 			exists: not is_destroyed;
@@ -170,7 +170,7 @@ feature -- Status setting
 			skip_adjustment_disabled: not skip_adjustment 
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

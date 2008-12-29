@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a notification %
 		%message (Wm_notify)."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	window_from: WEL_WINDOW is
+	window_from: WEL_WINDOW
 			-- Control sending message
 		local
 			l_hwnd, l_null: POINTER
@@ -36,13 +36,13 @@ feature -- Access
 			end
 		end
 
-	id_from: INTEGER is
+	id_from: INTEGER
 			-- Identifier of control sending message
 		do
 			Result := cwel_nmhdr_get_idfrom (item)
 		end
 
-	code: INTEGER is
+	code: INTEGER
 			-- Notification code
 		do
 			Result := cwel_nmhdr_get_code (item)
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nmhdr
@@ -58,29 +58,29 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nmhdr: INTEGER is
+	c_size_of_nmhdr: INTEGER
 		external
 			"C [macro <nmhdr.h>]"
 		alias
 			"sizeof (NMHDR)"
 		end
 
-	cwel_nmhdr_get_hwndfrom (ptr: POINTER): POINTER is
+	cwel_nmhdr_get_hwndfrom (ptr: POINTER): POINTER
 		external
 			"C [macro <nmhdr.h>] (NMHDR*): EIF_POINTER"
 		end
 
-	cwel_nmhdr_get_idfrom (ptr: POINTER): INTEGER is
+	cwel_nmhdr_get_idfrom (ptr: POINTER): INTEGER
 		external
 			"C [macro <nmhdr.h>]"
 		end
 
-	cwel_nmhdr_get_code (ptr: POINTER): INTEGER is
+	cwel_nmhdr_get_code (ptr: POINTER): INTEGER
 		external
 			"C [macro <nmhdr.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision screen, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current', a screen object.
 		do
 			base_make (an_interface)
@@ -52,13 +52,13 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is `Current' destroyed?
 		do
 			Result := not dc.exists
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer.
 		local
 			wel_point: WEL_POINT
@@ -68,7 +68,7 @@ feature -- Status report
 			create Result.set (wel_point.x, wel_point.y)
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET is
+	widget_at_position (x, y: INTEGER): EV_WIDGET
 			-- Widget at position (`x', `y') if any.
 		local
 			l_window: WEL_WINDOW
@@ -104,13 +104,13 @@ feature -- Status report
 
 feature -- Basic operation
 
-	set_pointer_position (x, y: INTEGER) is
+	set_pointer_position (x, y: INTEGER)
 			-- Set `pointer_position' to (`x',`y`).
 		do
 			cwin_set_cursor_position (x, y)
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
 			a_default_colors: EV_STOCK_COLORS
@@ -120,7 +120,7 @@ feature -- Basic operation
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	fake_pointer_button_press (a_button: INTEGER) is
+	fake_pointer_button_press (a_button: INTEGER)
 			-- Simulate the user pressing a `a_button'
 			-- on the pointing device.
 		do
@@ -134,7 +134,7 @@ feature -- Basic operation
 			end
 		end
 
-	fake_pointer_button_release (a_button: INTEGER) is
+	fake_pointer_button_release (a_button: INTEGER)
 			-- Simulate the user releasing a `a_button'
 			-- on the pointing device.
 		do
@@ -148,19 +148,19 @@ feature -- Basic operation
 			end
 		end
 
-	fake_pointer_wheel_up is
+	fake_pointer_wheel_up
 			-- Simulate the user rotating the mouse wheel up.
 		do
 			send_mouse_wheel_up
 		end
 
-	fake_pointer_wheel_down is
+	fake_pointer_wheel_down
 			-- Simulate the user rotating the mouse wheel down.
 		do
 			send_mouse_wheel_down
 		end
 
-	fake_key_press (a_key: EV_KEY) is
+	fake_key_press (a_key: EV_KEY)
 			-- Simulate the user pressing `a_key'.
 		local
 			vk_code: INTEGER
@@ -169,7 +169,7 @@ feature -- Basic operation
 			send_keyboard_key_down (vk_code)
 		end
 
-	fake_key_release (a_key: EV_KEY) is
+	fake_key_release (a_key: EV_KEY)
 			-- Simulate the user releasing `a_key'.
 		local
 			vk_code: INTEGER
@@ -180,19 +180,19 @@ feature -- Basic operation
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current'.
 		do
 			Result := dc.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current'.
 		do
 			Result := dc.height
 		end
 
-	virtual_width: INTEGER is
+	virtual_width: INTEGER
 			-- Virtual width of `Current'
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -201,7 +201,7 @@ feature -- Measurement
 			Result := l_metrics.virtual_screen_width
 		end
 
-	virtual_height: INTEGER is
+	virtual_height: INTEGER
 			-- Virtual height of `Current'
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -210,7 +210,7 @@ feature -- Measurement
 			Result := l_metrics.virtual_screen_height
 		end
 
-	virtual_x: INTEGER is
+	virtual_x: INTEGER
 			-- X position of virtual screen in main display coordinates
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -219,7 +219,7 @@ feature -- Measurement
 			Result := l_metrics.virtual_screen_x
 		end
 
-	virtual_y: INTEGER is
+	virtual_y: INTEGER
 			-- Y position of virtual screen in main display coordinates
 		local
 			l_metrics: WEL_SYSTEM_METRICS
@@ -228,19 +228,19 @@ feature -- Measurement
 			Result := l_metrics.virtual_screen_y
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Number of pixels per inch along screen height.
 		do
 			Result := get_device_caps (dc.item, logical_pixels_y)
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Number of pixels per inch along screen width.
 		do
 			Result := get_device_caps (dc.item, logical_pixels_x)
 		end
 
-	redraw is
+	redraw
 			-- Force screen to redraw itself.
 		external
 			"C inline use %"wel.h%""
@@ -250,7 +250,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy actual object.
 		do
 			dc.release
@@ -264,13 +264,13 @@ feature -- Implementation
 
 feature {NONE} -- Constants
 
-	System_metrics_constants: WEL_SYSTEM_METRICS is
+	System_metrics_constants: WEL_SYSTEM_METRICS
 			-- System metrics constants.
 		once
 			create Result
 		end
 
-	Key_conversion: EV_WEL_KEY_CONVERSION is
+	Key_conversion: EV_WEL_KEY_CONVERSION
 			-- Key conversion routines.
 		once
 			create Result
@@ -279,7 +279,7 @@ feature {NONE} -- Constants
 invariant
 	dc_not_void: dc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

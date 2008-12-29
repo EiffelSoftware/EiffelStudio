@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bind Variable of type DATE_TIME"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	set_value (new_value: DATE_TIME) is
+	set_value (new_value: DATE_TIME)
 			-- Set value of bind-variable to `new_value'
 		local
 			c, y, mo, d, h, mi, s: INTEGER_8
@@ -45,7 +45,7 @@ feature -- Basic operations
 			(buffer + 6).memory_copy ($s, 1)			
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

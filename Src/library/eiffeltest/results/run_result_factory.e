@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Factory producing test run results"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature {NONE} -- Initialization
 
-	run_result_factory: HASHED_PROTOTYPE_FACTORY [TEST_RUN_RESULT] is
+	run_result_factory: HASHED_PROTOTYPE_FACTORY [TEST_RUN_RESULT]
 			-- Singleton of run result factory
 		local
 			r: TEST_RUN_RESULT
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			not_empty: Result /= Void and then not Result.is_empty
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

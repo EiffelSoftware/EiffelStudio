@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature {EV_ANY_I} -- Implementation
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM
 			-- Retrieve the Current row from `a_y' coordinate
 		deferred
 		end
@@ -23,19 +23,19 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Initialize a pick and drop transport.
 		deferred
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 			-- Call appropriate selection action sequences
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

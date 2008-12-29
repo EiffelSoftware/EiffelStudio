@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IServiceProvider' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iservice_provider_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
+	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `guid_service' [in].  
 			-- `riid' [in].  
@@ -38,7 +38,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iservice_provider_impl_proxy(initializer)
@@ -46,31 +46,31 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_query_service (cpp_obj: POINTER; guid_service: POINTER; riid: POINTER; ppv_object: CELL [ECOM_INTERFACE]) is
+	ccom_query_service (cpp_obj: POINTER; guid_service: POINTER; riid: POINTER; ppv_object: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IServiceProvider_impl_proxy %"ecom_control_library_IServiceProvider_impl_proxy_s.h%"](GUID *,GUID *,EIF_OBJECT)"
 		end
 
-	ccom_delete_iservice_provider_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iservice_provider_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IServiceProvider_impl_proxy %"ecom_control_library_IServiceProvider_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iservice_provider_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iservice_provider_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IServiceProvider_impl_proxy %"ecom_control_library_IServiceProvider_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IServiceProvider_impl_proxy %"ecom_control_library_IServiceProvider_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing delayed calls to a procedure.
 		with some operands possibly still open.
@@ -20,13 +20,13 @@ inherit
 
 feature -- Calls
 
-	apply is
+	apply
 			-- Call procedure with `args' as last set.
 		do
 			call (operands)
 		end
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call procedure with `args'.
 		local
 			l_closed_count: INTEGER
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

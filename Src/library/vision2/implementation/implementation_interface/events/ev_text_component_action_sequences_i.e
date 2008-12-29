@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_TEXT_COMPONENT_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `text' changes.
 		do
 			if change_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a change action sequence.
 		deferred
 		end
@@ -35,7 +35,7 @@ feature {EV_ANY_I} -- Implementation
 	change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `change_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

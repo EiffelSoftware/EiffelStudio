@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IParseDisplayName' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iparse_display_name_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `psz_display_name' [in].  
@@ -51,7 +51,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iparse_display_name_impl_proxy(initializer)
@@ -59,31 +59,31 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"](::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_delete_iparse_display_name_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iparse_display_name_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iparse_display_name_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iparse_display_name_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

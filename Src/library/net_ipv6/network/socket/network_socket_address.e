@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A network socket address."
@@ -39,7 +39,7 @@ create
 
 feature -- Initialization
 
-	make_from_address_and_port (an_address: INET_ADDRESS;  a_port: INTEGER) is
+	make_from_address_and_port (an_address: INET_ADDRESS;  a_port: INTEGER)
 		require
 			valid_address: an_address /= Void
 			valid_port: a_port >= 0 and then a_port <= 0xFFFF
@@ -49,7 +49,7 @@ feature -- Initialization
 			socket_address /= Void
 		end
 
-	make_from_hostname_and_port (a_hostname: STRING;  a_port: INTEGER) is
+	make_from_hostname_and_port (a_hostname: STRING;  a_port: INTEGER)
 		require
 			non_void_hostname: a_hostname /= Void
 			-- TODO look at this valid_host: is_valid_host (a_hostname)
@@ -65,7 +65,7 @@ feature -- Initialization
 			socket_address /= Void
 		end
 
-	make_any_local (a_port: INTEGER) is
+	make_any_local (a_port: INTEGER)
 			--
 		local
 			addr: INET_ADDRESS
@@ -78,7 +78,7 @@ feature -- Initialization
 			socket_address /= Void
 		end
 
-	make_localhost (a_port: INTEGER) is
+	make_localhost (a_port: INTEGER)
 			--
 		local
 			addr: INET_ADDRESS
@@ -93,13 +93,13 @@ feature -- Initialization
 
 feature -- Status report
 
-	port: INTEGER is
+	port: INTEGER
 			-- Port number
 		do
 			Result := get_sock_port (socket_address.item)
 		end
 
-	host_address: INET_ADDRESS is
+	host_address: INET_ADDRESS
 			-- Host address of address
 		do
 			Result := create_from_sockaddr(socket_address.item)
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature --
 
-	is_valid_host (hostname: STRING): BOOLEAN is
+	is_valid_host (hostname: STRING): BOOLEAN
 			--
 		require
 			hostname_not_void: hostname /= Void
@@ -117,7 +117,7 @@ feature --
 
 feature -- Status setting
 
-	set_port_from_name (a_name, protocol: STRING) is
+	set_port_from_name (a_name, protocol: STRING)
 			-- Set port number using `a_name' and `protocol'
 			-- to refer into the (local) services file.
 		local
@@ -130,13 +130,13 @@ feature -- Status setting
 			set_port (return)
 		end;
 
-	set_port (p: INTEGER) is
+	set_port (p: INTEGER)
 			-- Set port to `p'.
 		do
 			set_sock_port (socket_address.item, p)
 		end
 
-	set_host_address (a_host_address: INET_ADDRESS) is
+	set_host_address (a_host_address: INET_ADDRESS)
 			-- Set host address to `a_host_address'
 		do
 			make_from_address_and_port (a_host_address, port)
@@ -144,7 +144,7 @@ feature -- Status setting
 
 feature {NONE} -- External
 
-	address_size: INTEGER is
+	address_size: INTEGER
 			-- Size of address in bytes.
 		external
 			"C"
@@ -152,7 +152,7 @@ feature {NONE} -- External
 			"inet_address_size"
 		end
 
-	set_sock_family (address: POINTER; a_family: INTEGER) is
+	set_sock_family (address: POINTER; a_family: INTEGER)
 			-- Set the family in the address structure.
 		external
 			"C"
@@ -160,7 +160,7 @@ feature {NONE} -- External
 			"en_sockaddr_set_family"
 		end
 
-	get_sock_family (address: POINTER): INTEGER is
+	get_sock_family (address: POINTER): INTEGER
 			-- Get the family from the address structure.
 		external
 			"C"
@@ -168,7 +168,7 @@ feature {NONE} -- External
 			"en_sockaddr_get_family"
 		end
 
-	set_sock_port (address: POINTER; a_port: INTEGER) is
+	set_sock_port (address: POINTER; a_port: INTEGER)
 			-- Set the port in the address structure.
 		external
 			"C"
@@ -176,7 +176,7 @@ feature {NONE} -- External
 			"en_sockaddr_set_port"
 		end
 
-	get_sock_port (address: POINTER): INTEGER is
+	get_sock_port (address: POINTER): INTEGER
 			-- Get the port from the address structure.
 		external
 			"C"
@@ -184,13 +184,13 @@ feature {NONE} -- External
 			"en_sockaddr_get_port"
 		end
 
-	get_servent_port (name, proto: POINTER): INTEGER is
+	get_servent_port (name, proto: POINTER): INTEGER
 			-- Get the services entry using `name' and `proto'
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

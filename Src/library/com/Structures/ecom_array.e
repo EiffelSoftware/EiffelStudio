@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multi-dimensional array"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,13 +41,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create empty array.
 		do
 			make (1, <<1>>, <<0>>)
 		end
 
-	make (a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER]) is
+	make (a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER])
 			-- Create `a_dimensional_count' dimensional array
 			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count
 		end
 
-	make_from_array (a: ARRAY [G]; a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER]) is
+	make_from_array (a: ARRAY [G]; a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER])
 			-- Create `a_dimensional_count' dimensional array
 			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize (v: G) is
+	initialize (v: G)
 			-- Make each entry have value `v'
 		local
 			an_index: ARRAY [INTEGER]
@@ -151,7 +151,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (some_indices: ARRAY [INTEGER]): G is
+	item (some_indices: ARRAY [INTEGER]): G
 			-- Entry at `some_indices'
 		require
 			valid_indices: are_indices_valid (some_indices)
@@ -175,7 +175,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	are_element_counts_valid (some_element_counts: ARRAY [INTEGER]): BOOLEAN is
+	are_element_counts_valid (some_element_counts: ARRAY [INTEGER]): BOOLEAN
 			-- Are `some_element_counts' valid element counts?
 		require
 			non_void_element_counts: some_element_counts /= Void
@@ -197,7 +197,7 @@ feature -- Status report
 			end
 		end
 
-	are_indices_valid (some_indices: ARRAY [INTEGER]): BOOLEAN is
+	are_indices_valid (some_indices: ARRAY [INTEGER]): BOOLEAN
 			-- Are `some_indices' valid indices?
 		local
 			i: INTEGER
@@ -220,7 +220,7 @@ feature -- Status report
 			end
 		end
 
-	are_indices_large_enough (some_indices: ARRAY [INTEGER]): BOOLEAN is
+	are_indices_large_enough (some_indices: ARRAY [INTEGER]): BOOLEAN
 			-- Are `some_indices' large enough?
 		local
 			i: INTEGER
@@ -242,7 +242,7 @@ feature -- Status report
 			end
 		end
 
-	total_count (some_element_counts: ARRAY [INTEGER]): INTEGER is
+	total_count (some_element_counts: ARRAY [INTEGER]): INTEGER
 			-- Total number of elements
 		require
 			valid_counts: are_element_counts_valid (some_element_counts)
@@ -265,7 +265,7 @@ feature -- Status report
 			valid_count: Result >= 0
 		end
 
-	are_element_counts_consistent: BOOLEAN is
+	are_element_counts_consistent: BOOLEAN
 			-- Are `element_counts' consistent?
 		local
 			i: INTEGER
@@ -286,7 +286,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: like item; some_indices: ARRAY [INTEGER]) is
+	put (v: like item; some_indices: ARRAY [INTEGER])
 			-- Assign item `v' at indices `some_indices'.
 		require
 			valid_indices: are_indices_valid (some_indices)
@@ -296,7 +296,7 @@ feature -- Element change
 			element_inserted: item (some_indices) = v
 		end
 
-	force (v: like item; some_indices: ARRAY [INTEGER]) is
+	force (v: like item; some_indices: ARRAY [INTEGER])
 			-- Assign item `v' at indices `some_indices'.
 			-- Resize if necesary.
 		require
@@ -310,7 +310,7 @@ feature -- Element change
 
 feature -- Removal
 
-	discard_items is
+	discard_items
 			-- Remove all elements
 		do
 			dimension_count := 0
@@ -323,7 +323,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (n_upper_indices: ARRAY [INTEGER]) is
+	resize (n_upper_indices: ARRAY [INTEGER])
 			-- Rearrange array so that it can accommodate `n_upper_indices'
 			-- without losing any previously entered items
 			-- or changing their indices;
@@ -380,7 +380,7 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	flat_index (some_indices: ARRAY [INTEGER]): INTEGER is
+	flat_index (some_indices: ARRAY [INTEGER]): INTEGER
 			-- Flattened index
 		require
 			valid_indices: are_indices_valid (some_indices)
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	next_index (some_indices: ARRAY [INTEGER]) is
+	next_index (some_indices: ARRAY [INTEGER])
 			-- Generate next index
 		require
 			valid_indices: are_indices_valid (some_indices)
@@ -448,7 +448,7 @@ invariant
 	consistent_size: capacity = total_count (element_counts)
 	non_negative_count: count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

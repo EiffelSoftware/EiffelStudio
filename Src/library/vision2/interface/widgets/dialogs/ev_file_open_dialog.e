@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision file open dialog."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Event handling
 
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Open.
 		obsolete
 			"This has been replaced by open_actions"
@@ -36,7 +36,7 @@ feature -- Event handling
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one filename be selected?
 		require
 			not_destroyed: not is_destroyed
@@ -46,7 +46,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 			-- No particular order is guaranteed.
 		require
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one filename to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status setting
 			multiple_selection_enabled: multiple_selection_enabled
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one filename to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -86,7 +86,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_FILE_OPEN_DIALOG_IMP} implementation.make (Current)
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 invariant
 	file_name_consistent_with_file_names: not file_names.is_empty implies file_names.first.is_equal (file_name)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

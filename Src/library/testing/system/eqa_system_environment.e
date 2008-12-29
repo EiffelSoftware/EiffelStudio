@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing a environment for system testing.
 	]"

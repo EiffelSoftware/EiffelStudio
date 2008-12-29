@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Duration of dates and times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (y, mo, d, h, mi, s: INTEGER) is
+	make (y, mo, d, h, mi, s: INTEGER)
 			-- Set `year', `month', `day' to `y', `mo', `d'.
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
 		do
@@ -45,7 +45,7 @@ feature -- Initialization
 			second_set: second = s
 		end
 
-	make_definite (d, h, m, s: INTEGER) is
+	make_definite (d, h, m, s: INTEGER)
 			-- Set `day' to `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
 		do
@@ -61,7 +61,7 @@ feature -- Initialization
 			second_set: second = s
 		end
 
-	make_fine (y, mo, d, h, mi: INTEGER; s: DOUBLE) is
+	make_fine (y, mo, d, h, mi: INTEGER; s: DOUBLE)
 			-- set `year', `month', `day' to `y', `mo', `d'.
 			-- set `hour', `minute', `second' to `h', `mi', `s'.
 		do
@@ -78,7 +78,7 @@ feature -- Initialization
 			fine_second_set: fine_second = s
 		end
 
-	 make_by_date_time (d: DATE_DURATION; t: TIME_DURATION) is
+	 make_by_date_time (d: DATE_DURATION; t: TIME_DURATION)
 			-- Set `date' to `d' and `time' to `t'.
 		require
 			date_exists: d /= Void
@@ -91,7 +91,7 @@ feature -- Initialization
 			time_set: time = t
 		end
 
-	make_by_date (d: DATE_DURATION) is
+	make_by_date (d: DATE_DURATION)
 			-- Set `date' to `d' and `time' to zero.
 		require
 			d_exists: d /= Void;
@@ -115,13 +115,13 @@ feature -- Access
 	origin_date_time: DATE_TIME
 			-- Origin date time of duration
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result.make_by_date_time (date.zero, time.zero)
 		end
 
-	seconds_count: INTEGER_64 is
+	seconds_count: INTEGER_64
 			-- Total number of seconds of current duration
 		require
 			has_origin: has_origin_date_time
@@ -129,7 +129,7 @@ feature -- Access
 			Result := (date.days_count.to_integer_64 * Seconds_in_day.to_integer_64) + time.seconds_count.to_integer_64
 		end
 
-	fine_seconds_count: DOUBLE is
+	fine_seconds_count: DOUBLE
 			-- Total number of seconds of current duration
 		require
 			has_origin: has_origin_date_time
@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is the current duration smaller than `other'?
 			-- False if either is not definite
 		do
@@ -155,7 +155,7 @@ feature -- Comparison
 					Result = False
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are the current duration an `other' equal?
 		do
 			Result := year = other.year and then month = other.month and then
@@ -165,7 +165,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	definite: BOOLEAN is
+	definite: BOOLEAN
 			-- Is this duration date-independent?
 			-- (True if it only uses `day', not `year' and `month')
 		do
@@ -174,7 +174,7 @@ feature -- Status report
 			result_definition: Result = (year = 0 and then month = 0)
 		end
 
-	canonical (start_date: DATE_TIME): BOOLEAN is
+	canonical (start_date: DATE_TIME): BOOLEAN
 			-- Are the time and date parts of the same sign,
 			-- and both canonical?
 		local
@@ -192,14 +192,14 @@ feature -- Status report
 			end
 		end
 
-	is_positive: BOOLEAN is
+	is_positive: BOOLEAN
 			-- Is duration positive?
 		do
 			Result := (date.is_positive or date.is_zero) and (time.is_positive or time.is_zero) and
 				not (date.is_zero and time.is_zero)
 		end
 
-	has_origin_date_time: BOOLEAN is
+	has_origin_date_time: BOOLEAN
 			-- Has an `origin_date_time' been set?
 		do
 			Result := (origin_date_time /= Void)
@@ -207,7 +207,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_origin_date_time (dt: ?DATE_TIME) is
+	set_origin_date_time (dt: ?DATE_TIME)
 			-- Set `origin_date_time' to `dt'.
 		do
 			origin_date_time := dt
@@ -223,7 +223,7 @@ feature -- Status setting
 
 feature -- Element Change
 
-	set_date (d: DATE_DURATION) is
+	set_date (d: DATE_DURATION)
 			-- Set `date' to `d'.
 		require
 			d_exists: d /= Void
@@ -233,7 +233,7 @@ feature -- Element Change
 			date_set: date = d
 		end
 
-	set_time (t: TIME_DURATION) is
+	set_time (t: TIME_DURATION)
 			-- Set `time' to `t'.
 		require
 			t_exists: time /= Void
@@ -245,7 +245,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: like Current): like Current
 			-- Sum with `other' (commutative)
 		do
 			create Result.make_by_date_time (date + other.date,
@@ -259,7 +259,7 @@ feature -- Basic operations
 			origin_date_time: equal (origin_date_time, Result.origin_date_time)
 		end
 
-	prefix "-": like Current is
+	prefix "-": like Current
 			-- Unary minus
 		do
 			create Result.make_by_date_time (-date, -time)
@@ -272,7 +272,7 @@ feature -- Basic operations
 			origin_date_time: equal (origin_date_time, Result.origin_date_time)
 		end
 
-	day_add (d: INTEGER) is
+	day_add (d: INTEGER)
 			-- Add `d' days to the current duration.
 		do
 			date.set_day (day + d)
@@ -282,7 +282,7 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	to_canonical (start_date: DATE_TIME): like Current is
+	to_canonical (start_date: DATE_TIME): like Current
 			-- A new duration, equivalent to current one
 			-- and canonical for `start_date'
 		local
@@ -319,7 +319,7 @@ feature -- Conversion
 				equal (start_date + Current, start_date + Result)
 		end
 
-	time_to_canonical: like Current is
+	time_to_canonical: like Current
 			-- A new duration, equivalent to current one
 			-- but `time' is canonical and has the same sign as `date'
 		require
@@ -356,7 +356,7 @@ invariant
 				((date.is_negative or date.is_zero) and
 				(time.is_negative or time.is_zero))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Closed figures filled with `background_color'."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_filled: BOOLEAN is
+	is_filled: BOOLEAN
 			-- Is this figure filled?
 		do
 			Result := background_color /= Void
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' to `a_color'.
 		require
 			a_color_exists: a_color /= Void
@@ -39,7 +39,7 @@ feature -- Status setting
 			background_color_assigned: background_color = a_color
 		end
 
-	remove_background_color is
+	remove_background_color
 			-- Do not fill this figure.
 		do
 			background_color := Void
@@ -48,7 +48,7 @@ feature -- Status setting
 			background_color_removed: background_color = Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

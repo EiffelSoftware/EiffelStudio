@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Diff class for texts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	unified: STRING is
+	unified: STRING
 			-- Get the diff in unified diff format.
 		require
 			hunks_not_void: hunks /= void
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_src_text: STRING; a_dst_text: STRING) is
+	set_text (a_src_text: STRING; a_dst_text: STRING)
 			-- Set the two texts to compare line by line.
 		require
 			a_src_text_not_void: a_src_text /= Void
@@ -148,7 +148,7 @@ feature -- Element change
 			values_set: values_set
 		end
 
-	set_file (a_src_file: STRING; a_dst_file: STRING) is
+	set_file (a_src_file: STRING; a_dst_file: STRING)
 			-- Set the two files to compare line by line.
 		require
 			a_src_file_not_void: a_src_file /= void
@@ -198,7 +198,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	patch (a_text:STRING; a_patch: STRING; reversed: BOOLEAN): STRING is
+	patch (a_text:STRING; a_patch: STRING; reversed: BOOLEAN): STRING
 			-- Apply `a_patch' (in unified patch format) to `a_text'. If the patch was created from destination to source set `reversed'.
 		require
 			a_text_not_void: a_text /= void
@@ -288,7 +288,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	line_delimiter: CHARACTER is
+	line_delimiter: CHARACTER
 			-- The line delimiter to use
 		do
 			Result := '%N'
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 
 	unified_header: STRING;
 			-- The header for the unified diff.
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

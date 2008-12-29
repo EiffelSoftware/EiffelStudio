@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text applicable to a PNG image."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make(im: GD_IMAGE;new_x,new_y,a_font:INTEGER;txt:STRING) is
+	make(im: GD_IMAGE;new_x,new_y,a_font:INTEGER;txt:STRING)
 		-- Create text
 		require
 			coordinates_within_the_image:im.coordinates_within_the_image(new_x,new_y)
@@ -41,7 +41,7 @@ feature -- Initialization
 		
 feature -- Drawing
 
-	draw_text is
+	draw_text
 			-- Draw text.
 		local
 			a: any
@@ -58,7 +58,7 @@ feature -- Drawing
 
 feature -- Settings
 
-	set_vertical(b: BOOLEAN) is
+	set_vertical(b: BOOLEAN)
 		-- Is current text to be displayed vertically ?
 		do
 			is_vertical := b
@@ -75,21 +75,21 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER) is
+	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageString"
 		end
 
-	gdImageStringUp(p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER) is
+	gdImageStringUp(p,f: POINTER; i1,i2: INTEGER; s: POINTER; a_color_index: INTEGER)
 		external
 			"C"
 		alias
 			"gdImageString"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List view item styles (LVIS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,29 +13,29 @@ obsolete
 
 feature -- Access
 
-	Lvis_cut: INTEGER is 4
+	Lvis_cut: INTEGER = 4
 			-- The item is marked for a cut and paste operation.
 			--
 			-- Declared in Windows as LVIS_CUT
 
-	Lvis_drophilited: INTEGER is 8
+	Lvis_drophilited: INTEGER = 8
 			-- The item is highlighted as a drag-and-dop target.
 			--
 			-- Declared in Windows as LVIS_DROPHILITED
 
-	Lvis_focused: INTEGER is 1
+	Lvis_focused: INTEGER = 1
 			-- The item has the focus.
 			--
 			-- Declared in Windows as LVIS_FOCUSED
 
-	Lvis_selected: INTEGER is 2
+	Lvis_selected: INTEGER = 2
 			-- The item is selected.
 			--
 			-- Declared in Windows as LVIS_SELECTED
 
 feature -- Status report
 
-	valid_lvis_constants (value: INTEGER): BOOLEAN is
+	valid_lvis_constants (value: INTEGER): BOOLEAN
 			-- Is `value' a valid constant?
 		do
 			Result := value = Lvis_cut or else
@@ -44,7 +44,7 @@ feature -- Status report
 				value = Lvis_selected
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

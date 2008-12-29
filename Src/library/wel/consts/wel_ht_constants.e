@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hit test (HT) code constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,79 +10,79 @@ class
 
 feature -- Access
 
-	Hterror: INTEGER is -2
+	Hterror: INTEGER = -2
 			-- Declared in Windows as HTERROR
 
-	Httransparent: INTEGER is -1
+	Httransparent: INTEGER = -1
 			-- Declared in Windows as HTTRANSPARENT
 
-	Htnowhere: INTEGER is 0
+	Htnowhere: INTEGER = 0
 			-- Declared in Windows as HTNOWHERE
 
-	Htclient: INTEGER is 1
+	Htclient: INTEGER = 1
 			-- Declared in Windows as HTCLIENT
 
-	Htcaption: INTEGER is 2
+	Htcaption: INTEGER = 2
 			-- Declared in Windows as HTCAPTION
 
-	Htsysmenu: INTEGER is 3
+	Htsysmenu: INTEGER = 3
 			-- Declared in Windows as HTSYSMENU
 
-	Htsize: INTEGER is 4
+	Htsize: INTEGER = 4
 			-- Declared in Windows as HTSIZE
 
-	Htmenu: INTEGER is 5
+	Htmenu: INTEGER = 5
 			-- Declared in Windows as HTMENU
 
-	Hthscroll: INTEGER is 6
+	Hthscroll: INTEGER = 6
 			-- Declared in Windows as HTHSCROLL
 
-	Htvscroll: INTEGER is 7
+	Htvscroll: INTEGER = 7
 			-- Declared in Windows as HTVSCROLL
 
-	Htminbutton: INTEGER is 8
+	Htminbutton: INTEGER = 8
 			-- Declared in Windows as HTMINBUTTON
 
-	Htmaxbutton: INTEGER is 9
+	Htmaxbutton: INTEGER = 9
 			-- Declared in Windows as HTMAXBUTTON
 
-	Htleft: INTEGER is 10
+	Htleft: INTEGER = 10
 			-- Declared in Windows as HTLEFT
 
-	Htright: INTEGER is 11
+	Htright: INTEGER = 11
 			-- Declared in Windows as HTRIGHT
 
-	Httop: INTEGER is 12
+	Httop: INTEGER = 12
 			-- Declared in Windows as HTTOP
 
-	Httopleft: INTEGER is 13
+	Httopleft: INTEGER = 13
 			-- Declared in Windows as HTTOPLEFT
 
-	Httopright: INTEGER is 14
+	Httopright: INTEGER = 14
 			-- Declared in Windows as HTTOPRIGHT
 
-	Htbottom: INTEGER is 15
+	Htbottom: INTEGER = 15
 			-- Declared in Windows as HTBOTTOM
 
-	Htbottomleft: INTEGER is 16
+	Htbottomleft: INTEGER = 16
 			-- Declared in Windows as HTBOTTOMLEFT
 
-	Htbottomright: INTEGER is 17
+	Htbottomright: INTEGER = 17
 			-- Declared in Windows as HTBOTTOMRIGHT
 
-	Htborder: INTEGER is 18
+	Htborder: INTEGER = 18
 			-- Declared in Windows as HTBORDER
 
-	Htgrowbox: INTEGER is 4
+	Htgrowbox: INTEGER = 4
 			-- Declared in Windows as HTGROWBOX
 
-	Htreduce: INTEGER is 8
+	Htreduce: INTEGER = 8
 			-- Declared in Windows as HTREDUCE
 
-	Htzoom: INTEGER is 9;
+	Htzoom: INTEGER = 9;
 			-- Declared in Windows as HTZOOM
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

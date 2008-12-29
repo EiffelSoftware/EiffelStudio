@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of widget with no child for Windows"
 	legal: "See notice at end of class."
@@ -23,25 +23,25 @@ inherit
 
 feature  -- Status report
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 		do
 		end
 
 feature  -- Status setting
 
-	propagate_event is
+	propagate_event
 			-- Propagate event to direct ancestor if no action
 			-- is specified for event.
 		do
 		end
 
-	set_no_event_propagation is
+	set_no_event_propagation
 			-- Propagate no event to direct ancestor if no action
 			-- is specified for event.
 		do
 		end
 
-	unrealize is
+	unrealize
 			-- Destroy current primitive.
 		do
 			if exists then
@@ -49,7 +49,7 @@ feature  -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

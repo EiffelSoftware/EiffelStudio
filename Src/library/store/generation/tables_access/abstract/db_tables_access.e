@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of database tables."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Initialization
 
-	make is
+	make
 			-- Ensure object unicity.
 		require
 			not_created: not created
@@ -22,7 +22,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	created: BOOLEAN is
+	created: BOOLEAN
 			-- Is the class object created?
 		do
 			Result := created_impl.item
@@ -30,28 +30,28 @@ feature -- Status report
 
 feature -- Access
 
-	Table_number: INTEGER is deferred end
+	Table_number: INTEGER deferred end
 			-- Number of database tables.
 
-	code_list: ARRAYED_LIST [INTEGER] is
+	code_list: ARRAYED_LIST [INTEGER]
 			-- Table code list.
 		deferred
 		end
 
-	name_list: ARRAYED_LIST [STRING] is
+	name_list: ARRAYED_LIST [STRING]
 			-- Table name list. Can be interpreted as a list
 			-- or a hash-table.
 		deferred
 		end
 
-	obj (i: INTEGER): DB_TABLE is
+	obj (i: INTEGER): DB_TABLE
 			-- Return instance of table with code `i'.
 		require
 			in_range: is_valid (i)
 		deferred
 		end
 
-	description (i: INTEGER): DB_TABLE_DESCRIPTION is
+	description (i: INTEGER): DB_TABLE_DESCRIPTION
 			-- Return description of table with code `i'.
 		require
 			in_range: is_valid (i)
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Facilities
 
-	is_valid (code: INTEGER): BOOLEAN is
+	is_valid (code: INTEGER): BOOLEAN
 			-- Is `code' a valid table code?
 		do
 			Result := code > 0 and then code <= Table_number
@@ -68,13 +68,13 @@ feature -- Facilities
 
 feature {NONE} -- Implementation
 
-	created_impl: BOOLEAN_REF is
+	created_impl: BOOLEAN_REF
 			-- Shared object to avoid multiplicity.
 		once
 			create Result
 		end
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

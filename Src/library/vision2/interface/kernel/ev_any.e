@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for Eiffel Vision interface.%N%
 		%Eiffel Vision uses the bridge pattern.%N%
@@ -46,7 +46,7 @@ feature {EV_ANY_HANDLER} -- Initialization
  --| proper initial results from class queries.
  --|----------------------------------------------------------------
 
-	frozen default_create is
+	frozen default_create
 			-- Standard creation procedure.
 			--| Must be called exactly once during creation.
 		do
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_data (some_data: like data) is
+	set_data (some_data: like data)
 			-- Assign `some_data' to `data'.
 		require
 			not_destroyed: not is_destroyed
@@ -90,7 +90,7 @@ feature -- Element change
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
@@ -101,7 +101,7 @@ feature -- Command
 
 feature -- Status Report
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
 		do
 			Result := implementation.is_destroyed
@@ -127,7 +127,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			--| consistent interface to users.
 			--| (See bridge pattern description below)
 
-	replace_implementation (new_implementation: like implementation) is
+	replace_implementation (new_implementation: like implementation)
 			-- Replace `implementation' with `new_implementation'.
 			-- The caller has complete responsibility for releasing any
 			-- resources held by the old `implementation'.
@@ -150,7 +150,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create `implementation'.
 			-- Must be defined in each descendant to create the
 			-- appropriate `implementation' object.
@@ -161,7 +161,7 @@ feature {EV_ANY} -- Implementation
 			implementation_created: implementation /= Void
 		end
 
-	initialize is
+	initialize
 			-- Mark `Current' as initialized.
 			-- This must be called during the creation procedure
 			-- to satisfy the `is_initialized' invariant.
@@ -177,7 +177,7 @@ feature {EV_ANY} -- Implementation
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
@@ -195,7 +195,7 @@ feature -- Duplication
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			--| Checked by the postcondition of default create.
 			--| Should be redefined and precursed in decendants to check new
@@ -219,13 +219,13 @@ feature {EV_ANY} -- Contract support
 			Result := (create {EV_ENVIRONMENT}).application.action_sequence_call_counter
 		end
 
-	is_usable: BOOLEAN is
+	is_usable: BOOLEAN
 			-- Is `Current' usable?
 		do
 			Result := is_initialized and not is_destroyed
 		end
 
-	application_exists: BOOLEAN is
+	application_exists: BOOLEAN
 			-- Does the application exist? This is used to stop
 			-- manipulation of widgets before an application is created.
 		do
@@ -254,7 +254,7 @@ invariant
 			--| (See bridge pattern notes below.)
 	default_create_called: default_create_called
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

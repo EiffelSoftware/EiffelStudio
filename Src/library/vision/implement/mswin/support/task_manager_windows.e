@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -8,7 +8,7 @@ deferred class TASK_MANAGER_WINDOWS
 
 feature
 
-	add_task (a_task: TASK_IMP) is
+	add_task (a_task: TASK_IMP)
 		do
 			if a_task /= Void then
 				tasks.extend (a_task)
@@ -16,7 +16,7 @@ feature
 			end
 		end
 
-	remove_task (a_task: TASK_IMP) is
+	remove_task (a_task: TASK_IMP)
 		do
 			tasks.prune_all (a_task)
 			if tasks.is_empty then
@@ -24,7 +24,7 @@ feature
 			end
 		end
 
-	tasks: LINKED_LIST [TASK_IMP] is
+	tasks: LINKED_LIST [TASK_IMP]
 			-- Tasks executed by `idle_action'
 		once
 			create Result.make
@@ -32,13 +32,13 @@ feature
 			result_exists: Result /= Void
 		end
 
-	application: WEL_APPLICATION is
+	application: WEL_APPLICATION
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

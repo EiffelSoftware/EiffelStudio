@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that facilitates the interaction with carbons CGImages"
 	author: ""
 	date: "$Date$"
@@ -38,7 +38,7 @@ create
 
 feature -- Creation
 
-	make_with_file (a_file_name: STRING) is
+	make_with_file (a_file_name: STRING)
 			--
 		do
 			item := load_image (a_file_name)
@@ -50,13 +50,13 @@ feature -- Access
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			--
 		do
 			Result := cgimage_get_width_external (item)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			--
 		do
 			Result := cgimage_get_height_external (item)
@@ -64,7 +64,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	load_image (a_file_name: STRING): POINTER is
+	load_image (a_file_name: STRING): POINTER
 			-- Loads an image from the specified path and returns a CGImageRef
 			-- This freature should probably be refactored to some better place so we could use the same code in other places (like EV_PIXMAP_IMP)
 		local
@@ -93,14 +93,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen kCGRenderingIntentDefault: INTEGER is
+	frozen kCGRenderingIntentDefault: INTEGER
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
 			"kCGRenderingIntentDefault"
 		end
 
-	frozen NULL: POINTER is
+	frozen NULL: POINTER
 		external
 			"C [macro <stdio.h>]"
 		alias

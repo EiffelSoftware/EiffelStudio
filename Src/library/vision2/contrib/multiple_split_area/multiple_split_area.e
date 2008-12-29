@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a split area that will hold multiple items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_SPLIT_AREA}
@@ -54,31 +54,31 @@ feature -- Access
 	disabled_close_button_shown: BOOLEAN
 		-- Are close buttons displayed (disabled) for widgets that may not be closed?
 
-	show_disabled_close_button: BOOLEAN is
+	show_disabled_close_button: BOOLEAN
 			-- Ensure `disabled_close_button_shown' is `True'.
 		do
 			disabled_close_button_shown := True
 		end
 
-	hide_disabled_close_button: BOOLEAN is
+	hide_disabled_close_button: BOOLEAN
 			-- Ensure `disable_close_button_shown' is `False'.
 		do
 			disabled_close_button_shown := False
 		end
 
-	show_disabled_minimize_button is
+	show_disabled_minimize_button
 			-- Ensure `disabled_minimize_button_shown' is `True'.
 		do
 			disabled_minimize_button_shown := True
 		end
 
-	hide_disabled_minimize_button is
+	hide_disabled_minimize_button
 			-- Ensure `disabled_minimize_button_shown' is `False'.
 		do
 			disabled_minimize_button_shown := False
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of widgets actually within `Current', does not include any
 			-- widgets that are currently docked out. Therefore, when a widget is
 			-- docked out, `count' is reduced by one.
@@ -88,7 +88,7 @@ feature -- Access
 			result_valid: Result >= 0
 		end
 
-	is_item_minimized (a_widget: EV_WIDGET): BOOLEAN is
+	is_item_minimized (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' minimized in `Current'?
 		require
 			widget_contained: linear_representation.has (a_widget)
@@ -96,7 +96,7 @@ feature -- Access
 			Result := holder_of_widget (a_widget).is_minimized
 		end
 
-	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN is
+	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' maximized in `Current'?
 		do
 			if maximized_tool /= Void then
@@ -106,7 +106,7 @@ feature -- Access
 			Result_consistent: Result implies maximized_tool /= Void
 		end
 
-	is_item_external (a_widget: EV_WIDGET): BOOLEAN is
+	is_item_external (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' currently external to `Current'?
 			-- i.e. has been docked out.
 		require
@@ -117,7 +117,7 @@ feature -- Access
 			Result_consistent: Result implies external_representation.has (a_widget)
 		end
 
-	original_index_of_external_item (a_widget: EV_WIDGET): INTEGER is
+	original_index_of_external_item (a_widget: EV_WIDGET): INTEGER
 			-- `Result' is original index of `a_widget' in `Current' before
 			-- it was made external.
 		require
@@ -142,7 +142,7 @@ feature -- Access
 		-- All widgets that have been inerted into `Current' but are presently
 		-- docked out of `Current'. No paticular order is guaranteed.
 
-	docked_out_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	docked_out_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when a widget is docked out of `Current'.
 		do
 			if docked_out_actions_internal = Void then
@@ -153,7 +153,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	docked_in_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	docked_in_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed after a widget has been docked in to `Current'.
 		do
 			if docked_in_actions_internal = Void then
@@ -164,7 +164,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	close_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	close_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- 	Actions to be performed after close icon is selected.
 		do
 			if close_actions_internal = Void then
@@ -173,7 +173,7 @@ feature -- Access
 			Result := close_actions_internal
 		end
 
-	minimize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	minimize_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed after a minimize icon is selected.
 		do
 			if minimize_actions_internal = Void then
@@ -182,7 +182,7 @@ feature -- Access
 			Result := minimize_actions_internal
 		end
 
-	maximize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	maximize_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed after a maximize icon is selected.
 		do
 			if maximize_actions_internal = Void then
@@ -191,7 +191,7 @@ feature -- Access
 			Result := maximize_actions_internal
 		end
 
-	restore_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+	restore_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed after an item has been restored.
 		do
 			if restore_actions_internal = Void then
@@ -200,7 +200,7 @@ feature -- Access
 			Result := restore_actions_internal
 		end
 
-	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX is
+	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX
 			-- `Result' is an EV_HORIZONTAL_BOX contained in the header of the tool
 			-- surrounding `widget' which permits you to customize the tools appearence
 			-- in `Current'. You should not unparent, `Result' or do anything dangerous
@@ -217,7 +217,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_top_widget_resizing is
+	enable_top_widget_resizing
 			-- Ensure `top_widget' resizing is `True'.
 			--| FIXME does not keep original positions.
 		do
@@ -227,7 +227,7 @@ feature -- Status setting
 			top_resizing: top_widget_resizing = True
 		end
 
-	disable_top_widget_resizing is
+	disable_top_widget_resizing
 			-- Ensure `top_widget' resizing is `False'.
 			--| FIXME does not keep original positions.
 		do
@@ -237,7 +237,7 @@ feature -- Status setting
 			not_top_resizing: top_widget_resizing = False
 		end
 
-	enable_close_button_as_grayed (widget: EV_WIDGET) is
+	enable_close_button_as_grayed (widget: EV_WIDGET)
 			-- Display a grayed out close button for `widget'.
 		require
 			widget_not_void: widget /= Void
@@ -250,7 +250,7 @@ feature -- Status setting
 		end
 
 
-	enable_close_button (widget: EV_WIDGET) is
+	enable_close_button (widget: EV_WIDGET)
 			-- Display a close button for `widget'.
 		require
 			widget_not_void: widget /= Void
@@ -262,7 +262,7 @@ feature -- Status setting
 			holder.enable_close_button
 		end
 
-	disable_close_button (widget: EV_WIDGET) is
+	disable_close_button (widget: EV_WIDGET)
 			-- hide the close button for `widget'.
 		require
 			widget_not_void: widget /= Void
@@ -274,7 +274,7 @@ feature -- Status setting
 			holder.disable_close_button
 		end
 
-	resize_widget_to (a_widget: EV_WIDGET; a_height: INTEGER) is
+	resize_widget_to (a_widget: EV_WIDGET; a_height: INTEGER)
 			-- Resize `a_widget' to `a_height' pixels.
 		require
 			widget_not_void: a_widget /= Void
@@ -305,18 +305,18 @@ feature -- Status setting
 
 	is_blocked: BOOLEAN
 
-	block is
+	block
 			--
 		do
 			is_blocked := True
 		end
 
-	unblock is
+	unblock
 		do
 			is_blocked := False
 		end
 
-	set_maximize_pixmap (pixmap: EV_PIXMAP) is
+	set_maximize_pixmap (pixmap: EV_PIXMAP)
 			-- Use `pixmap' as image on maximize buttons.
 		require
 			pixmap_not_void: pixmap /= Void
@@ -324,7 +324,7 @@ feature -- Status setting
 			maximize_pixmap := pixmap.twin
 		end
 
-	set_minimize_pixmap (pixmap: EV_PIXMAP) is
+	set_minimize_pixmap (pixmap: EV_PIXMAP)
 			-- Use `pixmap' as image on minimize buttons.
 		require
 			pixmap_not_void: pixmap /= Void
@@ -332,7 +332,7 @@ feature -- Status setting
 			minimize_pixmap := pixmap.twin
 		end
 
-	set_close_pixmap (pixmap: EV_PIXMAP) is
+	set_close_pixmap (pixmap: EV_PIXMAP)
 			-- Use `pixmap' as image on close buttons.
 		require
 			pixmap_not_void: pixmap /= Void
@@ -340,7 +340,7 @@ feature -- Status setting
 			close_pixmap := pixmap.twin
 		end
 
-	set_restore_pixmap (pixmap: EV_PIXMAP) is
+	set_restore_pixmap (pixmap: EV_PIXMAP)
 			-- Use `pixmap' as image on restore buttons.
 		require
 			pixmap_not_void: pixmap /= Void
@@ -348,7 +348,7 @@ feature -- Status setting
 			restore_pixmap := pixmap.twin
 		end
 
-	extend (widget: EV_WIDGET; name: STRING_GENERAL) is
+	extend (widget: EV_WIDGET; name: STRING_GENERAL)
 			-- Add `widget' to end with default height of 150 pixels.
 		require
 			widget_not_void: widget /= Void
@@ -360,7 +360,7 @@ feature -- Status setting
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 
-	insert_widget (widget: EV_WIDGET; name: STRING_GENERAL; position, desired_height: INTEGER) is
+	insert_widget (widget: EV_WIDGET; name: STRING_GENERAL; position, desired_height: INTEGER)
 			-- Insert `widget' into `Current' at position `position' with height `desired_height'.
 		require
 			widget_not_void: widget /= Void
@@ -406,7 +406,7 @@ feature -- Status setting
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 
-	add_external (widget: EV_WIDGET; window: EV_WINDOW; name: STRING_GENERAL; position, an_x, a_y, a_width, a_height: INTEGER) is
+	add_external (widget: EV_WIDGET; window: EV_WINDOW; name: STRING_GENERAL; position, an_x, a_y, a_width, a_height: INTEGER)
 			-- Add `widget' to `Current' as an external tool with name `name', a restore position of `position'
 			-- for when it is returned back to `Current', and a dialog screen size and position of `an_x', `a_y',
 			-- `a_width' and `a_height'. This effectively restores a tool as if it had already been dragged
@@ -441,7 +441,7 @@ feature -- Status setting
 			not_in_linear_rep: not linear_representation.has (widget)
 		end
 
-	remove (a_widget: EV_WIDGET) is
+	remove (a_widget: EV_WIDGET)
 			-- Remove `a_widget' from `Current'
 		require
 			a_widget_not_void: a_widget /= Void
@@ -487,7 +487,7 @@ feature -- Status setting
 			count_decreased: old linear_representation.has (a_widget) implies linear_representation.count = old linear_representation.count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from `Current'.
 			-- We have to call `remove_implementation' instead of `remove',
 			-- as do not want to call `rebuild' during the wipe out. This
@@ -532,7 +532,7 @@ feature -- Status setting
 			no_external_tools: external_representation.is_empty
 		end
 
-	maximize_item (a_widget: EV_WIDGET) is
+	maximize_item (a_widget: EV_WIDGET)
 			-- maximize `a_widget'.
 		require
 			has_widget: linear_representation.has (a_widget)
@@ -559,7 +559,7 @@ feature -- Status setting
 			is_maximized: is_item_maximized (a_widget)
 		end
 
-	minimize_item (a_widget: EV_WIDGET) is
+	minimize_item (a_widget: EV_WIDGET)
 			-- Minimize `a_widget'.
 		require
 			has_widget: linear_representation.has (a_widget)
@@ -587,7 +587,7 @@ feature -- Status setting
 			is_minimized: is_item_minimized (a_widget)
 		end
 
-	set_item_restore_height (a_widget: EV_WIDGET; a_height: INTEGER) is
+	set_item_restore_height (a_widget: EV_WIDGET; a_height: INTEGER)
 			-- Associate a restore height with item `a_widget'.
 			-- This height will be used when `a_widget' is restored from
 			-- a minimized of maximized state.
@@ -603,7 +603,7 @@ feature -- Status setting
 			tool_holder.set_restore_height (a_height)
 		end
 
-	restore_item (a_widget: EV_WIDGET) is
+	restore_item (a_widget: EV_WIDGET)
 			-- Restore representation of `a_widget' within `Current'.
 		require
 			has_widget: linear_representation.has (a_widget)
@@ -638,7 +638,7 @@ feature -- Status setting
 			-- situation, must go back to minimized state.
 		end
 
-	set_heights_no_resize (heights: ARRAYED_LIST [INTEGER]) is
+	set_heights_no_resize (heights: ARRAYED_LIST [INTEGER])
 			-- Adjust heights of contents based on `heights' as a guide,
 			-- but ensure that `Current' is not resized unless the
 			-- minimum sizes of each widget force it to be so.
@@ -699,7 +699,7 @@ feature -- Status setting
 		end
 
 
-	set_heights (heights: ARRAYED_LIST [INTEGER]) is
+	set_heights (heights: ARRAYED_LIST [INTEGER])
 			-- Adjust heights of contents based on `heights'.
 		require
 			heights_not_void: heights /= Void
@@ -748,7 +748,7 @@ feature -- Status setting
 			end
 		end
 
-	place_holder_inside_insert_structure (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): EV_VERTICAL_BOX is
+	place_holder_inside_insert_structure (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): EV_VERTICAL_BOX
 			-- `Result' is a vertical box containing a vertical box representing `upper_box' of `a_holder',
 			-- `a_holder' itself and a vertical box representing `lower_box' of `a_holder'.
 		require
@@ -770,7 +770,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	rebuilding_locked: BOOLEAN
 		-- Will calls to `rebuild' have no effect?
 
-	rebuild is
+	rebuild
 			-- Rebuild complete widget structure of `Current'.
 		local
 			split_area: EV_VERTICAL_SPLIT_AREA
@@ -842,7 +842,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	reverse_split_areas is
+	reverse_split_areas
 			-- Reverse disable item expand state of all split areas,
 			-- so that the direction of `Current' is reversed.
 			-- Only required in `top_resizing_mode'.
@@ -863,7 +863,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	split_area_index (holder_index: INTEGER): INTEGER is
+	split_area_index (holder_index: INTEGER): INTEGER
 			-- Index of split area containing `holder_index'.
 		require
 			holder_index_valid: holder_index >= 1 and holder_index <= linear_representation.count
@@ -895,7 +895,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	restore_pixmap: EV_PIXMAP
 		-- Pixmap associated with restore buttons.
 
-	initialize_docking_areas (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	initialize_docking_areas (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- Set up docking areas to allow the docking of `a_holder'.
 		require
 			a_holder_not_void: a_holder /= Void
@@ -955,7 +955,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	remove_docking_areas is
+	remove_docking_areas
 			-- Remove all docking areas added as result of last call to
 			-- `initialize_docking_areas'.
 		local
@@ -1011,7 +1011,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 
 
-	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- Maximize `a_tool'.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -1060,7 +1060,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			tool_maximized: maximized_tool = a_tool
 		end
 
-	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; must_rebuild: BOOLEAN) is
+	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; must_rebuild: BOOLEAN)
 			-- Ensure maximized tool `tool_holder' is no longer maximized,
 			-- and update state of `Current' to reflect this.
 			-- Rebuild `Current' if `must_rebuild'.
@@ -1144,7 +1144,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			no_maximized_tool: maximized_tool = Void
 		end
 
-	store_positions is
+	store_positions
 			-- Store all positions of splitters.
 		local
 			widget: EV_WIDGET
@@ -1165,7 +1165,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	restore_stored_positions is
+	restore_stored_positions
 			-- Restore all positions of splitters from `store_positions'.
 		do
 			if top_widget_resizing then
@@ -1257,7 +1257,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	minimized_states: ARRAYED_LIST [BOOLEAN]
 		-- List of all minimized states while a tool is maximized.
 
-	minimize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	minimize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- Ensure that `a_tool' is displayed minimized in `Current'.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -1295,7 +1295,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			index_of_holders_not_changed: all_holders.index = old all_holders.index
 		end
 
-	restore_minimized_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	restore_minimized_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- Ensure that `a_tool' is no longer displayed as minimized.
 		require
 			tool_not_void: a_tool /= Void
@@ -1478,7 +1478,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			not_minimized: not a_tool.is_minimized
 		end
 
-	transfer_box_contents (original_box, new_box: EV_BOX) is
+	transfer_box_contents (original_box, new_box: EV_BOX)
 			-- Transfer all contents of `original_box' to `new_box'.
 		require
 			original_box_not_void: original_box /= Void
@@ -1499,7 +1499,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			count_increased: new_box.count = old new_box.count + old original_box.count
 		end
 
-	remove_tool_structure (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	remove_tool_structure (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- `Remove' box containing `a_tool' and its upper and lower bars from
 			-- the boxes parent.
 		require
@@ -1516,7 +1516,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			tool_unparented: a_tool.parent.parent = Void
 		end
 
-	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER)
 			-- Remove `a_tool' from its `parent', and if the parent is a
 			-- split area, remove empty split areas.
 		require
@@ -1535,7 +1535,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			tool_not_parented: a_tool.parent.parent = Void
 		end
 
-	remove_parent_split_areas_bottom (split_area: EV_SPLIT_AREA) is
+	remove_parent_split_areas_bottom (split_area: EV_SPLIT_AREA)
 			-- Remove all split areas in `all_split_areas', from `split_area'
 			-- to first, if empty.
 		require
@@ -1560,7 +1560,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	remove_parent_split_areas_top (split_area: EV_SPLIT_AREA) is
+	remove_parent_split_areas_top (split_area: EV_SPLIT_AREA)
 			-- Remove all split areas in `all_split_areas', from `split_area'
 			-- to last, if empty.
 		require
@@ -1590,7 +1590,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	restore_parent_split_areas (split_area: EV_SPLIT_AREA) is
+	restore_parent_split_areas (split_area: EV_SPLIT_AREA)
 			-- Restore all unparented split areas from `split_area',
 			-- until the parent split area is not Void.
 		require
@@ -1614,7 +1614,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	next_non_minimized_down (current_position: INTEGER): INTEGER is
+	next_non_minimized_down (current_position: INTEGER): INTEGER
 			-- `Result' is next index of tool in `Current' from index `current_position'
 			-- that is not minimized or not external.
 		require
@@ -1635,7 +1635,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 
 
-	minimize_all_tools is
+	minimize_all_tools
 			-- Call `minimize_tool' for every tool in `Current'.
 			-- This is used after we rebuild the complete contents of `Current'.
 		local
@@ -1658,7 +1658,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 
 
-	update_all_minimize_buttons is
+	update_all_minimize_buttons
 			-- Ensure that the minimized buttons are updated to a valid state.
 			-- Only the minimize buttons of non external holders are modified.
 			-- If a tool is maximized in `Current', then ensure that all minimize
@@ -1700,7 +1700,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		end
 
 
-	all_minimized (lower, upper: INTEGER): BOOLEAN is
+	all_minimized (lower, upper: INTEGER): BOOLEAN
 			-- Are all items from position `lower' inclusive to `position `upper'
 			-- minimized?
 		require
@@ -1720,7 +1720,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	all_maximized (lower, upper: INTEGER): BOOLEAN is
+	all_maximized (lower, upper: INTEGER): BOOLEAN
 			-- Are all items from position `lower' inclusive to `position `upper'
 			-- maximized?
 		require
@@ -1740,7 +1740,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	unparent_all_holders is
+	unparent_all_holders
 			-- Ensure all items in `all_holders' are not parented.
 		local
 			current_parent: EV_CONTAINER
@@ -1758,7 +1758,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 		end
 
-	holder_of_widget (a_widget: EV_WIDGET): MULTIPLE_SPLIT_AREA_TOOL_HOLDER is
+	holder_of_widget (a_widget: EV_WIDGET): MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			-- `Result' is tool holder containing `a_widget'.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -1785,7 +1785,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			position_not_changed: all_holders.index = old all_holders.index
 		end
 
-	index_of_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): INTEGER is
+	index_of_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): INTEGER
 			-- `Result' is index of `a_holder' within `Current'.
 			-- Ignores any holders that are docked out, so will not correspond to
 			-- `all_holders.i_th'.
@@ -1798,7 +1798,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			valid_result: Result >= 1 and Result <= count
 		end
 
-	i_th_holder (an_index: INTEGER): MULTIPLE_SPLIT_AREA_TOOL_HOLDER IS
+	i_th_holder (an_index: INTEGER): MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			-- `Result' is i_th holder in current, not excluding any externally docked
 			-- holders. Therefore, you may not simply query `all_holders.i_th', as this includes
 			-- the external holders.
@@ -1813,7 +1813,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	update_for_holder_position_change (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; new_position: INTEGER) is
+	update_for_holder_position_change (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; new_position: INTEGER)
 			-- Update `linear_representation' and `all_holders' to reflect a change of
 			-- position from `original_position' to `new_position'.
 			-- Passing 0 as `original_position' means the holder was not contained in `Current',
@@ -1860,7 +1860,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			all_holders.put_left (a_holder)
 		end
 
-	set_holder_tool_height (a_height: INTEGER) is
+	set_holder_tool_height (a_height: INTEGER)
 			-- Assign `a_height' to `holder_tool_height'.
 		require
 			a_height_positive: a_height > 0
@@ -1896,7 +1896,7 @@ feature {NONE} -- Implementation
 	maximized_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		-- Holder currently maximized in `Current', or `Void' if none.
 
-	box_contents (box: EV_BOX): ARRAYED_LIST [EV_WIDGET] is
+	box_contents (box: EV_BOX): ARRAYED_LIST [EV_WIDGET]
 			-- `Result' is contents of `box' as an ARRAYED_LIST.
 			-- `box' remains unchanged.
 		require
@@ -1922,7 +1922,7 @@ feature {NONE} -- Implementation
 			box_index_consistent: old box.index = box.index
 		end
 
-	remove_implementation (a_widget: EV_WIDGET) is
+	remove_implementation (a_widget: EV_WIDGET)
 			-- Implementation for removal, without a rebuilding step. This allows features
 			-- such as `wipe_out' to remove all widgets without rebuilding the complete structure
 			-- for each removal.
@@ -2011,7 +2011,7 @@ feature {NONE} -- Implementation
 			count_decreased: old linear_representation.has (a_widget) implies linear_representation.count = old linear_representation.count - 1
 		end
 
-	store_heights_pre_insertion is
+	store_heights_pre_insertion
 			-- Store all heights of non external holders before insertion
 			-- of a new widget.
 		local
@@ -2039,7 +2039,7 @@ feature {NONE} -- Implementation
 			index_not_changed: linear_representation.index = old linear_representation.index
 		end
 
-	restore_heights_post_insertion (holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_height: INTEGER) is
+	restore_heights_post_insertion (holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_height: INTEGER)
 			-- Restore `holder' into `Current' at height `a_height'. This will perform a
 			-- "best fit" and attempt to leave other holds at same size, with minimal
 			-- adjustment.
@@ -2179,7 +2179,7 @@ feature {NONE} -- Implementation
 			index_not_changed: linear_representation.index = old linear_representation.index
 		end
 
-	update_expanded_state_of_all_split_areas is
+	update_expanded_state_of_all_split_areas
 			-- Ensure that expanded state of all split areas is correct.
 		local
 			cursor: CURSOR
@@ -2205,13 +2205,13 @@ feature {NONE} -- Implementation
 			index_not_changed: old all_split_areas.index = all_split_areas.index
 		end
 
-	platform_is_windows: BOOLEAN is
+	platform_is_windows: BOOLEAN
 			-- Is `Current' executing on Windows platform?
 		once
 			Result := (create {PLATFORM}).is_windows
 		end
 
-	application: EV_APPLICATION is
+	application: EV_APPLICATION
 			-- Application for `Current'. May not be a Once, as it is
 			-- possible to change the application.
 		do
@@ -2221,9 +2221,9 @@ feature {NONE} -- Implementation
 	holder_tool_height: INTEGER
 			-- Height of tools that surround each widget within `Current'.
 
-	restore_string: STRING is "Restore"
-	maximize_string: STRING is "Maximize"
-	minimize_string: STRING is "Minimize"
+	restore_string: STRING = "Restore"
+	maximize_string: STRING = "Maximize"
+	minimize_string: STRING = "Minimize"
 
 invariant
 	linear_representation_not_void: linear_representation /= Void
@@ -2233,7 +2233,7 @@ invariant
 	external_representation_not_void: external_representation /= Void
 	minimized_states_not_void: minimized_states /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parent of any graphic application based on MS-Windows implementation"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is 
+	make 
 			-- Create the application.
 		local
 			bw: BASE_IMP
@@ -50,12 +50,12 @@ feature {NONE} -- Implementation
 	application_name: STRING;
 			-- Name of the application top level
 
-	set_default is
+	set_default
 			-- Define default parameters for the application.
 		do
 		end
 
-	build is
+	build
 			-- Build an application.
 		do
 		end
@@ -63,14 +63,14 @@ feature {NONE} -- Implementation
 	init_toolkit: TOOLKIT_IMP
 			-- Toolkit of the application
 
-	set_toolkit  is
+	set_toolkit
 			-- Set MS-Windows as toolkit.
 		do
 			create init_toolkit.make (application_name)
 			if (toolkit = Void ) then end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

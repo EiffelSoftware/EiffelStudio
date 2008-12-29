@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_mediator: like snapshot_mediator; a_panel: EV_FRAME) is
+	make (a_mediator: like snapshot_mediator; a_panel: EV_FRAME)
 			-- Init
 		require
 			a_mediator_not_void: a_mediator /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Commands
 
-	build_next_route is
+	build_next_route
 			-- Build next route
 		local
 			l_info_box: EV_INFORMATION_DIALOG
@@ -45,7 +45,7 @@ feature -- Commands
 			end
 		end
 
-	reset is
+	reset
 			-- Reset
 		do
 			start_index := 0
@@ -62,7 +62,7 @@ feature {NONE} -- Results
 	grid: EV_GRID
 		-- Result grid
 
-	fill_results is
+	fill_results
 			--
 		local
 			l_array: LIST [like start_index]
@@ -128,14 +128,14 @@ feature {NONE} -- Results
 			end
 		end
 
-	wipe_out_results is
+	wipe_out_results
 			-- Wipe out all results.
 		do
 			result_panel.wipe_out
 			grid := Void
 		end
 
-	init_grid (a_grid: EV_GRID) is
+	init_grid (a_grid: EV_GRID)
 			-- Init grid with copy funcion.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -145,7 +145,7 @@ feature {NONE} -- Results
 			a_grid.key_press_actions.extend (agent on_grid_key_pressed)
 		end
 
-	on_grid_key_pressed (a_key: EV_KEY) is
+	on_grid_key_pressed (a_key: EV_KEY)
 			-- Support Copy.
 		require
 			a_key_not_void: a_key /= Void
@@ -166,7 +166,7 @@ feature {NONE} -- Results
 			end
 		end
 
-	select_all_row (a_grid: EV_GRID) is
+	select_all_row (a_grid: EV_GRID)
 			-- Select all rows of `a_grid'.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -184,7 +184,7 @@ feature {NONE} -- Results
 			end
 		end
 
-	copy_selected_items (a_grid: EV_GRID) is
+	copy_selected_items (a_grid: EV_GRID)
 			-- Copy all selected items in `a_grid'.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -275,7 +275,7 @@ feature {NONE} -- Results
 
 feature {NONE} -- Implementation
 
-	build is
+	build
 			-- Build route.
 		do
 			create route_stack.make (1000)
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	deep_visit_node (a_referee: like start_index): BOOLEAN is
+	deep_visit_node (a_referee: like start_index): BOOLEAN
 			-- Deep visit a node, Ture is found once object.
 		local
 			l_all_referrers, l_visited_referrers: HASH_TABLE [TUPLE [like start_index, ANY], like start_index]
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_last_link_to_once is
+	remove_last_link_to_once
 			-- Remove last found link to once in `reference_table'.
 			-- So that next searching will not return found routes anymore.
 		local
@@ -373,13 +373,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_visited (a_node: like start_index): BOOLEAN is
+	is_visited (a_node: like start_index): BOOLEAN
 			-- Is `a_node' visited?
 		do
 			Result := route_stack.has (a_node)
 		end
 
-	is_once_object (a_object: like start_index): BOOLEAN is
+	is_once_object (a_object: like start_index): BOOLEAN
 			-- Is `a_object' once?
 		do
 			Result := once_objects_table.has (a_object)
@@ -395,7 +395,7 @@ invariant
 	snapshot_mediator_not_void: snapshot_mediator /= Void
 	result_panel_not_void: result_panel /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

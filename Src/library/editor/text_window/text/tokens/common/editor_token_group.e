@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A groups of tokens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialisation
 
-	make_from_lexer (lexer: EDITOR_SCANNER) is
+	make_from_lexer (lexer: EDITOR_SCANNER)
 			-- Create a group of tokens from using token from `lexer'
 		require
 			lexer_exists: lexer /= Void
@@ -47,7 +47,7 @@ feature -- Miscellaneous
 	width: INTEGER
 			-- Width in pixel of the entire token.
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
@@ -61,7 +61,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	retrieve_position_by_width (a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local
@@ -94,7 +94,7 @@ feature -- Miscellaneous
 			Result := current_position + 1 -- We return a 1-based result (first character = 1)
 		end
 
-	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -108,7 +108,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -124,7 +124,7 @@ feature -- Miscellaneous
 
 	tab_size_cell: CELL [INTEGER]
 
-	tabulation_width: INTEGER is
+	tabulation_width: INTEGER
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
@@ -136,7 +136,7 @@ feature -- Miscellaneous
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_group (Current)
@@ -144,7 +144,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	composite_image: STRING_32 is
+	composite_image: STRING_32
 			-- Image of Current as single token
 		do
 			from
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

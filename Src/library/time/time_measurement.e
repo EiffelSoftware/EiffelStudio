@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Time Measurable Units"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,30 +11,30 @@ deferred class TIME_MEASUREMENT inherit
 
 feature -- Access
 
-	hour: INTEGER is
+	hour: INTEGER
 		-- Number of hours associated with current object
 		deferred
 		end
 	
 
-	minute: INTEGER is
+	minute: INTEGER
 		-- Number of minutes associated with current object
 		deferred
 		end
 	 
-	second: INTEGER is
+	second: INTEGER
 		-- Number of seconds associated with current object.
 		deferred
 		end
 	
-	fine_second: DOUBLE is
+	fine_second: DOUBLE
 		-- Number of fine seconds associated with current object
 		deferred
 		end
 	 
 feature -- Settings
 
-	set_second (s: INTEGER) is 
+	set_second (s: INTEGER) 
 			-- Set `second' to `s'.
 		require 
 			s_large_enough: s >= 0; 
@@ -44,7 +44,7 @@ feature -- Settings
 			second_set: second = s 
 		end
 
-	set_fine_second (s: DOUBLE) is 
+	set_fine_second (s: DOUBLE) 
 			-- Set `fine_second' to `s'
 		require 
 			s_large_enough: s >= 0; 
@@ -54,7 +54,7 @@ feature -- Settings
 			fine_second_set: fine_second = s
 		end
 
-	set_fractionals (f: DOUBLE) is
+	set_fractionals (f: DOUBLE)
 			-- Set `fractional_second' to `f'.
 		require
 			f_large_enough: f >= 0
@@ -64,7 +64,7 @@ feature -- Settings
 			second_same: second = old second
 		end	
 
-	set_minute (m: INTEGER) is 
+	set_minute (m: INTEGER) 
 			-- Set `minute' to `m'.
 		require 
 			m_large_enough: m >= 0 
@@ -74,7 +74,7 @@ feature -- Settings
 			minute_set: minute = m 
 		end
 
-	set_hour (h: INTEGER) is 
+	set_hour (h: INTEGER) 
 			-- Set `hour' to `h'.
 		require 
 			h_large_enough: h >= 0; 
@@ -84,7 +84,7 @@ feature -- Settings
 			hour_set: hour = h 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

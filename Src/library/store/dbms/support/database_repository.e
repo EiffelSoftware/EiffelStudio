@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_REPOSITORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -34,7 +34,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create attributes
 		do
 			create table.make (1)
@@ -44,7 +44,7 @@ feature -- Initialization
 			create rep_owner.make(1)
 		end
 
-	load is
+	load
 			-- Load in description of repository `repository_name'.
 		require else
 			repository_name_exists: repository_name /= Void
@@ -63,7 +63,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	generate_class(f: FILE) is
+	generate_class(f: FILE)
 			-- Generate Eiffel class template according to data
 			-- representation given by `repository_name'.
 		require
@@ -153,7 +153,7 @@ feature -- Basic operations
 			f.put_string (s)
 		end
 
-	execute is
+	execute
 			-- Implement an ACTION operation
 		do
 			request_select.object_convert (tmp_acc_col)
@@ -164,7 +164,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	allocate (object: ANY; table_name: STRING) is
+	allocate (object: ANY; table_name: STRING)
 			-- Create a schema table `repository_name' conforming 
 			-- to `object' basic attributes.
 		require else
@@ -272,7 +272,7 @@ feature -- Status setting
 			request_create.modify (r_string)
 		end
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Set repository name with `repository_name'.
 		require else
 			new_name_not_void: new_name /= Void
@@ -297,7 +297,7 @@ feature -- Status report
 	rep_owner: STRING
 			-- Owner of the table.
 
-	dimension: INTEGER is
+	dimension: INTEGER
 			-- Table column count.
 		require else
 			repository_exists: exists
@@ -305,7 +305,7 @@ feature -- Status report
 			Result := table.count
 		end
 
-	column_name (i :INTEGER): STRING is
+	column_name (i :INTEGER): STRING
 			-- Name of i-th column of table-like repository.
 		require else
 			repository_exists: exists
@@ -318,7 +318,7 @@ feature -- Status report
 			end
 		end
 
-	conforms (object: ANY): BOOLEAN is
+	conforms (object: ANY): BOOLEAN
 			-- Is the structure of repository_name the same
 			-- as the structure of `object'.
 		require else
@@ -384,13 +384,13 @@ feature -- Status report
 
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does current repository exist in database schema?
 		do
 			Result := not table.is_empty
 		end
 
-	column_number: INTEGER is
+	column_number: INTEGER
 			-- Column Number.
 		do
 			Result := table.count
@@ -398,7 +398,7 @@ feature -- Status report
 			Result >= 0
 		end
 
-	column_i_th(i: INTEGER): COLUMNS[DATABASE] is
+	column_i_th(i: INTEGER): COLUMNS[DATABASE]
 			-- Column corresponding to indice 'i'.
 		require
 			indice_valid: i>=1 and i<=column_number
@@ -420,30 +420,30 @@ feature {NONE} -- Status report
 			--| no element move in the class, feature to access list
 			--| elements is `column_i_th'.
 
-	request_select: DB_SELECTION is
+	request_select: DB_SELECTION
 			-- Selection utility object.
 		once
 			create Result.make
 		end
 
-	request_create: DB_CHANGE is
+	request_create: DB_CHANGE
 			-- Modification utility object.
 		once
 			create Result.make
 		end
 
-	Selection_string: STRING is 
+	Selection_string: STRING 
 		do
 			Result := db_spec.Selection_string (rep_qualifier, rep_owner, repository_name)
 		end
 
 
-	Max_char_size: INTEGER is 
+	Max_char_size: INTEGER 
 		do
 			Result := db_spec.Max_char_size
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

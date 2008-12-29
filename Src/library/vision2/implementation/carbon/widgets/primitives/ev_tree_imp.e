@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision Tree, Carbon implementation"
 	legal: "See notice at end of class."
@@ -68,7 +68,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty Tree.
 		local
 			ptr: POINTER
@@ -81,13 +81,13 @@ feature {NONE} -- Initialization
 			hide_title_row
 		end
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 			-- Call the appropriate selection action sequences
 		do
 			select_actions.call ([])
 		end
 
-	initialize is
+	initialize
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TREE_I}
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
@@ -106,19 +106,19 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 
 		do
 
 		end
 
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 		do
 		end
 
 feature -- Status report
 
-	selected_item: EV_TREE_NODE is
+	selected_item: EV_TREE_NODE
 			-- Item which is currently selected
 		do
 			Result ?= selected_item_imp.interface
@@ -130,39 +130,39 @@ feature -- Status report
 
 feature -- Implementation
 
-	ensure_item_visible (an_item: EV_TREE_NODE) is
+	ensure_item_visible (an_item: EV_TREE_NODE)
 
 		do
 			-- reveal_data_browser_item_external
 		end
 
-	set_to_drag_and_drop: BOOLEAN is
+	set_to_drag_and_drop: BOOLEAN
 		do
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
 
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
 
 		end
 
-	disable_transport is
+	disable_transport
 		do
 
 		end
 
-	update_pnd_status is
+	update_pnd_status
 			-- Update PND status of list and its children.
 		do
 		end
 
-	update_pnd_connection (a_enable: BOOLEAN) is
+	update_pnd_connection (a_enable: BOOLEAN)
 			-- Update the PND connection status for `Current'.
 		do
 		end
@@ -172,7 +172,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Initialize a pick and drop transport.
 		do
 		end
@@ -188,30 +188,30 @@ feature -- Implementation
 
 	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
 		do
 		end
 
-	post_drop_steps (a_button: INTEGER)  is
+	post_drop_steps (a_button: INTEGER)
 			-- Steps to perform once an attempted drop has happened.
 		do
 		end
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		do
 			Result := 74
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			if internal_minimum_width >= 0 then
@@ -224,7 +224,7 @@ feature -- Minimum size
 
 feature {EV_TREE_NODE_IMP}
 
-	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP
 			-- Returns the row index at relative coordinate `a_y'.
 		do
 		end
@@ -234,13 +234,13 @@ feature {NONE} -- Implementation
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
 
-	append (s: SEQUENCE [EV_TREE_ITEM]) is
+	append (s: SEQUENCE [EV_TREE_ITEM])
 			-- Add 's' to 'Current'
 		do
 			Precursor (s)
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_CARBON_DATABROWSER} (v, i)
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -274,34 +274,34 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING_32 is
+	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING_32
 			-- Retrieve cell text from `a_tree_node_imp`
 		do
 		end
 
-	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING_GENERAL) is
+	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING_GENERAL)
 			-- Set cell text at to `a_text'.
 		do
 		end
 
-	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP) is
+	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP)
 			-- Set the pixmap for `a_tree_node_imp'.
 		do
 		end
 
-	set_row_height (value: INTEGER) is
+	set_row_height (value: INTEGER)
 			-- Make `value' the new height of all the rows.
 		do
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height of rows in `Current'
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- Not implemented
 		do
 		end
@@ -310,7 +310,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_TREE_IMP
 

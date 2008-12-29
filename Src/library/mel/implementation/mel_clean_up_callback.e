@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback to clean a widget after having called other destroy callbacks"
@@ -19,13 +19,13 @@ inherit
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Clean up the object.
 		do
 			callback_struct.widget.clean_up
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

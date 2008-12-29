@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Widget to controll the scrolling of the viewing area in another widget."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrollbar.
 		require
 			name_exists: a_name /= Void
@@ -52,49 +52,49 @@ feature -- Initialization
 
 feature -- Access
 
-	drag_command: MEL_COMMAND_EXEC is
+	drag_command: MEL_COMMAND_EXEC
 			-- Command set for the drag callback
 		do
 			Result := motif_command (XmNdragCallback)
 		end;
 
-	value_changed_command: MEL_COMMAND_EXEC is
+	value_changed_command: MEL_COMMAND_EXEC
 			-- Command set for the value changed callback
 		do
 			Result := motif_command (XmNvalueChangedCallback)
 		end;
 
-	increment_command: MEL_COMMAND_EXEC is
+	increment_command: MEL_COMMAND_EXEC
 			-- Command set for the increment callback
 		do
 			Result := motif_command (XmNincrementCallback)
 		end;
 
-	decrement_command: MEL_COMMAND_EXEC is
+	decrement_command: MEL_COMMAND_EXEC
 			-- Command set for the decrement callback
 		do
 			Result := motif_command (XmNdecrementCallback)
 		end;
 
-	page_decrement_command: MEL_COMMAND_EXEC is
+	page_decrement_command: MEL_COMMAND_EXEC
 			-- Command set for the page decrement callback
 		do
 			Result := motif_command (XmNpageDecrementCallback)
 		end;
 
-	page_increment_command: MEL_COMMAND_EXEC is
+	page_increment_command: MEL_COMMAND_EXEC
 			-- Command set for the page increment callback
 		do
 			Result := motif_command (XmNvalueChangedCallback)
 		end;
 
-	to_bottom_command: MEL_COMMAND_EXEC is
+	to_bottom_command: MEL_COMMAND_EXEC
 			-- Command set for the to bottom callback
 		do
 			Result := motif_command (XmNtoBottomCallback)
 		end;
 
-	to_top_command: MEL_COMMAND_EXEC is
+	to_top_command: MEL_COMMAND_EXEC
 			-- Command set for the to top callback
 		do
 			Result := motif_command (XmNtoTopCallback)
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status report
 
-	value: INTEGER is
+	value: INTEGER
 			-- Value of the current slider position
 		require
 			exists: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Status report
 			value_small_enough: Result <= maximum
 		end;
 
-	increment: INTEGER is
+	increment: INTEGER
 			-- Amount `value' changes when a move action occurs
 		require
 			exists: not is_destroyed
@@ -124,7 +124,7 @@ feature -- Status report
 			granularity_small_enough: Result <= (maximum - minimum)
 		end;
 
-	initial_delay: INTEGER is
+	initial_delay: INTEGER
 			-- Number of milliseconds to wait before triggering continuous slider movement
 		require
 			exists: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Status report
 			initial_delay_large_enough: Result > 0
 		end;
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is scrollbar orientation horizontal?
 		require
 			exists: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Is scale orientation vertical?
 		require
 			exists: not is_destroyed
@@ -150,7 +150,7 @@ feature -- Status report
 			Result := orientation = XmVERTICAL
 		end;
 
-	is_maximum_on_top: BOOLEAN is
+	is_maximum_on_top: BOOLEAN
 			-- Is `maximum' placed at the top?
 		require
 			exists: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_TOP
 		end;
 
-	is_maximum_on_bottom: BOOLEAN is
+	is_maximum_on_bottom: BOOLEAN
 			-- Is processing direction bottom?
 		require
 			exists: not is_destroyed;
@@ -168,7 +168,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_BOTTOM
 		end;
 
-	is_maximum_on_right: BOOLEAN is
+	is_maximum_on_right: BOOLEAN
 			-- Is processing direction right?
 		require
 			exists: not is_destroyed;
@@ -177,7 +177,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_RIGHT
 		end;
 
-	is_maximum_on_left: BOOLEAN is
+	is_maximum_on_left: BOOLEAN
 			-- Is `maximum' placed at the left?
 		require
 			exists: not is_destroyed
@@ -186,7 +186,7 @@ feature -- Status report
 			Result := processing_direction = XmMAX_ON_LEFT
 		end;
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value
 		require
 			exists: not is_destroyed
@@ -196,7 +196,7 @@ feature -- Status report
 			maximum_greater_than_minimum: Result >= minimum
 		end;
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value
 		require
 			exists: not is_destroyed
@@ -206,7 +206,7 @@ feature -- Status report
 			minimum_smaller_than_maximum: Result <= maximum
 		end;
 
-	page_increment: INTEGER is
+	page_increment: INTEGER
 			-- Amount `value' changes when a page move action occurs
 		require
 			exists: not is_destroyed
@@ -217,7 +217,7 @@ feature -- Status report
 			page_increment_small_enough: Result <= (maximum - minimum)
 		end;
 
-	repeat_delay: INTEGER is
+	repeat_delay: INTEGER
 			-- Number of milliseconds to wait between subsequent
 			-- slider movements after the initial delay
 		require
@@ -228,7 +228,7 @@ feature -- Status report
 			positive_delay: Result > 0
 		end;
 
-	are_arrows_shown: BOOLEAN is
+	are_arrows_shown: BOOLEAN
 			-- Are arrows shown?
 		require
 			exists: not is_destroyed
@@ -236,7 +236,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNshowArrows)
 		end;
 
-	slider_size: INTEGER is
+	slider_size: INTEGER
 			-- Size of slider
 		require
 			exists: not is_destroyed
@@ -247,7 +247,7 @@ feature -- Status report
 			slider_size_large_enough: Result >= 0
 		end;
 
-	trough_color: MEL_PIXEL is
+	trough_color: MEL_PIXEL
 			-- Color of the slider's trough.
 		require
 			exists: not is_destroyed
@@ -261,7 +261,7 @@ feature -- Status report
 
 feature  -- Status setting
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -273,7 +273,7 @@ feature  -- Status setting
 			value_set: value = a_value
 		end;
 
-	set_increment (new_granularity: INTEGER) is
+	set_increment (new_granularity: INTEGER)
 			-- Set `increment' to `new_granularity'.
 		require
 			exist: not is_destroyed;
@@ -285,7 +285,7 @@ feature  -- Status setting
 			 increment_set: increment = new_granularity
 		end;
 
-	set_initial_delay (new_delay: INTEGER) is
+	set_initial_delay (new_delay: INTEGER)
 			-- Set `initial_delay' to `new_delay'.
 		require
 			exists: not is_destroyed;
@@ -296,7 +296,7 @@ feature  -- Status setting
 			delay_set: initial_delay = new_delay
 		end;
 
-	set_horizontal is
+	set_horizontal
 			-- Set `is_horizontal' to True.
 		require
 			exists: not is_destroyed
@@ -306,7 +306,7 @@ feature  -- Status setting
 			is_horizontal: is_horizontal
 		end;
 
-	set_vertical is
+	set_vertical
 			-- Set `is_horizontal' to False.
 		require
 			exists: not is_destroyed
@@ -316,7 +316,7 @@ feature  -- Status setting
 			is_vertical: is_vertical
 		end;
 
-	set_maximum_on_top is
+	set_maximum_on_top
 			-- Set `is_maximum_on_top' to True.
 		require
 			exists: not is_destroyed;
@@ -327,7 +327,7 @@ feature  -- Status setting
 			is_maximum_on_top: is_maximum_on_top
 		end
 
-	set_maximum_on_bottom is
+	set_maximum_on_bottom
 			-- Set `is_maximum_on_bottom' to True.
 		require
 			exists: not is_destroyed;
@@ -338,7 +338,7 @@ feature  -- Status setting
 			is_maximum_on_bottom: is_maximum_on_bottom
 		end
 
-	set_maximum_on_left is
+	set_maximum_on_left
 			-- Set `is_maximum_on_left' to True.
 		require
 			exists: not is_destroyed;
@@ -349,7 +349,7 @@ feature  -- Status setting
 			is_maximum_on_left: is_maximum_on_left
 		end
 
-	set_maximum_on_right is
+	set_maximum_on_right
 			-- Set `is_maximum_on_right' to True.
 		require
 			exists: not is_destroyed;
@@ -360,7 +360,7 @@ feature  -- Status setting
 			is_maximum_on_right: is_maximum_on_right
 		end
 
-	set_maximum (a_maximum: INTEGER) is
+	set_maximum (a_maximum: INTEGER)
 			-- Set `maximum' to `a_maximum'.
 		require
 			exists: not is_destroyed;
@@ -371,7 +371,7 @@ feature  -- Status setting
 			maximum_set: maximum = a_maximum
 		end;
 
-	set_minimum (a_minimum: INTEGER) is
+	set_minimum (a_minimum: INTEGER)
 			-- Set `minimum' to `a_minimum'.
 		require
 			exists: not is_destroyed;
@@ -382,7 +382,7 @@ feature  -- Status setting
 			minimum_set: minimum = a_minimum
 		end;
 
-	set_page_increment (a_value: INTEGER) is
+	set_page_increment (a_value: INTEGER)
 			-- Set `page_increment' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -394,7 +394,7 @@ feature  -- Status setting
 			page_increment_set: page_increment = a_value
 		end;
 
-	set_repeat_delay (a_delay: INTEGER) is
+	set_repeat_delay (a_delay: INTEGER)
 			-- Set `repeat_delay' to `a_delay'.
 		require
 			exists: not is_destroyed;
@@ -405,7 +405,7 @@ feature  -- Status setting
 			delay_set: repeat_delay = a_delay
 		end;
 
-	show_arrows is
+	show_arrows
 			-- Set `are_arrows_shown' to True.
 		require
 			exists: not is_destroyed
@@ -415,7 +415,7 @@ feature  -- Status setting
 			arrows_displayed: are_arrows_shown 
 		end;
 
-	hide_arrows is
+	hide_arrows
 			-- Set `are_arrows_shown' to False.
 		require
 			exists: not is_destroyed
@@ -425,7 +425,7 @@ feature  -- Status setting
 			arrows_hidden: not are_arrows_shown 
 		end;
 
-	set_slider_size (a_size: INTEGER) is
+	set_slider_size (a_size: INTEGER)
 			-- Set `slider_size' to `a_size'.
 		require
 			exists: not is_destroyed;
@@ -437,7 +437,7 @@ feature  -- Status setting
 			slider_size_set: slider_size = a_size
 		end;
 
-	set_trough_color (a_color: MEL_PIXEL) is
+	set_trough_color (a_color: MEL_PIXEL)
 			-- Set `trough_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -451,7 +451,7 @@ feature  -- Status setting
 
 feature  -- Element change
 
-	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider is
 			-- being dragged.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -464,7 +464,7 @@ feature  -- Element change
 			command_set: command_set (drag_command, a_command, an_argument)
 		end;
 
-	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value changes.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -476,7 +476,7 @@ feature  -- Element change
 			command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
-	set_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value 
 			-- descreases by one increment.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -489,7 +489,7 @@ feature  -- Element change
 			command_set: command_set (decrement_command, a_command, an_argument)
 		end;
 
-	set_increment_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_increment_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value 
 			-- increases by one increment.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -502,7 +502,7 @@ feature  -- Element change
 			command_set: command_set (increment_command, a_command, an_argument)
 		end;
 
-	set_page_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_page_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value 
 			-- decreases by one page increment.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -515,7 +515,7 @@ feature  -- Element change
 			command_set: command_set (page_decrement_command, a_command, an_argument)
 		end;
 
-	set_page_increment_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_page_increment_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider value 
 			-- increases by one page increment.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -528,7 +528,7 @@ feature  -- Element change
 			command_set: command_set (page_increment_command, a_command, an_argument)
 		end;
 
-	set_to_bottom_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_to_bottom_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider is moved
 			-- to the maximum value of the scrollbar.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -541,7 +541,7 @@ feature  -- Element change
 			command_set: command_set (to_bottom_command, a_command, an_argument)
 		end;
 
-	set_to_top_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_to_top_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the slider is moved
 			-- to the minimum value of the scrollbar.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -556,7 +556,7 @@ feature  -- Element change
 
 feature  -- Removal
 
-	remove_drag_callback is
+	remove_drag_callback
 			-- Remove the command for the drag callback.
 		do
 			remove_callback (XmNdragCallback)
@@ -564,7 +564,7 @@ feature  -- Removal
 			removed: drag_command = Void
 		end;
 
-	remove_value_changed_callback is
+	remove_value_changed_callback
 			-- Remove the command for the value changed callback.
 		do
 			remove_callback (XmNvalueChangedCallback)
@@ -572,7 +572,7 @@ feature  -- Removal
 			removed: value_changed_command = Void
 		end;
 
-	remove_increment_callback is
+	remove_increment_callback
 			-- Remove the command for the increment callback.
 		do
 			remove_callback (XmNincrementCallback)
@@ -580,7 +580,7 @@ feature  -- Removal
 			removed: increment_command = Void
 		end;
 
-	remove_decrement_callback is
+	remove_decrement_callback
 			-- Remove the command for the decrement callback.
 		do
 			remove_callback (XmNdecrementCallback)
@@ -588,7 +588,7 @@ feature  -- Removal
 			removed: decrement_command = Void
 		end;
 
-	remove_page_decrement_callback is
+	remove_page_decrement_callback
 			-- Remove the command for the page decrement callback.
 		do
 			remove_callback (XmNpageDecrementCallback)
@@ -596,7 +596,7 @@ feature  -- Removal
 			removed: page_decrement_command = Void
 		end;
 
-	remove_page_increment_callback is
+	remove_page_increment_callback
 			-- Remove the command for the page increment callback.
 		do
 			remove_callback (XmNpageIncrementCallback)
@@ -604,7 +604,7 @@ feature  -- Removal
 			removed: page_increment_command = Void
 		end;
 
-	remove_to_bottom_callback is
+	remove_to_bottom_callback
 			-- Remove the command for the to bottom callback.
 		do
 			remove_callback (XmNtoBottomCallback)
@@ -612,7 +612,7 @@ feature  -- Removal
 			removed: to_bottom_command = Void
 		end;
 
-	remove_to_top_callback is
+	remove_to_top_callback
 			-- Remove the command for the to top callback.
 		do
 			remove_callback (XmNtoTopCallback)
@@ -623,7 +623,7 @@ feature  -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr, 
-				resource_name: POINTER): MEL_SCROLL_BAR_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_SCROLL_BAR_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -633,7 +633,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	processing_direction: INTEGER is
+	processing_direction: INTEGER
 			-- Position at which to display Current's maximum and minimum values
 		require
 			exists: not is_destroyed
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNprocessingDirection)
 		end;
 
-	orientation: INTEGER is
+	orientation: INTEGER
 			-- Direction in which the widget is displayed
 		require
 			exists: not is_destroyed
@@ -649,7 +649,7 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNorientation)
 		end;
 
-	xm_create_scroll_bar (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_scroll_bar (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 	   external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ScrollBar.h>"
 		alias
@@ -662,7 +662,7 @@ invariant
 	value_large_enough: not is_destroyed implies value >= minimum;
 	valid_range: not is_destroyed implies minimum <= maximum
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

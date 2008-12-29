@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that may call `default_create'%
 		%from EV_ANY."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ class
 	-- you need to be able to call `default_create' on the object
 	-- afterwards. In this case, you just inherit from `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_WINDOWS task"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make  is
+	make
 			-- Create a task.
 		do
 			create actions.make
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is the list of actions empty?
 		do
 			Result := actions.is_empty
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_action (a_command: COMMAND; an_argument: ANY) is
+	add_action (a_command: COMMAND; an_argument: ANY)
 			-- Add `a_command' with `argument' to the list of action to execute 
 			-- while the system is waiting for user events.
 		local
@@ -62,7 +62,7 @@ feature -- Element change
 			actions.extend (action)
 		end
 
-	remove_action (a_command: COMMAND; an_argument: ANY) is
+	remove_action (a_command: COMMAND; an_argument: ANY)
 			-- Remove `a_command' with `argument' to the list of action to
 			-- execute while the system is waiting for user events.
 		local
@@ -80,7 +80,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute the command.
 		local
 			c: CURSOR
@@ -104,7 +104,7 @@ feature -- Basic operations
 			end
 		end
 
-	destroy is
+	destroy
 		do
 			remove_task (Current)
 		end
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 --samik	application: WEL_APPLICATION
 		-- Application this task is associated to.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GTK SD_TOOL_BAR_DRAWER implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 					-- Make user not break the invariant from EV_ANY_I
@@ -35,7 +35,7 @@ feature{NONE} -- Initlization
 
 feature -- Redefine
 
-	start_draw (a_rectangle: EV_RECTANGLE) is
+	start_draw (a_rectangle: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -62,7 +62,7 @@ feature -- Redefine
 			end
 		end
 
-	end_draw is
+	end_draw
 			-- Redefine
 		do
 			is_start_draw_called := False
@@ -71,7 +71,7 @@ feature -- Redefine
 	is_start_draw_called: BOOLEAN
 			-- Redefine
 
-	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Redefine
 		local
 			l_tool_bar_imp: EV_DRAWING_AREA_IMP
@@ -109,17 +109,17 @@ feature -- Redefine
 			end
 		end
 
-	on_theme_changed is
+	on_theme_changed
 			-- Redefine
 		do
 		end
 
-	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
+	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL)
 			-- Redefine
 		do
 		end
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
 			-- Redefine
 		do
 			tool_bar := a_tool_bar
@@ -127,7 +127,7 @@ feature -- Redefine
 
 feature {SD_NOTEBOOK_TAB_DRAWER_IMP} -- Command
 
-	draw_button_background (a_gtk_widget: POINTER; a_rect: EV_RECTANGLE; a_state: INTEGER) is
+	draw_button_background (a_gtk_widget: POINTER; a_rect: EV_RECTANGLE; a_state: INTEGER)
 			-- Draw button background.
 		require
 			exist: a_gtk_widget /= default_pointer
@@ -139,7 +139,7 @@ feature {SD_NOTEBOOK_TAB_DRAWER_IMP} -- Command
 
 feature {NONE} -- Implementation
 
-	button_style: POINTER is
+	button_style: POINTER
 			-- Default theme style from resource.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
@@ -147,13 +147,13 @@ feature {NONE} -- Implementation
 			not_void: Result /= default_pointer
 		end
 
-	style_source: POINTER is
+	style_source: POINTER
 			-- Button for query theme style.
 		once
 			Result := {EV_GTK_EXTERNALS}.gtk_button_new
 		end
 
-	gtk_shadow_type (a_state: INTEGER): INTEGER is
+	gtk_shadow_type (a_state: INTEGER): INTEGER
 			-- Get correspond shadow type base on `a_state'
 		do
 			inspect
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	to_gtk_state (a_state: INTEGER): INTEGER is
+	to_gtk_state (a_state: INTEGER): INTEGER
 			-- Convert from SD_TOOL_BAR_ITEM_STATE to WEL_THEME_TS_CONSTANTS.
 		do
 			inspect
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_pixmap (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS; a_gtk_object: POINTER) is
+	draw_pixmap (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS; a_gtk_object: POINTER)
 			-- Draw pixmap on tool bar.
 		require
 			not_void: a_arguments /= Void
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_text (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS; a_gtk_object: POINTER) is
+	draw_text (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS; a_gtk_object: POINTER)
 			-- Draw text on tool bar.
 		require
 			not_void: a_arguments /= Void
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_gtk_paint_line (a_gtk_widget: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN) is
+	c_gtk_paint_line (a_gtk_widget: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN)
 			-- Draw vertical separator line.
 		require
 			exist: a_gtk_widget /= default_pointer
@@ -306,7 +306,7 @@ feature {NONE} -- Externals
 		end
 
 
-	c_gtk_paint_box (a_style: POINTER; a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER; a_inset_shadow: BOOLEAN) is
+	c_gtk_paint_box (a_style: POINTER; a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER; a_inset_shadow: BOOLEAN)
 			-- Paint background.
 		require
 			exist: a_gtk_widget /= default_pointer
@@ -344,7 +344,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_gtk_paint_layout (a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_rect_x, a_rect_y, a_rect_width, a_rect_height: INTEGER; a_pango_layout: POINTER) is
+	c_gtk_paint_layout (a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_rect_x, a_rect_y, a_rect_width, a_rect_height: INTEGER; a_pango_layout: POINTER)
 			-- Paint texts.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -364,7 +364,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	c_gdk_desatuate (a_pixmap_buf: POINTER; a_result: POINTER) is
+	c_gdk_desatuate (a_pixmap_buf: POINTER; a_result: POINTER)
 			-- Desatuate `a_pixmap_buf'.
 			-- Result is a desatuated pixmap buf.
 		require
@@ -385,7 +385,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

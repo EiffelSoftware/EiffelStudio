@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IAxWinHostWindow' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ inherit
 	
 feature -- Basic Operations
 
-	create_control (lp_trics_data: STRING; p_stream: ECOM_STREAM) is
+	create_control (lp_trics_data: STRING; p_stream: ECOM_STREAM)
 			-- No description available.
 			-- `lp_trics_data' [in].  
 			-- `p_stream' [in].  
@@ -57,7 +57,7 @@ feature -- Basic Operations
 					p_stream: ECOM_STREAM; 
 					ppunk: CELL [ECOM_INTERFACE]; 
 					riid_advise: ECOM_GUID; 
-					punk_advise: ECOM_INTERFACE) is
+					punk_advise: ECOM_INTERFACE)
 			-- No description available.
 			-- `lp_trics_data' [in].  
 			-- `p_stream' [in].  
@@ -68,7 +68,7 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	attach_control (p_unk_control: ECOM_INTERFACE) is
+	attach_control (p_unk_control: ECOM_INTERFACE)
 			-- No description available.
 			-- `p_unk_control' [in].  
 		local
@@ -89,7 +89,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	activate_ax (p_unk_control: ECOM_INTERFACE; initialized: BOOLEAN; p_stream: ECOM_STREAM) is
+	activate_ax (p_unk_control: ECOM_INTERFACE; initialized: BOOLEAN; p_stream: ECOM_STREAM)
 			-- Activates COM control.
 		local
 			pdw_status: INTEGER_REF
@@ -177,14 +177,14 @@ feature -- Basic Operations
 			end
 		end
 
-	set_external_dispatch (p_disp: ECOM_INTERFACE) is
+	set_external_dispatch (p_disp: ECOM_INTERFACE)
 			-- No description available.
 			-- `p_disp' [in].  
 		do
 			external_dispatch := p_disp
 		end
 
-	set_external_uihandler (p_disp: IDOC_HOST_UIHANDLER_DISPATCH_INTERFACE) is
+	set_external_uihandler (p_disp: IDOC_HOST_UIHANDLER_DISPATCH_INTERFACE)
 			-- No description available.
 			-- `p_disp' [in].  
 		local
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 
 	m_dw_ole_object: INTEGER;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

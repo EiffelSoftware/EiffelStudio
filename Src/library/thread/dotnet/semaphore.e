@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Semaphore synchronization object, allows threads to access global %
 		%data through critical sections."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (a_count: INTEGER) is
+	make (a_count: INTEGER)
 			-- Create semaphore.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
 			Result := count >= 0
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	try_wait: BOOLEAN is
+	try_wait: BOOLEAN
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		require
@@ -45,7 +45,7 @@ feature -- Status setting
 			Result := wait_with_timeout (0)
 		end
 
-	wait is
+	wait
 			-- Decrement semaphore count, waiting if necessary until
 			-- that becomes possible.
 		require
@@ -69,7 +69,7 @@ feature -- Status setting
 			{MONITOR}.exit (Current)
 		end
 
-	post is
+	post
 			-- Increment semaphore count.
 		require
 			valid_semaphore: is_set
@@ -82,7 +82,7 @@ feature -- Status setting
 			{MONITOR}.exit (Current)
 		end
 
-	destroy is
+	destroy
 			-- Destroy semaphore.
 		require
 			valid_semaphore: is_set
@@ -92,7 +92,7 @@ feature -- Status setting
 
 feature {CONDITION_VARIABLE} -- Implementation
 
-	wait_with_timeout (a_timeout: INTEGER): BOOLEAN is
+	wait_with_timeout (a_timeout: INTEGER): BOOLEAN
 			-- Has client been successful in decrementing semaphore
 			-- count with only `a_timeout' ?
 		local
@@ -108,7 +108,7 @@ feature {CONDITION_VARIABLE} -- Implementation
 			{MONITOR}.exit (Current)
 		end
 
-	post_count (nb: INTEGER) is
+	post_count (nb: INTEGER)
 			-- Increment semaphore count by `nb'.
 		require
 			nb > 0
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

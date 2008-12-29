@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Push Button resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNarmColor: POINTER is
+	XmNarmColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNarmColor"
 		end;
 
-	XmNarmPixmap: POINTER is
+	XmNarmPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNarmPixmap"
 		end;
 
-	XmNdefaultButtonShadowThickness: POINTER is
+	XmNdefaultButtonShadowThickness: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNdefaultButtonShadowThickness"
 		end;
 
-	XmNfillOnArm: POINTER is
+	XmNfillOnArm: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNfillOnArm"
 		end;
 
-	XmNmultiClick: POINTER is
+	XmNmultiClick: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNmultiClick"
 		end;
 
-	XmNshowAsDefault: POINTER is
+	XmNshowAsDefault: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNshowAsDefault"
 		end;
 
-	XmNactivateCallback: POINTER is
+	XmNactivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNactivateCallback"
 		end;
 
-	XmNarmCallback: POINTER is
+	XmNarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNarmCallback"
 		end;
 
-	XmNdisarmCallback: POINTER is
+	XmNdisarmCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PushB.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNdisarmCallback"
 		end;
 
-	XmMULTICLICK_DISCARD: INTEGER is
+	XmMULTICLICK_DISCARD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/PushB.h>] : EIF_INTEGER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmMULTICLICK_DISCARD"
 		end;
 
-	XmMULTICLICK_KEEP: INTEGER is
+	XmMULTICLICK_KEEP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/PushB.h>] : EIF_INTEGER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmMULTICLICK_KEEP"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

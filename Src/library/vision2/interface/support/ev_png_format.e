@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Portable Network Graphics (PNG) Graphical Format Abstraction used by {EV_PIXMAP}.save_to_named_file"
 	legal: "See notice at end of class."
@@ -14,19 +14,19 @@ inherit
 
 feature {EV_PIXMAP_I} -- Access
 
-	file_extension: STRING_32 is
+	file_extension: STRING_32
 			-- Three character file extension associated with format.
 		once
 			Result := "png"
 		end
 
-	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME) is
+	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME)
 			-- Save `raw_image_data' to file `a_filename' in PNG format.
 		do
 			-- Implemented in pixmap implementation
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

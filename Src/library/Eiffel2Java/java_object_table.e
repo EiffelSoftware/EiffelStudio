@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class provides a mapping between Java and Eiffel objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a table for Eiffel proxies of Java object
 		do
 			create table.make (511)
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (object: POINTER): JAVA_OBJECT is
+	item (object: POINTER): JAVA_OBJECT
 			-- find a Eiffel proxy for an Java object
 		require
 			object_not_void: object /= default_pointer
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (object: JAVA_OBJECT) is
+	put (object: JAVA_OBJECT)
 			-- Add a new object to the table
 		require
 			object_not_void: object /= Void
@@ -58,7 +58,7 @@ feature {NONE}
 invariant
 	table_not_void: table /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

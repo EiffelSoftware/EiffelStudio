@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Command to handle leave and enter actions for a focusable."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_focus_label: like focus_label) is
+	make (a_focus_label: like focus_label)
 			-- Set `focus_label' to `a_focus_label'.
 		do
 			focus_label := a_focus_label
@@ -29,7 +29,7 @@ feature {NONE} -- Initialize
 
 feature -- Execution
 
-	execute (arg: FOCUSABLE) is
+	execute (arg: FOCUSABLE)
 		do
 			if arg /= Void then
 				if popup_timer.is_call_back_set then
@@ -82,7 +82,7 @@ feature {NONE} -- Properties
 
 feature {DELAYED_FOCUS_COMMAND} -- Implementation
 
-	popup_label (arg: FOCUSABLE) is
+	popup_label (arg: FOCUSABLE)
 			-- Pops up label. Requested by `delayed_focus_command'.
 		do
 			last_focusable := arg;
@@ -90,7 +90,7 @@ feature {DELAYED_FOCUS_COMMAND} -- Implementation
 			popup_timer_initialized := True
 		end;
 
-	uninitialize_timer is
+	uninitialize_timer
 			-- Uninitializes the timer.
 		do
 			popup_timer_initialized := False;
@@ -99,7 +99,7 @@ feature {DELAYED_FOCUS_COMMAND} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

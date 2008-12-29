@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dynamic-link library containing one or more functions %
 		%that are compiled, linked, and stored separately from the %
 		%processes using them."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dll_name: STRING_GENERAL) is
+	make (dll_name: STRING_GENERAL)
 			-- Load the DLL `dll_name'
 		require
 			dll_name_not_void: dll_name /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			item := {WEL_API}.load_module (a_wel_string.item)
 		end
 
-	make_permanent (dll_name: STRING) is
+	make_permanent (dll_name: STRING)
 			-- Load the DLL `dll_name' permanentely.
 			-- It will be unloaded at the very end of the execution
 			-- of current system.
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING_32 is
+	name: STRING_32
 			-- DLL name (including the path)
 		require
 			exists: exists
@@ -67,7 +67,7 @@ feature -- Access
 	is_loaded_at_all_time: BOOLEAN
 			-- Is current dll to be loaded at all time?
 
-	loal_api (a_name: STRING): POINTER is
+	loal_api (a_name: STRING): POINTER
 			-- Load api which name is `a_name' in current dll
 		require
 			exists: item /= default_pointer
@@ -81,7 +81,7 @@ feature -- Access
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Free the library.
 		local
 			a_default_pointer: POINTER
@@ -96,12 +96,12 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Implementation
 
-	Max_name_length: INTEGER is 255
+	Max_name_length: INTEGER = 255
 			-- Maximum dll name length
 
 feature {NONE} -- Externals
 
-	cwin_permanent_load_library (dll_name: POINTER): POINTER is
+	cwin_permanent_load_library (dll_name: POINTER): POINTER
 			-- Wrapper around LoadLibrary which will automatically
 			-- free the dll at the end of system execution.
 		external
@@ -111,7 +111,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_module_file_name (hinstance, buffer: POINTER;
-			length: INTEGER): INTEGER is
+			length: INTEGER): INTEGER
 			-- SDK GetModuleFileName
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPTSTR, int): EIF_INTEGER"
@@ -119,7 +119,7 @@ feature {NONE} -- Externals
 			"GetModuleFileName"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

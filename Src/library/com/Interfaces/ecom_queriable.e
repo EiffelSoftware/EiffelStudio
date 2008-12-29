@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM Queriable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ inherit
 
 feature  {NONE} -- Initialization
 
-	make_from_other (other: ECOM_INTERFACE) is
+	make_from_other (other: ECOM_INTERFACE)
 			-- Make from other Queriable.
 		require
 			non_void_other: other /= Void
@@ -34,7 +34,7 @@ feature  {NONE} -- Initialization
 			exists: exists
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from interface pointer.
 		require
 			non_default_pointer: a_pointer /= default_pointer
@@ -46,7 +46,7 @@ feature  {NONE} -- Initialization
 
 feature -- Access
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Is wrapped structure initialized?
 		do
 			Result := item /= default_pointer
@@ -60,13 +60,13 @@ feature {NONE} -- Implementation
 	initializer: POINTER;
 			-- Pointer to C++ wrapper.
 
-	dispose is
+	dispose
 			-- Delete C++ wrapper.
 		do
 			delete_wrapper
 		end
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete C++ wrapper.
 		deferred
 		end
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 invariant
 	queriable_invariant: initializer /= default_pointer and then exists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

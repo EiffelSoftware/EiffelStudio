@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Single line text-editing widget."
@@ -34,7 +34,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif text field.
 		require
 			name_exists: a_name /= Void;
@@ -58,7 +58,7 @@ feature -- Initialization
 
 feature -- Access
 
-	count, last_position: INTEGER is
+	count, last_position: INTEGER
 			-- Number of characters
 		do
 			Result :=  xm_text_get_last_position (screen_object)
@@ -66,7 +66,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end;
 
-	is_selection_active: BOOLEAN is
+	is_selection_active: BOOLEAN
 			-- Is some portion selected?
 		require 
 			realized: realized
@@ -74,73 +74,73 @@ feature -- Access
 			Result := xm_text_is_selection_active (screen_object)
 		end;
 
-	pos_to_x (char_pos: INTEGER): INTEGER is
+	pos_to_x (char_pos: INTEGER): INTEGER
 			-- X coordinate relative to the upper left corner of position `char_pos'
 		do
 			Result := xm_text_x_coord (screen_object, char_pos)
 		end;
 
-	pos_to_y (char_pos: INTEGER): INTEGER is
+	pos_to_y (char_pos: INTEGER): INTEGER
 			-- Y coordinate relative to the upper left corner of position `char_pos'
 		do
 			Result := xm_text_y_coord (screen_object, char_pos)
 		end;
 
-	xy_to_pos (x_coord, y_coord: INTEGER): INTEGER is
+	xy_to_pos (x_coord, y_coord: INTEGER): INTEGER
 			-- Character position at position `x_coord', `y_coord'
 		do
 			Result := xm_text_xy_to_pos (screen_object, x_coord, y_coord)
 		end;
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	focus_command: MEL_COMMAND_EXEC is
+	focus_command: MEL_COMMAND_EXEC
 			-- Command set for the focus callback
 		do
 			Result := motif_command (XmNfocusCallback)
 		end;
 
-	gain_primary_command: MEL_COMMAND_EXEC is
+	gain_primary_command: MEL_COMMAND_EXEC
 			-- Command set for the gain primary callback
 		do
 			Result := motif_command (XmNgainPrimaryCallback)
 		end;
 
-	lose_primary_command: MEL_COMMAND_EXEC is
+	lose_primary_command: MEL_COMMAND_EXEC
 			-- Command set for the lose primary callback
 		do
 			Result := motif_command (XmNlosePrimaryCallback)
 		end;
 
-	losing_focus_command: MEL_COMMAND_EXEC is
+	losing_focus_command: MEL_COMMAND_EXEC
 			-- Command set for the losing focus callback
 		do
 			Result := motif_command (XmNlosingFocusCallback)
 		end;
 
-	modify_verify_command: MEL_COMMAND_EXEC is
+	modify_verify_command: MEL_COMMAND_EXEC
 			-- Command set for the modify verify callback
 		do
 			Result := motif_command (XmNmodifyVerifyCallback)
 		end;
 
-	modify_verify_wcs_command: MEL_COMMAND_EXEC is
+	modify_verify_wcs_command: MEL_COMMAND_EXEC
 			-- Command set for the modify verify wcs callback
 		do
 			Result := motif_command (XmNmodifyVerifyCallbackWcs)
 		end;
 
-	motion_verify_command: MEL_COMMAND_EXEC is
+	motion_verify_command: MEL_COMMAND_EXEC
 			-- Command set for the motion verify callback
 		do
 			Result := motif_command (XmNmotionVerifyCallback)
 		end;
 
-	value_changed_command: MEL_COMMAND_EXEC is
+	value_changed_command: MEL_COMMAND_EXEC
 			-- Command set for the value changed callback
 		do
 			Result := motif_command (XmNvalueChangedCallback)
@@ -148,7 +148,7 @@ feature -- Access
 
 feature -- Status report
 
-	begin_of_selection: INTEGER is
+	begin_of_selection: INTEGER
 			-- Start position of selection
 		require
 			selection_active: is_selection_active;
@@ -159,7 +159,7 @@ feature -- Status report
 			valid_result: Result >= 0 and then Result < count
 		end;
 
-	end_of_selection: INTEGER is
+	end_of_selection: INTEGER
 			-- End position of selection
 		require
 			selection_active: is_selection_active;
@@ -170,7 +170,7 @@ feature -- Status report
 			valid_result: Result >= 0 and then Result < count
 		end;
 
-	blink_rate: INTEGER is
+	blink_rate: INTEGER
 			-- Time in milliseconds that the cursor spends either being
 			-- visible or invisible
 			-- (A value of zero prevents the cursor from blinking.)
@@ -182,7 +182,7 @@ feature -- Status report
 			blink_rate_large_enough: Result >=0
 		end;
 
-	columns: INTEGER is
+	columns: INTEGER
 			-- Number of characters that fit horizontally
 	   require
 			exists: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status report
 			columns_large_enough: Result >=0
 		end;
 
-	is_cursor_position_visible: BOOLEAN is
+	is_cursor_position_visible: BOOLEAN
 			-- Is the cursor visible?
 		require
 			exists: not is_destroyed
@@ -200,7 +200,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNcursorPositionVisible)
 		end;
 
-	is_width_resizable: BOOLEAN is
+	is_width_resizable: BOOLEAN
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -209,7 +209,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNresizeWidth)
 		end;
 
-	string, value: STRING is
+	string, value: STRING
 			-- Displayed string
 		require
 			exists: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Status report
 			string_not_void: Result /= Void
 		end;
 
-	cursor_position: INTEGER is
+	cursor_position: INTEGER
 			-- Current position of the cursor
 		require
 			exists: not is_destroyed
@@ -235,7 +235,7 @@ feature -- Status report
 			cursor_position_small_enough: Result <= count
 		end;
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is Current editable?
 		require
 			exists: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNeditable)
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Spacing between the top and bottom edges and the text
 		require
 			exists: not is_destroyed
@@ -253,7 +253,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Spacing between the left and right edges of and the text
 		require
 			exists: not is_destroyed
@@ -263,7 +263,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	max_length: INTEGER is
+	max_length: INTEGER
 			-- Maximum length of the text string that the user can enter
 			-- from the keyboard.
 		require
@@ -274,7 +274,7 @@ feature -- Status report
 			max_length_large_enough: Result >= 0
 		end;
 
-	is_pending_delete: BOOLEAN is
+	is_pending_delete: BOOLEAN
 			-- Is pending delete mode on?
 		require
 			exists: not is_destroyed
@@ -282,7 +282,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNpendingDelete)
 		end;
 
-	selection_array_count: INTEGER is
+	selection_array_count: INTEGER
 			-- Number of items in the selection array
 		require
 			exists: not is_destroyed
@@ -292,7 +292,7 @@ feature -- Status report
 			selection_array_count_large_enough: Result >=0
 		end;
 
-	select_threshold: INTEGER is
+	select_threshold: INTEGER
 			-- Number of pixels the insertion cursor must be dragged
 			-- during selection in order to select the next character
 		require
@@ -303,7 +303,7 @@ feature -- Status report
 			select_threshold_large_enough: Result >=0
 		end;
 
-	is_verify_bell_enabled: BOOLEAN is
+	is_verify_bell_enabled: BOOLEAN
 			-- Will a bell sound when a verification produces no action?
 		require
 			exists: not is_destroyed
@@ -313,7 +313,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_blink_rate (a_rate: INTEGER) is
+	set_blink_rate (a_rate: INTEGER)
 			-- Set `blink_rate' to `a_rate'.
 		require
 			exists: not is_destroyed;
@@ -324,7 +324,7 @@ feature -- Status setting
 			blink_rate_set: blink_rate = a_rate
 		end;
 
-	set_columns (a_width: INTEGER) is
+	set_columns (a_width: INTEGER)
 			-- Set `columns' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -335,7 +335,7 @@ feature -- Status setting
 			columns_set: columns = a_width
 		end;
 
-	set_cursor_position_visible is
+	set_cursor_position_visible
 			-- Set `is_cursor_position_visible' to True.
 		require
 			exists: not is_destroyed
@@ -345,7 +345,7 @@ feature -- Status setting
 			cursor_is_visible: is_cursor_position_visible 
 		end;
 
-	set_cursor_position_invisible is
+	set_cursor_position_invisible
 			-- Set `is_cursor_position_visible' to False.
 		require
 			exists: not is_destroyed
@@ -355,7 +355,7 @@ feature -- Status setting
 			cursor_is_invisible: not is_cursor_position_visible 
 		end;
 
-	enable_resize_width is
+	enable_resize_width
 			-- Set `is_width_resizable' to True.
 		require
 			exists: not is_destroyed
@@ -365,7 +365,7 @@ feature -- Status setting
 			resize_width_enabled: is_width_resizable
 		end;
 
-	disable_resize_width is
+	disable_resize_width
 			-- Set `is_width_resizable' to False.
 		require
 			exists: not is_destroyed
@@ -375,7 +375,7 @@ feature -- Status setting
 			resize_width_disabled: not is_width_resizable
 		end;
 
-	set_string, set_value (a_string: STRING) is
+	set_string, set_value (a_string: STRING)
 			-- Set `string' and `value' to `a_string'.
 		require
 			exists: not is_destroyed;
@@ -390,7 +390,7 @@ feature -- Status setting
 			value_set: value.is_equal (a_string)
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
+	set_cursor_position (a_position: INTEGER)
 			-- Set `cursor_position' to `a_position'.
 		require
 			exists: not is_destroyed;
@@ -402,7 +402,7 @@ feature -- Status setting
 			a_position_set: cursor_position = a_position
 		end;
 
-	set_editable is
+	set_editable
 			-- Set `is_editable' to True.
 		require
 			exists: not is_destroyed
@@ -412,7 +412,7 @@ feature -- Status setting
 			edition_allowed: is_editable 
 		end;
 
-	set_read_only is
+	set_read_only
 			-- Set `is_editable' to False.
 		require
 			exists: not is_destroyed
@@ -422,7 +422,7 @@ feature -- Status setting
 			read_only_text: not is_editable 
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -433,7 +433,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -444,7 +444,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_max_length (a_length: INTEGER) is
+	set_max_length (a_length: INTEGER)
 			-- Set `max_length' to `a_length'.
 		require
 			exists: not is_destroyed;
@@ -455,7 +455,7 @@ feature -- Status setting
 			max_length_set: max_length = a_length
 		end;
 
-	set_pending_delete_on is
+	set_pending_delete_on
 			-- Set `is_pending_delete' to True.
 		require
 			exists: not is_destroyed
@@ -465,7 +465,7 @@ feature -- Status setting
 			pending_delete_switched_on: is_pending_delete 
 		end;
 
-	set_pending_delete_off is
+	set_pending_delete_off
 			-- Set `is_pending_delete' to False.
 		require
 			exists: not is_destroyed
@@ -475,7 +475,7 @@ feature -- Status setting
 			pending_delete_switched_off: not is_pending_delete 
 		end;
 
-	set_selection (first, last: INTEGER; time: INTEGER) is
+	set_selection (first, last: INTEGER; time: INTEGER)
 			-- Select the text between `first' and `last' with time `time'
 			-- of the event that caused the event.
 		require
@@ -492,7 +492,7 @@ feature -- Status setting
 					end_of_selection = last
 		end;
 
-	set_selection_with_current_time (first, last: INTEGER) is
+	set_selection_with_current_time (first, last: INTEGER)
 			-- Select the text between `first' and `last' at `Current_time'.
 		require
 			exists: not is_destroyed;
@@ -508,7 +508,7 @@ feature -- Status setting
 					end_of_selection = last
 		end;
 
-	set_selection_array_count (a_count: INTEGER) is
+	set_selection_array_count (a_count: INTEGER)
 			-- Set `selection_array_count' to `a_count'.
 		require
 			exists: not is_destroyed;
@@ -519,7 +519,7 @@ feature -- Status setting
 			selection_array_count_set: selection_array_count = a_count
 		end;
 
-	set_select_threshold (a_threshold: INTEGER) is
+	set_select_threshold (a_threshold: INTEGER)
 			-- Set `select_threshold' to `a_threshold'.
 		require
 			exists: not is_destroyed;
@@ -530,7 +530,7 @@ feature -- Status setting
 			select_threshold_set: select_threshold = a_threshold
 		end;
 
-	enable_verify_bell is
+	enable_verify_bell
 			-- Set `is_verify_bell_enabled' to True.
 		require
 			exists: not is_destroyed
@@ -540,7 +540,7 @@ feature -- Status setting
 			verify_bell_enabled: is_verify_bell_enabled 
 		end;
 
-	disable_verify_bell is
+	disable_verify_bell
 			-- Set `is_verify_bell_enabled' to False.
 		require
 			exists: not is_destroyed
@@ -552,7 +552,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user causes
 			-- the text widget to be activate.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -565,7 +565,7 @@ feature -- Element change
 			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- receives the focus.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -578,7 +578,7 @@ feature -- Element change
 			command_set: command_set (focus_command, a_command, an_argument)
 		end;
 
-	set_gain_primary_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_gain_primary_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- gains ownership of the primary selection.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -591,7 +591,7 @@ feature -- Element change
 			command_set: command_set (gain_primary_command, a_command, an_argument)
 		end;
 
-	set_lose_primary_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_lose_primary_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- loses ownership of the primary selection.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -604,7 +604,7 @@ feature -- Element change
 			command_set: command_set (lose_primary_command, a_command, an_argument)
 		end;
 
-	set_losing_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_losing_focus_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- loses the focus.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -617,7 +617,7 @@ feature -- Element change
 			command_set: command_set (losing_focus_command, a_command, an_argument)
 		end;
 
-	set_modify_verify_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_modify_verify_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -630,7 +630,7 @@ feature -- Element change
 			command_set: command_set (modify_verify_command, a_command, an_argument)
 		end;
 
-	set_modify_verify_callback_wcs (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_modify_verify_callback_wcs (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the text widget
 			-- is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -643,7 +643,7 @@ feature -- Element change
 			command_set: command_set (modify_verify_wcs_command, a_command, an_argument)
 		end;
 
-	set_motion_verify_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_motion_verify_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the insertion cursor
 			-- is moved in the text widget.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -656,7 +656,7 @@ feature -- Element change
 			command_set: command_set (motion_verify_command, a_command, an_argument)
 		end;
 
-	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed after the value of the text widget
 			-- is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -669,7 +669,7 @@ feature -- Element change
 			command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
-	append (a_text: STRING) is
+	append (a_text: STRING)
 			-- Append `a_text' at the end of `string'.
 		require 
 			non_void_text: a_text /= Void
@@ -679,7 +679,7 @@ feature -- Element change
 			count_incremented: count = old count + a_text.count;
 		end;
 
-	cut_text (a_time: INTEGER) is
+	cut_text (a_time: INTEGER)
 			-- Copy the primary selected text to the clipboard
 			-- and then remove the selection.
 		require
@@ -688,7 +688,7 @@ feature -- Element change
 			xm_text_cut (screen_object, a_time)
 		end;
 
-	copy_text (a_time: INTEGER) is
+	copy_text (a_time: INTEGER)
 			-- Copy the primary selected text into the clipboard.
 		require
 			exists: not is_destroyed
@@ -696,7 +696,7 @@ feature -- Element change
 			xm_text_copy (screen_object, a_time)
 		end;
 
-	paste_text  is
+	paste_text
 			-- Insert the clipboard selection text at the current cursor position.
 		require
 			exists: not is_destroyed
@@ -704,7 +704,7 @@ feature -- Element change
 			xm_text_paste (screen_object)
 		end;
 
-	insert (a_position: INTEGER; a_text: STRING) is
+	insert (a_position: INTEGER; a_text: STRING)
 			-- Insert `a_text' at `a_position'.
 		require 
 			exists: not is_destroyed;
@@ -722,7 +722,7 @@ feature -- Element change
 				a_text.is_equal (value.substring (a_position+1, a_position + a_text.count))
 		end;
 
-	replace (from_position, to_position: INTEGER; a_text: STRING) is
+	replace (from_position, to_position: INTEGER; a_text: STRING)
 			-- Replace text from `from_position' to `to_position' by `a_text'.
 			-- `from_position' indicates the character position in the
 			-- string starting from 0. `to_position' indicates the
@@ -747,7 +747,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback is
+	remove_activate_callback
 			-- Remove the command for the activate callback.
 		do
 			remove_callback (XmNactivateCallback)
@@ -755,7 +755,7 @@ feature -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_focus_callback is
+	remove_focus_callback
 			-- Remove the command for the focus callback.
 		do
 			remove_callback (XmNfocusCallback)
@@ -763,7 +763,7 @@ feature -- Removal
 			removed: focus_command = Void
 		end;
 
-	remove_gain_primary_callback is
+	remove_gain_primary_callback
 			-- Remove the command for the gain primary callback.
 		do
 			remove_callback (XmNgainPrimaryCallback)
@@ -771,7 +771,7 @@ feature -- Removal
 			removed: gain_primary_command = Void
 		end;
 
-	remove_lose_primary_callback is
+	remove_lose_primary_callback
 			-- Remove the command for the lost primary callback.
 		do
 			remove_callback (XmNlosePrimaryCallback)
@@ -779,7 +779,7 @@ feature -- Removal
 			removed: lose_primary_command = Void
 		end;
 
-	remove_losing_focus_callback is
+	remove_losing_focus_callback
 			-- Remove the command for the losing focus callback.
 		do
 			remove_callback (XmNlosingFocusCallback)
@@ -787,7 +787,7 @@ feature -- Removal
 			removed: losing_focus_command = Void
 		end;
 
-	remove_modify_verify_callback is
+	remove_modify_verify_callback
 			-- Remove the command for the modify verify callback.
 		do
 			remove_callback (XmNmodifyVerifyCallback)
@@ -795,7 +795,7 @@ feature -- Removal
 			removed: modify_verify_command = Void
 		end;
 
-	remove_modify_verify_callback_wcs is
+	remove_modify_verify_callback_wcs
 			-- Remove the command for the modify verify callback.
 		do
 			remove_callback (XmNmodifyVerifyCallbackWcs)
@@ -803,7 +803,7 @@ feature -- Removal
 			removed: modify_verify_wcs_command = Void
 		end;
 
-	remove_motion_verify_callback is
+	remove_motion_verify_callback
 			-- Remove the command for the motion verify callback.
 		do
 			remove_callback (XmNmotionVerifyCallback)
@@ -811,7 +811,7 @@ feature -- Removal
 			removed: motion_verify_command = Void
 		end;
 
-	remove_value_changed_callback is
+	remove_value_changed_callback
 			-- Remove the command for the value changed callback.
 		do
 			remove_callback (XmNvalueChangedCallback)
@@ -819,7 +819,7 @@ feature -- Removal
 			removed: value_changed_command = Void
 		end;
 
-	clear is
+	clear
 			-- Clear text.
 		do
 			set_string ("")
@@ -827,7 +827,7 @@ feature -- Removal
 			cleared: string.is_empty
 		end;
 
-	clear_selection (time: INTEGER) is
+	clear_selection (time: INTEGER)
 			-- Clear text with time of the event `time' that caused the request.
 		require
 			realized: realized
@@ -838,7 +838,7 @@ feature -- Removal
 			not_selection_active: not is_selection_active
 		end;
 
-	clear_selection_with_current_time is
+	clear_selection_with_current_time
 			-- Clear text using `Current_time'.
 		require
 			realized: realized
@@ -852,7 +852,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -872,21 +872,21 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_text_field (w, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_text_field (w, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/TextF.h>"
 		alias
 			"XmCreateTextField"
 		end;
 
-	xm_text_set_string (w: POINTER; a_string: POINTER) is
+	xm_text_set_string (w: POINTER; a_string: POINTER)
 		external
 			"C (Widget, char *) | <Xm/Text.h>"
 		alias
 			"XmTextSetString"
 		end;
 
-	xm_text_get_string (w: POINTER): POINTER is
+	xm_text_get_string (w: POINTER): POINTER
 			-- Returns pointer to C string (need to free it)
 		external
 			"C (Widget): EIF_POINTER | <Xm/Text.h>"
@@ -894,7 +894,7 @@ feature {NONE} -- Implementation
 			"XmTextGetString"
 		end;
 
-	xm_text_cut (w: POINTER; a_time: INTEGER) is
+	xm_text_cut (w: POINTER; a_time: INTEGER)
 			-- Copy the primary selection to the clipboard
 			-- and remove the selected text.
 		external
@@ -903,7 +903,7 @@ feature {NONE} -- Implementation
 			"XmTextCut"
 		end;
 
-	xm_text_copy (w: POINTER; a_time: INTEGER) is
+	xm_text_copy (w: POINTER; a_time: INTEGER)
 			-- Copy the primary selection to the clipboard.
 		external
 			"C (Widget, Time) | <Xm/Text.h>"
@@ -911,7 +911,7 @@ feature {NONE} -- Implementation
 			"XmTextCopy"
 		end;
 
-	xm_text_paste (w: POINTER) is
+	xm_text_paste (w: POINTER)
 			-- Insert the clipboard selection.
 		external
 			"C (Widget) | <Xm/Text.h>"
@@ -919,106 +919,106 @@ feature {NONE} -- Implementation
 			"XmTextPaste"
 		end;
 
-	xm_text_insert (w: POINTER; a_pos: INTEGER; a_text: POINTER) is
+	xm_text_insert (w: POINTER; a_pos: INTEGER; a_text: POINTER)
 		external
 			"C (Widget, XmTextPosition, char *) | <Xm/Text.h>"
 		alias
 			"XmTextInsert"
 		end;
 
-	xm_text_replace (w: POINTER; spos, epos: INTEGER; a_text: POINTER) is
+	xm_text_replace (w: POINTER; spos, epos: INTEGER; a_text: POINTER)
 		external
 			"C (Widget, XmTextPosition, XmTextPosition, char *) | <Xm/Text.h>"
 		alias
 			"XmTextReplace"
 		end;
 
-	xm_text_get_insertion_position (w: POINTER): INTEGER is
+	xm_text_get_insertion_position (w: POINTER): INTEGER
 		external
 			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetInsertionPosition"
 		end;
 
-	xm_text_set_insertion_position (w: POINTER; pos: INTEGER) is
+	xm_text_set_insertion_position (w: POINTER; pos: INTEGER)
 		external
 			"C (Widget, XmTextPosition) | <Xm/Text.h>"
 		alias
 			"XmTextSetInsertionPosition"
 		end;
 
-	xm_text_get_begin_of_selection (w: POINTER): INTEGER is
+	xm_text_get_begin_of_selection (w: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"xm_text_get_begin_of_selection"
 		end;
 
-	xm_text_get_end_of_selection (w: POINTER): INTEGER is
+	xm_text_get_end_of_selection (w: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"xm_text_get_end_of_selection"
 		end;
 
-	xm_text_is_selection_active (w: POINTER): BOOLEAN is
+	xm_text_is_selection_active (w: POINTER): BOOLEAN
 		external
 			"C"
 		end;
 
-	xm_text_set_selection (w: POINTER; spos, epos, time: INTEGER) is
+	xm_text_set_selection (w: POINTER; spos, epos, time: INTEGER)
 		external
 			"C (Widget, XmTextPosition, XmTextPosition, Time) | <Xm/Text.h>"
 		alias
 			"XmTextSetSelection"
 		end;
 
-	xm_text_clear_selection (w: POINTER; time: INTEGER) is
+	xm_text_clear_selection (w: POINTER; time: INTEGER)
 		external
 			"C (Widget, Time) | <Xm/Text.h>"
 		alias
 			"XmTextClearSelection"
 		end;
 
-	xm_text_get_max_length (w: POINTER): INTEGER is
+	xm_text_get_max_length (w: POINTER): INTEGER
 		external
 			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetMaxLength"
 		end;
 
-	xm_text_set_max_length (w: POINTER; a_len: INTEGER) is
+	xm_text_set_max_length (w: POINTER; a_len: INTEGER)
 		external
 			"C (Widget, int) | <Xm/Text.h>"
 		alias
 			"XmTextSetMaxLength"
 		end;
 
-	xm_text_xy_to_pos (w: POINTER; x0, y0: INTEGER): INTEGER is
+	xm_text_xy_to_pos (w: POINTER; x0, y0: INTEGER): INTEGER
 		external
 			"C (Widget, Position, Position): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextXYToPos"
 		end;
 
-	xm_text_get_last_position (w: POINTER): INTEGER is
+	xm_text_get_last_position (w: POINTER): INTEGER
 		external
 			"C (Widget): EIF_INTEGER | <Xm/Text.h>"
 		alias
 			"XmTextGetLastPosition"
 		end;
 
-	xm_text_x_coord (w: POINTER; char_p: INTEGER): INTEGER is
+	xm_text_x_coord (w: POINTER; char_p: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-	xm_text_y_coord (w: POINTER; char_p: INTEGER): INTEGER is
+	xm_text_y_coord (w: POINTER; char_p: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

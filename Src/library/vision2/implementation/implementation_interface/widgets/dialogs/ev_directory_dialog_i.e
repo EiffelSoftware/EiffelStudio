@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,19 +13,19 @@ inherit
 
 feature -- Access
 
-	directory: STRING_32 is
+	directory: STRING_32
 			-- Path of the current selected file
 		deferred
 		end
 
-	start_directory: STRING_32 is
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 		deferred
 		end
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			a_path_not_void: a_path /= Void
@@ -34,7 +34,7 @@ feature -- Element change
 			assigned: start_directory.is_equal (a_path)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

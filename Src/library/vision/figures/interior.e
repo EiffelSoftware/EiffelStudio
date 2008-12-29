@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of the interior of a figure"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization 
 
-	make is
+	make
 			-- Create an interior.
 		do
 			logical_function_mode := GXcopy;
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature {FIGURE} -- Element change
 
-	set_drawing_attributes (drawing: DRAWING_I) is
+	set_drawing_attributes (drawing: DRAWING_I)
 			-- Set the attributes to `a_drawing'.
 		require
 			drawing_exists: drawing /= Void
@@ -72,7 +72,7 @@ invariant
 	background_when_opaque_stipple:
 		(fill_style = FillOpaqueStippled) implies background_color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

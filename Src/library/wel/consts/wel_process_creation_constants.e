@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for `create_process' from WEL_WINDOWS_ROUTINES."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	create_default_error_mode: INTEGER is
+	create_default_error_mode: INTEGER
 			-- New process does not inherit error mode of calling process but use default error mode.
 		external
 			"C [macro <winbase.h>]"
@@ -18,7 +18,7 @@ feature -- Access
 			"CREATE_DEFAULT_ERROR_MODE"
 		end
 
-	create_new_console: INTEGER is
+	create_new_console: INTEGER
 			-- New process has a new console, instead of inheriting parent's console.
 		external
 			"C [macro <winbase.h>]"
@@ -26,7 +26,7 @@ feature -- Access
 			"CREATE_NEW_CONSOLE"
 		end
 
-	create_new_process_group: INTEGER is
+	create_new_process_group: INTEGER
 			-- New process is root process of a new process group.
 		external
 			"C [macro <winbase.h>]"
@@ -34,12 +34,12 @@ feature -- Access
 			"CREATE_NEW_PROCESS_GROUP"
 		end
 
-	create_no_window: INTEGER is 0x08000000
+	create_no_window: INTEGER = 0x08000000
 			-- New process is console application run without console window.
 			-- Valid only when starting console application.
 			-- Windows Me/98/95:  Not supported.
 
-	detached_process: INTEGER is
+	detached_process: INTEGER
 			-- For console processes, new process does not have access to parent's console.
 		external
 			"C [macro <winbase.h>]"
@@ -47,7 +47,7 @@ feature -- Access
 			"DETACHED_PROCESS"
 		end
 
-	create_unicode_environment: INTEGER is
+	create_unicode_environment: INTEGER
 			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
 		external
 			"C [macro <winbase.h>]"
@@ -55,7 +55,7 @@ feature -- Access
 			"CREATE_UNICODE_ENVIRONMENT"
 		end
 
-	create_suspended: INTEGER is
+	create_suspended: INTEGER
 			-- The primary thread of the new process is created in a suspended state, and does not run until the ResumeThread function is called.
 		external
 			"C [macro <winbase.h>]"
@@ -63,7 +63,7 @@ feature -- Access
 			"CREATE_SUSPENDED"
 		end
 
- 	is_valid_creation_constant (a_constant: INTEGER): BOOLEAN is
+ 	is_valid_creation_constant (a_constant: INTEGER): BOOLEAN
 			-- Is `a_constant' a valid process creation constant?
 		do
 			Result := a_constant = (a_constant & (create_default_error_mode | create_new_console |
@@ -72,7 +72,7 @@ feature -- Access
 				((a_constant & (create_new_console | detached_process)) /= (create_new_console | detached_process))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

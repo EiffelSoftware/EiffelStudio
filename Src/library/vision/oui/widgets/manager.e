@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General parent widget"
 	legal: "See notice at end of class.";
@@ -24,13 +24,13 @@ inherit
 
 feature -- Access
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 			-- Parent of manager widget
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of manager widget
 		require
 			exists: not destroyed
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require
 			exists: not destroyed;
@@ -53,7 +53,7 @@ feature -- Element change
 			foreground_color = new_color
 		end;
 
-	set_foreground (new_color: COLOR) is
+	set_foreground (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require
 			exists: not destroyed;
@@ -64,7 +64,7 @@ feature -- Element change
 			foreground_color = new_color
 		end 
 	
-	set_initial_input_focus (a_child: WIDGET) is
+	set_initial_input_focus (a_child: WIDGET)
 			-- Set child which will initially have input focus
 		require
 			exists: not destroyed;
@@ -83,7 +83,7 @@ invariant
 
 	valid_parent: (not destroyed and then parent /= Void) implies depth > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

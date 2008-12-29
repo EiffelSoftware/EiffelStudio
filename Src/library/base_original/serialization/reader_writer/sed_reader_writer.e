@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor for reading/writing basic known entities from and to a particular %
 		%location specified in concrete descendants of current."
 	legal: "See notice at end of class."
@@ -11,28 +11,28 @@ deferred class
 
 feature -- Header/Footer
 
-	read_header is
+	read_header
 			-- Action being executed before starting to read data.
 		require
 			is_ready: is_ready_for_reading
 		do
 		end
 
-	write_header is
+	write_header
 			-- Action being executed before starting to write data.
 		require
 			is_ready: is_ready_for_writing
 		do
 		end
 
-	read_footer is
+	read_footer
 			-- Action being executed after finishing to read data.
 		require
 			is_ready: is_ready_for_reading
 		do
 		end
 
-	write_footer is
+	write_footer
 			-- Action being executed after finishing to write data.
 		require
 			is_ready: is_ready_for_writing
@@ -41,12 +41,12 @@ feature -- Header/Footer
 
 feature -- Status report
 
-	is_ready_for_reading: BOOLEAN is
+	is_ready_for_reading: BOOLEAN
 			-- Is Current ready for future read operations?
 		deferred
 		end
 
-	is_ready_for_writing: BOOLEAN is
+	is_ready_for_writing: BOOLEAN
 			-- Is Current ready for future write operations?
 		deferred
 		end
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_is_pointer_value_stored (v: like is_pointer_value_stored) is
+	set_is_pointer_value_stored (v: like is_pointer_value_stored)
 			-- Set `is_pointer_value_stored' with `v'.
 		do
 			is_pointer_value_stored := v
@@ -66,7 +66,7 @@ feature -- Settings
 
 feature -- Access
 
-	read_character_8: CHARACTER is
+	read_character_8: CHARACTER
 			-- Read next 8-bits character
 		require
 			is_ready: is_ready_for_reading
@@ -77,7 +77,7 @@ feature -- Access
 			Result := l_nat8.to_character_8
 		end
 
-	read_character_32: CHARACTER_32 is
+	read_character_32: CHARACTER_32
 			-- Read next 32-bits character
 		require
 			is_ready: is_ready_for_reading
@@ -85,7 +85,7 @@ feature -- Access
 			Result := read_natural_32.to_character_32
 		end
 
-	read_string_8: STRING is
+	read_string_8: STRING
 			-- Read next 8-bits sequence of character
 		require
 			is_ready: is_ready_for_reading
@@ -110,7 +110,7 @@ feature -- Access
 			read_string_8_not_void: Result /= Void
 		end
 
-	read_boolean: BOOLEAN is
+	read_boolean: BOOLEAN
 			-- Read next boolean
 		require
 			is_ready: is_ready_for_reading
@@ -121,84 +121,84 @@ feature -- Access
 			Result := l_nat = 1
 		end
 
-	read_natural_8: NATURAL_8 is
+	read_natural_8: NATURAL_8
 			-- Read next natural_8
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_natural_16: NATURAL_16 is
+	read_natural_16: NATURAL_16
 			-- Read next natural_16
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_natural_32: NATURAL_32 is
+	read_natural_32: NATURAL_32
 			-- Read next natural_32
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_natural_64: NATURAL_64 is
+	read_natural_64: NATURAL_64
 			-- Read next natural_64
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_integer_8: INTEGER_8 is
+	read_integer_8: INTEGER_8
 			-- Read next integer_8
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_integer_16: INTEGER_16 is
+	read_integer_16: INTEGER_16
 			-- Read next integer_16
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_integer_32: INTEGER is
+	read_integer_32: INTEGER
 			-- Read next integer_32
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_integer_64: INTEGER_64 is
+	read_integer_64: INTEGER_64
 			-- Read next integer_64
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_real_32: REAL is
+	read_real_32: REAL
 			-- Read next real_32
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_real_64: DOUBLE is
+	read_real_64: DOUBLE
 			-- Read next real_64
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_pointer: POINTER is
+	read_pointer: POINTER
 			-- Read next pointer
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_compressed_integer_32: INTEGER is
+	read_compressed_integer_32: INTEGER
 			-- Read next compressed integer_32.
 			-- See `read_compressed_natural_32' for more details about encoding.
 		require
@@ -207,7 +207,7 @@ feature -- Access
 			Result := read_compressed_natural_32.as_integer_32
 		end
 
-	read_compressed_natural_32: NATURAL_32 is
+	read_compressed_natural_32: NATURAL_32
 			-- Read next compressed natural_32.
 			-- Depending on first natural_8 value read, it will tell how much more we need to read:
 			-- 1 - Of the form 0xxxxxxx (0x00) for values between 0 and 127
@@ -247,7 +247,7 @@ feature -- Access
 
 feature -- Element change
 
-	write_character_8 (v: CHARACTER_8) is
+	write_character_8 (v: CHARACTER_8)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
@@ -255,7 +255,7 @@ feature -- Element change
 			write_natural_8 (v.code.to_natural_8)
 		end
 
-	write_character_32 (v: CHARACTER_32) is
+	write_character_32 (v: CHARACTER_32)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
@@ -263,7 +263,7 @@ feature -- Element change
 			write_natural_32 (v.natural_32_code)
 		end
 
-	write_string_8 (v: STRING) is
+	write_string_8 (v: STRING)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
@@ -283,7 +283,7 @@ feature -- Element change
 			end
 		end
 
-	write_boolean (v: BOOLEAN) is
+	write_boolean (v: BOOLEAN)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
@@ -295,84 +295,84 @@ feature -- Element change
 			end
 		end
 
-	write_natural_8 (v: NATURAL_8) is
+	write_natural_8 (v: NATURAL_8)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_natural_16 (v: NATURAL_16) is
+	write_natural_16 (v: NATURAL_16)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_natural_32 (v: NATURAL_32) is
+	write_natural_32 (v: NATURAL_32)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_natural_64 (v: NATURAL_64) is
+	write_natural_64 (v: NATURAL_64)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_integer_8 (v: INTEGER_8) is
+	write_integer_8 (v: INTEGER_8)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_integer_16 (v: INTEGER_16) is
+	write_integer_16 (v: INTEGER_16)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_integer_32 (v: INTEGER) is
+	write_integer_32 (v: INTEGER)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_integer_64 (v: INTEGER_64) is
+	write_integer_64 (v: INTEGER_64)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_real_32 (v: REAL) is
+	write_real_32 (v: REAL)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_real_64 (v: DOUBLE) is
+	write_real_64 (v: DOUBLE)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_pointer (v: POINTER) is
+	write_pointer (v: POINTER)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_compressed_integer_32 (v: INTEGER) is
+	write_compressed_integer_32 (v: INTEGER)
 			-- Write `v' as a compressed integer_32.
 			-- See `write_compressed_natural_32' for details about encoding.
 		require
@@ -381,7 +381,7 @@ feature -- Element change
 			write_compressed_natural_32 (v.as_natural_32)
 		end
 
-	write_compressed_natural_32 (v: NATURAL_32) is
+	write_compressed_natural_32 (v: NATURAL_32)
 			-- Write `v' as a compressed natural_32.
 			-- Depending on value of `v', it will tell how many natural_8 will
 			-- be written. Below here is the actual encoding where `x' represents
@@ -426,7 +426,7 @@ feature -- Element change
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

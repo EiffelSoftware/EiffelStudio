@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,13 +25,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create character format
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Do nothing
 		local
 			app_imp: like app_implementation
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of the current format
 		do
 			create Result
@@ -65,7 +65,7 @@ feature -- Access
 			Result.preferred_families.extend (name)
 		end
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the current format
 		local
 			a_color: INTEGER
@@ -77,7 +77,7 @@ feature -- Access
 			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background Color of the current format
 		local
 			a_color: INTEGER
@@ -89,7 +89,7 @@ feature -- Access
 			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
-	effects: EV_CHARACTER_FORMAT_EFFECTS is
+	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'
 		do
 			create Result
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Make `value' the new font
 		do
 			set_font_attributes
@@ -118,7 +118,7 @@ feature -- Status setting
 				)
 		end
 
-	set_font_attributes (a_name: STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER) is
+	set_font_attributes (a_name: STRING_GENERAL; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER)
 			-- Set internal font attributes
 		do
 			name := a_name
@@ -129,13 +129,13 @@ feature -- Status setting
 			char_set := a_charset
 		end
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Make `value' the new color
 		do
 			set_fcolor (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
 		end
 
-	set_fcolor (a_red, a_green, a_blue: INTEGER) is
+	set_fcolor (a_red, a_green, a_blue: INTEGER)
 			-- Pack `fcolor' with `a_red', `a_green' and `a_blue'
 		do
 			fcolor := a_blue;
@@ -145,7 +145,7 @@ feature -- Status setting
 			fcolor := fcolor + a_red
 		end
 
-	set_bcolor (a_red, a_green, a_blue: INTEGER) is
+	set_bcolor (a_red, a_green, a_blue: INTEGER)
 			-- Pack `bcolor' with `a_red', `a_green' and `a_blue'
 		do
 			bcolor := a_blue;
@@ -156,19 +156,19 @@ feature -- Status setting
 			bcolor_set := True
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Make `value' the new color
 		do
 			set_bcolor (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
 		end
 
-	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Make `an_effect' the new `effects'
 		do
 			set_effects_internal (an_effect.is_underlined, an_effect.is_striked_out, an_effect.vertical_offset)
 		end
 
-	set_effects_internal (a_underlined, a_striked_out: BOOLEAN; a_vertical_offset: INTEGER) is
+	set_effects_internal (a_underlined, a_striked_out: BOOLEAN; a_vertical_offset: INTEGER)
 			--
 		do
 			is_underlined := a_underlined
@@ -178,7 +178,7 @@ feature -- Status setting
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
-	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	dummy_character_format_range_information: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Used for creating a fully set GtkTextTag
 		once
 			create Result.make_with_flags (
@@ -194,7 +194,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			)
 		end
 
-	apply_character_format_to_text_buffer (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION; a_text_buffer, a_start_iter, a_end_iter: POINTER) is
+	apply_character_format_to_text_buffer (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION; a_text_buffer, a_start_iter, a_end_iter: POINTER)
 			-- Apply `Current' to `a_text_buffer' to the region bounded by `a_start_iter' and `a_end_iter'
 		local
 			a_tag_table: POINTER
@@ -353,7 +353,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 		end
 
 
-	new_text_tag_from_applicable_attributes (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION): POINTER is
+	new_text_tag_from_applicable_attributes (applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION): POINTER
 			-- Create a new text tag based on state of `Current'
 		local
 			color_struct: POINTER
@@ -446,67 +446,67 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			end
 		end
 
-	family_string: EV_GTK_C_STRING is
+	family_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("family")
 		end
 
-	size_string: EV_GTK_C_STRING is
+	size_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("size")
 		end
 
-	style_string: EV_GTK_C_STRING is
+	style_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("style")
 		end
 
-	weight_string: EV_GTK_C_STRING is
+	weight_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("weight")
 		end
 
-	foreground_string: EV_GTK_C_STRING is
+	foreground_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("foreground")
 		end
 
-	background_string: EV_GTK_C_STRING is
+	background_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("background")
 		end
 
-	foreground_gdk_string: EV_GTK_C_STRING is
+	foreground_gdk_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("foreground-gdk")
 		end
 
-	background_gdk_string: EV_GTK_C_STRING is
+	background_gdk_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("background-gdk")
 		end
 
-	underline_string: EV_GTK_C_STRING is
+	underline_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("underline")
 		end
 
-	strikethrough_string: EV_GTK_C_STRING is
+	strikethrough_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("strikethrough")
 		end
 
-	rise_string: EV_GTK_C_STRING is
+	rise_string: EV_GTK_C_STRING
 			-- String optimization
 		once
 			Result := ("rise")
@@ -514,7 +514,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			--
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 	family: INTEGER
 			-- Family used by `Current'.
 
-	height: INTEGER is
+	height: INTEGER
 			--  Height of `Current' in screen pixels.
 		do
 			Result := app_implementation.pixel_value_from_point_value (height_in_points)
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 	weight: INTEGER
 			-- Weight of `Current'.
 
-	is_bold: BOOLEAN is
+	is_bold: BOOLEAN
 			-- Is `Current' bold?
 		do
 			Result := (weight = {EV_FONT_CONSTANTS}.weight_bold)
@@ -565,13 +565,13 @@ feature {NONE} -- Implementation
 	bcolor: INTEGER
 			-- background color BGR packed into 24 bit.
 
-	destroy is
+	destroy
 			-- Clean up
 		do
 			set_is_destroyed (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

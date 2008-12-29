@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DES encryption and decryption"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,14 +18,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Prepare object for encryption
 		do
 			des_init (1)
 			set_key (secret_key)
 		end
 
-	make_with_key (key: STRING) is
+	make_with_key (key: STRING)
 			-- Prepare object for encryption with `key'.
 		require
 			key_not_void: key /= Void
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Disposal
 
-	terminate is
+	terminate
 			-- Dispose the allocated structures.
 		do
 			desdone
@@ -45,7 +45,7 @@ feature -- Disposal
 
 feature -- Encryption
 
-	encrypt (s: STRING): STRING is
+	encrypt (s: STRING): STRING
 			-- Padding done if length not multiple of 8
 		require
 			string_not_void: s /= Void
@@ -63,7 +63,7 @@ feature -- Encryption
 			c_encrypt ($c_string, Result.count)
 		end
 
-	decrypt (s: STRING): STRING is
+	decrypt (s: STRING): STRING
 			-- Padding done if length not multiple of 8
 		require
 			string_not_void: s /= Void
@@ -85,7 +85,7 @@ feature -- Encryption
 
 feature -- Status
 
-	des_init (mode: INTEGER) is
+	des_init (mode: INTEGER)
 			-- mode 0: standard Data Encryption Algorithm
 			-- mode 1: DEA without initial and final permutation for speed
 			-- mode 2: DEA without permutations and with 128-byte key
@@ -103,7 +103,7 @@ feature -- Status
 			end
 		end
 
-	set_key (key: STRING) is
+	set_key (key: STRING)
 		require
 			key_not_void: key /= Void;
 		local
@@ -115,7 +115,7 @@ feature -- Status
 
 feature {NONE}
 
-	secret_key: STRING is
+	secret_key: STRING
 		once
 			Result := "%/23/%/05/%/37/%/16/%/01/%/03/%/07/%/39/%/63/%/25/%
 					%%/37/%/56/%/23/%/19/%/54/%/63/%/21/%/53/%/32/%/40/%
@@ -134,42 +134,42 @@ feature {NONE}
 
 feature {NONE} -- Externals
 
-	c_decrypt (data: POINTER; size: INTEGER) is
+	c_decrypt (data: POINTER; size: INTEGER)
 		external
 			"C | %"desop.h%""
 		alias
 			"des_decrypt"
 		end
 
-	c_encrypt (data: POINTER; size: INTEGER) is
+	c_encrypt (data: POINTER; size: INTEGER)
 		external
 			"C | %"desop.h%""
 		alias
 			"des_encrypt"
 		end
 
-	desinit (mode: INTEGER): INTEGER is
+	desinit (mode: INTEGER): INTEGER
 		external
 			"C | %"des.h%""
 		alias
 			"ise_desinit"
 		end
 
-	desdone is
+	desdone
 		external
 			"C | %"des.h%""
 		alias
 			"ise_desdone"
 		end
 
-	setkey (key: POINTER) is
+	setkey (key: POINTER)
 		external
 			"C | %"des.h%""
 		alias
 			"ise_setkey"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

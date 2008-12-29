@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Adapters for EV_DRAWABLE that allows drawing of figures."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (a_drawable: like drawable) is
+	make_with_drawable (a_drawable: like drawable)
 			-- Initialize.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	offset_x: INTEGER is
+	offset_x: INTEGER
 			-- Everyting is drawen offset_x pixels to the right.
 		do
 			Result := 0
 		end
 
-	offset_y: INTEGER is
+	offset_y: INTEGER
 			-- Everyting is drawen offest_y pixels to bottom.
 		do
 			Result := 0
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	draw_grid is
+	draw_grid
 			-- Draw grid on canvas.
 			-- `world.point' is the origin of the grid.
 		local
@@ -80,17 +80,17 @@ feature -- Access
 	drawable: EV_DRAWABLE
 			-- Drawable surface (screen, drawing area or pixmap).
 
-	world: EV_MODEL_WORLD is
+	world: EV_MODEL_WORLD
 		deferred
 		end
 
-	Default_colors: EV_STOCK_COLORS is
+	Default_colors: EV_STOCK_COLORS
 		deferred
 		end
 
 feature -- Element Change
 
-	set_drawable (a_drawable: like drawable) is
+	set_drawable (a_drawable: like drawable)
 			-- Set `drawable' to `a_drawable'.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -102,7 +102,7 @@ feature -- Element Change
 
 feature -- Figure drawing
 
-	draw_figure_arc (arc: EV_MODEL_ARC) is
+	draw_figure_arc (arc: EV_MODEL_ARC)
 			-- Draw standard representation of `arc' to canvas.
 		local
 			l_point_array: SPECIAL [EV_COORDINATE]
@@ -141,7 +141,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rotated_arc  (arc: EV_MODEL_ROTATED_ARC) is
+	draw_figure_rotated_arc  (arc: EV_MODEL_ROTATED_ARC)
 			-- Draw standard representation of `arc' to canvas.
 		local
 			d: like drawable
@@ -203,7 +203,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_dot (dot: EV_MODEL_DOT) is
+	draw_figure_dot (dot: EV_MODEL_DOT)
 			-- Draw standard representation of `dot' to canvas.
 		local
 			lw, lwh: INTEGER
@@ -227,7 +227,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_ellipse (ellipse: EV_MODEL_ELLIPSE) is
+	draw_figure_ellipse (ellipse: EV_MODEL_ELLIPSE)
 			-- Draw standard representation of `ellipse' to canvas.
 		local
 			l_point_array: SPECIAL [EV_COORDINATE]
@@ -278,7 +278,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rotated_ellipse (ellipse: EV_MODEL_ROTATED_ELLIPSE) is
+	draw_figure_rotated_ellipse (ellipse: EV_MODEL_ROTATED_ELLIPSE)
 			-- Draw standard representation of `ellipse' to canvas.
 		local
 			bg: EV_COLOR
@@ -347,7 +347,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_equilateral (eql: EV_MODEL_EQUILATERAL) is
+	draw_figure_equilateral (eql: EV_MODEL_EQUILATERAL)
 			-- Draw standard representation of `eql' to canvas.
 		local
 			bg: EV_COLOR
@@ -375,7 +375,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_line (line: EV_MODEL_LINE) is
+	draw_figure_line (line: EV_MODEL_LINE)
 			-- Draw standard representation of `line' to canvas.
 		local
 			p: EV_MODEL_POLYGON
@@ -428,7 +428,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_picture (picture: EV_MODEL_PICTURE) is
+	draw_figure_picture (picture: EV_MODEL_PICTURE)
 			-- Draw standard representation of `picture' to canvas.
 		local
 			c: EV_COORDINATE
@@ -437,7 +437,7 @@ feature -- Figure drawing
 			drawable.draw_pixmap (c.x + offset_x, c.y + offset_y, picture.scaled_pixmap)
 		end
 
-	draw_figure_pie_slice (slice: EV_MODEL_PIE_SLICE) is
+	draw_figure_pie_slice (slice: EV_MODEL_PIE_SLICE)
 			-- Draw standard representation of `slice' to canvas.
 		local
 			l_point_array: SPECIAL [EV_COORDINATE]
@@ -487,7 +487,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rotated_pie_slice (slice: EV_MODEL_ROTATED_PIE_SLICE) is
+	draw_figure_rotated_pie_slice (slice: EV_MODEL_ROTATED_PIE_SLICE)
 			-- Draw standard representation of `slice' to canvas.
 		local
 			bg: EV_COLOR
@@ -556,7 +556,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polygon (polygon: EV_MODEL_POLYGON) is
+	draw_figure_polygon (polygon: EV_MODEL_POLYGON)
 			-- Draw standard representation of `polygon' to canvas.
 		local
 			bg: EV_COLOR
@@ -592,7 +592,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polyline (line: EV_MODEL_POLYLINE) is
+	draw_figure_polyline (line: EV_MODEL_POLYLINE)
 			-- Draw standard representation of `polyline' to canvas.
 		local
 			p: EV_MODEL_POLYGON
@@ -663,7 +663,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_parallelogram (parallelogram: EV_MODEL_PARALLELOGRAM) is
+	draw_figure_parallelogram (parallelogram: EV_MODEL_PARALLELOGRAM)
 			-- Draw standad representation of `parallelogram' to canvas.
 		local
 			d: like drawable
@@ -742,7 +742,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rectangle (rectangle: EV_MODEL_RECTANGLE) is
+	draw_figure_rectangle (rectangle: EV_MODEL_RECTANGLE)
 			-- Draw standard representation of `rectangle' to canvas.
 		local
 			width, height, min_x, min_y, p0x, p0y, p1x, p1y: INTEGER
@@ -786,7 +786,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rounded_parallelogram (f: EV_MODEL_ROUNDED_PARALLELOGRAM) is
+	draw_figure_rounded_parallelogram (f: EV_MODEL_ROUNDED_PARALLELOGRAM)
 			-- Draw standart representation of `f' to canvas.
 		local
 			d: like drawable
@@ -824,7 +824,7 @@ feature -- Figure drawing
 
 		end
 
-	draw_figure_rounded_rectangle (f: EV_MODEL_ROUNDED_RECTANGLE) is
+	draw_figure_rounded_rectangle (f: EV_MODEL_ROUNDED_RECTANGLE)
 			-- Draw standard representation of `f' to canvas.
 		local
 			d: like drawable
@@ -904,7 +904,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_star (star: EV_MODEL_STAR) is
+	draw_figure_star (star: EV_MODEL_STAR)
 			-- Draw standard representation of `star' to canvas.
 		local
 			cx, cy: INTEGER
@@ -940,7 +940,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_text (text_figure: EV_MODEL_TEXT) is
+	draw_figure_text (text_figure: EV_MODEL_TEXT)
 			-- Draw standard representation of `text_figure' to canvas.
 		local
 			p0: EV_COORDINATE
@@ -959,7 +959,7 @@ feature -- Figure drawing
 
 feature {NONE} -- Implementation
 
-	offset_coordinates (coordinates: ARRAY [EV_COORDINATE]) is
+	offset_coordinates (coordinates: ARRAY [EV_COORDINATE])
 			-- Add `offset_x' `offset_y' to all points in `coordinates'.
 		local
 			i, nb: INTEGER
@@ -977,7 +977,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deoffset_coordinates (coordinates: ARRAY [EV_COORDINATE]) is
+	deoffset_coordinates (coordinates: ARRAY [EV_COORDINATE])
 			-- Subtract `offset_x' `offset_y' from all points in `coordinates'.
 		local
 			i, nb: INTEGER
@@ -995,7 +995,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE) is
+	fill_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE)
 			 -- Draw a filled ellipse with center (`xcen',`ycen'), radius1 `a',
 			 -- radius2 `b' and rotation `phi' counter clockwise.
 			 --
@@ -1132,7 +1132,7 @@ feature {NONE} -- Implementation
 		 	end
 		end
 
-	draw_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE) is
+	draw_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE)
 			-- Draw a ellipse border with center (`xcen',`ycen'), radius1 `a',
 			-- radius2 `b' and rotation `phi' counter clockwise.
 			-- Please see fill_rotated_ellipse for more informations.
@@ -1233,7 +1233,7 @@ feature {NONE} -- Implementation
 		 	end
 		end
 
-	draw_rotated_arc (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
+	draw_rotated_arc (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE)
 			-- Draw a ellipse border from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
 			-- radius2 `b' and rotation `phi' counter clockwise.
@@ -1391,7 +1391,7 @@ feature {NONE} -- Implementation
 		 	end
 		end
 
-	draw_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
+	draw_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE)
 			-- Draw a pie slice border from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
 			-- radius2 `b' and rotation `phi' counter clockwise.
@@ -1446,7 +1446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
+	fill_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE)
 			-- Draw a pie slice from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
 			-- radius2 `b' and rotation `phi' counter clockwise.
@@ -1701,7 +1701,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	inside (x, y: INTEGER start_angle, end_angle: DOUBLE): BOOLEAN is
+	inside (x, y: INTEGER start_angle, end_angle: DOUBLE): BOOLEAN
 			-- Does the line (0,0) - (`x', `y') lie between `start_angle' and `end_angle'?
 		local
 			an_angle: DOUBLE
@@ -1718,7 +1718,7 @@ feature {NONE} -- Implementation
 invariant
 	drawable_not_void: drawable /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

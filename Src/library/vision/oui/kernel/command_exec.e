@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (a_command: COMMAND; an_argument: ANY) is
+	make (a_command: COMMAND; an_argument: ANY)
 			-- Store `a_command' and `an_argument'.
 		do
 			command := a_command;
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute (context_data: CONTEXT_DATA) is
+	execute (context_data: CONTEXT_DATA)
 			-- Execute `command' with `argument' and `context_data'.
 		local
 			command_clone: COMMAND
@@ -56,7 +56,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is Current equal to `other' ?
 		do
 			Result := command = other.command and then
@@ -67,7 +67,7 @@ invariant
 
 	valid_command: command /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

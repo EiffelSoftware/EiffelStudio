@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create with `a_world' and `a_filename'.
 		do
 			base_make (an_interface)
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 			register_basic_figures
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			if print_dc /= Void then
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	project is
+	project
 			-- Make a standard projection of the world on the device.
 		local
 			clip_rect: EV_RECTANGLE
@@ -102,14 +102,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixels_per_inch: INTEGER is 72
+	pixels_per_inch: INTEGER = 72
 
 	print_dc: WEL_PRINTER_DC
 
 	a_printer: EV_PRINTER
 			-- Drawable used for printing.
 			
-	greatest_common_denometer (value1, value2: INTEGER): INTEGER is
+	greatest_common_denometer (value1, value2: INTEGER): INTEGER
 			-- `Result' is greatest common denometer of `value1' and `value2'
 		local
 			l_value1, l_value2: INTEGER
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			Result := l_value1
 		end
 	
-	set_dc_extents (wx, wy, vx, vy: INTEGER) is
+	set_dc_extents (wx, wy, vx, vy: INTEGER)
 			-- Set extents of `print_dc' to correctly print `wx', `wy' pixels per inch,
 			-- on a printer with resolution `vx', `vy'.
 		require
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			print_dc.set_viewport_extent ((vx/gx).rounded, (vy/gy).rounded)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

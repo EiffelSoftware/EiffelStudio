@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A shell under the control %
 		%of the Window manager - always %
 		%so for Windows"
@@ -34,7 +34,7 @@ inherit
 
 feature -- Initialization
 
-	realize is
+	realize
 			-- Realize current widget
 		do
 			if not realized then
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title' to `a_title'.
 		do
 			if exists then
@@ -60,7 +60,7 @@ feature -- Status setting
 			private_title := a_title.twin
 		end
 
-	associate_bar (new_bar: BAR_IMP) is
+	associate_bar (new_bar: BAR_IMP)
 			-- Associate a menu bar to the widget.
 		require
 			bar_exists: new_bar /= Void
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_bar is
+	remove_bar
 			-- Remove the menu bar from the widget.
 		require
 			bar_present: bar /= Void
@@ -92,7 +92,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 			-- The invalid rectangle of the client area,
 			-- `invalid_rect', needs repainting.
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- The `menu_id' has been choosen from the menu.
 		do
 			if popup_menu /= Void then
@@ -146,20 +146,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_accelerator_command (accelerator_id: INTEGER) is
+	on_accelerator_command (accelerator_id: INTEGER)
 			-- The `acelerator_id' has been activated.
 		do
 			on_menu_command (accelerator_id)
 		end
 
-	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
 			resize_shell_children (a_width, a_height)
 		end
 
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
 		local
 		 	track: WEL_POINT
 		do
@@ -171,19 +171,19 @@ feature {NONE} -- Implementation
 		end
 
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style for creation
 		once
 			Result := Ws_overlappedwindow + ws_visible
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionWmShell"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Initialization
 
-	make (type: like item)  is
+	make (type: like item)
 			-- Initialize
 		do
 			item:=type	
@@ -24,15 +24,15 @@ feature --Access
 
 	item : HASHABLE
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := item.hash_code 
 		end
 
-	is_basic: BOOLEAN is True;
+	is_basic: BOOLEAN = True;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

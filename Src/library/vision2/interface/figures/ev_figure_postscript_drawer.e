@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class for drawing of figures to postscript."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Figure drawing
 
 	--| FIXME No figure drawing routines have support for the orientation attribute.
 
-	draw_figure_arc (arc: EV_FIGURE_ARC) is
+	draw_figure_arc (arc: EV_FIGURE_ARC)
 			-- Draw standard representation of `arc' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -45,7 +45,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_dot (dot: EV_FIGURE_DOT) is
+	draw_figure_dot (dot: EV_FIGURE_DOT)
 			-- Draw standard representation of `dot' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER]
@@ -68,7 +68,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
+	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE)
 			-- Draw standard representation of `ellipse' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -97,7 +97,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL) is
+	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL)
 			-- Draw standard representation of `eql' to canvas.
 		do
 			if eql.is_show_requested then
@@ -113,7 +113,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_line (line: EV_FIGURE_LINE) is
+	draw_figure_line (line: EV_FIGURE_LINE)
 			-- Draw standard representation of `line' to canvas.
 		do
 			if line.is_show_requested then
@@ -130,7 +130,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_picture (picture: EV_FIGURE_PICTURE) is
+	draw_figure_picture (picture: EV_FIGURE_PICTURE)
 			-- Draw standard representation of `picture' to canvas.
 		local
 			hex_string: STRING
@@ -160,7 +160,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE) is
+	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE)
 			-- Draw standard representation of `slice' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -186,7 +186,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polygon (polygon: EV_FIGURE_POLYGON) is
+	draw_figure_polygon (polygon: EV_FIGURE_POLYGON)
 			-- Draw standard representation of `polygon' to canvas.
 		do
 			if polygon.is_show_requested then
@@ -202,7 +202,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polyline (line: EV_FIGURE_POLYLINE) is
+	draw_figure_polyline (line: EV_FIGURE_POLYLINE)
 			-- Draw standard representation of `polyline' to canvas.
 		do
 			if line.is_show_requested then
@@ -219,7 +219,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE) is
+	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE)
 			-- Draw standard representation of `rectangle' to canvas.
 		do
 			if rectangle.is_show_requested then
@@ -235,7 +235,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rounded_rectangle (rounded_rectangle: EV_FIGURE_ROUNDED_RECTANGLE) is
+	draw_figure_rounded_rectangle (rounded_rectangle: EV_FIGURE_ROUNDED_RECTANGLE)
 			-- Draw standard representation of `rounded_rectangle' to canvas.
 		do
 			if rounded_rectangle.is_show_requested then
@@ -251,7 +251,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_star (star: EV_FIGURE_STAR) is
+	draw_figure_star (star: EV_FIGURE_STAR)
 			-- Draw standard representation of `star' to canvas.
 		local
 				coord_array: LINEAR [EV_COORDINATE]
@@ -280,7 +280,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
+	draw_figure_text (text_figure: EV_FIGURE_TEXT)
 			-- Draw standard representation of `text_figure' to canvas.
 		local
 			font_name, font_style: STRING_32
@@ -334,7 +334,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_margins (a_left_margin, a_bottom_margin: INTEGER) is
+	set_margins (a_left_margin, a_bottom_margin: INTEGER)
 			-- Set `left' and `bottom' margins to `a_left_margin'
 			-- and `a_bottom_margin'.
 			--| FIXME Requires pre- and post-conditions.
@@ -343,7 +343,7 @@ feature -- Status setting
 			bottom_margin := a_bottom_margin
 		end
 
-	set_page_size (a_size: INTEGER; landscape: BOOLEAN) is
+	set_page_size (a_size: INTEGER; landscape: BOOLEAN)
 			-- Set horizontal and vertical dimensions of page.
 		do
 			point_width := page_width (a_size, landscape) - (left_margin*2)
@@ -352,7 +352,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_ps_line (a_code: STRING_GENERAL) is
+	add_ps_line (a_code: STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			postscript_result.append_character ('%N')
 		end
 
-	add_ps_string (a_code: STRING_GENERAL) is
+	add_ps_string (a_code: STRING_GENERAL)
 			-- Add `a_code' to postscript data.
 		require
 			a_code_not_void: a_code /= Void
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			postscript_result.append (a_code.to_string_8)
 		end
 
-	append_line_styles (a_figure: EV_ATOMIC_FIGURE) is
+	append_line_styles (a_figure: EV_ATOMIC_FIGURE)
 			-- Add postscript code for dashed line style and line width.
 		do
 			if a_figure.dashed_line_style then
@@ -380,18 +380,18 @@ feature {NONE} -- Implementation
 			add_ps_line (a_figure.line_width.out + " setlinewidth")
 		end
 
-	translate_to (a_x, a_y: INTEGER) is
+	translate_to (a_x, a_y: INTEGER)
 		do
 			add_ps_line (a_x.out + " " + a_y.out + " " + "translate")
 		end
 
-	draw_arc (a_radius, start_angle, end_angle: INTEGER) is
+	draw_arc (a_radius, start_angle, end_angle: INTEGER)
 		do
 
 			add_ps_line ("0 0 "+a_radius.out+" " + start_angle.out + " " + end_angle.out + " arc")
 		end
 
-	draw_pie_slice (a_h, a_w, a_line_width, start_angle, end_angle: INTEGER; dashed, filled: BOOLEAN) is
+	draw_pie_slice (a_h, a_w, a_line_width, start_angle, end_angle: INTEGER; dashed, filled: BOOLEAN)
 		do
 			add_ps_line ("newpath")
 			if dashed then
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			add_ps_line ("grestore")
 		end
 
-	start_drawing_polygon (a_figure: EV_CLOSED_FIGURE; filled: BOOLEAN) is
+	start_drawing_polygon (a_figure: EV_CLOSED_FIGURE; filled: BOOLEAN)
 		do
 			add_ps_line ("gsave")
 			translate_to (0, 0)
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_polygon (coord_array: LINEAR [EV_COORDINATE]) is
+	draw_polygon (coord_array: LINEAR [EV_COORDINATE])
 		do
 			from
 				coord_array.start
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	finish_drawing_polygon (filled: BOOLEAN) is
+	finish_drawing_polygon (filled: BOOLEAN)
 		do
 			add_ps_line ("closepath")
 			if filled then
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			add_ps_line ("grestore")
 		end
 
-	draw_polyline (a_polyline: EV_ATOMIC_FIGURE; closed: BOOLEAN) is
+	draw_polyline (a_polyline: EV_ATOMIC_FIGURE; closed: BOOLEAN)
 		local
 			coord_array: LINEAR [EV_COORDINATE]
 		do
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 			add_ps_line ("grestore")
 		end
 
-	draw_arrowhead (a_color, a_line_width: STRING_GENERAL; point1, point2, point3: EV_RELATIVE_POINT) is
+	draw_arrowhead (a_color, a_line_width: STRING_GENERAL; point1, point2, point3: EV_RELATIVE_POINT)
 		do
 			add_ps_line ("%%Draw arrowhead")
 			add_ps_line ("gsave")
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			add_ps_line ("grestore")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

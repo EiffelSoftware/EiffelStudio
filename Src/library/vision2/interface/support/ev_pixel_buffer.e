@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pixel buffer used for storing RGBA values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Create pixel buffer with width `a_width' and height `a_height'.
 		require
 			a_width_valid: a_width > 0
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			implementation.make_with_size (a_width, a_height)
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap''s image data.
 		require
 			not_void: a_pixmap /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING) is
+	set_with_named_file (a_file_name: STRING)
 			-- Load pixel data from file `a_file_name'
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -54,7 +54,7 @@ feature -- Command
 			implementation.set_with_named_file (a_file_name)
 		end
 
-	save_to_named_file (a_file_name: STRING) is
+	save_to_named_file (a_file_name: STRING)
 			-- Save pixel data to file `a_file_name'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -63,7 +63,7 @@ feature -- Command
 			implementation.save_to_named_file (a_file_name)
 		end
 
-	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (a_rect: EV_RECTANGLE): EV_PIXMAP
 			-- Return a pixmap region of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
@@ -74,7 +74,7 @@ feature -- Command
 			result_not_void: Result /= Void
 		end
 
-	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
+	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Return a sub pixel buffer of `Current' represented by area `a_rect'.
 		require
 			not_void: a_rect /= Void
@@ -86,7 +86,7 @@ feature -- Command
 			result_not_current: Result /= Current
 		end
 
-	lock is
+	lock
 			-- Lock pixel buffer for data access.
 		require
 			not_locked: not is_locked
@@ -96,7 +96,7 @@ feature -- Command
 			is_locked: is_locked
 		end
 
-	pixel_iterator: EV_PIXEL_BUFFER_ITERATOR is
+	pixel_iterator: EV_PIXEL_BUFFER_ITERATOR
 			-- Return a pixel buffer iterator covering.
 		require
 			is_locked: is_locked
@@ -106,7 +106,7 @@ feature -- Command
 			result_not_void: Result /= Void
 		end
 
-	unlock is
+	unlock
 			-- Unlock from data access with `pixel_iterator'.
 		do
 			implementation.unlock
@@ -114,7 +114,7 @@ feature -- Command
 			not_locked: not is_locked
 		end
 
-	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER) is
+	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_x', `a_y'.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -123,7 +123,7 @@ feature -- Command
 			implementation.draw_pixel_buffer_with_x_y (a_x, a_y, a_pixel_buffer)
 		end
 
-	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE)
 			-- Draw `a_text' with `a_font' at `a_rect'.
 		require
 			not_void: a_text /= Void
@@ -133,7 +133,7 @@ feature -- Command
 			implementation.draw_text (a_text, a_font, a_point)
 		end
 
-	to_pixmap: EV_PIXMAP is
+	to_pixmap: EV_PIXMAP
 			-- Convert to EV_PIXMAP.
 		do
 			create Result.make_with_pixel_buffer (Current)
@@ -141,7 +141,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current' in pixels.
 		do
 			Result := implementation.width
@@ -149,7 +149,7 @@ feature -- Query
 			valid_width: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current' in pixels.
 		do
 			Result := implementation.height
@@ -165,7 +165,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation
 		do
 			create {EV_PIXEL_BUFFER_IMP} implementation.make (Current)
@@ -178,7 +178,7 @@ feature -- Implementation
 
 feature -- Obsolete
 
-	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		obsolete
 			"Use draw_pixel_buffer_with_x_y instead"
@@ -186,7 +186,7 @@ feature -- Obsolete
 			implementation.draw_pixel_buffer (a_pixel_buffer, a_rect)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

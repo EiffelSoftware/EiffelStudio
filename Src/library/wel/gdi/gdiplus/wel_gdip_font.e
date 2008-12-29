@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font functions in GDI+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL) is
+	make (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL)
 			-- Creation method.
 		require
 			not_void: a_font_family /= Void
@@ -28,7 +28,7 @@ feature{NONE} -- Initlization
 			make_with_family_size_sytle_unit (a_font_family, a_em_size, {WEL_GDIP_FONT_STYLE}.fontstyleregular, {WEL_GDIP_UNIT}.unitpoint)
 		end
 
-	make_with_family_size_sytle_unit (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL; a_style: INTEGER; a_unit: INTEGER) is
+	make_with_family_size_sytle_unit (a_font_family: WEL_GDIP_FONT_FAMILY; a_em_size: REAL; a_style: INTEGER; a_unit: INTEGER)
 			-- Create a font with `a_font_family', `a_em_size', `a_style' and `a_unit'.
 		require
 			not_void: a_font_family /= Void
@@ -44,7 +44,7 @@ feature{NONE} -- Initlization
 
 feature -- Delete
 
-	destroy_item is
+	destroy_item
 			-- Redefine
 		local
 			l_result: INTEGER
@@ -58,7 +58,7 @@ feature -- Delete
 
 feature {NONE} -- C externals
 
-	c_gdip_create_font (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_em_size: REAL; a_style, a_unit: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_font (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_em_size: REAL; a_style, a_unit: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			--	Create a Gdi+ font
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -87,7 +87,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_delete_font (a_gdiplus_handle: POINTER; a_gdiplus_font: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_delete_font (a_gdiplus_handle: POINTER; a_gdiplus_font: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			--	Delete a Gdi+ font
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -111,7 +111,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

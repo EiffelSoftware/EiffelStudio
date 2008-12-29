@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when a scale value's value has been %
@@ -29,14 +29,14 @@ feature
 	value: INTEGER;
 			-- New value of scale
 
-	make (a_widget: WIDGET; a_value: INTEGER) is
+	make (a_widget: WIDGET; a_value: INTEGER)
 			-- Create a context_data for `value changed' action.
 		do
 			widget := a_widget;
 			value := a_value
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

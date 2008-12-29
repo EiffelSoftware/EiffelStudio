@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Resource values for KEYSYM definition. Only includes latin 1 %
 		%and common keysym definitions."
@@ -11,7 +11,7 @@ class MEL_KEYSYMDEF_CONSTANTS
 
 feature -- keysymdef resources
 
-	XK_BackSpace: INTEGER is
+	XK_BackSpace: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -19,7 +19,7 @@ feature -- keysymdef resources
 			"XK_BackSpace"
 		end
 	
-	XK_Tab: INTEGER is
+	XK_Tab: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -27,7 +27,7 @@ feature -- keysymdef resources
 			"XK_Tab"
 		end
 	
-	XK_Linefeed: INTEGER is
+	XK_Linefeed: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -35,7 +35,7 @@ feature -- keysymdef resources
 			"XK_Linefeed"
 		end
 	
-	XK_Clear: INTEGER is
+	XK_Clear: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -43,7 +43,7 @@ feature -- keysymdef resources
 			"XK_Clear"
 		end
 	
-	XK_Return: INTEGER is
+	XK_Return: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -51,7 +51,7 @@ feature -- keysymdef resources
 			"XK_Return"
 		end
 	
-	XK_Pause: INTEGER is
+	XK_Pause: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -59,7 +59,7 @@ feature -- keysymdef resources
 			"XK_Pause"
 		end
 	
-	XK_Scroll_Lock: INTEGER is
+	XK_Scroll_Lock: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -67,7 +67,7 @@ feature -- keysymdef resources
 			"XK_Scroll_Lock"
 		end
 	
-	XK_Escape: INTEGER is
+	XK_Escape: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -75,7 +75,7 @@ feature -- keysymdef resources
 			"XK_Escape"
 		end
 	
-	XK_Delete: INTEGER is
+	XK_Delete: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -83,7 +83,7 @@ feature -- keysymdef resources
 			"XK_Delete"
 		end
 	
-	XK_Home: INTEGER is
+	XK_Home: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -91,7 +91,7 @@ feature -- keysymdef resources
 			"XK_Home"
 		end
 	
-	XK_Left: INTEGER is
+	XK_Left: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -99,7 +99,7 @@ feature -- keysymdef resources
 			"XK_Left"
 		end
 	
-	XK_Up: INTEGER is
+	XK_Up: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -107,7 +107,7 @@ feature -- keysymdef resources
 			"XK_Up"
 		end
 	
-	XK_Right: INTEGER is
+	XK_Right: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -115,7 +115,7 @@ feature -- keysymdef resources
 			"XK_Right"
 		end
 	
-	XK_Down: INTEGER is
+	XK_Down: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -123,7 +123,7 @@ feature -- keysymdef resources
 			"XK_Down"
 		end
 	
-	XK_Prior, XK_Page_Up: INTEGER is
+	XK_Prior, XK_Page_Up: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -131,7 +131,7 @@ feature -- keysymdef resources
 			"XK_Prior"
 		end
 	
-	XK_Next, XK_Page_Down: INTEGER is
+	XK_Next, XK_Page_Down: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -139,7 +139,7 @@ feature -- keysymdef resources
 			"XK_Next"
 		end
 	
-	XK_End: INTEGER is
+	XK_End: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -147,7 +147,7 @@ feature -- keysymdef resources
 			"XK_End"
 		end
 	
-	XK_Begin: INTEGER is
+	XK_Begin: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -155,7 +155,7 @@ feature -- keysymdef resources
 			"XK_Begin"
 		end
 	
-	XK_Select: INTEGER is
+	XK_Select: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -163,7 +163,7 @@ feature -- keysymdef resources
 			"XK_Select"
 		end
 	
-	XK_Print: INTEGER is
+	XK_Print: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -171,7 +171,7 @@ feature -- keysymdef resources
 			"XK_Print"
 		end
 	
-	XK_Execute: INTEGER is
+	XK_Execute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -179,7 +179,7 @@ feature -- keysymdef resources
 			"XK_Execute"
 		end
 	
-	XK_Insert: INTEGER is
+	XK_Insert: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -187,7 +187,7 @@ feature -- keysymdef resources
 			"XK_Insert"
 		end
 	
-	XK_Undo: INTEGER is
+	XK_Undo: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -195,7 +195,7 @@ feature -- keysymdef resources
 			"XK_Undo"
 		end
 	
-	XK_Redo: INTEGER is
+	XK_Redo: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -203,7 +203,7 @@ feature -- keysymdef resources
 			"XK_Redo"
 		end
 	
-	XK_Menu: INTEGER is
+	XK_Menu: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -211,7 +211,7 @@ feature -- keysymdef resources
 			"XK_Menu"
 		end
 	
-	XK_Find: INTEGER is
+	XK_Find: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -219,7 +219,7 @@ feature -- keysymdef resources
 			"XK_Find"
 		end
 	
-	XK_Cancel: INTEGER is
+	XK_Cancel: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -227,7 +227,7 @@ feature -- keysymdef resources
 			"XK_Cancel"
 		end
 	
-	XK_Help: INTEGER is
+	XK_Help: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -235,7 +235,7 @@ feature -- keysymdef resources
 			"XK_Help"
 		end
 	
-	XK_Break: INTEGER is
+	XK_Break: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -243,7 +243,7 @@ feature -- keysymdef resources
 			"XK_Break"
 		end
 	
-	XK_Mode_switch: INTEGER is
+	XK_Mode_switch: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -251,7 +251,7 @@ feature -- keysymdef resources
 			"XK_Mode_switch"
 		end
 	
-	XK_script_switch: INTEGER is
+	XK_script_switch: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -259,7 +259,7 @@ feature -- keysymdef resources
 			"XK_script_switch"
 		end
 	
-	XK_Num_Lock: INTEGER is
+	XK_Num_Lock: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -267,7 +267,7 @@ feature -- keysymdef resources
 			"XK_Num_Lock"
 		end
 	
-	XK_KP_Space: INTEGER is
+	XK_KP_Space: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -275,7 +275,7 @@ feature -- keysymdef resources
 			"XK_KP_Space"
 		end
 	
-	XK_KP_Tab: INTEGER is
+	XK_KP_Tab: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -283,7 +283,7 @@ feature -- keysymdef resources
 			"XK_KP_Tab"
 		end
 	
-	XK_KP_Enter: INTEGER is
+	XK_KP_Enter: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -291,7 +291,7 @@ feature -- keysymdef resources
 			"XK_KP_Enter"
 		end
 	
-	XK_KP_F1: INTEGER is
+	XK_KP_F1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -299,7 +299,7 @@ feature -- keysymdef resources
 			"XK_KP_F1"
 		end
 	
-	XK_KP_F2: INTEGER is
+	XK_KP_F2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -307,7 +307,7 @@ feature -- keysymdef resources
 			"XK_KP_F2"
 		end
 	
-	XK_KP_F3: INTEGER is
+	XK_KP_F3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -315,7 +315,7 @@ feature -- keysymdef resources
 			"XK_KP_F3"
 		end
 	
-	XK_KP_F4: INTEGER is
+	XK_KP_F4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -323,7 +323,7 @@ feature -- keysymdef resources
 			"XK_KP_F4"
 		end
 	
-	XK_KP_Equal: INTEGER is
+	XK_KP_Equal: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -331,7 +331,7 @@ feature -- keysymdef resources
 			"XK_KP_Equal"
 		end
 	
-	XK_KP_Multiply: INTEGER is
+	XK_KP_Multiply: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -339,7 +339,7 @@ feature -- keysymdef resources
 			"XK_KP_Multiply"
 		end
 	
-	XK_KP_Add: INTEGER is
+	XK_KP_Add: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -347,7 +347,7 @@ feature -- keysymdef resources
 			"XK_KP_Add"
 		end
 	
-	XK_KP_Separator: INTEGER is
+	XK_KP_Separator: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -355,7 +355,7 @@ feature -- keysymdef resources
 			"XK_KP_Separator"
 		end
 	
-	XK_KP_Subtract: INTEGER is
+	XK_KP_Subtract: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -363,7 +363,7 @@ feature -- keysymdef resources
 			"XK_KP_Subtract"
 		end
 	
-	XK_KP_Decimal: INTEGER is
+	XK_KP_Decimal: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -371,7 +371,7 @@ feature -- keysymdef resources
 			"XK_KP_Decimal"
 		end
 	
-	XK_KP_Divide: INTEGER is
+	XK_KP_Divide: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -379,7 +379,7 @@ feature -- keysymdef resources
 			"XK_KP_Divide"
 		end
 	
-	XK_KP_0: INTEGER is
+	XK_KP_0: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -387,7 +387,7 @@ feature -- keysymdef resources
 			"XK_KP_0"
 		end
 	
-	XK_KP_1: INTEGER is
+	XK_KP_1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -395,7 +395,7 @@ feature -- keysymdef resources
 			"XK_KP_1"
 		end
 	
-	XK_KP_2: INTEGER is
+	XK_KP_2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -403,7 +403,7 @@ feature -- keysymdef resources
 			"XK_KP_2"
 		end
 	
-	XK_KP_3: INTEGER is
+	XK_KP_3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -411,7 +411,7 @@ feature -- keysymdef resources
 			"XK_KP_3"
 		end
 	
-	XK_KP_4: INTEGER is
+	XK_KP_4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -419,7 +419,7 @@ feature -- keysymdef resources
 			"XK_KP_4"
 		end
 	
-	XK_KP_5: INTEGER is
+	XK_KP_5: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -427,7 +427,7 @@ feature -- keysymdef resources
 			"XK_KP_5"
 		end
 	
-	XK_KP_6: INTEGER is
+	XK_KP_6: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -435,7 +435,7 @@ feature -- keysymdef resources
 			"XK_KP_6"
 		end
 	
-	XK_KP_7: INTEGER is
+	XK_KP_7: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -443,7 +443,7 @@ feature -- keysymdef resources
 			"XK_KP_7"
 		end
 	
-	XK_KP_8: INTEGER is
+	XK_KP_8: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -451,7 +451,7 @@ feature -- keysymdef resources
 			"XK_KP_8"
 		end
 	
-	XK_KP_9: INTEGER is
+	XK_KP_9: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -459,7 +459,7 @@ feature -- keysymdef resources
 			"XK_KP_9"
 		end
 	
-	XK_F1: INTEGER is
+	XK_F1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -467,7 +467,7 @@ feature -- keysymdef resources
 			"XK_F1"
 		end
 	
-	XK_F2: INTEGER is
+	XK_F2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -475,7 +475,7 @@ feature -- keysymdef resources
 			"XK_F2"
 		end
 	
-	XK_F3: INTEGER is
+	XK_F3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -483,7 +483,7 @@ feature -- keysymdef resources
 			"XK_F3"
 		end
 	
-	XK_F4: INTEGER is
+	XK_F4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -491,7 +491,7 @@ feature -- keysymdef resources
 			"XK_F4"
 		end
 	
-	XK_F5: INTEGER is
+	XK_F5: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -499,7 +499,7 @@ feature -- keysymdef resources
 			"XK_F5"
 		end
 	
-	XK_F6: INTEGER is
+	XK_F6: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -507,7 +507,7 @@ feature -- keysymdef resources
 			"XK_F6"
 		end
 	
-	XK_F7: INTEGER is
+	XK_F7: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -515,7 +515,7 @@ feature -- keysymdef resources
 			"XK_F7"
 		end
 	
-	XK_F8: INTEGER is
+	XK_F8: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -523,7 +523,7 @@ feature -- keysymdef resources
 			"XK_F8"
 		end
 	
-	XK_F9: INTEGER is
+	XK_F9: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -531,7 +531,7 @@ feature -- keysymdef resources
 			"XK_F9"
 		end
 	
-	XK_F10: INTEGER is
+	XK_F10: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -539,7 +539,7 @@ feature -- keysymdef resources
 			"XK_F10"
 		end
 	
-	XK_F11: INTEGER is
+	XK_F11: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -547,7 +547,7 @@ feature -- keysymdef resources
 			"XK_F11"
 		end
 	
-	XK_L1: INTEGER is
+	XK_L1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -555,7 +555,7 @@ feature -- keysymdef resources
 			"XK_L1"
 		end
 	
-	XK_F12: INTEGER is
+	XK_F12: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -563,7 +563,7 @@ feature -- keysymdef resources
 			"XK_F12"
 		end
 	
-	XK_L2: INTEGER is
+	XK_L2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -571,7 +571,7 @@ feature -- keysymdef resources
 			"XK_L2"
 		end
 	
-	XK_F13: INTEGER is
+	XK_F13: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -579,7 +579,7 @@ feature -- keysymdef resources
 			"XK_F13"
 		end
 	
-	XK_L3: INTEGER is
+	XK_L3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -587,7 +587,7 @@ feature -- keysymdef resources
 			"XK_L3"
 		end
 	
-	XK_F14: INTEGER is
+	XK_F14: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -595,7 +595,7 @@ feature -- keysymdef resources
 			"XK_F14"
 		end
 	
-	XK_L4: INTEGER is
+	XK_L4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -603,7 +603,7 @@ feature -- keysymdef resources
 			"XK_L4"
 		end
 	
-	XK_F15: INTEGER is
+	XK_F15: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -611,7 +611,7 @@ feature -- keysymdef resources
 			"XK_F15"
 		end
 	
-	XK_L5: INTEGER is
+	XK_L5: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -619,7 +619,7 @@ feature -- keysymdef resources
 			"XK_L5"
 		end
 	
-	XK_F16: INTEGER is
+	XK_F16: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -627,7 +627,7 @@ feature -- keysymdef resources
 			"XK_F16"
 		end
 	
-	XK_L6: INTEGER is
+	XK_L6: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -635,7 +635,7 @@ feature -- keysymdef resources
 			"XK_L6"
 		end
 	
-	XK_F17: INTEGER is
+	XK_F17: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -643,7 +643,7 @@ feature -- keysymdef resources
 			"XK_F17"
 		end
 	
-	XK_L7: INTEGER is
+	XK_L7: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -651,7 +651,7 @@ feature -- keysymdef resources
 			"XK_L7"
 		end
 	
-	XK_F18: INTEGER is
+	XK_F18: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -659,7 +659,7 @@ feature -- keysymdef resources
 			"XK_F18"
 		end
 	
-	XK_L8: INTEGER is
+	XK_L8: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -667,7 +667,7 @@ feature -- keysymdef resources
 			"XK_L8"
 		end
 	
-	XK_F19: INTEGER is
+	XK_F19: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -675,7 +675,7 @@ feature -- keysymdef resources
 			"XK_F19"
 		end
 	
-	XK_L9: INTEGER is
+	XK_L9: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -683,7 +683,7 @@ feature -- keysymdef resources
 			"XK_L9"
 		end
 	
-	XK_F20: INTEGER is
+	XK_F20: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -691,7 +691,7 @@ feature -- keysymdef resources
 			"XK_F20"
 		end
 	
-	XK_L10: INTEGER is
+	XK_L10: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -699,7 +699,7 @@ feature -- keysymdef resources
 			"XK_L10"
 		end
 	
-	XK_F21: INTEGER is
+	XK_F21: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -707,7 +707,7 @@ feature -- keysymdef resources
 			"XK_F21"
 		end
 	
-	XK_R1: INTEGER is
+	XK_R1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -715,7 +715,7 @@ feature -- keysymdef resources
 			"XK_R1"
 		end
 	
-	XK_F22: INTEGER is
+	XK_F22: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -723,7 +723,7 @@ feature -- keysymdef resources
 			"XK_F22"
 		end
 	
-	XK_R2: INTEGER is
+	XK_R2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -731,7 +731,7 @@ feature -- keysymdef resources
 			"XK_R2"
 		end
 	
-	XK_F23: INTEGER is
+	XK_F23: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -739,7 +739,7 @@ feature -- keysymdef resources
 			"XK_F23"
 		end
 	
-	XK_R3: INTEGER is
+	XK_R3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -747,7 +747,7 @@ feature -- keysymdef resources
 			"XK_R3"
 		end
 	
-	XK_F24: INTEGER is
+	XK_F24: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -755,7 +755,7 @@ feature -- keysymdef resources
 			"XK_F24"
 		end
 	
-	XK_R4: INTEGER is
+	XK_R4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -763,7 +763,7 @@ feature -- keysymdef resources
 			"XK_R4"
 		end
 	
-	XK_F25: INTEGER is
+	XK_F25: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -771,7 +771,7 @@ feature -- keysymdef resources
 			"XK_F25"
 		end
 	
-	XK_R5: INTEGER is
+	XK_R5: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -779,7 +779,7 @@ feature -- keysymdef resources
 			"XK_R5"
 		end
 	
-	XK_F26: INTEGER is
+	XK_F26: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -787,7 +787,7 @@ feature -- keysymdef resources
 			"XK_F26"
 		end
 	
-	XK_R6: INTEGER is
+	XK_R6: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -795,7 +795,7 @@ feature -- keysymdef resources
 			"XK_R6"
 		end
 	
-	XK_F27: INTEGER is
+	XK_F27: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -803,7 +803,7 @@ feature -- keysymdef resources
 			"XK_F27"
 		end
 	
-	XK_R7: INTEGER is
+	XK_R7: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -811,7 +811,7 @@ feature -- keysymdef resources
 			"XK_R7"
 		end
 	
-	XK_F28: INTEGER is
+	XK_F28: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -819,7 +819,7 @@ feature -- keysymdef resources
 			"XK_F28"
 		end
 	
-	XK_R8: INTEGER is
+	XK_R8: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -827,7 +827,7 @@ feature -- keysymdef resources
 			"XK_R8"
 		end
 	
-	XK_F29: INTEGER is
+	XK_F29: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -835,7 +835,7 @@ feature -- keysymdef resources
 			"XK_F29"
 		end
 	
-	XK_R9: INTEGER is
+	XK_R9: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -843,7 +843,7 @@ feature -- keysymdef resources
 			"XK_R9"
 		end
 	
-	XK_F30: INTEGER is
+	XK_F30: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -851,7 +851,7 @@ feature -- keysymdef resources
 			"XK_F30"
 		end
 	
-	XK_R10: INTEGER is
+	XK_R10: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -859,7 +859,7 @@ feature -- keysymdef resources
 			"XK_R10"
 		end
 	
-	XK_F31: INTEGER is
+	XK_F31: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -867,7 +867,7 @@ feature -- keysymdef resources
 			"XK_F31"
 		end
 	
-	XK_R11: INTEGER is
+	XK_R11: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -875,7 +875,7 @@ feature -- keysymdef resources
 			"XK_R11"
 		end
 	
-	XK_F32: INTEGER is
+	XK_F32: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -883,7 +883,7 @@ feature -- keysymdef resources
 			"XK_F32"
 		end
 	
-	XK_R12: INTEGER is
+	XK_R12: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -891,7 +891,7 @@ feature -- keysymdef resources
 			"XK_R12"
 		end
 	
-	XK_F33: INTEGER is
+	XK_F33: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -899,7 +899,7 @@ feature -- keysymdef resources
 			"XK_F33"
 		end
 	
-	XK_R13: INTEGER is
+	XK_R13: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -907,7 +907,7 @@ feature -- keysymdef resources
 			"XK_R13"
 		end
 	
-	XK_F34: INTEGER is
+	XK_F34: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -915,7 +915,7 @@ feature -- keysymdef resources
 			"XK_F34"
 		end
 	
-	XK_R14: INTEGER is
+	XK_R14: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -923,7 +923,7 @@ feature -- keysymdef resources
 			"XK_R14"
 		end
 	
-	XK_F35: INTEGER is
+	XK_F35: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -931,7 +931,7 @@ feature -- keysymdef resources
 			"XK_F35"
 		end
 	
-	XK_R15: INTEGER is
+	XK_R15: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -939,7 +939,7 @@ feature -- keysymdef resources
 			"XK_R15"
 		end
 	
-	XK_Shift_L: INTEGER is
+	XK_Shift_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -947,7 +947,7 @@ feature -- keysymdef resources
 			"XK_Shift_L"
 		end
 	
-	XK_Shift_R: INTEGER is
+	XK_Shift_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -955,7 +955,7 @@ feature -- keysymdef resources
 			"XK_Shift_R"
 		end
 	
-	XK_Control_L: INTEGER is
+	XK_Control_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -963,7 +963,7 @@ feature -- keysymdef resources
 			"XK_Control_L"
 		end
 	
-	XK_Control_R: INTEGER is
+	XK_Control_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -971,7 +971,7 @@ feature -- keysymdef resources
 			"XK_Control_R"
 		end
 	
-	XK_Caps_Lock: INTEGER is
+	XK_Caps_Lock: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -979,7 +979,7 @@ feature -- keysymdef resources
 			"XK_Caps_Lock"
 		end
 	
-	XK_Shift_Lock: INTEGER is
+	XK_Shift_Lock: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -987,7 +987,7 @@ feature -- keysymdef resources
 			"XK_Shift_Lock"
 		end
 	
-	XK_Meta_L: INTEGER is
+	XK_Meta_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -995,7 +995,7 @@ feature -- keysymdef resources
 			"XK_Meta_L"
 		end
 	
-	XK_Meta_R: INTEGER is
+	XK_Meta_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1003,7 +1003,7 @@ feature -- keysymdef resources
 			"XK_Meta_R"
 		end
 	
-	XK_Alt_L: INTEGER is
+	XK_Alt_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1011,7 +1011,7 @@ feature -- keysymdef resources
 			"XK_Alt_L"
 		end
 	
-	XK_Alt_R: INTEGER is
+	XK_Alt_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1019,7 +1019,7 @@ feature -- keysymdef resources
 			"XK_Alt_R"
 		end
 	
-	XK_Super_L: INTEGER is
+	XK_Super_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1027,7 +1027,7 @@ feature -- keysymdef resources
 			"XK_Super_L"
 		end
 	
-	XK_Super_R: INTEGER is
+	XK_Super_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1035,7 +1035,7 @@ feature -- keysymdef resources
 			"XK_Super_R"
 		end
 	
-	XK_Hyper_R: INTEGER is
+	XK_Hyper_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1043,7 +1043,7 @@ feature -- keysymdef resources
 			"XK_Hyper_R"
 		end
 	
-	XK_Hyper_L: INTEGER is
+	XK_Hyper_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1051,7 +1051,7 @@ feature -- keysymdef resources
 			"XK_Hyper_L"
 		end
 	
-	XK_space: INTEGER is
+	XK_space: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1059,7 +1059,7 @@ feature -- keysymdef resources
 			"XK_space"
 		end
 	
-	XK_exclam: INTEGER is
+	XK_exclam: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1067,7 +1067,7 @@ feature -- keysymdef resources
 			"XK_exclam"
 		end
 	
-	XK_quotedbl: INTEGER is
+	XK_quotedbl: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1075,7 +1075,7 @@ feature -- keysymdef resources
 			"XK_quotedbl"
 		end
 	
-	XK_numbersign: INTEGER is
+	XK_numbersign: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1083,7 +1083,7 @@ feature -- keysymdef resources
 			"XK_numbersign"
 		end
 	
-	XK_dollar: INTEGER is
+	XK_dollar: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1091,7 +1091,7 @@ feature -- keysymdef resources
 			"XK_dollar"
 		end
 	
-	XK_percent: INTEGER is
+	XK_percent: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1099,7 +1099,7 @@ feature -- keysymdef resources
 			"XK_percent"
 		end
 	
-	XK_ampersand: INTEGER is
+	XK_ampersand: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1107,7 +1107,7 @@ feature -- keysymdef resources
 			"XK_ampersand"
 		end
 	
-	XK_apostrophe: INTEGER is
+	XK_apostrophe: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1115,7 +1115,7 @@ feature -- keysymdef resources
 			"XK_apostrophe"
 		end
 	
-	XK_quoteright: INTEGER is
+	XK_quoteright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1123,7 +1123,7 @@ feature -- keysymdef resources
 			"XK_quoteright"
 		end
 	
-	XK_parenleft: INTEGER is
+	XK_parenleft: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1131,7 +1131,7 @@ feature -- keysymdef resources
 			"XK_parenleft"
 		end
 	
-	XK_parenright: INTEGER is
+	XK_parenright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1139,7 +1139,7 @@ feature -- keysymdef resources
 			"XK_parenright"
 		end
 	
-	XK_asterisk: INTEGER is
+	XK_asterisk: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1147,7 +1147,7 @@ feature -- keysymdef resources
 			"XK_asterisk"
 		end
 	
-	XK_plus: INTEGER is
+	XK_plus: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1155,7 +1155,7 @@ feature -- keysymdef resources
 			"XK_plus"
 		end
 	
-	XK_comma: INTEGER is
+	XK_comma: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1163,7 +1163,7 @@ feature -- keysymdef resources
 			"XK_comma"
 		end
 	
-	XK_minus: INTEGER is
+	XK_minus: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1171,7 +1171,7 @@ feature -- keysymdef resources
 			"XK_minus"
 		end
 	
-	XK_period: INTEGER is
+	XK_period: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1179,7 +1179,7 @@ feature -- keysymdef resources
 			"XK_period"
 		end
 	
-	XK_slash: INTEGER is
+	XK_slash: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1187,7 +1187,7 @@ feature -- keysymdef resources
 			"XK_slash"
 		end
 	
-	XK_0: INTEGER is
+	XK_0: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1195,7 +1195,7 @@ feature -- keysymdef resources
 			"XK_0"
 		end
 	
-	XK_1: INTEGER is
+	XK_1: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1203,7 +1203,7 @@ feature -- keysymdef resources
 			"XK_1"
 		end
 	
-	XK_2: INTEGER is
+	XK_2: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1211,7 +1211,7 @@ feature -- keysymdef resources
 			"XK_2"
 		end
 	
-	XK_3: INTEGER is
+	XK_3: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1219,7 +1219,7 @@ feature -- keysymdef resources
 			"XK_3"
 		end
 	
-	XK_4: INTEGER is
+	XK_4: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1227,7 +1227,7 @@ feature -- keysymdef resources
 			"XK_4"
 		end
 	
-	XK_5: INTEGER is
+	XK_5: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1235,7 +1235,7 @@ feature -- keysymdef resources
 			"XK_5"
 		end
 	
-	XK_6: INTEGER is
+	XK_6: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1243,7 +1243,7 @@ feature -- keysymdef resources
 			"XK_6"
 		end
 	
-	XK_7: INTEGER is
+	XK_7: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1251,7 +1251,7 @@ feature -- keysymdef resources
 			"XK_7"
 		end
 	
-	XK_8: INTEGER is
+	XK_8: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1259,7 +1259,7 @@ feature -- keysymdef resources
 			"XK_8"
 		end
 	
-	XK_9: INTEGER is
+	XK_9: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1267,7 +1267,7 @@ feature -- keysymdef resources
 			"XK_9"
 		end
 	
-	XK_colon: INTEGER is
+	XK_colon: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1275,7 +1275,7 @@ feature -- keysymdef resources
 			"XK_colon"
 		end
 	
-	XK_semicolon: INTEGER is
+	XK_semicolon: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1283,7 +1283,7 @@ feature -- keysymdef resources
 			"XK_semicolon"
 		end
 	
-	XK_less: INTEGER is
+	XK_less: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1291,7 +1291,7 @@ feature -- keysymdef resources
 			"XK_less"
 		end
 	
-	XK_equal: INTEGER is
+	XK_equal: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1299,7 +1299,7 @@ feature -- keysymdef resources
 			"XK_equal"
 		end
 	
-	XK_greater: INTEGER is
+	XK_greater: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1307,7 +1307,7 @@ feature -- keysymdef resources
 			"XK_greater"
 		end
 	
-	XK_question: INTEGER is
+	XK_question: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1315,7 +1315,7 @@ feature -- keysymdef resources
 			"XK_question"
 		end
 	
-	XK_at: INTEGER is
+	XK_at: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1323,7 +1323,7 @@ feature -- keysymdef resources
 			"XK_at"
 		end
 	
-	XK_upper_A: INTEGER is
+	XK_upper_A: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1331,7 +1331,7 @@ feature -- keysymdef resources
 			"XK_A"
 		end
 	
-	XK_upper_B: INTEGER is
+	XK_upper_B: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1339,7 +1339,7 @@ feature -- keysymdef resources
 			"XK_B"
 		end
 	
-	XK_upper_C: INTEGER is
+	XK_upper_C: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1347,7 +1347,7 @@ feature -- keysymdef resources
 			"XK_C"
 		end
 	
-	XK_upper_D: INTEGER is
+	XK_upper_D: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1355,7 +1355,7 @@ feature -- keysymdef resources
 			"XK_D"
 		end
 	
-	XK_upper_E: INTEGER is
+	XK_upper_E: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1363,7 +1363,7 @@ feature -- keysymdef resources
 			"XK_E"
 		end
 	
-	XK_upper_F: INTEGER is
+	XK_upper_F: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1371,7 +1371,7 @@ feature -- keysymdef resources
 			"XK_F"
 		end
 	
-	XK_upper_G: INTEGER is
+	XK_upper_G: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1379,7 +1379,7 @@ feature -- keysymdef resources
 			"XK_G"
 		end
 	
-	XK_upper_H: INTEGER is
+	XK_upper_H: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1387,7 +1387,7 @@ feature -- keysymdef resources
 			"XK_H"
 		end
 	
-	XK_upper_I: INTEGER is
+	XK_upper_I: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1395,7 +1395,7 @@ feature -- keysymdef resources
 			"XK_I"
 		end
 	
-	XK_upper_J: INTEGER is
+	XK_upper_J: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1403,7 +1403,7 @@ feature -- keysymdef resources
 			"XK_J"
 		end
 	
-	XK_upper_K: INTEGER is
+	XK_upper_K: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1411,7 +1411,7 @@ feature -- keysymdef resources
 			"XK_K"
 		end
 	
-	XK_upper_L: INTEGER is
+	XK_upper_L: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1419,7 +1419,7 @@ feature -- keysymdef resources
 			"XK_L"
 		end
 	
-	XK_upper_M: INTEGER is
+	XK_upper_M: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1427,7 +1427,7 @@ feature -- keysymdef resources
 			"XK_M"
 		end
 	
-	XK_upper_N: INTEGER is
+	XK_upper_N: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1435,7 +1435,7 @@ feature -- keysymdef resources
 			"XK_N"
 		end
 	
-	XK_upper_O: INTEGER is
+	XK_upper_O: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1443,7 +1443,7 @@ feature -- keysymdef resources
 			"XK_O"
 		end
 	
-	XK_upper_P: INTEGER is
+	XK_upper_P: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1451,7 +1451,7 @@ feature -- keysymdef resources
 			"XK_P"
 		end
 	
-	XK_upper_Q: INTEGER is
+	XK_upper_Q: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1459,7 +1459,7 @@ feature -- keysymdef resources
 			"XK_Q"
 		end
 	
-	XK_upper_R: INTEGER is
+	XK_upper_R: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1467,7 +1467,7 @@ feature -- keysymdef resources
 			"XK_R"
 		end
 	
-	XK_upper_S: INTEGER is
+	XK_upper_S: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1475,7 +1475,7 @@ feature -- keysymdef resources
 			"XK_S"
 		end
 	
-	XK_upper_T: INTEGER is
+	XK_upper_T: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1483,7 +1483,7 @@ feature -- keysymdef resources
 			"XK_T"
 		end
 	
-	XK_upper_U: INTEGER is
+	XK_upper_U: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1491,7 +1491,7 @@ feature -- keysymdef resources
 			"XK_U"
 		end
 	
-	XK_upper_V: INTEGER is
+	XK_upper_V: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1499,7 +1499,7 @@ feature -- keysymdef resources
 			"XK_V"
 		end
 	
-	XK_upper_W: INTEGER is
+	XK_upper_W: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1507,7 +1507,7 @@ feature -- keysymdef resources
 			"XK_W"
 		end
 	
-	XK_upper_X: INTEGER is
+	XK_upper_X: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1515,7 +1515,7 @@ feature -- keysymdef resources
 			"XK_X"
 		end
 	
-	XK_upper_Y: INTEGER is
+	XK_upper_Y: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1523,7 +1523,7 @@ feature -- keysymdef resources
 			"XK_Y"
 		end
 	
-	XK_upper_Z: INTEGER is
+	XK_upper_Z: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1531,7 +1531,7 @@ feature -- keysymdef resources
 			"XK_Z"
 		end
 	
-	XK_bracketleft: INTEGER is
+	XK_bracketleft: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1539,7 +1539,7 @@ feature -- keysymdef resources
 			"XK_bracketleft"
 		end
 	
-	XK_backslash: INTEGER is
+	XK_backslash: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1547,7 +1547,7 @@ feature -- keysymdef resources
 			"XK_backslash"
 		end
 	
-	XK_bracketright: INTEGER is
+	XK_bracketright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1555,7 +1555,7 @@ feature -- keysymdef resources
 			"XK_bracketright"
 		end
 	
-	XK_asciicircum: INTEGER is
+	XK_asciicircum: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1563,7 +1563,7 @@ feature -- keysymdef resources
 			"XK_asciicircum"
 		end
 	
-	XK_underscore: INTEGER is
+	XK_underscore: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1571,7 +1571,7 @@ feature -- keysymdef resources
 			"XK_underscore"
 		end
 	
-	XK_grave: INTEGER is
+	XK_grave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1579,7 +1579,7 @@ feature -- keysymdef resources
 			"XK_grave"
 		end
 	
-	XK_quoteleft: INTEGER is
+	XK_quoteleft: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1587,7 +1587,7 @@ feature -- keysymdef resources
 			"XK_quoteleft"
 		end
 	
-	XK_a: INTEGER is
+	XK_a: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1595,7 +1595,7 @@ feature -- keysymdef resources
 			"XK_a"
 		end
 	
-	XK_b: INTEGER is
+	XK_b: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1603,7 +1603,7 @@ feature -- keysymdef resources
 			"XK_b"
 		end
 	
-	XK_c: INTEGER is
+	XK_c: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1611,7 +1611,7 @@ feature -- keysymdef resources
 			"XK_c"
 		end
 	
-	XK_d: INTEGER is
+	XK_d: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1619,7 +1619,7 @@ feature -- keysymdef resources
 			"XK_d"
 		end
 	
-	XK_e: INTEGER is
+	XK_e: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1627,7 +1627,7 @@ feature -- keysymdef resources
 			"XK_e"
 		end
 	
-	XK_f: INTEGER is
+	XK_f: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1635,7 +1635,7 @@ feature -- keysymdef resources
 			"XK_f"
 		end
 	
-	XK_g: INTEGER is
+	XK_g: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1643,7 +1643,7 @@ feature -- keysymdef resources
 			"XK_g"
 		end
 	
-	XK_h: INTEGER is
+	XK_h: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1651,7 +1651,7 @@ feature -- keysymdef resources
 			"XK_h"
 		end
 	
-	XK_i: INTEGER is
+	XK_i: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1659,7 +1659,7 @@ feature -- keysymdef resources
 			"XK_i"
 		end
 	
-	XK_j: INTEGER is
+	XK_j: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1667,7 +1667,7 @@ feature -- keysymdef resources
 			"XK_j"
 		end
 	
-	XK_k: INTEGER is
+	XK_k: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1675,7 +1675,7 @@ feature -- keysymdef resources
 			"XK_k"
 		end
 	
-	XK_l: INTEGER is
+	XK_l: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1683,7 +1683,7 @@ feature -- keysymdef resources
 			"XK_l"
 		end
 	
-	XK_m: INTEGER is
+	XK_m: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1691,7 +1691,7 @@ feature -- keysymdef resources
 			"XK_m"
 		end
 	
-	XK_n: INTEGER is
+	XK_n: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1699,7 +1699,7 @@ feature -- keysymdef resources
 			"XK_n"
 		end
 	
-	XK_o: INTEGER is
+	XK_o: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1707,7 +1707,7 @@ feature -- keysymdef resources
 			"XK_o"
 		end
 	
-	XK_p: INTEGER is
+	XK_p: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1715,7 +1715,7 @@ feature -- keysymdef resources
 			"XK_p"
 		end
 	
-	XK_q: INTEGER is
+	XK_q: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1723,7 +1723,7 @@ feature -- keysymdef resources
 			"XK_q"
 		end
 	
-	XK_r: INTEGER is
+	XK_r: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1731,7 +1731,7 @@ feature -- keysymdef resources
 			"XK_r"
 		end
 	
-	XK_s: INTEGER is
+	XK_s: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1739,7 +1739,7 @@ feature -- keysymdef resources
 			"XK_s"
 		end
 	
-	XK_t: INTEGER is
+	XK_t: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1747,7 +1747,7 @@ feature -- keysymdef resources
 			"XK_t"
 		end
 	
-	XK_u: INTEGER is
+	XK_u: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1755,7 +1755,7 @@ feature -- keysymdef resources
 			"XK_u"
 		end
 	
-	XK_v: INTEGER is
+	XK_v: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1763,7 +1763,7 @@ feature -- keysymdef resources
 			"XK_v"
 		end
 	
-	XK_w: INTEGER is
+	XK_w: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1771,7 +1771,7 @@ feature -- keysymdef resources
 			"XK_w"
 		end
 	
-	XK_x: INTEGER is
+	XK_x: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1779,7 +1779,7 @@ feature -- keysymdef resources
 			"XK_x"
 		end
 	
-	XK_y: INTEGER is
+	XK_y: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1787,7 +1787,7 @@ feature -- keysymdef resources
 			"XK_y"
 		end
 	
-	XK_z: INTEGER is
+	XK_z: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1795,7 +1795,7 @@ feature -- keysymdef resources
 			"XK_z"
 		end
 	
-	XK_braceleft: INTEGER is
+	XK_braceleft: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1803,7 +1803,7 @@ feature -- keysymdef resources
 			"XK_braceleft"
 		end
 	
-	XK_bar: INTEGER is
+	XK_bar: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1811,7 +1811,7 @@ feature -- keysymdef resources
 			"XK_bar"
 		end
 	
-	XK_braceright: INTEGER is
+	XK_braceright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1819,7 +1819,7 @@ feature -- keysymdef resources
 			"XK_braceright"
 		end
 	
-	XK_asciitilde: INTEGER is
+	XK_asciitilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1827,7 +1827,7 @@ feature -- keysymdef resources
 			"XK_asciitilde"
 		end
 	
-	XK_nobreakspace: INTEGER is
+	XK_nobreakspace: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1835,7 +1835,7 @@ feature -- keysymdef resources
 			"XK_nobreakspace"
 		end
 	
-	XK_exclamdown: INTEGER is
+	XK_exclamdown: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1843,7 +1843,7 @@ feature -- keysymdef resources
 			"XK_exclamdown"
 		end
 	
-	XK_cent: INTEGER is
+	XK_cent: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1851,7 +1851,7 @@ feature -- keysymdef resources
 			"XK_cent"
 		end
 	
-	XK_sterling: INTEGER is
+	XK_sterling: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1859,7 +1859,7 @@ feature -- keysymdef resources
 			"XK_sterling"
 		end
 	
-	XK_currency: INTEGER is
+	XK_currency: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1867,7 +1867,7 @@ feature -- keysymdef resources
 			"XK_currency"
 		end
 	
-	XK_yen: INTEGER is
+	XK_yen: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1875,7 +1875,7 @@ feature -- keysymdef resources
 			"XK_yen"
 		end
 	
-	XK_brokenbar: INTEGER is
+	XK_brokenbar: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1883,7 +1883,7 @@ feature -- keysymdef resources
 			"XK_brokenbar"
 		end
 	
-	XK_section: INTEGER is
+	XK_section: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1891,7 +1891,7 @@ feature -- keysymdef resources
 			"XK_section"
 		end
 	
-	XK_diaeresis: INTEGER is
+	XK_diaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1899,7 +1899,7 @@ feature -- keysymdef resources
 			"XK_diaeresis"
 		end
 	
-	XK_copyright: INTEGER is
+	XK_copyright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1907,7 +1907,7 @@ feature -- keysymdef resources
 			"XK_copyright"
 		end
 	
-	XK_ordfeminine: INTEGER is
+	XK_ordfeminine: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1915,7 +1915,7 @@ feature -- keysymdef resources
 			"XK_ordfeminine"
 		end
 	
-	XK_guillemotleft: INTEGER is
+	XK_guillemotleft: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1923,7 +1923,7 @@ feature -- keysymdef resources
 			"XK_guillemotleft"
 		end
 	
-	XK_notsign: INTEGER is
+	XK_notsign: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1931,7 +1931,7 @@ feature -- keysymdef resources
 			"XK_notsign"
 		end
 	
-	XK_hyphen: INTEGER is
+	XK_hyphen: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1939,7 +1939,7 @@ feature -- keysymdef resources
 			"XK_hyphen"
 		end
 	
-	XK_registered: INTEGER is
+	XK_registered: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1947,7 +1947,7 @@ feature -- keysymdef resources
 			"XK_registered"
 		end
 	
-	XK_macron: INTEGER is
+	XK_macron: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1955,7 +1955,7 @@ feature -- keysymdef resources
 			"XK_macron"
 		end
 	
-	XK_degree: INTEGER is
+	XK_degree: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1963,7 +1963,7 @@ feature -- keysymdef resources
 			"XK_degree"
 		end
 	
-	XK_plusminus: INTEGER is
+	XK_plusminus: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1971,7 +1971,7 @@ feature -- keysymdef resources
 			"XK_plusminus"
 		end
 	
-	XK_twosuperior: INTEGER is
+	XK_twosuperior: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1979,7 +1979,7 @@ feature -- keysymdef resources
 			"XK_twosuperior"
 		end
 	
-	XK_threesuperior: INTEGER is
+	XK_threesuperior: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1987,7 +1987,7 @@ feature -- keysymdef resources
 			"XK_threesuperior"
 		end
 	
-	XK_acute: INTEGER is
+	XK_acute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -1995,7 +1995,7 @@ feature -- keysymdef resources
 			"XK_acute"
 		end
 	
-	XK_mu: INTEGER is
+	XK_mu: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2003,7 +2003,7 @@ feature -- keysymdef resources
 			"XK_mu"
 		end
 	
-	XK_paragraph: INTEGER is
+	XK_paragraph: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2011,7 +2011,7 @@ feature -- keysymdef resources
 			"XK_paragraph"
 		end
 	
-	XK_periodcentered: INTEGER is
+	XK_periodcentered: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2019,7 +2019,7 @@ feature -- keysymdef resources
 			"XK_periodcentered"
 		end
 	
-	XK_cedilla: INTEGER is
+	XK_cedilla: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2027,7 +2027,7 @@ feature -- keysymdef resources
 			"XK_cedilla"
 		end
 	
-	XK_onesuperior: INTEGER is
+	XK_onesuperior: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2035,7 +2035,7 @@ feature -- keysymdef resources
 			"XK_onesuperior"
 		end
 	
-	XK_masculine: INTEGER is
+	XK_masculine: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2043,7 +2043,7 @@ feature -- keysymdef resources
 			"XK_masculine"
 		end
 	
-	XK_guillemotright: INTEGER is
+	XK_guillemotright: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2051,7 +2051,7 @@ feature -- keysymdef resources
 			"XK_guillemotright"
 		end
 	
-	XK_onequarter: INTEGER is
+	XK_onequarter: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2059,7 +2059,7 @@ feature -- keysymdef resources
 			"XK_onequarter"
 		end
 	
-	XK_onehalf: INTEGER is
+	XK_onehalf: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2067,7 +2067,7 @@ feature -- keysymdef resources
 			"XK_onehalf"
 		end
 	
-	XK_threequarters: INTEGER is
+	XK_threequarters: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2075,7 +2075,7 @@ feature -- keysymdef resources
 			"XK_threequarters"
 		end
 	
-	XK_questiondown: INTEGER is
+	XK_questiondown: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2083,7 +2083,7 @@ feature -- keysymdef resources
 			"XK_questiondown"
 		end
 	
-	XK_Agrave: INTEGER is
+	XK_Agrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2091,7 +2091,7 @@ feature -- keysymdef resources
 			"XK_Agrave"
 		end
 	
-	XK_Aacute: INTEGER is
+	XK_Aacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2099,7 +2099,7 @@ feature -- keysymdef resources
 			"XK_Aacute"
 		end
 	
-	XK_Acircumflex: INTEGER is
+	XK_Acircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2107,7 +2107,7 @@ feature -- keysymdef resources
 			"XK_Acircumflex"
 		end
 	
-	XK_Atilde: INTEGER is
+	XK_Atilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2115,7 +2115,7 @@ feature -- keysymdef resources
 			"XK_Atilde"
 		end
 	
-	XK_Adiaeresis: INTEGER is
+	XK_Adiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2123,7 +2123,7 @@ feature -- keysymdef resources
 			"XK_Adiaeresis"
 		end
 	
-	XK_Aring: INTEGER is
+	XK_Aring: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2131,7 +2131,7 @@ feature -- keysymdef resources
 			"XK_Aring"
 		end
 	
-	XK_AE: INTEGER is
+	XK_AE: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2139,7 +2139,7 @@ feature -- keysymdef resources
 			"XK_AE"
 		end
 	
-	XK_Ccedilla: INTEGER is
+	XK_Ccedilla: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2147,7 +2147,7 @@ feature -- keysymdef resources
 			"XK_Ccedilla"
 		end
 	
-	XK_Egrave: INTEGER is
+	XK_Egrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2155,7 +2155,7 @@ feature -- keysymdef resources
 			"XK_Egrave"
 		end
 	
-	XK_Eacute: INTEGER is
+	XK_Eacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2163,7 +2163,7 @@ feature -- keysymdef resources
 			"XK_Eacute"
 		end
 	
-	XK_Ecircumflex: INTEGER is
+	XK_Ecircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2171,7 +2171,7 @@ feature -- keysymdef resources
 			"XK_Ecircumflex"
 		end
 	
-	XK_Ediaeresis: INTEGER is
+	XK_Ediaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2179,7 +2179,7 @@ feature -- keysymdef resources
 			"XK_Ediaeresis"
 		end
 	
-	XK_Igrave: INTEGER is
+	XK_Igrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2187,7 +2187,7 @@ feature -- keysymdef resources
 			"XK_Igrave"
 		end
 	
-	XK_Iacute: INTEGER is
+	XK_Iacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2195,7 +2195,7 @@ feature -- keysymdef resources
 			"XK_Iacute"
 		end
 	
-	XK_Icircumflex: INTEGER is
+	XK_Icircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2203,7 +2203,7 @@ feature -- keysymdef resources
 			"XK_Icircumflex"
 		end
 	
-	XK_Idiaeresis: INTEGER is
+	XK_Idiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2211,7 +2211,7 @@ feature -- keysymdef resources
 			"XK_Idiaeresis"
 		end
 
-	XK_upper_ETH: INTEGER is
+	XK_upper_ETH: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2219,7 +2219,7 @@ feature -- keysymdef resources
 			"XK_ETH"
 		end
 	
-	XK_upperE_Eth: INTEGER is
+	XK_upperE_Eth: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2227,7 +2227,7 @@ feature -- keysymdef resources
 			"XK_Eth"
 		end
 	
-	XK_Ntilde: INTEGER is
+	XK_Ntilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2235,7 +2235,7 @@ feature -- keysymdef resources
 			"XK_Ntilde"
 		end
 	
-	XK_Ograve: INTEGER is
+	XK_Ograve: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2243,7 +2243,7 @@ feature -- keysymdef resources
 			"XK_Ograve"
 		end
 	
-	XK_Oacute: INTEGER is
+	XK_Oacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2251,7 +2251,7 @@ feature -- keysymdef resources
 			"XK_Oacute"
 		end
 	
-	XK_Ocircumflex: INTEGER is
+	XK_Ocircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2259,7 +2259,7 @@ feature -- keysymdef resources
 			"XK_Ocircumflex"
 		end
 	
-	XK_Otilde: INTEGER is
+	XK_Otilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2267,7 +2267,7 @@ feature -- keysymdef resources
 			"XK_Otilde"
 		end
 	
-	XK_Odiaeresis: INTEGER is
+	XK_Odiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2275,7 +2275,7 @@ feature -- keysymdef resources
 			"XK_Odiaeresis"
 		end
 	
-	XK_multiply: INTEGER is
+	XK_multiply: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2283,7 +2283,7 @@ feature -- keysymdef resources
 			"XK_multiply"
 		end
 	
-	XK_Ooblique: INTEGER is
+	XK_Ooblique: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2291,7 +2291,7 @@ feature -- keysymdef resources
 			"XK_Ooblique"
 		end
 	
-	XK_Ugrave: INTEGER is
+	XK_Ugrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2299,7 +2299,7 @@ feature -- keysymdef resources
 			"XK_Ugrave"
 		end
 	
-	XK_Uacute: INTEGER is
+	XK_Uacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2307,7 +2307,7 @@ feature -- keysymdef resources
 			"XK_Uacute"
 		end
 	
-	XK_Ucircumflex: INTEGER is
+	XK_Ucircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2315,7 +2315,7 @@ feature -- keysymdef resources
 			"XK_Ucircumflex"
 		end
 	
-	XK_Udiaeresis: INTEGER is
+	XK_Udiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2323,7 +2323,7 @@ feature -- keysymdef resources
 			"XK_Udiaeresis"
 		end
 	
-	XK_Yacute: INTEGER is
+	XK_Yacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2331,7 +2331,7 @@ feature -- keysymdef resources
 			"XK_Yacute"
 		end
 	
-	XK_upper_THORN: INTEGER is
+	XK_upper_THORN: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2339,7 +2339,7 @@ feature -- keysymdef resources
 			"XK_THORN"
 		end
 	
-	XK_Thorn: INTEGER is
+	XK_Thorn: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2347,7 +2347,7 @@ feature -- keysymdef resources
 			"XK_Thorn"
 		end
 	
-	XK_ssharp: INTEGER is
+	XK_ssharp: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2355,7 +2355,7 @@ feature -- keysymdef resources
 			"XK_ssharp"
 		end
 	
-	XK_lower_agrave: INTEGER is
+	XK_lower_agrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2363,7 +2363,7 @@ feature -- keysymdef resources
 			"XK_agrave"
 		end
 	
-	XK_lower_aacute: INTEGER is
+	XK_lower_aacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2371,7 +2371,7 @@ feature -- keysymdef resources
 			"XK_aacute"
 		end
 	
-	XK_lower_acircumflex: INTEGER is
+	XK_lower_acircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2379,7 +2379,7 @@ feature -- keysymdef resources
 			"XK_acircumflex"
 		end
 	
-	XK_lower_atilde: INTEGER is
+	XK_lower_atilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2387,7 +2387,7 @@ feature -- keysymdef resources
 			"XK_atilde"
 		end
 	
-	XK_lower_adiaeresis: INTEGER is
+	XK_lower_adiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2395,7 +2395,7 @@ feature -- keysymdef resources
 			"XK_adiaeresis"
 		end
 	
-	XK_lower_aring: INTEGER is
+	XK_lower_aring: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2403,7 +2403,7 @@ feature -- keysymdef resources
 			"XK_aring"
 		end
 	
-	XK_lower_ae: INTEGER is
+	XK_lower_ae: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2411,7 +2411,7 @@ feature -- keysymdef resources
 			"XK_ae"
 		end
 	
-	XK_lower_ccedilla: INTEGER is
+	XK_lower_ccedilla: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2419,7 +2419,7 @@ feature -- keysymdef resources
 			"XK_ccedilla"
 		end
 	
-	XK_lower_egrave: INTEGER is
+	XK_lower_egrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2427,7 +2427,7 @@ feature -- keysymdef resources
 			"XK_egrave"
 		end
 	
-	XK_lower_eacute: INTEGER is
+	XK_lower_eacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2435,7 +2435,7 @@ feature -- keysymdef resources
 			"XK_eacute"
 		end
 	
-	XK_lower_ecircumflex: INTEGER is
+	XK_lower_ecircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2443,7 +2443,7 @@ feature -- keysymdef resources
 			"XK_ecircumflex"
 		end
 	
-	XK_lower_ediaeresis: INTEGER is
+	XK_lower_ediaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2451,7 +2451,7 @@ feature -- keysymdef resources
 			"XK_ediaeresis"
 		end
 	
-	XK_lower_igrave: INTEGER is
+	XK_lower_igrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2459,7 +2459,7 @@ feature -- keysymdef resources
 			"XK_igrave"
 		end
 	
-	XK_lower_iacute: INTEGER is
+	XK_lower_iacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2467,7 +2467,7 @@ feature -- keysymdef resources
 			"XK_iacute"
 		end
 	
-	XK_lower_icircumflex: INTEGER is
+	XK_lower_icircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2475,7 +2475,7 @@ feature -- keysymdef resources
 			"XK_icircumflex"
 		end
 	
-	XK_lower_idiaeresis: INTEGER is
+	XK_lower_idiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2483,7 +2483,7 @@ feature -- keysymdef resources
 			"XK_idiaeresis"
 		end
 	
-	XK_lower_eth: INTEGER is
+	XK_lower_eth: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2491,7 +2491,7 @@ feature -- keysymdef resources
 			"XK_eth"
 		end
 	
-	XK_lower_ntilde: INTEGER is
+	XK_lower_ntilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2499,7 +2499,7 @@ feature -- keysymdef resources
 			"XK_ntilde"
 		end
 	
-	XK_lower_ograve: INTEGER is
+	XK_lower_ograve: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2507,7 +2507,7 @@ feature -- keysymdef resources
 			"XK_ograve"
 		end
 	
-	XK_lower_oacute: INTEGER is
+	XK_lower_oacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2515,7 +2515,7 @@ feature -- keysymdef resources
 			"XK_oacute"
 		end
 	
-	XK_lower_ocircumflex: INTEGER is
+	XK_lower_ocircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2523,7 +2523,7 @@ feature -- keysymdef resources
 			"XK_ocircumflex"
 		end
 	
-	XK_lower_otilde: INTEGER is
+	XK_lower_otilde: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2531,7 +2531,7 @@ feature -- keysymdef resources
 			"XK_otilde"
 		end
 	
-	XK_lower_odiaeresis: INTEGER is
+	XK_lower_odiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2539,7 +2539,7 @@ feature -- keysymdef resources
 			"XK_odiaeresis"
 		end
 	
-	XK_division: INTEGER is
+	XK_division: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2547,7 +2547,7 @@ feature -- keysymdef resources
 			"XK_division"
 		end
 	
-	XK_oslash: INTEGER is
+	XK_oslash: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2555,7 +2555,7 @@ feature -- keysymdef resources
 			"XK_oslash"
 		end
 	
-	XK_lower_ugrave: INTEGER is
+	XK_lower_ugrave: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2563,7 +2563,7 @@ feature -- keysymdef resources
 			"XK_ugrave"
 		end
 	
-	XK_lower_uacute: INTEGER is
+	XK_lower_uacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2571,7 +2571,7 @@ feature -- keysymdef resources
 			"XK_uacute"
 		end
 	
-	XK_lower_ucircumflex: INTEGER is
+	XK_lower_ucircumflex: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2579,7 +2579,7 @@ feature -- keysymdef resources
 			"XK_ucircumflex"
 		end
 	
-	XK_lower_udiaeresis: INTEGER is
+	XK_lower_udiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2587,7 +2587,7 @@ feature -- keysymdef resources
 			"XK_udiaeresis"
 		end
 	
-	XK_lower_yacute: INTEGER is
+	XK_lower_yacute: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2595,7 +2595,7 @@ feature -- keysymdef resources
 			"XK_yacute"
 		end
 	
-	XK_lower_thorn: INTEGER is
+	XK_lower_thorn: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2603,7 +2603,7 @@ feature -- keysymdef resources
 			"XK_thorn"
 		end
 	
-	XK_ydiaeresis: INTEGER is
+	XK_ydiaeresis: INTEGER
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
 				%| <X11/keysym.h>"
@@ -2611,7 +2611,7 @@ feature -- keysymdef resources
 			"XK_ydiaeresis"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

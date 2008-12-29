@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision multi column list row. Implementation interface."
 	legal: "See notice at end of class."
@@ -40,7 +40,7 @@ inherit
 
 feature -- Status report
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May the tree item be selected.
 		do
 			Result := parent /= Void
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- `Result' is pixmap displayed in `Current'.
 			-- We do not simply return `internal_pixmap' as
 			-- the image must be stretched to fit the size allocated
@@ -65,26 +65,26 @@ feature -- Element Change
 	internal_pixmap: EV_PIXMAP
 			-- Pixmap used at the start of the row.
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 			-- Parent implementation of `Current'.
 		deferred
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
 		deferred
 		end
 
-	remove_tooltip is
+	remove_tooltip
 			-- Make `tooltip' empty.
 		do
 			set_tooltip ("")
@@ -94,7 +94,7 @@ feature -- Element change
 
 feature -- Contract support
 
-	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		local
 			scaled_pixmap: EV_PIXMAP
@@ -112,12 +112,12 @@ feature -- Contract support
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
-	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
 		deferred
 		end
 
-	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index'.
 		deferred
 		end
@@ -126,7 +126,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

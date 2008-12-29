@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Event handler for mouse button events."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an event handler for `widget_oui' triggered by the
 			-- call-back specified by `resource'.
 		local
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_command (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_command (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions.
 		require
 			number_in_range: number >= 1 and number <= 5
@@ -74,7 +74,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_command (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_command (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions.
 		require
 			number_in_range: number >= 1 and number <= 5
@@ -100,7 +100,7 @@ feature -- Removal
 
 feature {NONE} -- Execution
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Callback routine to be called from
 			-- C when a mouse button event occurs,
 		local
@@ -160,7 +160,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	find_vision_parent (a_widget: MEL_OBJECT): WIDGET_IMP is
+	find_vision_parent (a_widget: MEL_OBJECT): WIDGET_IMP
 			-- Find `a_widget' parent that is recorded in EiffelVision
 		require
 			valid_widget: a_widget /= Void;
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			found: Result /= Void
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

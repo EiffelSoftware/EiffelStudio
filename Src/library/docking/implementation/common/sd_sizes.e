@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Singleton which has all sizes used in Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		local
 			l_env: EV_ENVIRONMENT
@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 
 feature {NONE} -- Implementation
 
-	update_all is
+	update_all
 			-- Update all sizes.
 		do
 			update_tool_bar_font_sizes
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			update_all_docking_managers
 		end
 
-	update_tool_bar_font_sizes is
+	update_tool_bar_font_sizes
 			-- Update `Tool_bar_font_cell' and related singletons.
 		local
 			l_color: SD_SYSTEM_COLOR
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			tool_bar_size_cell.put (l_tool_bar_size)
 		end
 
-	update_addtional_sizes is
+	update_addtional_sizes
 			-- The sizes should be updated after `update_tool_bar_font_sizes'.
 		local
 			l_platform: PLATFORM
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			zone_minimum_height_cell.put (l_zone_minimum_height)
 		end
 
-	update_widgets_sizes is
+	update_widgets_sizes
 			-- Update existing widgets sizes just after font changed
 		local
 			l_widgets: SD_WIDGETS_LISTS
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 													end)
 		end
 
-	update_all_docking_managers is
+	update_all_docking_managers
 			-- Call `resize' on all docking managers.
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 
 feature -- Singleton slots realted with tool bar font.
 
-	Tool_bar_font_cell: CELL [EV_FONT] is
+	Tool_bar_font_cell: CELL [EV_FONT]
 			-- Tool bar font singleton cell.
 		once
 			create Result.put (Void)
@@ -173,7 +173,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Notebook_tab_height_cell: CELL [INTEGER] is
+	Notebook_tab_height_cell: CELL [INTEGER]
 			-- Notebook tab height singleton cell.
 		once
 			create Result.put (0)
@@ -181,7 +181,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Notebook_tab_maximum_size_cell: CELL [INTEGER] is
+	Notebook_tab_maximum_size_cell: CELL [INTEGER]
 			-- Notebook tab maximum size singleton cell.
 		once
 			create Result.put (0)
@@ -189,7 +189,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Title_bar_height_cell: CELL [INTEGER] is
+	Title_bar_height_cell: CELL [INTEGER]
 			-- Title bar height singleton cell.
 		once
 			create Result.put (0)
@@ -197,7 +197,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Title_bar_text_start_y_cell: CELL [INTEGER] is
+	Title_bar_text_start_y_cell: CELL [INTEGER]
 			-- Title bar text start y singleton cell.
 		once
 			create Result.put (0)
@@ -205,7 +205,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Tool_bar_border_width_cell: CELL [INTEGER] is
+	Tool_bar_border_width_cell: CELL [INTEGER]
 			-- Tool bar border width singleton cell.
 		once
 			create Result.put (0)
@@ -213,7 +213,7 @@ feature -- Singleton slots realted with tool bar font.
 			not_void: Result /= Void
 		end
 
-	Tool_bar_size_cell: CELL [INTEGER] is
+	Tool_bar_size_cell: CELL [INTEGER]
 			-- Title bar size singleton cell.
 		once
 			create Result.put (0)
@@ -223,7 +223,7 @@ feature -- Singleton slots realted with tool bar font.
 
 feature -- Additional singleton slots.
 
-	Auto_hide_panel_size_cell: CELL [INTEGER] is
+	Auto_hide_panel_size_cell: CELL [INTEGER]
 			-- Auto hide panel size singleton cell.
 		once
 			create Result.put (0)
@@ -231,7 +231,7 @@ feature -- Additional singleton slots.
 			not_void: Result /= Void
 		end
 
-	Zone_minimum_width_cell: CELL [INTEGER] is
+	Zone_minimum_width_cell: CELL [INTEGER]
 			-- Zone minimum width singleton cell.
 		once
 			create Result.put (0)
@@ -239,7 +239,7 @@ feature -- Additional singleton slots.
 			not_void: Result /= Void
 		end
 
-	Zone_minimum_height_cell: CELL [INTEGER] is
+	Zone_minimum_height_cell: CELL [INTEGER]
 			-- Zone minimum height singleton cell.
 		once
 			create Result.put (0)
@@ -251,7 +251,7 @@ invariant
 
 		internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

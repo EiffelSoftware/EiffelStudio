@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities for accessing standardized colors."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	White: EV_COLOR is
+	White: EV_COLOR
 			-- White.
 		once
 			create Result.make_with_rgb (1, 1, 1)
@@ -20,7 +20,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Black: EV_COLOR is
+	Black: EV_COLOR
 			-- Black.
 		once
 			create Result.make_with_rgb (0, 0, 0)
@@ -28,7 +28,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Grey, Gray: EV_COLOR is
+	Grey, Gray: EV_COLOR
 			-- Grey.
 		once
 			create Result.make_with_rgb (0.7, 0.7, 0.7)
@@ -36,7 +36,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_grey, Dark_gray: EV_COLOR is
+	Dark_grey, Dark_gray: EV_COLOR
 			-- Dark grey.
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0.5)
@@ -44,7 +44,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Blue: EV_COLOR is
+	Blue: EV_COLOR
 			-- Blue.
 		once
 			create Result.make_with_rgb (0, 0, 1)
@@ -52,7 +52,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_blue: EV_COLOR is
+	Dark_blue: EV_COLOR
 			-- Dark blue.
 		once
 			create Result.make_with_rgb (0, 0, 0.5)
@@ -60,7 +60,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Cyan: EV_COLOR is
+	Cyan: EV_COLOR
 			-- Cyan.
 		once
 			create Result.make_with_rgb (0, 1, 1)
@@ -68,7 +68,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_cyan: EV_COLOR is
+	Dark_cyan: EV_COLOR
 			-- Dark cyan.
 		once
 			create Result.make_with_rgb (0, 0.5, 0.5)
@@ -76,7 +76,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Green: EV_COLOR is
+	Green: EV_COLOR
 			-- Green.
 		once
 			create Result.make_with_rgb (0, 1, 0)
@@ -84,7 +84,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_green: EV_COLOR is
+	Dark_green: EV_COLOR
 			-- Dark green.
 		once
 			create Result.make_with_rgb (0, 0.5, 0)
@@ -92,7 +92,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Yellow: EV_COLOR is
+	Yellow: EV_COLOR
 			-- Yellow.
 		once
 			create Result.make_with_rgb (1, 1, 0)
@@ -100,7 +100,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_yellow: EV_COLOR is
+	Dark_yellow: EV_COLOR
 			-- Dark yellow.
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0)
@@ -108,7 +108,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Red: EV_COLOR is
+	Red: EV_COLOR
 			-- Red.
 		once
 			create Result.make_with_rgb (1, 0, 0)
@@ -116,7 +116,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_red: EV_COLOR is
+	Dark_red: EV_COLOR
 			-- Dark red.
 		once
 			create Result.make_with_rgb (0.5, 0, 0)
@@ -124,7 +124,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Magenta: EV_COLOR is
+	Magenta: EV_COLOR
 			-- Magenta.
 		once
 			create Result.make_with_rgb (1, 0, 1)
@@ -132,7 +132,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Dark_magenta: EV_COLOR is
+	Dark_magenta: EV_COLOR
 			-- Dark magenta.
 		once
 			create Result.make_with_rgb (0.5, 0, 0.5)
@@ -142,7 +142,7 @@ feature -- Access
 
 feature -- Access
 
-	Color_dialog, Color_3d_face: EV_COLOR is
+	Color_dialog, Color_3d_face: EV_COLOR
 			-- Used for dialog box background.
 			-- Name: "color dialog".
 		do
@@ -151,7 +151,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Color_3d_highlight: EV_COLOR is
+	Color_3d_highlight: EV_COLOR
 			-- Used for 3D-effects (light color)
 			-- Name "color highlight"
 		do
@@ -160,7 +160,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Color_3d_shadow: EV_COLOR is
+	Color_3d_shadow: EV_COLOR
 			-- Used for 3D-effects (dark color)
 			-- Name "color shadow"
 		do
@@ -169,7 +169,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Color_read_only: EV_COLOR is
+	Color_read_only: EV_COLOR
 			-- Used for background of editable when read-only.
 			-- Name: "color read only".
 		do
@@ -178,7 +178,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Color_read_write: EV_COLOR is
+	Color_read_write: EV_COLOR
 			-- Used for background of editable when write/write enabled.
 			-- Name: "color read write".
 		do
@@ -187,7 +187,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Default_background_color: EV_COLOR is
+	Default_background_color: EV_COLOR
 			-- Used for background of most widgets.
 			-- Name: "default background".
 		do
@@ -196,7 +196,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Default_foreground_color: EV_COLOR is
+	Default_foreground_color: EV_COLOR
 			-- Used for foreground of most widgets.
 			-- Name: "default foreground".
 		do
@@ -207,7 +207,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	All_colors: LINKED_LIST [EV_COLOR] is
+	All_colors: LINKED_LIST [EV_COLOR]
 			-- A list of all the basic colors.
 		once
 			create Result.make
@@ -234,13 +234,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	implementation: EV_STOCK_COLORS_IMP is
+	implementation: EV_STOCK_COLORS_IMP
 			-- Responsible for interaction with native graphics toolkit.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

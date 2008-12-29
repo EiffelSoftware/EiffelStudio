@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gif Image"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make(w,h: INTEGER) is
+	make(w,h: INTEGER)
 			-- Initialize the image with
 			-- 'w' as width and 'h' as height.
 		require
@@ -29,7 +29,7 @@ feature -- Initialization
 			image := GdImageCreate (w,h)
 		end
 
-	make_from_file (file_name: FILE_NAME) is
+	make_from_file (file_name: FILE_NAME)
 			-- Load a GIF file, and store it into 'image'
 		require
 			file_name_possible: file_name /= Void and then file_name.is_valid
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Basic Operations
 
-	save_to_file (file_name: FILE_NAME) is
+	save_to_file (file_name: FILE_NAME)
 			-- Save Current to file.
 		require
 			file_name_possible: file_name /= Void and then file_name.is_valid
@@ -62,7 +62,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	color(red,green,blue: INTEGER):INTEGER is
+	color(red,green,blue: INTEGER):INTEGER
 			-- Index of Color obtained in rgb mode for Current Image.
 		require
 			red_possible: red >=0 and red <256
@@ -77,25 +77,25 @@ feature -- Access
 			result_possible: Result >= 0
 		end
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			Result := c_get_width ( image )
 		end		
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			Result := c_get_height ( image )
 		end
 
 feature -- Validity of use for Current Image.
 
-	coordinates_within_the_image(x,y: INTEGER): BOOLEAN is
+	coordinates_within_the_image(x,y: INTEGER): BOOLEAN
 			-- Does a point (x,y ) within the boundaries ?
 		do
 			Result := (gdImageBoundsSafe(image,x,y)=1)
 		end
 	
-	points_within_the_image(array: ARRAY [GIF_POINT]): BOOLEAN is
+	points_within_the_image(array: ARRAY [GIF_POINT]): BOOLEAN
 			-- Are all the points of 'array' within the image ?
 		require
 			array_not_empty: array /= Void and then array.count>0
@@ -115,7 +115,7 @@ feature -- Validity of use for Current Image.
 			end
 		end
 
-	color_index_of (r,g,b: INTEGER): INTEGER is
+	color_index_of (r,g,b: INTEGER): INTEGER
 		--It  searches the colors which have been defined thus far in the image 
 		-- specified and returns the index of the first color with RGB values
 		-- which exactly match those of the request. 
@@ -127,7 +127,7 @@ feature -- Validity of use for Current Image.
 			Result := gdImageColorAllocate(image, r,g,b )
 		end
 
-	has_color (r,g,b: INTEGER): BOOLEAN is
+	has_color (r,g,b: INTEGER): BOOLEAN
 		-- Does current image palette contains the color defined with r,g,b ?
 			require
 			rgb_possibles: r>=0 and r<256 and g>=0 and g<256 and b>=0 and b<256
@@ -135,7 +135,7 @@ feature -- Validity of use for Current Image.
 			Result := (gdImageColorAllocate(image, r,g,b )/=-1)
 		end
 
-	color_index_bound: INTEGER is
+	color_index_bound: INTEGER
 		-- Return the number of color indexes currently associated with the image.
 		do
 			Result := c_image_color_total(image)
@@ -143,7 +143,7 @@ feature -- Validity of use for Current Image.
 
 feature -- Drawing
 
-	draw_string(s: STRING;x,y,gif_font,color_index: INTEGER) is 
+	draw_string(s: STRING;x,y,gif_font,color_index: INTEGER) 
 		-- Draw_string is used to draw multiple characters on the image. 
 		-- 's' is the string we want to display.
 		-- x,y is the starting location the string begins.
@@ -163,7 +163,7 @@ feature -- Drawing
 			c_image_string(image, p,x,y, $a , color_index)	
 		end 
 
-	draw_line(x1,y1,x2,y2: INTEGER;color_index: INTEGER) is
+	draw_line(x1,y1,x2,y2: INTEGER;color_index: INTEGER)
 			-- Draw a line
 		require
 			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
@@ -173,7 +173,7 @@ feature -- Drawing
 			gdimageline ( image, x1,y1,x2,y2,color_index )
 		end
 
-	draw_dashed_line(x1,y1,x2,y2: INTEGER;color_index: INTEGER) is
+	draw_dashed_line(x1,y1,x2,y2: INTEGER;color_index: INTEGER)
 			-- Draw a dashed line
 		require
 			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
@@ -183,7 +183,7 @@ feature -- Drawing
 			gdimagedashedline ( image, x1,y1,x2,y2,color_index )
 		end
 
-	draw_polygon (array: ARRAY [GIF_POINT]; color_index: INTEGER) is
+	draw_polygon (array: ARRAY [GIF_POINT]; color_index: INTEGER)
 		require
 			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
 			at_least_two_elements: array.count > 1
@@ -206,14 +206,14 @@ feature -- Drawing
 			draw_line(gp2.get_x,gp2.get_y,gp1.get_x,gp1.get_y,color_index) 
 		end
 
-	draw_ellipse (center_x,center_y,ellipse_width,ellipse_height,color_index:INTEGER) is
+	draw_ellipse (center_x,center_y,ellipse_width,ellipse_height,color_index:INTEGER)
 		require
 			color_index_possible: color_index >=0 and color_index <=255 and then color_index <= color_index_bound
 		do
 			gdImageArc(image,center_x,center_y,ellipse_width,ellipse_height,0,360,color_index)
 		end
 
-	draw_rectangle (x1,y1,x2,y2,color_index: INTEGER) is
+	draw_rectangle (x1,y1,x2,y2,color_index: INTEGER)
 			-- Draw a rectangle with (x1,y1) and (x2,y2) the coords of 
 			-- two of the opposite summits of the rectangle.
 		require
@@ -224,7 +224,7 @@ feature -- Drawing
 			gdImageRectangle(image,x1,y1,x2,y2,color_index)	
 		end
 
-	draw_arc (center_x,center_y,arc_width,arc_height,starting_deg,ending_deg,color_index:INTEGER) is
+	draw_arc (center_x,center_y,arc_width,arc_height,starting_deg,ending_deg,color_index:INTEGER)
 			-- gdImageArc is used to draw a partial ellipse centered at the given point,
 			-- with the specified width and height in pixels. The arc begins at the position 
 			-- in degrees specified by starting_deg and ends at the position specified by 
@@ -237,7 +237,7 @@ feature -- Drawing
 			gdImageArc(image,center_x,center_y,arc_width,arc_height,starting_deg,ending_deg,color_index)
 		end
 
-	fill_closed_figure ( x,y,border_color, color_index: INTEGER ) is
+	fill_closed_figure ( x,y,border_color, color_index: INTEGER )
 		-- gdImageFillToBorder floods a portion of the image with the specified color_index,
 		--beginning at the specified point and stopping at the specified border color.
 		require
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 	image: POINTER
 		-- Pointer on the image structure.
 
-	dispose is
+	dispose
 			-- Remove C_struture associated with Current Image.
 		do
 			c_destroy_image(image)
@@ -259,56 +259,56 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	GdImageCreate (i,j: INTEGER):POINTER is
+	GdImageCreate (i,j: INTEGER):POINTER
 		external
 			"C"
 		alias
 			"gdImageCreate"
 		end
 
-	c_destroy_image (p: POINTER)is
+	c_destroy_image (p: POINTER)
 		external
 			"C"
 		alias
 			"gdImageDestroy"
 		end
 
-	gdImageCreateFromGif (p: POINTER): POINTER is
+	gdImageCreateFromGif (p: POINTER): POINTER
 		external
 			"C"
 		alias
 			"gdImageCreateFromGif"
 		end
 
-       gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER is
+       gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorAllocate"
 		end
 
-       gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER) is
+       gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageLine"
 		end
 
-	gdImageDashedLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER) is
+	gdImageDashedLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageDashedLine"
 		end
 
-	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER) is
+	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageRectangle"
 		end
 
-	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,color_index: INTEGER) is
+	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,color_index: INTEGER)
 		external
 			"c"
 		alias
@@ -316,59 +316,59 @@ feature {NONE} -- Externals
 		end
 
 
-	gdImageGif(p: POINTER; f: POINTER) is
+	gdImageGif(p: POINTER; f: POINTER)
 		external
 			"c"
 		alias
 			"gdImageGif"
 		end
 
-	gdimagefilltoborder(p: POINTER; x,y, stopping_color, color_index: INTEGER) is
+	gdimagefilltoborder(p: POINTER; x,y, stopping_color, color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageFillToBorder"
 		end
 
-	c_pixel_color_index(p: POINTER; x,y: INTEGER):INTEGER is
+	c_pixel_color_index(p: POINTER; x,y: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageGetPixel"
 		end
 
-	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER is
+	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageBoundsSafe"
 		end
 
-	c_get_height (p: POINTER ): INTEGER is
+	c_get_height (p: POINTER ): INTEGER
 		external
 			"c[macro <gif_library.h>]"
 		end
 
-	c_get_width (p: POINTER ): INTEGER is
+	c_get_width (p: POINTER ): INTEGER
 		external
 			"c[macro <gif_library.h>]"
 		end
 	
-	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER is
+	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorExact"
 		end
 
-	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; color_index: INTEGER) is
+	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; color_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageString"
 		end
 
-	c_image_color_total (p: POINTER): INTEGER is
+	c_image_color_total (p: POINTER): INTEGER
 		external	
 			"c[macro <gif_library.h>]"
 		alias
@@ -378,7 +378,7 @@ feature {NONE} -- Externals
 invariant
 	image_exists: image /= DEFAULT_POINTER
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

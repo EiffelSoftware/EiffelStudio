@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Objects that may be compared according to a partial order relation"
@@ -14,14 +14,14 @@ deferred class
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		require
 			other_exists: other /= Void
 		deferred
 		end
 
-	infix "<=" (other: like Current): BOOLEAN is
+	infix "<=" (other: like Current): BOOLEAN
 			-- Is current object less than or equal to `other'?
 		require
 			other_exists: other /= Void
@@ -29,7 +29,7 @@ feature -- Comparison
 			Result := (Current < other) or is_equal (other)
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	infix ">" (other: like Current): BOOLEAN
 			-- Is current object greater than `other'?
 		require
 			other_exists: other /= Void
@@ -37,7 +37,7 @@ feature -- Comparison
 			Result := other < Current
 		end
 
-	infix ">=" (other: like Current): BOOLEAN is
+	infix ">=" (other: like Current): BOOLEAN
 			-- Is current object greater than or equal to `other'?
 		require
 			other_exists: other /= Void
@@ -45,7 +45,7 @@ feature -- Comparison
 			Result := (other < Current) or is_equal (other)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

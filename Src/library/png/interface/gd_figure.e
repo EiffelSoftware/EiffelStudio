@@ -1,4 +1,4 @@
-indexing
+note
 	description: "figure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Drawings
 
-	draw_border is
+	draw_border
 		deferred
 		end
 
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 
 invariant
 	image_exists: image /=Void	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

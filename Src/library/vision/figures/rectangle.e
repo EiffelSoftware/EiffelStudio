@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a rectangle"
 	legal: "See notice at end of class.";
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a rectangle.
 		do
 			init_fig (Void);
@@ -43,7 +43,7 @@ feature -- Initialization
 			orientation := 0;
 		end;
 
-	make_from_closure (cl: CLOSURE) is
+	make_from_closure (cl: CLOSURE)
 			-- Create a rectangle containing `cl`
 		local
 			w,h : INTEGER;
@@ -60,7 +60,7 @@ feature -- Initialization
 
 feature -- Access
 
-	center: COORD_XY_FIG is
+	center: COORD_XY_FIG
 			-- Center of the rectangle.
 		local
 			v_cos, v_sin: REAL;
@@ -85,7 +85,7 @@ feature -- Access
 	width: INTEGER;
 			-- Width of rectangle
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of rectangle
 		do
 			inspect
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_height (new_height: like height) is
+	set_height (new_height: like height)
 			-- Set `height' to `new_height'.
 		require
 			new_height_positive: new_height >= 0
@@ -113,7 +113,7 @@ feature -- Element change
 			height = new_height
 		end;
 
-	set_orientation (new_orientation: like orientation) is
+	set_orientation (new_orientation: like orientation)
 			-- Set `orientation' to `new_orientation'.
 		require
 			orientation_positive: new_orientation >= 0;
@@ -125,7 +125,7 @@ feature -- Element change
 			orientation = new_orientation
 		end;
 
-	set_origin_to_center is
+	set_origin_to_center
 			-- Set origin to `center'.
 		do
 			origin_user_type := 3;
@@ -133,7 +133,7 @@ feature -- Element change
 			origin.is_superimposable (center)
 		end;
 
-	set_origin_to_upper_left is
+	set_origin_to_upper_left
 			-- Set origin to upper left coiner.
 		do
 			origin_user_type := 2;
@@ -141,7 +141,7 @@ feature -- Element change
 			origin.is_superimposable (upper_left)
 		end;
 
-	set_upper_left (a_point: like upper_left) is
+	set_upper_left (a_point: like upper_left)
 			-- Set `upper_left' to `a_point'.
 		require
 			a_point_exists: a_point /= Void
@@ -152,7 +152,7 @@ feature -- Element change
 			upper_left = a_point
 		end;
 
-	set_width (new_width: like width) is
+	set_width (new_width: like width)
 			-- Set `width' to `new_width'
 		require
 			new_width_positive: new_width >= 0
@@ -163,7 +163,7 @@ feature -- Element change
 			width = new_width
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -181,7 +181,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -192,7 +192,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			upper_left.xytranslate (vx, vy);
@@ -201,7 +201,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the rectangle.
 		do
 			if drawing.is_drawable then
@@ -219,7 +219,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current rectangle superimposable to `other' ?
 		require else
 			other_exists: other /= Void
@@ -230,7 +230,7 @@ feature -- Status report
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		local
 			v_max, v_maxdiv2: INTEGER;
 			cent: COORD_XY_FIG;
@@ -261,7 +261,7 @@ invariant
 	non_negative_height: height >= 0;
 	upper_left_exists: upper_left /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

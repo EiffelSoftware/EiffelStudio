@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	c_elems: INTEGER is
+	c_elems: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_cadword_c_elems (item)
 		end
 
-	p_elems: INTEGER_REF is
+	p_elems: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_tag_cadword_p_elems (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_cadword
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_c_elems (a_c_elems: INTEGER) is
+	set_c_elems (a_c_elems: INTEGER)
 			-- Set `c_elems' with `a_c_elems'.
 		do
 			ccom_tag_cadword_set_c_elems (item, a_c_elems)
 		end
 
-	set_p_elems (a_p_elems: INTEGER_REF) is
+	set_p_elems (a_p_elems: INTEGER_REF)
 			-- Set `p_elems' with `a_p_elems'.
 		require
 			non_void_a_p_elems: a_p_elems /= Void
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_cadword: INTEGER is
+	c_size_of_tag_cadword: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagCADWORD_s.h%"]"
@@ -79,31 +79,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagCADWORD)"
 		end
 
-	ccom_tag_cadword_c_elems (a_pointer: POINTER): INTEGER is
+	ccom_tag_cadword_c_elems (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagCADWORD_s_impl.h%"](ecom_control_library::tagCADWORD *):EIF_INTEGER"
 		end
 
-	ccom_tag_cadword_set_c_elems (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_cadword_set_c_elems (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagCADWORD_s_impl.h%"](ecom_control_library::tagCADWORD *, ULONG)"
 		end
 
-	ccom_tag_cadword_p_elems (a_pointer: POINTER): INTEGER_REF is
+	ccom_tag_cadword_p_elems (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagCADWORD_s_impl.h%"](ecom_control_library::tagCADWORD *):EIF_REFERENCE"
 		end
 
-	ccom_tag_cadword_set_p_elems (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_tag_cadword_set_p_elems (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagCADWORD_s_impl.h%"](ecom_control_library::tagCADWORD *, EIF_OBJECT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

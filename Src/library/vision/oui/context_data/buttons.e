@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"State of the mouse buttons. %
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (nb_buttons: INTEGER) is
+	make (nb_buttons: INTEGER)
 			-- Create an array of five logical 
 			-- mouse buttons.
 		require
@@ -38,7 +38,7 @@ feature -- Initialization
 			make_array (1, nb_buttons)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

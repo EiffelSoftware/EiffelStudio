@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision scrollbar. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -92,21 +92,21 @@ inherit
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_GAUGE_IMP}
 			disable_tabable_from
 			disable_tabable_to
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		do
 			Result := Ws_visible + Ws_childwindow +
 				Ws_clipchildren + Ws_clipsiblings
 		end
 
-	wel_background_color: WEL_COLOR_REF is
+	wel_background_color: WEL_COLOR_REF
 		do
 			Result := background_color_imp
 			if Result = Void then
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Assign `a_leap' to `leap'.
 		local
 			l_previous: INTEGER
@@ -131,7 +131,7 @@ feature {EV_ANY_I} -- Implementation
 			l_previous := {WEL_API}.set_control_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
-	wel_set_range (a_minimum, a_maximum: INTEGER) is
+	wel_set_range (a_minimum, a_maximum: INTEGER)
 			-- Set `minimum' and `maximum' with
 			-- `a_minimum' and `a_maximum'
 		local
@@ -161,7 +161,7 @@ feature {EV_ANY_I} -- Implementation
 			l_previous := {WEL_API}.set_control_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
-	set_range is
+	set_range
 		do
 				--| Adjust the range so that the value_range.upper can actually
 				--| be achieved. When scroll bars are proportional in WEL, only
@@ -171,7 +171,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SCROLL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

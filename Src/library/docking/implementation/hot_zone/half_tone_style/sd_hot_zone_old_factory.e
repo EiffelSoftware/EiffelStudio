@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory produce all the Visual Studio 2003 style feedbacks"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Factory method
 
-	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE is
+	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
 			-- Redefine
 		local
 			l_docking_zone: SD_DOCKING_ZONE
@@ -33,7 +33,7 @@ feature -- Factory method
 			result_not_void: Result /= Void
 		end
 
-	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
+	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
 			-- Redefine
 		do
 			if a_zone.type = {SD_ENUMERATION}.tool then
@@ -45,19 +45,19 @@ feature -- Factory method
 
 feature {NONE}-- Implementation
 
-	hot_zone_docking (a_zone: SD_DOCKING_ZONE): SD_HOT_ZONE_OLD_DOCKING is
+	hot_zone_docking (a_zone: SD_DOCKING_ZONE): SD_HOT_ZONE_OLD_DOCKING
 			-- Hot zone for SD_DOCKING_ZONE.
 		do
 			create Result.make (a_zone, docker_mediator)
 		end
 
-	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_OLD_TAB is
+	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_OLD_TAB
 			-- Hot zone for SD_TAB_ZONE.
 		do
 			create Result.make (a_zone, docker_mediator)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation Interface for EV_REGION"
 	author: ""
 	date: "$Date$"
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 	interface: EV_REGION;
 		-- Interface object for `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

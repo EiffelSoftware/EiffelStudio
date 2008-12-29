@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mailer object used to send or retrieve resources"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Status report
 	transfer_error: TRANSFER_ERROR
 		-- Has the transfer failed?
 
-	error: BOOLEAN is
+	error: BOOLEAN
 		do
 			Result:= transfer_error.transfer_error
 		end
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_from_resource (resource: EMAIL_RESOURCE) is
+	set_from_resource (resource: EMAIL_RESOURCE)
 			-- Set 'resource' to from_resource.
 		require
 			resource_exists: resource /= Void
@@ -49,7 +49,7 @@ feature -- Settings
 			set_transfer_error
 		end
 
-	set_to_resource (resource: EMAIL_RESOURCE) is
+	set_to_resource (resource: EMAIL_RESOURCE)
 			-- Set 'resource' to to_resource.
 		require
 			resource_exists: resource /= Void
@@ -62,7 +62,7 @@ feature -- Settings
 
 feature -- Basic operations
 
-	transfer is
+	transfer
 			-- transfer data and check for errors.
 		require
 			resources_exists: from_resource /= Void and then to_resource /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 --			transfer_error:= True
 --		end
 
-	set_transfer_error is
+	set_transfer_error
 		do
 			if from_resource = Void then
 				transfer_error:= to_resource.transfer_error
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_transfer_error is
+	disable_transfer_error
 			-- Unset error.
 		do
 			if 	transfer_error /= Void then
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 --			end	
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

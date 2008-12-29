@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The Fibonacci number sequence"
@@ -20,11 +20,11 @@ class FIBONACCI inherit
 
 feature -- Access
 
-	First: INTEGER is 1
+	First: INTEGER = 1
 
-	Second: INTEGER is 1
+	Second: INTEGER = 1
 
-	higher_fibonacci (n: INTEGER): INTEGER is
+	higher_fibonacci (n: INTEGER): INTEGER
 			-- Lowest Fibonacci number greater than or equal to `n'
 		do
 			if n <= First then
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	lower_fibonacci (n: INTEGER): INTEGER is
+	lower_fibonacci (n: INTEGER): INTEGER
 			-- Greatest Fibonacci number lower than or equal to `n'
 		require
 			argument_big_enough: n >= Second
@@ -60,7 +60,7 @@ feature -- Access
 			end
 		end
 
-	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN] is
+	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN]
 			-- Array of `n' boolean values, where the
 			-- value at index `i' is true if and only if
 			-- `i' is a Fibonacci number.
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	is_fibonacci (n: INTEGER): BOOLEAN is
+	is_fibonacci (n: INTEGER): BOOLEAN
 			-- Is `n' a Fibonacci number?
 		local
 			to_test, count: INTEGER
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	i_th (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER
 			-- The `i'-th Fibonacci number
 		local
 			count: INTEGER
@@ -129,7 +129,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

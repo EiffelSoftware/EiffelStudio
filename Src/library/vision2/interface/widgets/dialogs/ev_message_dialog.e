@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision message dialog. Dialogs that always consist of %N%
 		%a pixmap, a text and one or more buttons."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 	make_with_text_and_actions (
 		a_text: STRING_GENERAL;
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-	) is
+	)
 			-- Create `Current', assign `a_text' to `text' and `actions' to `select_actions'
 			-- of `buttons'.
 			-- (`actions' are added to `buttons' in order.)
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			button_box.go_to (c)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' to default state.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Icon displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Message displayed by `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -166,7 +166,7 @@ feature -- Access
 	background_color: EV_COLOR
 			-- Background color of `Current'.
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default identifier name if no specific name is set.
 		do
 			if title.is_empty then
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
 			dialog_box: EV_CONTAINER
@@ -192,7 +192,7 @@ feature -- Status setting
 			background_color.copy (a_color)
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'.
 		local
 			dialog_box: EV_CONTAINER
@@ -205,7 +205,7 @@ feature -- Status setting
 			foreground_color.copy (a_color)
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		require
 			not_destroyed: not is_destroyed
@@ -225,7 +225,7 @@ feature -- Status setting
 			pixmap_assigned: pixmap.is_equal (a_pixmap)
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Assign `Void' to `pixmap'.
 		require
 			not_destroyed: not is_destroyed
@@ -235,7 +235,7 @@ feature -- Status setting
 			pixmap_void: pixmap = Void
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -247,7 +247,7 @@ feature -- Status setting
 			cloned: text /= a_text
 		end
 
-	remove_text is
+	remove_text
 			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
@@ -257,7 +257,7 @@ feature -- Status setting
 			text_not_void: text /= Void and text.is_empty
 		end
 
-	set_buttons (button_labels: ARRAY [STRING_GENERAL]) is
+	set_buttons (button_labels: ARRAY [STRING_GENERAL])
 			-- Assign new buttons with `button_labels' to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -278,7 +278,7 @@ feature -- Status setting
 	set_buttons_and_actions (
 		button_labels: ARRAY [STRING_GENERAL]
 		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-	) is
+	)
 			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -306,7 +306,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	has_button (a_text: STRING_GENERAL): BOOLEAN is
+	has_button (a_text: STRING_GENERAL): BOOLEAN
 			-- Does `Current' contain a button with `text' `a_text'?
 		require
 			not_destroyed: not is_destroyed
@@ -315,7 +315,7 @@ feature -- Status report
 			Result := buttons.has (a_text)
 		end
 
-	button (a_text: STRING_GENERAL): EV_BUTTON is
+	button (a_text: STRING_GENERAL): EV_BUTTON
 			-- Button that has `a_text'.
 		require
 			not_destroyed: not is_destroyed
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			-- Lookup-table for the buttons in `Current' based on
 			-- their captions.
 
-	clean_buttons is
+	clean_buttons
 			-- Remove all buttons from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			buttons.clear_all
 		end
 
-	add_button (a_text: STRING_GENERAL) is
+	add_button (a_text: STRING_GENERAL)
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_button_with_action
-		(a_text: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+		(a_text: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
 			-- An item has been added to `buttons'.
 		require
 			not_destroyed: not is_destroyed
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			button (a_text).select_actions.extend (a_action)
 		end
 
-	on_button_press (a_button_text: STRING_GENERAL) is
+	on_button_press (a_button_text: STRING_GENERAL)
 			-- A button with text `a_button_text' has been pressed.
 		do
 			selected_button := a_button_text
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_press (a_key: EV_KEY) is
+	on_key_press (a_key: EV_KEY)
 			-- Called when user presses a key on the dialog.
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_left then
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	move_to_next_button (a_delta: INTEGER) is
+	move_to_next_button (a_delta: INTEGER)
 			-- Moves focus to next or previous button based on `a_delta'.
 		require
 			valid_delta: a_delta = -1 or a_delta = 1
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

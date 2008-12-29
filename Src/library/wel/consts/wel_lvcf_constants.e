@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List view column flag (LVCF) constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,55 +13,55 @@ obsolete
 
 feature -- Column Flags (General)
 
-	Lvcf_fmt: INTEGER is 1
+	Lvcf_fmt: INTEGER = 1
 			-- The fmt member is valid.
 			--
 			-- Declared in Windows as LVCF_FMT
 
-	Lvcf_subitem: INTEGER is 8
+	Lvcf_subitem: INTEGER = 8
 			-- The iSubItem member is valid.
 			--
 			-- Declared in Windows as LVCF_SUBITEM
 
-	Lvcf_text: INTEGER is 4
+	Lvcf_text: INTEGER = 4
 			-- The pszText member is valid.
 			--
 			-- Declared in Windows as LVCF_TEXT
 
-	Lvcf_width: INTEGER is 2
+	Lvcf_width: INTEGER = 2
 			-- The cx member is valid.
 			--
 			-- Declared in Windows as LVCF_WIDTH
 
-	Lvcf_image: INTEGER is 16
+	Lvcf_image: INTEGER = 16
 			-- The ilmage member is valid
 			--
 			-- Declared in Windows as LVCF_IMAGE
 
 feature -- Column Flags (Format)
 
-	Lvcfmt_right: INTEGER is 1
+	Lvcfmt_right: INTEGER = 1
 			-- alignment of the column : right.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 			--
 			-- Declared in Windows as LVCFMT_RIGHT
 
-	Lvcfmt_center: INTEGER is 2
+	Lvcfmt_center: INTEGER = 2
 			-- alignment of the column : center.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 			--
 			-- Declared in Windows as LVCFMT_CENTER
 
-	Lvcfmt_left: INTEGER is 0
+	Lvcfmt_left: INTEGER = 0
 			-- alignment of the column : left.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 			--
 			-- Declared in Windows as LVCFMT_LEFT
 
-	Lvcfmt_justifymask: INTEGER is 3
+	Lvcfmt_justifymask: INTEGER = 3
 			-- alignment of the column : justify.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
@@ -70,7 +70,7 @@ feature -- Column Flags (Format)
 
 feature -- Validation
 
-	valid_lvcfmt_constant (value: INTEGER): BOOLEAN is
+	valid_lvcfmt_constant (value: INTEGER): BOOLEAN
 			-- Is `value' a valid lvcfmt constant?
 		do
 			Result := value = Lvcfmt_left or else
@@ -79,7 +79,7 @@ feature -- Validation
 				value = Lvcfmt_justifymask
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

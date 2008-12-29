@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Information given by EiffelVision when a callback is triggered"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET; a_current, a_next: INTEGER) is
+	make (a_widget: WIDGET; a_current, a_next: INTEGER)
 			-- Create a context_data for `motion' action.
 		do
 			widget := a_widget;
@@ -39,7 +39,7 @@ feature -- Access
 	next_cursor_position: INTEGER;;
 			-- Future position of cursor if the motion is agreed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

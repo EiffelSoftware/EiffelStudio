@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Save memory states at differents point and analyze the difference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create states.make (10)
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	states_open_from_file is
+	states_open_from_file
 			-- Open states from disk.
 		local
 			l_item: MA_MEMORY_STATE
@@ -62,33 +62,33 @@ feature -- Command
 			grid_data_set: states.states.count = grid_data.count
 		end
 
-	states_save_to_file is
+	states_save_to_file
 			-- Save states to a disk file.
 		do
 			states.save_states
 		end
 
-	adjust_widgets_layout is
+	adjust_widgets_layout
 			-- Adjust the split, 2 grids' positon and size to make it nice looking.
 		do
 			adjust_split_vertical
 			adjust_split_horizontal
 		end
 
-	adjust_split_vertical is
+	adjust_split_vertical
 			-- Adjust the split area (which ia at the top area)'s position.
 		do
 			main_window.split_incre.set_split_position ((main_window.split_incre.width / 2).ceiling)
 		end
 
-	adjust_split_horizontal is
+	adjust_split_horizontal
 			-- Adjust the split area (which ia at the bottom area)'s position.
 		do
 			main_window.split_incre_horizontal.set_split_position (main_window.split_incre_horizontal.minimum_split_position
 				+ main_window.memory_spot_1.row_count * main_window.memory_spot_1.row_height + main_window.memory_spot_1.header.height)
 		end
 
-	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID) is
+	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID)
 			-- Adjust a column width to fix the max width of the item its contain.
 		do
 			if a_grid.row_count > 0 then
@@ -96,7 +96,7 @@ feature -- Command
 			end
 		end
 
-	add_current_state is
+	add_current_state
 			-- Save current memory state, show them in grid.
 		local
 			l_state: MA_MEMORY_STATE
@@ -111,7 +111,7 @@ feature -- Command
 			states_add_one: states.count = old states.count + 1
 		end
 
-	show_object_count_changed is
+	show_object_count_changed
 			-- Show the object increased objects information in the result grid.
 		local
 			l_state_1, l_state_2: MA_MEMORY_STATE
@@ -134,7 +134,7 @@ feature -- Command
 			end
 		end
 
-	update_grid_content is
+	update_grid_content
 			-- Fill grid_from_state, grid_to_state using grid data.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -177,7 +177,7 @@ feature -- Command
 
 feature {NONE} -- Implemention
 
-	update_grid_increased_content  is
+	update_grid_increased_content
 			-- Show the increased objects in the bottom result grid.
 		local
 			l_int: INTEGER
@@ -207,7 +207,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	init_grid is
+	init_grid
 			-- Init the grid's title.
 		do
 			grid_from_state.insert_new_column (1)
@@ -250,7 +250,7 @@ feature {NONE} -- Implemention
 			grid_changed_column_set: grid_changed.column_count = 2
 		end
 
-	on_grid_header_click (a_column_index: INTEGER) is
+	on_grid_header_click (a_column_index: INTEGER)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_positive: a_column_index > 0
@@ -271,7 +271,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	handle_pick_item (a_item: EV_GRID_LABEL_ITEM): MA_CLASS_STONE is
+	handle_pick_item (a_item: EV_GRID_LABEL_ITEM): MA_CLASS_STONE
 			-- User pick a item from grid to filter.
 		do
 			if a_item /= Void and a_item.column.index = 1 then
@@ -279,7 +279,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	sort_data is
+	sort_data
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		local
 			l_sorter: DS_QUICK_SORTER [like grid_data_increased_row]
@@ -300,7 +300,7 @@ feature {NONE} -- Implemention
 	sorted_column: INTEGER
 			-- Column on which sorting is done.
 
-	sort_on_type_name (u, v: like grid_data_increased_row): BOOLEAN is
+	sort_on_type_name (u, v: like grid_data_increased_row): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	sort_on_count (u, v: like grid_data_increased_row): BOOLEAN is
+	sort_on_count (u, v: like grid_data_increased_row): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -326,7 +326,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	grid_data_increased_row: TUPLE [text: STRING; nb: INTEGER] is
+	grid_data_increased_row: TUPLE [text: STRING; nb: INTEGER]
 			-- Anchor type should not called.
 			-- first INTEGER is increased object count, second INTEGER is the increased objects type id
 		require
@@ -351,7 +351,7 @@ feature {NONE} -- Implemention
 
 	states: MA_MEMORY_STATE_MANAGER
 
-	grid_state_prefix: STRING is "States: "
+	grid_state_prefix: STRING = "States: "
 			-- The states grid prefix of first column.
 
 invariant
@@ -361,7 +361,7 @@ invariant
 	grid_increased_not_void: grid_changed /= Void
 	main_window_not_void: main_window /= Void
 	grid_data_not_void: grid_data /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

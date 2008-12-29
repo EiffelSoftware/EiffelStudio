@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision checkable list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature -- Status report
 
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			-- is `list_item' checked?
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -59,7 +59,7 @@ feature -- Status setting
 
 		end
 
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 --			-- redraw only the parts that need redrawing.
 --		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 			-- Redefined from EV_LIST_IMP to prevent `uncheck_actions'
 			-- frombeing fired when an item is inserted to `Current'.
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cwin_listview_setcheckstate (hwnd: POINTER; iindex: INTEGER; fcheck: BOOLEAN) is
+	cwin_listview_setcheckstate (hwnd: POINTER; iindex: INTEGER; fcheck: BOOLEAN)
 			-- Code below is inlined as old version of C compilers do not define
 			-- ListView_SetCheckState although they define ListView_GetCheckState.
 		external
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			"ListView_SetItemState((HWND) $hwnd, (int) $iindex, (UINT) INDEXTOSTATEIMAGEMASK(($fcheck)?2:1), (UINT) LVIS_STATEIMAGEMASK)"
 		end
 
-	cwin_listview_getcheckstate (hwnd: POINTER; iindex: INTEGER): BOOLEAN is
+	cwin_listview_getcheckstate (hwnd: POINTER; iindex: INTEGER): BOOLEAN
 			--
 		external
 			"C macro signature (HWND, UINT): EIF_BOOLEAN use <commctrl.h>"
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			"ListView_GetCheckState"
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Default extended style for `Current'.
 		once
 			Result := Precursor {EV_LIST_IMP} + Lvs_ex_checkboxes
@@ -147,7 +147,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

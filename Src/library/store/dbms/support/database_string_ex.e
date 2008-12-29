@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String tools"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create -- Creation procedure
 
 feature -- Status setting
 
-	get_select_name (no_descriptor: INTEGER; index: INTEGER) is
+	get_select_name (no_descriptor: INTEGER; index: INTEGER)
 			-- Put in `Current' name of the index-th column of selection.
 		do
 			set_count (db_spec.put_col_name (no_descriptor, index, Current, capacity))
@@ -31,7 +31,7 @@ feature -- Status setting
 			capacity_unchanged: capacity = old capacity
 		end
 
-	get_value (no_descriptor: INTEGER; index: INTEGER) is
+	get_value (no_descriptor: INTEGER; index: INTEGER)
 			-- Put in `Current' value of index-th column of selection.
 		do
 			set_count (db_spec.put_data (no_descriptor, index, Current, capacity))
@@ -39,7 +39,7 @@ feature -- Status setting
 			capacity_unchanged: capacity = old capacity
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

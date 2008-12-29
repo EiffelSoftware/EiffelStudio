@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Graphic history based on a linear list of undoable commands, represented on %
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a graphic representation of the history.
 		require
 			name_not_void: a_name /= Void;
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_history_list (a_history_list: HISTORY_LIST) is
+	set_history_list (a_history_list: HISTORY_LIST)
 			-- Set the `history_list' to `a_history_list'.
 		local
 			i: INTEGER
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature {HISTORY_LIST} -- Implementation
 
-	back is
+	back
 			-- Move cursor backward one position.
 		do
 			if not scroll_list.off then
@@ -114,7 +114,7 @@ feature {HISTORY_LIST} -- Implementation
 			update_widgets
 		end;
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		do
 			if not scroll_list.off then
@@ -124,7 +124,7 @@ feature {HISTORY_LIST} -- Implementation
 			update_widgets
 		end;
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to position `i'.
 		do
 			if not scroll_list.off then
@@ -136,7 +136,7 @@ feature {HISTORY_LIST} -- Implementation
 
 feature {HISTORY_LIST}
 
-	record (a_command: UNDOABLE) is
+	record (a_command: UNDOABLE)
 			-- Insert `a_command' after the cursor position, and place
 			-- cursor upon it
 		do
@@ -148,20 +148,20 @@ feature {HISTORY_LIST}
 			update_widgets
 		end;
 
-	remove_after is
+	remove_after
 			-- Remove all commands after the cursor position.
 		do
 			scroll_list.remove_right
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Make history empty.
 		do
 			scroll_list.wipe_out;
 			update_widgets
 		end;
 
-	update_widgets is
+	update_widgets
 			-- Update the state of different widgets (scroll list, buttons).
 		do
 			if not scroll_list.off then
@@ -191,19 +191,19 @@ feature {NONE} -- Implementation
 	undo_button: PUSH_B;
 			-- Button to undo a command
 
-	undo_command: HISTORY_UNDO is
+	undo_command: HISTORY_UNDO
 			-- Command associated with the `undo' button.
 		once
 			create Result
 		end;
 
-	redo_command: HISTORY_REDO is
+	redo_command: HISTORY_REDO
 			-- Command associated with the `redo' button.
 		once
 			create Result
 		end;
 
-	click_command: HISTORY_CLCK is
+	click_command: HISTORY_CLCK
 			-- Command associated with a direct click in the scroll list.
 		once
 			create Result
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	close_button: PUSH_B;
 			-- Button to close the history window
 
-	close_commmand: POPDOWN_COM is
+	close_commmand: POPDOWN_COM
 			-- Command associated with the `close' button.
 		once
 			create Result
@@ -223,7 +223,7 @@ invariant
 	valid_history: (history_list /= Void) implies ((history_list.count = scroll_list.count)
 			and (history_list.index = scroll_list.index ))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

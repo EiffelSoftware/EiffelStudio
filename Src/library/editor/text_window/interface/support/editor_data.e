@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General editor preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -39,13 +39,13 @@ feature {NONE} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-	update is
+	update
 		do
 			init_colors
 			panel_manager.refresh_all
 		end
 
-	update_font is
+	update_font
 			-- Font was changed, must redraw tokens due to possible width change.
 		do
 			init_fonts
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 feature -- Value
 
-	color_of_id (a_id: INTEGER): EV_COLOR is
+	color_of_id (a_id: INTEGER): EV_COLOR
 			-- Color of `a_id'
 		require
 			a_id_positive: a_id > 0
@@ -82,7 +82,7 @@ feature -- Value
 			color_of_id_not_void: Result /= Void
 		end
 
-	font_of_id (a_id: INTEGER): EV_FONT is
+	font_of_id (a_id: INTEGER): EV_FONT
 			-- Font of `a_id'
 		require
 			a_id_positive: a_id > 0
@@ -92,13 +92,13 @@ feature -- Value
 			font_of_id_not_void: Result /= Void
 		end
 
-	smart_indentation: BOOLEAN is
+	smart_indentation: BOOLEAN
 			-- Is smart indentation enabled?
 		do
 			Result := smart_indentation_preference.value
 		end
 
-	tabulation_spaces: INTEGER is
+	tabulation_spaces: INTEGER
 			-- Number of space characters in a tabulation.
 			-- TODO: neilc.  Make sure user does not enter a negative value for this.
 		do
@@ -110,214 +110,214 @@ feature -- Value
 			tabulation_spaces_positive: Result > 0
 		end
 
-	automatic_update: BOOLEAN is
+	automatic_update: BOOLEAN
 			-- If the text has been modified by an external editor, should we
 			-- reload the file automatically if no change has been made here?
 		do
 			Result := automatic_update_preference.value
 		end
 
-	use_tab_for_indentation: BOOLEAN is
+	use_tab_for_indentation: BOOLEAN
 			-- Use tabulations (not spaces) for auto-indenting?
 		do
 			Result := use_tab_for_indentation_preference.value
 		end
 
-	scrolling_common_line_count: INTEGER is
+	scrolling_common_line_count: INTEGER
 			-- Number of common lines staying on screen after scrolling
 			-- by one page up or down.
 		do
 			Result := scrolling_common_line_count_preference.value
 		end
 
-	mouse_wheel_scroll_full_page: BOOLEAN is
+	mouse_wheel_scroll_full_page: BOOLEAN
 			-- Should a mouse wheel scroll event scroll full page?
 		do
 			Result := mouse_wheel_scroll_full_page_preference.value
 		end
 
-	mouse_wheel_scroll_size: INTEGER is
+	mouse_wheel_scroll_size: INTEGER
 			-- Number of lines to scroll when a mouse wheel scroll event is received.
 			-- Overriden by `mouse_wheel_scroll_full_page'.
 		do
 			Result := mouse_wheel_scroll_size_preference.value
 		end
 
-	remove_trailing_white_space: BOOLEAN is
+	remove_trailing_white_space: BOOLEAN
 			-- Indicates if trailing white space should be removed from lines during editing
 		do
 			Result := remove_trailing_white_space_preference.value
 		end
 
-	left_margin_width: INTEGER is
+	left_margin_width: INTEGER
 			-- Width of left margin in pixels (not the breakpoint/line number margin margin)
 		do
 			Result := left_margin_width_preference.value
 		end
 
-	margin_background_color: EV_COLOR is
+	margin_background_color: EV_COLOR
 			-- Color for margin background
 		do
 			Result := margin_background_color_preference.value
 		end
 
-	margin_separator_color: EV_COLOR is
+	margin_separator_color: EV_COLOR
 			-- Color for margin separator
 		do
 			Result := margin_separator_color_preference.value
 		end
 
-	line_number_text_color: EV_COLOR is
+	line_number_text_color: EV_COLOR
 			-- Color for line number text
 		do
 			Result := line_number_text_color_preference.value
 		end
 
-	show_line_numbers: BOOLEAN is
+	show_line_numbers: BOOLEAN
 			-- Indicates if the editor should display the line numbers
 		do
 			Result := show_line_numbers_preference.value
 		end
 
-	smart_home: BOOLEAN is
+	smart_home: BOOLEAN
 			-- Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed
 		do
 			Result := smart_home_preference.value
 		end
 
-	blinking_cursor: BOOLEAN is
+	blinking_cursor: BOOLEAN
 			-- Indicates if editor cursor should blick
 		do
 			Result := blinking_cursor_preference.value
 		end
 
-	normal_text_color: EV_COLOR is
+	normal_text_color: EV_COLOR
 			-- Color used to display normal text
 		do
 			Result := normal_text_color_preference.value
 		end
 
-	normal_background_color: EV_COLOR is
+	normal_background_color: EV_COLOR
 			-- Background color used to display normal text
 		do
 			Result := normal_background_color_preference.value
 		end
 
-	selection_text_color: EV_COLOR is
+	selection_text_color: EV_COLOR
 			-- Color used to display selected text
 		do
 			Result := selection_text_color_preference.value
 		end
 
-	selection_background_color: EV_COLOR is
+	selection_background_color: EV_COLOR
 			-- Background color used to display selected text when has focus
 		do
 			Result := selection_background_color_preference.value
 		end
 
-	focus_out_selection_background_color: EV_COLOR is
+	focus_out_selection_background_color: EV_COLOR
 			-- Background color used to display selected text when focus losed
 		do
 			Result := focus_out_selection_background_color_preference.value
 		end
 
-	string_text_color: EV_COLOR is
+	string_text_color: EV_COLOR
 			-- Color used to display strings
 		do
 			Result := string_text_color_preference.value
 		end
 
-	string_background_color: EV_COLOR is
+	string_background_color: EV_COLOR
 			-- Background color used to display strings
 		do
 			Result := string_background_color_preference.value
 		end
 
-	keyword_text_color: EV_COLOR is
+	keyword_text_color: EV_COLOR
 			-- Color used to display keywords
 		do
 			Result := keyword_text_color_preference.value
 		end
 
-	keyword_background_color: EV_COLOR is
+	keyword_background_color: EV_COLOR
 			-- Background color used to display keywords
 		do
 			Result := keyword_background_color_preference.value
 		end
 
-	spaces_text_color: EV_COLOR is
+	spaces_text_color: EV_COLOR
 			-- Color used to display spaces
 		do
 			Result := spaces_text_color_preference.value
 		end
 
-	spaces_background_color: EV_COLOR is
+	spaces_background_color: EV_COLOR
 			-- Background color used to display spaces
 		do
 			Result := spaces_background_color_preference.value
 		end
 
-	comments_text_color: EV_COLOR is
+	comments_text_color: EV_COLOR
 			-- Color used to display comments
 		do
 			Result := comments_text_color_preference.value
 		end
 
-	comments_background_color: EV_COLOR is
+	comments_background_color: EV_COLOR
 			-- Color used to display comments background
 		do
 			Result := comments_background_color_preference.value
 		end
 
-	number_text_color: EV_COLOR is
+	number_text_color: EV_COLOR
 			-- Color used to display numbers
 		do
 			Result := number_text_color_preference.value
 		end
 
-	number_background_color: EV_COLOR is
+	number_background_color: EV_COLOR
 			-- Background color used to display numbers
 		do
 			Result := number_background_color_preference.value
 		end
 
-	operator_text_color: EV_COLOR is
+	operator_text_color: EV_COLOR
 			-- Color used to display operator
 		do
 			Result := operator_text_color_preference.value
 		end
 
-	operator_background_color: EV_COLOR is
+	operator_background_color: EV_COLOR
 			-- Background color used to display operator	
 		do
 			Result := operator_background_color_preference.value
 		end
 
-	highlight_color: EV_COLOR is
+	highlight_color: EV_COLOR
 			-- Background color used to highlight lines
 		do
 			Result := highlight_color_preference.value
 		end
 
-	cursor_line_highlight_color: EV_COLOR is
+	cursor_line_highlight_color: EV_COLOR
 			-- Background color used to highlight line with cursor in it
 		do
 			Result := cursor_line_highlight_color_preference.value
 		end
 
-	highlight_document_changes: BOOLEAN is
+	highlight_document_changes: BOOLEAN
 			-- Should editor highlight changes in document between saves?
 		do
 			Result := highlight_document_changes_preference.value
 		end
 
-	quadruple_click_enabled: BOOLEAN is
+	quadruple_click_enabled: BOOLEAN
 			-- is quadruple click (select all) enabled ?
 		do
 			Result := quadruple_click_enabled_preference.value
 		end
 
-	use_buffered_line: BOOLEAN is
+	use_buffered_line: BOOLEAN
 			--
 		do
 			Result := use_buffered_line_preference.value
@@ -449,127 +449,127 @@ feature {ANY} -- Preferences
 
 feature -- Misc	
 
-	plain_white: EV_COLOR is
+	plain_white: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (255, 255, 255)
 		end
 
-	plain_gray: EV_COLOR is
+	plain_gray: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (64, 64, 64)
 		end
 
-	dark_gray: EV_COLOR is
+	dark_gray: EV_COLOR
 		once
 			Result := (create {EV_STOCK_COLORS}).dark_grey
 		end
 
-	plain_black: EV_COLOR is
+	plain_black: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
 
 feature {NONE} -- Preference Strings
 
-	tabulation_spaces_string: STRING is "editor.general.tab_step"
-	left_margin_width_string: STRING is "editor.general.left_margin_width"
-	margin_background_color_string: STRING is "editor.general.colors.margin_background_color"
-	margin_separator_color_string: STRING is "editor.general.colors.margin_separator_color"
-	line_number_text_color_string: STRING is "editor.general.colors.line_number_text_color"
-	show_line_numbers_string: STRING is "editor.general.show_line_numbers"
-	smart_home_string: STRING is "editor.general.smart_home"
-	use_tab_for_indentation_string: STRING is "editor.general.use_tab_for_indentation"
-	scrolling_common_line_count_string: STRING is "editor.general.scrolling_common_line_count"
-	mouse_wheel_scroll_full_page_string: STRING is "editor.general.mouse_wheel_scroll_full_page"
-	mouse_wheel_scroll_size_string: STRING is "editor.general.mouse_wheel_scroll_size"
-	remove_trailing_white_space_string: STRING is "editor.general.remove_trailing_white_space"
-	blinking_cursor_string: STRING is "editor.general.blinking_cursor"
-	automatic_update_string: STRING is "editor.general.automatic_update"
-	editor_font_string: STRING is "editor.general.editor_font"
-	keyword_font_string: STRING is "editor.general.keyword_font"
-	font_zoom_factor_string: STRING is "editor.general.font_zoom_factor"
-	header_font_string: STRING is "editor.general.header_font"
-	highlight_document_changes_string: STRING is "editor.general.highlight_document_changes_between_saves"
+	tabulation_spaces_string: STRING = "editor.general.tab_step"
+	left_margin_width_string: STRING = "editor.general.left_margin_width"
+	margin_background_color_string: STRING = "editor.general.colors.margin_background_color"
+	margin_separator_color_string: STRING = "editor.general.colors.margin_separator_color"
+	line_number_text_color_string: STRING = "editor.general.colors.line_number_text_color"
+	show_line_numbers_string: STRING = "editor.general.show_line_numbers"
+	smart_home_string: STRING = "editor.general.smart_home"
+	use_tab_for_indentation_string: STRING = "editor.general.use_tab_for_indentation"
+	scrolling_common_line_count_string: STRING = "editor.general.scrolling_common_line_count"
+	mouse_wheel_scroll_full_page_string: STRING = "editor.general.mouse_wheel_scroll_full_page"
+	mouse_wheel_scroll_size_string: STRING = "editor.general.mouse_wheel_scroll_size"
+	remove_trailing_white_space_string: STRING = "editor.general.remove_trailing_white_space"
+	blinking_cursor_string: STRING = "editor.general.blinking_cursor"
+	automatic_update_string: STRING = "editor.general.automatic_update"
+	editor_font_string: STRING = "editor.general.editor_font"
+	keyword_font_string: STRING = "editor.general.keyword_font"
+	font_zoom_factor_string: STRING = "editor.general.font_zoom_factor"
+	header_font_string: STRING = "editor.general.header_font"
+	highlight_document_changes_string: STRING = "editor.general.highlight_document_changes_between_saves"
 
-	normal_text_color_string: STRING is "editor.general.colors.normal_text_color"
+	normal_text_color_string: STRING = "editor.general.colors.normal_text_color"
 			-- Color used to display normal text
 
-	normal_background_color_string: STRING is "editor.general.colors.normal_background_color"
+	normal_background_color_string: STRING = "editor.general.colors.normal_background_color"
 			-- Background color used to display normal text
 
-	selection_text_color_string: STRING is "editor.general.colors.selection_text_color"
+	selection_text_color_string: STRING = "editor.general.colors.selection_text_color"
 			-- Color used to display selected text
 
-	selection_background_color_string: STRING is "editor.general.colors.selection_background_color"
+	selection_background_color_string: STRING = "editor.general.colors.selection_background_color"
 			-- Background color used to display selected text when has focus
 
-	focus_out_selection_background_color_string: STRING is "editor.general.colors.focus_out_selection_background_color"
+	focus_out_selection_background_color_string: STRING = "editor.general.colors.focus_out_selection_background_color"
 			-- Background color used to display selected text when focus losed.
 
-	string_text_color_string: STRING is "editor.general.colors.string_text_color"
+	string_text_color_string: STRING = "editor.general.colors.string_text_color"
 			-- Color used to display strings
 
-	string_background_color_string: STRING is "editor.general.colors.string_background_color"
+	string_background_color_string: STRING = "editor.general.colors.string_background_color"
 			-- Background color used to display strings
 
-	keyword_text_color_string: STRING is "editor.general.colors.keyword_text_color"
+	keyword_text_color_string: STRING = "editor.general.colors.keyword_text_color"
 			-- Color used to display keywords
 
-	keyword_background_color_string: STRING is "editor.general.colors.keyword_background_color"
+	keyword_background_color_string: STRING = "editor.general.colors.keyword_background_color"
 			-- Background color used to display keywords
 
-	spaces_text_color_string: STRING is "editor.general.colors.spaces_text_color"
+	spaces_text_color_string: STRING = "editor.general.colors.spaces_text_color"
 			-- Color used to display spaces
 
-	spaces_background_color_string: STRING is "editor.general.colors.spaces_background_color"
+	spaces_background_color_string: STRING = "editor.general.colors.spaces_background_color"
 			-- Background color used to display spaces
 
-	comments_text_color_string: STRING is "editor.general.colors.comments_text_color"
+	comments_text_color_string: STRING = "editor.general.colors.comments_text_color"
 			-- Color used to display comments
 
-	comments_background_color_string: STRING is "editor.general.colors.comments_background_color"
+	comments_background_color_string: STRING = "editor.general.colors.comments_background_color"
 			-- Background color used to display comments
 
-	number_text_color_string: STRING is "editor.general.colors.number_text_color"
+	number_text_color_string: STRING = "editor.general.colors.number_text_color"
 			-- Color used to display numbers
 
-	number_background_color_string: STRING is "editor.general.colors.number_background_color"
+	number_background_color_string: STRING = "editor.general.colors.number_background_color"
 			-- Background color used to display numbers
 
-	operator_text_color_string: STRING is "editor.general.colors.operator_text_color"
+	operator_text_color_string: STRING = "editor.general.colors.operator_text_color"
 			-- Color used to display operator
 
-	operator_background_color_string: STRING is "editor.general.colors.operator_background_color"
+	operator_background_color_string: STRING = "editor.general.colors.operator_background_color"
 			-- Background color used to display operator
 
-	highlight_color_string: STRING is "editor.general.colors.highlight_color"
+	highlight_color_string: STRING = "editor.general.colors.highlight_color"
 
-	cursor_line_highlight_color_string: STRING is "editor.general.colors.cursor_line_highlight_color"
+	cursor_line_highlight_color_string: STRING = "editor.general.colors.cursor_line_highlight_color"
 
-	smart_indentation_string: STRING is "editor.general.smart_indentation"
+	smart_indentation_string: STRING = "editor.general.smart_indentation"
 			-- Is smart indentation enabled?
 
-	quadruple_click_enabled_string: STRING is "editor.general.quadruple_click_enabled"
+	quadruple_click_enabled_string: STRING = "editor.general.quadruple_click_enabled"
 			-- is quadruple click (select all) enabled ?
 
-	use_buffered_line_string: STRING is "editor.general.use_buffered_line"
+	use_buffered_line_string: STRING = "editor.general.use_buffered_line"
 
 
 feature {NONE} -- Implementation
 
-	colors: SPECIAL [EV_COLOR] is
+	colors: SPECIAL [EV_COLOR]
 			-- Color table
 		once
 			create Result.make (max_color_id + 1)
 		end
 
-	fonts: SPECIAL [EV_FONT] is
+	fonts: SPECIAL [EV_FONT]
 			-- Font table
 		once
 			create Result.make (max_font_id + 1)
 		end
 
-	init_colors is
+	init_colors
 			-- Init `colors'.
 		do
 			colors.put (margin_background_color_preference.value, margin_background_color_id)
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			colors.put (cursor_line_highlight_color_preference.value, cursor_line_highlight_color_id)
 		end
 
-	init_fonts is
+	init_fonts
 			-- Init `fonts'.
 		do
 			font_with_zoom_factor_cell.put (calculate_font_with_zoom_factor)
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			set: font_of_id (keyword_font_id) /= Void
 		end
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EDITOR_PREFERENCE_MANAGER
@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 	preferences: PREFERENCES;
 			-- Preferences
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

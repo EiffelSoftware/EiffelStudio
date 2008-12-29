@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Files accessed via HTTP"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize protocol.
 		do
 			set_read_buffer_size (Default_buffer_size)
@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	Read_mode_id: INTEGER is unique
+	Read_mode_id: INTEGER = unique
 
 feature -- Access
 
-	location: STRING is
+	location: STRING
 			-- Resource location
 		do
 			Result := address.location
@@ -42,43 +42,43 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of data resource
 		do
 			if is_count_valid then Result := content_length end
 		end
 
-	Default_buffer_size: INTEGER is 16384
+	Default_buffer_size: INTEGER = 16384
 			-- Default size of read buffer.
 
 feature -- Status report
 
-	read_mode: BOOLEAN is
+	read_mode: BOOLEAN
 			-- Is read mode set?
 		do
 			Result := (mode = Read_mode_id)
 		end
 
-	Write_mode: BOOLEAN is False
+	Write_mode: BOOLEAN = False
 			-- Is write mode set? (Answer: no)
 
-	Is_writable: BOOLEAN is False
+	Is_writable: BOOLEAN = False
 			-- Is it possible to open in write mode currently? (Answer: no)
 			-- (HTTP resources are read-only.)
 
-	valid_mode (n: INTEGER): BOOLEAN is
+	valid_mode (n: INTEGER): BOOLEAN
 			-- Is mode `n' valid?
 		do
 			Result := n = Read_mode_id
 		end
 
-	Supports_multiple_transactions: BOOLEAN is False
+	Supports_multiple_transactions: BOOLEAN = False
 			-- Does resource support multiple tranactions per connection?
 			-- (Answer: no)
 
 feature -- Status setting
 
-	open is
+	open
 			-- Open resource.
 		do
 			if not is_open then
@@ -105,7 +105,7 @@ feature -- Status setting
 			error_code := Connection_refused
 		end
 
-	close is
+	close
 			-- Close.
 		do
 			main_socket.close
@@ -117,7 +117,7 @@ feature -- Status setting
 			error_code := Transmission_error
 		end
 
-	initiate_transfer is
+	initiate_transfer
 			-- Initiate transfer.
 		local
 			str: STRING
@@ -157,20 +157,20 @@ feature -- Status setting
 			error_code := Transfer_failed
 		end
 
-	set_read_mode is
+	set_read_mode
 			-- Set read mode.
 		do
 			mode := Read_mode_id
 		end
 
-	 set_write_mode is
+	 set_write_mode
 	 		-- Set write mode.
 		do
 		end
 
 feature {NONE} -- Status setting
 
-	open_connection is
+	open_connection
 			-- Open the connection.
 		do
 			open
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	content_length: INTEGER
 			-- Cached value of 'Content-Length:'
 
-	get_headers is
+	get_headers
 			-- Get HTTP headers
 		require
 			open: is_open
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			if not error then get_content_length end
 		end
 
-	get_content_length is
+	get_content_length
 			-- Get content length from HTTP headers
 		require
 			non_empty_headers: not headers.is_empty
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_error is
+	check_error
 			-- Check for error.
 		do
 			if is_open and headers.count > 0 then
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Encoder Implementation
 
-	base64_encoded (s: STRING): STRING_8 is
+	base64_encoded (s: STRING): STRING_8
 			-- base64 encoded value of `s'.
 		require
 			s_not_void: s /= Void
@@ -335,7 +335,7 @@ invariant
 	count_constraint: (is_count_valid and count > 0) implies
 				(is_packet_pending = (bytes_transferred < count))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

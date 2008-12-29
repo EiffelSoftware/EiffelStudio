@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Objects that might contain a random number generator"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		require
 			has_generator: has_random_generator
@@ -21,14 +21,14 @@ feature -- Access
 	 
 feature -- Status report
 
-	has_random_generator: BOOLEAN is
+	has_random_generator: BOOLEAN
 			-- Does current object have access to a random number generator?
 		deferred
 		end
 	 
 feature -- Status setting
 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		require
 			has_generator: has_random_generator
@@ -38,7 +38,7 @@ feature -- Status setting
 			seed_set: seed = s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

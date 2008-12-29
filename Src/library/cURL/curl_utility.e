@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Utilities for Eiffel cURL wrapper library.
 																		]"
@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	module_name: STRING is
+	module_name: STRING
 			-- Module name.
 		once
 			if {PLATFORM}.is_windows then
@@ -26,7 +26,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

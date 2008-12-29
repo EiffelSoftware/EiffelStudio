@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision Implementation of a Motif message box."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_message: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif message box.
 		local
 			mc: MEL_COMPOSITE
@@ -55,25 +55,25 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set message alignment to beginning.
 		do
 			set_alignment_beginning
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set message alignment to center.
 		do
 			set_alignment_center
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set message alignment to right.
 		do
 			set_alignment_end
 		end;
 
-	set_message (a_message: STRING) is
+	set_message (a_message: STRING)
 			-- Set `a_message' as message.
 		local
 			ms: MEL_STRING
@@ -83,7 +83,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_cancel_label (a_label: STRING) is
+	set_cancel_label (a_label: STRING)
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		local
@@ -94,7 +94,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_help_label (a_label: STRING) is
+	set_help_label (a_label: STRING)
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		local
@@ -105,7 +105,7 @@ feature -- Status setting
 			ms.destroy
 		end;
 
-	set_ok_label (a_label: STRING) is
+	set_ok_label (a_label: STRING)
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		local
@@ -118,37 +118,37 @@ feature -- Status setting
 
 feature -- Display
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		do
 			help_button.unmanage
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			cancel_button.unmanage
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			ok_button.unmanage
 		end;
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		do
 			help_button.manage
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		do
 			cancel_button.manage
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		do
 			ok_button.manage
@@ -156,7 +156,7 @@ feature -- Display
 
 feature -- Element change
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		local
@@ -170,7 +170,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		local
@@ -184,7 +184,7 @@ feature -- Element change
 			a_list.add_command (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		local
@@ -200,28 +200,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			remove_command (cancel_command, a_command, argument)
 		end;
 
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		do
 			remove_command (help_command, a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
 			remove_command (ok_command, a_command, argument)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

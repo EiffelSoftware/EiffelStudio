@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPerPropertyBrowsing' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iper_property_browsing_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_display_string (disp_id: INTEGER; p_bstr: CELL [STRING]) is
+	get_display_string (disp_id: INTEGER; p_bstr: CELL [STRING])
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_bstr' [out].  
@@ -35,7 +35,7 @@ feature -- Basic Operations
 			ccom_get_display_string (initializer, disp_id, p_bstr)
 		end
 
-	map_property_to_page (disp_id: INTEGER; p_clsid: ECOM_GUID) is
+	map_property_to_page (disp_id: INTEGER; p_clsid: ECOM_GUID)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_clsid' [out].  
@@ -43,7 +43,7 @@ feature -- Basic Operations
 			ccom_map_property_to_page (initializer, disp_id, p_clsid.item)
 		end
 
-	get_predefined_strings (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD) is
+	get_predefined_strings (disp_id: INTEGER; p_ca_strings_out: TAG_CALPOLESTR_RECORD; p_ca_cookies_out: TAG_CADWORD_RECORD)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `p_ca_strings_out' [out].  
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			ccom_get_predefined_strings (initializer, disp_id, p_ca_strings_out.item, p_ca_cookies_out.item)
 		end
 
-	get_predefined_value (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT) is
+	get_predefined_value (disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: ECOM_VARIANT)
 			-- No description available.
 			-- `disp_id' [in].  
 			-- `dw_cookie' [in].  
@@ -63,7 +63,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iper_property_browsing_impl_proxy(initializer)
@@ -71,49 +71,49 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_display_string (cpp_obj: POINTER; disp_id: INTEGER; p_bstr: CELL [STRING]) is
+	ccom_get_display_string (cpp_obj: POINTER; disp_id: INTEGER; p_bstr: CELL [STRING])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_map_property_to_page (cpp_obj: POINTER; disp_id: INTEGER; p_clsid: POINTER) is
+	ccom_map_property_to_page (cpp_obj: POINTER; disp_id: INTEGER; p_clsid: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"](EIF_INTEGER,GUID *)"
 		end
 
-	ccom_get_predefined_strings (cpp_obj: POINTER; disp_id: INTEGER; p_ca_strings_out: POINTER; p_ca_cookies_out: POINTER) is
+	ccom_get_predefined_strings (cpp_obj: POINTER; disp_id: INTEGER; p_ca_strings_out: POINTER; p_ca_cookies_out: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagCALPOLESTR *,ecom_control_library::tagCADWORD *)"
 		end
 
-	ccom_get_predefined_value (cpp_obj: POINTER; disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: POINTER) is
+	ccom_get_predefined_value (cpp_obj: POINTER; disp_id: INTEGER; dw_cookie: INTEGER; p_var_out: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,VARIANT *)"
 		end
 
-	ccom_delete_iper_property_browsing_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iper_property_browsing_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iper_property_browsing_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iper_property_browsing_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPerPropertyBrowsing_impl_proxy %"ecom_control_library_IPerPropertyBrowsing_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

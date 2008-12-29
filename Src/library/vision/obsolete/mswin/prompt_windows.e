@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_prompt: PROMPT; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_prompt: PROMPT; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			managed := man
 		end
 
 feature -- Status report
 
-	selection_text: STRING is
+	selection_text: STRING
 			-- Return the selected text
 		do
 			if realized then
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		do
 			apply_shown := False
@@ -50,7 +50,7 @@ feature -- Status setting
 			end
 		end
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			cancel_shown := False
@@ -60,7 +60,7 @@ feature -- Status setting
 			end
 		end
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		do
 			help_shown := False
@@ -70,7 +70,7 @@ feature -- Status setting
 			end
 		end
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			ok_shown := False
@@ -80,7 +80,7 @@ feature -- Status setting
 			end
 		end
 
-	set_apply_label (a_label: STRING) is
+	set_apply_label (a_label: STRING)
 			-- Set `a_label' as label for apply button,
 			-- by default this label is `apply'.
 		do
@@ -91,7 +91,7 @@ feature -- Status setting
 			private_apply_label := a_label.twin
 		end
 
-	set_cancel_label (a_label: STRING) is
+	set_cancel_label (a_label: STRING)
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		do
@@ -102,7 +102,7 @@ feature -- Status setting
 			private_cancel_label := a_label.twin
 		end
 
-	set_help_label (a_label: STRING) is
+	set_help_label (a_label: STRING)
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		do
@@ -113,7 +113,7 @@ feature -- Status setting
 			end
 		end
 
-	set_ok_label (a_label: STRING) is
+	set_ok_label (a_label: STRING)
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		do
@@ -124,7 +124,7 @@ feature -- Status setting
 			end
 		end
 
-	set_selection_label (a_label: STRING) is
+	set_selection_label (a_label: STRING)
 			-- Set `a_label' as selection label,
 			-- by default this label is `selection'.
 		do
@@ -139,7 +139,7 @@ feature -- Status setting
 			end
 		end
 
-	set_selection_text (a_text: STRING) is
+	set_selection_text (a_text: STRING)
 			-- Current text in selection box
 		do
 			private_selection_text := a_text.twin
@@ -149,7 +149,7 @@ feature -- Status setting
 			end
 		end
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		do
 			apply_shown := True
@@ -159,7 +159,7 @@ feature -- Status setting
 			end
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		do
 			cancel_shown := True
@@ -169,7 +169,7 @@ feature -- Status setting
 			end
 		end
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		do
 			help_shown := True
@@ -179,7 +179,7 @@ feature -- Status setting
 			end
 		end
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		do
 			ok_shown := True
@@ -191,28 +191,28 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_apply_action (a_command: COMMAND; arg: ANY) is
+	add_apply_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute
 			-- when apply button is activated.
 		do
 			apply_actions.add (Current, a_command, arg)
 		end
 
-	add_ok_action (a_command: COMMAND; arg: ANY) is
+	add_ok_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute
 			-- when ok button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	add_cancel_action (a_command: COMMAND; arg: ANY) is
+	add_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute
 			-- when cancel button is activated.
 		do
 			cancel_actions.add (Current, a_command, arg)
 		end
 
-	add_help_action (a_command: COMMAND; arg: ANY) is
+	add_help_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute
 			-- when help button is activated.
 		do
@@ -221,28 +221,28 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; arg: ANY) is
+	remove_apply_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to
 			-- execute when apply button is activated.
 		do
 			apply_actions.remove (Current, a_command, arg)
 		end
 
-	remove_cancel_action (a_command: COMMAND; arg: ANY) is
+	remove_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to
 			-- execute when cancel button is activated.
 		do
 			cancel_actions.remove (Current, a_command, arg)
 		end
 
-	remove_help_action (a_command: COMMAND; arg: ANY) is
+	remove_help_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to
 			-- execute when help button is activated.
 		do
 			help_actions.remove (Current, a_command, arg)
 		end
 
-	remove_ok_action (a_command: COMMAND; arg: ANY) is
+	remove_ok_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to
 			-- execute when ok button is activated.
 		do
@@ -251,7 +251,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	resize_children is
+	resize_children
 			-- resize children with an appropriate size.
 		do
 			check
@@ -291,13 +291,13 @@ feature {NONE} -- Implementation
 
 	selection_static: WEL_STATIC
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "EvisionPrompt"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

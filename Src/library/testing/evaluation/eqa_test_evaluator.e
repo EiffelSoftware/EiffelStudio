@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that are able to run tests in a protected environment and provide information whether
 			the test has failed or succeeded.
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !READABLE_STRING_8) is
+	frozen execute (a_test_set: !EQA_TEST_SET; a_test: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]; a_name: !READABLE_STRING_8)
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -116,7 +116,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	safe_execute (a_procedure: !PROCEDURE [ANY, TUPLE]) is
+	safe_execute (a_procedure: !PROCEDURE [ANY, TUPLE])
 			-- Execute `procedure' in a protected way.
 		require
 			buffer_empty: buffer.is_empty

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_WINDOWS event handler for a widget and a command"
 	legal: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (w: WIDGET_IMP) is
+	make (w: WIDGET_IMP)
 		require
 			w_exists: w /= Void
 		do
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (a: ACTION_WINDOWS) is
+	put (a: ACTION_WINDOWS)
 			-- Add an action
 		require
 			a_exists: a /= Void
@@ -61,7 +61,7 @@ feature -- Element change
 			end
 		end
 
-	execute (cd: CONTEXT_DATA) is
+	execute (cd: CONTEXT_DATA)
 			-- Execute the actions
 		local
 			acts: LINKED_LIST [ACTION_WINDOWS]
@@ -97,7 +97,7 @@ feature -- Element change
 			end
 		end
 
-	reset_translations is
+	reset_translations
 			-- Reset translation execution status
 		local
 			translation_list: LINKED_LIST [TRANSLATION_COMMAND]
@@ -114,7 +114,7 @@ feature -- Element change
 		end
 
 
-	find_matching_translation (cd: CONTEXT_DATA) is
+	find_matching_translation (cd: CONTEXT_DATA)
 		local
 			trans: TRANSLATION_COMMAND
 			translation_list: LINKED_LIST [TRANSLATION_COMMAND]
@@ -151,7 +151,7 @@ feature -- Element change
 			end
 		end
 
-	remove (c: COMMAND; arg: ANY) is
+	remove (c: COMMAND; arg: ANY)
 			-- Remove command `c' and `arg' on `widget'
 		local
 			act: LINKED_LIST [ACTION_WINDOWS]
@@ -196,7 +196,7 @@ invariant
 	widget_exists: widget /= Void
 	actions_exist: actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the scroll bar. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_DECREMENT, XmCR_DRAG, XmCR_INCREMENT,
@@ -35,13 +35,13 @@ feature -- Access
 				XmCR_TO_BOTTOM, XmCR_TO_TOP, XmCR_VALUE_CHANGED>>;
 		end;
 
-	value: INTEGER is
+	value: INTEGER
 			-- Value of the slider's new location
 		do
 			Result := c_value (handle)
 		end;
 
-	pixel: INTEGER is
+	pixel: INTEGER
 			-- Coordinate where selection ocurred
 		do
 			Result := c_value (handle)
@@ -49,17 +49,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_value (a_callback_struct_ptr: POINTER): INTEGER is
+	c_value (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmScrollBarCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_pixel (a_callback_struct_ptr: POINTER): INTEGER is
+	c_pixel (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmScrollBarCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Sequential, one-way linked lists"
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty list.
 		do
 			before := True
@@ -36,25 +36,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		do
 			Result := active.item
 		end
 
-	first: like item is
+	first: like item
 			-- Item at first position
 		do
 			Result := first_element.item
 		end
 
-	last: like item is
+	last: like item
 			-- Item at last position
 		do
 			Result := last_element.item
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		local
 			p: LINKED_LIST_CURSOR [G]
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	cursor: LINKED_LIST_CURSOR [G] is
+	cursor: LINKED_LIST_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (active, after, before)
@@ -91,7 +91,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := not off
@@ -103,26 +103,26 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := after or before
 		end
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position?
 		do
 			Result := not after and not before and (active = first_element)
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position?
 		do
 			Result := not after and not before and
 						(active /= Void) and then (active.right = Void)
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		local
 			ll_c: like cursor
@@ -143,10 +143,10 @@ feature -- Status report
 			end
 		end
 
-	full: BOOLEAN is False
+	full: BOOLEAN = False
 		-- Is structured filled to capacity? (Answer: no.)
 
-	is_inserted (v: G): BOOLEAN is
+	is_inserted (v: G): BOOLEAN
 			-- Has `v' been inserted at the end by the most recent `put' or
 			-- `extend'?
 		do
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			if first_element /= Void then
@@ -177,7 +177,7 @@ feature -- Cursor movement
 			empty_convention: is_empty implies after
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 			-- (Go before if empty)
 		local
@@ -202,7 +202,7 @@ feature -- Cursor movement
 			Empty_convention: is_empty implies before
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		local
 			old_active: like first_element
@@ -220,7 +220,7 @@ feature -- Cursor movement
 			end
 		end
 
-	back is
+	back
 			-- Move to previous item.
 		do
 			if is_empty then
@@ -235,7 +235,7 @@ feature -- Cursor movement
 			end
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is too big.
 		local
@@ -279,7 +279,7 @@ feature -- Cursor movement
 	 		after_set: (old index + i) >= (count + 1) implies after
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			if i = 0 then
@@ -295,7 +295,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
 			ll_c: like cursor
@@ -317,7 +317,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		local
@@ -332,7 +332,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
@@ -349,7 +349,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
@@ -374,7 +374,7 @@ feature -- Element change
 			item_inserted: previous.item = v
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -397,13 +397,13 @@ feature -- Element change
 			item_inserted_before: old before implies active.item = v
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		do
 			active.put (v)
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -439,7 +439,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -471,7 +471,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
@@ -505,7 +505,7 @@ feature -- Removal
 			cleanup_after_remove (removed)
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -514,7 +514,7 @@ feature -- Removal
 			forth
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -535,7 +535,7 @@ feature -- Removal
 			cleanup_after_remove (removed)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			internal_wipe_out
@@ -543,7 +543,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
@@ -574,7 +574,7 @@ feature -- Duplication
 
 feature {LINKED_LIST} -- Implementation
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -582,7 +582,7 @@ feature {LINKED_LIST} -- Implementation
 			create Result.make
 		end
 
-	new_cell (v: like item): like first_element is
+	new_cell (v: like item): like first_element
 			-- A newly created instance of the same type as `first_element'.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -593,7 +593,7 @@ feature {LINKED_LIST} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	previous: like first_element is
+	previous: like first_element
 			-- Element left of cursor
 		local
 			p: like first_element
@@ -612,7 +612,7 @@ feature {LINKED_LIST} -- Implementation
 			end
 		end
 
-	next: like first_element is
+	next: like first_element
 			-- Element right of cursor
 		do
 			if before then
@@ -628,7 +628,7 @@ feature {LINKED_LIST} -- Implementation
 	first_element: LINKABLE [like item]
 			-- Head of list
 
-	last_element: like first_element is
+	last_element: like first_element
 			-- Tail of list
 		local
 			p: like first_element
@@ -646,7 +646,7 @@ feature {LINKED_LIST} -- Implementation
 			end
 		end
 
-	cleanup_after_remove (v: like first_element) is
+	cleanup_after_remove (v: like first_element)
 			-- Clean-up a just removed cell.
 		require
 			non_void_cell: v /= Void
@@ -655,7 +655,7 @@ feature {LINKED_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen internal_wipe_out is
+	frozen internal_wipe_out
 			-- Remove all items.
 			--| Used by `copy' instead of `wipe_out' to ensure that it
 			--| will behave consistently even in descendants that 
@@ -682,7 +682,7 @@ invariant
 	before_constraint: before implies (active = first_element)
 	after_constraint: after implies (active = last_element)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

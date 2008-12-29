@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision combo box, gtk implementation."
@@ -62,7 +62,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a combo-box.
 		local
 			activate_id: INTEGER
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
 		end
 
-	initialize is
+	initialize
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
@@ -103,11 +103,11 @@ feature {NONE} -- Initialization
 			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
 feature -- Status report
 
-	rows: INTEGER is
+	rows: INTEGER
 		 	-- Number of lines.
 		do
 			Result := {EV_GTK_EXTERNALS}.g_list_length (
@@ -115,7 +115,7 @@ feature -- Status report
 			)
 		end
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Currently selected item if any.
 		local
 			item_pointer: POINTER
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_maximum_text_length (len: INTEGER) is
+	set_maximum_text_length (len: INTEGER)
 			-- Set the length of the longest
 		do
 			{EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
@@ -157,7 +157,7 @@ feature {EV_LIST_ITEM_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementa
 	container_widget: POINTER
 			-- Gtk combo struct
 
-	launch_select_actions is
+	launch_select_actions
 			--
 		local
 			sel_item: EV_LIST_ITEM
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 	dropdown_window: POINTER
 			-- Pointer to the GtkWindow that drops down on item selection.
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			--| For now, do nothing.
 		end
 
-	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP)
 			-- Add `v' to container.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_list_select_item (list_widget, 0)
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at position `a_position'.
 		local
 			imp: EV_LIST_ITEM_IMP
@@ -215,20 +215,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gtk_reorder_child (a_container, a_child: POINTER; an_index: INTEGER) is
+	gtk_reorder_child (a_container, a_child: POINTER; an_index: INTEGER)
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
 		end
 
-	select_callback (n: INTEGER; an_item: POINTER) is
+	select_callback (n: INTEGER; an_item: POINTER)
 			-- Redefined to counter repeated select signal of combo box.
 		do
 			-- Do nothing, we handle selection via unmapping of popup window and explicit calling.
 		end
 
-	on_focus_changed (a_has_focus: BOOLEAN) is
+	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Focus for `Current' has changed'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
@@ -241,7 +241,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

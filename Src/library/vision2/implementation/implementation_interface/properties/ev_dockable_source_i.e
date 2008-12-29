@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation interface for dockable source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 		-- Original position in parent. Required
 		-- to restore widget later.
 
-	is_dock_executing: BOOLEAN is
+	is_dock_executing: BOOLEAN
 			-- Is `Current' in the process of a dockable transport?
 		do
 			Result := source_being_docked /= Void
@@ -42,7 +42,7 @@ feature -- Access
 			-- `is_externally_dockable' this way as we have no easy solution to
 			-- assign `True' to `is_externally_dockable'.
 
-	is_external_docking_enabled: BOOLEAN is
+	is_external_docking_enabled: BOOLEAN
 			-- Is `Current' able to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
@@ -57,7 +57,7 @@ feature -- Access
 			-- Internal reversed value of `is_external_docking_relative' as we cannot
 			-- easily initialize a BOOLE to True in this case.
 
-	is_external_docking_relative: BOOLEAN is
+	is_external_docking_relative: BOOLEAN
 			-- Will dockable dialog displayed when `Current' is docked externally
 			-- be displayed relative to parent window of `Current'?
 			-- Otherwise displayed as a standard window.
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status report
 
-	get_next_target (a_widget: EV_WIDGET): EV_DOCKABLE_TARGET is
+	get_next_target (a_widget: EV_WIDGET): EV_DOCKABLE_TARGET
 			-- `Result' is next dockable target that is `is_dockable' found by
 			-- recursively seraching up the parenting structure from `current_target'.
 			-- `Result' will be `Void' if none.
@@ -108,7 +108,7 @@ feature -- Status report
 			result_is_dockable: Result /= Void implies Result.is_docking_enabled
 		end
 
-	closest_dockable_target: EV_DOCKABLE_TARGET is
+	closest_dockable_target: EV_DOCKABLE_TARGET
 			-- `Result' is first dockable target that `is_dockable' found by recursively
 			-- searching up through the parenting structure from the widget
 			-- currently underneath the pointer position.
@@ -142,7 +142,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_dockable is
+	enable_dockable
 			-- Allow `Current' to be dockable
 		do
 			is_dockable := True
@@ -151,12 +151,12 @@ feature -- Status setting
 			is_dockable: is_dockable
 		end
 
-	internal_enable_dockable is
+	internal_enable_dockable
 			-- Platform specific implementation of `enable_dockable'.
 		deferred
 		end
 
-	disable_dockable is
+	disable_dockable
 			-- Ensure `Current' is not dockable
 		do
 			is_dockable := False
@@ -165,12 +165,12 @@ feature -- Status setting
 			not_is_dockable: not is_dockable
 		end
 
-	internal_disable_dockable is
+	internal_disable_dockable
 			-- Platform specific implementation of `disable_dockable'.
 		deferred
 		end
 
-	set_real_source (dockable_source: EV_DOCKABLE_SOURCE) is
+	set_real_source (dockable_source: EV_DOCKABLE_SOURCE)
 			-- Set `dockable_source' to be the widget moved when a
 			-- drag begins on `Current'.
 		require
@@ -182,7 +182,7 @@ feature -- Status setting
 			real_source_assigned: real_source = dockable_source
 		end
 
-	remove_real_source is
+	remove_real_source
 			-- Ensure `real_source' is `Void'.
 		require
 			is_dockable: is_dockable
@@ -192,7 +192,7 @@ feature -- Status setting
 			real_source_void: real_source = Void
 		end
 
-	enable_external_docking is
+	enable_external_docking
 			-- Allow `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
@@ -204,7 +204,7 @@ feature -- Status setting
 			is_externally_dockable: is_external_docking_enabled
 		end
 
-	disable_external_docking is
+	disable_external_docking
 			-- Forbid `Current' to be docked into an EV_DOCKABLE_DIALOG
 			-- When there is no valid EV_DRAGABLE_TARGET upon completion
 			-- of the transport?
@@ -216,7 +216,7 @@ feature -- Status setting
 			not_externally_dockable: not is_external_docking_enabled
 		end
 
-	enable_external_docking_relative is
+	enable_external_docking_relative
 			-- Assign `True' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
 			-- is displayed relative to the top level window.
@@ -228,7 +228,7 @@ feature -- Status setting
 			external_docking_not_relative: is_external_docking_relative
 		end
 
-	disable_external_docking_relative is
+	disable_external_docking_relative
 			-- Assign `False' to `is_external_docking_relative', ensuring that
 			-- a dockable dialog displayed when `Current' is docked externally
 			-- is displayed as a standard window.
@@ -242,7 +242,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	complete_dock is
+	complete_dock
 			-- Complete a dock from `source_being_docked'.
 		require
 			source_being_docked: source_being_docked /= Void
@@ -563,7 +563,7 @@ feature -- Basic operations
 			insert_label_not_parented: insert_label.parent = Void
 		end
 
-	close_dockable_dialog (dockable_dialog: EV_DOCKABLE_DIALOG) is
+	close_dockable_dialog (dockable_dialog: EV_DOCKABLE_DIALOG)
 			-- Close request received by `dockable_dialog' so
 			-- restore widget contained back to its original position
 			-- in its old parent if possible.
@@ -639,7 +639,7 @@ feature -- Basic operations
 
 feature -- Inapplicable
 
-	drag_cursor: EV_POINTER_STYLE is
+	drag_cursor: EV_POINTER_STYLE
 			-- Cursor used when `Current' is being transported.
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizeall_cursor
@@ -648,7 +648,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	widget_source_being_docked: EV_WIDGET_IMP is
+	widget_source_being_docked: EV_WIDGET_IMP
 			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not a widget.
 		local
@@ -665,20 +665,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_source_being_docked: EV_ITEM_I is
+	item_source_being_docked: EV_ITEM_I
 			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not an item.
 		do
 			Result ?= source_being_docked
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- `Result' is widget implementation at current
 			-- cursor position.
 		deferred
 		end
 
-	position_in_parent (a_dockable_source: EV_DOCKABLE_SOURCE_I): INTEGER is
+	position_in_parent (a_dockable_source: EV_DOCKABLE_SOURCE_I): INTEGER
 			-- `Result' is position of `a_widget' within its `parent'.
 		local
 			cell: EV_CELL
@@ -707,7 +707,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_transport (a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE) is
+	initialize_transport (a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE)
 			-- Store platform independent settings required
 			-- to execute the dragging. `a_screen_x' and `a_screen_y' are
 			-- the coordinates of the mouse relative to `Current' when the transport
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			source_being_docked_set: source_being_docked /= Void
 		end
 
-	move_dialog_to_pointer (dialog: EV_DOCKABLE_DIALOG) is
+	move_dialog_to_pointer (dialog: EV_DOCKABLE_DIALOG)
 			-- Move dialog to pointer position, so it is positioned
 			-- relative with `original_x_offset' and `original_y_offset'
 			-- which were the original position of the drag.
@@ -768,7 +768,7 @@ feature {NONE} -- Implementation
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Executed when `pebble' is being moved.
 		local
 			counter: INTEGER
@@ -929,7 +929,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-		unparent_source_being_docked is
+		unparent_source_being_docked
 				-- Remove `widget_source_being_docked' from `parent' or
 				-- `item_source_being_docked' from `parent'.
 			require
@@ -948,7 +948,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-		replace_insert_label is
+		replace_insert_label
 				-- Replace `insert_label' with `widget_source_being_docked'.
 			require
 				source_not_parented: widget_source_being_docked.parent = Void
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 				parent_swapped: old insert_label.parent = widget_source_being_docked.parent
 			end
 
-		replace_insert_sep is
+		replace_insert_sep
 				-- Replace `insert_sep' with item_source_being_docked'.
 			require
 				source_not_parented: item_source_being_docked.parent = Void
@@ -1021,7 +1021,7 @@ feature {NONE} -- Implementation
 				parent_swapped: old insert_sep.parent = item_source_being_docked.parent
 			end
 
-	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER)
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
@@ -1042,7 +1042,7 @@ invariant
 	widget_or_item_source: not (widget_source_being_docked /= Void and item_source_being_docked /= Void)
 	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

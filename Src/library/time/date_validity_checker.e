@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facility routines to check the validity of DATEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	date_valid (s: STRING; code_string: STRING): BOOLEAN is
+	date_valid (s: STRING; code_string: STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to `code_string'?
@@ -39,7 +39,7 @@ feature -- Preconditions
 		end
 
 	date_valid_with_base (s: STRING; code_string: STRING; 
-							base: INTEGER): BOOLEAN is
+							base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to `code_string'?
@@ -57,7 +57,7 @@ feature -- Preconditions
 				code.is_date (s)
 		end
 
-	date_valid_default (s: STRING): BOOLEAN is
+	date_valid_default (s: STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to 
@@ -68,7 +68,7 @@ feature -- Preconditions
 			Result := date_valid (s, date_default_format_string)
 		end	
 
-	date_valid_default_with_base (s: STRING; base: INTEGER): BOOLEAN is
+	date_valid_default_with_base (s: STRING; base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to 
@@ -81,7 +81,7 @@ feature -- Preconditions
 			Result := date_valid_with_base (s, date_default_format_string, base)
 		end	
 
-	compact_date_valid (c_d: INTEGER): BOOLEAN is
+	compact_date_valid (c_d: INTEGER): BOOLEAN
 			-- Is compact date `c_d' valid?
 		local
 			l_cd: INTEGER
@@ -96,7 +96,7 @@ feature -- Preconditions
 			Result := is_correct_date (y, m, d)
 		end
 
-	ordered_compact_date_valid (c_d: INTEGER): BOOLEAN is
+	ordered_compact_date_valid (c_d: INTEGER): BOOLEAN
 			-- Is compact date `c_d' valid?
 		local
 			l_cd: INTEGER
@@ -111,14 +111,14 @@ feature -- Preconditions
 			Result := is_correct_date (y, m, d)
 		end
 
-	is_correct_date (y, m, d: INTEGER): BOOLEAN is
+	is_correct_date (y, m, d: INTEGER): BOOLEAN
 			-- Is date specified by `y', `m', and `d' a correct date?
 		do
 			Result := m >= 1 and m <= Months_in_year and then d >= 1 and 
 				d <= days_in_i_th_month (m, y) and then y >= 0 and then y <= 65535
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

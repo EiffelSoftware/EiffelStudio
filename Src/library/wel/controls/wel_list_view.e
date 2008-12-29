@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control that displays a multi-column list of items.
 
@@ -41,7 +41,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
-				an_id: INTEGER) is
+				an_id: INTEGER)
 			-- Make a List view control.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -62,7 +62,7 @@ feature -- Status report
 	column_count: INTEGER
 			-- Number of columns
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of item in the list view
 		require
 			exists: exists
@@ -71,7 +71,7 @@ feature -- Status report
 						Lvm_getitemcount, to_wparam (0), to_lparam (0))
 		end
 
-	visible_count: INTEGER is
+	visible_count: INTEGER
 			-- Number of items that will fit in the list view window
 		require
 			exists: exists
@@ -80,7 +80,7 @@ feature -- Status report
 						Lvm_getcountperpage, to_wparam (0), to_lparam (0))
 		end
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected items in the list view window
 		require
 			exists: exists
@@ -89,7 +89,7 @@ feature -- Status report
 						Lvm_getselectedcount, to_wparam (0), to_lparam (0))
 		end
 
-	top_index: INTEGER is
+	top_index: INTEGER
 			-- Index of the first visible item
 		require
 			exists
@@ -101,7 +101,7 @@ feature -- Status report
 			result_small_enough: Result <= count
 		end
 
-	focus_item: INTEGER is
+	focus_item: INTEGER
 			-- Zero-based index of the item that has the focus
 			-- Return -1 if there is none.
 		require
@@ -114,7 +114,7 @@ feature -- Status report
 			result_small_enough: Result < count
 		end
 
-	selected_items: ARRAY [INTEGER] is
+	selected_items: ARRAY [INTEGER]
 			-- Contains all the selected index. Only one in
 			-- case of a single selection list view.
 		require
@@ -145,7 +145,7 @@ feature -- Status report
 			result_valid: Result.count = selected_count
 		end
 
-	selected_item: INTEGER is
+	selected_item: INTEGER
 			-- Contains the top most selected index.
 			-- -1 if no item is selected.
 		require
@@ -157,7 +157,7 @@ feature -- Status report
 			result_valid: selected_count > 0 implies Result >= 0
 		end
 
-	get_background_color: WEL_COLOR_REF is
+	get_background_color: WEL_COLOR_REF
 			-- `Result' is background color used for control.
 		local
 			color_int: INTEGER
@@ -167,7 +167,7 @@ feature -- Status report
 			create Result.make_by_color (color_int)
 		end
 
-	get_text_background_color: WEL_COLOR_REF is
+	get_text_background_color: WEL_COLOR_REF
 			-- `Result' is background color of item text.
 		local
 			color_int: INTEGER
@@ -177,7 +177,7 @@ feature -- Status report
 			create Result.make_by_color (color_int)
 		end
 
-	get_text_foreground_color: WEL_COLOR_REF is
+	get_text_foreground_color: WEL_COLOR_REF
 			-- `Result' is foreground color for item text.
 		local
 			color_int: INTEGER
@@ -187,7 +187,7 @@ feature -- Status report
 			create Result.make_by_color (color_int)
 		end
 
-	get_column_width (column: INTEGER): INTEGER is
+	get_column_width (column: INTEGER): INTEGER
 			-- Width of the zero-based `index'-th item.
 		require
 			exists: exists
@@ -198,7 +198,7 @@ feature -- Status report
 				to_wparam (column), to_lparam (0))
 		end
 
-	get_item_state (index, mask: INTEGER): INTEGER is
+	get_item_state (index, mask: INTEGER): INTEGER
 			-- State of the zero-based `index'-th item. The mask give
 			-- the state informations to retrieve. See WEL_LVIS_CONSTANTS for
 			-- the value of the mask.
@@ -211,7 +211,7 @@ feature -- Status report
 				to_wparam (index), to_lparam (mask))
 		end
 
-	get_item_position (index: INTEGER): WEL_POINT is
+	get_item_position (index: INTEGER): WEL_POINT
 			-- Retrieves the position of the zero-based `index'-th item.
 		require
 			exists: exists
@@ -222,7 +222,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Lvm_getitemposition, to_wparam (index), Result.item)
 		end
 
-	get_item_rect (index: INTEGER): WEL_RECT is
+	get_item_rect (index: INTEGER): WEL_RECT
 			-- Retrieves the position of the zero-based `index'-th item.
 		require
 			exists: exists
@@ -233,7 +233,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Lvm_getitemrect, to_wparam (index), Result.item)
 		end
 
-	get_cell_text (isub_item, iitem: INTEGER): STRING_32 is
+	get_cell_text (isub_item, iitem: INTEGER): STRING_32
 			-- Get the label of the cell with coordinates `isub_item', `iiitem'.
 		require
 			exists: exists
@@ -268,7 +268,7 @@ feature -- Status report
 			Result := l_item.text
 		end
 
-	get_item (index, subitem: INTEGER): WEL_LIST_VIEW_ITEM is
+	get_item (index, subitem: INTEGER): WEL_LIST_VIEW_ITEM
 			-- Return a representation of the item at the
 			-- `index' position.
 		require
@@ -309,7 +309,7 @@ feature -- Status report
 			end
 		end
 
-	get_extended_view_style: INTEGER is
+	get_extended_view_style: INTEGER
 			-- Gets extended styles in list view controls.
 		require
 			function_supported: comctl32_version >= version_470
@@ -318,7 +318,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0))
 		end
 
-	get_tooltip: WEL_TOOLTIP is
+	get_tooltip: WEL_TOOLTIP
 			-- `Result' is tooltip associated with `Current'.
 		local
 			pointer: POINTER
@@ -331,7 +331,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	ensure_visible (an_index: INTEGER) is
+	ensure_visible (an_index: INTEGER)
 			-- Ensure that column `an_index' is completely visible in `Current'.
 		require
 			exists: exists
@@ -341,7 +341,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_ensurevisible, to_wparam (an_index), to_lparam (1))
 		end
 
-	set_extended_view_style (a_new_style: INTEGER) is
+	set_extended_view_style (a_new_style: INTEGER)
 			-- Sets extended styles in list view controls.
 		require
 			function_supported: comctl32_version >= version_470
@@ -349,7 +349,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setextendedlistviewstyle, to_wparam (0), to_lparam (a_new_style))
 		end
 
-	set_column_width (value, index: INTEGER) is
+	set_column_width (value, index: INTEGER)
 			-- Make `value' the new width of the zero-base `index'-th column.
 		require
 			exists: exists
@@ -359,7 +359,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setcolumnwidth, to_wparam (index), to_lparam (value))
 		end
 
-	update_item (index: INTEGER) is
+	update_item (index: INTEGER)
 			-- Update the list view.
 		require
 			exists: exists
@@ -369,7 +369,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_update, to_wparam (index), to_lparam (0))
 		end
 
-	set_item_state (index, state: INTEGER) is
+	set_item_state (index, state: INTEGER)
 			-- Set state of item at `index' with `state'.
 			-- See class WEL_LVIS_CONSTANTS for possible `state' values.
 		require
@@ -385,7 +385,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setitemstate, to_wparam (index), an_item.item)
 		end
 
-	set_item_count (value: INTEGER) is
+	set_item_count (value: INTEGER)
 			-- Prepares a list view control for adding a large number
 			-- of items and make it then faster.
 		require
@@ -395,7 +395,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setitemcount, to_wparam (value), to_lparam (0))
 		end
 
-	set_cell_text (isub_item, iitem: INTEGER; txt: STRING_GENERAL) is
+	set_cell_text (isub_item, iitem: INTEGER; txt: STRING_GENERAL)
 			-- Set the label of the cell with coordinates `isub_item', `item'
 			-- with `txt'.
 		require
@@ -411,7 +411,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setitemtext, to_wparam (iitem), an_item.item)
 		end
 
-	set_column_title (txt: STRING_GENERAL; index: INTEGER) is
+	set_column_title (txt: STRING_GENERAL; index: INTEGER)
 			-- Make `txt' the new title of the `index'-th column.
 		require
 			exists: exists
@@ -424,7 +424,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
-	set_column_format (index: INTEGER; fmt: INTEGER) is
+	set_column_format (index: INTEGER; fmt: INTEGER)
 			-- Set the alignment of the column, cannot be used for
 			-- the first column that must be left aligned.
 		require
@@ -439,7 +439,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Lvm_setcolumn, to_wparam (index), a_column.item)
 		end
 
-	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
+	set_image_list(an_imagelist: WEL_IMAGE_LIST)
 			-- Set the current "large" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -452,7 +452,7 @@ feature -- Status setting
 			end
 		end
 
-	set_small_image_list(an_imagelist: WEL_IMAGE_LIST) is
+	set_small_image_list(an_imagelist: WEL_IMAGE_LIST)
 			-- Set the current "small" image list to `an_imagelist'.
 			-- If `an_imagelist' is set to Void, it removes
 			-- the current associated image list (if any).
@@ -465,19 +465,19 @@ feature -- Status setting
 			end
 		end
 
-	set_background_color (a_color: WEL_COLOR_REF) is
+	set_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background of `Current'.
 		do
 			{WEL_API}.send_message (item, Lvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
-	set_text_background_color (a_color: WEL_COLOR_REF) is
+	set_text_background_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to background color of item text.
 		do
 			{WEL_API}.send_message (item, Lvm_settextbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
-	set_text_foreground_color (a_color: WEL_COLOR_REF) is
+	set_text_foreground_color (a_color: WEL_COLOR_REF)
 			-- Assign `a_color' to foreground color for item text.
 		do
 			{WEL_API}.send_message (item, Lvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
@@ -485,7 +485,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	append_column (column: WEL_LIST_VIEW_COLUMN) is
+	append_column (column: WEL_LIST_VIEW_COLUMN)
 			-- Append `column' to the list view.
 		require
 			exists: exists
@@ -496,7 +496,7 @@ feature -- Element change
 			new_column_count: column_count = old column_count + 1
 		end
 
-	insert_column (column: WEL_LIST_VIEW_COLUMN; index: INTEGER) is
+	insert_column (column: WEL_LIST_VIEW_COLUMN; index: INTEGER)
 			-- Insert `column' at the zero-based `index'.
 		require
 			exists: exists
@@ -509,7 +509,7 @@ feature -- Element change
 			new_column_count: column_count = old column_count + 1
 		end
 
-	prepend_column (column: WEL_LIST_VIEW_COLUMN) is
+	prepend_column (column: WEL_LIST_VIEW_COLUMN)
 			-- Prepend `column' to the list view.
 		require
 			exists: exists
@@ -520,7 +520,7 @@ feature -- Element change
 			new_column_count: column_count = old column_count + 1
 		end
 
-	delete_column (index: INTEGER) is
+	delete_column (index: INTEGER)
 			-- Remove the zero-based `index'-th column of the list view.
 		require
 			exists: exists
@@ -533,7 +533,7 @@ feature -- Element change
 			new_column_count: column_count = old column_count - 1
 		end
 
-	insert_item (an_item: WEL_LIST_VIEW_ITEM) is
+	insert_item (an_item: WEL_LIST_VIEW_ITEM)
 			-- Insert `item' in the list-view. The zero-based position of the item is
 			-- given by the `iitem' attribute of the item.
 		require
@@ -546,7 +546,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	replace_item (an_item: WEL_LIST_VIEW_ITEM) is
+	replace_item (an_item: WEL_LIST_VIEW_ITEM)
 			-- Set the properties of `an_item'.
 			-- The zero-based position of the item is given by the
 			-- `iitem' attribute of the item.
@@ -558,7 +558,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Lvm_setitem, to_wparam (0), an_item.item)
 		end
 
-	delete_item (index: INTEGER) is
+	delete_item (index: INTEGER)
 			-- Remove the zero-based `index'-th item of the list view.
 		require
 			exists: exists
@@ -570,7 +570,7 @@ feature -- Element change
 			new_count: count = old count - 1
 		end
 
-	reset_content is
+	reset_content
 			-- Reset the content of the list.
 		require
 			exists: exists
@@ -582,7 +582,7 @@ feature -- Element change
 
 feature -- Basic Operations
 
-	search (a_search_info: WEL_LIST_VIEW_SEARCH_INFO; a_starting_index: INTEGER): INTEGER is
+	search (a_search_info: WEL_LIST_VIEW_SEARCH_INFO; a_starting_index: INTEGER): INTEGER
 			-- Search list view item according to `a_search_info'.
 			-- Search starts after zero based index `a_starting_index'.
 			-- If `a_starting_index' is -1 then search all items.
@@ -598,7 +598,7 @@ feature -- Basic Operations
 
 feature -- Notifications
 
-	on_lvn_begindrag (info: WEL_NM_LIST_VIEW) is
+	on_lvn_begindrag (info: WEL_NM_LIST_VIEW)
 			-- A drag-and-drop operation involving the left mouse
 			-- button is being initiated.
 		require
@@ -606,14 +606,14 @@ feature -- Notifications
 		do
 		end
 
-	on_lvn_beginlabeledit (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_beginlabeledit (info: WEL_LIST_VIEW_ITEM)
 			-- A label editing for an item has started.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_beginrdrag (info: WEL_NM_LIST_VIEW) is
+	on_lvn_beginrdrag (info: WEL_NM_LIST_VIEW)
 			-- A drag-and-drop operation involving the right mouse
 			-- button is being initiated.
 		require
@@ -621,35 +621,35 @@ feature -- Notifications
 		do
 		end
 
-	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
+	on_lvn_columnclick (info: WEL_NM_LIST_VIEW)
 			-- A column was tapped.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_deleteallitems (info: WEL_NM_LIST_VIEW) is
+	on_lvn_deleteallitems (info: WEL_NM_LIST_VIEW)
 			-- All the items were deleted.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_deleteitem (info: WEL_NM_LIST_VIEW) is
+	on_lvn_deleteitem (info: WEL_NM_LIST_VIEW)
 			-- An item was deleted.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_endlabeledit (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_endlabeledit (info: WEL_LIST_VIEW_ITEM)
 			-- A label editing for an item has ended.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_getdispinfo (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_getdispinfo (info: WEL_LIST_VIEW_ITEM)
 			-- It is a request for the parent window to
 			-- provide information needed to display or
 			-- sort a list view item.
@@ -658,35 +658,35 @@ feature -- Notifications
 		do
 		end
 
-	on_lvn_insertitem (info: WEL_NM_LIST_VIEW) is
+	on_lvn_insertitem (info: WEL_NM_LIST_VIEW)
 			-- A new item was inserted.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW)
 			-- An item has changed.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_itemchanging (info: WEL_NM_LIST_VIEW) is
+	on_lvn_itemchanging (info: WEL_NM_LIST_VIEW)
 			-- An item is changing
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_keydown (virtual_key: INTEGER) is
+	on_lvn_keydown (virtual_key: INTEGER)
 			-- A key has been pressed.
 		require
 			exists: exists
 		do
 		end
 
-	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM) is
+	on_lvn_setdispinfo (info: WEL_LIST_VIEW_ITEM)
 			-- The list must update the information it maintains
 			-- for an item.
 		require
@@ -696,7 +696,7 @@ feature -- Notifications
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -754,13 +754,13 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_wc_listview)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -768,26 +768,26 @@ feature {NONE} -- Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
-	buffer_size: INTEGER is 32
+	buffer_size: INTEGER = 32
 			-- Windows text retrieval buffer size
 
 feature {NONE} -- Externals
 
-	cwin_wc_listview: POINTER is
+	cwin_wc_listview: POINTER
 		external
 			"C [macro %"cctrl.h%"] : EIF_POINTER"
 		alias
 			"WC_LISTVIEW"
 		end
 
-	ListView_Gettooltips (ptr: POINTER): POINTER is
+	ListView_Gettooltips (ptr: POINTER): POINTER
 		external
 			"C [macro %"cctrl.h%"] (HWND): EIF_POINTER"
 		alias
 			"ListView_GetToolTips"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

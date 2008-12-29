@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tree View State Image List (TVSIL) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Access
 
-	Tvsil_normal: INTEGER is 0
+	Tvsil_normal: INTEGER = 0
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a tree view control. 
 			--
 			-- Declared in Windows as TVSIL_NORMAL
 
-	Tvsil_state: INTEGER is 2;
+	Tvsil_state: INTEGER = 2;
 			-- Indicates the state image list. You can use state 
 			-- images to indicate application-defined item states. 
 			-- A state image is displayed to the left of an item's
@@ -25,7 +25,7 @@ feature -- Access
 			--
 			-- Declared in Windows as TVSIL_STATE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

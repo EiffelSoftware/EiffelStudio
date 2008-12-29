@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Rectangular area defined by `point_a' and `point_b'."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Events
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Array with four absolute corner points.
 		local
 			sin_a, cos_a: DOUBLE
@@ -61,7 +61,7 @@ feature -- Events
 			Result.force (c, 4)
 		end
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			if point_a.angle_abs = 0.0 then
@@ -82,7 +82,7 @@ feature -- Status report
 	--| dimensions. If the angle is not zero on point a, this might look
 	--| strange.
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of rectangle.
 		do
 			if point_b.relative_to (point_a) then
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := Result + 1
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of rectangle.
 		do
 			if point_b.relative_to (point_a) then
@@ -110,7 +110,7 @@ feature -- Status report
 			Result := Result + 1
 		end
 
-	center: EV_COORDINATE is
+	center: EV_COORDINATE
 			-- Center point of rectangle.
 		do
 			create Result.set (
@@ -118,7 +118,7 @@ feature -- Status report
 				(point_a.y_abs + point_b.y_abs) // 2)
 		end
 
-	top_left: EV_COORDINATE is
+	top_left: EV_COORDINATE
 			-- Top-left coordinates of rectangle.
 		local
 			top, left: INTEGER
@@ -136,7 +136,7 @@ feature -- Status report
 			create Result.set (left, top)
 		end
 		
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			parray: ARRAY [EV_COORDINATE]
@@ -164,7 +164,7 @@ feature -- Status report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

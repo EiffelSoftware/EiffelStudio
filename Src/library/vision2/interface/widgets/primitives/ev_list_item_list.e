@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Common ancestor for EV_LIST and EV_COMBO_BOX."
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
+	make_with_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
 			-- Create with an item for each of `a_string_array'.
 		do
 			default_create
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		require
@@ -64,7 +64,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	strings: LINKED_LIST [STRING_32] is
+	strings: LINKED_LIST [STRING_32]
 			-- Representation of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -83,7 +83,7 @@ feature -- Access
 			same_size: Result.count = count
 		end
 
-	strings_8: ARRAYED_LIST [STRING] is
+	strings_8: ARRAYED_LIST [STRING]
 			-- Representation of `Current' as STRING_8.
 			-- Conversion is done using `as_string_8', thus some data
 			-- might be lost.
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Status setting
 
-	remove_selection is
+	remove_selection
 			-- Ensure there is no `selected_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Status setting
 			not_selected: selected_item = Void
 		end
 
-	set_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
+	set_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
 			-- Wipe out and re-initialize with an item
 			-- for each of `a_string_array'.
 		require
@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
@@ -157,7 +157,7 @@ feature {NONE} -- Contract support
 
 feature -- Contract support
 
-	is_parent_recursive (a_list_item: EV_LIST_ITEM): BOOLEAN is
+	is_parent_recursive (a_list_item: EV_LIST_ITEM): BOOLEAN
 			-- Is `a_list_item' a parent of `Current'?
 		do
 				-- As we cannot insert a EV_LIST or EV_COMBO_BOX into
@@ -170,7 +170,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_LIST_ITEM_LIST_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -9,7 +9,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/include$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library" syntax_level="1">
 			<assertions precondition="true"/>
 			<warning name="export_class_missing" enabled="false"/>
 			<warning name="old_verbatim_strings" enabled="false"/>

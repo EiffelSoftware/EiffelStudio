@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ Color adjust type enumeration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,30 +10,30 @@ class
 
 feature -- Enumeration
 
-    ColorAdjustTypeDefault: INTEGER is 0
+    ColorAdjustTypeDefault: INTEGER = 0
 			-- ColorAdjustTypeDefault
 
-    ColorAdjustTypeBitmap: INTEGER is 1
+    ColorAdjustTypeBitmap: INTEGER = 1
 			-- ColorAdjustTypeBitmap
 
-    ColorAdjustTypeBrush: INTEGER is 2
+    ColorAdjustTypeBrush: INTEGER = 2
 			-- ColorAdjustTypeBrush
 
-    ColorAdjustTypePen: INTEGER is 3
+    ColorAdjustTypePen: INTEGER = 3
 			-- ColorAdjustTypePen
 
-    ColorAdjustTypeText: INTEGER is 4
+    ColorAdjustTypeText: INTEGER = 4
 			-- ColorAdjustTypeText
 
-    ColorAdjustTypeCount: INTEGER is 5
+    ColorAdjustTypeCount: INTEGER = 5
 			-- ColorAdjustTypeCount
 
-    ColorAdjustTypeAny: INTEGER is 6
+    ColorAdjustTypeAny: INTEGER = 6
     		-- ColorAdjustTypeAny, reserved.
 
 feature -- Query
 
-	is_valid (a_type: INTEGER): BOOLEAN is
+	is_valid (a_type: INTEGER): BOOLEAN
 			-- If `a_type' valid?
 		do
 			Result := a_type = ColorAdjustTypeDefault or
@@ -45,7 +45,7 @@ feature -- Query
 				a_type = ColorAdjustTypeAny
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

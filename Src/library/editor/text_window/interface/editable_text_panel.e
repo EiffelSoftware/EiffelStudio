@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Editable: yes
 		Scroll bars: yes
@@ -44,7 +44,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Initialize variables and objects related to display.
 		do
 				-- Set default mode
@@ -73,7 +73,7 @@ feature -- Access
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
 
-	blinking_cursor: BOOLEAN is
+	blinking_cursor: BOOLEAN
 	        -- Is blinking cursor on?
 	  	do
 	  	  	Result := editor_preferences.blinking_cursor
@@ -83,14 +83,14 @@ feature -- Access
 
 feature -- Content change
 
-	clear_window is
+	clear_window
 			-- Wipe out the text area.
 		do
 			disable_editable
 			Precursor {SELECTABLE_TEXT_PANEL}
 		end
 
-	display_message (message: STRING_32) is
+	display_message (message: STRING_32)
 			-- Display `message' in the editor.
 		do
 			load_text (message)
@@ -99,13 +99,13 @@ feature -- Content change
 
 feature -- Text status report
 
-	undo_is_possible: BOOLEAN is
+	undo_is_possible: BOOLEAN
 			-- Is there any operation to undo?
 		do
 			Result := text_displayed.undo_is_possible
 		end
 
-	redo_is_possible: BOOLEAN is
+	redo_is_possible: BOOLEAN
 			-- Is there any operation to redo?
 		do
 			Result := text_displayed.redo_is_possible
@@ -114,7 +114,7 @@ feature -- Text status report
 	is_read_only: BOOLEAN
 			-- Is text read-only?
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable?
 		do
 			Result := not is_read_only and then allow_edition and then not text_displayed.text_being_processed
@@ -122,14 +122,14 @@ feature -- Text status report
 
 feature -- Status setting
 
-	set_read_only (a_flag: BOOLEAN) is
+	set_read_only (a_flag: BOOLEAN)
 			-- Set `is_read_only' to `a_flag'.
 		do
 			is_read_only := a_flag
 			allow_edition := not a_flag
 		end
 
-	enable_editable is
+	enable_editable
 			-- Allow text edition.
 		do
 			if not is_read_only then
@@ -137,13 +137,13 @@ feature -- Status setting
 			end
 		end
 
-	disable_editable is
+	disable_editable
 			-- Forbid text edition.
 		do
 			allow_edition := False
 		end
 
-	set_changed (val: BOOLEAN) is
+	set_changed (val: BOOLEAN)
 			-- Assign `val' to `changed'.
 		require
 			text_exists: not is_empty
@@ -151,7 +151,7 @@ feature -- Status setting
 			text_displayed.set_changed (val, True)
 		end
 
-	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN) is
+	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN)
 		do
 			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
 				if position_is_displayed (prev_x_cur, prev_y_cur) and then prev_y_cur < first_line_displayed + number_of_lines_displayed then
@@ -163,7 +163,7 @@ feature -- Status setting
 
 feature -- Element Change
 
-	set_not_editable_warning_message (message: like not_editable_warning_wide_message) is
+	set_not_editable_warning_message (message: like not_editable_warning_wide_message)
 			-- Assign `message' to `not_editable_warning_message'
 		do
 			not_editable_warning_wide_message := message
@@ -179,7 +179,7 @@ feature -- File access status report
 
 feature -- Indirect observer / manager pattern.
 
-	add_edition_observer (txt_observer: TEXT_OBSERVER) is
+	add_edition_observer (txt_observer: TEXT_OBSERVER)
 			-- Add observer of `text_displayed' for global content changes.
 		do
 			if text_displayed /= Void then
@@ -187,7 +187,7 @@ feature -- Indirect observer / manager pattern.
 			end
 		end
 
-	add_history_observer (history_observer: UNDO_REDO_OBSERVER) is
+	add_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Add observer of `history'.
 		do
 			if text_displayed /= Void then
@@ -195,7 +195,7 @@ feature -- Indirect observer / manager pattern.
 			end
 		end
 
-	remove_history_observer (history_observer: UNDO_REDO_OBSERVER) is
+	remove_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Remove observer of `history'.
 		do
 			if text_displayed /= Void then
@@ -218,7 +218,7 @@ feature -- Access
 
 feature -- Process Vision2 events
 
- 	on_char (character_string: STRING_32) is
+ 	on_char (character_string: STRING_32)
    			-- Process displayable character key press event.
    		local
    			c: CHARACTER_32
@@ -236,7 +236,7 @@ feature -- Process Vision2 events
 
 feature {NONE} -- Handle keystokes
 
- 	handle_character (c: CHARACTER_32) is
+ 	handle_character (c: CHARACTER_32)
  			-- Process push on a character key corresponding to `c'.
 		local
 			had_selection: BOOLEAN
@@ -259,7 +259,7 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
 		local
 			l_num: INTEGER
@@ -336,7 +336,7 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
 			l_num: INTEGER
@@ -424,7 +424,7 @@ feature {NONE} -- Handle keystokes
 
 feature {EDITOR_CURSOR} -- Handle text modifications
 
-	on_line_modified (line_number: INTEGER) is
+	on_line_modified (line_number: INTEGER)
 			-- Update `Current' when line number `line_number' has been modified.
 		local
 			wdth: INTEGER
@@ -437,7 +437,7 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			end
 		end
 
-	on_line_removed (line_number: INTEGER) is
+	on_line_removed (line_number: INTEGER)
 			-- Update `Current' when line number `line_number' has been removed.
 		do
 			if not text_displayed.is_removing_block then
@@ -446,14 +446,14 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 			end
 		end
 
-	on_block_removed is
+	on_block_removed
 			-- Update current when a block of text has been removed
 		do
 			set_first_line_displayed (first_line_displayed.min (maximum_top_line_index), True)
 			update_vertical_scrollbar
 		end
 
-	on_line_inserted (line_number: INTEGER) is
+	on_line_inserted (line_number: INTEGER)
 			-- Update `Current' when line number `line_number' has been inserted.
 		local
 			wdth: INTEGER
@@ -469,7 +469,7 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 
 feature -- Text selection access
 
-	wide_string_selection: STRING_32 is
+	wide_string_selection: STRING_32
 			-- Current selection string
 		require
 			has_selection: has_selection
@@ -481,7 +481,7 @@ feature -- Text selection access
 			end
 		end
 
-	string_selection: STRING is
+	string_selection: STRING
 			-- Current selection string
 		obsolete
 			"Use `wide_string_selection' instead."
@@ -498,7 +498,7 @@ feature -- Text selection access
 
 feature -- Text status report
 
-	cursor_x_position: INTEGER is
+	cursor_x_position: INTEGER
 			-- Current column number.
 		require
 			not_empty: not is_empty
@@ -506,7 +506,7 @@ feature -- Text status report
 			Result := text_displayed.cursor.x_in_characters
 		end
 
-	cursor_visible_x_position: INTEGER is
+	cursor_visible_x_position: INTEGER
 			-- Current visible character position in line.
 		require
 			not_empty: not is_empty
@@ -514,7 +514,7 @@ feature -- Text status report
 			Result := text_displayed.cursor.x_in_visible_characters
 		end
 
-	cursor_y_position: INTEGER is
+	cursor_y_position: INTEGER
 			-- Current line number (in the whole text).
 		require
 			not_empty: not is_empty
@@ -522,7 +522,7 @@ feature -- Text status report
 			Result := text_displayed.cursor.y_in_lines
 		end
 
-	 draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
+	 draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER)
 			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.		
 		local
 			width_cursor: INTEGER
@@ -542,7 +542,7 @@ feature -- Text status report
 			end
  		end
 
-	draw_copy_cut_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
+	draw_copy_cut_cursor (media: EV_DRAWABLE; x, y, width: INTEGER)
 			-- Draw the copy cut cursor block defined by the rectangle associated with the copy_cut_cursor at `y' and on `media'.		
 		require
 			copy_cut_cursor_not_void: copy_cut_cursor /= Void
@@ -560,7 +560,7 @@ feature -- Text status report
 			media.set_copy_mode
  		end
 
-	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN) is
+	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN)
 			-- Internal cursor drawing.  Draws cursor on `media' at position `x' and `y'.
 		do
 			if not mouse_copy_cut then
@@ -575,7 +575,7 @@ feature -- Text status report
 
 feature -- Edition Operations on text
 
-	cut_selection is
+	cut_selection
 			-- Copy current selection to clipboard and remove it.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -590,7 +590,7 @@ feature -- Edition Operations on text
 			end
 		end
 
-	paste is
+	paste
 			-- Paste clipboard at cursor position.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -605,7 +605,7 @@ feature -- Edition Operations on text
 			end
 		end
 
-	set_selection_case (lower: BOOLEAN) is
+	set_selection_case (lower: BOOLEAN)
 		do
 			if not text_displayed.is_empty then
 				text_displayed.set_selection_case (lower)
@@ -613,7 +613,7 @@ feature -- Edition Operations on text
 			end
 		end
 
-	undo is
+	undo
 			-- Undo last command.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -625,7 +625,7 @@ feature -- Edition Operations on text
 			refresh_now
 		end
 
-	redo is
+	redo
 			-- Redo last command.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -637,7 +637,7 @@ feature -- Edition Operations on text
 			refresh_now
 		end
 
-	indent_selection is
+	indent_selection
 			-- Indent selected lines.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -647,7 +647,7 @@ feature -- Edition Operations on text
 			refresh_now
 		end
 
-	unindent_selection is
+	unindent_selection
 			-- Unindent selected lines.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -657,7 +657,7 @@ feature -- Edition Operations on text
 			refresh_now
 		end
 
-	run_if_editable (command: PROCEDURE[like Current, TUPLE]) is
+	run_if_editable (command: PROCEDURE[like Current, TUPLE])
 			-- Apply `command' if the current text is editable.
 			-- Otherwise, display a message which warns the user
 			-- that the text cannot be modified.
@@ -669,7 +669,7 @@ feature -- Edition Operations on text
 			end
 		end
 
-	replace_selection (word: STRING_32) is
+	replace_selection (word: STRING_32)
 			-- Replace currently selected text with `word'.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -679,7 +679,7 @@ feature -- Edition Operations on text
 			refresh
 		end
 
-	display_not_editable_warning_message is
+	display_not_editable_warning_message
 				-- display warning message : text is not editable...
 		local
 			wm: STRING_32
@@ -699,7 +699,7 @@ feature -- Edition Operations on text
 
 feature {NONE} -- Mouse copy cut
 
-	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER) is
+	process_left_click (x_pos, y_pos: INTEGER; a_screen_x, a_screen_y: INTEGER)
 		do
 			if is_editable and then has_selection and then position_is_in_selection (x_pos, y_pos, False) and then click_count = 0 then
 				if not editor_drawing_area.has_capture then
@@ -722,7 +722,7 @@ feature {NONE} -- Mouse copy cut
 			end
 		end
 
-	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
+	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER)
 		local
 			cur: like cursor_type
 			perform_changes: BOOLEAN
@@ -763,7 +763,7 @@ feature {NONE} -- Mouse copy cut
 			end
 		end
 
-	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
+	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER)
 		local
 			x_cur, y_cur: INTEGER
 			tok: EDITOR_TOKEN
@@ -804,7 +804,7 @@ feature {NONE} -- Mouse copy cut
 			end
 		end
 
-	cancel_mouse_copy_cut is
+	cancel_mouse_copy_cut
 			-- stop mouse copy/cut.
 		do
 			mouse_copy_cut := False
@@ -817,7 +817,7 @@ feature {NONE} -- Mouse copy cut
 			wipe_copy_cut_cursor_out
 		end
 
-	lose_focus is
+	lose_focus
 			-- Update when focus is lost.
 		do
 			Precursor
@@ -829,7 +829,7 @@ feature {NONE} -- Mouse copy cut
 			end
 		end
 
-	ignore_keyboard_input: BOOLEAN is
+	ignore_keyboard_input: BOOLEAN
 			-- Should key event be ignored?
 		do
 			Result := Precursor or else mouse_copy_cut
@@ -850,7 +850,7 @@ feature {NONE} -- Mouse copy cut
 	forget_mouse_moves: BOOLEAN
 			-- Should mouse pointer moves be ignored?
 
-	set_offset (an_offset: INTEGER) is
+	set_offset (an_offset: INTEGER)
 			--
 		do
 			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
@@ -864,7 +864,7 @@ feature {NONE} -- Mouse copy cut
 			Precursor (an_offset)
 		end
 
-	wipe_copy_cut_cursor_out is
+	wipe_copy_cut_cursor_out
 			-- Wipe copy cut cursor out from then editor.
 		local
 			x_p, y_p: INTEGER
@@ -884,7 +884,7 @@ feature {NONE} -- Mouse copy cut
 			copy_cut_cursor := Void
 		end
 
-	on_key_down (ev_key: EV_KEY) is
+	on_key_down (ev_key: EV_KEY)
 		do
 			if mouse_copy_cut and then ev_key /= Void then
 				if ev_key.code = Key_Ctrl then
@@ -898,7 +898,7 @@ feature {NONE} -- Mouse copy cut
 			Precursor (ev_key)
 		end
 
-	on_key_up (ev_key: EV_KEY) is
+	on_key_up (ev_key: EV_KEY)
 		do
 			Precursor {SELECTABLE_TEXT_PANEL} (ev_key)
 			if mouse_copy_cut and then ev_key /= Void and then ev_key.code = Key_Ctrl then
@@ -908,12 +908,12 @@ feature {NONE} -- Mouse copy cut
 			end
 		end
 
-	scroll_only: BOOLEAN is
+	scroll_only: BOOLEAN
 		do
 			Result := mouse_copy_cut
 		end
 
-	position_is_displayed (x_pos, y_pos: INTEGER): BOOLEAN is
+	position_is_displayed (x_pos, y_pos: INTEGER): BOOLEAN
 			-- Is point with coordinates `x_pos', `y_pos' visible?
 		do
 			Result :=
@@ -928,7 +928,7 @@ feature {NONE} -- Mouse copy cut
 
 feature {NONE} -- Text Loading
 
-	reset is
+	reset
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 			Precursor {SELECTABLE_TEXT_PANEL}
@@ -937,7 +937,7 @@ feature {NONE} -- Text Loading
 			file_name := Void
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Finish editor setup as the entire text has been loaded.
 		do
 			Precursor {SELECTABLE_TEXT_PANEL}
@@ -949,13 +949,13 @@ feature {NONE} -- Text Loading
 
 feature {NONE} -- retrieving backup
 
-	open_normal_selected is
+	open_normal_selected
 			-- The open normal button was pushed.
 		do
 			open_backup := False
 		end
 
-	open_backup_selected is
+	open_backup_selected
 			-- The open backup button was pushed.
 		do
 			open_backup := True
@@ -963,7 +963,7 @@ feature {NONE} -- retrieving backup
 
 feature {NONE} -- Implementation
 
-	show_vertical_scrollbar: BOOLEAN is
+	show_vertical_scrollbar: BOOLEAN
 			-- Is it necessary to show the vertical scroll bar ?
 		do
 			if not is_read_only and then allow_edition then
@@ -975,7 +975,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Constants
 
-	is_unwanted_characters (a_code: NATURAL_32): BOOLEAN is
+	is_unwanted_characters (a_code: NATURAL_32): BOOLEAN
 			-- Is `a_code' unwanted characters?
 		do
 			if a_code < 256 then
@@ -985,7 +985,7 @@ feature {NONE} -- Private Constants
 			end
 		end
 
-	unwanted_characters: SPECIAL [BOOLEAN] is
+	unwanted_characters: SPECIAL [BOOLEAN]
 			-- Unwanted characters: backspace, tabulation, carriage return and escape.
 		local
 			c: CHARACTER
@@ -1003,13 +1003,13 @@ feature {NONE} -- Private Constants
 			end
 		end
 
-	meta_key_codes: ARRAY [INTEGER] is
+	meta_key_codes: ARRAY [INTEGER]
 			-- Codes of meta keys.
 		once
 			Result := <<Key_ctrl, Key_caps_lock, Key_right_meta, Key_left_meta, Key_scroll_lock, Key_num_lock, Key_shift>>
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

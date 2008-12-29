@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Whole text displayed in the editor window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make_from_file (fn: STRING) is
+	make_from_file (fn: STRING)
 		do
 			make
 			--| FIXME: Not yet implemented.
@@ -56,26 +56,26 @@ feature -- test features
 
 	current_line: VIEWER_LINE
 
-	after: BOOLEAN is
+	after: BOOLEAN
 		do
 			Result := (current_line = Void)
 		end
 
-	forth is
+	forth
 		require
 			not after
 		do
 			current_line := current_line.next
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 		require
 			valid_i: i >= 1 and then i <= count
 		do
 			current_line := item (i)
 		end
 
-	start is
+	start
 		require
 			count >= 1
 		do
@@ -84,7 +84,7 @@ feature -- test features
 
 feature -- Basic operations
 
-	search_string (searched_string: STRING_GENERAL) is
+	search_string (searched_string: STRING_GENERAL)
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
 			-- set to True and `found_string_line' &
@@ -122,7 +122,7 @@ feature -- Basic operations
 			end
 		end
 
-	string_selected (start_selection: VIEWER_CURSOR; end_selection: VIEWER_CURSOR): STRING is
+	string_selected (start_selection: VIEWER_CURSOR; end_selection: VIEWER_CURSOR): STRING
 		require
 				right_order: start_selection < end_selection
 		local
@@ -182,17 +182,17 @@ feature -- Basic operations
 
 feature -- Element Change
 
-	prepend_line (a_line: like first_displayed_line) is
+	prepend_line (a_line: like first_displayed_line)
 		do
 			prepend_data (a_line)
 		end
 
-	append_line, extend (a_line: like first_displayed_line) is
+	append_line, extend (a_line: like first_displayed_line)
 		do
 			append_data (a_line)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

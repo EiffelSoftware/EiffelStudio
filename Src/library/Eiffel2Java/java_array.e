@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parent of all Java array classes that contains the %
                  %common routines to all arrays. Not to be used directly,%
                  % instead use the class with array of specific type."
@@ -20,7 +20,7 @@ create {NONE}
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (p: POINTER) is
+	make_from_pointer (p: POINTER)
 			-- Make an Eiffel array accessor out of a pointer to a 
 			-- Java array.
 		require
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of cells in this array
 		do
 			Result := jni.get_array_length (jarray)
@@ -40,7 +40,7 @@ feature -- Status report
 			positive_count: Result >= 0
 		end
 
-	valid_index (index: INTEGER): BOOLEAN is
+	valid_index (index: INTEGER): BOOLEAN
 			-- Index is valid if it's between 0..count-1
 		do
 			Result := (index >= 0) and (index < count)
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 invariant
 	jarray_not_null: jarray /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

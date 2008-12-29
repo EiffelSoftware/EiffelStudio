@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keyboard layout constants."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,32 +8,32 @@ class
 
 feature -- Constants
 
-	Hkl_prev: INTEGER is 0
+	Hkl_prev: INTEGER = 0
 			--Previous locale identifier
 
-	Hkl_next: INTEGER is 1
+	Hkl_next: INTEGER = 1
 			--Next locale identifier
 
-	Klf_activate: INTEGER is 1
+	Klf_activate: INTEGER = 1
 
-	Klf_substitute_ok: INTEGER is 2
+	Klf_substitute_ok: INTEGER = 2
 
-	Klf_unload_previous: INTEGER is 4
+	Klf_unload_previous: INTEGER = 4
 
-	Klf_reorder: INTEGER is 8
+	Klf_reorder: INTEGER = 8
 			--Reorder locale identifiers starting with current as first
 
-	Kl_namelength: INTEGER is 9
+	Kl_namelength: INTEGER = 9
 
 feature -- Constants for Windows 2000 or later
 
-	Klf_replace_lang: INTEGER is 16
+	Klf_replace_lang: INTEGER = 16
 
-	Klf_notellshell: INTEGER is 128
+	Klf_notellshell: INTEGER = 128
 
-	Klf_set_for_process: INTEGER is 256;
+	Klf_set_for_process: INTEGER = 256;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

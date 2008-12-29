@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision horizontal scroll bar. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		local
 			err : INTEGER
@@ -36,7 +36,7 @@ feature -- Minimum size
 			Result := rect.bottom - rect.top
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := 50
@@ -44,7 +44,7 @@ feature -- Minimum size
 
 feature {NONE} -- Layout
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- Take a horizontal orientation
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -73,7 +73,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_SCROLL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
 

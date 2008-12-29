@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class defining an Eiffel thread."
 	legal: "See notice at end of class."

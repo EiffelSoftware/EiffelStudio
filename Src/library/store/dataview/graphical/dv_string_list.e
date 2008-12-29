@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a character separated list of types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create list.
 		do
 			default_create
@@ -44,7 +44,7 @@ feature -- Access
 	separator: CHARACTER
 			-- Integer values separator, ',' by default.
 
-	value: STRING is
+	value: STRING
 			-- List selected values, coded with integers.
 			-- and comma-separated.
 		local
@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end
 
-	integer_list: ARRAYED_LIST [INTEGER] is
+	integer_list: ARRAYED_LIST [INTEGER]
 			-- List selected values, coded with integers.
 		local
 			lis: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_list_separator (a_sep: CHARACTER) is
+	set_list_separator (a_sep: CHARACTER)
 			-- Set `a_sep' to the character to separate
 			-- integer values in the string representation.
 			-- Default value is comma.
@@ -103,7 +103,7 @@ feature -- Basic operations
 			separator := a_sep
 		end
 
-	fill_with_attributes (code: INTEGER) is
+	fill_with_attributes (code: INTEGER)
 			-- Fill the list with attributes of table with `code'.
 		require
 			is_valid_code: is_valid_code (code)
@@ -124,7 +124,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_choice (a_code: INTEGER; a_label: STRING) is
+	add_choice (a_code: INTEGER; a_label: STRING)
 			-- Add `a_data' to the combo box and enable its selection
 			-- with `a_label'.
 		require
@@ -138,7 +138,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	set_value (s: STRING) is
+	set_value (s: STRING)
 			-- List values to select , coded with integers.
 			-- and comma-separated.
 		local
@@ -168,7 +168,7 @@ feature -- Basic operations
 			end
 		end
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		do
 			if not is_locked then
@@ -176,7 +176,7 @@ feature -- Basic operations
 			end
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		do
 			if not is_locked then
@@ -184,19 +184,19 @@ feature -- Basic operations
 			end
 		end
 
-	lock_sensitiveness is
+	lock_sensitiveness
 			-- Lock display string sensitiveness.
 		do
 			is_locked := True
 		end
 
-	unlock_sensitiveness is
+	unlock_sensitiveness
 			-- Unlock display string sensitiveness.
 		do
 			is_locked := False
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

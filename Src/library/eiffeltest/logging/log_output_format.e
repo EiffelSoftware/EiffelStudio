@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test log output formats"
 	legal: "See notice at end of class."
@@ -15,20 +15,20 @@ deferred class LOG_OUTPUT_FORMAT inherit
 	
 feature -- Status report
 
-	is_device_set: BOOLEAN is
+	is_device_set: BOOLEAN
 			-- Is device set?
 		do
 			Result := output_device /= Void
 		end
 
-	is_log_writable: BOOLEAN is
+	is_log_writable: BOOLEAN
 			-- Is log ready for writing?
 		do
 			Result := is_device_set
 		end
 feature -- Status setting
 
-	set_facility (f: LOG_FACILITY) is
+	set_facility (f: LOG_FACILITY)
 			-- Set facility to `f'.
 		require
 			facility_exists: f /= Void
@@ -42,7 +42,7 @@ feature -- Status setting
 
 feature -- Output
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Output `s'.
 			-- Map '%N' to `put_new_line'.
 		local
@@ -65,7 +65,7 @@ feature -- Output
 			end
 		end
 
-	put_test_id (t: TESTABLE) is
+	put_test_id (t: TESTABLE)
 			-- Output test identification for `t'.
 		require
 			writable: is_log_writable
@@ -73,7 +73,7 @@ feature -- Output
 		deferred
 		end
 
-	put_header (header: STRING) is
+	put_header (header: STRING)
 			-- Output `header' with underlining.
 		require
 			non_empty_header: header /= Void and then not header.is_empty
@@ -81,7 +81,7 @@ feature -- Output
 		deferred
 		end
 
-	put_box (s: STRING; c: CHARACTER) is
+	put_box (s: STRING; c: CHARACTER)
 			-- Output `s' surrounded by a box out of `c'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -94,20 +94,20 @@ feature {NONE} -- Implementation
 	log: LOG_FACILITY
 			-- Callback reference to log facility
 			
-	output_device: IO_MEDIUM is
+	output_device: IO_MEDIUM
 			-- Device for log output
 		do
 			Result := log.output_device
 		end
 
-	standard_put_string (s: STRING) is
+	standard_put_string (s: STRING)
 			-- Output `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
 		deferred
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

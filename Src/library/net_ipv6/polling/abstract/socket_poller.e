@@ -1,4 +1,4 @@
-indexing
+note
 
         description:
                 "Asynchronous socket polling, timer-based."
@@ -14,7 +14,7 @@ deferred class
 
 feature -- Creation
 
-	make is
+	make
 			-- Create internal structure of poller.
 		do
 			make_listen_list;
@@ -24,7 +24,7 @@ feature -- Creation
 			
 		end;
 
-	make_active (a_poll_delay: INTEGER) is
+	make_active (a_poll_delay: INTEGER)
 			-- Create active poller with `a_poll_delay' time
 			-- quantum (in milliseconds).
 		do
@@ -35,7 +35,7 @@ feature -- Creation
 
 feature -- Activation
 
-	set_active (a_poll_delay: INTEGER) is
+	set_active (a_poll_delay: INTEGER)
 			-- Activate poller timer with `a_poll_delay'
 			-- time quantum (in milliseconds).
 		require
@@ -44,14 +44,14 @@ feature -- Activation
 		deferred
 		end;
 
-	set_inactive is
+	set_inactive
 			-- Disactivate poller timer.
 		require
 			poller_active: is_poller_active
 		deferred
 		end;
 
-	is_poller_active: BOOLEAN is
+	is_poller_active: BOOLEAN
 			-- Is poller called back?
 		deferred
 		end;
@@ -60,14 +60,14 @@ feature -- Activation
 			-- Are all subscribed socket polled at each timer call-
 			-- back or just one?
 
-	set_poll_one is
+	set_poll_one
 			-- Only one subscribed listening socket and one service
 			-- socket will be polled at each poll delay (if present).
 		do
 			is_poll_all := False
 		end;
 
-	set_poll_all is
+	set_poll_all
 			-- All subscribed sockets will be polled at each poll
 			-- delay.
 		do
@@ -77,13 +77,13 @@ feature -- Activation
 	is_auto_discard: BOOLEAN;
 			-- Subscription is removed at call-back.
 
-	set_auto_discard is
+	set_auto_discard
 			-- Poller will call back only once.
 		do
 			is_auto_discard := True
 		end;
 
-	set_no_discard is
+	set_no_discard
 			-- Subsciption to polling remains after call-back.
 		do
 			is_auto_discard := False
@@ -92,7 +92,7 @@ feature -- Activation
 
 feature -- Subscription
 
-	add_accept_call_back (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
+	add_accept_call_back (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY)
 			-- Set command	`a_command' to be called when
 			-- `a_stream_socket' is connected.
 		require
@@ -102,13 +102,13 @@ feature -- Subscription
 			listen_list_extend (a_stream_socket, a_command, an_argument)
 		end;
 
-	remove_accept_call_back (a_stream_socket: STREAM_SOCKET) is
+	remove_accept_call_back (a_stream_socket: STREAM_SOCKET)
 			-- Remove socket `a_stream_socket' from call-back list.
 		do
 			listen_list_remove (a_stream_socket)
 		end;
 
-	add_readable_call_back (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
+	add_readable_call_back (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY)
 			-- Set command	`a_command' to be called when
 			-- `a_socket' is readable.
 		require
@@ -118,13 +118,13 @@ feature -- Subscription
 			service_list_extend (a_socket, a_command, an_argument)
 		end;
 
-	remove_readable_call_back (a_socket: SOCKET) is
+	remove_readable_call_back (a_socket: SOCKET)
 			-- Remove socket `a_socket' from call-back list.
 		do
 			service_list_remove (a_socket)
 		end;
 
-	wipe_out_all_call_backs is
+	wipe_out_all_call_backs
 			-- Remove all socket call_backs from poller.
 		do
 			listen_socket_list.wipe_out;
@@ -140,7 +140,7 @@ feature -- Subscription
 
 feature {NONE} -- execution
 
-	poll is
+	poll
 			-- Synchronously poll when called back by timer.
 		local
 			was_blocking, we_are_done: BOOLEAN;
@@ -223,7 +223,7 @@ feature {NONE} -- implementation
 	service_argument_list: LINKED_LIST [ANY];
 			-- List of argument to be passed.
 
-	make_listen_list is
+	make_listen_list
 			-- Create three sublists regarding listen sockets.
 		do
 			create listen_socket_list.make;
@@ -232,7 +232,7 @@ feature {NONE} -- implementation
 			listen_list_exhausted := True
 		end;
 
-	make_service_list is
+	make_service_list
 			-- Create three sublists regarding service sockets.
 		do	
 			create service_socket_list.make;
@@ -241,7 +241,7 @@ feature {NONE} -- implementation
 			service_list_exhausted := True
 		end;
 
-	listen_list_extend (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
+	listen_list_extend (a_stream_socket: STREAM_SOCKET; a_command: POLL_COMMAND; an_argument: ANY)
 			-- Add `a_stream_socket' at the end of the circular,
 			-- i.e. at position before cursor.
 		do
@@ -260,7 +260,7 @@ feature {NONE} -- implementation
 			end
 		end;
 
-	listen_list_remove (a_stream_socket: STREAM_SOCKET) is
+	listen_list_remove (a_stream_socket: STREAM_SOCKET)
 			-- Remove 'a_stream_socket' from subscribed listen list,
 			-- cursor goes to previous item in circular.
 		local
@@ -286,43 +286,43 @@ feature {NONE} -- implementation
 			end
 		end;
 
-	listen_list_empty: BOOLEAN is
+	listen_list_empty: BOOLEAN
 			-- Is listen list empty?
 		do
 			Result := listen_socket_list.is_empty
 		end;
 
-	listen_list_after: BOOLEAN is
+	listen_list_after: BOOLEAN
 			-- Is underlying linked_list after?
 		do
 			Result := listen_socket_list.after
 		end;
 
-	listen_list_isfirst: BOOLEAN is
+	listen_list_isfirst: BOOLEAN
 			-- Is underlying linked_list pointing first item?
 		do
 			Result := listen_socket_list.isfirst
 		end;
 
-	listen_list_socket_item: STREAM_SOCKET is
+	listen_list_socket_item: STREAM_SOCKET
 			-- Current socket item in listen list.
 		do
 			Result := listen_socket_list.item
 		end;
 
-	listen_list_command_item: POLL_COMMAND is
+	listen_list_command_item: POLL_COMMAND
 			-- Current command item in listen list.
 		do
 			Result := listen_command_list.item
 		end;
 
-	listen_list_argument_item: ANY is
+	listen_list_argument_item: ANY
 			-- Current argument item in listen list.
 		do
 			Result := listen_argument_list.item
 		end;
 
-	listen_list_forth is
+	listen_list_forth
 			-- One step ahead in listen_list, loop with first if
 			-- after.
 		do
@@ -347,7 +347,7 @@ feature {NONE} -- implementation
 	listen_list_start: INTEGER;
 			-- Index of start mark in underlying linked_list.
 
-	listen_list_set_start is
+	listen_list_set_start
 			-- Set current item to be the mark for exhausted.
 		do
 			if not listen_list_empty then
@@ -359,7 +359,7 @@ feature {NONE} -- implementation
 		end;
 
 
-	service_list_extend (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY) is
+	service_list_extend (a_socket: SOCKET; a_command: POLL_COMMAND; an_argument: ANY)
 			-- See listen_list comments.
 		do
 			if service_list_empty or else
@@ -377,7 +377,7 @@ feature {NONE} -- implementation
 	 		 end
 	 	 end;
 
-	service_list_remove (a_socket: SOCKET) is
+	service_list_remove (a_socket: SOCKET)
 			-- See listen_list comments.
 		local
 			i: INTEGER
@@ -402,43 +402,43 @@ feature {NONE} -- implementation
 			end
  		 end;
 
-	service_list_empty: BOOLEAN is
+	service_list_empty: BOOLEAN
 			-- See listen_list comments.
 	 	do
 	 		Result := service_socket_list.is_empty
 		end;
 
-	service_list_after: BOOLEAN is
+	service_list_after: BOOLEAN
 			-- See listen_list comments.
  		do
  			Result := service_socket_list.after
 		end;
 
-	service_list_isfirst: BOOLEAN is
+	service_list_isfirst: BOOLEAN
 			-- See listen_list comments.
  		do
  			Result := service_socket_list.isfirst
 		end;
 
-	service_list_socket_item: SOCKET is
+	service_list_socket_item: SOCKET
 			-- See listen_list comments.
  		do
  			Result := service_socket_list.item
 		end;
 
-	service_list_command_item: POLL_COMMAND is
+	service_list_command_item: POLL_COMMAND
 			-- See listen_list comments.
  		do
  			Result := service_command_list.item
 		end;
 
-	service_list_argument_item: ANY is
+	service_list_argument_item: ANY
 			-- See listen_list comments.
  		do
  			Result := service_argument_list.item
 		end;
 
-	service_list_forth is
+	service_list_forth
 			-- See listen_list comments.
  		do
  			if not service_list_empty then
@@ -462,7 +462,7 @@ feature {NONE} -- implementation
 	service_list_start: INTEGER;
 			-- See listen_list comments.
 
-	service_list_set_start is
+	service_list_set_start
 			-- See listen_list comments.
 		do
 			if not service_list_empty then
@@ -473,7 +473,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

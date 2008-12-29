@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Scrolled Window resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNclipWindow: POINTER is
+	XmNclipWindow: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNclipWindow"
 		end;
 
-	XmNhorizontalScrollBar: POINTER is
+	XmNhorizontalScrollBar: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNhorizontalScrollBar"
 		end;
 
-	XmNscrollBarDisplayPolicy: POINTER is
+	XmNscrollBarDisplayPolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNscrollBarDisplayPolicy"
 		end;
 
-	XmNscrollBarPlacement: POINTER is
+	XmNscrollBarPlacement: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNscrollBarPlacement"
 		end;
 
-	XmNscrolledWindowMarginHeight: POINTER is
+	XmNscrolledWindowMarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNscrolledWindowMarginHeight"
 		end;
 
-	XmNscrolledWindowMarginWidth: POINTER is
+	XmNscrolledWindowMarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNscrolledWindowMarginWidth"
 		end;
 
-	XmNscrollingPolicy: POINTER is
+	XmNscrollingPolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNscrollingPolicy"
 		end;
 
-	XmNspacing: POINTER is
+	XmNspacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNspacing"
 		end;
 
-	XmNverticalScrollBar: POINTER is
+	XmNverticalScrollBar: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNverticalScrollBar"
 		end;
 
-	XmNvisualPolicy: POINTER is
+	XmNvisualPolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNvisualPolicy"
 		end;
 
-	XmNworkWindow: POINTER is
+	XmNworkWindow: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNworkWindow"
 		end;
 
-	XmNtraverseObscuredCallback: POINTER is
+	XmNtraverseObscuredCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNtraverseObscuredCallback"
 		end;
 
-	XmSTATIC: INTEGER is
+	XmSTATIC: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmSTATIC"
 		end;
 
-	XmAS_NEEDED: INTEGER is
+	XmAS_NEEDED: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmAS_NEEDED"
 		end;
 
-	XmTOP_LEFT: INTEGER is
+	XmTOP_LEFT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmTOP_LEFT"
 		end;
 
-	XmBOTTOM_LEFT: INTEGER is
+	XmBOTTOM_LEFT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmBOTTOM_LEFT"
 		end;
 
-	XmTOP_RIGHT: INTEGER is
+	XmTOP_RIGHT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmTOP_RIGHT"
 		end;
 
-	XmBOTTOM_RIGHT: INTEGER is
+	XmBOTTOM_RIGHT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmBOTTOM_RIGHT"
 		end;
 
-	XmAUTOMATIC: INTEGER is
+	XmAUTOMATIC: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmAUTOMATIC"
 		end;
 
-	XmAPPLICATION_DEFINED: INTEGER is
+	XmAPPLICATION_DEFINED: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmAPPLICATION_DEFINED"
 		end;
 
-	XmCONSTANT: INTEGER is
+	XmCONSTANT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmCONSTANT"
 		end;
 
-	XmVARIABLE: INTEGER is
+	XmVARIABLE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrolledW.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmVARIABLE"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

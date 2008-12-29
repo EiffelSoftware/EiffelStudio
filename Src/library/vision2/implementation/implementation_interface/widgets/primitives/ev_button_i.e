@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision button. Implementation interface."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature -- Access
 
-	is_default_push_button: BOOLEAN is
+	is_default_push_button: BOOLEAN
 			-- Is this button currently a default push button 
 			-- for a particular container?
 		deferred
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	enable_default_push_button is
+	enable_default_push_button
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		deferred
@@ -51,7 +51,7 @@ feature -- Status Setting
 			is_default_push_button: is_default_push_button
 		end
 
-	disable_default_push_button is
+	disable_default_push_button
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		deferred
@@ -59,7 +59,7 @@ feature -- Status Setting
 			is_not_default_push_button: not is_default_push_button
 		end
 
-	enable_can_default is
+	enable_can_default
 			-- Allow the style of the button to be changed to the
 			-- default push button if tabbed to by the user
 			-- (GTK implementation needed only)
@@ -74,7 +74,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

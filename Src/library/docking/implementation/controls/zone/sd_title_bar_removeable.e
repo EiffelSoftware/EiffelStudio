@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_ZONE which title bar is removeable (such as: SD_DOCKING_ZONE, SD_TAB_ZONE) inherited this object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ deferred class
 
 feature -- Basic operation
 
-	set_show_normal_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN)
 			-- Show normal\max button if `a_show' True.
 		deferred
 		end
 
-	set_show_stick (a_show: BOOLEAN) is
+	set_show_stick (a_show: BOOLEAN)
 			-- Show stick button if `a_show' True.
 		deferred
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Out (OUT) precision constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	Out_default_precis: INTEGER is 0
+	Out_default_precis: INTEGER = 0
 
-	Out_string_precis: INTEGER is 1
+	Out_string_precis: INTEGER = 1
 
-	Out_character_precis: INTEGER is 2
+	Out_character_precis: INTEGER = 2
 
-	Out_stroke_precis: INTEGER is 3
+	Out_stroke_precis: INTEGER = 3
 
-	Out_tt_precis: INTEGER is 4
+	Out_tt_precis: INTEGER = 4
 
-	Out_device_precis: INTEGER is 5
+	Out_device_precis: INTEGER = 5
 
-	Out_raster_precis: INTEGER is 6
+	Out_raster_precis: INTEGER = 6
 
-	Out_tt_only_precis: INTEGER is 7;
+	Out_tt_only_precis: INTEGER = 7;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

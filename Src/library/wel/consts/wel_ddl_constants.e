@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog Dir List (DDL) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	Ddl_readwrite: INTEGER is 0
+	Ddl_readwrite: INTEGER = 0
 
-	Ddl_readonly: INTEGER is 1
+	Ddl_readonly: INTEGER = 1
 
-	Ddl_hidden: INTEGER is 2
+	Ddl_hidden: INTEGER = 2
 
-	Ddl_system: INTEGER is 4
+	Ddl_system: INTEGER = 4
 
-	Ddl_directory: INTEGER is 16
+	Ddl_directory: INTEGER = 16
 
-	Ddl_archive: INTEGER is 32
+	Ddl_archive: INTEGER = 32
 
-	Ddl_postmsgs: INTEGER is 8192
+	Ddl_postmsgs: INTEGER = 8192
 
-	Ddl_drives: INTEGER is 16384
+	Ddl_drives: INTEGER = 16384
 
-	Ddl_exclusive: INTEGER is 32768;
+	Ddl_exclusive: INTEGER = 32768;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a push button with a pixmap."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_push_b: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN) is
+	make (a_push_b: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a motif push button.
 		local
 			mc: MEL_COMPOSITE
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	pixmap: PIXMAP is
+	pixmap: PIXMAP
 			-- Pixmap for Current
 		local
 			pixmap_x: PIXMAP_IMP
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_pixmap (a_pixmap: PIXMAP) is
+	set_pixmap (a_pixmap: PIXMAP)
 			-- Set pixmap to `a_pixmap'.
 		local
 			pixmap_implementation: PIXMAP_IMP;
@@ -78,7 +78,7 @@ feature -- Status setting
 			set_insensitive_pixmap (pixmap_implementation)
 		end;
 
-	set_pressed (b: like is_pressed) is
+	set_pressed (b: like is_pressed)
 			-- Set `is_pressed' to `b'.
 		local
 			t_color, b_color: MEL_PIXEL
@@ -97,7 +97,7 @@ feature {PIXMAP_IMP} -- Implementation
 	private_pixmap: PIXMAP;
 			-- Pixmap data
 
-	update_pixmap is
+	update_pixmap
 			-- Update the X pixmap after a change inside the Eiffel pixmap.
 		local
 			pixmap_implementation: PIXMAP_IMP
@@ -107,7 +107,7 @@ feature {PIXMAP_IMP} -- Implementation
 			set_insensitive_pixmap (pixmap_implementation)
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		do
 			mel_set_background_color (color_imp);
@@ -121,7 +121,7 @@ feature {PIXMAP_IMP} -- Implementation
 			end
 		end;
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

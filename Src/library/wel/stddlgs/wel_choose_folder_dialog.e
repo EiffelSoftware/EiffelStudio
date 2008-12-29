@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Browse for folder dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize structure
 		do
 			standard_make
@@ -49,14 +49,14 @@ feature -- Initialization
 
 feature -- Access
 
-	folder_name: STRING_32 is
+	folder_name: STRING_32
 			-- Selected folder name
 			-- Empty if no folder was selected.
 		do
 			Result := str_folder_name.string
 		end
 
-	display_name: STRING_32 is
+	display_name: STRING_32
 			-- Display name of selected folder
 			-- Empty if no folder was selected.
 		obsolete
@@ -65,19 +65,19 @@ feature -- Access
 			Result := folder_name
 		end
 	
-	title: STRING_32 is
+	title: STRING_32
 			-- Dialog title
 		do
 			Result := str_title.string
 		end
 
-	starting_folder: STRING_32 is
+	starting_folder: STRING_32
 			-- Initial folder name
 		do
 			Result := str_starting_folder.string
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Dialog box creation flags
 			-- Can be a combination of values defined in 
 			-- class WEL_BIF_CONSTANTS.
@@ -85,7 +85,7 @@ feature -- Access
 			Result := cwel_browse_info_get_ulflags (item)
 		end
 
-	has_flag (a_flags: INTEGER): BOOLEAN is
+	has_flag (a_flags: INTEGER): BOOLEAN
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_BIF_CONSTANTS for `a_flags' values.
 		do
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title'
 		require
 			a_title_not_void: a_title /= Void
@@ -104,13 +104,13 @@ feature -- Element Change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_default_title is
+	set_default_title
 			-- Set `title' with default title ("Please choose a folder")
 		do
 			set_title ("Please choose a folder.")
 		end
 
-	set_starting_folder (a_folder_name: STRING_GENERAL) is
+	set_starting_folder (a_folder_name: STRING_GENERAL)
 			-- Set the initial folder name
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
@@ -120,7 +120,7 @@ feature -- Element Change
 			starting_folder_set: starting_folder.is_equal(a_folder_name)
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_BIF_CONSTANTS for `a_flags' values.
 		do
@@ -129,7 +129,7 @@ feature -- Element Change
 			flags_set: flags = a_flags
 		end
 
-	add_flag (a_flags: INTEGER) is
+	add_flag (a_flags: INTEGER)
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_BIF_CONSTANTS for `a_flags' values.
 		do
@@ -138,7 +138,7 @@ feature -- Element Change
 			has_flag: has_flag (a_flags)
 		end
 
-	remove_flag (a_flags: INTEGER) is
+	remove_flag (a_flags: INTEGER)
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_BIF_CONSTANTS for `a_flags' values.
 		do
@@ -149,7 +149,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+	activate (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
 		local
@@ -166,7 +166,7 @@ feature -- Basic operations
 			end
 		end
 		
-	cwel_sh_browse_for_folder (p: POINTER; str: POINTER): INTEGER is
+	cwel_sh_browse_for_folder (p: POINTER; str: POINTER): INTEGER
 			-- Open dialog in a different thread with COM properly initialized
 			-- to single threaded appartment. `Result' is 1 if user cancelled dialog,
 			-- 0 otherwise.
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 	str_title: WEL_STRING
 			-- Dialog title
 
-	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
+	set_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set parent window with `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -194,12 +194,12 @@ feature {NONE} -- Implementation
 			cwel_browse_info_set_hwndowner (item, a_parent.item)
 		end
 
-	max_title_length: INTEGER is 256
+	max_title_length: INTEGER = 256
 			-- Max title string length
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_browse_info
@@ -207,61 +207,61 @@ feature -- Measurement
 
 feature {NONE} -- External
 
-	c_size_of_browse_info: INTEGER is
+	c_size_of_browse_info: INTEGER
 		external
 			"C [macro %"choose_folder.h%"]"
 		alias
 			"sizeof (BROWSEINFO)"
 		end
 
-	max_path: INTEGER is
+	max_path: INTEGER
 			external
 				"C [macro %"wel.h%"]"
 			alias
 				"MAX_PATH"
 			end
 
-	cwel_browse_callback_proc: POINTER is
+	cwel_browse_callback_proc: POINTER
 		external
 			"C [macro %"choose_folder.h%"]: EIF_POINTER"
 		end
 
-	cwel_browse_info_get_ulflags (ptr: POINTER): INTEGER is
+	cwel_browse_info_get_ulflags (ptr: POINTER): INTEGER
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 
-	cwel_browse_info_set_hwndowner (ptr, parent: POINTER) is
+	cwel_browse_info_set_hwndowner (ptr, parent: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 	
-	cwel_browse_info_set_pszdisplayname (ptr, name: POINTER) is
+	cwel_browse_info_set_pszdisplayname (ptr, name: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 
-	cwel_browse_info_set_ulflags (ptr: POINTER; a_flags: INTEGER) is
+	cwel_browse_info_set_ulflags (ptr: POINTER; a_flags: INTEGER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 
-	cwel_browse_info_set_lpsztitle (ptr, a_title: POINTER) is
+	cwel_browse_info_set_lpsztitle (ptr, a_title: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 
-	cwel_browse_info_set_lpfn (ptr, value: POINTER) is
+	cwel_browse_info_set_lpfn (ptr, value: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 	
-	cwel_browse_info_set_lparam (ptr, value: POINTER) is
+	cwel_browse_info_set_lparam (ptr, value: POINTER)
 			external
 				"C [macro %"choose_folder.h%"]"
 			end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General bulletin implementation"
 	legal: "See notice at end of class.";
@@ -16,34 +16,34 @@ inherit
 
 feature -- Status setting
 	
-	set_default_position (flag: BOOLEAN) is
+	set_default_position (flag: BOOLEAN)
 			-- Set default position.
 		deferred
 		end;
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow Current bulletin to recompute its size
 			-- according to its children.
 		deferred
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid Current bulletin to recompute its size
 			-- according to its children.
 		deferred
 		end;
 
-	circulate_up is
+	circulate_up
 			-- Circulate the children of the bulletin up
 		deferred
 		end;
 
-	circulate_down is
+	circulate_down
 			--circulate the children of the bulletin down
 		deferred
 		end;
 
-	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
+	restack_children (a_stackable_array: ARRAY [STACKABLE])
 			-- Stack the children of the bulletin in the 
 			-- order that they are in the array.
 			-- Each item in the argument array must have the same
@@ -51,7 +51,7 @@ feature -- Status setting
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

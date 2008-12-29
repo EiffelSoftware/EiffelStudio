@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			wide_image := ""
@@ -37,10 +37,10 @@ feature -- Width & height
 	width: INTEGER
 			-- Width in pixels
 
-	separator_width: INTEGER is 1
+	separator_width: INTEGER = 1
 			-- Width in pixels of separator
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
@@ -68,7 +68,7 @@ feature -- Width & height
 			end
 		end
 
-	retrieve_position_by_width (a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
@@ -77,7 +77,7 @@ feature -- Width & height
 
 feature -- Miscellaneous
 
-	update_position is
+	update_position
 			-- Update the value of `position' to
 			-- its correct value
 		do
@@ -89,7 +89,7 @@ feature -- Miscellaneous
 			update_width
 		end
 
-	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -103,7 +103,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		do
 			update_width
@@ -114,7 +114,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	hide is
+	hide
 			-- Hide Current
 		do
 			width := 0
@@ -122,7 +122,7 @@ feature -- Miscellaneous
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_line_number (Current)
@@ -130,19 +130,19 @@ feature -- Visitor
 
 feature {MARGIN_WIDGET, MARGIN} -- Implementation
 
-	update_width is
+	update_width
 			-- Update value of `width'
 		do
 			width := get_substring_width (internal_image.count) + 1 + separator_width
 		end
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 			-- Color of text
 		do
 			Result := line_number_text_color_id
 		end
 
-	gray_text_color: EV_COLOR is
+	gray_text_color: EV_COLOR
 			-- Gray text color.  Used for dimming text until fully loaded
 		local
 			lightness: REAL
@@ -151,7 +151,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
 			create Result.make_with_rgb (lightness, lightness, lightness)
 		end
 
-	display_with_colors (d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+	display_with_colors (d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE)
 			-- Display token with coloring
 		local
 			text_to_be_drawn: like wide_image
@@ -176,7 +176,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
  			draw_text_top_left (l_pos, d_y, text_to_be_drawn, device)
 		end
 
-	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE)
 			-- Display token with coloring
 		local
 			text_to_be_drawn: like wide_image
@@ -201,7 +201,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
  			draw_text_top_left (l_pos, d_y, text_to_be_drawn, device)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

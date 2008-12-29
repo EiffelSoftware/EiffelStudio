@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that wraps a process id with its parent process id"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_parent_id, a_process_id: INTEGER) is
+	make (a_parent_id, a_process_id: INTEGER)
 			--
 		do
 			parent_id := a_parent_id
@@ -32,7 +32,7 @@ feature -- Access
 	id: INTEGER;
 			-- Process id	
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

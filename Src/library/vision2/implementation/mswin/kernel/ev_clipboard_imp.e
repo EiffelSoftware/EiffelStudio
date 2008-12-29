@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow access to the operating %N%
 		%system clipboard."
 	legal: "See notice at end of class."
@@ -22,19 +22,19 @@ create
 
 feature {NONE}-- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
 
-	destroy is
+	destroy
 		do
 			--| FIXME
 			set_is_destroyed (True)
@@ -42,7 +42,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text content of clipboard.
 		do
 			open_clipboard (Void)
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	has_text: BOOLEAN is
+	has_text: BOOLEAN
 			-- Does the clipboard currently contain text?
 		do
 			open_clipboard (Void)
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		local
 			window: EV_WINDOW
@@ -100,7 +100,7 @@ feature {EV_ANY_I}
 	interface: EV_CLIPBOARD;
 		-- Interface of `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

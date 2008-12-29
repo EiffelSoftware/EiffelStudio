@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_CHECKABLE_LIST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-	check_actions: EV_LIST_ITEM_CHECK_ACTION_SEQUENCE is
+	check_actions: EV_LIST_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when item is checked.
 		do
 			Result := implementation.check_actions
@@ -30,7 +30,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	uncheck_actions: EV_LIST_ITEM_CHECK_ACTION_SEQUENCE is
+	uncheck_actions: EV_LIST_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when item is unchecked.
 		do
 			Result := implementation.uncheck_actions
@@ -38,7 +38,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

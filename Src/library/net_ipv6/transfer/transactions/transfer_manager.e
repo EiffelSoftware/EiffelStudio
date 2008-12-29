@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Managers that control the data transactions"
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ create {TRANSFER_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create manager.
 		do
 			list_make (1)
@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: DATA_RESOURCE is
+	source: DATA_RESOURCE
 			-- Selected source
 		do
 			Result := transaction.source
 		end
 
-	target: DATA_RESOURCE is
+	target: DATA_RESOURCE
 			-- Selected target
 		do
 			Result := transaction.target
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Measurement
 
-	total_count: INTEGER is
+	total_count: INTEGER
 			-- Total number of transactions
 		local
 			idx: INTEGER
@@ -89,7 +89,7 @@ feature -- Measurement
 			
 feature -- Status report
 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Has an error occurred in any transaction?
 		require
 			not_empty: not is_empty
@@ -97,7 +97,7 @@ feature -- Status report
 			Result := check_query (agent transaction.error)
 		end
 		
-	error_reason: STRING is
+	error_reason: STRING
 			-- Reason of most recent error
 		require
 			error_exists: error
@@ -122,7 +122,7 @@ feature -- Status report
 			index_unchanged: index = old index
 		end
 
-	transactions_succeeded: BOOLEAN is
+	transactions_succeeded: BOOLEAN
 			-- Have all transactions succeeded?
 		require
 			not_empty: not is_empty
@@ -135,7 +135,7 @@ feature -- Status report
 	transfer_finished: BOOLEAN
 			-- Has a transfer taken place?
 	
-	insertable (t: TRANSACTION): BOOLEAN is
+	insertable (t: TRANSACTION): BOOLEAN
 			-- Can transaction `t' be added?
 		do
 			Result := True
@@ -143,7 +143,7 @@ feature -- Status report
 	 
 feature -- Status setting
 
-	reset_status is
+	reset_status
 			-- Reset status flags.
 		do
 			transfer_finished := False
@@ -155,7 +155,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_transaction (n: INTEGER) is
+	remove_transaction (n: INTEGER)
 			-- Remove `n'-th transaction.
 		require
 			not_empty: not is_empty
@@ -177,7 +177,7 @@ feature -- Removal
 			
 feature -- Basic operations
 
-	transfer is
+	transfer
 			-- Execute all transactions.
 		require
 			not_empty: not is_empty
@@ -189,7 +189,7 @@ feature -- Basic operations
 			transfer_flag_set: transfer_finished
 		end
 
-	execute_transaction is
+	execute_transaction
 			-- Execute selected transaction.
 		do
 			transaction.execute
@@ -205,7 +205,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	reset_error is
+	reset_error
 			-- Reset error flags.
 		do
 			transaction.reset_error
@@ -216,7 +216,7 @@ invariant
 	finished_transaction_range: 0 <= finished_transactions and
 			finished_transactions <= total_count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

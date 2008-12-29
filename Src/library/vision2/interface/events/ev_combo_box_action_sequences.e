@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_COMBO_BOX."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 		obsolete "Use `list_shown_actions' instead."
 			-- Actions to be performed when drop down list is displayed.
 		do
@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	list_shown_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	list_shown_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when drop down list is shown.
 		do
 			Result := implementation.drop_down_actions
@@ -41,7 +41,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when drop down list is hidden.
 		do
 			Result := implementation.list_hidden_actions
@@ -49,7 +49,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

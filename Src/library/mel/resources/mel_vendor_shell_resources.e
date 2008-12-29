@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Vendor Shell resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNaudibleWarning: POINTER is
+	XmNaudibleWarning: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNaudibleWarning"
 		end;
 
-	XmNbuttonFontList: POINTER is
+	XmNbuttonFontList: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNbuttonFontList"
 		end;
 
-	XmNdefaultFontList: POINTER is
+	XmNdefaultFontList: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNdefaultFontList"
 		end;
 
-	XmNdeleteResponse: POINTER is
+	XmNdeleteResponse: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNdeleteResponse"
 		end;
 
-	XmNinputMethod: POINTER is
+	XmNinputMethod: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNinputMethod"
 		end;
 
-	XmNkeyboardFocusPolicy: POINTER is
+	XmNkeyboardFocusPolicy: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNkeyboardFocusPolicy"
 		end;
 
-	XmNlabelFontList: POINTER is
+	XmNlabelFontList: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNlabelFontList"
 		end;
 
-	XmNmwmDecorations: POINTER is
+	XmNmwmDecorations: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNmwmDecorations"
 		end;
 
-	XmNmwmFunctions: POINTER is
+	XmNmwmFunctions: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNmwmFunctions"
 		end;
 
-	XmNmwmInputMode: POINTER is
+	XmNmwmInputMode: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNmwmInputMode"
 		end;
 
-	XmNmwmMenu: POINTER is
+	XmNmwmMenu: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmwmMenu"
 		end;
 
-	XmNpreeditType: POINTER is
+	XmNpreeditType: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNpreeditType"
 		end;
 
-	XmNshellUnitType: POINTER is
+	XmNshellUnitType: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNshellUnitType"
 		end;
 
-	XmNtextFontList: POINTER is
+	XmNtextFontList: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNtextFontList"
 		end;
 
-	XmNuseAsyncGeometry: POINTER is
+	XmNuseAsyncGeometry: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNuseAsyncGeometry"
 		end;
 
-	XmBELL: INTEGER is
+	XmBELL: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmBELL"
 		end;
 
-	XmNONE: INTEGER is
+	XmNONE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNONE"
 		end;
 
-	XmDESTROY: INTEGER is
+	XmDESTROY: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmDESTROY"
 		end;
 
-	XmUNMAP: INTEGER is
+	XmUNMAP: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmUNMAP"
 		end;
 
-	XmDO_NOTHING: INTEGER is
+	XmDO_NOTHING: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmDO_NOTHING"
 		end;
 
-	XmEXPLICIT: INTEGER is
+	XmEXPLICIT: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmEXPLICIT"
 		end;
 
-	XmPOINTER: INTEGER is
+	XmPOINTER: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/VendorS.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmPOINTER"
 		end;
 
-	MWM_DECOR_ALL: INTEGER is
+	MWM_DECOR_ALL: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"MWM_DECOR_ALL"
 		end;
 
-	MWM_DECOR_BORDER: INTEGER is
+	MWM_DECOR_BORDER: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"MWM_DECOR_BORDER"
 		end;
 
-	MWM_DECOR_RESIZEH: INTEGER is
+	MWM_DECOR_RESIZEH: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"MWM_DECOR_RESIZEH"
 		end;
 
-	MWM_DECOR_TITLE: INTEGER is
+	MWM_DECOR_TITLE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"MWM_DECOR_TITLE"
 		end;
 
-	MWM_DECOR_MENU: INTEGER is
+	MWM_DECOR_MENU: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"MWM_DECOR_MENU"
 		end;
 
-	MWM_DECOR_MINIMIZE: INTEGER is
+	MWM_DECOR_MINIMIZE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"MWM_DECOR_MINIMIZE"
 		end;
 
-	MWM_DECOR_MAXIMIZE: INTEGER is
+	MWM_DECOR_MAXIMIZE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -244,7 +244,7 @@ feature -- Implementation
 			"MWM_DECOR_MAXIMIZE"
 		end;
 
-	MWM_FUNC_ALL: INTEGER is
+	MWM_FUNC_ALL: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -252,7 +252,7 @@ feature -- Implementation
 			"MWM_FUNC_ALL"
 		end;
 
-	MWM_FUNC_RESIZE: INTEGER is
+	MWM_FUNC_RESIZE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -260,7 +260,7 @@ feature -- Implementation
 			"MWM_FUNC_RESIZE"
 		end;
 
-	MWM_FUNC_MOVE: INTEGER is
+	MWM_FUNC_MOVE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -268,7 +268,7 @@ feature -- Implementation
 			"MWM_FUNC_MOVE"
 		end;
 
-	MWM_FUNC_MINIMIZE: INTEGER is
+	MWM_FUNC_MINIMIZE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -276,7 +276,7 @@ feature -- Implementation
 			"MWM_FUNC_MINIMIZE"
 		end;
 
-	MWM_FUNC_MAXIMIZE: INTEGER is
+	MWM_FUNC_MAXIMIZE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -284,7 +284,7 @@ feature -- Implementation
 			"MWM_FUNC_MAXIMIZE"
 		end;
 
-	MWM_FUNC_CLOSE: INTEGER is
+	MWM_FUNC_CLOSE: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -292,7 +292,7 @@ feature -- Implementation
 			"MWM_FUNC_CLOSE"
 		end;
 
-	MWM_INPUT_APPLICATION_MODAL: INTEGER is
+	MWM_INPUT_APPLICATION_MODAL: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -300,7 +300,7 @@ feature -- Implementation
 			"MWM_INPUT_APPLICATION_MODAL"
 		end;
 
-	MWM_INPUT_SYSTEM_MODAL: INTEGER is
+	MWM_INPUT_SYSTEM_MODAL: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/MwmUtil.h>]: EIF_INTEGER | <Xm/Xm.h>"
@@ -308,7 +308,7 @@ feature -- Implementation
 			"MWM_INPUT_SYSTEM_MODAL"
 		end;
 
-	XmPIXELS: INTEGER is
+	XmPIXELS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/VendorS.h>] : EIF_INTEGER"
@@ -316,7 +316,7 @@ feature -- Implementation
 			"XmPIXELS"
 		end;
 
-	Xm100TH_MILLIMETERS: INTEGER is
+	Xm100TH_MILLIMETERS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/VendorS.h>] : EIF_INTEGER"
@@ -324,7 +324,7 @@ feature -- Implementation
 			"Xm100TH_MILLIMETERS"
 		end;
 
-	Xm1000TH_INCHES: INTEGER is
+	Xm1000TH_INCHES: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/VendorS.h>] : EIF_INTEGER"
@@ -332,7 +332,7 @@ feature -- Implementation
 			"Xm1000TH_INCHES"
 		end;
 
-	Xm100TH_POINTS: INTEGER is
+	Xm100TH_POINTS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/VendorS.h>] : EIF_INTEGER"
@@ -340,7 +340,7 @@ feature -- Implementation
 			"Xm100TH_POINTS"
 		end;
 
-	Xm100TH_FONT_UNITS: INTEGER is
+	Xm100TH_FONT_UNITS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/VendorS.h>] : EIF_INTEGER"
@@ -348,7 +348,7 @@ feature -- Implementation
 			"Xm100TH_FONT_UNITS"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

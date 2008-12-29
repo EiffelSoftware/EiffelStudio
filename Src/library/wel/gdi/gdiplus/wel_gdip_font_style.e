@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ font style enumeration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,27 +10,27 @@ class
 
 feature -- Enumerations
 
-    FontStyleRegular: INTEGER is 0
+    FontStyleRegular: INTEGER = 0
     		-- Regular
 
-    FontStyleBold: INTEGER is 1
+    FontStyleBold: INTEGER = 1
     		-- Bold
 
-    FontStyleItalic: INTEGER is 2
+    FontStyleItalic: INTEGER = 2
     		-- Italic
 
-    FontStyleBoldItalic: INTEGER is 3
+    FontStyleBoldItalic: INTEGER = 3
     		-- Bold italic
 
-    FontStyleUnderline: INTEGER is 4
+    FontStyleUnderline: INTEGER = 4
     		-- Underline
 
-    FontStyleStrikeout: INTEGER is 8
+    FontStyleStrikeout: INTEGER = 8
     		-- Strickout
 
 feature -- Query
 
-	is_valid (a_style: INTEGER): BOOLEAN is
+	is_valid (a_style: INTEGER): BOOLEAN
 			-- If `a_style' valid?
 		do
 			Result := a_style = FontStyleRegular or
@@ -41,7 +41,7 @@ feature -- Query
 						a_style = FontStyleStrikeout
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

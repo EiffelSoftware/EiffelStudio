@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision spin button. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {EV_ANY_I} -- Implementatio
 
 	interface: EV_SPIN_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

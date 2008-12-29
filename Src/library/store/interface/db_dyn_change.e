@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DB_CHANGE for dynamic sql"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation routine
 		do
 			implementation := handle.database.db_dyn_change
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	prepare (s: STRING) is
+	prepare (s: STRING)
 			-- Parse of the sql statement `s'
 		require
 			not_void: s /= Void
@@ -61,7 +61,7 @@ feature -- Element change
 			prepared_statement: is_prepared
 		end
 
-	execute is
+	execute
 			-- Execute the sql statement
 		require
 			prepare_statement: is_prepared
@@ -75,21 +75,21 @@ feature -- Element change
 			end
 		end
 
-	parameter_count : INTEGER is
+	parameter_count : INTEGER
 		do
 			Result := implementation.parameter_count
 		end
 
 feature -- Status Report
 
-	is_allocatable : BOOLEAN is
+	is_allocatable : BOOLEAN
 		do
 			Result := implementation.is_allocatable
 		end
 
 feature -- Basic Operations
 
-	terminate is
+	terminate
 		do
 			implementation.terminate
 		end
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		-- Handle reference to specific database implementation
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

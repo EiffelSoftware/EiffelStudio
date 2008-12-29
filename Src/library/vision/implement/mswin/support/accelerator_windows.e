@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a accelerator table.
 		do
 			create accelerator_list.make
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the `accelerator_list' empty?
 		do
 			Result := accelerator_list.is_empty
@@ -32,7 +32,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	add (acc: WEL_ACCELERATOR) is
+	add (acc: WEL_ACCELERATOR)
 			-- Add an accelerator to the table
 		require
 			acc_not_void: acc /= Void
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove (acc: WEL_ACCELERATOR) is
+	remove (acc: WEL_ACCELERATOR)
 			-- Remove an accelerator from the table.
 		require
 			acc_not_void: acc /= Void
@@ -69,7 +69,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	recreate_accelerators is
+	recreate_accelerators
 			-- Recreate the accelerators
 		require
 			accelerator_list_not_void: accelerator_list /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	acc_array: WEL_ARRAY [WEL_ACCELERATOR];
 			-- Array used to create and recreate the accelerators.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

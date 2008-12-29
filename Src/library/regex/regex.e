@@ -1,6 +1,6 @@
 
 
-indexing
+note
 
    library: "Eif rx"
    type: "regular expressions"
@@ -25,7 +25,7 @@ create {REGEX_COMPILER}
 feature
    -- matching strings
 
-   match( str: STRING) is
+   match( str: STRING)
 	 -- match expression against `str'
       require
 	 str /= Void
@@ -63,7 +63,7 @@ feature
 	 -- should the beginning of the match_string be counted as 
 	 -- the beginning of a line?
 
-   set_beginning_of_line is
+   set_beginning_of_line
 	 -- set `beginning_of_line' to true
       do
 	 beginning_of_line := True
@@ -71,7 +71,7 @@ feature
 	 beginning_of_line
       end
 
-   unset_beginning_of_line is
+   unset_beginning_of_line
 	 -- set `beginning_of_line' to false
       do
 	 beginning_of_line := False
@@ -83,7 +83,7 @@ feature
 	 -- should the end of the match_string be counted as 
 	 -- the end of a line?
 
-   set_end_of_line is
+   set_end_of_line
 	 -- set `end_of_line' to true
       do
 	 end_of_line := True
@@ -91,7 +91,7 @@ feature
 	 end_of_line
       end
 
-   unset_end_of_line is
+   unset_end_of_line
 	 -- set `end_of_line' to false
       do
 	 end_of_line := False
@@ -102,11 +102,11 @@ feature
 feature {NONE}
    -- implimenting flags
 
-   Reg_bol: INTEGER is 1
+   Reg_bol: INTEGER = 1
 
-   Reg_eol: INTEGER is 2
+   Reg_eol: INTEGER = 2
 
-   reg_notbol: INTEGER is
+   reg_notbol: INTEGER
 	 -- value of `REG_NOTBOL' flag
       do
 	 if not beginning_of_line then
@@ -118,7 +118,7 @@ feature {NONE}
 	 Result = 0 or Result = Reg_bol
       end
 
-  reg_noteol: INTEGER is
+  reg_noteol: INTEGER
 	 -- value of `REG_NOTEOL' flag
       do
 	 if not end_of_line then
@@ -136,7 +136,7 @@ feature
      count: INTEGER
      -- the number of potential sub expressions
      
-     valid_index( i: INTEGER): BOOLEAN is
+     valid_index( i: INTEGER): BOOLEAN
 	 -- is `i' a valid substring index?
       do
 	 Result := (i>=0) and (i <= count)
@@ -144,7 +144,7 @@ feature
 	 Result = ((i>=0) and (i <= count))
       end
 
-   lower( i: INTEGER): INTEGER is
+   lower( i: INTEGER): INTEGER
 	 -- lower index of `i' th substring
       require
 	 valid_index(i)
@@ -155,7 +155,7 @@ feature
 	 match_string.valid_index(Result )
       end
 
-   upper( i: INTEGER): INTEGER is
+   upper( i: INTEGER): INTEGER
 	 -- upper index of `i' th substring
       require
 	 valid_index(i)
@@ -166,7 +166,7 @@ feature
 	 match_string.valid_index(Result )
       end
 
-   item( i: INTEGER): STRING is
+   item( i: INTEGER): STRING
 	 -- `i' th matching substring
       require
 	 valid_index(i)
@@ -180,7 +180,7 @@ feature
 feature
    -- disposal
 
-   dispose is
+   dispose
 	 -- action just before gc
       do
 	bw_free_reg_space(reg)
@@ -191,7 +191,7 @@ feature
 feature {NONE}
    -- creation
 
-   make( int_reg: POINTER) is
+   make( int_reg: POINTER)
 	 -- create a regular expression based on `int_reg'
       require
 	  int_reg /= Default_pointer
@@ -213,12 +213,12 @@ feature {NONE}
 feature {NONE}
    -- external c code
 
-   Reg_espace: INTEGER is 12
+   Reg_espace: INTEGER = 12
 
-   Reg_nomatch: INTEGER is 1
+   Reg_nomatch: INTEGER = 1
 
    bw_match( r:  POINTER; s: POINTER; nmat: INTEGER; p: POINTER; fl_b: INTEGER;
-	     fl_e: INTEGER): INTEGER is
+	     fl_e: INTEGER): INTEGER
 	 -- attempt to match `r' against `s'
       require
 	 r /= Default_pointer
@@ -226,35 +226,35 @@ feature {NONE}
       external "C ( regex_t*,char*, int, regmatch_t*, int, int): int | %"regex_glue.h%""
       end
 
-   bw_re_nsub( r: POINTER): INTEGER is
+   bw_re_nsub( r: POINTER): INTEGER
 	 -- how many subexpreesions might match?
       require
 	 r /= Default_pointer
       external "C (regex_t*): int | %"regex_glue.h%""
       end
 
-   bw_free_reg_space( r: POINTER) is
+   bw_free_reg_space( r: POINTER)
 	 -- free space used by `r'
       require
 	 r /= Default_pointer
       external "C (regext_t*) | %"regex_glue.h%""
       end
 
-   bw_alloc_subarray( i: INTEGER): POINTER is
+   bw_alloc_subarray( i: INTEGER): POINTER
 	 -- allocates an array of subexpression match structures
       require
 	 i >= 0
       external "C (int): regmatch_t* | %"regex_glue.h%""
       end
 
-   bw_free_subarray( p: POINTER) is
+   bw_free_subarray( p: POINTER)
 	 -- frees allocated pointer
       require
 	 p /= Default_pointer
       external "C (regmatch_t*) | %"regex_glue.h%""
       end
 
-   bw_start_offset( p: POINTER; i: INTEGER): INTEGER is
+   bw_start_offset( p: POINTER; i: INTEGER): INTEGER
 	 -- index of start of `i' th matching substring
       require
 	 p /= Default_pointer 
@@ -262,7 +262,7 @@ feature {NONE}
       external "C (regmatch_t*, int): int | %"regex_glue.h%""
       end
 
-   bw_end_offset( p: POINTER; i: INTEGER): INTEGER is
+   bw_end_offset( p: POINTER; i: INTEGER): INTEGER
 	 -- index of end of `i' th matching substring
       require
 	 p /= Default_pointer
@@ -270,7 +270,7 @@ feature {NONE}
       external  "C (regmatch_t*, int): int | %"regex_glue.h%""
       end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

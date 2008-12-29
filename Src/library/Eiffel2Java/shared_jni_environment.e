@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared JNI environment. Since one JNI is needed per %
                  %thread we limit Eiffel to having one thread that %
                  %deals with Java."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	jni: JNI_ENVIRONMENT is
+	jni: JNI_ENVIRONMENT
 			-- Standard JNI enviroment. It uses value of
 			-- CLASS_PATH environment variable to initialize JVM.
 		local
@@ -41,7 +41,7 @@ feature -- Access
 			jni_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

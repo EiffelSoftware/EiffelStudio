@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Deffered class of data exception from the runtime
 		]"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Basic mathematical operations, single-precision.
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	log_2 (v: REAL): REAL is
+	log_2 (v: REAL): REAL
 			-- Base 2 logarithm of `v'
 		require
 			v > 0.0
@@ -27,7 +27,7 @@ feature -- Access
 			Result := log (v) / log (2.0)
 		end
 
-	cosine (v: REAL): REAL is
+	cosine (v: REAL): REAL
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		external
@@ -36,7 +36,7 @@ feature -- Access
 			"cos"
 		end
 
-	arc_cosine (v: REAL): REAL is
+	arc_cosine (v: REAL): REAL
 			-- Trigonometric arccosine of `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -44,7 +44,7 @@ feature -- Access
 			"acos"
 		end
 
-	sine (v: REAL): REAL is
+	sine (v: REAL): REAL
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
@@ -53,7 +53,7 @@ feature -- Access
 			"sin"
 		end
 
-	arc_sine (v: REAL): REAL is
+	arc_sine (v: REAL): REAL
 			-- Trigonometric arcsine of `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -61,7 +61,7 @@ feature -- Access
 			"asin"
 		end
 
-	tangent (v: REAL): REAL is
+	tangent (v: REAL): REAL
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
@@ -70,7 +70,7 @@ feature -- Access
 			"tan"
 		end
 
-	arc_tangent (v: REAL): REAL is
+	arc_tangent (v: REAL): REAL
 			-- Trigonometric arctangent of `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -78,7 +78,7 @@ feature -- Access
 			"atan"
 		end
 
-	sqrt (v: REAL): REAL is
+	sqrt (v: REAL): REAL
 			-- Square root of `v'
 		require
 			v >= 0.0
@@ -88,7 +88,7 @@ feature -- Access
 			"sqrt"
 		end
 
-	log (v: REAL): REAL is
+	log (v: REAL): REAL
 			-- Natural logarithm of `v'
 		require
 			v > 0.0
@@ -98,7 +98,7 @@ feature -- Access
 			"log"
 		end
 
-	log10 (v: REAL): REAL is
+	log10 (v: REAL): REAL
 			-- Base 10 logarithm of `v'
 		require
 			v > 0.0
@@ -108,7 +108,7 @@ feature -- Access
 			"log10"
 		end
 
-	floor (v: REAL): REAL is
+	floor (v: REAL): REAL
 			-- Greatest integral value less than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -116,7 +116,7 @@ feature -- Access
 			"floor"
 		end
 
-	ceiling (v: REAL): REAL is
+	ceiling (v: REAL): REAL
 			-- Least integral value greater than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -126,7 +126,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	rabs (v: REAL): REAL is
+	rabs (v: REAL): REAL
 			-- Absolute value of `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			"fabs"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

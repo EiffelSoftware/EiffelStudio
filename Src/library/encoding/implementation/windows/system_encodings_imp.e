@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System encodings, windows implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	system_code_page: STRING is
+	system_code_page: STRING
 			-- System code page
 			-- Take oem as default
 		do
@@ -24,7 +24,7 @@ feature -- Access
 											locale_idefaultcodepage_maxlen)
 		end
 
-	console_code_page: STRING is
+	console_code_page: STRING
 			-- Console code page
 		do
 			Result := c_console_code_page.out
@@ -41,7 +41,7 @@ feature {NONE} -- NLS LC CTYPE CONSTANTS
 
 feature {NONE} -- Implementation
 
-	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32 is
+	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32
 		local
 			l_pointer: MANAGED_POINTER
 			l_int: INTEGER
@@ -51,14 +51,14 @@ feature {NONE} -- Implementation
 			Result := pointer_to_wide_string (l_pointer.item, l_pointer.count)
 		end
 
-	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; a_pointer: POINTER; a_len: INTEGER): INTEGER is
+	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; a_pointer: POINTER; a_len: INTEGER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"return GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, $a_pointer, (int) $a_len);"
 		end
 
-	c_tchar_length: INTEGER is
+	c_tchar_length: INTEGER
 			-- Lenth of TCHAR.
 		external
 			"C inline use <windows.h>"
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			"return sizeof(TCHAR);"
 		end
 
-	c_console_code_page: INTEGER is
+	c_console_code_page: INTEGER
 			-- Output codepage of the console
 		external
 			"C inline use <windows.h>"
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	system_locale: INTEGER is
+	system_locale: INTEGER
 			-- Encapsulation of GetSystemDefaultLCID
 		external
 			"C (): LCID | <windows.h>"
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			"GetSystemDefaultLCID"
 		end
 
-	user_locale: INTEGER is
+	user_locale: INTEGER
 			-- Encapsulation of GetUserDefaultLCID
 		external
 			"C (): LCID| <windows.h>"
@@ -100,7 +100,7 @@ invariant
 	correct_locale_idefaultmaccodepage_maxlen:
 		c_extract_locale_string (system_locale, LOCALE_IDEFAULTMACCODEPAGE, default_pointer, 0) <= locale_idefaultmaccodepage_maxlen
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

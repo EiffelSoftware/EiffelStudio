@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	Access: "internal"
 	Product: "EiffelStore"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic operations
 
-	field_copy (i: INTEGER; object, value: ANY): BOOLEAN is
+	field_copy (i: INTEGER; object, value: ANY): BOOLEAN
 			-- Copy `value' in `i'-th field of `object'.
 		require
 			object_not_void: object /= Void
@@ -126,7 +126,7 @@ feature -- Basic operations
 
 		end
 
-	field_clean (i: INTEGER; object: ANY): BOOLEAN is
+	field_clean (i: INTEGER; object: ANY): BOOLEAN
 			-- Clean `i'-th field of `object'.
 		require
 			object_not_void: object /= Void
@@ -155,7 +155,7 @@ feature -- Basic operations
 			end
 		end
 
-	switch_mark (obj: ANY) is
+	switch_mark (obj: ANY)
 			-- Unmark `obj' if marked or mark it if unmarked.
 		require
 			object_not_void: obj /= Void
@@ -167,7 +167,7 @@ feature -- Basic operations
 			end
 		end
 
-	unmark_structure (obj: ANY) is
+	unmark_structure (obj: ANY)
 			-- Unmark structure of objects.
 		require
 			object_not_void: obj /= Void
@@ -193,7 +193,7 @@ feature -- Basic operations
 			end
 		end
 
-	traversal (object: ANY) is
+	traversal (object: ANY)
 			-- Traverse the entire object structure starting with root `obj'.
 			-- An object in the Eiffel run-time system includes the following:
 			--    a) Reference objects instance of a class type
@@ -227,7 +227,7 @@ feature -- Basic operations
 			object_finish_action (object)
 		end
 
-	deep_traversal (object: ANY) is
+	deep_traversal (object: ANY)
 			-- Perform a deep recursive traversal on 
 			-- the transitive closure of the object network 
 			-- reachable from root `object'.
@@ -270,37 +270,37 @@ feature -- Basic operations
 			end
 		end
 
-	object_init_action (object: ANY) is
+	object_init_action (object: ANY)
 			-- Do nothing.
 			-- (To be redefined in heir.)
 		do
 		end
 
-	reference_object_action (i: INTEGER; object: ANY) is
+	reference_object_action (i: INTEGER; object: ANY)
 			-- Do nothing.
 			-- (To be redefined in heir.)
 		do
 		end
 
-	simple_object_action (type, i: INTEGER; object: ANY) is
+	simple_object_action (type, i: INTEGER; object: ANY)
 			-- Do nothing.
 			-- (To be redefined in heir.)
 		do
 		end
 
-	object_finish_action (object: ANY) is
+	object_finish_action (object: ANY)
 			-- Do nothing.
 			-- (To be redefined in heir.)
 		do
 		end
 
-	store_action (object: ANY) is
+	store_action (object: ANY)
 			-- Do nothing.
 			-- (To be redefined in heir.)
 		do
 		end
 
-	nb_classes: INTEGER is
+	nb_classes: INTEGER
 			-- Number of dynamic types in current system
 		obsolete
 			"Should not be used. No other equivalent feature is supported."
@@ -309,12 +309,12 @@ feature -- Basic operations
 
 feature {NONE} -- Status report
 
-	is_void (obj: ANY): BOOLEAN is
+	is_void (obj: ANY): BOOLEAN
 		do
 			Result := (obj = Void)
 		end
 
-	is_integer (obj: ANY): BOOLEAN is
+	is_integer (obj: ANY): BOOLEAN
 			-- Is `obj' an integer value?
 		local
 			r_int: INTEGER_REF
@@ -323,7 +323,7 @@ feature {NONE} -- Status report
 			Result := r_int /= Void
 		end
 
-	is_real (obj: ANY): BOOLEAN is
+	is_real (obj: ANY): BOOLEAN
 			-- Is `obj' a real value?
 		local
 			r_real: REAL_REF
@@ -332,7 +332,7 @@ feature {NONE} -- Status report
 			Result := r_real /= Void
 		end
 
-	is_double (obj: ANY): BOOLEAN is
+	is_double (obj: ANY): BOOLEAN
 			-- Is `obj' a double value?
 		local
 			r_double: DOUBLE_REF
@@ -341,7 +341,7 @@ feature {NONE} -- Status report
 			Result := r_double /= Void
 		end
 
-	is_boolean (obj: ANY): BOOLEAN is
+	is_boolean (obj: ANY): BOOLEAN
 			-- Is `obj' a boolean value?
 		local
 			r_boolean: BOOLEAN_REF
@@ -350,7 +350,7 @@ feature {NONE} -- Status report
 			Result := r_boolean /= Void
 		end
 
-	is_character (obj: ANY): BOOLEAN is
+	is_character (obj: ANY): BOOLEAN
 			-- Is `obj' a character value?
 		local
 			r_character: CHARACTER_REF
@@ -359,7 +359,7 @@ feature {NONE} -- Status report
 			Result := r_character /= Void
 		end
 
-	is_string (obj: ANY): BOOLEAN is
+	is_string (obj: ANY): BOOLEAN
 			-- Is `obj' a string value?
 		local
 			r_string: STRING
@@ -368,7 +368,7 @@ feature {NONE} -- Status report
 			Result := r_string /= Void
 		end
 
-	is_date (obj: ANY): BOOLEAN is
+	is_date (obj: ANY): BOOLEAN
 			-- Is `obj' a date object?
 		local
 			r_date: DATE_TIME
@@ -379,7 +379,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	array_traversal (one_array: ARRAY [ANY]) is
+	array_traversal (one_array: ARRAY [ANY])
 			-- Scan though all item elements of `one_array'
 			-- and propagate the deep traversal to those
 			-- that are references to objects.
@@ -413,7 +413,7 @@ feature {NONE} -- Basic operations
 			end
 		end 
 
-	deep_unmark (object: ANY) is
+	deep_unmark (object: ANY)
 			-- Unmark all objects reachable from
 			-- the transitive closure of the object network
 			-- reachable from the `object' root.
@@ -447,7 +447,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	array_unmark (one_array: ARRAY [ANY]) is
+	array_unmark (one_array: ARRAY [ANY])
 			-- Scan though all item elements of `one_array'
 			-- and propagate the unmarking traversal to those
 			-- that are references to objects.
@@ -473,7 +473,7 @@ feature {NONE} -- Basic operations
 			end
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,25 +33,25 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cmdtextf: INTEGER is
+	cmdtextf: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmdtext_cmdtextf (item)
 		end
 
-	cw_actual: INTEGER is
+	cw_actual: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmdtext_cw_actual (item)
 		end
 
-	cw_buf: INTEGER is
+	cw_buf: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmdtext_cw_buf (item)
 		end
 
-	rgwz: INTEGER_REF is
+	rgwz: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmdtext_rgwz (item)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_tag_olecmdtext
@@ -67,25 +67,25 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cmdtextf (a_cmdtextf: INTEGER) is
+	set_cmdtextf (a_cmdtextf: INTEGER)
 			-- Set `cmdtextf' with `a_cmdtextf'.
 		do
 			ccom_x_tag_olecmdtext_set_cmdtextf (item, a_cmdtextf)
 		end
 
-	set_cw_actual (a_cw_actual: INTEGER) is
+	set_cw_actual (a_cw_actual: INTEGER)
 			-- Set `cw_actual' with `a_cw_actual'.
 		do
 			ccom_x_tag_olecmdtext_set_cw_actual (item, a_cw_actual)
 		end
 
-	set_cw_buf (a_cw_buf: INTEGER) is
+	set_cw_buf (a_cw_buf: INTEGER)
 			-- Set `cw_buf' with `a_cw_buf'.
 		do
 			ccom_x_tag_olecmdtext_set_cw_buf (item, a_cw_buf)
 		end
 
-	set_rgwz (a_rgwz: INTEGER_REF) is
+	set_rgwz (a_rgwz: INTEGER_REF)
 			-- Set `rgwz' with `a_rgwz'.
 		require
 			non_void_a_rgwz: a_rgwz /= Void
@@ -95,7 +95,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_tag_olecmdtext: INTEGER is
+	c_size_of_x_tag_olecmdtext: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__tagOLECMDTEXT_s.h%"]"
@@ -103,55 +103,55 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_tagOLECMDTEXT)"
 		end
 
-	ccom_x_tag_olecmdtext_cmdtextf (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_olecmdtext_cmdtextf (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_olecmdtext_set_cmdtextf (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_olecmdtext_set_cmdtextf (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *, ULONG)"
 		end
 
-	ccom_x_tag_olecmdtext_cw_actual (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_olecmdtext_cw_actual (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_olecmdtext_set_cw_actual (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_olecmdtext_set_cw_actual (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *, ULONG)"
 		end
 
-	ccom_x_tag_olecmdtext_cw_buf (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_olecmdtext_cw_buf (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_olecmdtext_set_cw_buf (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_olecmdtext_set_cw_buf (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *, ULONG)"
 		end
 
-	ccom_x_tag_olecmdtext_rgwz (a_pointer: POINTER): INTEGER_REF is
+	ccom_x_tag_olecmdtext_rgwz (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *):EIF_REFERENCE"
 		end
 
-	ccom_x_tag_olecmdtext_set_rgwz (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_x_tag_olecmdtext_set_rgwz (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMDTEXT_s_impl.h%"](ecom_control_library::_tagOLECMDTEXT *, EIF_OBJECT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

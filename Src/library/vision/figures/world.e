@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Manager of figures"
 	legal: "See notice at end of class.";
@@ -55,7 +55,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a world
 		local
 			ll: LINKED_LIST [FIGURE];
@@ -84,7 +84,7 @@ feature -- Initialization
 			conf_notified := Current;
 		end;
 
-	make_with_plane (plane_number: INTEGER) is
+	make_with_plane (plane_number: INTEGER)
 		do
 			max_plane := plane_number;
 			make
@@ -92,18 +92,18 @@ feature -- Initialization
 
 feature -- Access
 
-	item: FIGURE is
+	item: FIGURE
 		do
 			Result := al_item.item
 		end;
 
-	has (f: FIGURE): BOOLEAN is
+	has (f: FIGURE): BOOLEAN
 				-- Does `Currnt` include `f`
 		do
 			Result := i_th (f.plane + 1). has (f)
 		end;
 
-	search (f: FIGURE) is
+	search (f: FIGURE)
 				-- Move to first position where f and item are identical
 				-- according to '=' rule
 		do
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end;
 
-	search_equal (f: FIGURE) is
+	search_equal (f: FIGURE)
 				-- Move to first position where f and item are identical
 				-- according to `equal' rule
 		do
@@ -130,7 +130,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 				-- Number of item in `Current'
 		do
 			world_mark;
@@ -148,7 +148,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_origin (p: like origin) is
+	set_origin (p: like origin)
 			-- Set `origin' to `p'.
 		require else
 			p_exists: p /= Void
@@ -158,7 +158,7 @@ feature -- Element change
 			origin = p
 		end;
 
-	add (v: FIGURE) is
+	add (v: FIGURE)
 			-- Append `v' 
 		do
 			v.set_conf_not_notify;
@@ -176,7 +176,7 @@ feature -- Element change
 			set_conf_modified_with (v.surround_box);
 		end;
 
- 	merge (other: like Current) is
+ 	merge (other: like Current)
 			-- Merge `other' 
 			-- Do not move cursor.
 			-- Empty other.
@@ -204,7 +204,7 @@ feature -- Element change
 			set_conf_modified_with (other.surround_box)
 		end;
 
-	put (v: FIGURE) is
+	put (v: FIGURE)
 			-- Put item `v' at cursor position.
 		do
 			set_conf_modified_with (item.surround_box);
@@ -216,7 +216,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (fig: FIGURE) is
+	remove (fig: FIGURE)
 			-- remove `fig`
 		do
 			world_mark;
@@ -229,7 +229,7 @@ feature -- Removal
 			set_conf_modified_with (fig.surround_box)
 		end;
 
-	wipe_out is
+	wipe_out
 			-- remove all figures
 		do
 			from
@@ -247,7 +247,7 @@ feature -- Removal
 
 feature -- Cursor movement 
 
-	start is
+	start
 			-- Move to first position
 		do
 			from
@@ -262,7 +262,7 @@ feature -- Cursor movement
 			end
 		end;
 
-	finish is
+	finish
 			-- Move to last position
 		do
 			al_finish;
@@ -272,7 +272,7 @@ feature -- Cursor movement
 			end
 		end;
 
-	forth is
+	forth
 			-- Move to next position
 		do
 			al_item.forth;
@@ -292,7 +292,7 @@ feature -- Cursor movement
 
 feature -- Output
 
-	clip_draw (clip: CLIP) is
+	clip_draw (clip: CLIP)
 		local
 			box: CLOSURE;
 			new_clip: CLIP;
@@ -352,7 +352,7 @@ feature {WORLD} -- Access
 
 feature {WORLD} -- Element change
 
-	set_no_origin is
+	set_no_origin
 			-- Erase definition of `origin'.
 		do
 			origin := Void
@@ -362,7 +362,7 @@ feature {WORLD} -- Element change
 
 feature {WORLD} -- Cursor
 
-	world_mark is
+	world_mark
 		do
 			mark_index := index;
 			if not off then
@@ -370,7 +370,7 @@ feature {WORLD} -- Cursor
 			end
 		end;
 
-	world_return is
+	world_return
 		do
 			index := mark_index;
 			if not off then
@@ -378,7 +378,7 @@ feature {WORLD} -- Cursor
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

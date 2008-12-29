@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list, gtk implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,9 +37,9 @@ feature -- Status report
 
 feature -- Initialize
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
-	initialize is
+	initialize
 			-- Initialize the list.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
@@ -56,7 +56,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	ensure_item_visible (an_item: EV_LIST_ITEM) is
+	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_index' is visible in `Current'.
 		local
 			an_item_index: INTEGER
@@ -70,7 +70,7 @@ feature -- Status setting
 			--| FIXME IEK This needs to be properly implemented
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
@@ -83,7 +83,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
@@ -103,7 +103,7 @@ feature -- Status setting
 			end
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the selection of the list.
 		do
 			switch_to_single_mode_if_necessary
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 		do
 			Result := list_widget
 		end
@@ -121,7 +121,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
 
-	set_is_out (a_value: BOOLEAN) is
+	set_is_out (a_value: BOOLEAN)
 			-- Assign `a_value' to `is_out'.
 		do
 			is_out := a_value
@@ -129,7 +129,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -137,13 +137,13 @@ feature {NONE} -- Implementation
 			--| For now, do nothing.
 		end
 
-	vertical_adjustment_struct: POINTER is
+	vertical_adjustment_struct: POINTER
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
 		end
 
-	select_callback (n_args: INTEGER; args: POINTER) is
+	select_callback (n_args: INTEGER; args: POINTER)
 			-- Called when a list item is selected.
 		local
 			l_item: EV_LIST_ITEM_IMP
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			call_select_actions (l_item)
 		end
 
-	switch_to_single_mode_if_necessary is
+	switch_to_single_mode_if_necessary
 			-- Change selection mode if the last selected
 			-- item is deselected.
 		local
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	switch_to_browse_mode_if_necessary is
+	switch_to_browse_mode_if_necessary
 			-- Change selection mode to browse mode
 			-- if necessary.
 		do
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 	is_out: BOOLEAN
 			-- Is the mouse pointer over the list?
 
-	button_is_pressed: BOOLEAN is
+	button_is_pressed: BOOLEAN
 			-- Is one of the mouse buttons pressed?
 		local
 			temp_mask, temp_x, temp_y: INTEGER
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
 		end
 
-	on_item_clicked is
+	on_item_clicked
 			-- One of the item has been clicked.
 		do
 			Precursor
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	selection_mode_is_single:BOOLEAN;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

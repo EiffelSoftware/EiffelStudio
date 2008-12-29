@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that contain all structures required for buffering RTF for saving/loading/implementation.
 		]"
@@ -28,7 +28,7 @@ create
 
 feature -- Status Setting
 
-	set_rich_text (a_rich_text: EV_RICH_TEXT_I) is
+	set_rich_text (a_rich_text: EV_RICH_TEXT_I)
 			-- Assign `a_rich_text' to `rich_text' and initialize buffering structures.
 		require
 			a_rich_text_not_void: a_rich_text /= Void
@@ -37,7 +37,7 @@ feature -- Status Setting
 			clear_structures
 		end
 
-	clear_structures is
+	clear_structures
 			-- Clear all structures used for buffering into RTF format.
 		do
 				-- Rebuild structures used for buffering RTF.
@@ -72,13 +72,13 @@ feature -- Status Setting
 			buffered_text := ""
 		end
 
-	initialize_for_saving is
+	initialize_for_saving
 			-- Initialize `Current' for saving'.
 		do
 			clear_structures
 		end
 
-	append_text_for_rtf (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT_I) is
+	append_text_for_rtf (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT_I)
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
 		local
@@ -197,7 +197,7 @@ feature -- Status Setting
 
 feature {EV_ANY_I} -- Status Setting
 
-	generate_paragraph_information (a_text: STRING_GENERAL) is
+	generate_paragraph_information (a_text: STRING_GENERAL)
 			-- `Result' is index of first character of every line in `a_text' upon
 			-- which the paragraph formatting changes, as determined by '%N'.
 		require
@@ -236,7 +236,7 @@ feature {EV_ANY_I} -- Status Setting
 			counts_equal: paragraph_start_indexes.count = paragraph_formats.count
 		end
 
-	set_with_rtf (rtf_text: STRING_32) is
+	set_with_rtf (rtf_text: STRING_32)
 			-- Set `text' and formatting of `Current' from `rtf_text' in RTF format.
 		require
 			rtf_text_not_void: rtf_text /= Void
@@ -362,7 +362,7 @@ feature {EV_ANY_I} -- Status Setting
 	last_load_successful: BOOLEAN
 		-- Was last call to `set_with_rtf' successful?
 
-	generate_complete_rtf_from_buffering is
+	generate_complete_rtf_from_buffering
 			-- Generate the rtf heading for buffered operations into `internal_text'.
 			-- Current contents of `internal_text' are lost.
 		local
@@ -387,7 +387,7 @@ feature {EV_ANY_I} -- Status Setting
 
 feature {NONE} -- Implementation		
 
-	process_text (rtf_text: STRING_32; index: INTEGER) is
+	process_text (rtf_text: STRING_32; index: INTEGER)
 			-- Process RTF string `rtf_text' for text data from `index' until
 			-- text is exhausted signified through encountering a control character.
 		require
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	buffer_formatting (a_text: STRING_32) is
+	buffer_formatting (a_text: STRING_32)
 			-- Buffer `a_text' into `rich_text' with formatting applied from `current_format'.
 		require
 			a_text_not_void: a_text /= Void
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 			number_of_characters_opened := number_of_characters_opened + a_text.count
 		end
 
-	get_character (rtf_text: STRING_32; index: INTEGER): WIDE_CHARACTER is
+	get_character (rtf_text: STRING_32; index: INTEGER): WIDE_CHARACTER
 			-- `Result' is character `index' within `rtf_text'.
 		require
 			rtf_text_not_void: rtf_text /= Void
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 		-- Highest character index already read. This prevents us from increasing or
 		-- decreasing the "depth" of the document if a "{" or "}" character is read twice.
 
-	process_keyword  (rtf_text: STRING_32; index: INTEGER) is
+	process_keyword  (rtf_text: STRING_32; index: INTEGER)
 			-- Process RTF string `rtf_text' for a keyword starting at position `index'
 			-- until a rtf character is received signifying the end of the keyword.
 		require
@@ -732,28 +732,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_string: STRING_32 is
+	new_line_string: STRING_32
 		once
 			Result := "%N"
 		ensure
 			not_void: Result /= Void
 		end
 
-	tab_string: STRING_32 is
+	tab_string: STRING_32
 		once
 			Result := "%T"
 		ensure
 			not_void: Result /= Void
 		end
 
-	tab_tag_string: STRING_32 is
+	tab_tag_string: STRING_32
 		once
 			Result := "tab"
 		ensure
 			not_void: Result /= Void
 		end
 
-	line_string: STRING_32 is
+	line_string: STRING_32
 			-- String constants
 		once
 			Result := "line"
@@ -761,7 +761,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	move_to_end_of_tag (rtf_text: STRING_32; start_index: INTEGER) is
+	move_to_end_of_tag (rtf_text: STRING_32; start_index: INTEGER)
 			-- Move `main_iterator' to the next character immediately following the closing brace
 			-- associated with the opening brace at `start_index' within RTF text `rtf_text'
 			-- This includes the depth of the brace, and will find the brace pair, not just the next closing brace.
@@ -795,7 +795,7 @@ feature {NONE} -- Implementation
 			move_main_iterator (l_index - 1)
 		end
 
-	process_fonttable (rtf_text: STRING_32) is
+	process_fonttable (rtf_text: STRING_32)
 			-- Process fonttable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
@@ -833,7 +833,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_font_to_all_fonts is
+	add_font_to_all_fonts
 			-- Create and add a new font to `all_fonts' at index `last_font_index'
 			-- based on `last_fontfamily' and `last_fontname'.
 		local
@@ -861,7 +861,7 @@ feature {NONE} -- Implementation
 			all_fonts.force (a_font, last_fontindex)
 		end
 
-	process_colortable (rtf_text: STRING_32) is
+	process_colortable (rtf_text: STRING_32)
 			-- Process colortable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 			-- closing "}". Valid rtf opens as many as are closed.
 
 
-	process_fontname (rtf_text: STRING_32) is
+	process_fontname (rtf_text: STRING_32)
 			-- Process a font name found in RTF text `rtf_text' starting at position `main_iterator'.
 		require
 			rtf_text_not_void: rtf_text /= Void
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 		-- A string representation of the contents of from the last
 		-- RTF file loaded.
 
-	update_main_iterator is
+	update_main_iterator
 			-- Ensure `main_iterator' takes the value of `temp_iterator'.
 		do
 			main_iterator := temp_iterator
@@ -1014,7 +1014,7 @@ feature {NONE} -- Implementation
 			main_iterator_set: main_iterator = temp_iterator
 		end
 
-	move_main_iterator (step: INTEGER) is
+	move_main_iterator (step: INTEGER)
 			-- Ensure `main_iterator' is moved `step' characters next time `update_main_iterator' is called.
 			-- Each call will not move the iterator back to less than one of the previous calls
 			-- as enforced by the value of `temp_iterator'.
@@ -1032,20 +1032,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pixels_to_half_points (pixels: INTEGER): INTEGER is
+	pixels_to_half_points (pixels: INTEGER): INTEGER
 			-- `Result' is pixels converted to half points, being
 			-- the meaurement used for font sizes in RTF.
 		do
 			Result := (pixels * points_per_inch * 2) // screen.vertical_resolution
 		end
 
-	half_points_to_pixels (half_points: INTEGER): INTEGER is
+	half_points_to_pixels (half_points: INTEGER): INTEGER
 			-- `Result' is half points converted to pixels.
 		do
 			Result := half_points * screen.vertical_resolution // (points_per_inch * 2)
 		end
 
-	build_paragraph_from_format (a_format: EV_PARAGRAPH_FORMAT) is
+	build_paragraph_from_format (a_format: EV_PARAGRAPH_FORMAT)
 			-- Add RTF representation of `a_format' to `paragraph_formats' is
 		require
 			formats_not_void: paragraph_formats /= Void
@@ -1086,7 +1086,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	build_font_from_format (a_format: EV_CHARACTER_FORMAT_I) is
+	build_font_from_format (a_format: EV_CHARACTER_FORMAT_I)
 			-- Update font text `font_text' for addition of a new format to the buffering.
 		local
 			current_family: INTEGER
@@ -1129,7 +1129,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	build_color_from_format (a_format: EV_CHARACTER_FORMAT_I) is
+	build_color_from_format (a_format: EV_CHARACTER_FORMAT_I)
 			-- Update color text `color_text' for addition of a new format to the buffering.
 		local
 			l_color: INTEGER
@@ -1196,7 +1196,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_rtf_keyword (a_string, a_keyword: STRING_32) is
+	add_rtf_keyword (a_string, a_keyword: STRING_32)
 			-- Add rtf representation of `rtf_control_character' and keyword `a_keyword' to `a_string'.
 		require
 			string_not_void: a_string /= Void
@@ -1221,10 +1221,10 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	default_structure_size: INTEGER is 20
+	default_structure_size: INTEGER = 20
 		-- Default size used to initalize all buffering structures.
 
-	default_string_size: INTEGER is 50000
+	default_string_size: INTEGER = 50000
 		-- Default size used for all internal strings for buffering.
 		-- This reduces the need to resize the string as the formatting is applied.
 		-- Resizing strings can be slow, so is to be avoided wherever possible.
@@ -1323,16 +1323,16 @@ feature {NONE} -- Implementation
 		-- Booleans used to determine current formatting. These are used to prevent
 		-- repeatedly opening the same tags each time a new format is encountered.
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Once acces to EV_SCREEN object.
 		once
 			create Result
 		end
 
-	points_per_inch: INTEGER is 72
+	points_per_inch: INTEGER = 72
 		-- Number of points per inch.
 
-	initial_color_value: INTEGER is -1
+	initial_color_value: INTEGER = -1
 		-- Value assigned to each color RGB component before loading.
 		-- This permits us to determine if the first color is auto, as if
 		-- so, the rgb values are all still set to this value.
@@ -1340,7 +1340,7 @@ feature {NONE} -- Implementation
 invariant
 	rich_text_not_void: rich_text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation interface for objects that represent paragraph formatting information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,42 +16,42 @@ inherit
 
 feature -- Status report
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Current alignment. See EV_PARAGRAPH_CONSTANTS
 			-- for possible values.
 		deferred
 		end
 
-	left_margin: INTEGER is
+	left_margin: INTEGER
 			-- Left margin between border and text in pixels.
 		deferred
 		end
 		
-	right_margin: INTEGER is
+	right_margin: INTEGER
 			-- Right margin between line end and border in pixels.
 		deferred
 		end
 		
-	top_spacing: INTEGER is
+	top_spacing: INTEGER
 			-- Spacing between top of paragraph and previous line in pixels.
 		deferred
 		end
 		
-	bottom_spacing: INTEGER is
+	bottom_spacing: INTEGER
 			-- Spacing between bottom of paragraph and next line in pixels.
 		deferred
 		end
 
 feature -- Status setting
 
-	set_alignment (an_alignment: INTEGER) is
+	set_alignment (an_alignment: INTEGER)
 			-- Assign `an_alignment' to `alignment.
 		deferred
 		ensure
 			alignment_set: alignment = an_alignment
 		end
 
-	set_left_margin (a_margin: INTEGER) is
+	set_left_margin (a_margin: INTEGER)
 			-- Set `left_margin' to `a_margin'.
 		require
 			margin_non_negative: a_margin >= 0
@@ -60,7 +60,7 @@ feature -- Status setting
 			margin_set: left_margin = a_margin
 		end
 
-	set_right_margin (a_margin: INTEGER) is
+	set_right_margin (a_margin: INTEGER)
 			-- Set `right_margin' to `a_margin'.
 		require
 			margin_non_negative: a_margin >= 0
@@ -69,7 +69,7 @@ feature -- Status setting
 			margin_set: right_margin = a_margin
 		end
 		
-	set_top_spacing (a_spacing: INTEGER) is
+	set_top_spacing (a_spacing: INTEGER)
 			-- Set `top_spacing' to `a_spacing'.
 		require
 			spacing_non_negative: a_spacing >= 0
@@ -78,7 +78,7 @@ feature -- Status setting
 			spacing_set: top_spacing = a_spacing
 		end
 		
-	set_bottom_spacing (a_spacing: INTEGER) is
+	set_bottom_spacing (a_spacing: INTEGER)
 			-- Set `bottom_spacing' to `a_spacing'.
 		require
 			spacing_non_negative: a_spacing >= 0
@@ -91,7 +91,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PARAGRAPH_FORMAT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

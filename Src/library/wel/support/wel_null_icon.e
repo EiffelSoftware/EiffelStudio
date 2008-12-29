@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special icon used for creating a WEL_WND_CLASS%
 		% structure when an application must explicitly draw an icon%
 		% whenever the user minimizes the window."
@@ -19,12 +19,12 @@ inherit
 
 feature -- Status report
 
-	exists: BOOLEAN is True
+	exists: BOOLEAN = True
 			-- A null icon always exists.
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Nothing to destroy.
 		do
 		end
@@ -33,7 +33,7 @@ invariant
 	exists: exists
 	no_item: item = default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

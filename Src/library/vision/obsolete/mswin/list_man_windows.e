@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS list manager"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -21,25 +21,25 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current list
 		do
 			Result := private_list.count
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the chain empty?
 		do
 			Result := count = 0
 		end
 
-	first: STRING is
+	first: STRING
 			-- Item at first position
 		do
 			Result := private_list.first
 		end
 
-	first_visible_item_position: INTEGER is
+	first_visible_item_position: INTEGER
 			-- Position of the first visible item in the list
 		do
 			if not is_empty then
@@ -49,7 +49,7 @@ feature -- Status report
 			end
 		end
 
-	has (an_item: STRING): BOOLEAN is
+	has (an_item: STRING): BOOLEAN
 			-- Does `an_item' exist in current scroll list?
 		require else
 			not_an_item_void: an_item /= Void
@@ -57,55 +57,55 @@ feature -- Status report
 			Result := private_list.has (an_item)
 		end
 
-	i_th (i: INTEGER): STRING is
+	i_th (i: INTEGER): STRING
 			-- Item at `i'-th position
 		do
 			Result := private_list.i_th (i)
 		end
 
-	index_of (an_item: STRING; i: INTEGER): INTEGER is
+	index_of (an_item: STRING; i: INTEGER): INTEGER
 			-- Index of `i'-th `an_item'; 0 if none
 		do
 			Result := private_list.index_of (an_item, i)
 		end
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position in the chain?
 		do
 			Result := index = 1
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position in the chain?
 		do
 			Result := (index = count) and not is_empty
 		end
 
-	item: STRING is
+	item: STRING
 			-- Item at cursor position
 		do
 			Result := private_list.i_th (index)
 		end
 
-	last: STRING is
+	last: STRING
 			-- Item at last position
 		do
 			Result := private_list.i_th (count)
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off?
 		do
 			Result := (index = 0) or (index = count + 1)
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is cursor off left edge?
 		do
 			Result := (index = 0)
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor off right edge?
 		do
 			Result := (count = 0) or (index = count + 1)
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_browse_selection is
+	set_browse_selection
 			-- Set selection mode of current list to
 			-- browse. At most only one item can be selected
 			-- at a time but dragging select button moves
@@ -122,7 +122,7 @@ feature -- Status setting
 			multiple_selection := False
 		end
 
-	set_extended_selection is
+	set_extended_selection
 			-- Set selection mode of current list to
 			-- extended. Any number of items can be selected
 			-- at any time using dragging mode, otherwise
@@ -132,7 +132,7 @@ feature -- Status setting
 			multiple_selection := True
 		end
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set selection mode of current list to
 			-- multiple. Any item can be selected at any
 			-- time in this mode.
@@ -140,7 +140,7 @@ feature -- Status setting
 			multiple_selection := True
 		end
 
-	set_single_selection is
+	set_single_selection
 			-- Set selection mode of current list to
 			-- single. At most only one item can be selected
 			-- at a time.
@@ -148,13 +148,13 @@ feature -- Status setting
 			multiple_selection := False
 		end
 
-	set_visible_item_count (a_count : INTEGER) is
+	set_visible_item_count (a_count : INTEGER)
 		deferred
 		end
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move cursor backward one position.
 		do
 			index := index - 1
@@ -162,26 +162,26 @@ feature -- Cursor movement
 			index = old index - 1
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position
 			-- (no effect if chain is empty).
 		do
 			index := count
 		end
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		do
 			index := index + 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to position `i'.
 		do
 			index := i
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		do
 			index := index + i
@@ -189,7 +189,7 @@ feature -- Cursor movement
 			index = old index + i
 		end
 
-	search_equal (an_item: STRING) is
+	search_equal (an_item: STRING)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where item is equal to `an_item' (shallow equality)
@@ -202,7 +202,7 @@ feature -- Cursor movement
 			private_list.compare_references
 		end
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			if not is_empty then
@@ -212,7 +212,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_left (an_item: STRING) is
+	put_left (an_item: STRING)
 			-- Put `an_item' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -226,7 +226,7 @@ feature -- Element change
 			count_changed: count = old count + 1
 		end
 
-	put_right (an_item: STRING) is
+	put_right (an_item: STRING)
 			-- Put `an_item' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -247,7 +247,7 @@ feature -- Element change
 			index_not_changed: index = old index
 		end
 
-	merge_left (other: LIST [STRING]) is
+	merge_left (other: LIST [STRING])
 		local
 			item_index: INTEGER
 		do
@@ -270,7 +270,7 @@ feature -- Element change
 			other.wipe_out
 		end
 
-	merge_right (other: LIST[STRING]) is
+	merge_right (other: LIST[STRING])
 		local
 			item_index: INTEGER
 		do
@@ -294,7 +294,7 @@ feature -- Element change
 			other.wipe_out
 		end
 
-	put (an_item: STRING) is
+	put (an_item: STRING)
 			-- Put `an_item' at cursor position.
 		do
 			private_list.put_i_th (an_item, index)
@@ -306,7 +306,7 @@ feature -- Element change
 			has (an_item)
 		end
 
-	put_i_th (an_item: STRING; i: INTEGER) is
+	put_i_th (an_item: STRING; i: INTEGER)
 			-- Put `an_item' at `i'-th position.
 		do
 			private_list.put_i_th (an_item, i)
@@ -318,7 +318,7 @@ feature -- Element change
 			not is_empty
 		end
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		local
@@ -341,7 +341,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): LINKED_LIST [STRING] is
+	duplicate (n: INTEGER): LINKED_LIST [STRING]
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 			-- Cannot duplicate a widget !!!
@@ -350,19 +350,19 @@ feature -- Duplication
 
 feature -- Output
 
-	deselect_all is
+	deselect_all
 			-- Deselect all selected items.
 		deferred
 		end
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the visible in the list
 			-- Do nothing if `item' is visible.
 			-- Not under Windows
 		do
 		end
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		do
 			if exists then
@@ -370,22 +370,22 @@ feature -- Output
 			end
 		end
 
-	show_current is
+	show_current
 			-- Make item at current position the first visible item.
 		do
 		end
 
-	show_first is
+	show_first
 			-- Make first item the first visible item.
 		do
 		end
 
-	show_i_th (i: INTEGER) is
+	show_i_th (i: INTEGER)
 			-- Make item at `i'-th position the first visible item.
 		do
 		end
 
-	show_last is
+	show_last
 			-- Make last item the last visible item.
 		do
 		end
@@ -406,25 +406,25 @@ feature {NONE} -- Implementation
 
 	private_selected_positions: LINKED_LIST[INTEGER]
 
-	insert_item (s: STRING; iti: INTEGER) is
+	insert_item (s: STRING; iti: INTEGER)
 		-- Add an item checking for size as we go
 		deferred
 		end
 
-	delete_item (i: INTEGER) is
+	delete_item (i: INTEGER)
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 		deferred
 		end
 
-	selection_change_actions: ACTIONS_MANAGER is
+	selection_change_actions: ACTIONS_MANAGER
 			-- Event handler for list events
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

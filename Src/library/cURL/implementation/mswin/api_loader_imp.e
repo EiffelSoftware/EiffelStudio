@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Interactive with native system APIs for dynamic loading.
 					Windows verson.
@@ -13,7 +13,7 @@ class
 
 feature -- Command
 
-	load_module (a_name: STRING): POINTER is
+	load_module (a_name: STRING): POINTER
 			-- Load module with `a_name'.
 			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
 		require
@@ -25,7 +25,7 @@ feature -- Command
 			Result := c_load_module (l_wel_string.item)
 		end
 
-	loal_api (a_module: POINTER; a_name: STRING): POINTER is
+	loal_api (a_module: POINTER; a_name: STRING): POINTER
 			-- Load api which name is `a_name' in `a_module'
 		require
 			exists: a_module /= default_pointer
@@ -39,7 +39,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	c_load_module (a_name: POINTER): POINTER is
+	c_load_module (a_name: POINTER): POINTER
 			-- Load module with `a_name'.
 			-- `a_name' is LPCTSTR, we should use WEL_STRING here.
 		require
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			"return (EIF_POINTER) LoadLibrary ($a_name);"
 		end
 
-	c_loal_api (a_module: POINTER; a_name: POINTER): POINTER is
+	c_loal_api (a_module: POINTER; a_name: POINTER): POINTER
 			-- Load api which name is `a_name' in `a_module'
 		require
 			exists: a_module /= default_pointer
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			"return GetProcAddress ((HMODULE) $a_module, $a_name);"
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

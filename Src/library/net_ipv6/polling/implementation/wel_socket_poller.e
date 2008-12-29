@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class WEL_SOCKET_POLLER
@@ -19,7 +19,7 @@ create
 
 feature -- Initialisation
 
-	make (a_window: WEL_WINDOW; a_timer_id: INTEGER) is
+	make (a_window: WEL_WINDOW; a_timer_id: INTEGER)
 			-- Create WEL_TIMER and socket_poller.
 		require
 			not_window_void: a_window /= Void
@@ -34,7 +34,7 @@ feature -- Initialisation
 			id: timer_id = a_timer_id			
 		end
 		
-	make_active (a_window: WEL_WINDOW; a_timer_id: INTEGER; a_delay: INTEGER) is
+	make_active (a_window: WEL_WINDOW; a_timer_id: INTEGER; a_delay: INTEGER)
 			-- Enable timer and create active socket_poller.
 		require
 			not_window_void: a_window /= Void
@@ -52,7 +52,7 @@ feature -- Initialisation
 		
 feature -- Execute
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- Poll the socket.
 		do
 			poll
@@ -60,14 +60,14 @@ feature -- Execute
 
 feature -- Activation
 
-	set_active (a_delay: INTEGER) is
+	set_active (a_delay: INTEGER)
             -- Set `a_poll_delay' to `delay_time'.
 		do
 			parent_window.set_timer (timer_id, a_delay)
 			is_poller_active := True
 		end 
 		
-	set_inactive is
+	set_inactive
             -- Stop polling the socket.
 		do
 			is_poller_active := False
@@ -85,7 +85,7 @@ feature {NONE}
 	timer_id: INTEGER;
 		-- From timer of parent_window
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

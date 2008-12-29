@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Polygonal capabilities (PC) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Pc_none: INTEGER is
+	Pc_none: INTEGER
 			-- Supports no polygons
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"PC_NONE"
 		end
 
-	Pc_polygon: INTEGER is
+	Pc_polygon: INTEGER
 			-- Supports alternate fill polygons
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"PC_POLYGON"
 		end
 
-	Pc_rectangle: INTEGER is
+	Pc_rectangle: INTEGER
 			-- Supports rectangles
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"PC_RECTANGLE"
 		end
 
-	Pc_windpolygon: INTEGER is
+	Pc_windpolygon: INTEGER
 			-- Supports winding number fill polygons
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"PC_WINDPOLYGON"
 		end
 
-	Pc_scanline: INTEGER is
+	Pc_scanline: INTEGER
 			-- Supports scan lines
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"PC_SCANLINE"
 		end
 
-	Pc_wide: INTEGER is
+	Pc_wide: INTEGER
 			-- Supports wide borders
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"PC_WIDE"
 		end
 
-	Pc_styled: INTEGER is
+	Pc_styled: INTEGER
 			-- Supports styled borders
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"PC_STYLED"
 		end
 
-	Pc_widestyled: INTEGER is
+	Pc_widestyled: INTEGER
 			-- Supports wide, styled borders
 		external
 			"C [macro %"wel.h%"]"
@@ -74,7 +74,7 @@ feature -- Access
 			"PC_WIDESTYLED"
 		end
 
-	Pc_interiors: INTEGER is
+	Pc_interiors: INTEGER
 			-- Supports interiors
 		external
 			"C [macro %"wel.h%"]"
@@ -82,7 +82,7 @@ feature -- Access
 			"PC_INTERIORS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

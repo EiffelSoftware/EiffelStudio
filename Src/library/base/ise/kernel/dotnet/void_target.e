@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception for feature applied to void reference.
 		This type replace .NET NullReferenceException, and works as an adapter.
@@ -36,7 +36,7 @@ create
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.void_call_target
@@ -44,9 +44,9 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Feature call on void target.";
+	frozen internal_meaning: STRING = "Feature call on void target.";
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

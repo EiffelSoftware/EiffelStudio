@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used for describing a particular PND target"
 	author: ""
 	date: "$Date$"
@@ -52,7 +52,7 @@ feature {EV_APPLICATION_I} -- Implementation
 			target_assigned: target = a_target
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

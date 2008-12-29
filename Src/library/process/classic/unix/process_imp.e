@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Object that implements PROCESS on UNIX
@@ -38,14 +38,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
 		do
 			setup_command (a_exec_name, args, a_working_directory)
 			create_child_process_manager
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
+	make_with_command_line (cmd_line: STRING; a_working_directory: STRING)
 		local
 			p_name :STRING
 			args: LIST [STRING]
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature  -- Control
 
-	launch is
+	launch
 		local
 			l_timeout: BOOLEAN
 		do
@@ -90,12 +90,12 @@ feature  -- Control
 			end
 		end
 
-	terminate is
+	terminate
 		do
 			internal_terminate (False)
 		end
 
-	terminate_tree is
+	terminate_tree
 		do
 			if is_launched_in_new_process_group then
 				internal_terminate (True)
@@ -104,45 +104,45 @@ feature  -- Control
 			end
 		end
 
-	wait_for_exit is
+	wait_for_exit
 		local
 			l_wait: BOOLEAN
 		do
 			l_wait := timer.wait (0)
 		end
 
-	wait_for_exit_with_timeout (a_timeout: INTEGER) is
+	wait_for_exit_with_timeout (a_timeout: INTEGER)
 		local
 			l_wait: BOOLEAN
 		do
 			l_wait := timer.wait (a_timeout)
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 		do
 			append_input_buffer (s)
 		end
 
 feature -- Status reporting
 
-	id: INTEGER is
+	id: INTEGER
 		do
 			Result := internal_id
 		end
 
-	has_exited: BOOLEAN is
+	has_exited: BOOLEAN
 		do
 			Result := has_cleaned_up
 		end
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 		do
 			Result := child_process.exit_code
 		end
 
 feature {PROCESS_TIMER}  -- Status checking
 
-	check_exit is
+	check_exit
 			-- Check if process has exited.
 		local
 			l_threads_exited: BOOLEAN
@@ -199,7 +199,7 @@ feature{NONE} -- Interprocess IO
 			-- This buffer is used temporarily to store data that can not be
 			-- consumed by launched process.
 
-	append_input_buffer (a_input:STRING) is
+	append_input_buffer (a_input:STRING)
 			-- Append `a_input' to `input_buffer'.
 		require
 			a_input_not_void: a_input /= Void
@@ -220,7 +220,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 	last_input_bytes: INTEGER
 			-- Number of bytes in `buffer_size' wrote to process the last time
 
-	write_input_stream is
+	write_input_stream
 			-- Write at most `buffer_size' bytes of data in `input_buffer' into launched process.
 			--|Note: This feature will be used in input listening thread.
 		require
@@ -257,7 +257,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			end
 		end
 
-	read_output_stream is
+	read_output_stream
 			-- Read output stream from launched process and dispatch data to `output_handler'.
 			--|Note: This feature will be used in output listening thread.			
 		require
@@ -274,7 +274,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			end
 		end
 
-	read_error_stream is
+	read_error_stream
 			-- Read output stream from launched process and dispatch data to `output_handler'.
 			--|Note: This feature will be used in error listening thread.
 		require
@@ -298,7 +298,7 @@ feature{NONE} -- Status reporting
 
 feature {NONE}  -- Implementation
 
-	internal_terminate (is_tree: BOOLEAN) is
+	internal_terminate (is_tree: BOOLEAN)
 			-- Terminate current launched process.
 			-- If `is_tree' is True, terminate whole process group.
 		require
@@ -308,7 +308,7 @@ feature {NONE}  -- Implementation
 			force_terminated := True
 		end
 
-	initialize_child_process is
+	initialize_child_process
 			-- Initialize `child_process'.
 		do
 			launched := False
@@ -324,7 +324,7 @@ feature {NONE}  -- Implementation
 			set_is_read_pipe_broken (False)
 		end
 
-	initialize_after_launch is
+	initialize_after_launch
 			-- Initialize when process has been launched successfully.
 		do
 			has_process_exited := False
@@ -334,7 +334,7 @@ feature {NONE}  -- Implementation
 			start_listening_threads
 		end
 
-	new_thread_attributes: THREAD_ATTRIBUTES is
+	new_thread_attributes: THREAD_ATTRIBUTES
 			-- New threads attributes used to launch thread
 		do
 			create Result.make
@@ -343,7 +343,7 @@ feature {NONE}  -- Implementation
 			result_attached: Result /= Void
 		end
 
-	start_listening_threads is
+	start_listening_threads
 			-- Setup listeners for process output/error and for process status acquiring.
 		do
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
@@ -370,7 +370,7 @@ feature {NONE}  -- Implementation
 
 feature{NONE} -- Initialization
 
-	setup_command (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+	setup_command (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING)
 			-- Setup command line.
 		require
 			a_exec_name_not_void: a_exec_name /= Void
@@ -403,7 +403,7 @@ feature{NONE} -- Initialization
 					(args = Void implies arguments = Void)
 		end
 
-	create_child_process_manager is
+	create_child_process_manager
 			-- Create child process manager
 		require
 			executable_not_void: executable /= Void
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 	internal_id: INTEGER
 			-- Internal process id
 
-	environment_table_as_pointer: POINTER is
+	environment_table_as_pointer: POINTER
 			-- {POINTER} representation of `environment_variable_table'
 			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
 		local
@@ -494,7 +494,7 @@ feature{NONE} -- Error recovery
 	is_read_pipe_broken: BOOLEAN
 			-- Is pipe used for reading broken?
 
-	set_is_read_pipe_broken (b: BOOLEAN) is
+	set_is_read_pipe_broken (b: BOOLEAN)
 			-- Set `is_read_pipe_broken' with `b'.
 		do
 			is_read_pipe_broken := b
@@ -505,7 +505,7 @@ feature{NONE} -- Error recovery
 invariant
 	child_process_not_void: child_process /= Void
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

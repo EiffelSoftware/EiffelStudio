@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list item list, Carbon implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set up `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -49,37 +49,37 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- `Result is all items currently selected in `Current'.
 		deferred
 		end
 
 feature -- Status report
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM
 			-- Retrieve the Current row from `a_y' coordinate
 		do
 		end
 
-	update_pnd_status is
+	update_pnd_status
 			-- Update PND status of list and its children.
 		do
 
 		end
 
-	update_pnd_connection (a_enable: BOOLEAN) is
+	update_pnd_connection (a_enable: BOOLEAN)
 			-- Update the PND connection of `Current' if needed.
 		do
 
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 				-- Steps to perform before transport initiated.
 			do
 
 			end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Default height of rows
 		do
 
@@ -95,7 +95,7 @@ feature -- Status report
 
 	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 
@@ -103,37 +103,37 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at one based index, `an_index'.
 		deferred
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at one based index, `an_index'.
 		deferred
 		end
 
 feature -- Insertion
 
-	set_text_on_position (a_row: INTEGER; a_text: STRING_GENERAL) is
+	set_text_on_position (a_row: INTEGER; a_text: STRING_GENERAL)
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		do
 
 		end
 
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		do
 
 		end
 
-	remove_row_pixmap (a_row: INTEGER) is
+	remove_row_pixmap (a_row: INTEGER)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		do
 
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -151,7 +151,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	remove_i_th (an_index: INTEGER) is
+	remove_i_th (an_index: INTEGER)
 		local
 			item_imp: EV_LIST_ITEM_IMP
 		do
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			--update_pnd_status
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_LIST_ITEM_LIST_IMP
 

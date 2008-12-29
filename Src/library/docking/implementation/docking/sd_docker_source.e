@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_ZONE which dockable SD_ZONE should inherited, used by SD_DOCKER_MEDIATOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Key feature.
 
-	add_hot_zones (a_docker_mediator: SD_DOCKER_MEDIATOR; a_hot_zones: ARRAYED_LIST [SD_HOT_ZONE]) is
+	add_hot_zones (a_docker_mediator: SD_DOCKER_MEDIATOR; a_hot_zones: ARRAYED_LIST [SD_HOT_ZONE])
 			-- Add hot zones
 		require
 			a_docker_mediator_not_void: a_docker_mediator /= Void
@@ -32,7 +32,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

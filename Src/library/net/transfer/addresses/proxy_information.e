@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Information about proxies"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (h: STRING; p: INTEGER) is
+	make (h: STRING; p: INTEGER)
 			-- Create proxy information for host `h' and port `p'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_host (h: STRING) is
+	set_host (h: STRING)
 			-- Set host name to `h'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
@@ -56,7 +56,7 @@ feature -- Status setting
 			host_set: host = h
 		end
 			
-	set_port (p: INTEGER) is
+	set_port (p: INTEGER)
 			-- Set port to `p'.
 		require
 			port_non_negative: p >= 0
@@ -72,7 +72,7 @@ invariant
 	host_valid: proxy_host_ok (host)
 	port_non_negative: port >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

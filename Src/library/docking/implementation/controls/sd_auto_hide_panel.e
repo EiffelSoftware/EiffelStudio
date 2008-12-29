@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Panels that are hold SD_ZONE which are hidden at four 
 					side of main window area.
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_direction: INTEGER; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_direction: INTEGER; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method. If not vertical style, it'll be horizontal style.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -72,7 +72,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	tab_stubs: like internal_tab_stubs is
+	tab_stubs: like internal_tab_stubs
 			-- Tab stubs current holded.
 		do
 			Result := internal_tab_stubs
@@ -81,14 +81,14 @@ feature -- Query
 	tab_groups: ACTIVE_LIST [like internal_tab_group]
 			-- All tab groups.
 
-	has (a_tab: SD_TAB_STUB): BOOLEAN is
+	has (a_tab: SD_TAB_STUB): BOOLEAN
 			-- If `Current' has a_tab ?
 		do
 			start
 			Result := Precursor {SD_HOR_VER_BOX} (a_tab)
 		end
 
-	has_tab (a_content: SD_CONTENT): BOOLEAN is
+	has_tab (a_content: SD_CONTENT): BOOLEAN
 			-- If `Current' has `a_content'?
 		require
 			a_content_not_void: a_content /= Void
@@ -103,7 +103,7 @@ feature -- Query
 			end
 		end
 
-	is_content_in_group (a_content: SD_CONTENT): BOOLEAN is
+	is_content_in_group (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_content' in a tab group?
 		require
 			a_content_not_void: a_content /= Void
@@ -128,7 +128,7 @@ feature -- Query
 			end
 		end
 
-	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
+	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB
 			-- SD_TAB_STUB which represent `a_content'.
 		require
 			a_content_not_void: a_content /= Void
@@ -148,7 +148,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	content_by_tab (a_tab: SD_TAB_STUB): SD_CONTENT is
+	content_by_tab (a_tab: SD_TAB_STUB): SD_CONTENT
 			-- SD_CONTENT which represent by `a_tab'.
 		require
 			a_tab_not_void: a_tab /= Void
@@ -171,7 +171,7 @@ feature -- Query
 
 feature -- Command
 
-	set_tab_group (a_contents: ARRAYED_LIST [SD_CONTENT]) is
+	set_tab_group (a_contents: ARRAYED_LIST [SD_CONTENT])
 			-- Set `a_contents' to a `tab_groups'.
 		require
 			a_contents_not_void: a_contents /= Void
@@ -201,7 +201,7 @@ feature -- Command
 			set: contents_tab_group_set (a_contents)
 		end
 
-	select_tab_by_content (a_content: SD_CONTENT) is
+	select_tab_by_content (a_content: SD_CONTENT)
 			-- `select_tab' by `a_content'.
 		require
 			a_content_not_void: a_content /= Void
@@ -210,7 +210,7 @@ feature -- Command
 			select_tab (tab_by_content (a_content))
 		end
 
-	select_tab (a_tab: SD_TAB_STUB) is
+	select_tab (a_tab: SD_TAB_STUB)
 			-- Show tab text with `a_content'.
 		require
 			a_tab_not_void: a_tab /= Void
@@ -233,7 +233,7 @@ feature -- Command
 			end
 		end
 
-	tab_group (a_tab: SD_TAB_STUB):like internal_tab_group  is
+	tab_group (a_tab: SD_TAB_STUB):like internal_tab_group
 			-- Get the group contain `a_tab'.
 		require
 			a_tab_not_void: a_tab /= Void
@@ -254,7 +254,7 @@ feature -- Command
 			not_void: Result /= Void
 		end
 
-	set_tab_with_friend (a_tab: SD_TAB_STUB; a_friend: SD_CONTENT) is
+	set_tab_with_friend (a_tab: SD_TAB_STUB; a_friend: SD_CONTENT)
 			-- Set tab with friend, so they show in a group.
 		require
 			a_tab_not_void: a_tab /= Void and a_friend /= Void
@@ -293,7 +293,7 @@ feature -- Command
 			end
 		end
 
-	update_tab_group is
+	update_tab_group
 			-- Update tab stubs layout by tab group.
 		do
 			from
@@ -310,7 +310,7 @@ feature -- Command
 			update_tab_group_max_size
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Redefine
 		local
 			l_spacer: SD_AUTO_HIDE_SEPARATOR
@@ -329,7 +329,7 @@ feature -- Command
 			Precursor {SD_HOR_VER_BOX}(a_color)
 		end
 
-	update_size is
+	update_size
 			--Update sizes based on font size.
 		do
 			if count = 0 then
@@ -350,7 +350,7 @@ feature -- Command
 			internal_docking_manager.command.resize (True)
 		end
 
-	destroy is
+	destroy
 			-- Redefine
 		do
 			internal_docking_manager := Void
@@ -360,7 +360,7 @@ feature -- Command
 
 feature -- States report
 
-	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN is
+	contents_tab_group_set (a_contents: ARRAYED_LIST [SD_CONTENT]): BOOLEAN
 			-- If `a_contents' tab group set?
 		require
 			a_contents_not_void: a_contents /= Void
@@ -374,7 +374,7 @@ feature -- States report
 
 feature {NONE} -- Implementation functions.
 
-	tab_group_max_size (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]): INTEGER is
+	tab_group_max_size (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]): INTEGER
 			-- Tab group max size.
 		require
 			a_tab_group_not_void: a_tab_group /= Void
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is
+	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB])
 			-- Only leave one text show in a group.
 		require
 			a_tab_group_not_void: a_tab_group /= Void
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation functions.
 			only_one_tab_have_text:
 		end
 
-	update_tab_group_max_size is
+	update_tab_group_max_size
 			-- Update tab group max size.
 		local
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	update_separators (a_first, a_last: BOOLEAN; a_tab: SD_TAB_STUB) is
+	update_separators (a_first, a_last: BOOLEAN; a_tab: SD_TAB_STUB)
 			-- Update separetor
 		do
 			if a_first then
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	on_add_tab_stub (a_stub: SD_TAB_STUB) is
+	on_add_tab_stub (a_stub: SD_TAB_STUB)
 			-- Handle insert a tab stub event.
 		require
 			a_stub_not_void: a_stub /= Void
@@ -514,7 +514,7 @@ feature {NONE} -- Implementation functions.
 			added_stub_and_space: not internal_ignore_added_action implies old count = count - 2 and has (a_stub)
 		end
 
-	on_pruned_tab_stub (a_stub: SD_TAB_STUB) is
+	on_pruned_tab_stub (a_stub: SD_TAB_STUB)
 			-- Handle prune a tab sutb event.
 		require
 			a_stub_not_void: a_stub /= Void
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation functions.
 			removed: not has (a_stub)
 		end
 
-	tab_group_internal (a_tab: SD_TAB_STUB):like internal_tab_group  is
+	tab_group_internal (a_tab: SD_TAB_STUB):like internal_tab_group
 			-- Get the group contain `a_tab'.
 		require
 			a_tab_not_void: a_tab /= Void
@@ -589,13 +589,13 @@ feature {NONE} -- Impelementation attributes.
 	internal_tab_stubs: ACTIVE_LIST [SD_TAB_STUB]
 			-- All tab stubs.
 
-	spacer_size: INTEGER is 10
+	spacer_size: INTEGER = 10
 			-- Spacer size.
 
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	internal_tab_group: ARRAYED_LIST [SD_TAB_STUB] is
+	internal_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 			-- Tab group which stay together without separator. This is used for type signature.
 		require
 			False
@@ -617,7 +617,7 @@ invariant
 	internal_tab_stubs_not_void: internal_tab_stubs /= Void
 	tab_groups_not_void: tab_groups /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

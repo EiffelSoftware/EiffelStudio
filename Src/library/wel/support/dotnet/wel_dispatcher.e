@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Receives and dispatch the Windows messages to the Eiffel objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the C variables
 		do
 			create window_delegate.make (Current, $window_procedure)
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 	window_delegate, dialog_delegate: WEL_DISPATCHER_DELEGATE
 			-- Delegate for callbacks.
 			
-	dispose is
+	dispose
 			-- Wean `Current'
 		local
 			null: POINTER
@@ -48,22 +48,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_set_window_procedure_address (address: WEL_DISPATCHER_DELEGATE) is
+	cwel_set_window_procedure_address (address: WEL_DISPATCHER_DELEGATE)
 		external
 			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end
 
-	cwel_set_dialog_procedure_address (address: WEL_DISPATCHER_DELEGATE) is
+	cwel_set_dialog_procedure_address (address: WEL_DISPATCHER_DELEGATE)
 		external
 			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end
 
-	cwel_set_dispatcher_object (dispatcher: POINTER) is
+	cwel_set_dispatcher_object (dispatcher: POINTER)
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

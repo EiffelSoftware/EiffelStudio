@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Case-insensitive string equality testers
 		]"
@@ -36,7 +36,7 @@ feature -- Status setting
 
 feature -- Query
 
-	test (v, u: !G): BOOLEAN is
+	test (v, u: !G): BOOLEAN
 			-- <Precursor>
 		do
 			if is_case_sensitive then
@@ -60,7 +60,7 @@ feature -- Query
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

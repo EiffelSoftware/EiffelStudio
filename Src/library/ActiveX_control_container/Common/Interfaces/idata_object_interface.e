@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,63 +12,63 @@ inherit
 
 feature -- Status Report
 
-	get_data_user_precondition (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN is
+	get_data_user_precondition (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_data_here_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN is
+	get_data_here_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_data_here'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	query_get_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD): BOOLEAN is
+	query_get_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD): BOOLEAN
 			-- User-defined preconditions for `query_get_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_canonical_format_etc_user_precondition (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD): BOOLEAN is
+	get_canonical_format_etc_user_precondition (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_canonical_format_etc'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN is
+	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_format_etc_user_precondition (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]): BOOLEAN is
+	enum_format_etc_user_precondition (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_format_etc'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	dadvise_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF): BOOLEAN is
+	dadvise_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `dadvise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	dunadvise_user_precondition (dw_connection: INTEGER): BOOLEAN is
+	dunadvise_user_precondition (dw_connection: INTEGER): BOOLEAN
 			-- User-defined preconditions for `dunadvise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_dadvise_user_precondition (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN is
+	enum_dadvise_user_precondition (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_dadvise'.
 			-- Redefine in descendants if needed.
 		do
@@ -77,7 +77,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
+	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `pformatetc_in' [in].  
 			-- `p_medium' [out].  
@@ -90,7 +90,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
+	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_medium' [in, out].  
@@ -103,7 +103,7 @@ feature -- Basic Operations
 		deferred
 		end
 
-	query_get_data (p_formatetc: TAG_FORMATETC_RECORD) is
+	query_get_data (p_formatetc: TAG_FORMATETC_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 		require
@@ -114,7 +114,7 @@ feature -- Basic Operations
 
 		end
 
-	get_canonical_format_etc (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD) is
+	get_canonical_format_etc (pformatect_in: TAG_FORMATETC_RECORD; pformatetc_out: TAG_FORMATETC_RECORD)
 			-- No description available.
 			-- `pformatect_in' [in].  
 			-- `pformatetc_out' [out].  
@@ -128,7 +128,7 @@ feature -- Basic Operations
 
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
@@ -143,7 +143,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_format_etc (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]) is
+	enum_format_etc (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE])
 			-- No description available.
 			-- `dw_direction' [in].  
 			-- `ppenum_format_etc' [out].  
@@ -156,7 +156,7 @@ feature -- Basic Operations
 			valid_ppenum_format_etc: ppenum_format_etc.item /= Void
 		end
 
-	dadvise (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF) is
+	dadvise (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `advf' [in].  
@@ -171,7 +171,7 @@ feature -- Basic Operations
 
 		end
 
-	dunadvise (dw_connection: INTEGER) is
+	dunadvise (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		require
@@ -180,7 +180,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_dadvise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_dadvise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_advise' [out].  
 		require
@@ -192,7 +192,7 @@ feature -- Basic Operations
 			valid_ppenum_advise: ppenum_advise.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

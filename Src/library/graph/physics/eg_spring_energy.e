@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Calculating the energy on a particle depending on dt of the particle.
 
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	npx, npy: DOUBLE
 			-- Position of a particle with dt.
 
-	external_force (a_node: like particle_type): DOUBLE is
+	external_force (a_node: like particle_type): DOUBLE
 			-- External force for `a_node'. (attraction to center of universe).
 		local
 			l_dt: DOUBLE
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			Result := center_attraction * distance (npx, npy, center_x, center_y)
 		end
 
-	nearest_neighbor_force (a_node: like particle_type): DOUBLE is
+	nearest_neighbor_force (a_node: like particle_type): DOUBLE
 			-- Get the spring force between all of `a_node's adjacent nodes.
 		local
 			i, nb: INTEGER
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	n_body_force (a_node, an_other: EG_PARTICLE): DOUBLE is
+	n_body_force (a_node, an_other: EG_PARTICLE): DOUBLE
 			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
 		do
 			if a_node /= an_other then
@@ -93,12 +93,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	particle_type: EG_LINKABLE_FIGURE is
+	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

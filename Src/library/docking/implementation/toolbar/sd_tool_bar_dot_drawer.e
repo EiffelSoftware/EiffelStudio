@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects with responsibility for draw a dot on dragging area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	make
 
 feature {NONE} -- Initlization
-	make (a_color: EV_COLOR) is
+	make (a_color: EV_COLOR)
 			-- Creation method.
 		require
 			not_void: a_color /= Void
@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	draw (a_pixmap: EV_PIXMAP) is
+	draw (a_pixmap: EV_PIXMAP)
 			-- Draw dot on a_pixmap.
 		require
 			not_void: a_pixmap /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Drawing.
 	bar_dot: EV_PIXMAP
 			-- bar dot which current draw.
 
-	init_a_dot is
+	init_a_dot
 			-- Init colors of a shadowed dot.
 		local
 			l_color: EV_COLOR
@@ -115,7 +115,7 @@ feature {NONE} -- Drawing.
 			bar_dot.draw_point (2, 2)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

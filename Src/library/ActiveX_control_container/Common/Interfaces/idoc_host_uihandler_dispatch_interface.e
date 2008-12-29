@@ -1,4 +1,4 @@
-indexing
+note
 	description: "IDocHostUIHandlerDispatch Interface Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,105 +12,105 @@ inherit
 
 feature -- Status Report
 
-	show_context_menu_user_precondition (dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): BOOLEAN is
+	show_context_menu_user_precondition (dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `show_context_menu'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_host_info_user_precondition (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF): BOOLEAN is
+	get_host_info_user_precondition (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_host_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	show_ui_user_precondition (dw_id: INTEGER; p_active_object: ECOM_INTERFACE; p_command_target: ECOM_INTERFACE; p_frame: ECOM_INTERFACE; p_doc: ECOM_INTERFACE): BOOLEAN is
+	show_ui_user_precondition (dw_id: INTEGER; p_active_object: ECOM_INTERFACE; p_command_target: ECOM_INTERFACE; p_frame: ECOM_INTERFACE; p_doc: ECOM_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `show_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	hide_ui_user_precondition: BOOLEAN is
+	hide_ui_user_precondition: BOOLEAN
 			-- User-defined preconditions for `hide_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	update_ui_user_precondition: BOOLEAN is
+	update_ui_user_precondition: BOOLEAN
 			-- User-defined preconditions for `update_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enable_modeless_user_precondition (f_enable: BOOLEAN): BOOLEAN is
+	enable_modeless_user_precondition (f_enable: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `enable_modeless'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_doc_window_activate_user_precondition (f_activate: BOOLEAN): BOOLEAN is
+	on_doc_window_activate_user_precondition (f_activate: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `on_doc_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_frame_window_activate_user_precondition (f_activate: BOOLEAN): BOOLEAN is
+	on_frame_window_activate_user_precondition (f_activate: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `on_frame_window_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	resize_border_user_precondition (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN): BOOLEAN is
+	resize_border_user_precondition (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `resize_border'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_accelerator_user_precondition (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): BOOLEAN is
+	translate_accelerator_user_precondition (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_option_key_path_user_precondition (pbstr_key: CELL [STRING]; dw: INTEGER): BOOLEAN is
+	get_option_key_path_user_precondition (pbstr_key: CELL [STRING]; dw: INTEGER): BOOLEAN
 			-- User-defined preconditions for `get_option_key_path'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_drop_target_user_precondition (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE]): BOOLEAN is
+	get_drop_target_user_precondition (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_drop_target'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_external_user_precondition (pp_dispatch: CELL [ECOM_INTERFACE]): BOOLEAN is
+	get_external_user_precondition (pp_dispatch: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_external'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	translate_url_user_precondition (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING]): BOOLEAN is
+	translate_url_user_precondition (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `translate_url'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	filter_data_object_user_precondition (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE]): BOOLEAN is
+	filter_data_object_user_precondition (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `filter_data_object'.
 			-- Redefine in descendants if needed.
 		do
@@ -119,7 +119,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show_context_menu (dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT is
+	show_context_menu (dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `x' [in].  
@@ -132,7 +132,7 @@ feature -- Basic Operations
 
 		end
 
-	get_host_info (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF) is
+	get_host_info (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF)
 			-- No description available.
 			-- `pdw_flags' [in, out].  
 			-- `pdw_double_click' [in, out].  
@@ -144,7 +144,7 @@ feature -- Basic Operations
 
 		end
 
-	show_ui (dw_id: INTEGER; p_active_object: ECOM_INTERFACE; p_command_target: ECOM_INTERFACE; p_frame: ECOM_INTERFACE; p_doc: ECOM_INTERFACE): ECOM_HRESULT is
+	show_ui (dw_id: INTEGER; p_active_object: ECOM_INTERFACE; p_command_target: ECOM_INTERFACE; p_frame: ECOM_INTERFACE; p_doc: ECOM_INTERFACE): ECOM_HRESULT
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `p_active_object' [in].  
@@ -157,7 +157,7 @@ feature -- Basic Operations
 
 		end
 
-	hide_ui is
+	hide_ui
 			-- No description available.
 		require
 			hide_ui_user_precondition: hide_ui_user_precondition
@@ -165,7 +165,7 @@ feature -- Basic Operations
 
 		end
 
-	update_ui is
+	update_ui
 			-- No description available.
 		require
 			update_ui_user_precondition: update_ui_user_precondition
@@ -173,7 +173,7 @@ feature -- Basic Operations
 
 		end
 
-	enable_modeless (f_enable: BOOLEAN) is
+	enable_modeless (f_enable: BOOLEAN)
 			-- No description available.
 			-- `f_enable' [in].  
 		require
@@ -182,7 +182,7 @@ feature -- Basic Operations
 
 		end
 
-	on_doc_window_activate (f_activate: BOOLEAN) is
+	on_doc_window_activate (f_activate: BOOLEAN)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -191,7 +191,7 @@ feature -- Basic Operations
 
 		end
 
-	on_frame_window_activate (f_activate: BOOLEAN) is
+	on_frame_window_activate (f_activate: BOOLEAN)
 			-- No description available.
 			-- `f_activate' [in].  
 		require
@@ -200,7 +200,7 @@ feature -- Basic Operations
 
 		end
 
-	resize_border (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN) is
+	resize_border (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN)
 			-- No description available.
 			-- `left' [in].  
 			-- `top' [in].  
@@ -214,7 +214,7 @@ feature -- Basic Operations
 
 		end
 
-	translate_accelerator (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT is
+	translate_accelerator (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT
 			-- No description available.
 			-- `h_wnd' [in].  
 			-- `n_message' [in].  
@@ -228,7 +228,7 @@ feature -- Basic Operations
 
 		end
 
-	get_option_key_path (pbstr_key: CELL [STRING]; dw: INTEGER) is
+	get_option_key_path (pbstr_key: CELL [STRING]; dw: INTEGER)
 			-- No description available.
 			-- `pbstr_key' [out].  
 			-- `dw' [in].  
@@ -241,7 +241,7 @@ feature -- Basic Operations
 			valid_pbstr_key: pbstr_key.item /= Void
 		end
 
-	get_drop_target (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE]) is
+	get_drop_target (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `p_drop_target' [in].  
 			-- `pp_drop_target' [out].  
@@ -254,7 +254,7 @@ feature -- Basic Operations
 			valid_pp_drop_target: pp_drop_target.item /= Void
 		end
 
-	get_external (pp_dispatch: CELL [ECOM_INTERFACE]) is
+	get_external (pp_dispatch: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pp_dispatch' [out].  
 		require
@@ -266,7 +266,7 @@ feature -- Basic Operations
 			valid_pp_dispatch: pp_dispatch.item /= Void
 		end
 
-	translate_url (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING]) is
+	translate_url (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING])
 			-- No description available.
 			-- `dw_translate' [in].  
 			-- `bstr_urlin' [in].  
@@ -280,7 +280,7 @@ feature -- Basic Operations
 			valid_pbstr_urlout: pbstr_urlout.item /= Void
 		end
 
-	filter_data_object (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE]) is
+	filter_data_object (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `p_do' [in].  
 			-- `pp_doret' [out].  
@@ -293,7 +293,7 @@ feature -- Basic Operations
 			valid_pp_doret: pp_doret.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

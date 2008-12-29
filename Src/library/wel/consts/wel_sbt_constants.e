@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Status window text constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,11 +10,11 @@ class
 
 feature -- Access
 
-	Sbt_borders: INTEGER is 0
+	Sbt_borders: INTEGER = 0
 			-- The text is drawn with a border to appear
 			-- lower than the plane of the window.
 
-	Sbt_noborders: INTEGER is
+	Sbt_noborders: INTEGER
 			-- The text is drawn without borders.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -22,7 +22,7 @@ feature -- Access
 			"SBT_NOBORDERS"
 		end
 
-	Sbt_ownerdraw: INTEGER is
+	Sbt_ownerdraw: INTEGER
 			-- The text is drawn by the parent window.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -30,7 +30,7 @@ feature -- Access
 			"SBT_OWNERDRAW"
 		end
 
-	Sbt_popout: INTEGER is
+	Sbt_popout: INTEGER
 			-- The text is drawn with a border to appear
 			-- higher than the plane of the window.
 		external
@@ -39,7 +39,7 @@ feature -- Access
 			"SBT_POPOUT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that shares an instance of scale factories."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Access
 
-	font_factory: EV_SCALED_FONT_FACTORY is
+	font_factory: EV_SCALED_FONT_FACTORY
 			-- Scaled font factory.
 		once
 			create Result
@@ -18,7 +18,7 @@ feature {NONE} -- Access
 			Result_not_Void: Result /= Void
 		end
 		
-	pixmap_factory: EV_SCALED_PIXMAP_FACTORY is
+	pixmap_factory: EV_SCALED_PIXMAP_FACTORY
 			-- Scaled pixmap factory.
 		once
 			create Result
@@ -26,7 +26,7 @@ feature {NONE} -- Access
 			Result_not_Void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

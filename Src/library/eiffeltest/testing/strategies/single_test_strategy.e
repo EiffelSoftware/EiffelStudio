@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Strategy that executes a single test from a suite"
 	legal: "See notice at end of class."
@@ -16,17 +16,17 @@ class SINGLE_TEST_STRATEGY inherit
 		
 feature -- Status report
 
-	Is_context_needed: BOOLEAN is True
+	Is_context_needed: BOOLEAN = True
 			-- Does strategy need context? (Answer: yes)
 
-	Is_last: BOOLEAN is True
+	Is_last: BOOLEAN = True
 			-- Is current test the last test? (Answer: yes)
 
-	Has_random_generator: BOOLEAN is False
+	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
 	 
-	is_context_ok: BOOLEAN is
+	is_context_ok: BOOLEAN
 			-- Is context value ok?
 		do
 			Result := suite.valid_test_index (context.item)
@@ -34,13 +34,13 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		do
 			is_reset := False
 		end
 
-	start is
+	start
 			-- Select first test.
 		do
 			reset
@@ -49,12 +49,12 @@ feature -- Cursor movement
 
 feature {NONE} -- Inapplicable
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 		end
 	 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 		end
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 	actual_context: INTEGER_REF;
 			-- Argument context
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to memory lock functions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Access
 
-	c_local_lock (handle: POINTER): POINTER is
+	c_local_lock (handle: POINTER): POINTER
 		external
 			"C [macro %"wel.h%"] (HWND): HWND"
 		alias
 			"LocalLock"
 		end	
 		
-	c_local_unlock (handle: POINTER) is
+	c_local_unlock (handle: POINTER)
 			--
 		external
 			"C [macro %"wel.h%"] (HWND)"
@@ -26,7 +26,7 @@ feature -- Access
 			"LocalUnlock"
 		end	
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

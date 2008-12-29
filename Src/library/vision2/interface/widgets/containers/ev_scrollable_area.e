@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays a single widget that may be larger that the container.
@@ -34,7 +34,7 @@ create
 
 feature -- Access
 
-	horizontal_step: INTEGER is
+	horizontal_step: INTEGER
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on horizontal scroll bar.
 		require
@@ -45,7 +45,7 @@ feature -- Access
 			bridge_ok: Result = implementation.horizontal_step
 		end
 
-	vertical_step: INTEGER is
+	vertical_step: INTEGER
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on vertical scroll bar.
 		require
@@ -56,7 +56,7 @@ feature -- Access
 			bridge_ok: Result = implementation.vertical_step
 		end
 
-	is_horizontal_scroll_bar_visible: BOOLEAN is
+	is_horizontal_scroll_bar_visible: BOOLEAN
 			-- Should horizontal scroll bar be displayed?
 		require
 			not_destroyed: not is_destroyed
@@ -66,7 +66,7 @@ feature -- Access
 			bridge_ok: Result = implementation.is_horizontal_scroll_bar_visible
 		end
 
-	is_vertical_scroll_bar_visible: BOOLEAN is
+	is_vertical_scroll_bar_visible: BOOLEAN
 			-- Should vertical scroll bar be displayed?
 		require
 			not_destroyed: not is_destroyed
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_horizontal_step (a_step: INTEGER) is
+	set_horizontal_step (a_step: INTEGER)
 			-- Assign `a_step' to `horizontal_step'.
 		require
 			not_destroyed: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Element change
 			assigned: horizontal_step = a_step
 		end
 
-	set_vertical_step (a_step: INTEGER) is
+	set_vertical_step (a_step: INTEGER)
 			-- Assign `a_step' to `vertical_step'.
 		require
 			not_destroyed: not is_destroyed
@@ -100,7 +100,7 @@ feature -- Element change
 			assigned: vertical_step = a_step
 		end
 
-	show_horizontal_scroll_bar is
+	show_horizontal_scroll_bar
 			-- Display horizontal scroll bar.
 		require
 			not_destroyed: not is_destroyed
@@ -110,7 +110,7 @@ feature -- Element change
 			shown: is_horizontal_scroll_bar_visible
 		end
 
-	hide_horizontal_scroll_bar is
+	hide_horizontal_scroll_bar
 			-- Do not display horizontal scroll bar.
 		require
 			not_destroyed: not is_destroyed
@@ -120,7 +120,7 @@ feature -- Element change
 			hidden: not is_horizontal_scroll_bar_visible
 		end
 
-	show_vertical_scroll_bar is
+	show_vertical_scroll_bar
 			-- Display vertical scroll bar.
 		require
 			not_destroyed: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Element change
 			shown: is_vertical_scroll_bar_visible
 		end
 
-	hide_vertical_scroll_bar is
+	hide_vertical_scroll_bar
 			-- Do not display vertical scroll bar.
 		require
 			not_destroyed: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Element change
 		
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_VIEWPORT} and horizontal_step = 10 and
@@ -156,7 +156,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
@@ -166,7 +166,7 @@ invariant
 	horizontal_step_positive: is_usable implies horizontal_step > 0
 	vertical_step_positive: is_usable implies vertical_step > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

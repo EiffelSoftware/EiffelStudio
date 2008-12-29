@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This structure identifies a tool for which text is to be %
 		%displayed and receives the text for the tool. This structure %
 		%is used with the Ttn_needtext notification message."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_tooltiptext_get_hdr (item))
@@ -45,7 +45,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the tooltip
 		require
 			text_id_not_set: not text_id_set
@@ -59,7 +59,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	text_id: INTEGER is
+	text_id: INTEGER
 			-- String resource identifier for the text
 		require
 			text_id_set: text_id_set
@@ -67,14 +67,14 @@ feature -- Access
 			Result := cwin_lo_word (cwel_tooltiptext_get_lpsztext (item))
 		end
 
-	instance: WEL_INSTANCE is
+	instance: WEL_INSTANCE
 			-- Instance that contains a string resource to be
 			-- used as the text.
 		do
 			create Result.make (cwel_tooltiptext_get_hinst (item))
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Flag that indicates how to interpret `id_from'
 			-- member of `hdr'.
 			-- See class WEL_TTF_CONSTANTS for the different values.
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
 			text_not_void: a_text /= Void
@@ -95,7 +95,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_text_id (an_id: INTEGER) is
+	set_text_id (an_id: INTEGER)
 			-- Set `text' with a string resource identifier `an_id'.
 		do
 			set_instance (main_args.resource_instance)
@@ -105,7 +105,7 @@ feature -- Element change
 			text_id_set: text_id = an_id
 		end
 
-	set_instance (an_instance: WEL_INSTANCE) is
+	set_instance (an_instance: WEL_INSTANCE)
 			-- Set `instance' with `an_instance'.
 		require
 			an_instance_not_void: an_instance /= Void
@@ -115,7 +115,7 @@ feature -- Element change
 			instance_set: instance.item = an_instance.item
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 		require
 			positive_flags: a_flags >= 0
@@ -127,7 +127,7 @@ feature -- Element change
 
 feature -- Status report
 
-	text_id_set: BOOLEAN is
+	text_id_set: BOOLEAN
 			-- Is `text' equal to a resource string identifer?
 		do
 			Result := cwin_hi_word (cwel_tooltiptext_get_lpsztext (item)) = 0
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tooltiptext
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	str_text: WEL_STRING
 			-- C string to save `text'
 
-	main_args: WEL_MAIN_ARGUMENTS is
+	main_args: WEL_MAIN_ARGUMENTS
 			-- Main arguments of the application
 		once
 			create Result
@@ -156,14 +156,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_tooltiptext: INTEGER is
+	c_size_of_tooltiptext: INTEGER
 		external
 			"C [macro <tooltipt.h>]"
 		alias
 			"sizeof (TOOLTIPTEXT)"
 		end
 
-	cwin_make_int_resource (an_id: INTEGER): POINTER is
+	cwin_make_int_resource (an_id: INTEGER): POINTER
 			-- SDK MAKEINTRESOURCE
 		external
 			"C [macro <wel.h>] (WORD): EIF_POINTER"
@@ -171,42 +171,42 @@ feature {NONE} -- Externals
 			"MAKEINTRESOURCE"
 		end
 
-	cwel_tooltiptext_set_lpsztext (ptr: POINTER; value: POINTER) is
+	cwel_tooltiptext_set_lpsztext (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tooltipt.h>]"
 		end
 
-	cwel_tooltiptext_set_hinst (ptr: POINTER; value: POINTER) is
+	cwel_tooltiptext_set_hinst (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tooltipt.h>]"
 		end
 
-	cwel_tooltiptext_set_uflags (ptr: POINTER; value: INTEGER) is
+	cwel_tooltiptext_set_uflags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tooltipt.h>]"
 		end
 
-	cwel_tooltiptext_get_lpsztext (ptr: POINTER): POINTER is
+	cwel_tooltiptext_get_lpsztext (ptr: POINTER): POINTER
 		external
 			"C [macro <tooltipt.h>]"
 		end
 
-	cwel_tooltiptext_get_hdr (ptr: POINTER): POINTER is
+	cwel_tooltiptext_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
-	cwel_tooltiptext_get_hinst (ptr: POINTER): POINTER is
+	cwel_tooltiptext_get_hinst (ptr: POINTER): POINTER
 		external
 			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
-	cwel_tooltiptext_get_uflags (ptr: POINTER): INTEGER is
+	cwel_tooltiptext_get_uflags (ptr: POINTER): INTEGER
 		external
 			"C [macro <tooltipt.h>] (TOOLTIPTEXT*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MSBOXPARAMS structure used by cwin_message_box_indirect"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- initialization
 
-	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER) is
+	make_basic (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style,a_language,a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- without user icon.
 			-- With `a_window' as parent, `a_text' displayed as message, `a_title' displayed in title bar.
@@ -49,7 +49,7 @@ feature {NONE} -- initialization
 				a_wel_string2.item, a_style, default_pointer, cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
-	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)is
+	make_by_id (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id, a_language, a_sublanguage: INTEGER)
 			-- create a MSGBOXPARAMS structure
 			-- with user icon defined by `an_id, `a_window' as parent, `a_text' displayed as message,
 			--`a_title' displayed in title bar and `a_style' as the window style.
@@ -81,7 +81,7 @@ feature {NONE} -- initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
  			-- size of structure `MSGBOXPARAMS'
  		do
 			Result := c_size_of_msgboxparams
@@ -89,7 +89,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation	
 
-	a_main_arguments: WEL_MAIN_ARGUMENTS is
+	a_main_arguments: WEL_MAIN_ARGUMENTS
 		once
 			create Result
 		ensure
@@ -98,20 +98,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_msgboxparams_set (a_msgboxparams, a_window, a_hinstance, a_text, a_title: POINTER; a_style:INTEGER; an_icon: POINTER; a_language_id: INTEGER) is
+	cwel_msgboxparams_set (a_msgboxparams, a_window, a_hinstance, a_text, a_title: POINTER; a_style:INTEGER; an_icon: POINTER; a_language_id: INTEGER)
 			-- Set the fields of
 			-- MSGBOXPARAMS
 		external
 			"C [macro <msgboxpa.h>] (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCTSTR, LPCTSTR, DWORD, LPCTSTR, DWORD)"
 		end
 
-	c_size_of_msgboxparams: INTEGER is
+	c_size_of_msgboxparams: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"sizeof (MSGBOXPARAMS)"
 		end
-	cwin_make_int_resource (an_id: INTEGER): POINTER is
+	cwin_make_int_resource (an_id: INTEGER): POINTER
 			-- Convert `an_id' to a pointer
 			-- SDK MAKEINTRESOURCE
 		external
@@ -120,7 +120,7 @@ feature {NONE} -- Externals
 			"MAKEINTRESOURCE"
 		end
 
-	cwin_make_lang_id (a_language, a_sublanguage: INTEGER): INTEGER is
+	cwin_make_lang_id (a_language, a_sublanguage: INTEGER): INTEGER
 			-- Create a language identifier
 			-- from `a_language' and `a_sublanguage'
 		external
@@ -129,7 +129,7 @@ feature {NONE} -- Externals
 			"MAKELANGID"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

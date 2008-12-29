@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Desktop device context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Makes a DC associated with the Desktop Window
 		do
 			hwindow := cwin_get_desktop_window
@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		do
 			item := cwin_get_dc (hwindow)
 		end
 
-	release is
+	release
 			-- Release the device context
 		do
 			unselect_all
@@ -41,7 +41,7 @@ feature -- Basic operations
 			item := default_pointer
 		end
 
-	quick_release is
+	quick_release
 		do
 			cwin_release_dc (hwindow, item)
 			item := default_pointer
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 		do
 			unselect_all
 			cwin_release_dc (hwindow, item)
@@ -63,7 +63,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_get_desktop_window: POINTER is
+	cwin_get_desktop_window: POINTER
 			-- SDK GetDesktopWindow
 		external
 			"C [macro <wel.h>]: EIF_POINTER"
@@ -71,7 +71,7 @@ feature {NONE} -- Externals
 			"GetDesktopWindow ()"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

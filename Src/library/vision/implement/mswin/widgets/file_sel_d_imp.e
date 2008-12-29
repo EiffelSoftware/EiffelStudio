@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog for file selection"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -44,7 +44,7 @@ create
 
 feature -- Initialization
 
-	make (a_file_sel_dialog: FILE_SEL_D; oui_parent: COMPOSITE) is
+	make (a_file_sel_dialog: FILE_SEL_D; oui_parent: COMPOSITE)
 			-- Create a file selection dialog box
 		do
 			parent ?= oui_parent.implementation
@@ -56,7 +56,7 @@ feature -- Initialization
 			end
 		end
 
-	realize is
+	realize
 			-- Realize current widget
 		do
 			realized := true
@@ -68,12 +68,12 @@ feature -- Initialization
 
 feature -- Access
 
-	dir_count: INTEGER is
+	dir_count: INTEGER
 			-- Count of directories below `filter'
 		do
 		end
 
-	dir_list: LINKED_LIST [STRING] is
+	dir_list: LINKED_LIST [STRING]
 			-- List of directories below `filter'
 		do
 		end
@@ -82,7 +82,7 @@ feature -- Access
 			-- Base directory used in determining files and directories
 			-- to be displayed
 
-	file_list: LINKED_LIST [STRING_GENERAL] is
+	file_list: LINKED_LIST [STRING_GENERAL]
 			-- List of files below `filter' that match `pattern'
 		do
 			if wel_file_dialog /= Void and then wel_file_dialog.selected then
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Measurement
 
-	file_count: INTEGER is
+	file_count: INTEGER
 			-- Count of files below `filter' that
 			-- match `pattern' when not `directory_selection'
 		do
@@ -119,7 +119,7 @@ feature -- Status report
 	realized: BOOLEAN
 			-- Is this widget realized?
 
-	selected_file: STRING is
+	selected_file: STRING
 			-- Current selected file
 		do
 			if directory_selection then
@@ -138,7 +138,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	popdown is
+	popdown
 			-- Popdown widget
 		do
 			is_popped_up := false
@@ -147,7 +147,7 @@ feature -- Status setting
 			end
 		end
 
-	popup is
+	popup
 			-- Display a file selection dialog box
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -194,25 +194,25 @@ feature -- Status setting
 			end
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title' to `a_title'.
 		do
 			title := a_title.twin
 		end
 
-	set_pattern (s: STRING) is
+	set_pattern (s: STRING)
 			-- Set the pattern to `s'
 		do
 			pattern := s
 		end
 
-	set_pattern_name (s: STRING) is
+	set_pattern_name (s: STRING)
 			-- Set `pattern_name' to `s'
 		do
 			pattern_name := s
 		end
 
-	set_filter (s: STRING) is
+	set_filter (s: STRING)
 			-- Set the filter to `s'
 		local
 			string_count: INTEGER
@@ -264,7 +264,7 @@ feature -- Status setting
 			end
 		end
 
-	set_directory (s: STRING) is
+	set_directory (s: STRING)
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		do
@@ -272,58 +272,58 @@ feature -- Status setting
 			directory.replace_substring_all ("/", "\")
 		end
 
-	set_open_file is
+	set_open_file
 			-- Set dialog to be "open file"
 		do
 			file_save_selection := false
 		end
 
-	set_save_file is
+	set_save_file
 			-- Set dialog to be "save file"
 		do
 			file_save_selection := true
 		end
 
-	set_file_selection is
+	set_file_selection
 			-- Set dialog for file selection
 		do
 			directory_selection := false
 		end
 
-	set_directory_selection is
+	set_directory_selection
 			-- Set dialog for directory selection
 		do
 			directory_selection := true
 		end
 
-	unrealize is
+	unrealize
 			-- Does nothing.
 		do
 			realized := False
 		end
 
-	add_cancel_action (a_command: COMMAND; arg: ANY) is
+	add_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.add (Current, a_command, arg)
 		end
 
-	add_help_action (a_command: COMMAND; arg: ANY) is
+	add_help_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		do
 			help_actions.add (Current, a_command, arg)
 		end
 
-	add_ok_action (a_command: COMMAND; arg: ANY) is
+	add_ok_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	add_filter_action (a_command: COMMAND; arg: ANY) is
+	add_filter_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- filter button is activated.
 		do
@@ -332,28 +332,28 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; arg: ANY) is
+	remove_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.remove (Current, a_command, arg)
 		end
 
-	remove_filter_action (a_command: COMMAND; arg: ANY) is
+	remove_filter_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- filter button is activated.
 		do
 			filter_actions.remove (Current, a_command, arg)
 		end
 
-	remove_help_action (a_command: COMMAND; arg: ANY) is
+	remove_help_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		do
 			help_actions.remove (Current, a_command, arg)
 		end
 
- 	remove_ok_action (a_command: COMMAND; arg: ANY) is
+ 	remove_ok_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -362,27 +362,27 @@ feature -- Removal
 
 feature -- Inapplicable
 
-	build is
+	build
 		do
 		end
 
-	set_file_list_label (s: STRING) is
+	set_file_list_label (s: STRING)
 		do
 		end
 
-	set_dir_list_label  (s: STRING) is
+	set_dir_list_label  (s: STRING)
 		do
 		end
 
-	set_label_font (f: FONT) is
+	set_label_font (f: FONT)
 		do
 		end
 
-	set_text_font (f: FONT) is
+	set_text_font (f: FONT)
 		do
 		end
 
-	set_button_font (f: FONT) is
+	set_button_font (f: FONT)
 		do
 		end
 
@@ -392,11 +392,11 @@ feature -- Inapplicable
 
 	button_font : FONT
 
-	set_file_list_width   (i: INTEGER) is
+	set_file_list_width   (i: INTEGER)
 		do
 		end
 
-	set_filter_label (s: STRING) is
+	set_filter_label (s: STRING)
 		do
 		end
 
@@ -420,7 +420,7 @@ feature {NONE} -- Inaplicable
 	hide_filter_button,
 	show_file_selection_label,
 	hide_file_selection_label,
-	set_all_selection is
+	set_all_selection
 		do
 			debug ("WINDOWS")
 				check
@@ -445,20 +445,20 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	has_wildcard (s: STRING): BOOLEAN is
+	has_wildcard (s: STRING): BOOLEAN
 			-- Has string `s' a wildcard?
 		do
 			Result := s.substring_index ("?", 1) /= 0 or else
 				s.substring_index ("*", 1) /= 0
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionFileSelectionDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

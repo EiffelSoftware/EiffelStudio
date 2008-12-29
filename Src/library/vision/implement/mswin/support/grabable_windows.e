@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class."; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
@@ -17,32 +17,32 @@ feature -- Status report
 			-- Collection of widgets set insensitive
 			-- by exclusive grab
 
-	is_cascade_grab: BOOLEAN is
+	is_cascade_grab: BOOLEAN
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		do
 			Result := grab_style = Modal
 		end
 
-	is_exclusive_grab: BOOLEAN is
+	is_exclusive_grab: BOOLEAN
 			-- Is the shell popped up with exclusive grab ?
 		do
 			Result := grab_style = Modal
 		end
 
-	is_no_grab: BOOLEAN is
+	is_no_grab: BOOLEAN
 			-- Is the shell popped up with no grab ?
 		do
 			Result := grab_style = Modeless
 		end
 
-	parent: COMPOSITE_IMP is
+	parent: COMPOSITE_IMP
 		deferred
 		end
 
 feature -- Status setting
 
-	set_cascade_grab is
+	set_cascade_grab
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells poped up with grab to receive events).
 		do
@@ -51,7 +51,7 @@ feature -- Status setting
 			is_cascade_grab: is_cascade_grab
 		end
 
-	set_exclusive_grab is
+	set_exclusive_grab
 			-- Specifies that the shell would be popped up with exclusive grab.
 		do
 			grab_style := Modal
@@ -59,7 +59,7 @@ feature -- Status setting
 			is_exclusive_grab: is_exclusive_grab
 		end
 
-	set_no_grab is
+	set_no_grab
 			-- Specifies that the shell would be popped up with no grab.
 		do
 			grab_style := Modeless
@@ -72,13 +72,13 @@ feature {NONE} --Implementation
 	grab_style: INTEGER
 			-- style of grab
 
-	Modal: INTEGER is 1
+	Modal: INTEGER = 1
 			-- Indicates modal grab style.
 
-	Modeless: INTEGER is 2
+	Modeless: INTEGER = 2
 			-- Indicates modeless grab style.
 
-	set_windows_insensitive is
+	set_windows_insensitive
 			-- Set windows insensitive that are sensitive
 		require
 			insensitive_list_void: insensitive_list = Void
@@ -118,7 +118,7 @@ feature {NONE} --Implementation
 			insensitive_list_exists: insensitive_list /= Void
 		end
 
-	set_windows_sensitive is
+	set_windows_sensitive
 			-- Set windows previously set insensitive back to sensitive
 		require
 			insensitive_list_exists: insensitive_list /= Void
@@ -138,7 +138,7 @@ feature {NONE} --Implementation
 			insensitive_list_void: insensitive_list = Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

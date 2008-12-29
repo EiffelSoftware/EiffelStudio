@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPdraw button"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_draw_b: DRAW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_draw_b: DRAW_B; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			create private_attributes
 			a_draw_b.set_font_imp (Current)
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	draw_selected (a_dc: WEL_DC) is
+	draw_selected (a_dc: WEL_DC)
 			-- Do actions
 		do
 			set_drawing_dc (a_dc)
@@ -41,7 +41,7 @@ feature -- Status setting
 			unset_drawing_dc
 		end
 
-	draw_unselected (a_dc: WEL_DC) is
+	draw_unselected (a_dc: WEL_DC)
 			-- Do actions
 		do
 			set_drawing_dc (a_dc)
@@ -49,7 +49,7 @@ feature -- Status setting
 			unset_drawing_dc
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

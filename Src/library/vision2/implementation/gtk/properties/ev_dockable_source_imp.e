@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gtk implementation of dockable source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Status setting
 				a_x, a_y, a_button: INTEGER;
 				a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 				a_screen_x, a_screen_y: INTEGER)
-			is
+			
 				-- Filter out duplicate events.
 			do
 				if not awaiting_movement then
@@ -37,7 +37,7 @@ feature -- Status setting
 	awaiting_movement: BOOLEAN
 	original_screen_x, original_screen_y: INTEGER_16
 
-	dragable_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	dragable_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- If in drag/pick and drop then update.
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
@@ -70,22 +70,22 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
-	internal_enable_dockable is
+	internal_enable_dockable
 			-- Activate drag mechanism.
  		do
 			-- Nothing to be done
 		end
 
-	internal_disable_dockable is
+	internal_disable_dockable
 			-- Deactivate drag mechanism
 		do
 			-- Nothing to be done
 		end
 
-	drag_and_drop_starting_movement: INTEGER is 3
+	drag_and_drop_starting_movement: INTEGER = 3
 
 	start_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Initialize the pick/drag and drop mechanism.
 		do
 			enable_capture
@@ -94,7 +94,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		end
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Actually start the pick/drag and drop mechanism.
 		do
 			set_pointer_style (Drag_cursor)
@@ -103,7 +103,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 	orig_cursor: EV_POINTER_STYLE
 
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Terminate the pick and drop mechanism.
 		do
 			awaiting_movement := False
@@ -126,27 +126,27 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 			end
 		end
 
-	enable_capture is
+	enable_capture
 			--
 		deferred
 		end
 
-	disable_capture is
+	disable_capture
 			--
 		deferred
 		end
 
-	set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end
 
-	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end
 
-	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER)
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
@@ -160,14 +160,14 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			--
 		deferred
 		end
 
 	interface: EV_DOCKABLE_SOURCE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

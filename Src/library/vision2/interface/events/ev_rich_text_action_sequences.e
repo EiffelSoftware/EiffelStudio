@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_RICH_TEXT."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+	caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed when caret position changes.
 		do
 			Result := implementation.caret_move_actions
@@ -33,7 +33,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selection changes.
 		do
 			Result := implementation.selection_change_actions
@@ -41,7 +41,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+	file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed while loading or saving.
 			-- Event data is percentage of file written in the range (0-100).
 		do
@@ -50,7 +50,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

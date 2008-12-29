@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A dialog box that allows the user to customize a toolbar%
 				  %Call `customize' each time a toolbar must be edited"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation method
 		local
 			l_constants: EV_LAYOUT_CONSTANTS
@@ -34,7 +34,7 @@ feature -- Initialization
 			create final_toolbar.make (20)
 		end
 
-	prepare is
+	prepare
 			-- Initialize world.
 		local
 			list_container1: EV_VERTICAL_BOX
@@ -147,7 +147,7 @@ feature -- Initialization
 			set_default_push_button (ok_button)
 		end
 
-	customize_toolbar (a_parent: EV_WINDOW; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	customize_toolbar (a_parent: EV_WINDOW; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Reload the dialog box with available buttons found in `toolbar'
 			-- and set `is_text_displayed' to `text_displayed'.
 			-- `toolbar' is a list of separators and commands that represents both
@@ -180,7 +180,7 @@ feature -- Result
 	final_toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- list containing the buttons to be displayed and then the ones in the pool
 
-	veto_pebble_function (a_stone: ANY): BOOLEAN is
+	veto_pebble_function (a_stone: ANY): BOOLEAN
 			-- Veto pebble function
 		do
 			if {an_item: SD_CUSTOMIZABLE_LIST_ITEM} a_stone then
@@ -239,7 +239,7 @@ feature {NONE} -- Graphical interface
 
 feature {NONE} -- Button actions
 
-	generate_toolbar is
+	generate_toolbar
 			-- Generate a "toolbar" in `final_toolbar' from the user input
 			-- and set `is_text_displayed'
 		local
@@ -284,7 +284,7 @@ feature {NONE} -- Button actions
 			valid_data := True
 		end
 
-	exit is
+	exit
 			-- Hide the current window
 		do
 			w_width := width
@@ -292,7 +292,7 @@ feature {NONE} -- Button actions
 			destroy
 		end
 
-	add_to_displayed is
+	add_to_displayed
 			-- Move the currently selected button from the pool to the displayed buttons
 		local
 			sel: SD_CUSTOMIZABLE_LIST_ITEM
@@ -319,7 +319,7 @@ feature {NONE} -- Button actions
 			end -- if
 		end
 
-	remove_from_displayed is
+	remove_from_displayed
 			-- Move the currently selected button from the pool to the displayed buttons
 		local
 			sel: SD_CUSTOMIZABLE_LIST_ITEM
@@ -343,7 +343,7 @@ feature {NONE} -- Button actions
 			end -- if
 		end
 
-	move_up is
+	move_up
 			-- Move the currently selected button one position up in `current_list'
 		local
 			sel: SD_CUSTOMIZABLE_LIST_ITEM
@@ -363,7 +363,7 @@ feature {NONE} -- Button actions
 			moving := False
 		end
 
-	move_down is
+	move_down
 			-- Move the currently selected button one position down in `current_list'
 		local
 			sel: SD_CUSTOMIZABLE_LIST_ITEM
@@ -387,7 +387,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	moving: BOOLEAN
 			-- flag set when moving an item up or down to avoid graying buttons unnecessarily
 
-	on_pool_select is
+	on_pool_select
 			-- Called when the user clicks the pool list
 		do
 			if (not add_button.is_sensitive) then
@@ -395,7 +395,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	on_pool_deselect is
+	on_pool_deselect
 			-- Called when the user deselects an item of the pool list
 		do
 			if add_button.is_sensitive then
@@ -403,7 +403,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	on_current_select is
+	on_current_select
 			-- Called when the user clicks the current list
 		do
 			if (not remove_button.is_sensitive) then
@@ -413,7 +413,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	on_current_deselect is
+	on_current_deselect
 			-- Called when the user deselects an item of the current list
 		do
 			if (not moving)
@@ -425,7 +425,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	move_to_pool_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM) is
+	move_to_pool_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Move `an_item' to pool list.
 		do
 			if an_item.parent /= Void then
@@ -440,7 +440,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	move_to_current_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM) is
+	move_to_current_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Move `an_item' to current list.
 		do
 			if an_item.parent /= Void then
@@ -455,7 +455,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			end
 		end
 
-	mouse_move (li: SD_CUSTOMIZABLE_LIST_ITEM; xi, yi, b: INTEGER; xf, yf, p: DOUBLE; ax, ay: INTEGER) is
+	mouse_move (li: SD_CUSTOMIZABLE_LIST_ITEM; xi, yi, b: INTEGER; xf, yf, p: DOUBLE; ax, ay: INTEGER)
 			-- Move `li' to the other list.
 			--| Assumption: `li' is selected.
 		do
@@ -468,7 +468,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 
 feature {NONE} -- Internal data
 
-	set_up_events (it: SD_CUSTOMIZABLE_LIST_ITEM) is
+	set_up_events (it: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Set up the double_click actions and the drop actions of `it'.
 		require
 			valid_it: it /= Void
@@ -477,7 +477,7 @@ feature {NONE} -- Internal data
 			it.drop_actions.extend (agent drop2 (?, it))
 		end
 
-	drop2 (src, dst: SD_CUSTOMIZABLE_LIST_ITEM) is
+	drop2 (src, dst: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- `src' was dropped onto `dst'.
 			-- Set up events for `src' if it is a newly created separator. (Eww how ugly...)
 		local
@@ -499,7 +499,7 @@ feature {NONE} -- Internal data
 			end
 		end
 
-	fill_lists (a_toolbar: ARRAYED_LIST[SD_TOOL_BAR_ITEM]) is
+	fill_lists (a_toolbar: ARRAYED_LIST[SD_TOOL_BAR_ITEM])
 			-- Fill in `pool_list' and `current_list' with the pool and the toolbar
 		require
 			toolbar_non_void: a_toolbar /= Void
@@ -534,7 +534,7 @@ feature {NONE} -- Internal data
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

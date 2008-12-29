@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that manage all toolbars. This manager directly under SD_DOCKING_MANAGER's control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set: docking_manager = a_docking_manager
 		end
 
-	init_right_click_menu is
+	init_right_click_menu
 			-- Initialize right click menu.
 		local
 			l_platform: PLATFORM
@@ -60,7 +60,7 @@ feature -- Query
 	contents: ACTIVE_LIST [SD_TOOL_BAR_CONTENT]
 			-- All tool bar contents.
 
-	content_by_title (a_title: STRING_GENERAL): SD_TOOL_BAR_CONTENT is
+	content_by_title (a_title: STRING_GENERAL): SD_TOOL_BAR_CONTENT
 			-- SD_TOOL_BAR_CONTENT which has `a_title'.
 		require
 			not_destroyed: not is_destroyed
@@ -89,7 +89,7 @@ feature -- Query
 
 feature -- Command
 
-	lock is
+	lock
 			-- Disable drag area for docked tool bars.
 			-- Disable dock for floating tool bars.
 		require
@@ -114,7 +114,7 @@ feature -- Command
 			locked: is_locked
 		end
 
-	unlock is
+	unlock
 			-- Enable drag area for docked tool bars.
 			-- Enable dock for floating tool bars.
 		require
@@ -139,7 +139,7 @@ feature -- Command
 			unlocked: not is_locked
 		end
 
-	destroy is
+	destroy
 			-- Release hooks.
 		local
 			l_floating_tool_bars: like floating_tool_bars
@@ -175,7 +175,7 @@ feature -- Command
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_CONTENT} -- Internal functions.
 
-	on_resize (a_x, a_y, a_width, a_height: INTEGER; a_force: BOOLEAN) is
+	on_resize (a_x, a_y, a_width, a_height: INTEGER; a_force: BOOLEAN)
 			-- Handle main window resize event.
 		require
 			not_destroyed: not is_destroyed
@@ -192,7 +192,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			end
 		end
 
-	hide_all_floating is
+	hide_all_floating
 			-- Hide all floating tool bars.
 		require
 			not_destroyed: not is_destroyed
@@ -210,7 +210,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			end
 		end
 
-	show_all_floating is
+	show_all_floating
 			-- Show all floating tool bars.
 		require
 			not_destroyed: not is_destroyed
@@ -230,7 +230,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			end
 		end
 
-	is_all_floating_displayed: BOOLEAN is
+	is_all_floating_displayed: BOOLEAN
 			-- If floating tool bar zones hidden?
 		require
 			not_destroyed: not is_destroyed
@@ -246,7 +246,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			end
 		end
 
-	set_top (a_content: SD_TOOL_BAR_CONTENT; a_direction: INTEGER) is
+	set_top (a_content: SD_TOOL_BAR_CONTENT; a_direction: INTEGER)
 			-- Set `a_content' dock at `a_direction'
 		require
 			not_destroyed: not is_destroyed
@@ -263,7 +263,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			set_top_imp (a_content, l_tool_bar_row)
 		end
 
-	set_top_with (a_source_content, a_target_content: SD_TOOL_BAR_CONTENT) is
+	set_top_with (a_source_content, a_target_content: SD_TOOL_BAR_CONTENT)
 			-- Set `a_source_content' docking at same row/column of `a_target_content'.
 		require
 			not_destroyed: not is_destroyed
@@ -281,7 +281,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			SD_TOOL_BAR_ZONE_ASSISTANT,	SD_TOOL_BAR_ZONE, SD_DEBUG_ACCESS, SD_TOOL_BAR,
 			SD_TOOL_BAR_CONTENT} -- Internal querys
 
-	tool_bar_container (a_direction: INTEGER): EV_BOX is
+	tool_bar_container (a_direction: INTEGER): EV_BOX
 			-- Tool bar container base on `a_direction'.
 		require
 			not_destroyed: not is_destroyed
@@ -303,7 +303,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			not_void: Result /= Void
 		end
 
-	container_direction (a_tool_bar: SD_TOOL_BAR_ZONE): INTEGER is
+	container_direction (a_tool_bar: SD_TOOL_BAR_ZONE): INTEGER
 			-- Tool bar container directions.
 		require
 			not_destroyed: not is_destroyed
@@ -328,7 +328,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 	floating_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			-- All floating tool bars.
 
-	hidden_docking_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT] is
+	hidden_docking_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			-- Hidden docking contents.
 		require
 			not_destroyed: not is_destroyed
@@ -350,7 +350,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			end
 		end
 
-	content_of (a_tool_bar: SD_TOOL_BAR): SD_TOOL_BAR_CONTENT is
+	content_of (a_tool_bar: SD_TOOL_BAR): SD_TOOL_BAR_CONTENT
 			-- Content of `a_tool_bar'
 		require
 			not_destroyed: not is_destroyed
@@ -372,7 +372,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 
 feature {NONE} -- Agents
 
-	on_add_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT) is
+	on_add_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- Handle add tool bar content.
 		require
 			not_destroyed: not is_destroyed
@@ -381,7 +381,7 @@ feature {NONE} -- Agents
 			a_content.set_manager (Current)
 		end
 
-	on_remove_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT) is
+	on_remove_tool_bar_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- Handle remove tool bar content.
 		require
 			not_destroyed: not is_destroyed
@@ -392,7 +392,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_menu_area_click (a_widget: EV_WIDGET; a_button, a_screen_x, a_screen_y: INTEGER) is
+	on_menu_area_click (a_widget: EV_WIDGET; a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Handle menu area right click.
 		require
 			not_destroyed: not is_destroyed
@@ -420,7 +420,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	notify_four_area (a_width, a_height: INTEGER; a_resize_horizontal: BOOLEAN) is
+	notify_four_area (a_width, a_height: INTEGER; a_resize_horizontal: BOOLEAN)
 			-- Called by `on_resize'. Notify four tool bar area.
 		require
 			not_destroyed: not is_destroyed
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	notify_each_row (a_tool_bar_container: EV_CONTAINER; a_size: INTEGER) is
+	notify_each_row (a_tool_bar_container: EV_CONTAINER; a_size: INTEGER)
 			-- Notify each row in a_tool_bar_container reisze to a_size.
 			-- a_size is width for top, bottom tool bar container.
 			-- a_size is height for left, right tool bar container.
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_at_menu_area (a_widget: EV_WIDGET): BOOLEAN is
+	is_at_menu_area (a_widget: EV_WIDGET): BOOLEAN
 			-- If `a_widget' in menus area?
 		require
 			not_destroyed: not is_destroyed
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_pointer_actions (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_pointer_actions (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If SD_TOOL_BAR_BUTTON at `a_screen_x', `a_screen_y' has pointer button actions?
 		require
 			not_destroyed: not is_destroyed
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_pebble_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_pebble_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_drop_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	has_drop_function (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	right_click_menu: EV_MENU is
+	right_click_menu: EV_MENU
 			-- Construct a right click menu
 		require
 			not_destroyed: not is_destroyed
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	set_top_imp (a_content: SD_TOOL_BAR_CONTENT; a_row: SD_TOOL_BAR_ROW) is
+	set_top_imp (a_content: SD_TOOL_BAR_CONTENT; a_row: SD_TOOL_BAR_ROW)
 			-- Common part of `set_top' and `set_top_with'.
 		require
 			not_destroyed: not is_destroyed
@@ -632,7 +632,7 @@ invariant
 	not_void: floating_tool_bars /= Void
 	items_not_void: contents.for_all (agent (v: SD_TOOL_BAR_CONTENT): BOOLEAN do Result := v /= Void end)
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

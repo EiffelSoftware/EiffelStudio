@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tab control item flag (TCIF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,32 +10,32 @@ class
 
 feature -- Access
 
-	Tcif_text: INTEGER is 1
+	Tcif_text: INTEGER = 1
 			-- The pszText member is valid.
 			--
 			-- Declared in Windows as TCIF_TEXT
 
-	Tcif_image: INTEGER is 2
+	Tcif_image: INTEGER = 2
 			-- The iImage member is valid.
 			--
 			-- Declared in Windows as TCIF_IMAGE
 
-	Tcif_rtlreading: INTEGER is 4
+	Tcif_rtlreading: INTEGER = 4
 			-- Windows 95 only: Displays the text of pszText
 			-- using right-to-left reading order on Hebrew or
 			-- Arabic systems.
 			--
 			-- Declared in Windows as TCIF_RTLREADING
 
-	Tcif_param: INTEGER is 8
+	Tcif_param: INTEGER = 8
 			-- The lParam member is valid.
 			--
 			-- Declared in Windows as TCIF_PARAM
 
-	Tcif_state: INTEGER is 16;
+	Tcif_state: INTEGER = 16;
 			-- Declared in Windows as TCIF_STATE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

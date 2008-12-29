@@ -1,6 +1,6 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
-indexing
+note
 	description:
 		"EiffelVision separator item, mswindows implementation."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ deferred class
 inherit
 	EV_ITEM_IMP
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

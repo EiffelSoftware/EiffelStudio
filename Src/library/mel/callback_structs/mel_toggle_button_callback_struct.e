@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the toggle button. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_ARM, XmCR_DISARM, XmCR_VALUE_CHANGED)
@@ -31,7 +31,7 @@ feature -- Access
 			Result := <<XmCR_ARM, XmCR_DISARM, XmCR_VALUE_CHANGED>>;
 		end;
 
-	set: BOOLEAN is
+	set: BOOLEAN
 			-- Is the button selected?
 		do
 			Result := c_set (handle) /= 0
@@ -39,12 +39,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_set (a_callback_struct_ptr: POINTER): INTEGER is
+	c_set (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmToggleButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

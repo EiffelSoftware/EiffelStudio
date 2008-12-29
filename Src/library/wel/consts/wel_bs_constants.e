@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Button style (BS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,60 +10,60 @@ class
 
 feature -- Access
 
-	Bs_pushbutton: INTEGER is 0
+	Bs_pushbutton: INTEGER = 0
 
-	Bs_defpushbutton: INTEGER is 1
+	Bs_defpushbutton: INTEGER = 1
 
-	Bs_checkbox: INTEGER is 2
+	Bs_checkbox: INTEGER = 2
 
-	Bs_autocheckbox: INTEGER is 3
+	Bs_autocheckbox: INTEGER = 3
 
-	Bs_radiobutton: INTEGER is 4
+	Bs_radiobutton: INTEGER = 4
 
-	Bs_3state: INTEGER is 5
+	Bs_3state: INTEGER = 5
 
-	Bs_auto3state: INTEGER is 6
+	Bs_auto3state: INTEGER = 6
 
-	Bs_groupbox: INTEGER is 7
+	Bs_groupbox: INTEGER = 7
 
-	Bs_userbutton: INTEGER is 8
+	Bs_userbutton: INTEGER = 8
 
-	Bs_autoradiobutton: INTEGER is 9
+	Bs_autoradiobutton: INTEGER = 9
 
-	Bs_ownerdraw: INTEGER is 11
+	Bs_ownerdraw: INTEGER = 11
 
-	Bs_lefttext: INTEGER is 32
+	Bs_lefttext: INTEGER = 32
 
-	Bs_text: INTEGER is 0
+	Bs_text: INTEGER = 0
 
-	Bs_icon: INTEGER is 64
+	Bs_icon: INTEGER = 64
 
-	Bs_bitmap: INTEGER is 128
+	Bs_bitmap: INTEGER = 128
 
-	Bs_left: INTEGER is 256
+	Bs_left: INTEGER = 256
 
-	Bs_right: INTEGER is 512
+	Bs_right: INTEGER = 512
 
-	Bs_center: INTEGER is 768
+	Bs_center: INTEGER = 768
 
-	Bs_top: INTEGER is 1024
+	Bs_top: INTEGER = 1024
 
-	Bs_bottom: INTEGER is 2048
+	Bs_bottom: INTEGER = 2048
 
-	Bs_vcenter: INTEGER is 3072
+	Bs_vcenter: INTEGER = 3072
 
-	Bs_pushlike: INTEGER is 4096
+	Bs_pushlike: INTEGER = 4096
 
-	Bs_multiline: INTEGER is 8192
+	Bs_multiline: INTEGER = 8192
 
-	Bs_notify: INTEGER is 16384
+	Bs_notify: INTEGER = 16384
 
-	Bs_flat: INTEGER is 32768
+	Bs_flat: INTEGER = 32768
 
-	Bs_rightbutton: INTEGER is 32;
+	Bs_rightbutton: INTEGER = 32;
 			-- Same as `Bs_lefttext'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

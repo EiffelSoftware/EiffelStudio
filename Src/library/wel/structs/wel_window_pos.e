@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the size and position of a %
 		%window."
 	legal: "See notice at end of class."
@@ -32,13 +32,13 @@ create
 
 feature -- Access
 
-	window: WEL_WINDOW is
+	window: WEL_WINDOW
 			-- Identifies the window
 		do
 			Result := window_of_item (cwel_windowpos_get_hwnd (item))
 		end
 
-	window_insert_after: WEL_WINDOW is
+	window_insert_after: WEL_WINDOW
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
 			-- which this window is placed.
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	hwindow_insert_after: POINTER is
+	hwindow_insert_after: POINTER
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
 			-- which this window is placed.
@@ -59,19 +59,19 @@ feature -- Access
 			Result := cwel_windowpos_get_hwndinsertafter (item)
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- Position of the left edge of the window
 		do
 			Result := cwel_windowpos_get_x (item)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- Position of the top edge of the window
 		do
 			Result := cwel_windowpos_get_y (item)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Window width
 		do
 			Result := cwel_windowpos_get_width (item)
@@ -79,7 +79,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Window height
 		do
 			Result := cwel_windowpos_get_height (item)
@@ -87,7 +87,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Window position flags
 			-- See class WEL_SWP_CONSTANTS for values
 		do
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'.
 		do
 			cwel_windowpos_set_x (item, a_x)
@@ -106,7 +106,7 @@ feature -- Element change
 			x_set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'.
 		do
 			cwel_windowpos_set_y (item, a_y)
@@ -114,7 +114,7 @@ feature -- Element change
 			y_set: y = a_y
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'.
 		do
 			cwel_windowpos_set_width (item, a_width)
@@ -122,7 +122,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'.
 		do
 			cwel_windowpos_set_height (item, a_height)
@@ -130,7 +130,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_SWP_CONSTANTS for `a_flags' values.
 		do
@@ -139,7 +139,7 @@ feature -- Element change
 			flags_set: flags = a_flags
 		end
 
-	set_window (a_window: WEL_WINDOW) is
+	set_window (a_window: WEL_WINDOW)
 			-- Set `window' with `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -150,7 +150,7 @@ feature -- Element change
 			window_set: window = a_window
 		end
 
-	set_window_insert_after (a_window: WEL_WINDOW) is
+	set_window_insert_after (a_window: WEL_WINDOW)
 			-- Set `window_insert_after' with `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -161,19 +161,19 @@ feature -- Element change
 			window_insert_after_set: window_insert_after = a_window
 		end
 
-	set_hwindow_insert_after (a_window: POINTER) is
+	set_hwindow_insert_after (a_window: POINTER)
 			-- Set `window_insert_after' with `a_window'.
 		do
 			cwel_windowpos_set_hwndinsertafter (item, a_window)
 		end
 
-	set_top is
+	set_top
 			-- Place the window at the top of the Z order.
 		do
 			cwel_windowpos_set_hwndinsertafter (item, Hwnd_top)
 		end
 
-	set_bottom is
+	set_bottom
 			-- Place the window at the bottom of the Z order.
 			-- If `window' identifies a topmost window, the window
 			-- loses its topmost status and is placed at the bottom
@@ -182,7 +182,7 @@ feature -- Element change
 			cwel_windowpos_set_hwndinsertafter (item, Hwnd_bottom)
 		end
 
-	set_topmost is
+	set_topmost
 			-- Places the window above all non-topmost windows.
 			-- The window maintains its topmost position even when
 			-- it is deactivated.
@@ -190,7 +190,7 @@ feature -- Element change
 			cwel_windowpos_set_hwndinsertafter (item, Hwnd_topmost)
 		end
 
-	set_no_topmost is
+	set_no_topmost
 			-- Places the window above all non-topmost windows
 			-- (that is, behind all topmost windows). No effect
 			-- if the window is already a non-topmost window.
@@ -200,7 +200,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_windowpos
@@ -208,84 +208,84 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_windowpos: INTEGER is
+	c_size_of_windowpos: INTEGER
 		external
 			"C [macro <winpos.h>]"
 		alias
 			"sizeof (WINDOWPOS)"
 		end
 
-	cwel_windowpos_set_hwnd (ptr: POINTER; value: POINTER) is
+	cwel_windowpos_set_hwnd (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, HWND)"
 		end
 
-	cwel_windowpos_set_hwndinsertafter (ptr: POINTER; value: POINTER) is
+	cwel_windowpos_set_hwndinsertafter (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, HWND)"
 		end
 
-	cwel_windowpos_set_x (ptr: POINTER; value: INTEGER) is
+	cwel_windowpos_set_x (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
-	cwel_windowpos_set_y (ptr: POINTER; value: INTEGER) is
+	cwel_windowpos_set_y (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
-	cwel_windowpos_set_width (ptr: POINTER; value: INTEGER) is
+	cwel_windowpos_set_width (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
-	cwel_windowpos_set_height (ptr: POINTER; value: INTEGER) is
+	cwel_windowpos_set_height (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, int)"
 		end
 
-	cwel_windowpos_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_windowpos_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*, UINT)"
 		end
 
-	cwel_windowpos_get_hwnd (ptr: POINTER): POINTER is
+	cwel_windowpos_get_hwnd (ptr: POINTER): POINTER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_POINTER"
 		end
 
-	cwel_windowpos_get_hwndinsertafter (ptr: POINTER): POINTER is
+	cwel_windowpos_get_hwndinsertafter (ptr: POINTER): POINTER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_POINTER"
 		end
 
-	cwel_windowpos_get_x (ptr: POINTER): INTEGER is
+	cwel_windowpos_get_x (ptr: POINTER): INTEGER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
-	cwel_windowpos_get_y (ptr: POINTER): INTEGER is
+	cwel_windowpos_get_y (ptr: POINTER): INTEGER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
-	cwel_windowpos_get_width (ptr: POINTER): INTEGER is
+	cwel_windowpos_get_width (ptr: POINTER): INTEGER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
-	cwel_windowpos_get_height (ptr: POINTER): INTEGER is
+	cwel_windowpos_get_height (ptr: POINTER): INTEGER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
-	cwel_windowpos_get_flags (ptr: POINTER): INTEGER is
+	cwel_windowpos_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <winpos.h>] (WINDOWPOS*): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

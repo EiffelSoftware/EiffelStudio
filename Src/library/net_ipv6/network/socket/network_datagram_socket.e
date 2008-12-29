@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Network datagram sockets"
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make a network datagram socket.
 		do
 			c_reset_error
@@ -54,7 +54,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end
 
-	make_bound (a_port: INTEGER) is
+	make_bound (a_port: INTEGER)
 			-- Make a network datagram socket bound to its well
 			-- known local address with port `a_port'.
 		local
@@ -70,7 +70,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end
 
-	make_targeted (a_hostname: STRING; a_peer_port: INTEGER) is
+	make_targeted (a_hostname: STRING; a_peer_port: INTEGER)
 			-- Make a network datagram socket connected to
 			-- hostname `a_hostname' and port `a_port'.
 		local
@@ -86,7 +86,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	broadcast_enabled: BOOLEAN is
+	broadcast_enabled: BOOLEAN
 			-- Is broadcasting enabled?
 		require
 			valid_descriptor: exists
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature
 
-	connect_to_peer (a_peer_address: like address) is
+	connect_to_peer (a_peer_address: like address)
 			-- Target socket to `a_peer_address'.
 		do
 			set_peer_address (a_peer_address)
@@ -108,7 +108,7 @@ feature
 
 feature -- Status setting
 
-	enable_broadcast is
+	enable_broadcast
 			-- Enable broadcasting.
 		require
 			valid_descriptor: exists
@@ -116,7 +116,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 1)
 		end;
 
-	disable_broadcast is
+	disable_broadcast
 			-- Disable broadcasting.
 		require
 			valid_descriptor: exists
@@ -124,7 +124,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 0)
 		end
 
-	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
+	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER)
 			-- Send `a_packet' to address `to_address'
 		local
 			retried: BOOLEAN
@@ -138,7 +138,7 @@ feature -- Status setting
 			retry
 		end
 
-	received (size: INTEGER; flags: INTEGER): PACKET is
+	received (size: INTEGER; flags: INTEGER): PACKET
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		local
@@ -164,13 +164,13 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	make_peer_address is
+	make_peer_address
 			-- Create a peer address.
 		do
 			peer_address := address.twin
 		end
 
-	do_create is
+	do_create
 		local
 			l_fd, l_fd1: INTEGER
 		do
@@ -182,11 +182,11 @@ feature {NONE} -- Implementation
 			is_created := True
 		end
 
-	do_connect is
+	do_connect
 		do
 		end
 
-	do_bind is
+	do_bind
 		local
 			l_fd, l_fd1, l_port: INTEGER
 		do
@@ -201,42 +201,42 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_create (a_fd, a_fd1: TYPED_POINTER [INTEGER]) is
+	c_create (a_fd, a_fd1: TYPED_POINTER [INTEGER])
 		external
 			"C blocking"
 		alias
 			"en_socket_datagram_create"
 		end
 
-	c_bind (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER) is
+	c_bind (a_fd, a_fd1, a_port: TYPED_POINTER [INTEGER]; an_address: POINTER)
 		external
 			"C blocking"
 		alias
 			"en_socket_datagram_bind"
 		end
 
-	c_connect (an_fd, an_fd1:INTEGER; an_address: POINTER) is
+	c_connect (an_fd, an_fd1:INTEGER; an_address: POINTER)
 		external
 			"C blocking"
 		alias
 			"en_socket_datagram_connect"
 		end
 
-	c_recv_from (an_fd, an_fd1:INTEGER; a_last_fd: TYPED_POINTER [INTEGER]; buf: POINTER; len:INTEGER; flags: INTEGER; a_timeout: INTEGER; an_address: POINTER): INTEGER is
+	c_recv_from (an_fd, an_fd1:INTEGER; a_last_fd: TYPED_POINTER [INTEGER]; buf: POINTER; len:INTEGER; flags: INTEGER; a_timeout: INTEGER; an_address: POINTER): INTEGER
 		external
 			"C blocking"
 		alias
 			"en_socket_datagram_rcv_from"
 		end
 
-	c_send_to (an_fd, an_fd1:INTEGER; buf: POINTER; len:INTEGER; flags: INTEGER; an_address: POINTER): INTEGER is
+	c_send_to (an_fd, an_fd1:INTEGER; buf: POINTER; len:INTEGER; flags: INTEGER; an_address: POINTER): INTEGER
 		external
 			"C blocking"
 		alias
 			"en_socket_datagram_send_to"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

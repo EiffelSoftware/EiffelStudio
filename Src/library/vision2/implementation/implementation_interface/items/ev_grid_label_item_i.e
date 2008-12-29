@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cell consisting of only of a text label. Implementation Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			must_recompute_text_dimensions := True
@@ -31,7 +31,7 @@ feature {EV_ANY} -- Initialization
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 		local
@@ -44,7 +44,7 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			end
 		end
 
-	text_width: INTEGER is
+	text_width: INTEGER
 			-- `Result' is width required to fully display `text' in `pixels'.
 			-- This function is optimized internally by `Current' and is therefore
 			-- faster than querying `font.string_size' directly.
@@ -55,7 +55,7 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			result_non_negative: Result >= 0
 		end
 
-	text_height: INTEGER is
+	text_height: INTEGER
 			-- `Result' is height required to fully display `text' in `pixels'.
 			-- This function is optimized internally by `Current' and is therefore
 			-- faster than querying `font.string_size' directly.
@@ -68,7 +68,7 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 
 feature {EV_GRID_LABEL_ITEM} -- Implementation
 
-	string_size_changed is
+	string_size_changed
 			-- Respond to the changing of an `interface' property which
 			-- affects the size of `text'
 		do
@@ -79,7 +79,7 @@ feature {EV_GRID_LABEL_ITEM} -- Implementation
 
 feature {EV_GRID_DRAWER_I} -- Implementation
 
-	internal_default_font: EV_FONT is
+	internal_default_font: EV_FONT
 			-- Default font used for `Current'.
 		once
 			create Result
@@ -95,7 +95,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		-- Must the dimensions of `interface.text' be re-computed
 		-- before drawing.
 
-	recompute_text_dimensions is
+	recompute_text_dimensions
 			-- Recompute `internal_text_width' and `internal_text_height'.
 		local
 			l_text_dimensions: TUPLE [w: INTEGER; h: INTEGER]
@@ -124,7 +124,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			dimensions_recomputed: must_recompute_text_dimensions = False
 		end
 
-	text_dimensions: TUPLE [INTEGER, INTEGER] is
+	text_dimensions: TUPLE [INTEGER, INTEGER]
 			-- A once tuple for use within `recompute_text_dimensions' to
 			-- prevent the need for always creating new tuples.
 		once
@@ -133,7 +133,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP)
 			-- Redraw `Current'.
 		local
 			l_interface: like interface
@@ -304,7 +304,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 		end
 
-	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is
+	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT
 			-- Once access to a layout structure used by `layout_procedure'.
 		once
 			create Result
@@ -316,7 +316,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

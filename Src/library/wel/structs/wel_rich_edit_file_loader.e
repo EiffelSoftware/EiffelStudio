@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This class allows to load a file into a rich edit control.
 		
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: RAW_FILE) is
+	make (a_file: RAW_FILE)
 			-- Load `a_file' in the rich edit control.
 		require
 			a_file_not_void: a_file /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	file: RAW_FILE
 			-- File to load
 
-	read_buffer is
+	read_buffer
 			-- Read from `file' `length' characters.
 		do
 				-- FIXME: we do not handle `is_unicode' because it would imply
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	finish_action is
+	finish_action
 			-- Close `file'.
 		do
 			file.close
@@ -72,7 +72,7 @@ invariant
 	file_not_void: file /= Void
 	not_is_unicode: not is_unicode_data
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

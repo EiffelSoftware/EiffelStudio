@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent action sequences for EV_HEADER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
+	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]]
 			-- Actions to be performed when a mouse pointer is pressed on a header item.
 			--
 			-- header_item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -31,7 +31,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]] is
+	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [header_item: EV_HEADER_ITEM; x_pos: INTEGER; y_pos: INTEGER; button_number: INTEGER]]
 			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
 			--
 			-- header_item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -44,7 +44,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when resizing begins on a header item.
 		do
 			Result := implementation.item_resize_start_actions
@@ -52,7 +52,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed as a header item is resized.
 		do
 			Result := implementation.item_resize_actions
@@ -60,7 +60,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when resizing completes on a header item.
 		do
 			Result := implementation.item_resize_end_actions
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 
 	implementation: EV_HEADER_ACTION_SEQUENCES_I;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPropertyBag' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iproperty_bag_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE) is
+	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [out].  
@@ -48,7 +48,7 @@ feature -- Basic Operations
 			ccom_read (initializer, psz_prop_name, p_var.item, p_error_log_item)
 		end
 
-	write (psz_prop_name: STRING; p_var: ECOM_VARIANT) is
+	write (psz_prop_name: STRING; p_var: ECOM_VARIANT)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [in].  
@@ -58,7 +58,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iproperty_bag_impl_proxy(initializer)
@@ -66,37 +66,37 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_read (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER; p_error_log: POINTER) is
+	ccom_read (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER; p_error_log: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *,::IErrorLog *)"
 		end
 
-	ccom_write (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER) is
+	ccom_write (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *)"
 		end
 
-	ccom_delete_iproperty_bag_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iproperty_bag_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iproperty_bag_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iproperty_bag_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

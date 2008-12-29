@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Figure able to be clipped by its window's children"
 	legal: "See notice at end of class.";
@@ -12,14 +12,14 @@ class
 
 feature -- Status report 
 
-	is_clipped_by_children: BOOLEAN is
+	is_clipped_by_children: BOOLEAN
 			-- Is drawing into the area of a drawing obscured by its visible
 			-- produces no effect ?
 		do
 			Result := subwindow_mode = ClipByChildren
 		end;
 
-	is_including_inferiors: BOOLEAN is
+	is_including_inferiors: BOOLEAN
 			-- Do drawing appears into the area of a window obscured by its
 			-- visible children even when they have opaque backgrounds ?
 		do
@@ -28,14 +28,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_clipped_by_children is
+	set_clipped_by_children
 			-- Specifies that drawing into the area of a drawing obscured by
 			-- its visible children produces no effect.
 		do
 			subwindow_mode := ClipByChildren;
 		end;
 
-	set_including_inferiors is
+	set_including_inferiors
 			-- Specifies that drawing appears through visible children even
 			-- when they have opaque backgrounds.
 		do
@@ -48,13 +48,13 @@ feature {NONE} -- Access
 			-- Whether subwindows obscure their parent for purposes of drawing
 			-- on the parent
 
-	ClipByChildren: INTEGER is 0;
+	ClipByChildren: INTEGER = 0;
 			-- X code to define clip by children mode
 
-	IncludeInferiors: INTEGER is 1;;
+	IncludeInferiors: INTEGER = 1;;
 			-- X code to define include inferiors mode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of Motif text field widget."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_text_field: TEXT_FIELD; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif text_field.
 		local
 			mc: MEL_COMPOSITE
@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
 		local
@@ -76,7 +76,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
  
-	insert (a_text: STRING; a_position: INTEGER) is
+	insert (a_text: STRING; a_position: INTEGER)
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		do
@@ -85,7 +85,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs.
 		do
@@ -94,11 +94,11 @@ feature -- Removal
 
 feature -- Non-implemented feature for Motif systems
 
-	wel_set_focus is
+	wel_set_focus
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

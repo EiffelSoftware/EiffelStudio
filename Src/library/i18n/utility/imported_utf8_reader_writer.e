@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Imported routines for reading and writing STRING_32 objects using UTF-8 encoding"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	utf8_rw: UTF8_READER_WRITER is
+	utf8_rw: UTF8_READER_WRITER
 			-- Routines for reading and writing UTF-8 strings
 		once
 			create Result
@@ -18,7 +18,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

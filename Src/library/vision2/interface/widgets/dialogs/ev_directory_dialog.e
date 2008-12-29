@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	directory: STRING_32 is
+	directory: STRING_32
 			-- Path of currently selected directory.
 			-- `Result' is empty if "OK" was not pressed.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 				Result.is_equal (implementation.directory)
 		end
 
-	start_directory: STRING_32 is
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 		require
 			not_destroyed: not is_destroyed
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Assign `a_path' to `start_directory'.
 		require
 			not_destroyed: not is_destroyed
@@ -66,13 +66,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Initialization
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_DIRECTORY_DIALOG_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

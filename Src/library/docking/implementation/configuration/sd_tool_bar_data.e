@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain data about tool bars in docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		do
 			create rows.make (1)
@@ -24,7 +24,7 @@ feature -- Visible
 	is_visible: BOOLEAN
 		-- If visible?
 
-	set_visible (a_bool: BOOLEAN) is
+	set_visible (a_bool: BOOLEAN)
 			-- Set `is_visible'
 		do
 			is_visible := a_bool
@@ -37,7 +37,7 @@ feature -- Floating data
 	is_floating: BOOLEAN
 		-- If `Current' data about a floating zone?
 
-	set_floating (a_is_floating: BOOLEAN) is
+	set_floating (a_is_floating: BOOLEAN)
 			-- Set `is_floating'.
 		do
 			is_floating := a_is_floating
@@ -48,7 +48,7 @@ feature -- Floating data
 	title: STRING_32
 			-- Title of floating zone.
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -61,7 +61,7 @@ feature -- Floating data
 	screen_x, screen_y: INTEGER
 			-- Floating tool bar zone's position.
 
-	set_screen_x_y (a_screen_x, a_screen_y: INTEGER) is
+	set_screen_x_y (a_screen_x, a_screen_y: INTEGER)
 			-- Set `a_screen_x' and `a_screen_y'.
 		do
 			screen_x := a_screen_x
@@ -75,7 +75,7 @@ feature -- Docking data
 	rows: ARRAYED_LIST [like tool_bar_data]
 			-- All row data in `Current'.
 
-	row (a_title: STRING_GENERAL): like tool_bar_data is
+	row (a_title: STRING_GENERAL): like tool_bar_data
 			-- Row data contain a_title. If not found, create a new one.
 		require
 			a_title_not_void: a_title /= Void
@@ -110,7 +110,7 @@ feature -- SD_TOOL_BAR_ZONE last state
 	last_state: SD_TOOL_BAR_ZONE_STATE
 			-- Last tool bar state information
 
-	set_last_state (a_last_state: SD_TOOL_BAR_ZONE_STATE) is
+	set_last_state (a_last_state: SD_TOOL_BAR_ZONE_STATE)
 			-- Set `last_state' with `a_last_state'
 		require
 			not_void: a_last_state /= Void
@@ -129,7 +129,7 @@ invariant
 
 	rows_not_void: rows /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

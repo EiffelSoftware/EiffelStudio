@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Eiffel class instanciated and used from the Eiffel runtime."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -74,7 +74,7 @@ feature -- Notification
 			retry
 		end
 
-	notify_argument (a_id: INTEGER): ?TUPLE is
+	notify_argument (a_id: INTEGER): ?TUPLE
 			-- Empty argument container for operation `a_id'.
 		local
 			retried: BOOLEAN
@@ -255,7 +255,7 @@ feature {NONE} -- Execution replay
 
 	execution_recorder_parameters: RT_DBG_EXECUTION_PARAMETERS
 			-- Once per thread record parameters.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
@@ -284,7 +284,7 @@ feature {NONE} -- Execution replay
 
 	execution_recorder_cell: !CELL [?RT_DBG_EXECUTION_RECORDER]
 			-- Cell containing the once per thread recorder, if activated.
-		indexing
+		note
 			description: "Once per thread"
 		once
 			create Result.put (Void)
@@ -316,13 +316,13 @@ feature -- Execution replay
 
 feature -- debug purpose: to remove
 
-	test_activate_recording (ref: !ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER) is
+	test_activate_recording (ref: !ANY; fid: INTEGER; dep: INTEGER; bpline: INTEGER)
 		do
 			activate_execution_replay_recording (True, ref, (create {INTERNAL}).dynamic_type (ref), fid, dep, bpline)
 			c_activate_recording
 		end
 
-	frozen c_activate_recording is
+	frozen c_activate_recording
 		external
 			"C inline use %"eif_main.h%""
 		alias
@@ -336,7 +336,7 @@ feature -- debug purpose: to remove
 			]"
 		end
 
-	frozen c_is_inside_rt_eiffel_code: INTEGER is
+	frozen c_is_inside_rt_eiffel_code: INTEGER
 		external
 			"C inline use %"eif_debug.h%""
 		alias
@@ -355,7 +355,7 @@ invariant
 			-- Since this object is shared among threads,
 			-- it is better to avoid any attribute conflict
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

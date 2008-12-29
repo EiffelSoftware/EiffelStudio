@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an array with `n' elements.
 		do
 			-- Built-in
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item, infix "@" (i: INTEGER): G
 			-- Entry at index `i', if in index interval
 		do
 			-- Built-in
@@ -36,16 +36,16 @@ feature -- Access
 
 feature -- Measurement
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Maximum index.
 		do
 			Result := count - 1
 		end
 
-	lower: INTEGER is 0
+	lower: INTEGER = 0
 			-- Minimum index.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of available indices.
 		do
 			-- Built-in
@@ -53,13 +53,13 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (i: INTEGER; v:G) is
+	put (i: INTEGER; v:G)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			-- Built-in
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

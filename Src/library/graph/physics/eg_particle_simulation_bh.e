@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			This is the Barnes and Hut implementation for the n_body_force_solver of
 			a particle system. The runtime is O (n log n) where n is the number of particles.
@@ -45,7 +45,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Set `theta' to 0.25.
 		do
 			theta := 0.25
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change.
 
-	set_particles (a_particles: like particles) is
+	set_particles (a_particles: like particles)
 			-- Set `particles' to `a_particles' and build `quad_tree'.
 		do
 			Precursor {EG_PARTICLE_SIMULATION} (a_particles)
@@ -64,7 +64,7 @@ feature -- Element change.
 			quad_tree_exists: quad_tree /= Void
 		end
 
-	set_theta (a_theta: like theta) is
+	set_theta (a_theta: like theta)
 			-- Set `theta' to `a_theta'.
 		require
 			a_theta_in_range: theta >= 0 and theta <= 1.0
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	theta_count: INTEGER
 			-- Number of times theta was below 1.0
 
-	n_body_force_solver (a_particle: like particle_type): G is
+	n_body_force_solver (a_particle: like particle_type): G
 			-- Solve n_nody_force O(log n) best case O(n) worste case.
 		do
 			last_theta_average := 0.0
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): G is
+	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): G
 			-- Traverse `node' and calculate force with `a_particle'.
 		local
 			r: DOUBLE
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-	build_quad_tree is
+	build_quad_tree
 			-- Build `quad_tree' from `particles'. O(n log n)
 		local
 			l_particles: like particles
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 invariant
 	quad_tree_exists: quad_tree /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif menu bar."
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_bar: BAR; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif bar menu.
 		local
 			mc: MEL_COMPOSITE
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	help_button: MENU_B is
+	help_button: MENU_B
 			-- Menu Button which appears at the lower right corner of the
 			-- menu bar
 		local
@@ -68,13 +68,13 @@ feature -- Status report
 			end;
 		end;
 
-	title: STRING is
+	title: STRING
 			-- Title of current menu
 		do
 			Result := ""
 		end;
 
-	remove_title is
+	remove_title
 			-- Remove current menu title if any.
 		do
 			-- Do nothing
@@ -82,12 +82,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set menu title to `a_title'.
 		do
 		end;
 
-	set_help_button (button: MENU_B) is
+	set_help_button (button: MENU_B)
 			-- Set the Menu Button which appears at the lower right corner
 			-- of the menu bar.
 		local
@@ -97,21 +97,21 @@ feature -- Status setting
 			set_menu_help_widget (mel_cb)
 		end;
 
-	allow_recompute_size  is
+	allow_recompute_size
 			-- Enable the recompute size.
 		do
 			enable_resize_height;
 			enable_resize_width
 		end;
 
-	forbid_recompute_size  is
+	forbid_recompute_size
 			-- Disable the recompute size.
 		do
 			disable_resize_height;
 			disable_resize_width
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

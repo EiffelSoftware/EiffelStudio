@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel Vision vertical progress bar. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			
 feature {EV_ANY_I} -- Implementation
 
-	gtk_progress_bottom_to_top_enum: INTEGER is
+	gtk_progress_bottom_to_top_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -43,7 +43,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

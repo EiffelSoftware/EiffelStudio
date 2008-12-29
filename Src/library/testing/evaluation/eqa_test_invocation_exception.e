@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents an exception that occurred during the execution
 		of an eiffel test
@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_code: like code; a_recipient_name: like recipient_name; a_class_name: like class_name;
-	      a_type: like dynamic_type; a_tag_name: like tag_name; a_trace: like trace) is
+	      a_type: like dynamic_type; a_tag_name: like tag_name; a_trace: like trace)
 			-- Initialize `Current'.
 			--
 			-- `a_code': Code defining type of exception (as in {EXCEP_CONST})
@@ -65,11 +65,11 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	erl_class_imp: STRING is "TEST_EVALUATOR"
-	function: STRING is "FUNCTION"
-	predicate: STRING is "PREDICATE"
-	procedure: STRING is "PROCEDURE"
-	dash_line: STRING is "-------------------------------------------------------------------------------"
+	erl_class_imp: STRING = "TEST_EVALUATOR"
+	function: STRING = "FUNCTION"
+	predicate: STRING = "PREDICATE"
+	procedure: STRING = "PROCEDURE"
+	dash_line: STRING = "-------------------------------------------------------------------------------"
 			-- Constants for used to parse trace
 
 feature {NONE} -- Status setting
@@ -105,7 +105,7 @@ feature {NONE} -- Status setting
 
 		end
 
-	go_after_next_dash_line (a_list: LIST [!STRING]) is
+	go_after_next_dash_line (a_list: LIST [!STRING])
 		require
 			a_list_not_void: a_list /= Void
 			a_list_not_off: not a_list.off
@@ -123,14 +123,14 @@ feature {NONE} -- Status setting
 			end
 		end
 
-	is_test_interpreter_line (v: !STRING): BOOLEAN is
+	is_test_interpreter_line (v: !STRING): BOOLEAN
 			-- Is `v' a stack line describing a frame in an TEST_INTERPRETER_* class?
 		do
 			Result := v.count > erl_class_imp.count and then
 					(v.substring (1, erl_class_imp.count).is_equal (erl_class_imp))
 		end
 
-	is_routine_fast_line (v: !STRING): BOOLEAN is
+	is_routine_fast_line (v: !STRING): BOOLEAN
 			-- Is `v' a stack line describing a frame in an `ROUTINE.fast_*' class?
 		local
 			l_list: LIST [!STRING]

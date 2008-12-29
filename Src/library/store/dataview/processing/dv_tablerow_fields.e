@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fields representing part of%
 			%the content of a table row."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create field_list.make (1)
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := table_description /= void
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	add_field, extend (ta_field: DV_TABLEROW_FIELD) is
+	add_field, extend (ta_field: DV_TABLEROW_FIELD)
 			-- Add `field' to structure.
 		require
 			not_void: ta_field /= Void
@@ -52,7 +52,7 @@ feature {DV_COMPONENT} -- Access
 	table_description: DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 
-	updated_tablerow: DB_TABLE is
+	updated_tablerow: DB_TABLE
 			-- Updated table row if `is_update_valid'.	
 		require
 			is_activated: is_activated
@@ -74,7 +74,7 @@ feature {DV_COMPONENT} --  Status report
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_table_description (td: DB_TABLE_DESCRIPTION) is
+	set_table_description (td: DB_TABLE_DESCRIPTION)
 			-- Set represented table description to `td'.
 		require
 			not_void: td /= Void
@@ -83,7 +83,7 @@ feature {DV_COMPONENT} -- Basic operations
 			table_description := td
 		end
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			from
@@ -98,7 +98,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_activated := True
 		end
 
-	refresh (table_descr: DB_TABLE_DESCRIPTION) is
+	refresh (table_descr: DB_TABLE_DESCRIPTION)
 			-- Refresh fields with values of `tr'.
 		require
 			is_activated: is_activated
@@ -113,7 +113,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	clear is
+	clear
 			-- Clear fields and make them insensitive.
 		require
 			is_activated: is_activated
@@ -128,7 +128,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make structure sensitive.
 		do
 			from 
@@ -141,7 +141,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make structure insensitive.
 		do
 			from 
@@ -154,7 +154,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	update_tablerow (default_tablerow: DB_TABLE) is
+	update_tablerow (default_tablerow: DB_TABLE)
 			-- Displayed object with user changes. Fields unchanged are taken
 			-- from `default_tablerow'.
 		require
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 	new_tablerow: DB_TABLE;
 			-- Updated tablerow.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

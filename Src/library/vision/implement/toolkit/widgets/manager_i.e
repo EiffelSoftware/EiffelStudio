@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General manager implementation"
 	legal: "See notice at end of class.";
@@ -18,18 +18,18 @@ inherit
 
 feature -- Access
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of manager widget
 		deferred
 		end;
 
 feature -- Status setting
 
-	update_foreground_color is
+	update_foreground_color
 		deferred
 		end;
         
-	set_initial_input_focus (a_widget: WIDGET) is
+	set_initial_input_focus (a_widget: WIDGET)
 			-- Set child which will initially have input focus
 		require
 			a_widget_not_void: not (a_widget = Void)
@@ -38,7 +38,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require
 			color_not_void: new_color /= Void
@@ -47,7 +47,7 @@ feature -- Element change
 			foreground_color_set: foreground_color = new_color
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

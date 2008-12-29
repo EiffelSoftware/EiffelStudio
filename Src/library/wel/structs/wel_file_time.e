@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper of FILETIME structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_current_time is
+	make_by_current_time
 			-- Create FILETIME structure and initialize it 
 			-- to current universal time.
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			initialized: item /= default_pointer
 		end
 
-	make_by_file_access_time (a_file: FILE) is
+	make_by_file_access_time (a_file: FILE)
 			-- Create FILETIME structure and initialize 
 			-- it to universal access time of file `a_file'
 		require
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			initialized: item /= default_pointer
 		end
 
-	make_by_file_creation_time (a_file: FILE) is
+	make_by_file_creation_time (a_file: FILE)
 			-- Create FILETIME structure and initialize 
 			-- it to universal creation time of file `a_file'
 		require
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			initialized: item /= default_pointer
 		end
 
-	make_by_file_modification_time (a_file: FILE) is
+	make_by_file_modification_time (a_file: FILE)
 			-- Create FILETIME structure and initialize 
 			-- it to universal modification time of file `a_file'
 		require
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of FILETIME structure
 		do
 			Result := c_size_of_file_time
@@ -83,14 +83,14 @@ feature -- Measurement
 
 feature -- Conversion
 
-	system_time: WEL_SYSTEM_TIME is
+	system_time: WEL_SYSTEM_TIME
 			-- FILETIME in SYSTEMTIME format
 		do
 			create Result.make
 			cwel_file_time_to_system_time (item, Result.item)
 		end
 
-	local_file_time: WEL_FILE_TIME is
+	local_file_time: WEL_FILE_TIME
 			-- universal FILETIME in local FILETIME form
 			-- `Current' must be in universal time form
 		do
@@ -98,7 +98,7 @@ feature -- Conversion
 			cwel_file_time_to_local_file_time (item, Result.item)
 		end
 
-	universal_file_time: WEL_FILE_TIME is
+	universal_file_time: WEL_FILE_TIME
 			-- local FILETIME in universal FILETIME form
 			-- `Current' must be in local time form
 		do
@@ -108,7 +108,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	is_equal (a_file_time: WEL_FILE_TIME): BOOLEAN is
+	is_equal (a_file_time: WEL_FILE_TIME): BOOLEAN
 			-- is `a_file_time' equal to `Current'?
 		do
 			if (cwel_compare_file_time (item, a_file_time.item) = 0) then
@@ -116,7 +116,7 @@ feature -- Basic operations
 			end
 		end
 
-	is_larger_than (a_file_time: WEL_FILE_TIME): BOOLEAN is
+	is_larger_than (a_file_time: WEL_FILE_TIME): BOOLEAN
 			-- is `Current' larger than `a_file_time'?
 		require
 			non_default_item: item /= default_pointer
@@ -128,7 +128,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	file_times (a_file: FILE; a_creation_time, an_access_time, a_modification_time: WEL_FILE_TIME) is
+	file_times (a_file: FILE; a_creation_time, an_access_time, a_modification_time: WEL_FILE_TIME)
 			-- retrieves file times of file `a_file'
 		require
 			valid_file: a_file /= Void
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	handle_from_file_descriptor (a_fd: INTEGER): POINTER is
+	handle_from_file_descriptor (a_fd: INTEGER): POINTER
 			-- Associated handle of `a_fd'.
 		external
 			"C inline use <io.h>"
@@ -162,44 +162,44 @@ feature {NONE} -- Externals
 			"(EIF_POINTER) _get_osfhandle($a_fd)"
 		end
 
-	c_size_of_file_time: INTEGER is
+	c_size_of_file_time: INTEGER
 		external 
 			"C [macro %"wel_time.h%"]"
 		alias
 			"sizeof(FILETIME)"
 		end
 
-	cwel_compare_file_time (ft1, ft2: POINTER):INTEGER is
+	cwel_compare_file_time (ft1, ft2: POINTER):INTEGER
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_file_time_to_system_time (ft, st: POINTER) is
+	cwel_file_time_to_system_time (ft, st: POINTER)
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_file_time_to_local_file_time (ft, lft: POINTER) is
+	cwel_file_time_to_local_file_time (ft, lft: POINTER)
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_local_file_time_to_file_time (lft, ft: POINTER) is
+	cwel_local_file_time_to_file_time (lft, ft: POINTER)
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_get_file_time (file_handle, cft, aft, mft: POINTER) is
+	cwel_get_file_time (file_handle, cft, aft, mft: POINTER)
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_get_system_time_as_file_time (ft: POINTER) is
+	cwel_get_system_time_as_file_time (ft: POINTER)
 		external 
 			"C [macro %"wel_time.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Absolute temporal values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	origin: like Current is
+	origin: like Current
 			-- Place of start for recording objects
 		deferred
 		ensure
@@ -26,14 +26,14 @@ feature -- Access
 
 feature -- Measurement
 
-	duration: DURATION is
+	duration: DURATION
 			-- Length of the interval of time since `origin'
 		deferred
 		end
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is the current object before `other'?
 		do
 			Result := duration < other.duration
@@ -41,7 +41,7 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "-" (other: like Current): INTERVAL [like Current] is
+	infix "-" (other: like Current): INTERVAL [like Current]
 			-- Interval between current object and `other'
 		require
 			other_exists: other /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 					Result.end_bound.is_equal (Current)
 		end
 
-	relative_duration (other: like Current): DURATION is
+	relative_duration (other: like Current): DURATION
 			-- Relative duration from `Current' to `other'
 		require
 			other_exists: other /= Void
@@ -63,7 +63,7 @@ feature -- Basic operations
 			Result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

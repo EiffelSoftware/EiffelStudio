@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that responsible for drawing SD_NOTEBOOK_TAB."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_shared
@@ -21,7 +21,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw unselected tab.
 		require
 			setted: pixmap /= Void
@@ -31,7 +31,7 @@ feature -- Command
 			current_total_width := a_width
 		end
 
-	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw selected tab.
 		require
 			setted: pixmap /= Void
@@ -41,7 +41,7 @@ feature -- Command
 			current_total_width := a_width
 		end
 
-	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw hot tab.
 		require
 			setted: pixmap /= Void
@@ -51,7 +51,7 @@ feature -- Command
 			current_total_width := a_width
 		end
 
-	draw_focus_rect (a_rect: EV_RECTANGLE) is
+	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Draw focus rectangle.
 		require
 			not_void: a_rect /= Void
@@ -60,7 +60,7 @@ feature -- Command
 
 feature -- Key setting
 
-	set_drawing_area (a_tab: SD_NOTEBOOK_TAB) is
+	set_drawing_area (a_tab: SD_NOTEBOOK_TAB)
 			-- Set `internal_tab' with `a_tab'
 		require
 			not_void: a_tab /= Void
@@ -70,7 +70,7 @@ feature -- Key setting
 			set: internal_tab = a_tab
 		end
 
-	set_is_draw_at_top (a_draw_at_top: BOOLEAN) is
+	set_is_draw_at_top (a_draw_at_top: BOOLEAN)
 			-- Set `is_top_side_tab' with `a_draw_at_top'
 		do
 			is_top_side_tab := a_draw_at_top
@@ -83,7 +83,7 @@ feature -- Properties
 	text: STRING_32
 			-- Text
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text'
 		require
 			not_void: a_text /= Void
@@ -96,7 +96,7 @@ feature -- Properties
 	pixmap: EV_PIXMAP
 			-- Pixmap Current will draw.
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set `pixmap'
 		require
 			not_void: a_pixmap /= Void
@@ -109,7 +109,7 @@ feature -- Properties
 	padding_width: INTEGER
 			-- Padding width.
 
-	set_padding_width (a_width: INTEGER) is
+	set_padding_width (a_width: INTEGER)
 			-- Set `padding_width'.
 		require
 			valid: a_width >= 0
@@ -119,18 +119,18 @@ feature -- Properties
 			set: padding_width = a_width
 		end
 
-	gap_height: INTEGER is
+	gap_height: INTEGER
 			-- Gap height
 		deferred
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of Current will draw.
 		do
 			Result := internal_tab.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of Current will draw.
 		do
 			Result := internal_tab.height
@@ -139,7 +139,7 @@ feature -- Properties
 	is_draw_pixmap: BOOLEAN
 			-- If Current will draw pixmap?
 
-	set_draw_pixmap (a_draw: BOOLEAN) is
+	set_draw_pixmap (a_draw: BOOLEAN)
 			-- Set `is_draw_pixmap'
 		do
 			is_draw_pixmap := a_draw
@@ -150,7 +150,7 @@ feature -- Properties
 	is_enough_space: BOOLEAN
 			-- Enough space now?
 
-	set_enough_space (a_enough: BOOLEAN) is
+	set_enough_space (a_enough: BOOLEAN)
 			-- Set `is_enough_space'.
 		do
 			is_enough_space := a_enough
@@ -161,7 +161,7 @@ feature -- Properties
 	is_selected: BOOLEAN
 			-- Draw selected?
 
-	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN) is
+	set_selected (a_selected: BOOLEAN; a_focused: BOOLEAN)
 			-- Set `is_selected'
 		local
 			l_font: EV_FONT
@@ -194,19 +194,19 @@ feature -- Properties
 
 feature -- Size issues
 
-	start_x_separator_before_internal: INTEGER is
+	start_x_separator_before_internal: INTEGER
 			-- Start x position where should draw separator before.
 		do
 			Result := 0
 		end
 
-	start_x_pixmap_internal: INTEGER is
+	start_x_pixmap_internal: INTEGER
 			-- Start x position where should draw `pixmap'.
 		do
 			Result := start_x_separator_before_internal + padding_width
 		end
 
-	start_x_text_internal: INTEGER is
+	start_x_text_internal: INTEGER
 			-- Start x position where should draw `text'.
 		do
 			Result := start_x_pixmap_internal
@@ -215,7 +215,7 @@ feature -- Size issues
 			end
 		end
 
-	start_x_close: INTEGER is
+	start_x_close: INTEGER
 			-- Start x position where should draw close
 		require
 			avialable: is_top_side_tab
@@ -241,7 +241,7 @@ feature -- Size issues
 			end
 		end
 
-	start_x_tail_internal: INTEGER is
+	start_x_tail_internal: INTEGER
 			-- Start x position where should draw tail area.
 		local
 			l_width: INTEGER
@@ -269,7 +269,7 @@ feature -- Size issues
 			non_negative: Result >= 0
 		end
 
-	start_x_separator_after_internal: INTEGER is
+	start_x_separator_after_internal: INTEGER
 			-- Start x position where should draw separator after.
 		do
 			if is_selected then
@@ -283,23 +283,23 @@ feature -- Size issues
 			end
 		end
 
-	start_y_position: INTEGER is
+	start_y_position: INTEGER
 			-- Start y position of drawing a pixmap.
 		deferred
 		end
 
-	start_y_position_text: INTEGER is
+	start_y_position_text: INTEGER
 			-- Start y position of drawing a pixmap.
 		deferred
 		end
 
-	start_y_close: INTEGER is
+	start_y_close: INTEGER
 			-- Start y position of drawing a close button
 		do
 			Result :=(height / 2  - (internal_shared.icons.close.height - close_background_expand * 2) / 2).floor - 1
 		end
 
-	close_rectangle: EV_RECTANGLE is
+	close_rectangle: EV_RECTANGLE
 			-- Close button rectangle
 		require
 			has_close_button: is_top_side_tab
@@ -309,7 +309,7 @@ feature -- Size issues
 			not_void: Result /= Void
 		end
 
-	close_width: INTEGER is
+	close_width: INTEGER
 			-- Width of the close button.
 		require
 			has_close_button: is_top_side_tab
@@ -317,7 +317,7 @@ feature -- Size issues
 			Result := internal_shared.icons.close.width + 2 * close_background_expand
 		end
 
-	close_rectangle_parent_box: EV_RECTANGLE is
+	close_rectangle_parent_box: EV_RECTANGLE
 			-- Close button rectangle relative to parent box
 		do
 			Result := close_rectangle
@@ -326,7 +326,7 @@ feature -- Size issues
 			end
 		end
 
-	text_clipping_width (a_total_width: INTEGER): INTEGER is
+	text_clipping_width (a_total_width: INTEGER): INTEGER
 			-- Clipping width of text when close button not exist
 		do
 			Result := a_total_width - start_x_text_internal
@@ -337,7 +337,7 @@ feature -- Size issues
 			positive: Result >= 0
 		end
 
-	close_clipping_width (a_total_width: INTEGER): INTEGER is
+	close_clipping_width (a_total_width: INTEGER): INTEGER
 			-- Clipping width of text when close button exist.
 		require
 			has_close_button: is_top_side_tab
@@ -352,7 +352,7 @@ feature -- Size issues
 
 feature {NONE} -- Implementation
 
-	start_draw is
+	start_draw
 			-- We make a buffer pixmap
 			-- Should call `end_draw' after every thing is done.
 		require
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			created: buffer_pixmap /= Void
 		end
 
-	end_draw is
+	end_draw
 			-- Draw `buffer_pixmap' to `internal_drawing_area'
 			-- Call `start_draw' before call this function.
 		require
@@ -381,14 +381,14 @@ feature {NONE} -- Implementation
 			cleared: buffer_pixmap = Void
 		end
 
-	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Draw pixmap and text when unselected.
 		require
 			not_void: a_pixmap /= Void
 		deferred
 		end
 
-	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Draw pixmap and text when selected.
 		require
 			not_void: a_pixmap /= Void
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	close_background_expand: INTEGER is 3
+	close_background_expand: INTEGER = 3
 			-- close button background expand size.
 
 	internal_tab: SD_NOTEBOOK_TAB
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 	buffer_pixmap: EV_PIXMAP;
 			-- Buffer pixmap
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

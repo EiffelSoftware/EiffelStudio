@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a motif widget."
@@ -35,13 +35,13 @@ feature -- Access
 	cursor: SCREEN_CURSOR;
 			-- Cursor used
 
-	get_multi_click_time: INTEGER is
+	get_multi_click_time: INTEGER
 			-- Multiclick time
 		do
 			Result := button_click_actions.multi_click_time
 		end;
 
-	screen: SCREEN_I is
+	screen: SCREEN_I
 			-- Associated screen 
 		do
 			Result := widget_manager.screen_i_using_index (widget_index)
@@ -49,7 +49,7 @@ feature -- Access
 			valid_result: Result /= Void
 		end; 
 
-	widget_oui: WIDGET is
+	widget_oui: WIDGET
 			-- Object user interface widget associated with current
 			-- implementation
 		do
@@ -58,19 +58,19 @@ feature -- Access
 
 feature -- Status Report
 
-	managed: BOOLEAN is
+	managed: BOOLEAN
 			-- Is the widget managed?
 		do
 			Result := is_managed
 		end;
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- Is current object sensitive?
 		do
 			Result := not is_sensitive
 		end;
 
-	background_color: COLOR is
+	background_color: COLOR
 			-- Color used for the background.
 		local
 			bg_color_x: COLOR_IMP
@@ -87,7 +87,7 @@ feature -- Status Report
 			color_exists: Result /= Void
 		end;
 
-	background_pixmap: PIXMAP is
+	background_pixmap: PIXMAP
 			-- Pixmap used for the background
 		local
 			bg_pixmap_x: PIXMAP_IMP
@@ -103,7 +103,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if `flag'. This means
 			-- that any events with an event type of KeyPress,
 			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
@@ -120,13 +120,13 @@ feature -- Status Setting
 			insensitive_equal_flag: insensitive = flag
 		end;
 
-	set_multi_click_time (time: INTEGER) is
+	set_multi_click_time (time: INTEGER)
 			-- Set `multi_click_time' to `time'.
 		do
 			button_click_actions.set_multi_click_time (time)
 		end;
 	
-	set_cursor (a_cursor: SCREEN_CURSOR) is
+	set_cursor (a_cursor: SCREEN_CURSOR)
 			-- Set cursor label to `cursor_name'.
 		require
 			a_cursor_exists: a_cursor /= Void
@@ -147,7 +147,7 @@ feature -- Status Setting
 			set: cursor = a_cursor
 		end;
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 			-- Set background_color to `a_color'.
 			--| This will automatically update the
 			--| the top_shadow, bottom_shadow
@@ -170,7 +170,7 @@ feature -- Status Setting
 			background_set: background_color = a_color;
 		end;
 
-	set_background_pixmap (a_pixmap: PIXMAP) is
+	set_background_pixmap (a_pixmap: PIXMAP)
 			-- Set background_pixmap to `a_pixmap'.
 		require
 			a_pixmap_exists: a_pixmap /= Void
@@ -189,7 +189,7 @@ feature -- Status Setting
 			background_pixmap_set: background_pixmap = a_pixmap;
 		end;
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -203,7 +203,7 @@ feature -- Status Setting
 			managed_equal_flag: managed = flag 
 		end; 
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 		local
@@ -214,7 +214,7 @@ feature -- Status Setting
 			list.add_command (a_command, argument)
 		end;
 
-	set_widget_default is
+	set_widget_default
 			-- Set the widget default after creating 
 			-- associated oui widget.
 		do
@@ -222,7 +222,7 @@ feature -- Status Setting
 
 feature -- Element change
 
-	add_destroy_action (a_command: COMMAND; argument: ANY) is
+	add_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current widget is destroyed.
 		local
@@ -236,7 +236,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
 		local
@@ -250,7 +250,7 @@ feature -- Element change
 			list.add_command (number, a_command, argument)
 		end;
 
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
 		local
@@ -264,7 +264,7 @@ feature -- Element change
 			list.add_command (number, a_command, argument)
 		end; 
 
-	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
@@ -288,7 +288,7 @@ feature -- Element change
 			end
 		end;
 
-	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is clicked.
 		local
@@ -307,35 +307,35 @@ feature -- Element change
 			end
 		end;
 
-	add_enter_action (a_command: COMMAND; argument: ANY) is
+	add_enter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer enter the window.
 		do
 			add_xt_event_command (EnterWindowMask, a_command, argument)
 		end;
 
-	add_key_press_action (a_command: COMMAND; argument: ANY) is
+	add_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
 			add_xt_event_command (KeyPressMask, a_command, argument)
 		end;
 
-	add_key_release_action (a_command: COMMAND; argument: ANY) is
+	add_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when a key
 			-- is released.
 		do
 			add_xt_event_command (KeyReleaseMask, a_command, argument)
 		end;
 
-	add_leave_action (a_command: COMMAND; argument: ANY) is
+	add_leave_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- pointer leave the window.
 		do
 			add_xt_event_command (LeaveWindowMask, a_command, argument)
 		end; 
 
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
@@ -344,7 +344,7 @@ feature -- Element change
 
 feature -- Removal
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy screen widget implementation and all
 			-- screen widget implementations of its children
 			-- contained in `wid_list;.
@@ -362,14 +362,14 @@ feature -- Removal
 			mel_destroy
 		end; 
 
-	remove_destroy_action (a_command: COMMAND; argument: ANY) is
+	remove_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current widget is destroyed.
 		do
 			remove_command (destroy_command, a_command, argument)
 		end;
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
@@ -377,7 +377,7 @@ feature -- Removal
 		end;
 
 	remove_button_motion_action (number: INTEGER; a_command: COMMAND; 
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
@@ -402,7 +402,7 @@ feature -- Removal
 		end; 
 
 	remove_button_press_action (number: INTEGER; a_command: COMMAND; 
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is pressed.
 		local
@@ -415,7 +415,7 @@ feature -- Removal
 		end; 
 
 	remove_button_release_action (number: INTEGER; a_command: COMMAND; 
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is released.
 		local
@@ -428,7 +428,7 @@ feature -- Removal
 		end; 
 
 	remove_button_click_action (number: INTEGER; a_command: COMMAND; 
-			argument: ANY) is
+			argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- `number'-th mouse button is clicked.
 		local
@@ -438,35 +438,35 @@ feature -- Removal
 			actions.remove (number, a_command, argument)
 		end;
 
-	remove_enter_action (a_command: COMMAND; argument: ANY) is
+	remove_enter_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer enter the window.
 		do
 			remove_command (event_command (EnterWindowMask), a_command, argument)
 		end; 
 
-	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+	remove_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is pressed.
 		do
 			remove_command (event_command (KeyPressMask), a_command, argument)
 		end;
 
-	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+	remove_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when a key
 			-- is released.
 		do
 			remove_command (event_command (KeyReleaseMask), a_command, argument)
 		end; 
 
-	remove_leave_action (a_command: COMMAND; argument: ANY) is
+	remove_leave_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when the
 			-- pointer leave the window.
 		do
 			remove_command (event_command (LeaveWindowMask), a_command, argument)
 		end; 
 
-	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved.
 		do
@@ -475,7 +475,7 @@ feature -- Removal
 
 feature -- Update
 
-	grab (a_cursor: SCREEN_CURSOR) is
+	grab (a_cursor: SCREEN_CURSOR)
 			-- Grab the mouse and the keyboard.
 			-- If `cursor' is not void, the pointer will have the shape
 			-- set by cursor during the grab.
@@ -491,7 +491,7 @@ feature -- Update
 			grab_pointer (cursor_implementation)
 		end;
 
-	ungrab is
+	ungrab
 			-- Release the mouse and the keyboard from an earlier grab.
 		require
 			widget_realized: realized
@@ -501,7 +501,7 @@ feature -- Update
 
 feature {COLOR_IMP} -- Implementation
 
-	update_background_color is
+	update_background_color
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			color_implementation: COLOR_IMP;
@@ -523,7 +523,7 @@ feature {RESOURCE_X} -- Implementation
 
 feature {PIXMAP_IMP} -- Implementation
 
-	update_background_pixmap is
+	update_background_pixmap
 			-- Update the X pixmap after a change inside the Eiffel pixmap.
 		local
 			pixmap_implementation: PIXMAP_IMP
@@ -534,19 +534,19 @@ feature {PIXMAP_IMP} -- Implementation
 
 feature {SCREEN_CURSOR_IMP, ALL_CURS_X}
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
+	define_cursor_if_shell (a_cursor: SCREEN_CURSOR)
 			-- Define `cursor' if the current widget is a shell.
 		require
 			a_cursor_exists: a_cursor /= Void
 		do
 		end;
 
-	undefine_cursor_if_shell is
+	undefine_cursor_if_shell
 			-- Undefine the cursor if the current widget is a shell.
 		do
 		end; 
 	
-	update_cursor is
+	update_cursor
 			-- Update the X cursor after a change inside the Eiffel cursor.
 		local
 			cursor_implementation: SCREEN_CURSOR_IMP
@@ -559,13 +559,13 @@ feature {SCREEN_CURSOR_IMP, ALL_CURS_X}
 
 feature {NONE} -- Implementation
 	
-	click_actions_table: HASH_TABLE [BUTTON_CLICK_HAND_X, POINTER] is
+	click_actions_table: HASH_TABLE [BUTTON_CLICK_HAND_X, POINTER]
 			-- Table of click actions for all widgets
 		once
 			create Result.make (1)
 		end;
 
-	button_click_actions: BUTTON_CLICK_HAND_X is
+	button_click_actions: BUTTON_CLICK_HAND_X
 			-- Button click actions for Current widget
 		do
 			Result := click_actions_table.item (screen_object);
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end;
 
-	mel_parent (a_widget: WIDGET; index: INTEGER): MEL_COMPOSITE is
+	mel_parent (a_widget: WIDGET; index: INTEGER): MEL_COMPOSITE
 			-- Retrieve mel parent from the widget manage for 
 			-- `widget' using `index'
 		do
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void
 		end;
 
-	parent_screen_object (a_widget: WIDGET; index: INTEGER): POINTER is
+	parent_screen_object (a_widget: WIDGET; index: INTEGER): POINTER
 			-- Retrieve parent screen object from the widget manager 
 			-- `widget' using `index'
 		do
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 	widget_index: INTEGER;
 			-- Widget index in window manager
 
-	set_widget_index (index: INTEGER) is
+	set_widget_index (index: INTEGER)
 			-- Set widget_index to `index'.
 		do
 			widget_index := index
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 
 feature {WIDGET_IMP} -- Implementation
 
-	remove_command (cmd_exec: MEL_COMMAND_EXEC; a_command: COMMAND; an_argument: ANY) is
+	remove_command (cmd_exec: MEL_COMMAND_EXEC; a_command: COMMAND; an_argument: ANY)
 			-- Add the EiffelVision command to the mel command list
 			-- for event mask `mask'.
 		local
@@ -622,7 +622,7 @@ feature {WIDGET_IMP} -- Implementation
 			end;
 		end;
 
-	vision_command_list (mel_cmd_exec: MEL_COMMAND_EXEC): VISION_COMMAND_LIST is
+	vision_command_list (mel_cmd_exec: MEL_COMMAND_EXEC): VISION_COMMAND_LIST
 			-- Get the vision command list from `mel_cmd_exec'
 		do
 			if mel_cmd_exec /= Void then
@@ -630,7 +630,7 @@ feature {WIDGET_IMP} -- Implementation
 			end
 		end;
 
-	button_command (mel_cmd_exec: MEL_COMMAND_EXEC): BUTTON_HAND_X is
+	button_command (mel_cmd_exec: MEL_COMMAND_EXEC): BUTTON_HAND_X
 			-- Get the vision command list from `mel_cmd_exec'
 		do
 			if mel_cmd_exec /= Void then
@@ -638,7 +638,7 @@ feature {WIDGET_IMP} -- Implementation
 			end
 		end;
 
-	add_xt_event_command (a_mask: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	add_xt_event_command (a_mask: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Add the EiffelVision command to the mel command list
 			-- for event mask `mask'.
 		local
@@ -654,7 +654,7 @@ feature {WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		require
 			valid_color_imp: color_imp /= Void and color_imp.is_valid
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			mel_set_background_color (color_imp);	
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

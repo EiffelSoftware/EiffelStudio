@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"A timer manager implementation for X."
@@ -22,7 +22,7 @@ create
 	
 feature -- Initialization
 
-	make is
+	make
 		do
 		end
 	
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_delay';
 			-- in milliseconds has expired.
 		local
@@ -49,7 +49,7 @@ feature -- Status setting
 			is_regular_call_back := False
 		end; 
 
-	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute all the `a_time'
 			-- milliseconds.
 		do
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	command: COMMAND;
 			-- Command to call
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Call the command.
 		local
 			command_clone: COMMAND;
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

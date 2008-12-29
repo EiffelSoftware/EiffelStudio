@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the scale. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_DRAG, XmCR_VALUE_CHANGED)
@@ -31,7 +31,7 @@ feature -- Access
 			Result := <<XmCR_DRAG, XmCR_VALUE_CHANGED>>;
 		end;
 
-	value: INTEGER is
+	value: INTEGER
 			-- New value of the scale
 		do
 			Result := c_value (handle)
@@ -39,12 +39,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_value (a_callback_struct_ptr: POINTER): INTEGER is
+	c_value (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmScaleCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

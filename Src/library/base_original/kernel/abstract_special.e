@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor of SPECIAL to perform queries on SPECIAL without knowing its actual generic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ deferred class
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count of special area		
 		deferred
 		ensure
 			count_non_negative: Result >= 0
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,13 +42,13 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := False
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty Tree.
 		local
 			a_tree_view: POINTER
@@ -58,7 +58,7 @@ feature -- Initialization
 			set_c_object (a_tree_view)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			dummy_imp: EV_HEADER_ITEM_IMP
@@ -88,7 +88,7 @@ feature -- Initialization
 
 	dummy_item: EV_HEADER_ITEM
 
-	resize_model  (a_columns: INTEGER) is
+	resize_model  (a_columns: INTEGER)
 			-- Resize the data model to match the number of columns
 		local
 			a_type_array: MANAGED_POINTER
@@ -113,7 +113,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -129,7 +129,7 @@ feature -- Element change
 			item_imp.set_parent_imp (Current)
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item a`a_position'
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -146,20 +146,20 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
 		-- Reusable item resize tuple.
 
-	set_call_item_resize_start_actions (a_flag: BOOLEAN) is
+	set_call_item_resize_start_actions (a_flag: BOOLEAN)
 			-- Set `call_item_resize_start_actions' to `a_flag'.
 		do
 			call_item_resize_start_actions := a_flag
 		end
 
-	item_has_resized is
+	item_has_resized
 			-- The item has finished resizing so call `item_resize_end_actions'.
 		do
 			item_resize_end_actions.call (item_resize_tuple)
 			call_item_resize_end_actions := False
 		end
 
-	on_resize (a_item: EV_HEADER_ITEM) is
+	on_resize (a_item: EV_HEADER_ITEM)
 			-- `a_item' has resized.
 		require
 			a_item_not_void: a_item /= Void
@@ -182,7 +182,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		local
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		local
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_item_resize_actions is
+	call_item_resize_actions
 			-- Call the item resize end actions.
 		do
 			item_has_resized
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 	model_count: INTEGER
 		-- Number of cells available in model
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_HEADER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

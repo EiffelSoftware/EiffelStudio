@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif implementation of a split window."
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical:BOOLEAN) is
+	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical:BOOLEAN)
 			-- Create a motif frame.
 		require
 			a_window_not_void: a_window /= Void
@@ -93,20 +93,20 @@ feature -- Access
 			--| Depending on the value of `is_vertical', it can be the
 			--| height or the width
 
-	split_width: INTEGER is 10
+	split_width: INTEGER = 10
 			-- width of either split
 
 	split_visible: BOOLEAN
 
 feature -- Element change
 
-	set_proportion (p:INTEGER) is
+	set_proportion (p:INTEGER)
 			-- Set the split proportion from 0 to 100.
 		do
 			proportion := p
 		end
 
-	update_split, realize is
+	update_split, realize
 			-- Create the actual Windows window.
 		local
 			mc: MEL_COMPOSITE
@@ -129,7 +129,7 @@ feature -- Element change
 		end
 
 
-	set_default_split_size is
+	set_default_split_size
 			-- Set default split size after realization
 		local
 			mc: MEL_COMPOSITE
@@ -151,7 +151,7 @@ feature -- Element change
 
 feature --Status setting
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 		do
 			Precursor {MEL_PANED_WINDOW} (new_width,new_height)
 			if managed then
@@ -175,7 +175,7 @@ feature --Status setting
 
 feature -- Sizing policy
 
-	child_has_resized is
+	child_has_resized
 		-- Respond to resizing from children
 		do
 io.put_string ("%NChild has resized%N")
@@ -194,7 +194,7 @@ io.put_string ("%NChild has resized%N")
 
 feature -- Element change
 
-	set_first_child (a_child: SPLIT_WINDOW_CHILD) is
+	set_first_child (a_child: SPLIT_WINDOW_CHILD)
 			-- set `first_child' to `a_child'
 		require
 			a_child_not_void: a_child /= Void
@@ -204,7 +204,7 @@ feature -- Element change
 			first_child_set: first_child = a_child
 		end
 
-	set_second_child (a_child: SPLIT_WINDOW_CHILD) is
+	set_second_child (a_child: SPLIT_WINDOW_CHILD)
 			-- set `second_child' to `a_child'
 		require
 			a_child_not_void: a_child /= Void
@@ -215,19 +215,19 @@ feature -- Element change
 			second_child_set: second_child = a_child
 		end
 
-	remove_first_child is
+	remove_first_child
 			-- Remove `first_child' from the display
 		do
 		end
 
-	remove_second_child is
+	remove_second_child
 			-- Remove `second_child' from the display
 		do			
 		end
 
 feature -- Implementation
 
-	add_child (a_child: SPLIT_WINDOW_CHILD) is
+	add_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as currently lowest child.
 		do
 			if first_child = Void then
@@ -237,7 +237,7 @@ feature -- Implementation
 			end
 		end
 
-	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+	remove_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Remove `a_child' from the display.
 		do
 			if first_child = Void then
@@ -247,13 +247,13 @@ feature -- Implementation
 			end
 		end
 
-	add_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	add_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as managed.
 		do
 			resize_children
 		end
 
-	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
+	remove_managed_child (a_window: SPLIT_WINDOW_CHILD)
 			-- Remove `a_window' as managed.
 		do
 			resize_children
@@ -261,7 +261,7 @@ feature -- Implementation
 
 feature -- {NONE} -- Implementation
 
-	resize_first_child is
+	resize_first_child
 			-- Resize the top child to the correct dimensions.
 		require
 			not_void: Current /= Void
@@ -281,7 +281,7 @@ end
 			end
 		end
 
-	resize_second_child is
+	resize_second_child
 			-- Resize the bottom child to the correct dimensions.
 		require
 			not_void: Current /= Void
@@ -300,7 +300,7 @@ end
 			end
 		end
 
-	resize_children is
+	resize_children
 			-- Resize the two children if they are managed
 		do
 			if parent.realized then
@@ -316,7 +316,7 @@ end
 
 feature -- Status setting
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			list: like children;
@@ -337,7 +337,7 @@ feature -- Status setting
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

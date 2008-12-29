@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IErrorLog' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ierror_log_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	add_error (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO) is
+	add_error (psz_prop_name: STRING; p_excep_info: ECOM_EXCEP_INFO)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_excep_info' [in].  
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ierror_log_impl_proxy(initializer)
@@ -45,31 +45,31 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_add_error (cpp_obj: POINTER; psz_prop_name: STRING; p_excep_info: POINTER) is
+	ccom_add_error (cpp_obj: POINTER; psz_prop_name: STRING; p_excep_info: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IErrorLog_impl_proxy %"ecom_control_library_IErrorLog_impl_proxy_s.h%"](EIF_OBJECT,EXCEPINFO *)"
 		end
 
-	ccom_delete_ierror_log_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ierror_log_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IErrorLog_impl_proxy %"ecom_control_library_IErrorLog_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ierror_log_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ierror_log_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IErrorLog_impl_proxy %"ecom_control_library_IErrorLog_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IErrorLog_impl_proxy %"ecom_control_library_IErrorLog_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

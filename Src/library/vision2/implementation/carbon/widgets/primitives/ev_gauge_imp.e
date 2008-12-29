@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision gauge. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,19 +34,19 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- deferred creation
 		do
 			base_make ( an_interface )
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
 		end
 
-	ev_gauge_imp_initialize is
+	ev_gauge_imp_initialize
 			-- Initialize without calling precursor.
 			--| Separate function so it can be called from
 			--| widgets that inherit twice from EV_WIDGET_IMP,
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current value of the gauge.
 		do
 			Result := get_control32bit_value_external ( gauge_ptr )
@@ -76,25 +76,25 @@ feature -- Access
 
 feature -- Status setting
 
-	step_forward is
+	step_forward
 			-- Increment `value' by `step' if possible.
 		do
 			set_value (value_range.upper.min (value + step))
 		end
 
-	step_backward is
+	step_backward
 			-- Decrement `value' by `step' if possible.
 		do
 			set_value (value_range.lower.max (value - step))
 		end
 
-	leap_forward is
+	leap_forward
 			-- Increment `value' by `leap' if possible.
 		do
 			set_value (value_range.upper.min (value + leap))
 		end
 
-	leap_backward is
+	leap_backward
 			-- Decrement `value' by `leap' if possible.
 		do
 			set_value (value_range.lower.max (value - leap))
@@ -102,7 +102,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		do
 			set_control32bit_value_external ( gauge_ptr, a_value )
@@ -112,7 +112,7 @@ feature -- Element change
 			range_same: value_range.is_equal (old value_range)
 		end
 
-	set_step (a_step: INTEGER) is
+	set_step (a_step: INTEGER)
 			-- Set `step' to `a_step'.
 		do
 			step := a_step
@@ -122,13 +122,13 @@ feature -- Element change
 			range_same: value_range.is_equal (old value_range)
 		end
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Set `leap' to `a_leap'.
 		do
 			leap := a_leap
 		end
 
-	set_range is
+	set_range
 			-- Update widget range from `value_range'
 		local
 			temp_value: INTEGER
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	value_changed_handler is
+	value_changed_handler
 			-- Called when `value' changes.
 		do
 			if change_actions_internal /= Void then
@@ -167,7 +167,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_GAUGE_I
 

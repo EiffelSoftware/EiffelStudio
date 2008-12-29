@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequence for mouse movement events."
 	legal: "See notice at end of class."
@@ -21,13 +21,13 @@ create {EV_POINTER_MOTION_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE]) is
+	force_extend (action: PROCEDURE [ANY, TUPLE])
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, ?, ?, ?, ?, ?, ?, action))
 		end
 
-	wrapper (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; action: PROCEDURE [ANY, TUPLE])
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
@@ -37,13 +37,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

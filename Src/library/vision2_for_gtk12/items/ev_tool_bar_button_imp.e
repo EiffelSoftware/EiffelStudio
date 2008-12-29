@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision2 Toolbar button,%
 		%a specific button that goes in a tool-bar."
@@ -51,14 +51,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_button_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialization of button box and events.
 		do
 			Precursor {EV_ITEM_IMP}
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
-	initialize_button_box is
+	initialize_button_box
 			-- Create the box for pixmap and label and connect action sequence.
 		local
 			box: POINTER
@@ -121,14 +121,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		do
 			gray_pixmap := a_gray_pixmap.twin
 			--| FIXME IEK Needs proper implementation
 		end
 
-	remove_gray_pixmap is
+	remove_gray_pixmap
 			-- Make `pixmap' `Void'.
 		do
 			gray_pixmap := Void
@@ -137,13 +137,13 @@ feature -- Element change
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- 	Create a drop down action sequence.
 		do
 			create Result
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 			-- Attach to GTK "clicked" signal.
 		do
@@ -155,7 +155,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

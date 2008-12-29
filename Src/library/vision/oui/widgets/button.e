@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General button"
 	legal: "See notice at end of class.";
@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of current button
 		require
 			exists: not destroyed
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current button to recompute its size according to
 			-- changes on its text.
 		require
@@ -43,7 +43,7 @@ feature -- Status setting
 			implementation.allow_recompute_size
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid current button to recompute its size according to
 			-- changes on its text.
 		require
@@ -52,7 +52,7 @@ feature -- Status setting
 			implementation.forbid_recompute_size
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment of current label to center
 		require
 			exists: not destroyed
@@ -60,7 +60,7 @@ feature -- Status setting
 			implementation.set_center_alignment
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment of current label to left.
 		require
 			exists: not destroyed
@@ -68,7 +68,7 @@ feature -- Status setting
 			implementation.set_left_alignment
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set current button text to `a_text'.
 		require
 			exists: not destroyed;
@@ -86,7 +86,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when current
 			-- arrow button is activated.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -98,7 +98,7 @@ feature -- Element change
 			implementation.add_activate_action (a_command, argument)
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when current
 			-- arrow button is armed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -110,7 +110,7 @@ feature -- Element change
 			implementation.add_arm_action (a_command, argument)
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when current
 			-- arrow button is released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -124,7 +124,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is activated.
 		require
@@ -134,7 +134,7 @@ feature -- Removal
 			implementation.remove_activate_action (a_command, argument)
 		end;
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is armed.
 		require
@@ -144,7 +144,7 @@ feature -- Removal
 			implementation.remove_arm_action (a_command, argument)
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current arrow button is released.
 		require
@@ -156,7 +156,7 @@ feature -- Removal
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN = true;
 			-- Is current widget an heir of FONTABLE ?
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
@@ -166,14 +166,14 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	without_ampersands (a_text: STRING): STRING is
+	without_ampersands (a_text: STRING): STRING
 			-- Returns a string which is a_text without ampersands
 		do
 			Result := a_text.twin
 			Result.prune_all('&')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

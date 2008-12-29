@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Enumeration specifies how the interior of a closed path is filled.
 					Please see MSDN:
@@ -14,22 +14,22 @@ class
 
 feature -- Enumeration
 
-	Alternate: INTEGER is 0
+	Alternate: INTEGER = 0
 			-- Specifies the alternate fill mode.
 
-	Winding: INTEGER is 1
+	Winding: INTEGER = 1
 			-- Specifies the winding fill mode.
 
 feature -- Query
 
-	is_valid (a_int: INTEGER): BOOLEAN is
+	is_valid (a_int: INTEGER): BOOLEAN
 			-- If `a_int' valid?
 		do
 			Result := a_int = Alternate
 				or a_int = Winding
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

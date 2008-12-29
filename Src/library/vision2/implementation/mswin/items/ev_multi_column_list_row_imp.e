@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision multi column list row. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the row with one column by default.
 			-- The sub-items start at 2. 1 is the index of
 			-- the current item.
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
@@ -55,13 +55,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected?
 		do
 			Result := parent_imp.internal_is_selected (Current)
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Text of tooltip assigned to `Current'.
 		do
 			if internal_tooltip_string = Void then
@@ -73,19 +73,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select `Current'.
 		do
 			parent_imp.internal_select (Current)
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect Current.
 		do
 			parent_imp.internal_deselect (Current)
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -93,49 +93,49 @@ feature -- Status setting
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 		end
 
 feature {EV_ANY_I} -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of `Current' in `Parent_imp'.
 		do
 			Result := parent_imp.internal_get_index (Current)
@@ -144,12 +144,12 @@ feature {EV_ANY_I} -- Access
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 		-- The parent of `Current'.
 
-	on_parented is
+	on_parented
 			-- `Current' just parented.
 		do
 		end
 
-	set_parent_imp (par_imp: like parent_imp) is
+	set_parent_imp (par_imp: like parent_imp)
 			-- Assign `par_imp' to `parent_imp'.
 			--| Make `par_imp' the new parent of `Current'.
 		do
@@ -160,7 +160,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	set_pixmap (a_pix: EV_PIXMAP) is
+	set_pixmap (a_pix: EV_PIXMAP)
 			-- Set the rows `pixmap' to `a_pix'.
 		do
 			internal_pixmap := a_pix.twin
@@ -169,7 +169,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Set the rows `pixmap' to `a_pix'.
 		do
 			internal_pixmap := Void
@@ -178,7 +178,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
 		do
 			if parent_imp /= Void then
@@ -186,7 +186,7 @@ feature {EV_ANY_I} -- Access
 			end
 		end
 
-	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if parent_imp /= Void then
@@ -203,7 +203,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

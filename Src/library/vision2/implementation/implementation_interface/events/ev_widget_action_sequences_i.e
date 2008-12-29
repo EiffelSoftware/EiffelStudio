@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_WIDGET_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]] is
+	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]]
 			-- Actions to be performed when an OS file drop occurs on `Current'.
 		do
 			if file_drop_actions_internal = Void then
@@ -31,7 +31,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			if pointer_motion_actions_internal = Void then
@@ -44,12 +44,12 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_file_drop_actions: like file_drop_actions_internal is
+	create_file_drop_actions: like file_drop_actions_internal
 			-- Create a file_drop action sequence.
 		deferred
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			if pointer_button_press_actions_internal = Void then
@@ -74,7 +74,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Create a pointer_button_press action sequence.
 		deferred
 		end
@@ -85,7 +85,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			if pointer_double_press_actions_internal = Void then
@@ -99,7 +99,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Create a pointer_double_press action sequence.
 		deferred
 		end
@@ -110,7 +110,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 		do
 			if pointer_button_release_actions_internal = Void then
@@ -124,7 +124,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	create_pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Create a pointer_button_release action sequence.
 		deferred
 		end
@@ -135,7 +135,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			if pointer_enter_actions_internal = Void then
@@ -149,7 +149,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a pointer_enter action sequence.
 		deferred
 		end
@@ -159,7 +159,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed when mouse wheel is rotated.
 		do
 			if mouse_wheel_actions_internal = Void then
@@ -172,7 +172,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a mouse_wheel action sequence.
 		deferred
 		end
@@ -182,7 +182,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			if pointer_leave_actions_internal = Void then
@@ -196,7 +196,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a pointer_leave action sequence.
 		deferred
 		end
@@ -207,7 +207,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	key_press_actions: EV_KEY_ACTION_SEQUENCE is
+	key_press_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
 		do
 			if key_press_actions_internal = Void then
@@ -221,7 +221,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_key_press_actions: EV_KEY_ACTION_SEQUENCE is
+	create_key_press_actions: EV_KEY_ACTION_SEQUENCE
 			-- Create a key_press action sequence.
 		deferred
 		end
@@ -232,7 +232,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
+	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard press generates a displayable character.
 		do
 			if key_press_string_actions_internal = Void then
@@ -246,7 +246,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
+	create_key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
 			-- Create a key_press_string action sequence.
 		deferred
 		end
@@ -257,7 +257,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	key_release_actions: EV_KEY_ACTION_SEQUENCE is
+	key_release_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is released.
 		do
 			if key_release_actions_internal = Void then
@@ -271,7 +271,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_key_release_actions: EV_KEY_ACTION_SEQUENCE is
+	create_key_release_actions: EV_KEY_ACTION_SEQUENCE
 			-- Create a key_release action sequence.
 		deferred
 		end
@@ -282,7 +282,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is gained.
 		do
 			if focus_in_actions_internal = Void then
@@ -296,7 +296,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a focus_in action sequence.
 		deferred
 		end
@@ -307,7 +307,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			if focus_out_actions_internal = Void then
@@ -321,7 +321,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a focus_out action sequence.
 		deferred
 		end
@@ -332,7 +332,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when size changes.
 		do
 			if resize_actions_internal = Void then
@@ -346,7 +346,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Create a resize action sequence.
 		deferred
 		end
@@ -354,7 +354,7 @@ feature {EV_ANY_I} -- Implementation
 	resize_actions_internal: EV_GEOMETRY_ACTION_SEQUENCE;
 			-- Implementation of once per object `resize_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

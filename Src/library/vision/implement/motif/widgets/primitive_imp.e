@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a motif primitive widget."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Access
 
-	is_stackable: BOOLEAN is 
+	is_stackable: BOOLEAN 
 			-- Is the Current widget stackable?
 		do
 			Result := True
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status Report
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Color used for the foreground_color
 		local
 			fg_color_x: COLOR_IMP
@@ -57,7 +57,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_foreground_color (a_color: COLOR) is
+	set_foreground_color (a_color: COLOR)
 			-- Set `foreground_color' to `a_color'.
 		require
 			a_color_exists: not (a_color = Void)
@@ -82,7 +82,7 @@ feature {COLOR_IMP} -- Implementation
 	private_foreground_color: COLOR;
 			-- Foreground_color colour
 
-	update_foreground_color is
+	update_foreground_color
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			color_implementation: COLOR_IMP
@@ -94,7 +94,7 @@ feature {COLOR_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		do
 			mel_set_background_color (color_imp);
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "List manager"
 	legal: "See notice at end of class.";
@@ -13,7 +13,7 @@ obsolete
 
 feature -- Callback (adding and removing)
 
-	add_selection_action (a_command: COMMAND; argument: ANY) is
+	add_selection_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when items are
 			-- selected.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -25,7 +25,7 @@ feature -- Callback (adding and removing)
 			implementation.add_single_action (a_command, argument)
 		end;
 
-	remove_selection_action (a_command: COMMAND; argument: ANY) is
+	remove_selection_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' to the list of action to execute
 			-- when items are selected.
 		require
@@ -37,7 +37,7 @@ feature -- Callback (adding and removing)
 
 feature -- Access
 
-	item: STRING is
+	item: STRING
 			-- Item at cursor position
 		require
 			exists: not destroyed;
@@ -46,7 +46,7 @@ feature -- Access
 			Result := implementation.item
 		end;
 
-	last: STRING is
+	last: STRING
 			-- Item at last position
 		require
 			exists: not destroyed;
@@ -55,7 +55,7 @@ feature -- Access
 			Result := implementation.last
 		end;
 
-	search_equal (v: STRING) is
+	search_equal (v: STRING)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where item is equal to `v' (shallow equality);
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Cursor
 
-	back is
+	back
 			-- Move cursor backward one position.
 		require
 			exists: not destroyed
@@ -81,7 +81,7 @@ feature -- Cursor
 			index = old index - 1
 		end;
 
-	is_empty, empty: BOOLEAN is
+	is_empty, empty: BOOLEAN
 			-- Is current series empty?
 		require
 			exists: not destroyed
@@ -89,7 +89,7 @@ feature -- Cursor
 			Result := implementation.is_empty
 		end;
 
-	finish is
+	finish
 			-- Move cursor to last position
 			-- (no effect if series is empty).
 		require
@@ -100,7 +100,7 @@ feature -- Cursor
 			is_empty_or_last: empty or islast
 		end;
 
-	first: STRING is
+	first: STRING
 			-- Item at first position
 		require
 			exists: not destroyed;
@@ -109,7 +109,7 @@ feature -- Cursor
 			Result := implementation.first
 		end;
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		require
 			exists: not destroyed;
@@ -120,7 +120,7 @@ feature -- Cursor
 			index >= 1 and index <= count + 1
 		end;
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to position `i'.
 		require
 			exists: not destroyed;
@@ -133,7 +133,7 @@ feature -- Cursor
 			index = i
 		end;
 
-	has (v: STRING): BOOLEAN is
+	has (v: STRING): BOOLEAN
 			-- Does `v' appear in current series?
 		require
 			exists: not destroyed;
@@ -142,7 +142,7 @@ feature -- Cursor
 			Result := implementation.has (v)
 		end;
 
-	i_th (i: INTEGER): STRING is
+	i_th (i: INTEGER): STRING
 			-- Item at `i'_th position
 		require
 			exists: not destroyed;
@@ -152,7 +152,7 @@ feature -- Cursor
 			Result := implementation.i_th (i)
 		end;
 
-	index_of (v: STRING; i: INTEGER): INTEGER is
+	index_of (v: STRING; i: INTEGER): INTEGER
 			-- Index of `i'-th item `v'; 0 if none
 		require
 			exists: not destroyed;
@@ -163,7 +163,7 @@ feature -- Cursor
 			Result >= 0
 		end;
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position in current series?
 		require
 			exists: not destroyed
@@ -173,7 +173,7 @@ feature -- Cursor
 			Result implies (not empty)
 		end;
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position in current series?
 		require
 			exists: not destroyed
@@ -183,7 +183,7 @@ feature -- Cursor
 			Result implies (not empty)
 		end;
 
-	start is
+	start
 			-- Move cursor to first position.
 		require
 			exists: not destroyed
@@ -193,7 +193,7 @@ feature -- Cursor
 			empty or isfirst
 		end;
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		require
 			exists: not destroyed;
@@ -206,7 +206,7 @@ feature -- Cursor
 			index = old index + i
 		end;
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off?
 		require
 			exists: not destroyed
@@ -214,7 +214,7 @@ feature -- Cursor
 			Result := implementation.off
 		end;
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is cursor off left edge?
 		require
 			exists: not destroyed
@@ -222,7 +222,7 @@ feature -- Cursor
 			Result := implementation.before
 		end;
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor off right edge?
 		require
 			exists: not destroyed;
@@ -230,7 +230,7 @@ feature -- Cursor
 			Result := implementation.after
 		end;
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current cursor index
 		require
 			exists: not destroyed
@@ -240,7 +240,7 @@ feature -- Cursor
 
 feature -- Deletion
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to its right neighbor
 			-- (or after if no right neighbor).
@@ -253,7 +253,7 @@ feature -- Deletion
 			not empty implies index = old index
 		end;
 
-	remove_all_occurrences (an_item: STRING) is
+	remove_all_occurrences (an_item: STRING)
 			-- Remove all items identical to `v'.
 			-- Leave cursor `off'.
 		require
@@ -264,7 +264,7 @@ feature -- Deletion
 			is_off: off
 		end;
 
-	remove_left (n: INTEGER) is
+	remove_left (n: INTEGER)
 			-- Remove min (`n', position - 1) items
 			-- to the left of cursor position.
 			-- Do not move cursor
@@ -277,7 +277,7 @@ feature -- Deletion
 			implementation.remove_left (n)
 		end;
 
-	remove_right (n: INTEGER) is
+	remove_right (n: INTEGER)
 			-- Remove min (`n', count - position) items
 			-- to the right of cursor position.
 			-- Do not move cursor.
@@ -289,7 +289,7 @@ feature -- Deletion
 			implementation.remove_right (n)
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Make list empty
 		require
 			exists: not destroyed
@@ -299,7 +299,7 @@ feature -- Deletion
 
 feature -- Insertion
 
-	put_left (an_item: STRING) is
+	put_left (an_item: STRING)
 			-- Put `an_item' to the left of cursor index.
 			-- Do not move cursor.
 		require
@@ -311,7 +311,7 @@ feature -- Insertion
 			count = old count+1;
 		end;
 
-	put_right (an_item: STRING) is
+	put_right (an_item: STRING)
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -324,7 +324,7 @@ feature -- Insertion
 			index = old index
 		end;
 
-	merge_left (other: LIST [STRING]) is
+	merge_left (other: LIST [STRING])
 			-- Merge `other' into the current list before
 			-- cursor position.
 			-- Do not move cursor.
@@ -339,7 +339,7 @@ feature -- Insertion
 			other.empty
 		end;
 
-	merge_right (other: LIST [STRING]) is
+	merge_right (other: LIST [STRING])
 			-- Merge `other' into the current list after
 			-- cursor position.
 			-- Do not move cursor.
@@ -354,7 +354,7 @@ feature -- Insertion
 			other.empty
 		end;
 
-	put (an_item: STRING) is
+	put (an_item: STRING)
 			-- Put `an_item' at cursor position.
 		require
 			exists: not destroyed;
@@ -363,7 +363,7 @@ feature -- Insertion
 			implementation.put (an_item)
 		end;
 
-	put_i_th (an_item: STRING; i: INTEGER) is
+	put_i_th (an_item: STRING; i: INTEGER)
 			-- Put `an_item' at `i'-th position.
 		require
 			exists: not destroyed;
@@ -375,7 +375,7 @@ feature -- Insertion
 			not empty
 		end;
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		require
@@ -389,7 +389,7 @@ feature -- Insertion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): LINKED_LIST [STRING] is
+	duplicate (n: INTEGER): LINKED_LIST [STRING]
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 		require
@@ -402,7 +402,7 @@ feature -- Duplication
 
 feature -- Number of elements
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current series
 		require
 			exists: not destroyed
@@ -412,7 +412,7 @@ feature -- Number of elements
 
 feature -- Selection
 
-	deselect_item is
+	deselect_item
 			-- Deselect current selected items.
 		require
 			exists: not destroyed
@@ -422,7 +422,7 @@ feature -- Selection
 			selected_list_is_empty: selected_count = 0
 		end;
 
-	first_visible_item_position: INTEGER is
+	first_visible_item_position: INTEGER
 			-- Position of the first visible item in the list
 		require
 			exists: not destroyed
@@ -433,7 +433,7 @@ feature -- Selection
 			empty = (Result = 0)
 		end;
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the first visible item in the list if
 			-- `position' < `first_visible_item_position'.
 			-- Make `item' the last visible item in the list if
@@ -446,7 +446,7 @@ feature -- Selection
 			implementation.scroll_to_current
 		end;
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		require
 			exists: not destroyed;
@@ -455,7 +455,7 @@ feature -- Selection
 			implementation.select_item
 		end;
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		require
 			exists: not destroyed;
@@ -465,7 +465,7 @@ feature -- Selection
 			implementation.select_i_th (i)
 		end;
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected items in current list
 		require
 			exists: not destroyed
@@ -473,7 +473,7 @@ feature -- Selection
 			Result := implementation.selected_count
 		end;
 
-	selected_item: STRING is
+	selected_item: STRING
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		require
@@ -482,7 +482,7 @@ feature -- Selection
 			Result := implementation.selected_item
 		end;
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- Null if nothing is selected
@@ -492,13 +492,13 @@ feature -- Selection
 			Result := implementation.selected_position
 		end;
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		deferred
 		end;
 
 feature -- Visibilty
 
-	set_visible_item_count (a_count: INTEGER) is
+	set_visible_item_count (a_count: INTEGER)
 			-- Set the number of visible items to `a_count'.
 		require
 			exists: not destroyed;
@@ -507,7 +507,7 @@ feature -- Visibilty
 			implementation.set_visible_item_count (a_count)
 		end;
 
-	show_current is
+	show_current
 			-- Make item at current position visible.
 		require
 			exists: not destroyed;
@@ -516,7 +516,7 @@ feature -- Visibilty
 			implementation.show_current
 		end;
 
-	show_first is
+	show_first
 			-- Make first item visible.
 		require
 			exists: not destroyed
@@ -524,7 +524,7 @@ feature -- Visibilty
 			implementation.show_first
 		end;
 
-	show_i_th (i: INTEGER) is
+	show_i_th (i: INTEGER)
 			-- Make item at `i'-th position visible.
 		require
 			exists: not destroyed;
@@ -534,7 +534,7 @@ feature -- Visibilty
 			implementation.show_i_th (i)
 		end;
 
-	show_last is
+	show_last
 			-- Make last item visible.
 		require
 			exists: not destroyed
@@ -542,7 +542,7 @@ feature -- Visibilty
 			implementation.show_last
 		end;
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 			-- Number of visible item of list
 		require
 			exists: not destroyed
@@ -554,7 +554,7 @@ feature -- Visibilty
 
 feature {LIST_MAN_I}
 
-	set_list_imp (a_list_imp: LIST_MAN_I) is
+	set_list_imp (a_list_imp: LIST_MAN_I)
 			-- Set list implementation to `a_list_imp'.
 		do
 			implementation := a_list_imp
@@ -567,27 +567,27 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 feature -- Obsolete
 
-	add_single_action (a_command: COMMAND; argument: ANY) is
+	add_single_action (a_command: COMMAND; argument: ANY)
 		do
 			add_selection_action (a_command, argument)
 		end;
 
-	set_single_selection is
+	set_single_selection
 		do
 		end;
 
-	add_right (an_item: STRING) is
+	add_right (an_item: STRING)
 		Obsolete "Use `put_right'"
 		do
 			put_right (an_item)
 		end;
 
-	add_left (an_item: STRING) is
+	add_left (an_item: STRING)
 		Obsolete "Use `put_left'"
 		do
 			put_left (an_item)
 		end;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

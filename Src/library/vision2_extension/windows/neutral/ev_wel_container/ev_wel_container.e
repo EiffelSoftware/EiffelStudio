@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow positioning of WEL_WINDOW in a Vision2 system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ inherit
 
 feature -- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Underlying WEL_WINDOW which `Current' is
 			-- composed of.
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			Result := implementation.implementation_window
 		end
 
-	item: WEL_WINDOW is
+	item: WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -59,13 +59,13 @@ feature -- Access
 			Result := implementation.item
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is there no element?
 		do
 			Result := item /= Void
 		end
 
-	has (v: WEL_WINDOW): BOOLEAN is
+	has (v: WEL_WINDOW): BOOLEAN
 			-- Is `v' contained in `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -73,7 +73,7 @@ feature -- Access
 			Result := (v /= Void and then item = v)
 		end
 
-	linear_representation: LINEAR [like item] is
+	linear_representation: LINEAR [like item]
 			-- Representation as a linear structure
 		local
 			l: LINKED_LIST [like item]
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Status setting
 
-	wipe_out is
+	wipe_out
 			-- Remove `child_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -96,7 +96,7 @@ feature -- Status setting
 			implementation.replace (Void)
 		end
 
-	put, replace  (a_window: WEL_WINDOW) is
+	put, replace  (a_window: WEL_WINDOW)
 			-- Replace `child_item' with `a_window'.
 		require
 			not_destroyed: not is_destroyed
@@ -106,13 +106,13 @@ feature -- Status setting
 			implementation.replace (a_window)
 		end
 
-	extend (an_item: like item) is
+	extend (an_item: like item)
 			-- Ensure that structure includes `an_item'.
 		do
 			replace (an_item)
 		end
 
-	prune (v: WEL_WINDOW) is
+	prune (v: WEL_WINDOW)
 			-- Remove `v' if contained.
 		require
 			not_destroyed: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	wel_message_actions: EV_WEL_MESSAGE_ACTION_SEQUENCE is
+	wel_message_actions: EV_WEL_MESSAGE_ACTION_SEQUENCE
 			-- Actions to be performed when a message is received by `implementation_window'.
 		do
 			Result := implementation.wel_message_actions
@@ -141,13 +141,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of `Current'.
 		do
 			create {EV_WEL_CONTAINER_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

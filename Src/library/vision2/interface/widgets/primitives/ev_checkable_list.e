@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays a list of items from which the user may select.
@@ -33,7 +33,7 @@ create
 
 feature -- Access
 
-	checked_items: DYNAMIC_LIST [EV_LIST_ITEM] is
+	checked_items: DYNAMIC_LIST [EV_LIST_ITEM]
 			-- All items checked in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -43,7 +43,7 @@ feature -- Access
 			bridge_ok: lists_equal (Result, implementation.checked_items)
 		end
 		
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			-- Is `list_item' currently checked?
 		require
 			not_destroyed: not is_destroyed
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		require
@@ -66,7 +66,7 @@ feature -- Status setting
 			item_is_checked: is_item_checked (list_item)
 		end
 		
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure `list_item' is not checked.
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CHECKABLE_LIST_IMP} implementation.make (Current)
@@ -96,7 +96,7 @@ invariant
 	checked_items_valid: checked_items.count >= 0 and checked_items.count <= count
 	--checked_items_ordered: checked_items.for_all (agent valid_position )
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

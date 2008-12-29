@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision color. Gtk implementation%N%
 		%Both REAL and 16 bit INTEGER values are stored%N%
@@ -24,14 +24,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create zero intensity color.
 		do
 			base_make (an_interface)
 			name := Default_name.twin
 		end
 
-	initialize is
+	initialize
 			-- Do nothing.
 		do
 			set_is_initialized (True)
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_red (a_red: REAL) is
+	set_red (a_red: REAL)
 			-- Assign `a_red' to `red'.
 		do
 			red := a_red
@@ -64,21 +64,21 @@ feature -- Element change
 
 		end
 
-	set_green (a_green: REAL) is
+	set_green (a_green: REAL)
 			-- Assign `a_green' to `green'.
 		do
 			green := a_green
 			green_16_bit := (a_green * 0xFFFF).rounded
 		end
 
-	set_blue (a_blue: REAL) is
+	set_blue (a_blue: REAL)
 			-- Assign `a_blue' to `blue'.
 		do
 			blue := a_blue
 			blue_16_bit := (a_blue * 0xFFFF).rounded
 		end
 
-	set_name (a_name: STRING_GENERAL) is
+	set_name (a_name: STRING_GENERAL)
 			-- Assign `a_name' to `name'.
 		do
 			name.copy (a_name)
@@ -86,14 +86,14 @@ feature -- Element change
 
 feature -- Conversion
 
-	rgb_24_bit: INTEGER is
+	rgb_24_bit: INTEGER
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		do
 			Result := (red_8_bit * 0x10000) + (green_8_bit * 0x100) + blue_8_bit
 		end
 
-	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
+	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER)
 			-- Set intensities from `a_24_bit_rgb' value
 			-- with red in the most significant bits and blue in the least.
 		do
@@ -102,7 +102,7 @@ feature -- Conversion
 			set_blue_with_16_bit ((a_24_bit_rgb \\ 0xFFFF00) * 0x101)
 		end
 
-	red_8_bit: INTEGER is
+	red_8_bit: INTEGER
 			-- Intensity of `red' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -110,7 +110,7 @@ feature -- Conversion
 			Result := (red * 0xFF).rounded
 		end
 
-	green_8_bit: INTEGER is
+	green_8_bit: INTEGER
 			-- Intensity of `green' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -118,7 +118,7 @@ feature -- Conversion
 			Result := (green * 0xFF).rounded
 		end
 
-	blue_8_bit: INTEGER is
+	blue_8_bit: INTEGER
 			-- Intensity of `blue' component
 			-- as an 8 bit unsigned integer.
 			-- Range [0,255]
@@ -126,19 +126,19 @@ feature -- Conversion
 			Result := (blue * 0xFF).rounded
 		end
 
-	set_red_with_8_bit (an_8_bit_red: INTEGER) is
+	set_red_with_8_bit (an_8_bit_red: INTEGER)
 			-- Set `red' from `an_8_bit_red' intinsity.
 		do
 			set_red_with_16_bit (an_8_bit_red * 0x101)
 		end
 
-	set_green_with_8_bit (an_8_bit_green: INTEGER) is
+	set_green_with_8_bit (an_8_bit_green: INTEGER)
 			-- Set `green' from `an_8_bit_green' intinsity.
 		do
 			set_green_with_16_bit (an_8_bit_green * 0x101)
 		end
 
-	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
+	set_blue_with_8_bit (an_8_bit_blue: INTEGER)
 		do
 			set_blue_with_16_bit (an_8_bit_blue * 0x101)
 		end
@@ -158,28 +158,28 @@ feature -- Conversion
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
 
-	set_red_with_16_bit (a_16_bit_red: INTEGER) is
+	set_red_with_16_bit (a_16_bit_red: INTEGER)
 			-- Set `red' from `a_8_bit_red' intinsity.
 		do
 			red_16_bit := a_16_bit_red
 			red := a_16_bit_red / 0xFFFF
 		end
 
-	set_green_with_16_bit (a_16_bit_green: INTEGER) is
+	set_green_with_16_bit (a_16_bit_green: INTEGER)
 			-- Set `green' from `a_16_bit_green' intinsity.
 		do
 			green_16_bit := a_16_bit_green
 			green := a_16_bit_green / 0xFFFF
 		end
 
-	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
+	set_blue_with_16_bit (a_16_bit_blue: INTEGER)
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		do
 			blue_16_bit := a_16_bit_blue
 			blue := a_16_bit_blue / 0xFFFF
 		end
 
-	set_with_other (other: EV_COLOR) is
+	set_with_other (other: EV_COLOR)
 			-- Take on the appearance of `other'.
 		local
 			imp: EV_COLOR_IMP
@@ -198,14 +198,14 @@ feature -- Conversion
 
 feature {EV_ANY_I} -- Command
 
-	delta: REAL is
+	delta: REAL
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
 		do
 			Result := 1 / 255
 		end
 
-	destroy is
+	destroy
           		-- Render `Current' unusable.
 		do
 			set_is_destroyed (True)
@@ -215,7 +215,7 @@ feature {EV_ANY_I, ANY} -- Implementation
 
 	interface: EV_COLOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

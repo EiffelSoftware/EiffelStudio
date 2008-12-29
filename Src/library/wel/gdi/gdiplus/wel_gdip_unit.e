@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ unit enumeration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,30 +10,30 @@ class
 
 feature -- Enumerations
 
-    UnitWorld: INTEGER is 0
+    UnitWorld: INTEGER = 0
     		-- World coordinate (non-physical unit)
 
-    UnitDisplay: INTEGER is 1
+    UnitDisplay: INTEGER = 1
     		-- Variable -- for PageTransform only
 
-    UnitPixel: INTEGER is 2
+    UnitPixel: INTEGER = 2
     		-- Each unit is one device pixel.
 
-    UnitPoint: INTEGER is 3
+    UnitPoint: INTEGER = 3
     		-- Each unit is a printer's point, or 1/72 inch.
 
-    UnitInch: INTEGER is 4
+    UnitInch: INTEGER = 4
     		-- Each unit is 1 inch.
 
-    UnitDocument: INTEGER is 5
+    UnitDocument: INTEGER = 5
     		-- Each unit is 1/300 inch.
 
-    UnitMillimeter: INTEGER is 6
+    UnitMillimeter: INTEGER = 6
     		-- Each unit is 1 millimeter.
 
 feature -- Query
 
-	is_valid (a_unit: INTEGER): BOOLEAN is
+	is_valid (a_unit: INTEGER): BOOLEAN
 			-- If `a_unit' valid?
 		do
 			Result := a_unit = unitworld or
@@ -45,7 +45,7 @@ feature -- Query
 				a_unit = unitmillimeter
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

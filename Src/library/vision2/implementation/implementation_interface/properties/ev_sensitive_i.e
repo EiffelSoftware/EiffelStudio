@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision sensitive. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	user_is_sensitive: BOOLEAN is
+	user_is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		do
 			if not has_parent or else parent_is_sensitive then
@@ -32,7 +32,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	user_enable_sensitive is
+	user_enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			internal_non_sensitive := False
@@ -43,7 +43,7 @@ feature -- Status setting
 			is_sensitive_if_orphaned: not has_parent implies interface.implementation.is_sensitive
 		end
 
-	user_disable_sensitive is
+	user_disable_sensitive
 			-- Make object desensitive to user input.
 		do
 			internal_non_sensitive := True
@@ -54,25 +54,25 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		deferred
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object desensitive to user input.
 		deferred
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 		deferred
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 		deferred
 		end
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is the object sensitive to user input.
 		deferred
 		end
@@ -81,7 +81,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

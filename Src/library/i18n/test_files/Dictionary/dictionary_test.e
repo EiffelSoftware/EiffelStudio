@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER) is
+	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER)
 
 			-- Creation procedure.
 		do
@@ -27,7 +27,7 @@ feature -- Initialization
 			end
 		end
 feature -- set current_folder
-	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER) is
+	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER)
 			-- check the type of t and create new folder in the relevant folder
 			-- this class could be extended when a new dictionary structure is added
 			-- need plural_form, datalength and seed to make directory uniq
@@ -60,7 +60,7 @@ feature -- set current_folder
 
 feature	-- Data generation
 
-	data_generation(t:I18N_DICTIONARY; datalength,seed:INTEGER) is
+	data_generation(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			-- generate array of `I18N_DICTIONARY_ENTRY' and fill it in `t'
 			-- fill 't' with datalength of `I18N_DICTIONARY_ENTRY'
 		local
@@ -123,7 +123,7 @@ feature	-- Data generation
 		end
 
 
-data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER) is
+data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				-- check all query functions in `I18N_DICTIONARY': `has, has_plural'
 				-- check all data for every function
 				-- use `random' with same `seed'  to check whether they are in `t', one could also use a `linked_list'
@@ -233,7 +233,7 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER) is
 
 feature -- Data access
 
-	data_get(t:I18N_DICTIONARY; datalength,seed:INTEGER) is
+	data_get(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				-- check data access functions in `I18N_DICTIONARY': `get_plural, get_sigular'
 				-- use 'random' with same `seed' to get them out
 				-- use 'random'  with another `seed' get nothing out
@@ -357,14 +357,14 @@ feature -- Data access
 		end
 feature -- access
 	current_folder: DIRECTORY
-	current_folder_string: STRING_8 is
+	current_folder_string: STRING_8
 		do
 			result :=Operating_environment.Current_directory_name_representation+
 												Operating_environment.Directory_separator.out
 		end
 
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

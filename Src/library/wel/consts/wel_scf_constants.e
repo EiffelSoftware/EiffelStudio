@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set Character Format constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,16 +10,16 @@ class
 
 feature -- Access
 
-	Scf_selection: INTEGER is 1
+	Scf_selection: INTEGER = 1
 			-- Apply format to selection only.
 
-	Scf_word: INTEGER is 2
+	Scf_word: INTEGER = 2
 			-- Apply format to word only.
 
-	Scf_all: INTEGER is 4;
+	Scf_all: INTEGER = 4;
 			-- Apply format to all text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

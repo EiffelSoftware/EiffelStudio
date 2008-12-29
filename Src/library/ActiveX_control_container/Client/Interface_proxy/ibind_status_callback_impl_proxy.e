@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IBindStatusCallback' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ibind_status_callback_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	on_start_binding (dw_reserved: INTEGER; pib: IBINDING_INTERFACE) is
+	on_start_binding (dw_reserved: INTEGER; pib: IBINDING_INTERFACE)
 			-- No description available.
 			-- `dw_reserved' [in].  
 			-- `pib' [in].  
@@ -47,21 +47,21 @@ feature -- Basic Operations
 			ccom_on_start_binding (initializer, dw_reserved, pib_item)
 		end
 
-	get_priority (pn_priority: INTEGER_REF) is
+	get_priority (pn_priority: INTEGER_REF)
 			-- No description available.
 			-- `pn_priority' [out].  
 		do
 			ccom_get_priority (initializer, pn_priority)
 		end
 
-	on_low_resource (reserved: INTEGER) is
+	on_low_resource (reserved: INTEGER)
 			-- No description available.
 			-- `reserved' [in].  
 		do
 			ccom_on_low_resource (initializer, reserved)
 		end
 
-	on_progress (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING) is
+	on_progress (ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING)
 			-- No description available.
 			-- `ul_progress' [in].  
 			-- `ul_progress_max' [in].  
@@ -71,7 +71,7 @@ feature -- Basic Operations
 			ccom_on_progress (initializer, ul_progress, ul_progress_max, ul_status_code, sz_status_text)
 		end
 
-	on_stop_binding (hresult: ECOM_HRESULT; sz_error: STRING) is
+	on_stop_binding (hresult: ECOM_HRESULT; sz_error: STRING)
 			-- No description available.
 			-- `hresult' [in].  
 			-- `sz_error' [in].  
@@ -79,7 +79,7 @@ feature -- Basic Operations
 			ccom_on_stop_binding (initializer, hresult, sz_error)
 		end
 
-	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD) is
+	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD)
 			-- No description available.
 			-- `grf_bindf' [out].  
 			-- `pbindinfo' [in, out].  
@@ -87,7 +87,7 @@ feature -- Basic Operations
 			ccom_get_bind_info (initializer, grf_bindf, pbindinfo.item)
 		end
 
-	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD)
 			-- No description available.
 			-- `grf_bscf' [in].  
 			-- `dw_size' [in].  
@@ -97,7 +97,7 @@ feature -- Basic Operations
 			ccom_on_data_available (initializer, grf_bscf, dw_size, p_formatetc.item, p_stgmed.item)
 		end
 
-	on_object_available (riid: ECOM_GUID; punk: ECOM_INTERFACE) is
+	on_object_available (riid: ECOM_GUID; punk: ECOM_INTERFACE)
 			-- No description available.
 			-- `riid' [in].  
 			-- `punk' [in].  
@@ -119,7 +119,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ibind_status_callback_impl_proxy(initializer)
@@ -127,73 +127,73 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_on_start_binding (cpp_obj: POINTER; dw_reserved: INTEGER; pib: POINTER) is
+	ccom_on_start_binding (cpp_obj: POINTER; dw_reserved: INTEGER; pib: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,::IBinding *)"
 		end
 
-	ccom_get_priority (cpp_obj: POINTER; pn_priority: INTEGER_REF) is
+	ccom_get_priority (cpp_obj: POINTER; pn_priority: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_on_low_resource (cpp_obj: POINTER; reserved: INTEGER) is
+	ccom_on_low_resource (cpp_obj: POINTER; reserved: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_on_progress (cpp_obj: POINTER; ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING) is
+	ccom_on_progress (cpp_obj: POINTER; ul_progress: INTEGER; ul_progress_max: INTEGER; ul_status_code: INTEGER; sz_status_text: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_on_stop_binding (cpp_obj: POINTER; hresult: ECOM_HRESULT; sz_error: STRING) is
+	ccom_on_stop_binding (cpp_obj: POINTER; hresult: ECOM_HRESULT; sz_error: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_get_bind_info (cpp_obj: POINTER; grf_bindf: INTEGER_REF; pbindinfo: POINTER) is
+	ccom_get_bind_info (cpp_obj: POINTER; grf_bindf: INTEGER_REF; pbindinfo: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT,ecom_control_library::_tagRemBINDINFO *)"
 		end
 
-	ccom_on_data_available (cpp_obj: POINTER; grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: POINTER; p_stgmed: POINTER) is
+	ccom_on_data_available (cpp_obj: POINTER; grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: POINTER; p_stgmed: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagRemFORMATETC *,ecom_control_library::tagRemSTGMEDIUM *)"
 		end
 
-	ccom_on_object_available (cpp_obj: POINTER; riid: POINTER; punk: POINTER) is
+	ccom_on_object_available (cpp_obj: POINTER; riid: POINTER; punk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](GUID *,IUnknown *)"
 		end
 
-	ccom_delete_ibind_status_callback_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ibind_status_callback_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ibind_status_callback_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ibind_status_callback_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects representing delayed calls to a procedure.
@@ -20,7 +20,7 @@ inherit
 
 feature -- Calls
 
-	apply is
+	apply
 			-- Call procedure with `operands' as last set.
 		local
 			obj: SYSTEM_OBJECT
@@ -28,7 +28,7 @@ feature -- Calls
 			obj := rout_disp.invoke (target_object, internal_operands)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

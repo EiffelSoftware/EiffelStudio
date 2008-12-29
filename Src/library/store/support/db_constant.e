@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -10,21 +10,21 @@ class DB_CONSTANT
 
 feature {NONE} -- Status report
 	
-	name_table_size: INTEGER is
+	name_table_size: INTEGER
 			-- Shared hash table size 
 			-- used to hold stored procedure names
 		do
 			Result := name_table_size_ref.item
 		end
 
-	selection_string_size: INTEGER is
+	selection_string_size: INTEGER
 			-- Shared allocated size of passed SQL string
 			-- with bind variables
 		do
 			Result := selection_string_size_ref.item
 		end
 
-	parsed_string_size: INTEGER is
+	parsed_string_size: INTEGER
 			-- Shared allocated size of passed SQL string
 			-- with bind variables all expanded
 		do
@@ -33,7 +33,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	set_name_table_size (n: INTEGER) is
+	set_name_table_size (n: INTEGER)
 			-- Set shared `name_table_size_ref' with `n'.
 		require
 			n_positive: n > 0
@@ -43,7 +43,7 @@ feature {NONE} -- Status setting
 			name_table_size_set: name_table_size = n
 		end
 
-	set_selection_string_size (n: INTEGER) is
+	set_selection_string_size (n: INTEGER)
 			-- Set shared `selection_string_size' with `n'.
 		require
 			n_positive: n > 0
@@ -53,7 +53,7 @@ feature {NONE} -- Status setting
 			selection_string_size_set: selection_string_size = n
 		end
 
-	set_parsed_string_size (n: INTEGER) is
+	set_parsed_string_size (n: INTEGER)
 			-- Set shared `parsed_string_size' with `n'.
 		require
 			n_positive: n > 0
@@ -65,34 +65,34 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Status report
 
-	Default_name_table_size: INTEGER is 20
+	Default_name_table_size: INTEGER = 20
 
-	Default_selection_string_size: INTEGER is 2048
+	Default_selection_string_size: INTEGER = 2048
 
-	Default_parsed_string_size: INTEGER is 4096
+	Default_parsed_string_size: INTEGER = 4096
 
-	name_table_size_ref: INTEGER_REF is
+	name_table_size_ref: INTEGER_REF
 			-- Shared integer object holding a value
 		once
 			create Result
 			Result.set_item (Default_name_table_size)
 		end
 
-	selection_string_size_ref: INTEGER_REF is
+	selection_string_size_ref: INTEGER_REF
 			-- Shared integer reference object holding a value
 		once
 			create Result
 			Result.set_item (Default_selection_string_size)
 		end
 
-	parsed_string_size_ref: INTEGER_REF is
+	parsed_string_size_ref: INTEGER_REF
 			-- Shared integer object holding a value
 		once
 			create Result
 			Result.set_item (Default_parsed_string_size)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

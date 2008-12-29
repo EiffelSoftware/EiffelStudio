@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPoggle button"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -79,7 +79,7 @@ create
 
 feature  
 
-	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Creation 
 		local
 			a_box: BOX_WINDOWS;
@@ -95,7 +95,7 @@ feature
 			managed := man
 		end
 
-	realize is
+	realize
 			-- Display a toggle button
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -126,7 +126,7 @@ feature
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealize widget and notify parent if necessary
 		local
 			a_box: BOX_WINDOWS
@@ -145,7 +145,7 @@ feature
 
 feature -- Status report
 
-	state: BOOLEAN is
+	state: BOOLEAN
 			-- True if the toggle has been armed. False otherwise.
 		do
 			if exists then
@@ -155,7 +155,7 @@ feature -- Status report
 			end
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- Horizontal position relative to parent
 		do
 			if exists then
@@ -165,7 +165,7 @@ feature -- Status report
 			end
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Vertical position relative to parent
 		do
 			if exists then
@@ -177,7 +177,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -210,7 +210,7 @@ feature -- Status setting
 			end
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if `flag'.
 		local
 			mp: MENU_PULL_IMP
@@ -230,7 +230,7 @@ feature -- Status setting
 			end
 		end
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 		do
 			if exists then
 				wel_set_x (a_x)
@@ -238,7 +238,7 @@ feature -- Status setting
 			private_attributes.set_x (a_x)
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 		do
 			if exists then
 				wel_set_y (a_y)
@@ -246,7 +246,7 @@ feature -- Status setting
 			private_attributes.set_y (a_y)
 		end
 
-	arm is
+	arm
 			-- Set a toggle armed
 		do
 			if not state then
@@ -255,7 +255,7 @@ feature -- Status setting
 			end
 		end
 
-	disarm is
+	disarm
 			-- Set a toggle disarmed
 		do
 			if state then
@@ -264,7 +264,7 @@ feature -- Status setting
 			end
 		end
 
-	set_toggle_on is
+	set_toggle_on
 			-- Set current toggle button on.
 		local
 			menu_parent: MENU_IMP
@@ -287,7 +287,7 @@ feature -- Status setting
 			end
 		end
 
-	set_toggle_off is
+	set_toggle_off
 			-- Set current toggle button off.
 		local
 			menu_parent: MENU_IMP
@@ -307,7 +307,7 @@ feature -- Status setting
 
 feature -- Element change  
 
-	add_value_changed_action (a_command: COMMAND; arg: ANY) is
+	add_value_changed_action (a_command: COMMAND; arg: ANY)
 			-- Add a command to the list of action to execute
 			-- when value is changed
 		do
@@ -316,7 +316,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_value_changed_action (a_command: COMMAND; arg: ANY) is
+	remove_value_changed_action (a_command: COMMAND; arg: ANY)
 			-- Remove a command from the list of action to execute
 			-- when value is changed
 		do
@@ -325,14 +325,14 @@ feature -- Removal
 
 feature {BOX_WINDOWS} -- Implementation
 
-	set_realized is
+	set_realized
 			-- To avoid a second realization
 		do
 		end
 
 feature {BOX_WINDOWS} -- Status report
 
-	toggle_height: INTEGER is
+	toggle_height: INTEGER
 			-- The height of the toggle_b if in
 			-- a radio box or a check box.
 		local
@@ -342,7 +342,7 @@ feature {BOX_WINDOWS} -- Status report
 			Result := (7 * (font_windows.string_height (Current, text).max (Minimum_height)) // 4)
 		end
 
-	toggle_width: INTEGER is
+	toggle_width: INTEGER
 			-- Width of the toggle including the width
 			-- of the text
 		local
@@ -354,7 +354,7 @@ feature {BOX_WINDOWS} -- Status report
 
 feature {BOX_WINDOWS} -- Status setting
 
-	resize_for_toggle is
+	resize_for_toggle
 			-- Resize to fit in a check box or in a radio box.
 		do
 			resize (toggle_width, toggle_height)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 
 	private_state: BOOLEAN;
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Called when the button is clicked.
 		local
 			a_parent: RADIO_BOX_IMP
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			toggle_value_changed_actions.execute (Current, Void)
 		end
 
-	in_a_box: BOOLEAN is
+	in_a_box: BOOLEAN
 			-- Is current object in a radio box or a check box?
 		local
 			box: BOX_WINDOWS
@@ -387,17 +387,17 @@ feature {NONE} -- Implementation
 			Result := box /= Void
 		end
 
-	Extra_width: INTEGER is
+	Extra_width: INTEGER
 			-- Extra width
 		once
 			Result := 18
 		end
 
-	Minimum_height: INTEGER is 15
+	Minimum_height: INTEGER = 15
 			-- Minimum height of a toggle button in a check box
 			-- or a radio box.
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style for creation
 		local
 			a_radio: RADIO_BOX_IMP
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tools for handling plural forms"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Validation
 
-	valid_plural_form (i: INTEGER): BOOLEAN is
+	valid_plural_form (i: INTEGER): BOOLEAN
 			-- is `i' a valid plural form?
 		do
 			Result := i <= max_plural_form and i >= min_plural_form
@@ -18,7 +18,7 @@ feature -- Validation
 
 feature {I18N_MO_FILE} -- parsing
 
-	mo_header_to_plural_form (nplurals: INTEGER; conditional: STRING_32): INTEGER is
+	mo_header_to_plural_form (nplurals: INTEGER; conditional: STRING_32): INTEGER
 			-- extract from a mo file header the "plural form rules"
 		require
 			conditional_not_void: conditional /= Void
@@ -57,28 +57,28 @@ feature {I18N_MO_FILE} -- parsing
 
 feature {I18N_FILE} -- plural form constants
 
-	max_plural_form: INTEGER is 9
-	min_plural_form: INTEGER is 0
+	max_plural_form: INTEGER = 9
+	min_plural_form: INTEGER = 0
 
-	unknown_plural_form: INTEGER is 0
-	one_plural_form:INTEGER is 1
-	two_plural_forms_singular_one:INTEGER is 2
-	two_plural_forms_singular_one_zero:INTEGER is 3
-	three_plural_forms_special_zero:INTEGER is 4
-	three_plural_forms_special_one_two:INTEGER is 5
-	three_plural_forms_special_twelve_to_nineteen:INTEGER is 6 --baltic family, ex: lithuanian
-	three_plural_forms_special_slavic:INTEGER is 7 --this and below are simplified names because slavic languages are beserk
-	three_plural_forms_special_polish:INTEGER is 8 -- I give up on the naming. It's only so we don't have magic numbers.
-	four_plural_forms_special_slovenian:INTEGER is 9
+	unknown_plural_form: INTEGER = 0
+	one_plural_form:INTEGER = 1
+	two_plural_forms_singular_one:INTEGER = 2
+	two_plural_forms_singular_one_zero:INTEGER = 3
+	three_plural_forms_special_zero:INTEGER = 4
+	three_plural_forms_special_one_two:INTEGER = 5
+	three_plural_forms_special_twelve_to_nineteen:INTEGER = 6 --baltic family, ex: lithuanian
+	three_plural_forms_special_slavic:INTEGER = 7 --this and below are simplified names because slavic languages are beserk
+	three_plural_forms_special_polish:INTEGER = 8 -- I give up on the naming. It's only so we don't have magic numbers.
+	four_plural_forms_special_slovenian:INTEGER = 9
 
 feature -- nplurals constants
 
-	min_plural_index: INTEGER is 0
-	max_plural_index: INTEGER is 1
+	min_plural_index: INTEGER = 0
+	max_plural_index: INTEGER = 1
 
 feature -- Reduction
 
-	get_reduction_agent(quantity: INTEGER): FUNCTION[ANY, TUPLE[INTEGER], INTEGER] is
+	get_reduction_agent(quantity: INTEGER): FUNCTION[ANY, TUPLE[INTEGER], INTEGER]
 			-- get from `quantity'  the appropriate reduction function
 		do
 			inspect
@@ -105,7 +105,7 @@ feature -- Reduction
 
 		end
 
-	 get_nplural (form: INTEGER): INTEGER is
+	 get_nplural (form: INTEGER): INTEGER
 	 		--
 	 	do
 	 		if form <= 3 then
@@ -121,13 +121,13 @@ feature -- Reduction
 
 feature {I18N_PLURAL_TOOLS}	-- agents
 
-	reduce_one_plural_form (quantity: INTEGER): INTEGER is
+	reduce_one_plural_form (quantity: INTEGER): INTEGER
 			--
 		do
 			Result := 0
 		end
 
-	reduce_two_plural_forms_singular_one (quantity: INTEGER): INTEGER is
+	reduce_two_plural_forms_singular_one (quantity: INTEGER): INTEGER
 			--
 		do
 			if  quantity = 1 then
@@ -137,7 +137,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_two_plural_forms_singular_one_zero (quantity: INTEGER): INTEGER is
+	reduce_two_plural_forms_singular_one_zero (quantity: INTEGER): INTEGER
 			--
 		do
 			if quantity > 1 then
@@ -147,7 +147,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_three_plural_forms_special_zero (quantity: INTEGER): INTEGER is
+	reduce_three_plural_forms_special_zero (quantity: INTEGER): INTEGER
 			--
 		do
 			if  (quantity \\ 10 = 1) and (quantity \\ 100 /= 11) then
@@ -159,7 +159,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_three_plural_forms_special_one_two (quantity: INTEGER): INTEGER is
+	reduce_three_plural_forms_special_one_two (quantity: INTEGER): INTEGER
 			--
 		do
 			if quantity = 1 then
@@ -171,7 +171,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_three_plural_forms_special_twelve_to_nineteen (quantity: INTEGER): INTEGER is
+	reduce_three_plural_forms_special_twelve_to_nineteen (quantity: INTEGER): INTEGER
 			--
 		do
 			if  (quantity \\ 10 = 1) and (quantity \\ 100 /= 11) then
@@ -183,7 +183,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_three_plural_forms_special_slavic (quantity: INTEGER): INTEGER is
+	reduce_three_plural_forms_special_slavic (quantity: INTEGER): INTEGER
 			--
 		do
 			if  (quantity \\ 10 = 1) and (quantity \\ 100 /= 11) then
@@ -198,7 +198,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_three_plural_forms_special_polish (quantity: INTEGER): INTEGER is
+	reduce_three_plural_forms_special_polish (quantity: INTEGER): INTEGER
 			--
 		do
 			if quantity = 1 then
@@ -210,7 +210,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-	reduce_four_plural_forms_special_slovenian (quantity: INTEGER): INTEGER is
+	reduce_four_plural_forms_special_slovenian (quantity: INTEGER): INTEGER
 			--
 		do
 			if (quantity \\ 100 =1) then
@@ -224,7 +224,7 @@ feature {I18N_PLURAL_TOOLS}	-- agents
 			end
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

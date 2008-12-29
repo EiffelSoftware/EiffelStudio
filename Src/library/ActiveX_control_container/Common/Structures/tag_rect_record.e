@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,19 +20,19 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
 		end
 
-	make_from_wel_rect (a_rect: WEL_RECT) is
+	make_from_wel_rect (a_rect: WEL_RECT)
 			-- Make from WEL_RECT.
 		require
 			non_void_rect: a_rect /= Void
@@ -43,31 +43,31 @@ feature {NONE}  -- Initialization
 		
 feature -- Access
 
-	left: INTEGER is
+	left: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rect_left (item)
 		end
 
-	top: INTEGER is
+	top: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rect_top (item)
 		end
 
-	right: INTEGER is
+	right: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rect_right (item)
 		end
 
-	bottom: INTEGER is
+	bottom: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rect_bottom (item)
 		end
 
-	wel_rect: WEL_RECT is
+	wel_rect: WEL_RECT
 			-- Equivalent WEL_RECT
 		require
 			exists: exists
@@ -79,7 +79,7 @@ feature -- Access
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_rect
@@ -87,7 +87,7 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_from_rect (a_rect: WEL_RECT) is
+	set_from_rect (a_rect: WEL_RECT)
 			-- Set from WEL_RECT.
 		require
 			non_void_rect: a_rect /= Void
@@ -98,25 +98,25 @@ feature -- Basic Operations
 			set_bottom (a_rect.bottom)
 		end
 
-	set_left (a_left: INTEGER) is
+	set_left (a_left: INTEGER)
 			-- Set `left' with `a_left'.
 		do
 			ccom_tag_rect_set_left (item, a_left)
 		end
 
-	set_top (a_top: INTEGER) is
+	set_top (a_top: INTEGER)
 			-- Set `top' with `a_top'.
 		do
 			ccom_tag_rect_set_top (item, a_top)
 		end
 
-	set_right (a_right: INTEGER) is
+	set_right (a_right: INTEGER)
 			-- Set `right' with `a_right'.
 		do
 			ccom_tag_rect_set_right (item, a_right)
 		end
 
-	set_bottom (a_bottom: INTEGER) is
+	set_bottom (a_bottom: INTEGER)
 			-- Set `bottom' with `a_bottom'.
 		do
 			ccom_tag_rect_set_bottom (item, a_bottom)
@@ -124,7 +124,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_rect: INTEGER is
+	c_size_of_tag_rect: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagRECT_s.h%"]"
@@ -132,55 +132,55 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagRECT)"
 		end
 
-	ccom_tag_rect_left (a_pointer: POINTER): INTEGER is
+	ccom_tag_rect_left (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *):EIF_INTEGER"
 		end
 
-	ccom_tag_rect_set_left (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rect_set_left (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *, LONG)"
 		end
 
-	ccom_tag_rect_top (a_pointer: POINTER): INTEGER is
+	ccom_tag_rect_top (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *):EIF_INTEGER"
 		end
 
-	ccom_tag_rect_set_top (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rect_set_top (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *, LONG)"
 		end
 
-	ccom_tag_rect_right (a_pointer: POINTER): INTEGER is
+	ccom_tag_rect_right (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *):EIF_INTEGER"
 		end
 
-	ccom_tag_rect_set_right (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rect_set_right (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *, LONG)"
 		end
 
-	ccom_tag_rect_bottom (a_pointer: POINTER): INTEGER is
+	ccom_tag_rect_bottom (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *):EIF_INTEGER"
 		end
 
-	ccom_tag_rect_set_bottom (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rect_set_bottom (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRECT_s_impl.h%"](ecom_control_library::tagRECT *, LONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

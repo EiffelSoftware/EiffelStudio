@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an atom."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (display: MEL_DISPLAY; a_name: STRING; only_if_exists: BOOLEAN) is
+	make (display: MEL_DISPLAY; a_name: STRING; only_if_exists: BOOLEAN)
 			-- Create Atom with property `a_name' for `display'.
 			-- If `only_if_exists' and no atom exists with `a_name'
 			-- then a NULL pointer is returned. Otherwize, an atom
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			identifier := xm_intern_atom (display.handle, $ext, only_if_exists)
 		end;
 
-	make_from_existing (an_id: like identifier) is
+	make_from_existing (an_id: like identifier)
 			-- Initialize atom with C Atom `an_id'.
 		require
 			an_id_not_null: an_id /= default_pointer
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set: identifier = an_id
 		end;
 
-	make_primary is
+	make_primary
 			-- Create a XA_PRIMARY atom.
 		do
 			identifier := XA_PRIMARY
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			set: identifier = XA_PRIMARY
 		end;
 
-	make_string is
+	make_string
 			-- Create a XA_STRING atom.
 		do
 			identifier := XA_STRING
@@ -59,13 +59,13 @@ feature -- Access
 	identifier: POINTER;
 			-- Identifier of an atom
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the atom valid?
 		do
 			Result := identifier /= default_pointer
 		end;
 
-	name (a_display: MEL_DISPLAY): STRING is
+	name (a_display: MEL_DISPLAY): STRING
 			-- Name of the atom from `a_display'
 		require
 			valid_display: a_display /= Void and then a_display.is_valid;
@@ -83,42 +83,42 @@ feature -- Access
 
 feature {NONE} -- External features
 
-	xm_intern_atom (display_ptr, str: POINTER; b: BOOLEAN): POINTER is
+	xm_intern_atom (display_ptr, str: POINTER; b: BOOLEAN): POINTER
 		external
 			 "C [macro <Xm/AtomMgr.h>] (Display *, String, Boolean): EIF_POINTER"
 		alias
 			"XmInternAtom"
 		end;
 
-	xm_get_atom_name (display_ptr, id: POINTER): POINTER is
+	xm_get_atom_name (display_ptr, id: POINTER): POINTER
 		external
 			 "C [macro <Xm/AtomMgr.h>] (Display *, Atom): EIF_POINTER"
 		alias
 			"XmGetAtomName"
 		end;
 
-	xt_free (obj: POINTER) is
+	xt_free (obj: POINTER)
 		external
 			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;
 
-	XA_PRIMARY: POINTER is
+	XA_PRIMARY: POINTER
 		external
 			"C [macro <X11/Xatom.h>]: EIF_POINTER | <X11/X.h>"
 		alias
 			"XA_PRIMARY"
 		end;
 
-	XA_STRING: POINTER is
+	XA_STRING: POINTER
 		external
 			"C [macro <X11/Xatom.h>]: EIF_POINTER | <X11/X.h>"
 		alias
 			"XA_STRING"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

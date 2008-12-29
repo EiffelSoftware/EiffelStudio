@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	open_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE): BOOLEAN is
+	open_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `open'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	close_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER): BOOLEAN is
+	close_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER): BOOLEAN
 			-- User-defined preconditions for `close'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	add_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	add_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `add'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	find_unit_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	find_unit_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `find_unit'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_parent_state_user_precondition (pdw_state: INTEGER_REF): BOOLEAN is
+	get_parent_state_user_precondition (pdw_state: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_parent_state'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE) is
+	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_puu' [in].  
 		require
@@ -58,7 +58,7 @@ feature -- Basic Operations
 
 		end
 
-	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER) is
+	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER)
 			-- No description available.
 			-- `p_puu' [in].  
 			-- `f_commit' [in].  
@@ -68,7 +68,7 @@ feature -- Basic Operations
 
 		end
 
-	add (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	add (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -77,7 +77,7 @@ feature -- Basic Operations
 
 		end
 
-	find_unit (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	find_unit (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -86,7 +86,7 @@ feature -- Basic Operations
 
 		end
 
-	get_parent_state (pdw_state: INTEGER_REF) is
+	get_parent_state (pdw_state: INTEGER_REF)
 			-- No description available.
 			-- `pdw_state' [out].  
 		require
@@ -96,7 +96,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

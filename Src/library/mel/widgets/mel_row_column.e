@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Manager widget that arranges its children in rows and columns."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif row column.
 		require
 			name_exists: a_name /= Void;
@@ -52,31 +52,31 @@ feature -- Initialization
 
 feature -- Access
 
-	entry_command: MEL_COMMAND_EXEC is
+	entry_command: MEL_COMMAND_EXEC
 			-- Command set for the entry callback
 		do
 			Result := motif_command (XmNentryCallback)
 		end
 
-	tear_off_menu_activate_command: MEL_COMMAND_EXEC is
+	tear_off_menu_activate_command: MEL_COMMAND_EXEC
 			-- Command set for the tear off menu callback
 		do
 			Result := motif_command (XmNtearOffMenuActivateCallback)
 		end
 
-	tear_off_menu_deactivate_command: MEL_COMMAND_EXEC is
+	tear_off_menu_deactivate_command: MEL_COMMAND_EXEC
 			-- Command set for the tear off menu deactivate callback
 		do
 			Result := motif_command (XmNtearOffMenuDeactivateCallback)
 		end
 
-	map_command: MEL_COMMAND_EXEC is
+	map_command: MEL_COMMAND_EXEC
 			-- Command set for the map callback
 		do
 			Result := motif_command (XmNmapCallback)
 		end
 
-	unmap_command: MEL_COMMAND_EXEC is
+	unmap_command: MEL_COMMAND_EXEC
 			-- Command set for the unmap callback
 		do
 			Result := motif_command (XmNunmapCallback)
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Measurement
 
-	entry_border: INTEGER is
+	entry_border: INTEGER
 			-- Border width the children
 		require
 			exists: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Measurement
 			entry_border_large_enough: Result >= 0
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Amount of blank space between the top edge
 			-- of Current and the first item in each column, and the
 			-- bottom edge of Current and the last item in each column
@@ -106,7 +106,7 @@ feature -- Measurement
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Amount of blank space between the left edge
 			-- of Current and an item in a row, and the
 			-- right edge of Current and an item in a row
@@ -118,7 +118,7 @@ feature -- Measurement
 			margin_width_large_enough: Result >= 0
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- The horizontal and vertical spacing between the children
 		require
 			exists: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	adjust_last: BOOLEAN is
+	adjust_last: BOOLEAN
 			-- Is the last row expanded so as to be flush with the edge?
 		require
 			exists: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNadjustLast)
 		end;
 
-	adjust_margin: BOOLEAN is
+	adjust_margin: BOOLEAN
 			-- Is the text in each row aligned with other text in its row?
 		require
 			exists: not is_destroyed
@@ -146,7 +146,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNadjustMargin)
 		end;
 
-	entry_alignment_beginning: BOOLEAN is
+	entry_alignment_beginning: BOOLEAN
 			-- Are the children of Current aligned with the beginning?
 		require
 			exists: not is_destroyed
@@ -154,7 +154,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryAlignment) = XmALIGNMENT_BEGINNING
 		end;
 
-	entry_alignment_center: BOOLEAN is
+	entry_alignment_center: BOOLEAN
 			-- Are the children of Current aligned with the center?
 		require
 			exists: not is_destroyed
@@ -162,7 +162,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryAlignment) = XmALIGNMENT_CENTER
 		end;
 
-	entry_alignment_end: BOOLEAN is
+	entry_alignment_end: BOOLEAN
 			-- Are the children of Current aligned with the end?
 		require
 			exists: not is_destroyed
@@ -170,7 +170,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryAlignment) = XmALIGNMENT_END
 		end;
 
-	entry_vertical_alignment_baseline_bottom: BOOLEAN is
+	entry_vertical_alignment_baseline_bottom: BOOLEAN
 			-- Will the children that are subclasses of Text, TextField, Label
 			-- be vertically aligned with baseline_bottom?
 		require
@@ -180,7 +180,7 @@ feature -- Status report
 							= XmALIGNMENT_BASELINE_BOTTOM
 		end;
 
-	entry_vertical_alignment_baseline_top: BOOLEAN is
+	entry_vertical_alignment_baseline_top: BOOLEAN
 			-- Will the children that are subclasses of Text, TextField, Label
 			-- be vertically aligned with baseline_top?
 		require
@@ -189,7 +189,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryVerticalAlignment) = XmALIGNMENT_BASELINE_TOP
 		end;
 
-	entry_vertical_alignment_contents_bottom: BOOLEAN is
+	entry_vertical_alignment_contents_bottom: BOOLEAN
 			-- Will the children that are subclasses of Text, TextField, Label
 			-- be vertically aligned with contents_bottom?
 		require
@@ -199,7 +199,7 @@ feature -- Status report
 							= XmALIGNMENT_CONTENTS_BOTTOM
 		end;
 
-	entry_vertical_alignment_center: BOOLEAN is
+	entry_vertical_alignment_center: BOOLEAN
 			-- Will the children that are subclasses of Text, TextField, Label
 			-- be vertically aligned with the center?
 		require
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryVerticalAlignment) = XmALIGNMENT_CENTER
 		end;
 
-	entry_vertical_alignment_contents_top: BOOLEAN is
+	entry_vertical_alignment_contents_top: BOOLEAN
 			-- Will the children that are subclasses of Text, TextField, Label
 			-- be vertically aligned with contents_top?
 		require
@@ -217,14 +217,14 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNentryVerticalAlignment) = XmALIGNMENT_CONTENTS_TOP
 		end;
 
-	entry_class is
+	entry_class
 			-- Widget class to which the children must belong.
 		require
 			exists: not is_destroyed
 		do
 		end;
 
-	is_aligned: BOOLEAN is
+	is_aligned: BOOLEAN
 			-- Is alignment enabled?
 		require
 			exists: not is_destroyed
@@ -232,7 +232,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNisAligned)
 		end;
 
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Must all the children belong to the same widget class?
 		require
 			exists: not is_destroyed
@@ -240,7 +240,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNisHomogeneous)
 		end;
 
-	menu_accelerator: STRING is
+	menu_accelerator: STRING
 			-- Keybord short-cut for a menu
 		require
 			exists: not is_destroyed
@@ -250,7 +250,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end;
 
-	menu_help_widget: MEL_CASCADE_BUTTON is
+	menu_help_widget: MEL_CASCADE_BUTTON
 			-- Cascade button of a menu bar
 		require
 			exists: not is_destroyed
@@ -258,7 +258,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNmenuHelpWidget)
 		end;
 
-	menu_history: MEL_RECT_OBJ is
+	menu_history: MEL_RECT_OBJ
 			-- Most recently activated menu entry
 		require
 			exists: not is_destroyed
@@ -266,7 +266,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNmenuHistory)
 		end;
 
-	menu_post: STRING is
+	menu_post: STRING
 			-- String that describes the event for a posting menu
 		require
 			exists: not is_destroyed
@@ -276,7 +276,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end;
 
-	mnemonic: CHARACTER is
+	mnemonic: CHARACTER
 			-- Keysym of the key to press in order to post the pulldown
 			-- menu associated with an option menu
 		require
@@ -285,7 +285,7 @@ feature -- Status report
 			Result := get_xt_keysym (screen_object, XmNmnemonic)
 		end;
 
-	mnemonic_char_set: STRING is
+	mnemonic_char_set: STRING
 			-- Character set for the option menu's mnemonics
 		require
 			exists: not is_destroyed
@@ -293,7 +293,7 @@ feature -- Status report
 			Result := get_xt_string (screen_object, XmNmnemonicCharSet)
 		end;
 
-	num_columns: INTEGER is
+	num_columns: INTEGER
 			-- Number of rows or columns of Current
 		require
 			exists: not is_destroyed
@@ -303,7 +303,7 @@ feature -- Status report
 			result_large_enough: Result >= 0
 		end;
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is Current's orientation horizontal?
 		require
 			exists: not is_destroyed
@@ -311,7 +311,7 @@ feature -- Status report
 			Result := orientation = XmHORIZONTAL
 		end;
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Is scale orientation vertical?
 		require
 			exists: not is_destroyed
@@ -319,7 +319,7 @@ feature -- Status report
 			Result := orientation = XmVERTICAL
 		end;
 
-	packing_tight: BOOLEAN is
+	packing_tight: BOOLEAN
 			-- Is the method of spacing the items in Current tight?
 		require
 			exists: not is_destroyed
@@ -327,7 +327,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNpacking) = XmPACK_TIGHT
 		end;
 
-	packing_column: BOOLEAN is
+	packing_column: BOOLEAN
 			-- Is the method of spacing the items in the Current column?
 		require
 			exists: not is_destroyed
@@ -335,7 +335,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNpacking) = XmPACK_COLUMN
 		end;
 
-	packing_none: BOOLEAN is
+	packing_none: BOOLEAN
 			-- Is there no packing method?
 		require
 			exists: not is_destroyed
@@ -343,7 +343,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNpacking) = XmPACK_NONE
 		end;
 
-	is_popup_enabled: BOOLEAN is
+	is_popup_enabled: BOOLEAN
 			-- Are keyboard shortcuts in effects for popup menus?
 		require
 			exists: not is_destroyed
@@ -351,7 +351,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNpopupEnabled)
 		end;
 
-	is_radio_behavior: BOOLEAN is
+	is_radio_behavior: BOOLEAN
 			-- Acts Current like a radio box?
 		require
 			exists: not is_destroyed
@@ -359,7 +359,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNradioBehavior)
 		end;
 
-	is_radio_always_one: BOOLEAN is
+	is_radio_always_one: BOOLEAN
 			-- Must one toggle always be selected?
 		require
 			exists: not is_destroyed
@@ -367,7 +367,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNradioAlwaysOne)
 		end;
 
-	is_height_resizable: BOOLEAN is
+	is_height_resizable: BOOLEAN
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -376,7 +376,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNresizeHeight)
 		end;
 
-	is_width_resizable: BOOLEAN is
+	is_width_resizable: BOOLEAN
 			-- Will all text always be shown (i.e. expand as the text grows
 			-- instead of displaying a scroll bar)?
 		require
@@ -385,7 +385,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNresizeWidth)
 		end;
 
-	is_working_area: BOOLEAN is
+	is_working_area: BOOLEAN
 			-- Is Current a work area?
 		require
 			exists: not is_destroyed
@@ -393,7 +393,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmWORK_AREA
 		end;
 
-	is_menu: BOOLEAN is
+	is_menu: BOOLEAN
 			-- Is Current a menu?
 			-- (ie is it a menu bar or menu popup or menu pulldown
 			-- or menu option).
@@ -407,7 +407,7 @@ feature -- Status report
 					is_menu_option
 		end;
 				
-	is_menu_bar: BOOLEAN is
+	is_menu_bar: BOOLEAN
 			-- Is Current a menu bar?
 		require
 			exists: not is_destroyed
@@ -415,7 +415,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmMENU_BAR
 		end;
 
-	is_menu_popup: BOOLEAN is
+	is_menu_popup: BOOLEAN
 			-- Is Current a menu popup
 		require
 			exists: not is_destroyed
@@ -423,7 +423,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmMENU_POPUP
 		end;
 
-	is_menu_pulldown: BOOLEAN is
+	is_menu_pulldown: BOOLEAN
 			-- Is Current a menu pulldown?
 		require
 			exists: not is_destroyed
@@ -431,7 +431,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmMENU_PULLDOWN
 		end;
 
-	is_menu_option: BOOLEAN is
+	is_menu_option: BOOLEAN
 			-- Is Current a menu option?
 		require
 			exists: not is_destroyed
@@ -439,7 +439,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNrowColumnType) = XmMENU_OPTION
 		end;
 	
-	is_tear_off_enabled: BOOLEAN is
+	is_tear_off_enabled: BOOLEAN
 			-- Is the tear-off behavior enabled for Current?
 		require
 			exists: not is_destroyed
@@ -448,7 +448,7 @@ feature -- Status report
 				(screen_object, XmNtearOffModel) = XmTEAR_OFF_ENABLED
 		end;
 
-	is_tear_off_disabled: BOOLEAN is
+	is_tear_off_disabled: BOOLEAN
 			-- Is the tear-off behavior enabled for Current?
 		require
 			exists: not is_destroyed
@@ -459,7 +459,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_adjust_last is
+	enable_adjust_last
 			-- The last row will be expanded so as to be flush with the edge.
 		require
 			exists: not is_destroyed
@@ -469,7 +469,7 @@ feature -- Status setting
 			adjust_last_enabled: adjust_last 
 		end;
 
-	disable_adjust_last is
+	disable_adjust_last
 			-- The last row won't be expanded so as to be flush with the edge.
 		require
 			exists: not is_destroyed
@@ -479,7 +479,7 @@ feature -- Status setting
 			adjust_last_disabled: not adjust_last 
 		end;
 
-	enable_adjust_margin is
+	enable_adjust_margin
 			-- The text in each row will be aligned with other text in its row.
 		require
 			exists: not is_destroyed
@@ -489,7 +489,7 @@ feature -- Status setting
 			adjust_margint_enabled: adjust_margin 
 		end;
 
-	disable_adjust_margin is
+	disable_adjust_margin
 			-- The text in each row won't be aligned with other text in its row.
 		require
 			exists: not is_destroyed
@@ -499,7 +499,7 @@ feature -- Status setting
 			adjust_margint_disabled: not adjust_margin 
 		end;
 
-	set_entry_alignment_beginning is
+	set_entry_alignment_beginning
 			-- Set `entry_alignment_beginning'.
 		require
 			exists: not is_destroyed
@@ -509,7 +509,7 @@ feature -- Status setting
 			entry_alignment_beginning_set: entry_alignment_beginning
 		end;
 
-	set_entry_alignment_center is
+	set_entry_alignment_center
 			-- Set `entry_alignment_center'.
 		require
 			exists: not is_destroyed
@@ -519,7 +519,7 @@ feature -- Status setting
 			entry_alignment_center_set: entry_alignment_center
 		end;
 
-	set_entry_alignment_end is
+	set_entry_alignment_end
 			-- Set `entry_alignment_end'.
 		require
 			exists: not is_destroyed
@@ -529,7 +529,7 @@ feature -- Status setting
 			entry_alignment_end_set: entry_alignment_end
 		end;
 
-	set_entry_vertical_alignment_baseline_bottom is
+	set_entry_vertical_alignment_baseline_bottom
 			-- Set `entry_vertical_alignment_baseline_bottom'.
 		require
 			exists: not is_destroyed
@@ -539,7 +539,7 @@ feature -- Status setting
 			entry_vertical_alignment_baseline_bottom_set: entry_vertical_alignment_baseline_bottom
 		end;
 
-	set_entry_vertical_alignment_baseline_top is
+	set_entry_vertical_alignment_baseline_top
 			-- Set `entry_vertical_alignment_baseline_top'.
 		require
 			exists: not is_destroyed
@@ -549,7 +549,7 @@ feature -- Status setting
 			entry_vertical_alignment_baseline_top_set: entry_vertical_alignment_baseline_top
 		end;
 
-	set_entry_vertical_contents_bottom is
+	set_entry_vertical_contents_bottom
 			-- Set `entry_vertical_alignment_contents_bottom'.
 		require
 			exists: not is_destroyed
@@ -559,7 +559,7 @@ feature -- Status setting
 			entry_vertical_alignment_contents_bottom_set: entry_vertical_alignment_contents_bottom
 		end;
 
-	set_entry_vertical_alignment_center is
+	set_entry_vertical_alignment_center
 			-- Set `entry_vertical_alignment_center'.
 		require
 			exists: not is_destroyed
@@ -569,7 +569,7 @@ feature -- Status setting
 			entry_vertical_alignment_center_set: entry_vertical_alignment_center
 		end;
 
-	set_entry_vertical_contents_top is
+	set_entry_vertical_contents_top
 			-- Set `entry_vertical_alignment_contents_top'.
 		require
 			exists: not is_destroyed
@@ -579,7 +579,7 @@ feature -- Status setting
 			entry_vertical_alignment_contents_top_set: entry_vertical_alignment_contents_top
 		end;
 
-	enable_alignment is
+	enable_alignment
 			-- Set `is_aligned' to True.
 		require
 			exists: not is_destroyed
@@ -589,7 +589,7 @@ feature -- Status setting
 			alignment_enabled: is_aligned 
 		end;
 
-	disable_alignment is
+	disable_alignment
 			-- Set `is_aligned' to False.
 		require
 			exists: not is_destroyed
@@ -599,7 +599,7 @@ feature -- Status setting
 			alignment_disabled: not is_aligned 
 		end;
 
-	set_homogeneous is
+	set_homogeneous
 			-- Set `is_homogeneous' to False.
 		require
 			exists: not is_destroyed
@@ -609,7 +609,7 @@ feature -- Status setting
 			homogeneous_set: is_homogeneous
 		end;
 
-	set_heterogeneous is
+	set_heterogeneous
 			-- Set `is_homogeneous' to False.
 		require
 			exists: not is_destroyed
@@ -619,7 +619,7 @@ feature -- Status setting
 			heterogeneous_set: not is_homogeneous 
 		end;
 
-	set_menu_accelerator (a_string: STRING) is
+	set_menu_accelerator (a_string: STRING)
 			-- Set `menu_accelerator' to `a_string'.
 		require
 			exists: not is_destroyed;
@@ -630,7 +630,7 @@ feature -- Status setting
 			menu_accelerator_set: menu_accelerator.is_equal (a_string)
 		end;
 
-	set_menu_help_widget (a_cascade_button: MEL_CASCADE_BUTTON) is
+	set_menu_help_widget (a_cascade_button: MEL_CASCADE_BUTTON)
 			-- Set `menu_help_widget' to `a_cascade_button'.
 		require
 			exists: not is_destroyed;
@@ -642,7 +642,7 @@ feature -- Status setting
 			menu_help_widget_set: menu_help_widget = a_cascade_button
 		end;
 
-	set_menu_history (a_widget: MEL_RECT_OBJ) is
+	set_menu_history (a_widget: MEL_RECT_OBJ)
 			-- Set `menu_history' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -654,7 +654,7 @@ feature -- Status setting
 			menu_history_set: menu_history = a_widget
 		end;
 
-	set_menu_post (a_string: STRING) is
+	set_menu_post (a_string: STRING)
 			-- Set `menu_post' to `a_string'.
 		require
 			exists: not is_destroyed;
@@ -665,7 +665,7 @@ feature -- Status setting
 			menu_post_set: menu_post.is_equal (a_string)
 		end;
 
-	set_mnemonic (a_character: CHARACTER) is
+	set_mnemonic (a_character: CHARACTER)
 			-- Set `mnemonic'.
 		require
 			exists: not is_destroyed
@@ -675,7 +675,7 @@ feature -- Status setting
 			set: mnemonic = a_character
 		end;
 
-	set_mnemonic_char_set (a_string: STRING) is
+	set_mnemonic_char_set (a_string: STRING)
 			-- Set `mnemonic_char_set'.
 		require
 			exists: not is_destroyed
@@ -685,7 +685,7 @@ feature -- Status setting
 			set: mnemonic_char_set.is_equal (a_string)
 		end;
 
-	set_num_columns (a_number: INTEGER) is
+	set_num_columns (a_number: INTEGER)
 			-- Set `num_columns' to `a_number'.
 		require
 			exists: not is_destroyed;
@@ -696,7 +696,7 @@ feature -- Status setting
 			num_columns_set: num_columns = a_number
 		end;
 
-	enable_resize_height is
+	enable_resize_height
 			-- Set `is_height_resizable' to True.
 		require
 			exists: not is_destroyed
@@ -706,7 +706,7 @@ feature -- Status setting
 			resize_height_enabled: is_height_resizable
 		end;
 
-	disable_resize_height is
+	disable_resize_height
 			-- Set `is_height_resizable' to False.
 		require
 			exists: not is_destroyed
@@ -716,7 +716,7 @@ feature -- Status setting
 			resize_height_disabled: not is_height_resizable
 		end;
 
-	enable_resize_width is
+	enable_resize_width
 			-- Set `is_width_resizable' to True.
 		require
 			exists: not is_destroyed
@@ -726,7 +726,7 @@ feature -- Status setting
 			resize_width_enabled: is_width_resizable
 		end;
 
-	disable_resize_width is
+	disable_resize_width
 			-- Set `is_width_resizable' to False.
 		require
 			exists: not is_destroyed
@@ -736,7 +736,7 @@ feature -- Status setting
 			resize_width_disabled: not is_width_resizable
 		end;
 
-	set_horizontal is
+	set_horizontal
 			-- Set `is_horizontal' to True.
 		require
 			exists: not is_destroyed
@@ -746,7 +746,7 @@ feature -- Status setting
 			is_horizontal: is_horizontal
 		end;
 
-	set_vertical is
+	set_vertical
 			-- Set `is_horizontal' to False.
 		require
 			exists: not is_destroyed
@@ -756,7 +756,7 @@ feature -- Status setting
 			is_vertical: is_vertical
 		end;
 
-	set_packing_tight is
+	set_packing_tight
 			-- Set `packing_tight'.
 		require
 			exists: not is_destroyed
@@ -766,7 +766,7 @@ feature -- Status setting
 			packing_tight_set: packing_tight
 		end;
 
-	set_packing_column is
+	set_packing_column
 			-- Set `packing_column'.
 		require
 			exists: not is_destroyed
@@ -776,7 +776,7 @@ feature -- Status setting
 			packing_column_set: packing_column
 		end;
 
-	set_packing_none is
+	set_packing_none
 			-- Set `packing_none'.
 		require
 			exists: not is_destroyed
@@ -786,7 +786,7 @@ feature -- Status setting
 			packing_none_set: packing_none
 		end;
 
-	enable_popup is
+	enable_popup
 			-- Set `popup_enabled' to True.
 		require
 			exists: not is_destroyed
@@ -796,7 +796,7 @@ feature -- Status setting
 			popup_is_enabled: is_popup_enabled 
 		end;
 
-	disable_popup is
+	disable_popup
 			-- Set `popup_enabled' to False.
 		require
 			exists: not is_destroyed
@@ -806,7 +806,7 @@ feature -- Status setting
 			popup_is_disabled: not is_popup_enabled 
 		end;
 
-	enable_radio_behavior is
+	enable_radio_behavior
 			-- Set `is_radio_behavior' to True.
 		require
 			exists: not is_destroyed
@@ -816,7 +816,7 @@ feature -- Status setting
 			radio_behavior_enabled: is_radio_behavior 
 		end;
 
-	disable_radio_behavior is
+	disable_radio_behavior
 			-- Set `is_radio_behavior' to False.
 		require
 			exists: not is_destroyed
@@ -826,7 +826,7 @@ feature -- Status setting
 			radio_behavior_disabled: not is_radio_behavior 
 		end;
 
-	set_tear_off_to_enabled is
+	set_tear_off_to_enabled
 			-- Set `is_tear_off_enabled' to True.
 		require
 			exists: not is_destroyed
@@ -836,7 +836,7 @@ feature -- Status setting
 			tear_off_is_enabled: is_tear_off_enabled
 		end;
 
-	set_tear_off_to_disabled is
+	set_tear_off_to_disabled
 			-- Set `is_tear_off_disabled' to True.
 		require
 			exists: not is_destroyed
@@ -848,7 +848,7 @@ feature -- Status setting
 
 feature -- Resizing
 
-	set_entry_border (a_width: INTEGER) is
+	set_entry_border (a_width: INTEGER)
 			-- Set `entry_border' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -859,7 +859,7 @@ feature -- Resizing
 			entry_border_set: entry_border = a_width
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -870,7 +870,7 @@ feature -- Resizing
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -881,7 +881,7 @@ feature -- Resizing
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_spacing (a_spacing: INTEGER) is
+	set_spacing (a_spacing: INTEGER)
 			-- Set `spacing' to `a_spacing'.
 		require
 			exists: not is_destroyed;
@@ -894,7 +894,7 @@ feature -- Resizing
 
 feature -- Miscellaneaous
 
-	widget_position (a_widget: MEL_RECT_OBJ): INTEGER is
+	widget_position (a_widget: MEL_RECT_OBJ): INTEGER
 			-- Position of `a_widget' in Current's list of children
 		require
 			exists: not is_destroyed;
@@ -908,7 +908,7 @@ feature -- Miscellaneaous
 			position_small_enough: Result < children_count
 		end;
 
-	set_widget_position (a_widget: MEL_RECT_OBJ; a_position: INTEGER) is
+	set_widget_position (a_widget: MEL_RECT_OBJ; a_position: INTEGER)
 			-- Set `widget_position' of `a_widget' to `a_position'.
 		require
 			exists: not is_destroyed;
@@ -923,7 +923,7 @@ feature -- Miscellaneaous
 			position_set: widget_position (a_widget) = a_position;
 		end;
 
-	set_widget_at_last_position (a_widget: MEL_RECT_OBJ) is
+	set_widget_at_last_position (a_widget: MEL_RECT_OBJ)
 			-- Set `widget_position' of `a_widget' to the last position.
 		require
 			exists: not is_destroyed;
@@ -938,7 +938,7 @@ feature -- Miscellaneaous
 
 feature -- Element change
 
-	set_entry_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_entry_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when any button is pressed
 			-- is when its value changes.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -951,7 +951,7 @@ feature -- Element change
 			command_set: command_set (entry_command, a_command, an_argument)	
 		end;
 
-	set_tear_off_menu_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_tear_off_menu_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when a tear_off menu pane is
 			-- is going to be torn off.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -965,7 +965,7 @@ feature -- Element change
 					a_command, an_argument)	
 		end;
 
-	set_tear_off_menu_deactivate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_tear_off_menu_deactivate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when a tear_off menu pane is
 			-- is going to be deactivated.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -979,7 +979,7 @@ feature -- Element change
 					a_command, an_argument)	
 		end;
 
-	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget is mapped, if the
 			-- widget is a child of a dialog shell.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -992,7 +992,7 @@ feature -- Element change
 			command_set: command_set (map_command, a_command, an_argument)	
 		end;
 
-	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget is unmapped, if the
 			-- widget is a child of a dialog shell.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -1007,7 +1007,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_entry_callback is
+	remove_entry_callback
 			-- Remove the command for the entry callback.
 		do
 			remove_callback (XmNentryCallback)
@@ -1015,7 +1015,7 @@ feature -- Removal
 			removed: entry_command = Void
 		end;
 
-	remove_tear_off_menu_activate_callback is
+	remove_tear_off_menu_activate_callback
 			-- Remove the command for the tear off menu callback.
 		do
 			remove_callback (XmNtearOffMenuActivateCallback)
@@ -1023,7 +1023,7 @@ feature -- Removal
 			removed: tear_off_menu_activate_command = Void
 		end;
 
-	remove_tear_off_menu_deactivate_callback is
+	remove_tear_off_menu_deactivate_callback
 			-- Remove the command for the tear off menu deactivate callback.
 		do
 			remove_callback (XmNtearOffMenuDeactivateCallback)
@@ -1031,7 +1031,7 @@ feature -- Removal
 			removed: tear_off_menu_deactivate_command = Void
 		end;
 
-	remove_map_callback is
+	remove_map_callback
 			-- Remove the command for the map callback.
 		do
 			remove_callback (XmNmapCallback)
@@ -1039,7 +1039,7 @@ feature -- Removal
 			removed: map_command = Void
 		end;
 
-	remove_unmap_callback is
+	remove_unmap_callback
 			-- Remove the command for the unmap callback.
 		do
 			remove_callback (XmNunmapCallback)
@@ -1050,7 +1050,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr, 
-				resource_name: POINTER): MEL_ROW_COLUMN_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ROW_COLUMN_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -1059,7 +1059,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	orientation: INTEGER is
+	orientation: INTEGER
 			-- Direction in which the widget is displayed
 		require
 			exists: not is_destroyed
@@ -1067,14 +1067,14 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNorientation)
 		end;
 
-	xm_create_row_column (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_row_column (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreateRowColumn"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "3-4-5 Balanced Tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create root_node.make
 		end
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 		do
 			Result := root_node.keys_plus_one - 1
 		end
@@ -33,7 +33,7 @@ feature -- Access
 
 	last_data: like first_data
 
-	item (i: INTEGER): like first_data is
+	item (i: INTEGER): like first_data
 		require
 			i_is_valid: i >= 1 and i <= count
 		do
@@ -42,17 +42,17 @@ feature -- Access
 
 feature -- Element Change
 
-	set_first_data (tl: like first_data) is
+	set_first_data (tl: like first_data)
 		do
 			first_data := tl
 		end
 
-	set_last_data (tl: like first_data) is
+	set_last_data (tl: like first_data)
 		do
 			last_data := tl
 		end
 
-	prepend_data (tl: like first_data) is
+	prepend_data (tl: like first_data)
 			-- add tl at the beginning of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
@@ -78,7 +78,7 @@ feature -- Element Change
 			tl_has_tree: tl.tree /= Void
 		end
 
-	append_data (tl: like first_data) is
+	append_data (tl: like first_data)
 			-- add tl at the end of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
@@ -106,7 +106,7 @@ feature -- Element Change
 
 feature -- Removal
 
-		wipe_out is
+		wipe_out
 				-- Erase data.
 			local
 				l_default: like first_data
@@ -125,7 +125,7 @@ invariant
 	first_data_valid: first_data /= Void implies first_data.is_valid
 	last_data_valid: last_data /= Void implies last_data.is_valid
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

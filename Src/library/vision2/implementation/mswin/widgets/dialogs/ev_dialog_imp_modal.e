@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Status report
 
-	is_modal: BOOLEAN is
+	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	show_modal_to_window (a_parent_window: EV_WINDOW) is
+	show_modal_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		local
 			parent_window_imp: WEL_WINDOW
@@ -48,14 +48,14 @@ feature -- Basic operations
 			end
 		end
 
-	show_relative_to_window (a_parent_window: EV_WINDOW) is
+	show_relative_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		do
 			promote_to_dialog_window
 			interface.implementation.show_relative_to_window (a_parent_window)
 		end
 
-	hide is
+	hide
 			-- Hide `Current' if displayed.
 		do
 			promote_to_dialog_window
@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature {EV_WINDOW_IMP} -- Implementation
 
-	execute_show_actions is
+	execute_show_actions
 			-- Execute `show_actions_internal'.
 			--| Needs to be called externally from within EV_WINDOW_IMP
 			--| as the notification we use, is received by the parent window.
@@ -79,7 +79,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	terminate (a_result: INTEGER) is
+	terminate (a_result: INTEGER)
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL) is
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_MODAL is
+	common_dialog_imp: EV_DIALOG_IMP_MODAL
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): INTEGER is
+	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): INTEGER
 				-- SDK DialogBoxIndirect
 			external
 				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): INT_PTR"
@@ -132,7 +132,7 @@ feature {NONE} -- Externals
 				"DialogBoxIndirect"
 			end
 
-	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER) is
+	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER)
 			-- SDK EndDialog
 		external
 			"C [macro <wel.h>] (HWND, INT_PTR)"
@@ -140,7 +140,7 @@ feature {NONE} -- Externals
 			"EndDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

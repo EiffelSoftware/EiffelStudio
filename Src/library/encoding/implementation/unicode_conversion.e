@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel implementations for Unicode encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create {ENCODING}
 
 feature -- Query
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN is
+	is_code_page_valid (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
@@ -26,7 +26,7 @@ feature -- Query
 			end
 		end
 
-	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN is
+	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		do
 				-- We accept conversion between the same encodings to optimize.
@@ -54,7 +54,7 @@ feature -- Query
 
 feature -- Conversion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
+	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert between Unicode encodings.
 		do
 			reset
@@ -94,7 +94,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	utf8_to_utf32 (a_string: STRING_8): STRING_32 is
+	utf8_to_utf32 (a_string: STRING_8): STRING_32
 			-- UTF32 to UTF8 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	utf32_to_utf8 (a_string: STRING_32): STRING_8 is
+	utf32_to_utf8 (a_string: STRING_32): STRING_8
 			-- Convert UTF32 to UTF8.
 		require
 			a_string_not_void: a_string /= Void
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	unicode_encodings: HASH_TABLE [STRING, STRING] is
+	unicode_encodings: HASH_TABLE [STRING, STRING]
 			-- Supported Unicode encodings
 		once
 			create Result.make (8)
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			Result.put (utf32_be, utf32_be.as_lower)
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

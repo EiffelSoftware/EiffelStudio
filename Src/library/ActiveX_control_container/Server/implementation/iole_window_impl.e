@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleWindow' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 		
 feature -- Basic Operations
 
-	get_window (phwnd: CELL [POINTER]) is
+	get_window (phwnd: CELL [POINTER])
 			-- No description available.
 			-- `phwnd' [out].  
 		do
@@ -32,14 +32,14 @@ feature -- Basic Operations
 			phwnd.put (wel_item)
 		end
 
-	context_sensitive_help (f_enter_mode: INTEGER) is
+	context_sensitive_help (f_enter_mode: INTEGER)
 			-- No description available.
 			-- `f_enter_mode' [in].  
 		do
 			-- No Implementation.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

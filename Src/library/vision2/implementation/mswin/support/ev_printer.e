@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities for direct drawing to a printer."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create {EV_PRINT_PROJECTOR_IMP, EV_MODEL_PRINT_PROJECTOR_IMP}
 
 feature {NONE} -- Initialization
 
-	make_with_context (a_dc: WEL_PRINTER_DC) is
+	make_with_context (a_dc: WEL_PRINTER_DC)
 			-- Set `printer_dc' to `a_dc'.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_PRINTER_IMP} implementation.make (Current)
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
@@ -55,7 +55,7 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			Result := implementation.height
@@ -66,12 +66,12 @@ feature -- Measurement
 
 feature -- Status setting
 
-	start_document is
+	start_document
 		do
 			implementation.start_document
 		end
 
-	end_document is
+	end_document
 		do
 			implementation.end_document
 		end
@@ -81,7 +81,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_PRINTER_I;
 			-- Responsible for interaction with the native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An unix socket."
@@ -30,7 +30,7 @@ feature -- Status Report
 	address: UNIX_SOCKET_ADDRESS;
 			-- Local address of socket
 
-	cleanup is
+	cleanup
 			-- Close socket and unlink it from file system.
 		do
 			close;
@@ -39,7 +39,7 @@ feature -- Status Report
 			end
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Socket name
 		require else
 			valid_address: address /= Void
@@ -50,7 +50,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	unlink is
+	unlink
 			-- Remove associate name from file system.
 		require else
 			name_address: address /= void
@@ -63,14 +63,14 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	c_unlink (nam: POINTER) is
+	c_unlink (nam: POINTER)
 			-- External c routine to remove socket file from file
 			-- system
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatting element that operates on data from a TIME object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {I18N_FORMAT_STRING_PARSER}  -- Initialization
 
-	make (a_time_action: FUNCTION[ANY,TUPLE[TIME],STRING_32]) is
+	make (a_time_action: FUNCTION[ANY,TUPLE[TIME],STRING_32])
 			-- Creation procedure, set `time_action'
 		do
 			time_action := a_time_action
@@ -30,7 +30,7 @@ feature {NONE} -- Action
 
 feature --Output
 
- 	filled (a_date: DATE; a_time: TIME): STRING_32 is
+ 	filled (a_date: DATE; a_time: TIME): STRING_32
  			--
  		do
 			Result := time_action.item ([a_time])
@@ -39,7 +39,7 @@ feature --Output
 invariant
 	correct_date_action: time_action /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

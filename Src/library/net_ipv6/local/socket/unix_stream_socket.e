@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An unix stream socket."
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make an unix socket stream.
 		do
 			c_reset_error
@@ -49,7 +49,7 @@ feature -- Initialization
 			make_socket
 		end;
 
-	make_client (a_peer: STRING) is
+	make_client (a_peer: STRING)
 			-- Create an unix stream client socket with peer
 			-- address set to `a_peer'.
 		require
@@ -60,7 +60,7 @@ feature -- Initialization
 			peer_address.set_path (a_peer.twin)
 		end;
 
-	make_server (a_name: STRING) is
+	make_server (a_name: STRING)
 			-- Create an unix stream server socket bound to local
 			-- address `a_name'.
 		require
@@ -74,13 +74,13 @@ feature -- Initialization
 
 feature
 
-	listen (queue: INTEGER) is
+	listen (queue: INTEGER)
 			-- Listen on socket for at most `queue' connections.
 		do
 			c_listen (descriptor, queue)
 		end
 
-	accept is
+	accept
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		local
@@ -99,20 +99,20 @@ feature
 
 feature {NONE} -- Externals
 
-	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
+	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER
 			-- External c routine to accept a socket connection
 		external
 			"C blocking"
 		end;
 
-	c_listen (soc, backlog: INTEGER) is
+	c_listen (soc, backlog: INTEGER)
 			-- External c routine to make socket passive and accept
 			-- at most `backlog' number of pending connections
 		external
 			"C blocking"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A row column implemented under MS Windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -80,7 +80,7 @@ create
 
 feature -- Initialization
 
-	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create the widget
 		do
 			create private_attributes
@@ -112,13 +112,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	initialize is
+	initialize
 			-- Initialize this widget
 		do
 			preferred_count := 1
 		end
 
-	set_free_size is
+	set_free_size
 			-- Set size of items to be free, in vertical layout mode
 			-- only width is set to be the same as the widest one, in
 			-- horizontal layout mode only height is set to be the same
@@ -127,7 +127,7 @@ feature -- Status setting
 			same_size := false
 		end
 
-	set_margin_height (new_margin_height: INTEGER) is
+	set_margin_height (new_margin_height: INTEGER)
 			-- Set amount of blank space between the top edge
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column.
@@ -135,7 +135,7 @@ feature -- Status setting
 			margin_height := new_margin_height
 		end
 
-	set_margin_width (new_margin_width: INTEGER) is
+	set_margin_width (new_margin_width: INTEGER)
 			-- Set amount of blank space between the left edge
 			-- of row column and the first item in each row , and the
 			-- right edge of row column and the last item in each row.
@@ -143,21 +143,21 @@ feature -- Status setting
 			margin_width := new_margin_width
 		end
 
-	set_preferred_count (a_number: INTEGER) is
+	set_preferred_count (a_number: INTEGER)
 			-- Set preferably count of row or column, according to
 			-- row layout mode or column layout mode, to `a_number'.
 		do
 			preferred_count := a_number
 		end
 
-	set_same_size is
+	set_same_size
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
 		do
 			same_size := true
 		end
 
-	set_form_width (a_width: INTEGER) is
+	set_form_width (a_width: INTEGER)
 			-- Set the width for form.
 		do
 			if width /= a_width then
@@ -171,7 +171,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_height (a_height: INTEGER) is
+	set_form_height (a_height: INTEGER)
 			-- Set the width for form.
 		do
 			if height /= a_height then
@@ -185,7 +185,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width : INTEGER) is
+	set_width (new_width : INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -196,7 +196,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (new_height : INTEGER) is
+	set_height (new_height : INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= new_height then
@@ -207,7 +207,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height : INTEGER) is
+	set_size (new_width, new_height : INTEGER)
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
@@ -220,7 +220,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_size (new_width, new_height : INTEGER) is
+	set_form_size (new_width, new_height : INTEGER)
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
@@ -237,13 +237,13 @@ feature -- Status setting
 			end
 		end
 
-	set_spacing (new_spacing: INTEGER) is
+	set_spacing (new_spacing: INTEGER)
 			-- Set spacing between items to `new_spacing'.
 		do
 			spacing := new_spacing
 		end
 
-	set_row_layout (flag: BOOLEAN) is
+	set_row_layout (flag: BOOLEAN)
 			-- Set row column to layout items preferably in row if `flag',
 			-- in column otherwise.
 		do
@@ -252,7 +252,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	realize is
+	realize
 			-- Realize widget
 		local
 			tw: TOP_IMP
@@ -276,7 +276,7 @@ feature -- Element change
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize this widget
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -287,7 +287,7 @@ feature -- Element change
 			end
 		end
 
-	map_widgets (new_width, new_height: INTEGER) is
+	map_widgets (new_width, new_height: INTEGER)
 			-- Map into a row column format
 		require
 			not_mapping: not mapping
@@ -351,7 +351,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the emclosing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_enclosing_free_size (managed_count, ew, eh: INTEGER; c: ARRAYED_LIST [WIDGET_IMP]) is
+	set_enclosing_free_size (managed_count, ew, eh: INTEGER; c: ARRAYED_LIST [WIDGET_IMP])
 			-- Set the enclosing size if not `same_size'.
 		require
 			not_same_size: not same_size
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			set_form_size (max_width, max_height)
 		end
 
-	set_enclosing_same_size (managed_count, ew, eh: INTEGER) is
+	set_enclosing_same_size (managed_count, ew, eh: INTEGER)
 			-- Set the enclosing size if `same_size'.
 		local
 			max_width, max_height: INTEGER
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 			set_form_size (max_width, max_height)
 		end
 
-	set_children_in_columns (c : ARRAYED_LIST[WIDGET_IMP]; largest_w : INTEGER) is
+	set_children_in_columns (c : ARRAYED_LIST[WIDGET_IMP]; largest_w : INTEGER)
 			-- Place the children in columns
 		local
 			i,j, placed : INTEGER
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_children_in_rows (c: ARRAYED_LIST [WIDGET_IMP]; largest_h : INTEGER) is
+	set_children_in_rows (c: ARRAYED_LIST [WIDGET_IMP]; largest_h : INTEGER)
 			-- Place the children in rows
 		local
 			i,j, placed, prev : INTEGER
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_children_sizes (c: ARRAYED_LIST [WIDGET_IMP]; largest_w, largest_h : INTEGER) is
+	set_children_sizes (c: ARRAYED_LIST [WIDGET_IMP]; largest_w, largest_h : INTEGER)
 			-- Set the size of all the children
 		local
 			ci: WIDGET_IMP
@@ -684,7 +684,7 @@ feature {NONE} -- Implementation
 	shrunk: BOOLEAN
 			-- Did Current shrink?
 
-	child_has_resized is
+	child_has_resized
 			-- Remap widgets when child is resized
 		do
 			if not mapping then
@@ -692,13 +692,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionRowColumn"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

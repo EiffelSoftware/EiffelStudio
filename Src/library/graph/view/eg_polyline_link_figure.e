@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 					A polyline connecting source and target. The user can
@@ -29,7 +29,7 @@ create {EG_POLYLINE_LINK_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_POLYLINE_LINK_FIGURE without dimension.
 		do
 			Precursor {EG_LINK_FIGURE}
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			reflexive_radius := 50
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor {EG_LINK_FIGURE}
@@ -63,61 +63,61 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_point_x: INTEGER is
+	start_point_x: INTEGER
 			--
 		do
 			Result := line.point_array.item (0).x
 		end
 
-	start_point_y: INTEGER is
+	start_point_y: INTEGER
 			--
 		do
 			Result := line.point_array.item (0).y
 		end
 
-	end_point_x: INTEGER is
+	end_point_x: INTEGER
 			--
 		do
 			Result := line.point_array.item (line.point_array.count - 1).x
 		end
 
-	end_point_y: INTEGER is
+	end_point_y: INTEGER
 			--
 		do
 			Result := line.point_array.item (line.point_array.count - 1).y
 		end
 
-	i_th_point_x (i: INTEGER): INTEGER is
+	i_th_point_x (i: INTEGER): INTEGER
 			-- x position of `i'-th point.
 		do
 			Result := line.i_th_point_x (i) --point_array.item (i).x
 		end
 
-	i_th_point_y (i: INTEGER): INTEGER is
+	i_th_point_y (i: INTEGER): INTEGER
 			-- y position of `i'-th point.
 		do
 			Result := line.i_th_point_y (i) --point_array.item (i).y
 		end
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			--
 		do
 			Result := line.line_width
 		end
 
-	edges_count: INTEGER is
+	edges_count: INTEGER
 			--
 		do
 			Result := edge_move_handlers.count
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			--
 		do
 			Result := line.foreground_color
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			edge_xml_element, edges: XM_ELEMENT
@@ -159,13 +159,13 @@ feature -- Access
 				l_foreground_color.blue_8_bit.out))
 		end
 
-	edge_string: STRING is "EDGE"
-	x_pos_string: STRING is "X_POS"
-	y_pos_string: STRING is "Y_POS"
-	line_width_string: STRING is "LINE_WIDTH"
-	line_color_string: STRING is "LINE_COLOR"
+	edge_string: STRING = "EDGE"
+	x_pos_string: STRING = "X_POS"
+	y_pos_string: STRING = "Y_POS"
+	line_width_string: STRING = "LINE_WIDTH"
+	line_color_string: STRING = "LINE_COLOR"
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			edges, l_item: XM_ELEMENT
@@ -225,7 +225,7 @@ feature -- Access
 			set_foreground_color (l_xml_routines.xml_color (node, once "LINE_COLOR"))
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "EG_POLYLINE_LINK_FIGURE"
@@ -233,13 +233,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_start_arrow: BOOLEAN is
+	is_start_arrow: BOOLEAN
 			--
 		do
 			Result := line.is_start_arrow
 		end
 
-	is_end_arrow: BOOLEAN is
+	is_end_arrow: BOOLEAN
 			--
 		do
 			Result := line.is_end_arrow
@@ -247,14 +247,14 @@ feature -- Status report
 
 feature -- Status settings
 
-	enable_end_arrow is
+	enable_end_arrow
 			-- Set `is_end_arrow' `True'.
 		do
 			line.enable_end_arrow
 			request_update
 		end
 
-	enable_start_arrow is
+	enable_start_arrow
 			-- Set `is_start_arrow' `True'.
 		do
 			line.enable_start_arrow
@@ -263,14 +263,14 @@ feature -- Status settings
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's recources.
 		do
 			Precursor {EG_LINK_FIGURE}
 			line.pointer_button_press_actions.prune_all (agent pointer_button_pressed_on_a_line)
 		end
 
-	set_line_width (a_line_width: like line_width) is
+	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_width'.
 		require
 			a_line_width_positive: a_line_width > 0
@@ -281,7 +281,7 @@ feature -- Element change
 			set: line_width = a_line_width
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' to `a_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -292,7 +292,7 @@ feature -- Element change
 			set: foreground_color = a_color
 		end
 
-	set_i_th_point_position (i: INTEGER; ax, ay: INTEGER) is
+	set_i_th_point_position (i: INTEGER; ax, ay: INTEGER)
 			-- Set position of `i'-th point to (`ax', `ay').
 		require
 			valid_index: i > 1 and i < edges_count + 2
@@ -304,7 +304,7 @@ feature -- Element change
 			set: i_th_point_x (i) = ax and i_th_point_y (i) = ay
 		end
 
-	add_point_between (i, j: INTEGER) is
+	add_point_between (i, j: INTEGER)
 			-- Add a point between `i'-th and `j'-th point.
 		require
 			j_equals_i_plus_one: j = i + 1
@@ -359,7 +359,7 @@ feature -- Element change
 			j_th_edge_move_handler_at_j_th_y_position: edge_move_handlers.i_th (i).point_y = i_th_point_y (i + 1)
 		end
 
-	remove_i_th_point (i: INTEGER) is
+	remove_i_th_point (i: INTEGER)
 			-- Remove `i'-th point.
 		require
 			valid_index: i > 1 and i < edges_count + 2
@@ -394,7 +394,7 @@ feature -- Element change
 			one_edge_move_hadler_less: old (edge_move_handlers).count = edge_move_handlers.count + 1
 		end
 
-	reset is
+	reset
 			-- Remove all edges.
 		local
 			last_point: EV_COORDINATE
@@ -423,7 +423,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		local
 			nx, ny: INTEGER
@@ -461,7 +461,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -478,28 +478,28 @@ feature {NONE} -- Implementation
 			-- Move handlers for the edges of the polyline.
 			-- start_point and end_point have no move_handlers.
 
-	edge_moved (a_point: EV_COORDINATE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	edge_moved (a_point: EV_COORDINATE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `a_point' was moved for `ax', `ay'.
 		do
 			a_point.set_precise (a_point.x_precise + ax, a_point.y_precise + ay)
 			request_update
 		end
 
-	edge_start (an_edge: EG_EDGE) is
+	edge_start (an_edge: EG_EDGE)
 			-- User starts to move `an_edge'.
 		require
 			an_edge_not_void: an_edge /= Void
 		do
 		end
 
-	edge_end (an_edge: EG_EDGE) is
+	edge_end (an_edge: EG_EDGE)
 			-- User ends to move `an_edge'.
 		require
 			an_edge_not_void: an_edge /= Void
 		do
 		end
 
-	set_start_point_to_edge is
+	set_start_point_to_edge
 			-- Set the start point such that it is element of the edge of the source figure.
 		local
 			an_angle: DOUBLE
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 			source.update_edge_point (l_pa.item (0), an_angle)
 		end
 
-	set_end_point_to_edge is
+	set_end_point_to_edge
 			-- Set the end point such that it is element of the edge of the target figure.
 		local
 			an_angle: DOUBLE
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 			target.update_edge_point (l_pa.item (l_count - 1), an_angle)
 		end
 
-	set_end_and_start_point_to_edge is
+	set_end_and_start_point_to_edge
 			-- Set end and start point on the edge of source and target.
 		require
 			no_edges: edges_count = 0
@@ -543,7 +543,7 @@ feature {NONE} -- Implementation
 			target.update_edge_point (l_point_array.item (1), an_angle)
 		end
 
-	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User pressed on `line'.
 		local
 			i, nb: INTEGER
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_edge_cursor: EV_POINTER_STYLE is
+	new_edge_cursor: EV_POINTER_STYLE
 			-- Cursor displayed when pointer over a line (white dot).
 		local
 			pix_map: EV_PIXMAP
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_pixmap (pix_map, pix_map.width // 2, pix_map.height // 2)
 		end
 
-	is_on_edge (ax, ay: INTEGER): BOOLEAN is
+	is_on_edge (ax, ay: INTEGER): BOOLEAN
 			-- is position `ax', `ay' on an edge?
 		local
 			l_edge_move_handlers: like edge_move_handlers
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_is_directed_change is
+	on_is_directed_change
 			-- `model'.`is_directed' changed.
 		do
 			if model.is_directed then
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -640,7 +640,7 @@ invariant
 	edge_move_handlers_exists: edge_move_handlers /= Void
 	line_not_void: line /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

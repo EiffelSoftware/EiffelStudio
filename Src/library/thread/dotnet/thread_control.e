@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control over thread execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Basic operations
 
-	yield is
+	yield
 			-- The calling thread yields its execution in favor of another
 			-- thread.
 		do
 			thread_imp.sleep (0)
 		end
 
-	join_all is
+	join_all
 			-- The calling thread waits for all other threads to terminate.
 		local
 			l_list: LIST [THREAD]
@@ -44,7 +44,7 @@ feature -- Basic operations
 			end
 		end
 
-	join is
+	join
 			-- The calling thread waits for the current child thread to
 			-- terminate.
 		do
@@ -55,7 +55,7 @@ feature -- Basic operations
 			end
 		end
 
-	native_join (term: POINTER) is
+	native_join (term: POINTER)
 			-- Same as `join' except that the low-level architecture-dependant
 			-- routine is used. The thread must not be created detached.
 		do
@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature -- Sleep
 
-	sleep (nanoseconds: INTEGER_64) is
+	sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
 		obsolete
@@ -77,13 +77,13 @@ feature -- Sleep
 
 feature {NONE} -- Implementation
 
-	terminated: BOOLEAN is
+	terminated: BOOLEAN
 			-- True if the thread has terminated.
 		do
 			Result := not thread_imp.is_alive
 		end
 
-	exit is
+	exit
 			-- Exit calling thread. Must be called from the thread itself.
 		do
 			thread_imp.interrupt
@@ -91,13 +91,13 @@ feature {NONE} -- Implementation
 
 feature {THREAD_CONTROL} -- Threads id
 
-	thread_imp: SYSTEM_THREAD is
+	thread_imp: SYSTEM_THREAD
 			-- .NET thread object.			
 		do
 			Result := {SYSTEM_THREAD}.current_thread
 		end
 
-	current_thread_id: INTEGER is
+	current_thread_id: INTEGER
 			-- Id of current .NET thread.
 		do
 			Result := {SYSTEM_THREAD}.current_thread.get_domain.get_current_thread_id
@@ -105,21 +105,21 @@ feature {THREAD_CONTROL} -- Threads id
 
 feature {NONE} -- Threads management
 
-	childrens_mutex: MUTEX is
-		indexing
+	childrens_mutex: MUTEX
+		note
 			once_status: global
 		once
 			create Result.make
 		end
 
-	childrens_by_thread_id: HASH_TABLE [LIST [THREAD], INTEGER] is
-		indexing
+	childrens_by_thread_id: HASH_TABLE [LIST [THREAD], INTEGER]
+		note
 			once_status: global
 		once
 			create Result.make (5)
 		end
 
-	add_children (th: THREAD) is
+	add_children (th: THREAD)
 		require
 			thread_exists: th /= Void
 		local
@@ -134,7 +134,7 @@ feature {NONE} -- Threads management
 			childrens_mutex.unlock
 		end
 
-	remove_children (th: THREAD) is
+	remove_children (th: THREAD)
 		require
 			thread_exists: th /= Void
 		local
@@ -148,7 +148,7 @@ feature {NONE} -- Threads management
 			childrens_mutex.unlock
 		end
 
-	childrens: LIST [THREAD]  is
+	childrens: LIST [THREAD]
 		local
 			l_curr_th_id: INTEGER
 		do
@@ -167,7 +167,7 @@ feature {NONE} -- Threads management
 			childrens_mutex.unlock
 		end
 
-	childrens_count: INTEGER is
+	childrens_count: INTEGER
 		do
 			childrens_mutex.lock
 			Result := childrens.count
@@ -180,7 +180,7 @@ feature {NONE} -- Threads management
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

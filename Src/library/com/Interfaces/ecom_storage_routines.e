@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Storage Routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic Operations
 
-	is_compound_file (a_name: STRING): BOOLEAN is
+	is_compound_file (a_name: STRING): BOOLEAN
 			-- Does file `a_name' contain a storage object?
 		local
 			l_string: WEL_STRING
@@ -24,12 +24,12 @@ feature -- Basic Operations
 
 feature {NONE} -- Externals
 
-	ccom_is_compound_file (cpp_obj: POINTER; a_name: POINTER): INTEGER is
+	ccom_is_compound_file (cpp_obj: POINTER; a_name: POINTER): INTEGER
 		external
 			"C++ [E_Routines %"E_Routines.h%"] (WCHAR *): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

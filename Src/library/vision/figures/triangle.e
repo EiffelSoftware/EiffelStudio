@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a triangle"
 	legal: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization 
 
-	make  is
+	make
 			-- Create a triangle
 		do
 			init_fig (Void);
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_number_of_sides (new_number_of_sides: like number_of_sides) is
+	set_number_of_sides (new_number_of_sides: like number_of_sides)
 			-- Set `number_of_sides' to `new_number_of_sides'.
 		require else
 			can_change_on_triangle: false
@@ -49,7 +49,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current triangle superimposable to `other' ?
 			--| not finished
 		require else
@@ -63,7 +63,7 @@ invariant
 
 	side_constraint: number_of_sides = 3
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

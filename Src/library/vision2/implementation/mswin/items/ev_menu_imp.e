@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision menu. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			Precursor {EV_MENU_ITEM_IMP} (an_interface)
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create radio_group.make
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MENU_ITEM_IMP}
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Basic operations
 
-	disable_sensitive is
+	disable_sensitive
    			-- Set `Current' insensitive.
    		local
    			menu_bar_imp: EV_MENU_BAR_IMP
@@ -84,7 +84,7 @@ feature {EV_ANY_I} -- Basic operations
 			end
    		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `Current' insensitive.
 		local
    			menu_bar_imp: EV_MENU_BAR_IMP
@@ -106,7 +106,7 @@ feature {EV_ANY_I} -- Basic operations
 			end
 		end
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		local
 			wel_point: WEL_POINT
@@ -127,7 +127,7 @@ feature {EV_ANY_I} -- Basic operations
 			end
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- If `flag' then make children of `Current' insensitive else
 			-- make children sensitive.
 		local
@@ -159,7 +159,7 @@ feature {EV_ANY_I} -- Basic operations
 			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		local
@@ -194,7 +194,7 @@ feature {EV_ANY_I} -- Basic operations
 
 feature {EV_ANY_I} -- Implementation
 
-	on_measure_menu_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+	on_measure_menu_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Compute and return the width of this menu, and update `tabulation_margin'.
 		local
 			a_menu_item_imp: EV_MENU_ITEM_IMP
@@ -263,13 +263,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	update_parent_size is
+	update_parent_size
 			-- Update size of parent
 		do
 			--| No need to do anything here. Deferred from EV_MENU_ITEM_LIST_IMP.
 		end
 
-	wel_set_text (a_text: STRING_GENERAL) is
+	wel_set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `Current' and refresh `Current'.
 		local
 			wel_string: WEL_STRING
@@ -291,39 +291,39 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
 			Result := parent_imp /= Void
 		end
 
-	disable_default_processing is
+	disable_default_processing
 			-- Disable default window processing.
 		do
 			--| FIXME To be implemented for pick-and-dropable.
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event. Called on a pointer press.
 		do
 			--| FIXME To be implemented for pick-and-dropable.
 		end
 
-	internal_propagate_pointer_double_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_double_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 			-- Called on a pointer double press.
 		do
 			--| FIXME To be implemented for pick-and-dropable.
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_MENU_ITEM_IMP
 			-- `Result' is menu_item at pixel position `x_pos', `y_pos'.
 		do
 			--| FIXME to be implemented for pick-and-dropable.
 		end
 
-	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		do
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-	check_dragable_release (x_pos, y_pos: INTEGER) is
+	check_dragable_release (x_pos, y_pos: INTEGER)
 			-- End transport if in drag and drop.
 		do
 			-- Not applicable. Required by implementation of EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dispose is
+	dispose
 			-- Destroy the inner structure of `Current'.
 			--
 			-- This function should be called by the GC when the
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 		end
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit objects.
 			-- Render `Current' unusable.
 			-- Any feature calls after a call to destroy are
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			destroy_item
 		end
 
-	load_bounds_rect is
+	load_bounds_rect
 			-- Load rect struct which holds boundary information
 		local
 			menu_bar: EV_MENU_BAR_IMP
@@ -392,7 +392,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

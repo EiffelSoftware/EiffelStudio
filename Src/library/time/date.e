@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Absolute dates"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature -- Initialization
 
-	make (y, m, d: INTEGER) is
+	make (y, m, d: INTEGER)
 			-- Set `year', `month' and `day' to `y', `m', `d' respectively.
 		require
 			correct_date: is_correct_date (y, m, d)
@@ -63,7 +63,7 @@ feature -- Initialization
 			day_set: day = d
 		end
 
-	make_month_day_year (m, d, y: INTEGER) is
+	make_month_day_year (m, d, y: INTEGER)
 			-- Set `month', `day' and `year' to `m', `d' and `y' respectively.
 		require
 			correct_date: is_correct_date (y, m, d)
@@ -75,7 +75,7 @@ feature -- Initialization
 			day_set: day = d
 		end
 
-	make_day_month_year (d, m, y: INTEGER) is
+	make_day_month_year (d, m, y: INTEGER)
 			-- Set `day', `month' and `year' to `d', `m' and `y' respectively.
 		require
 			correct_date: is_correct_date (y, m, d)
@@ -87,7 +87,7 @@ feature -- Initialization
 			day_set: day = d
 		end
 
-	make_now is
+	make_now
 			-- Set the current object to today's date.
 		local
 			l_date: C_DATE
@@ -96,7 +96,7 @@ feature -- Initialization
 			make (l_date.year_now, l_date.month_now, l_date.day_now)
 		end
 
-	make_now_utc is
+	make_now_utc
 			-- Set the current object to today's date in utc format.
 		local
 			l_date: C_DATE
@@ -105,7 +105,7 @@ feature -- Initialization
 			make (l_date.year_now, l_date.month_now, l_date.day_now)
 		end
 
-	make_by_days (n: INTEGER) is
+	make_by_days (n: INTEGER)
 			-- Set the current date with the number of days `n' since `origin'.
 		local
 			i, j: INTEGER
@@ -129,7 +129,7 @@ feature -- Initialization
 			days_set: days = n
 		end
 
-	make_from_string_default (s: STRING) is
+	make_from_string_default (s: STRING)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -141,7 +141,7 @@ feature -- Initialization
 			make_from_string (s, Date_default_format_string)
 		end
 
-	make_from_string_default_with_base (s: STRING; base: INTEGER) is
+	make_from_string_default_with_base (s: STRING; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string' with base century `base'.
 		require
@@ -153,7 +153,7 @@ feature -- Initialization
 			make_from_string_with_base (s, Date_default_format_string, base)
 		end
 
-	make_from_string (s: STRING; code: STRING) is
+	make_from_string (s: STRING; code: STRING)
 			-- Initialize from a "standard" string of form
 			-- `code'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -171,7 +171,7 @@ feature -- Initialization
 			make (date.year, date.month, date.day)
 		end
 
-	make_from_string_with_base (s: STRING; code: STRING; base: INTEGER) is
+	make_from_string_with_base (s: STRING; code: STRING; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `code' with base century `base'.
 		require
@@ -189,7 +189,7 @@ feature -- Initialization
 			make (date.year, date.month, date.day)
 		end
 
-	make_by_compact_date (c_d: INTEGER) is
+	make_by_compact_date (c_d: INTEGER)
 			-- Initialize from a `compact_date'.
 		obsolete
 			"Use `make_by_ordered_compact_date' instead. But be careful in your update %
@@ -203,7 +203,7 @@ feature -- Initialization
 			compact_date_set: year | (month |<< 16) | (day |<< 24) = c_d
 		end
 
-	make_by_ordered_compact_date (c_d: INTEGER) is
+	make_by_ordered_compact_date (c_d: INTEGER)
 			-- Initialize from a `ordered_compact_date'.
 		require
 			c_d_valid: ordered_compact_date_valid (c_d)
@@ -215,7 +215,7 @@ feature -- Initialization
 
 feature -- Access
 
-	origin: DATE is
+	origin: DATE
 			-- Origin date
 		once
 			create Result.make (1600, 1, 1)
@@ -223,7 +223,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is the current date before `other'?
 		local
 			l_current, l_other: INTEGER
@@ -240,7 +240,7 @@ feature -- Comparison
 
 feature -- Measurement
 
-	duration: DATE_DURATION is
+	duration: DATE_DURATION
 			-- Definite duration elapsed since `origin'
 		do
 			create Result.make_by_days (days_from (origin.year) + year_day -
@@ -250,7 +250,7 @@ feature -- Measurement
 			duration_set: ((Current - origin).duration).is_equal (Result)
 		end
 
-	days: INTEGER is
+	days: INTEGER
 			-- Number of days elapsed since `origin'
 		do
 			Result := days_from (origin.year) + year_day - origin.year_day
@@ -260,13 +260,13 @@ feature -- Measurement
 
 feature -- Status report
 
-	leap_year: BOOLEAN is
+	leap_year: BOOLEAN
 			-- Is the current year a leap year?
 		do
 			Result := is_leap_year (year)
 		end
 
-	days_at_month: INTEGER is
+	days_at_month: INTEGER
 			-- Number of days from the beginning of the year
 			-- until the beginning of the current month
 		local
@@ -281,7 +281,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	year_day: INTEGER is
+	year_day: INTEGER
 			-- Number of days from the beginning of the year
 		do
 			Result := days_at_month + day
@@ -290,7 +290,7 @@ feature -- Status report
 			result_small_enough: Result <= days_in_year
 		end
 
-	week_of_year: INTEGER is
+	week_of_year: INTEGER
 			-- Number of weeks from the beginning of the year
 			-- The first week of the year begins on the first sunday of the year
 			-- The week number before the first sunday of the year is 0
@@ -310,7 +310,7 @@ feature -- Status report
 			Result_small_enough: Result < Max_weeks_in_year
 		end
 
-	days_in_year: INTEGER is
+	days_in_year: INTEGER
 			-- Number of days in the current year
 		do
 			if leap_year then
@@ -324,7 +324,7 @@ feature -- Status report
 					(not leap_year implies Result = days_in_non_leap_year)
 		end
 
-	day_of_the_week: INTEGER is
+	day_of_the_week: INTEGER
 			-- Number of day from the beginning of the week
 			-- sunday is 1, etc.., saturday is 7
 		do
@@ -333,7 +333,7 @@ feature -- Status report
 			day_of_the_week_range: Result > 0 and then Result < 8
 		end
 
-	day_of_january_1st: INTEGER is
+	day_of_january_1st: INTEGER
 			-- Day of the week of january 1st of the current year
 		local
 			january_1st: DATE
@@ -344,7 +344,7 @@ feature -- Status report
 			day_of_the_week_definition: Result > 0 and then Result < 8
 		end
 
-	days_from (y: INTEGER): INTEGER is
+	days_from (y: INTEGER): INTEGER
 			-- Days between the current year and year `y'
 		local
 			l_year: like year
@@ -358,7 +358,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	to_date_time: DATE_TIME is
+	to_date_time: DATE_TIME
 			-- Date-time version, with a zero time component
 		do
 			create Result.make_by_date (Current)
@@ -366,7 +366,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (d: DATE_DURATION): DATE is
+	infix "+" (d: DATE_DURATION): DATE
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
 		do
@@ -378,7 +378,7 @@ feature -- Basic operations
 					(Result - Current).duration.is_equal (d)
 		end
 
-	add (d: DATE_DURATION) is
+	add (d: DATE_DURATION)
 			-- Adds `d' to the current date.
 			-- if `d' is not definite, add years and months and then days.
 		do
@@ -390,7 +390,7 @@ feature -- Basic operations
 			end
 		end
 
-	relative_duration (other: like Current): DATE_DURATION is
+	relative_duration (other: like Current): DATE_DURATION
 			-- Duration from `other' to the current date
 		do
 			create Result.make_by_days (days - other.days)
@@ -402,7 +402,7 @@ feature -- Basic operations
 			origin_date_set: equal (Result.origin_date, other)
 		end
 
-	day_forth is
+	day_forth
 			-- Move to next day.
 			-- days is from the origin, day is current.
 		do
@@ -416,7 +416,7 @@ feature -- Basic operations
 			days_set: days = old days + 1
 		end
 
-	day_back is
+	day_back
 			-- Move to previous day.
 		do
 			if day = 1 then
@@ -429,7 +429,7 @@ feature -- Basic operations
 			days_set: days = old days - 1
 		end
 
-	day_add (d: INTEGER) is
+	day_add (d: INTEGER)
 			-- Add `d' days to the current date.
 		do
 			make_by_days (days + d)
@@ -437,7 +437,7 @@ feature -- Basic operations
 			days_set: days = old days + d
 		end
 
-	month_forth is
+	month_forth
 			-- Move to next month.
 			-- Can move days backward if next month has less days than the
 			-- current month.
@@ -456,7 +456,7 @@ feature -- Basic operations
 			end
 		end
 
-	month_back is
+	month_back
 			-- Move to previous month.
 			-- Can move days backward if previous month has less days than the
 			-- current month.
@@ -475,7 +475,7 @@ feature -- Basic operations
 			end
 		end
 
-	month_add (m: INTEGER) is
+	month_add (m: INTEGER)
 			-- Add `m' months to the current date.
 			-- Can move days backward.
 		local
@@ -495,7 +495,7 @@ feature -- Basic operations
 			end
 		end
 
-	year_forth is
+	year_forth
 			-- Move to next year.
 			-- May cut the 29th february.
 		local
@@ -514,7 +514,7 @@ feature -- Basic operations
 			year_increased: year = old year + 1
 		end
 
-	year_back is
+	year_back
 			-- Move to previous year.
 			-- May cut the 29th february.
 		do
@@ -526,7 +526,7 @@ feature -- Basic operations
 			year_decreased: year = old year - 1
 		end
 
-	year_add (y: INTEGER) is
+	year_add (y: INTEGER)
 			-- Add `y' years to the current date.
 			-- May cut the 29th february.
 		do
@@ -538,7 +538,7 @@ feature -- Basic operations
 			year_set: year = old year + y
 		end
 
-	year_month_add (y, m: INTEGER) is
+	year_month_add (y, m: INTEGER)
 			-- Add `y' years and `m' months to the current date.
 			-- Check the number of days after.
 		do
@@ -547,14 +547,14 @@ feature -- Basic operations
 
 feature -- Output
 
-	debug_output, out: STRING is
+	debug_output, out: STRING
 			-- Printable representation of `Current' with "standard"
 			-- Form: `date_default_format_string'
 		do
 			Result := formatted_out (date_default_format_string)
 		end
 
-	formatted_out (s: STRING): STRING is
+	formatted_out (s: STRING): STRING
 			-- Printable representation of `Current' with "standard"
 			-- Form: `s'
 		require
@@ -568,7 +568,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	days_at_months: SPECIAL [INTEGER] is
+	days_at_months: SPECIAL [INTEGER]
 			-- Array containing number of days from the end of
 			-- the year to each month of a non-leap year
 		once
@@ -588,7 +588,7 @@ invariant
 	year_small_enough: year <= 65535
 	year_non_negative: year >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

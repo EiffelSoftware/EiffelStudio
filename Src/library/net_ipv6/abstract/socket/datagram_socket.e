@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A datagram socket."
@@ -24,12 +24,12 @@ inherit
 
 feature -- Creation
 
-	make is
+	make
 				-- Create a domain typed socket
 		deferred
 		end
 
-	make_bound_to_address (a_local_address: like address) is
+	make_bound_to_address (a_local_address: like address)
 			-- Create a socket bound to its well-known address
 			-- `local_address'.
 		do
@@ -38,7 +38,7 @@ feature -- Creation
 			bind
 		end
 
-	make_connected_to_peer (a_peer_address: like address) is
+	make_connected_to_peer (a_peer_address: like address)
 			-- Create a socket targeted to `peer_address'.
 		do
 			make
@@ -47,7 +47,7 @@ feature -- Creation
 
 feature -- Basic operations
 
-	connect_to_peer (a_peer_address: like address) is
+	connect_to_peer (a_peer_address: like address)
 			-- Target socket to `a_peer_address'.
 		require
 			socket_exists: exists
@@ -55,14 +55,14 @@ feature -- Basic operations
 			set_peer_address (a_peer_address);
 		end
 
-	bind is
+	bind
 			-- Bind socket to a local address.
 		do
 			socket_bind
 			bound := True
 		end
 
-	close is
+	close
 			-- Close socket.
 		do
 			socket_close
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Input
 
-	received (size: INTEGER; flags: INTEGER): PACKET is
+	received (size: INTEGER; flags: INTEGER): PACKET
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		require
@@ -89,7 +89,7 @@ feature -- Input
 
 feature -- Output
 
-	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
+	send_to (a_packet: PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER)
 			-- Send `a_packet' to address `to_address'
 		require
 			socket_exists: exists;
@@ -99,13 +99,13 @@ feature -- Output
 		deferred
 		end
 
-	send (a_packet: PACKET; flags: INTEGER) is
+	send (a_packet: PACKET; flags: INTEGER)
 			-- Send `a_packet' to address in `peer_address'.
 		do
 			send_to (a_packet, peer_address, flags)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

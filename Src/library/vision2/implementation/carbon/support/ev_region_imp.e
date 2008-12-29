@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Carbon Implementation for EV_REGION"
 	author: ""
 	date: "$Date$"
@@ -92,6 +92,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end

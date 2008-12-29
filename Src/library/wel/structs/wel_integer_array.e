@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fixed integer array for WEL_STRUCTURE. Used internally by WEL. %
 				 % useful to protect integer arrays within an external call"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_array: ARRAY [INTEGER]) is
+	make (an_array: ARRAY [INTEGER])
 			-- Create a fixed integer array
 			-- from an existing standard integer array.
 		require
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_array (a_lower: INTEGER): ARRAY [INTEGER] is
+	to_array (a_lower: INTEGER): ARRAY [INTEGER]
 			-- Eiffel array
 		local
 			i, j, nb: INTEGER
@@ -78,7 +78,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in the array
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of the array (in bytes)
 		do
 				-- We need to return at least 1 to preserve the postcondition.
@@ -87,13 +87,13 @@ feature -- Measurement
 		
 feature {NONE} -- Constants
 
-	Integer_size: INTEGER is 4
+	Integer_size: INTEGER = 4
 			-- Size of integers.
 
 invariant
 	positive_count: count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Special shell which can be popped up or popped down at any time"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a dialog shell with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -52,12 +52,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current dialog shell.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

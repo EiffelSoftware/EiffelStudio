@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision titled window. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			internal_class_name := new_class_name
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Application name to be displayed by
 			-- the window manager.
 		do
@@ -76,7 +76,7 @@ feature -- Access
 			-- Our internal represention of the application
 			-- name to be displayed by the window manager.
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Short form of application name to be
 			-- displayed by the window manager when
 			-- application is iconified.
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	icon_pixmap: EV_PIXMAP is
+	icon_pixmap: EV_PIXMAP
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon.
 		local
@@ -104,26 +104,26 @@ feature -- Access
 
 feature -- Status report
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is `Current' minimized (iconic state)?
 		do
 			Result := flag_set (style, Ws_minimize)
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is `Current' maximized (take the all screen).
 		do
 			Result := flag_set (style, Ws_maximize)
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on screen?
 			-- `Result' is False if `is_minimized'.
 		do
 			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
 		end
 
-	has_title_bar: BOOLEAN is
+	has_title_bar: BOOLEAN
 			-- Does current have a title bar?
 		do
 				-- Not a constant because some descendants do not have a title bar.
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Raise `Current'. ie: put the window on the front
 			-- of the screen.
 		local
@@ -147,14 +147,14 @@ feature -- Status setting
 			l_bool := {WEL_API}.set_foreground_window (wel_item)
 		end
 
-	lower is
+	lower
 			-- Lower `Current'. ie: put the window on the back
 			-- of the screen.
 		do
 			set_z_order (hwnd_bottom)
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -167,13 +167,13 @@ feature -- Status setting
 			end
 		end
 
-	minimize is
+	minimize
 			-- Minimize `Current'
 		do
 			wel_minimize
 		end
 
-	maximize is
+	maximize
 			-- Maximize `Current'.
 			-- If the window is not shown, it gives it the screen
 			-- size, but do not call the precursor otherwise, it
@@ -184,7 +184,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_title (txt: STRING_GENERAL) is
+	set_title (txt: STRING_GENERAL)
 			-- Make `txt' the title of `Current'.
 		do
 			internal_title := txt.twin
@@ -193,7 +193,7 @@ feature -- Element change
 			end
 		end
 
-	set_icon_name (txt: STRING_GENERAL) is
+	set_icon_name (txt: STRING_GENERAL)
 			-- Make `txt' the new icon name.
 		do
 			internal_icon_name := txt.twin
@@ -202,7 +202,7 @@ feature -- Element change
 			end
 		end
 
-	set_icon_pixmap (a_pixmap: EV_PIXMAP) is
+	set_icon_pixmap (a_pixmap: EV_PIXMAP)
 			-- Make `pixmap' the new icon pixmap.
 		local
 			icon: WEL_ICON
@@ -242,7 +242,7 @@ feature -- Element change
 
 feature -- Standard window class values
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create.
 		do
 			Result := internal_class_name
@@ -257,7 +257,7 @@ feature {EV_ANY_I} -- Implementation
 	internal_class_name: STRING_32
 			-- Window class name.
 
-	new_class_name: STRING_32 is
+	new_class_name: STRING_32
 			-- Standard application icon used to create the
 			-- window class.
 			-- Can be redefined to return a user-defined icon.
@@ -269,7 +269,7 @@ feature {EV_ANY_I} -- Implementation
 	internal_icon_name: STRING_32
 			-- Name given by the user. internal representation.
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum height of `Current'.
 		local
 			mh: INTEGER
@@ -283,7 +283,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
@@ -299,7 +299,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	extra_minimum_width: INTEGER is
+	extra_minimum_width: INTEGER
 			-- Compute extra minimum width that does not count `item'.
 		require
 			exists: exists
@@ -309,7 +309,7 @@ feature {EV_ANY_I} -- Implementation
 				(interface.lower_bar.minimum_width)
 		end
 
-	extra_minimum_height: INTEGER is
+	extra_minimum_height: INTEGER
 			-- Compute extra minimum height that does not count `item'.
 		require
 			exists: exists
@@ -336,7 +336,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- default style of `Current'.
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
@@ -346,7 +346,7 @@ feature {NONE} -- WEL Implementation
 					+ Ws_border + Ws_sysmenu
 		end
 
-	on_show is
+	on_show
 			-- When `Current' receives the on_show message,
 			-- it resizes to the size of the child and sends
 			-- a message to the child.
@@ -381,7 +381,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 			-- Resize the child if it exists.
 		do
@@ -420,7 +420,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	execute_resize_actions (a_width, a_height: INTEGER) is
+	execute_resize_actions (a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
 			if resize_actions_internal /= Void then
@@ -442,7 +442,7 @@ feature {NONE} -- WEL Implementation
 		-- We have to have this flag, as Windows does not provide a message
 		-- which distinguishes between a normal resize or a restore.
 
-	copy_box_attributes (original_box, new_box: EV_VERTICAL_BOX) is
+	copy_box_attributes (original_box, new_box: EV_VERTICAL_BOX)
 			-- Copy all widgets from `original_box' to `new_box'
 			-- and set attributes.
 		require
@@ -489,13 +489,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Constants
 
-	Wel_icon_constants: WEL_ICON_CONSTANTS is
+	Wel_icon_constants: WEL_ICON_CONSTANTS
 			-- Icon constants (Icon_Big & Icon_small)
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

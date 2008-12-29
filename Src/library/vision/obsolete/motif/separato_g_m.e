@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Motif implementation of separator gadget"
 	legal: "See notice at end of class.";
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif separator gadget.
 		local
 			mc: MEL_COMPOSITE
@@ -50,7 +50,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 			-- Is the Current widget stackable?
 		do
 			Result := True
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
@@ -71,44 +71,44 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of gadget (Is Void)
 		do
 		end;
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
 		end; 
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 		do
 		end; 
 
-	set_background_color (new_color: COLOR) is
+	set_background_color (new_color: COLOR)
 			-- Set background color to `new_color'.
 		do
 		end; 
 
-	set_background_pixmap (new_pixmap: PIXMAP) is
+	set_background_pixmap (new_pixmap: PIXMAP)
 			-- Set background_pixmap to `new_color'.
 		do
 		end
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground_color color to `new_color'.
 		do
 		end;
 
-	update_foreground_color is
+	update_foreground_color
 			-- Do nothing.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

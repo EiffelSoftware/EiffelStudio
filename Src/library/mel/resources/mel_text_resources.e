@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Text resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNautoShowCursorPosition: POINTER is
+	XmNautoShowCursorPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNautoShowCursorPosition"
 		end;
 
-	XmNeditMode: POINTER is
+	XmNeditMode: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNeditMode"
 		end;
 
-	XmNsource: POINTER is
+	XmNsource: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNsource"
 		end;
 
-	XmNtopCharacter: POINTER is
+	XmNtopCharacter: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNtopCharacter"
 		end;
 
-	XmNresizeHeight: POINTER is
+	XmNresizeHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNresizeHeight"
 		end;
 
-	XmNrows: POINTER is
+	XmNrows: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNrows"
 		end;
 
-	XmNwordWrap: POINTER is
+	XmNwordWrap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNwordWrap"
 		end;
 
-	XmMULTI_LINE_EDIT: INTEGER is
+	XmMULTI_LINE_EDIT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Text.h>]: EIF_INTEGER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmMULTI_LINE_EDIT"
 		end;
 
-	XmSINGLE_LINE_EDIT: INTEGER is
+	XmSINGLE_LINE_EDIT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Text.h>]: EIF_INTEGER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmSINGLE_LINE_EDIT"
 		end;
 
-	XmSELECT_ALL: INTEGER is
+	XmSELECT_ALL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Text.h>]: EIF_INTEGER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmSELECT_ALL"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

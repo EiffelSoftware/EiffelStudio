@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a button in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_button (a_bitmap_index, a_command_id: INTEGER) is
+	make_button (a_bitmap_index, a_command_id: INTEGER)
 			-- Make a button using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_drop_down_button  (a_bitmap_index, a_command_id: INTEGER) is
+	make_drop_down_button  (a_bitmap_index, a_command_id: INTEGER)
 			-- Make a drop down button using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			set_command_id (a_command_id)
 		end
 
-	make_button_with_string (a_bitmap_index, a_string_index, a_command_id: INTEGER) is
+	make_button_with_string (a_bitmap_index, a_string_index, a_command_id: INTEGER)
 			-- Make a button using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_check (a_bitmap_index, a_command_id: INTEGER) is
+	make_check (a_bitmap_index, a_command_id: INTEGER)
 			-- Make a check button using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_check_group (a_bitmap_index, a_command_id: INTEGER) is
+	make_check_group (a_bitmap_index, a_command_id: INTEGER)
 			-- Make a check group using `a_bitmap_index' and
 			-- `a_command_id'.
 		do
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_group (a_bitmap_index, a_command_id: INTEGER) is
+	make_group (a_bitmap_index, a_command_id: INTEGER)
 			-- Make an enabled check group using `a_bitmap_index'
 			-- and `a_command_id'.
 		do
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			command_id_set: command_id = a_command_id
 		end
 
-	make_separator is
+	make_separator
 			-- Make a separator providing a small gap between
 			-- groups.
 		do
@@ -130,13 +130,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	bitmap_index: INTEGER is
+	bitmap_index: INTEGER
 			-- Zero-based index of button image
 		do
 			Result := cwel_tbbutton_get_ibitmap (item)
 		end
 
-	command_id: INTEGER is
+	command_id: INTEGER
 			-- Command identifier associated with the button. This
 			-- identifer is used in a Wm_command message when the
 			-- button is chosen.
@@ -144,27 +144,27 @@ feature -- Access
 			Result := cwel_tbbutton_get_idcommand (item)
 		end
 
-	state: INTEGER is
+	state: INTEGER
 			-- Button state flags.
 			-- See class WEL_TB_STATE_CONSTANTS for values
 		do
 			Result := cwel_tbbutton_get_fsstate (item)
 		end
 
-	style: INTEGER is
+	style: INTEGER
 			-- Button style flags.
 			-- See class WEL_TB_STYLE_CONSTANTS for values
 		do
 			Result := cwel_tbbutton_get_fsstyle (item)
 		end
 
-	data: INTEGER is
+	data: INTEGER
 			-- Application-defined value
 		do
 			Result := cwel_tbbutton_get_dwdata (item)
 		end
 
-	string_index: INTEGER is
+	string_index: INTEGER
 			-- Zero-based index of button string.
 		do
 			Result := cwel_tbbutton_get_istring (item)
@@ -174,7 +174,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_bitmap_index (a_bitmap_index: INTEGER) is
+	set_bitmap_index (a_bitmap_index: INTEGER)
 			-- Set `bitmap_index' with `a_bitmap_index'.
 		do
 			cwel_tbbutton_set_ibitmap (item, a_bitmap_index)
@@ -182,7 +182,7 @@ feature -- Element change
 			bitmap_index_set: bitmap_index = a_bitmap_index
 		end
 
-	set_command_id (a_command_id: INTEGER) is
+	set_command_id (a_command_id: INTEGER)
 			-- Set `command_id' with `a_command_id'.
 		do
 			cwel_tbbutton_set_idcommand (item, a_command_id)
@@ -190,7 +190,7 @@ feature -- Element change
 			command_id_set: command_id = a_command_id
 		end
 
-	set_state (a_state: INTEGER) is
+	set_state (a_state: INTEGER)
 			-- Set `state' with `a_state'.
 		do
 			cwel_tbbutton_set_fsstate (item, a_state)
@@ -198,7 +198,7 @@ feature -- Element change
 			state_set: state = a_state
 		end
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'.
 		do
 			cwel_tbbutton_set_fsstyle (item, a_style)
@@ -206,7 +206,7 @@ feature -- Element change
 			style_set: style = a_style
 		end
 
-	set_data (a_data: INTEGER) is
+	set_data (a_data: INTEGER)
 			-- Set `data' with `a_data'.
 		do
 			cwel_tbbutton_set_dwdata (item, a_data)
@@ -214,7 +214,7 @@ feature -- Element change
 			data_set: data = a_data
 		end
 
-	set_string_index (a_string_index: INTEGER) is
+	set_string_index (a_string_index: INTEGER)
 			-- Set `string_index' with `a_string_index'.
 		require
 			positive_index: a_string_index >= 0
@@ -226,7 +226,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tbbutton
@@ -234,74 +234,74 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_tbbutton: INTEGER is
+	c_size_of_tbbutton: INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		alias
 			"sizeof (TBBUTTON)"
 		end
 
-	cwel_tbbutton_set_ibitmap (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_ibitmap (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_set_idcommand (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_idcommand (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_set_fsstate (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_fsstate (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_set_fsstyle (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_fsstyle (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_set_dwdata (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_dwdata (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_set_istring (ptr: POINTER; value: INTEGER) is
+	cwel_tbbutton_set_istring (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_ibitmap (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_ibitmap (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_idcommand (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_idcommand (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_fsstate (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_fsstate (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_fsstyle (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_fsstyle (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_dwdata (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_dwdata (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-	cwel_tbbutton_get_istring (ptr: POINTER): INTEGER is
+	cwel_tbbutton_get_istring (ptr: POINTER): INTEGER
 		external
 			"C [macro <tbbutton.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

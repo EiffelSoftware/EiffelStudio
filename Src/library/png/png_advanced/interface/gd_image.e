@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GD Image"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make(w,h: INTEGER) is
+	make(w,h: INTEGER)
 			-- Initialize the image with
 			-- 'w' as width and 'h' as height.
 		require
@@ -35,7 +35,7 @@ feature -- Initialization
 			list_make
 		end
 
-	make_from_file (file_name: FILE_NAME) is
+	make_from_file (file_name: FILE_NAME)
 			-- Load a PNG file, and store it into 'image'
 		require
 			file_name_possible: file_name /= Void and then file_name.is_valid
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Settings
 
-	set_interlaced(b: BOOLEAN) is
+	set_interlaced(b: BOOLEAN)
 		-- If 'b', then set Current as interlaced image,
 		-- else make it linear ( default ).
 	local
@@ -67,7 +67,7 @@ feature -- Settings
 
 feature -- Basic Operations
 
-	save_to_file (file_name: FILE_NAME) is
+	save_to_file (file_name: FILE_NAME)
 			-- Save Current to file.
 		require
 			file_name_possible: file_name /= Void and then file_name.is_valid
@@ -84,13 +84,13 @@ feature -- Basic Operations
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of Current.
 		do
 			Result := c_get_width ( image )
 		end		
 
-	height: INTEGER is
+	height: INTEGER
 			-- Width of Current
 		do
 			Result := c_get_height ( image )
@@ -98,13 +98,13 @@ feature -- Access
 
 feature -- Validity status.
 
-	coordinates_within_the_image(x,y: INTEGER): BOOLEAN is
+	coordinates_within_the_image(x,y: INTEGER): BOOLEAN
 			-- Does a point (x,y ) within the boundaries ?
 		do
 			Result := (gdImageBoundsSafe(image,x,y)=1)
 		end
 	
-	points_within_the_image(array: ARRAY [TUPLE[INTEGER,INTEGER]]): BOOLEAN is
+	points_within_the_image(array: ARRAY [TUPLE[INTEGER,INTEGER]]): BOOLEAN
 			-- Are all the points of 'array' within the image ?
 		require
 			array_not_empty: array /= Void and then array.count>0
@@ -131,7 +131,7 @@ feature -- Implementation
 
 feature {NONE} -- Memory 
 
-	dispose is
+	dispose
 			-- Remove C_struture associated with Current Image.
 		do
 			c_destroy_image(image)
@@ -139,61 +139,61 @@ feature {NONE} -- Memory
 
 feature {NONE} -- Externals
 
-	GdImageCreate (i,j: INTEGER):POINTER is
+	GdImageCreate (i,j: INTEGER):POINTER
 		external
 			"C"
 		alias
 			"gdImageCreate"
 		end
 
-	c_destroy_image (p: POINTER)is
+	c_destroy_image (p: POINTER)
 		external
 			"C"
 		alias
 			"gdImageDestroy"
 		end
 
-	gdImageCreateFromPng (p: POINTER): POINTER is
+	gdImageCreateFromPng (p: POINTER): POINTER
 		external
 			"C"
 		alias
 			"gdImageCreateFromPng"
 		end
 
-	gdImagePng(p: POINTER; f: POINTER) is
+	gdImagePng(p: POINTER; f: POINTER)
 		external
 			"c"
 		alias
 			"gdImagePng"
 		end
 
-	gdImageInterlace(p: POINTER; i: INTEGER) is
+	gdImageInterlace(p: POINTER; i: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageInterlace"
 		end
 
-	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER is
+	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageBoundsSafe"
 		end
 
-	c_get_height (p: POINTER ): INTEGER is
+	c_get_height (p: POINTER ): INTEGER
 		external
 			"c[macro <eiffel_png.h>]"
 		end
 
-	c_get_width (p: POINTER ): INTEGER is
+	c_get_width (p: POINTER ): INTEGER
 		external
 			"c[macro <eiffel_png.h>]"
 		end
 
 invariant
 	image_exists: image /= DEFAULT_POINTER
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

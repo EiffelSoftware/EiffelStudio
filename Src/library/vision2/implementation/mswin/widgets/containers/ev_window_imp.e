@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision window. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -132,14 +132,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			make_top ("")
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
@@ -154,14 +154,14 @@ feature {NONE} -- Initialization
 			internal_is_border_enabled := True
 		end
 
-	class_style: INTEGER is
+	class_style: INTEGER
 			-- Standard style used to create the window class.
 			-- Can be redefined to return a user-defined style.
 		once
 			Result := Cs_dblclks
 		end
 
-	init_bars is
+	init_bars
 			-- Initialize `lower_bar' and `upper_bar'.
 		local
 			ub_imp, lb_imp: EV_VERTICAL_BOX_IMP
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	client_y: INTEGER is
+	client_y: INTEGER
 			-- Top of the client area of `Current'.
 		do
 			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
@@ -195,7 +195,7 @@ feature -- Access
 			Result := Result.min (height)
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of `Current'.
 		do
 			Result := Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} - client_y
@@ -206,13 +206,13 @@ feature -- Access
 			Result := Result.max (0)
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset of `Current' relative to screen
 		do
 			Result := x_position
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset of `Current' relative to screen
 		do
 			Result := y_position
@@ -226,13 +226,13 @@ feature -- Access
 			-- Maximum width that application wishes widget
 			-- instance to have.
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Window text to be displayed by the application manager.
 		do
 			Result := text
        	end
 
-	top_level_window_imp: like Current is
+	top_level_window_imp: like Current
 			-- Top level window that contains `Current'.
 			-- As `Current' is a window then we return `Current'
 		do
@@ -244,7 +244,7 @@ feature -- Access
 
 feature -- Status setting
 
-	lock_update is
+	lock_update
 			-- Lock updates for this window on certain platforms until
 			-- `unlock_update' is called.
 		do
@@ -252,21 +252,21 @@ feature -- Status setting
 			lock_window_update
 		end
 
-	unlock_update is
+	unlock_update
 			-- Unlock updates for this window on certain platforms.
 		do
 			Precursor {EV_WINDOW_I}
 			unlock_window_update
 		end
 
-	insert (v: like item) is
+	insert (v: like item)
 			-- Insert `v' into `Current'.
 		do
 			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP} (v)
 			ev_move_and_resize (x_position, y_position, width, height, False)
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
 			ev_set_minimum_size (0, 0)
@@ -277,21 +277,21 @@ feature -- Status setting
 			set_maximum_height (32000)
 		end
 
-	disable_user_resize is
+	disable_user_resize
 			-- Forbid the resize of the window.
 		do
 			user_can_resize := False
 			forbid_resize
 		end
 
-	enable_user_resize is
+	enable_user_resize
 			-- Allow the resize of the window.
 		do
 			user_can_resize := True
 			allow_resize
 		end
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid the resize of `Current'.
 		local
 			new_style: INTEGER
@@ -304,7 +304,7 @@ feature -- Status setting
 			set_style_and_redraw (new_style)
 		end
 
-	allow_resize is
+	allow_resize
 			-- Allow the resize of `Current'.
 		local
 			new_style: INTEGER
@@ -314,7 +314,7 @@ feature -- Status setting
 			set_style_and_redraw (new_style)
 		end
 
-	internal_enable_border is
+	internal_enable_border
 			-- Ensure a border is displayed around `Current'.
 		local
 			new_style: INTEGER
@@ -327,7 +327,7 @@ feature -- Status setting
 			set_style_and_redraw (new_style)
 		end
 
-	internal_disable_border is
+	internal_disable_border
 			-- Ensure no border is displayed around `Current'.
 		local
 			new_style: INTEGER
@@ -341,21 +341,21 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_x_position (a_x: INTEGER) is
+	set_x_position (a_x: INTEGER)
 			-- Set `x_position' with `a_x'
 		do
 			child_cell.set_is_positioned
 			ev_move (a_x, y_position)
 		end
 
-	set_y_position (a_y: INTEGER) is
+	set_y_position (a_y: INTEGER)
 			-- Set `y_position' with `a_y'
 		do
 			child_cell.set_is_positioned
 			ev_move (x_position, a_y)
 		end
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER)
 			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the screen.
 		local
@@ -369,7 +369,7 @@ feature -- Element change
 			end
 		end
 
-	set_maximum_width (value: INTEGER) is
+	set_maximum_width (value: INTEGER)
 			-- Make `value' the new maximum width.
 			-- If `width' is larger, then it is reduced.
 		do
@@ -379,7 +379,7 @@ feature -- Element change
 			end
 		end
 
-	set_maximum_height (value: INTEGER) is
+	set_maximum_height (value: INTEGER)
 			-- Make `value' the new maximum height.
 			-- If `height' is larger, then it is reduced.
 		do
@@ -389,13 +389,13 @@ feature -- Element change
 			end
 		end
 
-	set_title (txt: STRING_GENERAL) is
+	set_title (txt: STRING_GENERAL)
 			-- Make `txt' the title of `Current'.
 		do
 			set_text (txt.twin)
 		end
 
-	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
+	set_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Assign `a_menu_bar' to `menu_bar'.
 		local
 			mb_imp: WEL_MENU
@@ -412,7 +412,7 @@ feature -- Element change
 			compute_minimum_height
 		end
 
-	remove_menu_bar is
+	remove_menu_bar
 			-- Assign `Void' to `menu_bar'.
 		local
 			mb: EV_MENU_BAR_IMP
@@ -431,7 +431,7 @@ feature -- Element change
 
 feature -- Status Report
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does current window have focus?
 		do
 			Result := foreground_window = Current
@@ -439,7 +439,7 @@ feature -- Status Report
 
 feature {EV_ANY, EV_ANY_I} -- Accelerators
 
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
+	connect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Connect key combination `an_accel' to `Current'.
 		local
 			acc_imp: EV_ACCELERATOR_IMP
@@ -451,7 +451,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 		end
 
 
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+	disconnect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Disconnect key combination `an_accel' from `Current'.
 		local
 			acc_imp: EV_ACCELERATOR_IMP
@@ -464,7 +464,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 
 feature {NONE} -- Implementation
 
-	on_wm_setting_change is
+	on_wm_setting_change
 			-- Wm_settingchange message
 			-- Update the system fonts.
 		local
@@ -478,14 +478,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wel_destroy_window is
+	wel_destroy_window
 			-- Destroy the window-widget
 		do
 			destroy_item_from_context (False)
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
-			a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x_position', `a_y_position' position and
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- `menu_id' has been chosen from the menu.
 		local
 			menu_bar_imp: EV_MENU_BAR_IMP
@@ -530,7 +530,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_menu_opened (a_menu: WEL_MENU) is
+	on_menu_opened (a_menu: WEL_MENU)
 			-- `a_menu' has been opened.
 		local
 			menu_bar_imp: EV_MENU_BAR_IMP
@@ -546,7 +546,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 	last_focused_widget: POINTER
 		-- Last focused widget in `Current'.
 
-	set_last_focused_widget (windows_pointer: POINTER) is
+	set_last_focused_widget (windows_pointer: POINTER)
 			-- Assign `windows_pointer' to `last_focused_widget'.
 		do
 			last_focused_widget := windows_pointer
@@ -554,7 +554,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum width of `Current'.
 		local
 			mw: INTEGER
@@ -571,7 +571,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 					(interface.lower_bar.minimum_width))
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum height of `Current'.
 		local
 			mh: INTEGER
@@ -592,7 +592,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			ev_set_minimum_height (mh)
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
@@ -626,7 +626,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	parent_ask_resize (a_width, a_height: INTEGER) is
+	parent_ask_resize (a_width, a_height: INTEGER)
 			-- When the parent asks the resize, it's not
 			-- necessary to send him back the information
 			-- Can be called but do nothing.
@@ -637,7 +637,7 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	set_top_level_window_imp (a_window: EV_TITLED_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_TITLED_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -649,7 +649,7 @@ feature {NONE} -- Inapplicable
 
 feature {EV_ANY_I} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of `Current'.
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
@@ -657,13 +657,13 @@ feature {EV_ANY_I} -- Implementation
 					+ Ws_clipchildren + Ws_clipsiblings + Ws_sizebox
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Default extended style of `Current.
 		do
 			Result := Ws_ex_controlparent
 		end
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -674,7 +674,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	show_relative_to_window (a_parent: EV_WINDOW) is
+	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Show `Current' with respect to `a_window'.
 		do
 			if not is_parented_window then
@@ -684,7 +684,7 @@ feature {EV_ANY_I} -- Implementation
 			show_internal
 		end
 
-	show is
+	show
 			-- Show `Current'.
 		do
 			if is_parented_window then
@@ -694,7 +694,7 @@ feature {EV_ANY_I} -- Implementation
 			show_internal
 		end
 
-	hide is
+	hide
 			-- Hide `Current'.
 		do
 			Precursor {WEL_FRAME_WINDOW}
@@ -705,7 +705,7 @@ feature {EV_ANY_I} -- Implementation
 		-- Should the `show_actions_internal' be called?
 		-- used to ensure they are only called once.
 
-	on_show is
+	on_show
 			-- When the window receives the on_show message,
 			-- it resizes the window at the size of the child.
 			-- And it sends the message to the child because wel
@@ -738,7 +738,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
@@ -776,7 +776,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	execute_resize_actions (a_width, a_height: INTEGER) is
+	execute_resize_actions (a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
 			if resize_actions_internal /= Void then
@@ -785,7 +785,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-   	on_move (x_pos, y_pos: INTEGER) is
+   	on_move (x_pos, y_pos: INTEGER)
    			-- Wm_move message.
    			-- This message is sent after a window has been moved.
    			-- `x_position_pos' specifies the x_position-coordinate
@@ -796,7 +796,7 @@ feature {EV_ANY_I} -- Implementation
 			interface.move_actions.call ([x_position, y_position, ev_width, ev_height])
  		end
 
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
 			-- Called by WEL to request min/max size of `Current'.
 			-- Is called just before move and/or resize.
 		local
@@ -808,7 +808,7 @@ feature {EV_ANY_I} -- Implementation
 			min_max_info.set_max_track_size (max_track)
 		end
 
-	on_destroy is
+	on_destroy
 			-- Called when `Current' is destroyed.
 			-- Set the parent sensitive if it exists.
 		do
@@ -819,7 +819,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_wm_close is
+	on_wm_close
 			-- User clicked on "close" ('X').
 		do
 			if close_request_actions_internal /= Void then
@@ -829,7 +829,7 @@ feature {EV_ANY_I} -- Implementation
 			set_default_processing (False)
 		end
 
-	on_wm_mouseactivate (wparam, lparam: POINTER) is
+	on_wm_mouseactivate (wparam, lparam: POINTER)
 			-- `Current' has been activated thanks to the click of a window.
 		local
 			msg: INTEGER
@@ -897,7 +897,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	widget_has_pick (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN is
+	widget_has_pick (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN
 			-- Does `pick_and_dropable' have a pick and drop?
 		do
 			if pick_and_dropable /= Void then
@@ -905,7 +905,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	widget_has_drag (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN is
+	widget_has_drag (pick_and_dropable: EV_PICK_AND_DROPABLE_IMP): BOOLEAN
 			-- Does `pick_and_dropable' have a drag and drop?
 		do
 			if pick_and_dropable /= Void then
@@ -913,7 +913,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	source_at_pointer_position (button_pressed: INTEGER): EV_PICK_AND_DROPABLE_IMP is
+	source_at_pointer_position (button_pressed: INTEGER): EV_PICK_AND_DROPABLE_IMP
 			-- `Result' is EV_PICK_AND_DROPABLE at current pointer_position.
 			-- `button_pressed' is pointer button which caused this feature to be
 			-- called. This allows us to avoid excessive processing when we know
@@ -989,7 +989,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_wm_window_pos_changing (lparam: POINTER) is
+	on_wm_window_pos_changing (lparam: POINTER)
 			-- The position of `Current' is changing.
 		local
 			info: WEL_WINDOW_POS
@@ -1009,7 +1009,7 @@ feature {EV_ANY_I} -- Implementation
 			override_movement := False
 		end
 
-	on_wm_ncactivate (hwnd: POINTER; wparam, lparam: POINTER): POINTER is
+	on_wm_ncactivate (hwnd: POINTER; wparam, lparam: POINTER): POINTER
 			-- Handle wm_ncactive message
 			-- With this handling, we can have mulitple title bar focused windows which are first used by Photoshop.
 			-- This implementation is learn from www.codeproject.com "Docking Toolbars in Plain C"
@@ -1069,7 +1069,7 @@ feature {EV_ANY_I} -- Implementation
 			disable_default_processing
 		end
 
-	window_process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	window_process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
 		local
@@ -1125,7 +1125,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	window_on_wm_activate (wparam, lparam: POINTER) is
+	window_on_wm_activate (wparam, lparam: POINTER)
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		local
 			l_is_minimized: BOOLEAN
@@ -1164,7 +1164,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	fire_dialog_show_actions (dialog: POINTER) is
+	fire_dialog_show_actions (dialog: POINTER)
 			-- Call `show_actions' on a dialog referenced by `dialog'.
 			--| We need to ensure that all widgets in the dialog
 			--| are completely visible, and this was the only message that
@@ -1199,7 +1199,7 @@ feature {EV_ANY_I} -- Implementation
 			-- If `True', then on_window_pos_changing will not raise
 			-- `Current' to foreground.
 
-	has_title_bar: BOOLEAN is
+	has_title_bar: BOOLEAN
 			-- Does current have a title bar?
 		do
 		end
@@ -1216,12 +1216,12 @@ feature {EV_ANY_I} -- Implementation
 			-- Used in EV_TITLED_WINDOW_IMP but added here to
 			-- avoid assignment attempt in {EV_APPLICATION_IMP}.process_message.
 
-	allow_movement is
+	allow_movement
 		do
 			override_movement := False
 		end
 
-	move_to_foreground is
+	move_to_foreground
 			-- Move `Current' to foreground.
 		local
 			l_result: BOOLEAN
@@ -1231,7 +1231,7 @@ feature {EV_ANY_I} -- Implementation
 				Swp_nosize + Swp_nomove)
 		end
 
-	set_style_and_redraw (new_style: INTEGER) is
+	set_style_and_redraw (new_style: INTEGER)
 			-- Set `style' to `new_style', recompute
 			-- sizing dimensions and redraw.
 		do
@@ -1242,7 +1242,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -1270,7 +1270,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	title_height: INTEGER is
+	title_height: INTEGER
 			-- `Result' is absolute x position of client rect.
 		do
 			if has_title_bar then
@@ -1278,7 +1278,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	frame_height: INTEGER is
+	frame_height: INTEGER
 			-- `Result' is frame height of `Current'.
 		do
 			if user_can_resize then
@@ -1289,7 +1289,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	frame_width: INTEGER is
+	frame_width: INTEGER
 			-- `Result' is frame width of `Current'.
 		do
 			if user_can_resize then
@@ -1299,7 +1299,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- `Result' is border width of `Current'.
 		do
 			if internal_is_border_enabled then
@@ -1307,7 +1307,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 			end
 		end
 
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -1317,7 +1317,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation for switch non-parented and parented windows
 
-	show_internal is
+	show_internal
 			-- Show `Current'.
 		do
 			if not is_displayed then
@@ -1336,7 +1336,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			end
 		end
 
-	show_flags: INTEGER is
+	show_flags: INTEGER
 			-- Flags used for `ShowWindow'.
 		do
 			Result := sw_show
@@ -1345,7 +1345,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 	is_parented_window: BOOLEAN
 			-- If current is parented window?
 
-	switch_between_parented_window (a_parent: EV_WINDOW) is
+	switch_between_parented_window (a_parent: EV_WINDOW)
 			-- Change window native item to parent window if `a_parent' not void.
 			-- If `a_parent' void then change to not parented window.
 		local
@@ -1405,7 +1405,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			switched: wel_item /= old wel_item
 		end
 
-	clear_parent (a_widget: EV_WIDGET) is
+	clear_parent (a_widget: EV_WIDGET)
 			-- Clear the parent of `a_widget'.
 		local
 			l_imp: EV_WIDGET_IMP
@@ -1417,7 +1417,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			end
 		end
 
-	set_widget_parent (a_widget: EV_WIDGET; a_parent: EV_CONTAINER) is
+	set_widget_parent (a_widget: EV_WIDGET; a_parent: EV_CONTAINER)
 			-- Set `a_widget' parent to `a_parent' if possible.
 		require
 			not_void: a_parent /= Void
@@ -1436,7 +1436,7 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 
 feature {NONE} -- Features that should be directly implemented by externals
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		external
 			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
@@ -1444,37 +1444,37 @@ feature {NONE} -- Features that should be directly implemented by externals
 			"GetNextDlgTabItem"
 		end
 
-	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
@@ -1484,7 +1484,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WINDOW
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -1505,7 +1505,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

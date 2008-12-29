@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation (hidden window)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			internal_class_name := new_class_name + "_AS_DIALOG"
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			apply_center_dialog := True
 		end
 
-	make_with_real_dialog (other_imp: like common_dialog_imp) is
+	make_with_real_dialog (other_imp: like common_dialog_imp)
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: other_imp /= Void
@@ -78,7 +78,7 @@ feature -- Status Report
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
 
-	is_modal: BOOLEAN is
+	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
@@ -86,13 +86,13 @@ feature -- Status Report
 			Result := False
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		do
 			Result := False
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 
@@ -104,7 +104,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	enable_closeable is
+	enable_closeable
 			-- Set `Current' to be closeable by the user.
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
@@ -112,7 +112,7 @@ feature -- Status Setting
 			is_closeable := True
 		end
 
-	disable_closeable is
+	disable_closeable
 			-- Set `Current'to be non closeable by the user
 		do
 			is_closeable := False
@@ -120,21 +120,21 @@ feature -- Status Setting
 
 feature -- Element change
 
-	set_x_position (a_x: INTEGER) is
+	set_x_position (a_x: INTEGER)
 			-- Set `x_position' with `a_x'
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (a_x)
 			apply_center_dialog := False
 		end
 
-	set_y_position (a_y: INTEGER) is
+	set_y_position (a_y: INTEGER)
 			-- Set `y_position' with `a_y'
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (a_y)
 			apply_center_dialog := False
 		end
 
-	set_position (new_x_position: INTEGER; new_y_position: INTEGER) is
+	set_position (new_x_position: INTEGER; new_y_position: INTEGER)
 			-- Put at horizontal position `new_x_position' and at
 			-- vertical position `new_y_position' relative to parent.
 		do
@@ -144,7 +144,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	show_modal_to_window (a_parent_window: EV_WINDOW) is
+	show_modal_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		do
 			call_show_actions := True
@@ -153,7 +153,7 @@ feature -- Basic operations
 			interface.implementation.show_modal_to_window (a_parent_window)
 		end
 
-	show_relative_to_window (a_parent_window: EV_WINDOW) is
+	show_relative_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' with respect to `a_parent_window'.
 		do
 			call_show_actions := True
@@ -162,7 +162,7 @@ feature -- Basic operations
 			interface.implementation.show_relative_to_window (a_parent_window)
 		end
 
-	show is
+	show
 			-- Show `Current' if not already displayed.
 		local
 			button_imp: EV_BUTTON_IMP
@@ -207,7 +207,7 @@ feature {EV_DIALOG_I} -- Implementation
 	parent_window: EV_WINDOW
 			-- Parent window if any, Void otherwise
 
-	destroy_implementation is
+	destroy_implementation
 			-- Destroy `Current' but does not wipe out the children.
 		do
 			application_imp.remove_root_window (Current)
@@ -218,7 +218,7 @@ feature {EV_DIALOG_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_destroy is
+	on_destroy
 			-- WM_DESTROY
 		do
 			if parent_window /= Void then
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	move_children (other_imp: like common_dialog_imp) is
+	move_children (other_imp: like common_dialog_imp)
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_style is
+	update_style
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			set_style (new_style)
 		end
 
-	center_dialog is
+	center_dialog
 				-- Center the dialog relative to the parent window.
 		require
 			parent_window /= Void
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			set_position (x_pos, y_pos)
 		end
 
-	promote_to_modal_dialog is
+	promote_to_modal_dialog
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP_MODAL which allows modality
 		local
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (modal_dialog_imp)
 		end
 
-	promote_to_modeless_dialog is
+	promote_to_modeless_dialog
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP_MODELESS which allows modality
 		local
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	copy_from_real_dialog (other_imp: like common_dialog_imp) is
+	copy_from_real_dialog (other_imp: like common_dialog_imp)
 			-- Fill current with `other_imp' content.
 		local
 			other_menu_bar: EV_MENU_BAR
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			set_ex_style (other_imp.ex_style)
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Process all message plus `WM_INITDIALOG'.
 		do
 			if msg = Wm_close then
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+	common_dialog_imp: EV_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -453,7 +453,7 @@ feature {EV_ANY, EV_ANY_I}
 	interface: EV_DIALOG;
 			-- Interface for `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

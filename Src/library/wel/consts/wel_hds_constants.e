@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEL_HEADER_CONTROL styles."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
  
-	Hds_buttons: INTEGER is
+	Hds_buttons: INTEGER
 			-- Header items behave like buttons. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"HDS_BUTTONS"
 		end
 
-	Hds_hidden: INTEGER is
+	Hds_hidden: INTEGER
 			-- Indicates a header control that is intended to be hidden. 
 			-- This style does not hide the control; instead, it causes the 
 			-- header control to return zero in the cy member of the WINDOWPOS 
@@ -30,7 +30,7 @@ feature -- Access
 			"HDS_HIDDEN"
 		end
 
-	Hds_horz: INTEGER is
+	Hds_horz: INTEGER
 			-- The header control is horizontal.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -38,7 +38,7 @@ feature -- Access
 			"HDS_HORZ"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

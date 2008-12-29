@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision notebook. Implementation interface."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {EV_NOTEBOOK} -- Access
 
-	item_text (an_item: like item): STRING_32 is
+	item_text (an_item: like item): STRING_32
 			-- Label of `an_item'.
 		require
 			interface_has_an_item: interface.has (an_item)
@@ -38,7 +38,7 @@ feature {EV_NOTEBOOK} -- Access
 			not_void: Result /= Void
 		end
 
-	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		require
 			has_an_item: has (an_item)
@@ -49,24 +49,24 @@ feature {EV_NOTEBOOK} -- Access
 
 feature -- Status report
 
-	selected_item: like item is
+	selected_item: like item
 			-- Page displayed topmost.
 		deferred
 		end
 
-	selected_item_index: INTEGER is
+	selected_item_index: INTEGER
 			-- Index of `selected_item'.
 		deferred
 		end
 
-	tab_position: INTEGER is
+	tab_position: INTEGER
 			-- Position of tabs.
 			-- One of `Tab_left', `Tab_right', `Tab_top' or `Tab_bottom'.
 			-- Default: `Tab_top'
 		deferred
 		end
 
-	pointed_tab_index: INTEGER is
+	pointed_tab_index: INTEGER
 			-- index of tab currently under mouse pointer, or 0 if none.
 		deferred
 		ensure
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature {EV_NOTEBOOK} -- Status setting
 
-	set_tab_position (a_tab_position: INTEGER) is
+	set_tab_position (a_tab_position: INTEGER)
 			-- Display tabs at `a_tab_position'.
 		require
 			a_position_within_range:
@@ -86,7 +86,7 @@ feature {EV_NOTEBOOK} -- Status setting
 		deferred
 		end
 
-	select_item (an_item: like item) is
+	select_item (an_item: like item)
 			-- Display `an_item' above all others.
 		require
 			interface_has_an_item: interface.has (an_item)
@@ -97,7 +97,7 @@ feature {EV_NOTEBOOK} -- Status setting
 
 feature {EV_NOTEBOOK} -- Element change
 
-	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
+	set_item_text (an_item: like item; a_text: STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		require
 			interface_has_an_item: interface.has (an_item)
@@ -129,7 +129,7 @@ invariant
 			count > 0 implies
 			selected_item_index = interface.index_of (selected_item, 1)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

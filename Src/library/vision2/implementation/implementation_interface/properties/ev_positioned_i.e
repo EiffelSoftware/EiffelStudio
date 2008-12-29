@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision positioned, implementation interface.%N%
 		%See bridge pattern notes in ev_any.e"
@@ -18,42 +18,42 @@ inherit
 
 feature -- Measurement
 	
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		deferred
 		end
 	
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		deferred
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		deferred
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		deferred
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		deferred
 		end
 	
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		deferred
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		deferred
 		end
@@ -69,7 +69,7 @@ invariant
 	minimum_width_positive_or_zero: is_usable implies minimum_width >= 0
 	minimum_height_positive_or_zero: is_usable implies minimum_height >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

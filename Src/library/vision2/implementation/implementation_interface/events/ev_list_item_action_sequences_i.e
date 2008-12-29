@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_LIST_ITEM_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selected.
 		do
 			if select_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when deselected.
 		do
 			if deselect_actions_internal = Void then
@@ -52,7 +52,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a deselect action sequence.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Implementation
 	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `deselect_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio menu item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize with state `is_selected'.
 		do
 			Precursor
@@ -51,13 +51,13 @@ feature {EV_ANY_I} -- Status report
 
 feature {EV_ANY_I} -- Status setting
 
-	disable_select is
+	disable_select
 			-- Assign `False' to `is_selected'.
 		do
 			is_selected := False
 		end
 
-	enable_select is
+	enable_select
 		local
 			cur: CURSOR
 		do
@@ -86,20 +86,20 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_activate is
+	on_activate
 			-- Enable this item and call `Precursor'.
 		do
 			enable_select
 			Precursor
 		end
 
-	check_mark_bitmap_constant: INTEGER is
+	check_mark_bitmap_constant: INTEGER
 			-- Constant coding for the check mark used in Current.
 		do
 			Result := Wel_drawing_constants.Dfcs_menubullet
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

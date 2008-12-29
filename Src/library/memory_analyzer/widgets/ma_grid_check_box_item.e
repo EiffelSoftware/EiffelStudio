@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a checkbox in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method.
 		do
 			default_create
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			set_required_width (40)
 		end
 
-	make_with_boolean (a_bool: BOOLEAN)	is
+	make_with_boolean (a_bool: BOOLEAN)
 			-- Create the object with value to a_bool
 		do
 			make
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	initialize_for_tree is
+	initialize_for_tree
 			-- Draw tree line to check box.
 		do
 			tree_line_enabled := True
@@ -46,13 +46,13 @@ feature -- Status Setting
 
 feature -- Access
 
-	selected: BOOLEAN assign set_selected is
+	selected: BOOLEAN assign set_selected
 			-- Is current check box selected?
 		do
 			Result := internal_selected
 		end
 
-	set_selected (a_bool: BOOLEAN) is
+	set_selected (a_bool: BOOLEAN)
 			-- Set True/False to current grid item, and changed the text.
 		do
 			if internal_selected /= a_bool then
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	tree_line_enabled: BOOLEAN
 		-- Should a tree line be drawn all the way to the check box.
 
-	handle_pointer_pressed is
+	handle_pointer_pressed
 			-- Handle user press event.
 		do
 			internal_selected := not internal_selected
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_overlay_pixmap (a_drawable: EV_DRAWABLE) is
+	draw_overlay_pixmap (a_drawable: EV_DRAWABLE)
 			-- Draw the pixmap which represent whether current is selected.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_selected (a_drawable: EV_DRAWABLE) is
+	draw_selected (a_drawable: EV_DRAWABLE)
 			-- Draw the pixmap which is represent current is seleted.
 		local
 			l_data: like section_data
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	section_data: ARRAYED_LIST [EV_COORDINATE] is
+	section_data: ARRAYED_LIST [EV_COORDINATE]
 			-- Coordinate used to draw a check
 		once
 			create Result.make (7)
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	draw_line_section (a_coordinate: EV_COORDINATE; a_drawable: EV_DRAWABLE) is
+	draw_line_section (a_coordinate: EV_COORDINATE; a_drawable: EV_DRAWABLE)
 			-- Draw line sections to form a check starting from position specified by `a_coordinate'.
 		require
 			a_coordinate_attached: a_coordinate /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			a_drawable.draw_segment (l_start_x + a_coordinate.x, l_start_y + a_coordinate.y, l_start_x + a_coordinate.x, l_start_y + a_coordinate.y + 2)
 		end
 
-	draw_unselected (a_drawable: EV_DRAWABLE) is
+	draw_unselected (a_drawable: EV_DRAWABLE)
 			-- Draw the pixmap which is represent current is unseleted.
 		do
 			if is_selected and then parent.has_focus then
@@ -183,46 +183,46 @@ feature {NONE} -- Implementation
 			a_drawable.draw_rectangle (figure_start_x, figure_start_y, check_figure_size, check_figure_size)
 		end
 
-	figure_start_x: INTEGER is
+	figure_start_x: INTEGER
 			-- The start x position of the figure.
 		do
 			Result := ((width - check_figure_size) // 2 - margin_width).max (tree_line_margin_width)
 		end
 
-	figure_start_y: INTEGER is
+	figure_start_y: INTEGER
 			-- The start y position of the figure.
 		do
 			Result := (height - check_figure_size) // 2
 		end
 
-	check_figure_size: INTEGER is 12
+	check_figure_size: INTEGER = 12
 			-- The width/height of the check box.
 
-	check_figure_line_width: INTEGER is 1
+	check_figure_line_width: INTEGER = 1
 			-- The line width on the sign figure.
 
 	internal_selected: BOOLEAN
 			-- Whether current check box is internal_selected?
 
-	white_color: EV_COLOR is
+	white_color: EV_COLOR
 			-- White color
 		once
 			create Result.make_with_rgb (1, 1, 1)
 		end
 
-	black_color: EV_COLOR is
+	black_color: EV_COLOR
 			-- Black color
 		once
 			create Result.make_with_rgb (0, 0, 0)
 		end
 
-	margin_width: INTEGER is 3
+	margin_width: INTEGER = 3
 		-- Space between box and next item
 
-	tree_line_margin_width: INTEGER is 3
+	tree_line_margin_width: INTEGER = 3
 		-- Space between tree line and box.
 
-	check_box_line_width: INTEGER is
+	check_box_line_width: INTEGER
 			-- Line width for drawing check box.
 		do
 			if {PLATFORM}.is_windows then
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 invariant
 	selected_changed_actions_not_void: selected_changed_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

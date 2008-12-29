@@ -1,4 +1,4 @@
-indexing
+note
 
 	description :
 			"Fundamental class for Motif widgets that manage children."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	help_command: MEL_COMMAND_EXEC is
+	help_command: MEL_COMMAND_EXEC
 			-- Command set for the help callback
 		do
 			Result := motif_command (XmNhelpCallback)
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Status report
 
-	bottom_shadow_color: MEL_PIXEL is
+	bottom_shadow_color: MEL_PIXEL
 			-- Color used in drawing the border shadow's bottom
 			-- and right sides
 		require
@@ -39,7 +39,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	top_shadow_color: MEL_PIXEL is
+	top_shadow_color: MEL_PIXEL
 			-- Color used in drawin gthe border shadow's top
 			-- and left sides
 		require
@@ -52,7 +52,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	bottom_shadow_pixmap: MEL_PIXMAP is
+	bottom_shadow_pixmap: MEL_PIXMAP
 			-- Pixmap used in drawing the border shadow's bottom
 			-- and right sides
 		require
@@ -65,7 +65,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	top_shadow_pixmap: MEL_PIXMAP is
+	top_shadow_pixmap: MEL_PIXMAP
 			-- Pixmap used in drawing the border shadow's top
 			-- and left sides
 		require
@@ -78,7 +78,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	foreground, foreground_color: MEL_PIXEL is
+	foreground, foreground_color: MEL_PIXEL
 			-- Foreground color used by MEL_PRIMITIVE
 		require
 			exists: not is_destroyed
@@ -90,7 +90,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	highlight_color: MEL_PIXEL is
+	highlight_color: MEL_PIXEL
 			-- Color used in drawing the highlighting rectangle
 		require
 			exists: not is_destroyed
@@ -102,7 +102,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	highlight_pixmap: MEL_PIXMAP is
+	highlight_pixmap: MEL_PIXMAP
 			-- The pixmap used in drawing the highlighting rectangle
 		require
 			exists: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	initial_focus: MEL_OBJECT is
+	initial_focus: MEL_OBJECT
 			-- Widget that receives the keyboard focus when the manager is 
 			-- the child of a shell and the shell receives
 			-- the keyboard focus for the first time
@@ -124,7 +124,7 @@ feature -- Status report
 			Result := get_xt_widget (screen_object, XmNinitialFocus)
 		end;
 
-	shadow_thickness: INTEGER is
+	shadow_thickness: INTEGER
 			-- Thickness of the shadow border
 		require
 			exists: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Status report
 			shadow_thickness_large_enough: Result >= 0
 		end;
 
-	is_string_direction_l_to_r: BOOLEAN is
+	is_string_direction_l_to_r: BOOLEAN
 			-- Are strings drawn from left to right?
 		require
 			exists: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status report
 				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_L_TO_R
 		end;
 
-	is_string_direction_r_to_l: BOOLEAN is
+	is_string_direction_r_to_l: BOOLEAN
 			-- Are the strings displayed from right to left?
 		require
 			exists: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_R_TO_L
 		end;
 
-	traversal_on: BOOLEAN is
+	traversal_on: BOOLEAN
 			-- Is traversal possible?
 		require
 			exists: not is_destroyed
@@ -160,7 +160,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNtraversalOn)
 		end;
 
-	is_unit_pixel: BOOLEAN is
+	is_unit_pixel: BOOLEAN
 			-- Is the measurement unit of the widget the pixel?
 		require
 			exists: not is_destroyed
@@ -168,7 +168,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNunitType) = XmPIXELS
 		end;
 
-	is_unit_100th_millimeter: BOOLEAN is
+	is_unit_100th_millimeter: BOOLEAN
 			-- Is the measurement unit of the widget a 100th of a millimeter?
 		require
 			exists: not is_destroyed
@@ -176,7 +176,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_MILLIMETERS
 		end;
 
-	 is_unit_1000th_inch: BOOLEAN is
+	 is_unit_1000th_inch: BOOLEAN
 			-- Is the measurement unit of the widget a 1000th of an inch?
 		require
 			exists: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm1000TH_INCHES
 		end;
 
-	is_unit_100th_point: BOOLEAN is
+	is_unit_100th_point: BOOLEAN
 			-- Is the measurement unit of the widget a 100th of a point?
 		require
 			exists: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_POINTS
 		end;
 
-	is_unit_100th_font_unit: BOOLEAN is
+	is_unit_100th_font_unit: BOOLEAN
 			-- Is the measurement unit of the widget a 100th of a font unit?
 		require
 			exists: not is_destroyed
@@ -200,7 +200,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_FONT_UNITS
 		end;
 
-	is_navigation_none: BOOLEAN is
+	is_navigation_none: BOOLEAN
 			-- Is traversal excluding keyboard navigation?
 		require
 			exists: not is_destroyed
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := navigation_type = XmNONE
 		end;
 
-	is_navigation_tab_group: BOOLEAN is
+	is_navigation_tab_group: BOOLEAN
 			-- Is traversal including keyboard navigation?
 		require
 			exists: not is_destroyed
@@ -216,7 +216,7 @@ feature -- Status report
 			Result := navigation_type = XmTAB_GROUP
 		end;
 
-	is_navigation_sticky_tab_group: BOOLEAN is
+	is_navigation_sticky_tab_group: BOOLEAN
 			-- Is traversal including the `TAB' key?
 		require
 			exists: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Status report
 			Result := navigation_type = XmSTICKY_TAB_GROUP
 		end;
 
-	is_navigation_exclusive_tab_group: BOOLEAN is
+	is_navigation_exclusive_tab_group: BOOLEAN
 			-- Is traversal defined by the application?
 		require
 			exists: not is_destroyed
@@ -234,7 +234,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_bottom_shadow_color (a_color: MEL_PIXEL) is
+	set_bottom_shadow_color (a_color: MEL_PIXEL)
 			-- Set `bottom_shadow_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -246,7 +246,7 @@ feature -- Status setting
 			bottom_shadow_color_set: bottom_shadow_color.is_equal (a_color);	
 		end;
 
-	set_top_shadow_color (a_color: MEL_PIXEL) is
+	set_top_shadow_color (a_color: MEL_PIXEL)
 			-- Set `top_shadow_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -258,7 +258,7 @@ feature -- Status setting
 			top_shadow_color_set: top_shadow_color.is_equal (a_color)
 		end;
 
-	set_bottom_shadow_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_bottom_shadow_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `bottom_shadow_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -271,7 +271,7 @@ feature -- Status setting
 			bottom_shadow_pixmap_set: bottom_shadow_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_top_shadow_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_top_shadow_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `top_shadow_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -284,7 +284,7 @@ feature -- Status setting
 			top_shadow_pixmap_set: top_shadow_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_foreground, set_foreground_color (a_color: MEL_PIXEL) is
+	set_foreground, set_foreground_color (a_color: MEL_PIXEL)
 			-- Set `foreground' and `foreground_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -296,7 +296,7 @@ feature -- Status setting
 			foreground_set: foreground_color.is_equal (a_color)
 		end;
 
-	set_highlight_color (a_color: MEL_PIXEL) is
+	set_highlight_color (a_color: MEL_PIXEL)
 			-- Set `highlight_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -308,7 +308,7 @@ feature -- Status setting
 			highlight_color_set: highlight_color.is_equal (a_color)
 		end;
 
-	set_highlight_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_highlight_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `highlight_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -321,7 +321,7 @@ feature -- Status setting
 			highlight_pixmap_set: highlight_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_initial_focus (a_widget: like initial_focus) is
+	set_initial_focus (a_widget: like initial_focus)
 			-- Set `initial_focus' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -332,7 +332,7 @@ feature -- Status setting
 			initial_focus_set: initial_focus.is_equal (a_widget)
 		end;
 
-	set_shadow_thickness (a_thickness: INTEGER) is
+	set_shadow_thickness (a_thickness: INTEGER)
 			-- Set `shadow_thickness' to `a_thickness'.
 		require
 			exists: not is_destroyed;
@@ -343,7 +343,7 @@ feature -- Status setting
 			shadow_thickness_set: shadow_thickness = a_thickness
 		end;
 
-	set_string_direction_l_to_r is
+	set_string_direction_l_to_r
 			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
@@ -354,7 +354,7 @@ feature -- Status setting
 			is_string_direction_l_to_r: is_string_direction_l_to_r
 		end;
 
-	set_string_direction_r_to_l is
+	set_string_direction_r_to_l
 			-- Set the direction in which to draw the string to right to left.
 		require
 			exists: not is_destroyed
@@ -365,7 +365,7 @@ feature -- Status setting
 			is_string_direction_r_to_l: is_string_direction_r_to_l
 		end;
 
-	set_traversal_on is
+	set_traversal_on
 			-- Set `traversal_on' to True.
 		require
 			exists: not is_destroyed
@@ -375,7 +375,7 @@ feature -- Status setting
 			traversal_on: traversal_on
 		end;
 
-	set_traversal_off is
+	set_traversal_off
 			-- Set `traversal_on' to False.
 		require
 			exists: not is_destroyed
@@ -385,7 +385,7 @@ feature -- Status setting
 			traversal_off: not traversal_on
 		end;
 
-	set_unit_pixel is
+	set_unit_pixel
 			-- Set the measurement unit of the widget to the pixel.
 		require
 			exists: not is_destroyed
@@ -395,7 +395,7 @@ feature -- Status setting
 			unit_pixel_set: is_unit_pixel
 		end;
 
-	set_unit_100th_millimeter is
+	set_unit_100th_millimeter
 			-- Set the measurement unit of the widget to a 100th of a millimeter.
 		require
 			exists: not is_destroyed
@@ -405,7 +405,7 @@ feature -- Status setting
 			unit_100th_millimeter_set: is_unit_100th_millimeter
 		end;
 
-	set_unit_1000th_inch is
+	set_unit_1000th_inch
 			-- Set the measurement unit of the widget to a 1000th of an inch.
 		require
 			exists: not is_destroyed
@@ -415,7 +415,7 @@ feature -- Status setting
 			unit_1000th_inch_set: is_unit_1000th_inch
 		end;
 
-	set_unit_100th_point is
+	set_unit_100th_point
 			-- Set the measurement unit of the widget to a 100th of a point.
 		require
 			exists: not is_destroyed
@@ -425,7 +425,7 @@ feature -- Status setting
 			unit_100th_point_set: is_unit_100th_point
 		end;
 
-	set_unit_100th_font_unit is
+	set_unit_100th_font_unit
 			-- Set the measurement unit of the widget to a 100th of a font unit.
 		require
 			exists: not is_destroyed
@@ -435,7 +435,7 @@ feature -- Status setting
 			unit_100th_font_unit_set: is_unit_100th_font_unit
 		end;
 
-	set_navigation_to_none is
+	set_navigation_to_none
 			-- Set `is_navigation_none'.
 		do
 			set_xt_unsigned_char (screen_object, XmNnavigationType, XmNONE)
@@ -443,7 +443,7 @@ feature -- Status setting
 			is_navigation_none: is_navigation_none
 		end;
 
-	set_navigation_to_tab_group is
+	set_navigation_to_tab_group
 			-- Set `is_navigation_tab_group'.
 		do
 			set_xt_unsigned_char (screen_object, XmNnavigationType, XmTAB_GROUP)
@@ -451,7 +451,7 @@ feature -- Status setting
 			is_navigation_tab_group: is_navigation_tab_group
 		end;
 
-	set_navigation_to_sticky_tab_group is
+	set_navigation_to_sticky_tab_group
 			-- Set `is_navigation_sticky_tab_group'.
 		do
 			set_xt_unsigned_char (screen_object, XmNnavigationType, XmSTICKY_TAB_GROUP)
@@ -459,7 +459,7 @@ feature -- Status setting
 			is_navigation_sticky_tab_group: is_navigation_sticky_tab_group
 		end;
 
-	set_navigation_to_exclusive_tab_group is
+	set_navigation_to_exclusive_tab_group
 			-- Set `is_navigation_exclusive_tab_group'.
 		do
 			set_xt_unsigned_char (screen_object, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP)
@@ -469,7 +469,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_help_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_help_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when help is requested.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -483,7 +483,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_help_callback is
+	remove_help_callback
 			-- Remove command for the help callback.
 		do
 			remove_callback (XmNhelpCallback)
@@ -493,7 +493,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	navigation_type: INTEGER is
+	navigation_type: INTEGER
 			-- Determines the way widgets are to be
 			-- traversed during keyboard navigation
 		require
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNnavigationType)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parser facility for dates and times"
 	legal: "See notice at end of class." 
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER]) is
+	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER])
 			-- Create parser with date/time code `c', months array `m',
 			-- days array `d', and base century `b'.
 		require
@@ -40,7 +40,7 @@ feature -- Access
 	source_string: STRING
 			-- String to be parsed
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year part of `source_string'
 		require
 			value_parsed: parsed
@@ -48,7 +48,7 @@ feature -- Access
 			Result := year_val
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month part of `source_string'
 		require
 			value_parsed: parsed
@@ -56,7 +56,7 @@ feature -- Access
 			Result := month_val
 		end
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day part of `source_string'
 		require
 			value_parsed: parsed
@@ -64,7 +64,7 @@ feature -- Access
 			Result := day_val
 		end
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour part of `source_string'
 		require
 			value_parsed: parsed
@@ -72,7 +72,7 @@ feature -- Access
 			Result := hour_val
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute part of `source_string'
 		require
 			value_parsed: parsed
@@ -80,7 +80,7 @@ feature -- Access
 			Result := minute_val
 		end
 
-	fine_second: DOUBLE is
+	fine_second: DOUBLE
 			-- Seconds part of `source_string'
 		require
 			value_parsed: parsed
@@ -88,7 +88,7 @@ feature -- Access
 			Result := fine_second_val
 		end
 
-	day_text: STRING is
+	day_text: STRING
 			-- Text representation of `day'
 		require
 			value_parsed: parsed
@@ -101,14 +101,14 @@ feature -- Status report
 	parsed: BOOLEAN
 			-- Has `source_string' been parsed?
 
-	is_set_up: BOOLEAN is
+	is_set_up: BOOLEAN
 			-- Has parser been set up completely?
 		do
 			Result := (days /= Void) and (months /= Void) and 
 				(source_string /= Void and then not source_string.is_empty)
 		end
 		
-	is_date: BOOLEAN is
+	is_date: BOOLEAN
 			-- Does `source_string' contain a DATE?
 		require
 			string_parsed: parsed
@@ -116,7 +116,7 @@ feature -- Status report
 			Result := is_correct_date (year, month, day)
 		end
 
-	is_time: BOOLEAN is
+	is_time: BOOLEAN
 			-- Does `source_string' contain a TIME?
 		require
 			string_parsed: parsed
@@ -124,7 +124,7 @@ feature -- Status report
 			Result := is_correct_time (hour, minute, fine_second, False)
 		end
 
-	is_date_time: BOOLEAN is
+	is_date_time: BOOLEAN
 			-- Does `source_string' contain a DATE_TIME?
 		require
 			string_parsed: parsed
@@ -133,7 +133,7 @@ feature -- Status report
 				minute, fine_second, False)
 		end
 
-	is_value_valid: BOOLEAN is
+	is_value_valid: BOOLEAN
 			-- Is parsed value valid?
 		do
 			Result := parsed and then (is_date or is_time or is_date_time)
@@ -141,7 +141,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_source_string (s: STRING) is
+	set_source_string (s: STRING)
 			-- Assign `s' to `source_string'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -153,7 +153,7 @@ feature -- Status setting
 			not_parsed: not parsed
 		end
 
-	set_day_array (d: ARRAY [STRING]) is
+	set_day_array (d: ARRAY [STRING])
 			-- Set day array to `d'.
 		require
 			not_void: d /= Void
@@ -163,7 +163,7 @@ feature -- Status setting
 			days_set: days = d
 		end
 
-	set_month_array (m: ARRAY [STRING]) is
+	set_month_array (m: ARRAY [STRING])
 			-- Set month array to `m'.
 		require
 			not_void: m /= Void
@@ -173,7 +173,7 @@ feature -- Status setting
 			months_set: months = m
 		end
 
-	set_base_century (c: INTEGER) is
+	set_base_century (c: INTEGER)
 			-- Set base century to `c'.
 		require
 			base_century_valid: c /= 0 and (c \\ 100 = 0)
@@ -185,7 +185,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	parse is
+	parse
 			-- Parse `source_string'.
 		require
 			setup_complete: is_set_up
@@ -360,7 +360,7 @@ invariant
 			(parsed and then (is_date or is_time or is_date_time))
 	valid_value_implies_parsing: is_value_valid implies parsed
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Networking constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,20 +10,20 @@ class
 
 feature -- Generic constants
 
-	Max_path: INTEGER is 260
+	Max_path: INTEGER = 260
 			-- Maximum number of characters in full path
 			--
 			-- Declared in Windows as MAX_PATH
 			
 feature -- Connect constants
 
-	Connect_interactive: INTEGER is 8
+	Connect_interactive: INTEGER = 8
 			-- If this flag is set, the operating system may interact with 
 			-- the user for authentication purposes.
 			--
 			-- Declared in Windows as CONNECT_INTERACTIVE
 
-	Connect_prompt: INTEGER is 16
+	Connect_prompt: INTEGER = 16
 			-- This flag instructs the system not to use any default settings
 			-- for user names or passwords without offering the user the 
 			-- opportunity to supply an alternative. This flag is ignored 
@@ -31,7 +31,7 @@ feature -- Connect constants
 			--
 			-- Declared in Windows as CONNECT_PROMPT
 
-	Connect_redirect: INTEGER is 128
+	Connect_redirect: INTEGER = 128
 			-- This flag forces the redirection of a local device when making
 			-- the connection.
 			--
@@ -49,7 +49,7 @@ feature -- Connect constants
 			--
 			-- Declared in Windows as CONNECT_REDIRECT
 
-	Connect_update_profile: INTEGER is 1
+	Connect_update_profile: INTEGER = 1
 			-- This flag instructs the operating system to store the network
 			-- resource connection. 
 			--
@@ -66,7 +66,7 @@ feature -- Connect constants
 			--
 			-- Declared in Windows as CONNECT_UPDATE_PROFILE
 
-	Connect_localdrive: INTEGER is 256
+	Connect_localdrive: INTEGER = 256
 			-- If this flag is set, the connection was made using a local
 			-- device redirection. If the lpAccessName parameter points to a
 			-- buffer, the local device name is copied to the buffer.
@@ -75,85 +75,85 @@ feature -- Connect constants
 
 feature -- Net Resource constants
 
-	Resource_connected: INTEGER is 1
+	Resource_connected: INTEGER = 1
 			-- Enumerate currently connected resources.
 			--
 			-- Declared in Windows as RESOURCE_CONNECTED
 
-	Resource_globalnet: INTEGER is 2
+	Resource_globalnet: INTEGER = 2
 			-- Enumerate all resources on the network.
 			--
 			-- Declared in Windows as RESOURCE_GLOBALNET
 
-	Resource_remembered: INTEGER is 3
+	Resource_remembered: INTEGER = 3
 			-- Enumerate remembered (persistent) connections.
 			--
 			-- Declared in Windows as RESOURCE_REMEMBERED
 
-	Resource_type_any: INTEGER is 0
+	Resource_type_any: INTEGER = 0
 			-- All resources
 			--
 			-- Declared in Windows as RESOURCETYPE_ANY
 
-	Resource_type_disk: INTEGER is 1
+	Resource_type_disk: INTEGER = 1
 			-- Disk resources
 			--
 			-- Declared in Windows as RESOURCETYPE_DISK
 
-	Resource_type_print: INTEGER is 2
+	Resource_type_print: INTEGER = 2
 			-- Print resources
 			--
 			-- Declared in Windows as RESOURCETYPE_PRINT
 
-	Resource_display_type_domain: INTEGER is 1
+	Resource_display_type_domain: INTEGER = 1
 			-- The object should be displayed as a domain.
 			--
 			-- Declared in Windows as RESOURCEDISPLAYTYPE_DOMAIN
 
-	Resource_display_type_server: INTEGER is 2
+	Resource_display_type_server: INTEGER = 2
 			-- The object should be displayed as a server.
 			--
 			-- Declared in Windows as RESOURCEDISPLAYTYPE_SERVER
 
-	Resource_display_type_share: INTEGER is 3
+	Resource_display_type_share: INTEGER = 3
 			-- The object should be displayed as a share.
 			--
 			-- Declared in Windows as RESOURCEDISPLAYTYPE_SHARE
 
-	Resource_display_type_generic: INTEGER is 0
+	Resource_display_type_generic: INTEGER = 0
 			-- The method used to display the object does not matter.
 			--
 			-- Declared in Windows as RESOURCEDISPLAYTYPE_GENERIC
 
-	Resource_usage_connectable: INTEGER is 1
+	Resource_usage_connectable: INTEGER = 1
 			-- The resource is a connectable resource
 			--
 			-- Declared in Windows as RESOURCEUSAGE_CONNECTABLE
 
-	Resource_usage_container: INTEGER is 2
+	Resource_usage_container: INTEGER = 2
 			-- The resource is a container resource
 			--
 			-- Declared in Windows as RESOURCEUSAGE_CONTAINER
 			
 feature -- Net Errors
 
-	Error_access_denied: INTEGER is 5
+	Error_access_denied: INTEGER = 5
 			-- Access to the network resource was denied.
 			--
 			-- Declared in Windows as ERROR_ACCESS_DENIED
 
-	Error_already_assigned: INTEGER is 85
+	Error_already_assigned: INTEGER = 85
 			-- The local device specified by the lpLocalName member is 
 			-- already connected to a network resource.
 			--
 			-- Declared in Windows as ERROR_ALREADY_ASSIGNED
 
-	Error_bad_device: INTEGER is 1200
+	Error_bad_device: INTEGER = 1200
 			-- The value specified by lpLocalName is invalid.
 			--
 			-- Declared in Windows as ERROR_BAD_DEVICE
 
-	Error_bad_net_name: INTEGER is 67
+	Error_bad_net_name: INTEGER = 67
 			-- The value specified by the lpRemoteName member is not
 			-- acceptable to any network resource provider because the
 			-- resource name is invalid, or because the named resource
@@ -161,32 +161,32 @@ feature -- Net Errors
 			--
 			-- Declared in Windows as ERROR_BAD_NET_NAME
 
-	Error_bad_provider: INTEGER is 1204
+	Error_bad_provider: INTEGER = 1204
 			-- The value specified by the lpProvider member does not match
 			-- any provider.
 			--
 			-- Declared in Windows as ERROR_BAD_PROVIDER
 
-	Error_cancelled: INTEGER is 1223
+	Error_cancelled: INTEGER = 1223
 			-- The attempt to make the connection was canceled by the user
 			-- through a dialog box from one of the network resource
 			-- providers, or by a called resource.
 			--
 			-- Declared in Windows as ERROR_CANCELLED
 
-	Error_extended_error: INTEGER is 1208
+	Error_extended_error: INTEGER = 1208
 			-- A network-specific error occurred. To obtain a description of
 			-- the error, call the WNetGetLastError function.
 			--
 			-- Declared in Windows as ERROR_EXTENDED_ERROR
 
-	Error_invalid_address: INTEGER is 487
+	Error_invalid_address: INTEGER = 487
 			-- The caller passed in a pointer to a buffer that could not be
 			-- accessed.
 			--
 			-- Declared in Windows as ERROR_INVALID_ADDRESS
 
-	Error_invalid_parameter: INTEGER is 87
+	Error_invalid_parameter: INTEGER = 87
 			-- This error is a result of one of the following conditions: 
 			-- 1. The lpRemoteName member is NULL. In addition, lpAccessName
 			--    is not NULL, but lpBufferSize is either NULL or points to
@@ -199,13 +199,13 @@ feature -- Net Errors
 			--
 			-- Declared in Windows as ERROR_INVALID_PARAMETER
 
-	Error_invalid_password: INTEGER is 86
+	Error_invalid_password: INTEGER = 86
 			-- The specified password is invalid and the CONNECT_INTERACTIVE
 			-- flag is not set.
 			--
 			-- Declared in Windows as ERROR_INVALID_PASSWORD
 
-	Error_more_data: INTEGER is 234
+	Error_more_data: INTEGER = 234
 			-- The lpAccessName buffer is too small. 
 			-- If a local device is redirected, the buffer needs to be large
 			-- enough to contain the local device name. Otherwise, the
@@ -216,25 +216,25 @@ feature -- Net Errors
 			--
 			-- Declared in Windows as ERROR_MORE_DATA
 
-	Error_no_more_items: INTEGER is 259
+	Error_no_more_items: INTEGER = 259
 			-- The operating system cannot automatically choose a local
 			-- redirection because all the valid local devices are in use.
 			--
 			-- Declared in Windows as ERROR_NO_MORE_ITEMS
 
-	Error_no_net_or_bad_path: INTEGER is 1203
+	Error_no_net_or_bad_path: INTEGER = 1203
 			-- The operation could not be completed, either because a
 			-- network component is not started, or because the specified
 			-- resource name is not recognized.
 			--
 			-- Declared in Windows as ERROR_NO_NET_OR_BAD_PATH
 
-	Error_no_network: INTEGER is 1222;
+	Error_no_network: INTEGER = 1222;
 			-- The network is unavailable.
 			--
 			-- Declared in Windows as ERROR_NO_NETWORK
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

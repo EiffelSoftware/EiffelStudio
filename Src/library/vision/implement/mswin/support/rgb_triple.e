@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class."; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
@@ -11,7 +11,7 @@ create
 
 feature -- Initialisation
 	
-	make (r, g, b: INTEGER) is
+	make (r, g, b: INTEGER)
 		do
 			red := r
 			blue := b
@@ -26,7 +26,7 @@ feature {COLOR_IMP, COLOR_LOOKUP, PS_HEADER} -- Access
 
 	red: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows XP theme constants for part BP_PUSH_BUTTON."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,22 +10,22 @@ class
 
 feature -- Access
 		
-	Pbs_normal: INTEGER is 1
+	Pbs_normal: INTEGER = 1
 			-- PBS_NORMAL
 			
-	Pbs_hot: INTEGER is 2
+	Pbs_hot: INTEGER = 2
 			-- PBS_HOT
 	
-	Pbs_pressed: INTEGER is 3
+	Pbs_pressed: INTEGER = 3
 			-- PBS_PRESSED
 			
-	Pbs_disabled: INTEGER is 4
+	Pbs_disabled: INTEGER = 4
 			-- PBS_DISABLED
 			
-	Pbs_defaulted: INTEGER is 5;
+	Pbs_defaulted: INTEGER = 5;
 			-- PBS_DEFAULTED
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

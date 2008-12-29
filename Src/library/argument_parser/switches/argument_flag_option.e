@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a user passed argument option for flag arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ invariant
 	flags_attached: flags /= Void
 	not_flags_is_empty: not flags.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ObjectID (OBJID) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ class
 
 feature -- Access
 
-	objid_client: INTEGER is 0xFFFFFFFC
+	objid_client: INTEGER = 0xFFFFFFFC
 			-- To get something associated with a window. What you get
 			-- depends on the API that takes this as argument.
 
-	objid_menu: INTEGER is 0xFFFFFFFD
+	objid_menu: INTEGER = 0xFFFFFFFD
 			-- Get menu associated to a window.
 
-	objid_sysmenu: INTEGER is 0xFFFFFFFF;
+	objid_sysmenu: INTEGER = 0xFFFFFFFF;
 			-- Get system menu associated to a window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Item that can be inserted in a cell of an EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature -- Access
 
-	column: EV_GRID_COLUMN is
+	column: EV_GRID_COLUMN
 			-- Column to which current item belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -47,13 +47,13 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid in which `Current' is contained if any.
 		do
 			Result := implementation.parent
 		end
 
-	row: EV_GRID_ROW is
+	row: EV_GRID_ROW
 			-- Row to which current item belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 		require
@@ -76,7 +76,7 @@ feature -- Access
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 		require
@@ -89,7 +89,7 @@ feature -- Access
 			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
 
-	horizontal_indent: INTEGER is
+	horizontal_indent: INTEGER
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
 			-- This may not be set, but the value is determined by the current tree structure
 			-- of `parent' and `row'.
@@ -103,7 +103,7 @@ feature -- Access
 			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -125,7 +125,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color of foreground features like text.
 		require
 			not_destroyed: not is_destroyed
@@ -133,7 +133,7 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color displayed behind foreground features.
 		require
 			not_destroyed: not is_destroyed
@@ -141,7 +141,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is `Void' or `is_empty' then no tooltip is displayed.
 		require
@@ -150,7 +150,7 @@ feature -- Access
 			Result := implementation.tooltip
 		end
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
@@ -176,7 +176,7 @@ feature -- Access
 
 feature -- Status setting
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Status setting
 			virtual_x_position_visible_if_indent_less_than_column_width: horizontal_indent < column.width implies virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
-	set_foreground_color (a_color: like foreground_color) is
+	set_foreground_color (a_color: like foreground_color)
 			-- Assign `a_color' to `foreground_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -203,7 +203,7 @@ feature -- Status setting
 			foreground_color_assigned: foreground_color = a_color
 		end
 
-	set_background_color (a_color: like background_color) is
+	set_background_color (a_color: like background_color)
 			-- Assign `a_color' to `background_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -213,7 +213,7 @@ feature -- Status setting
 			background_color_assigned: background_color = a_color
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		require
@@ -229,7 +229,7 @@ feature -- Status setting
 
 feature -- Actions
 
-	activate is
+	activate
 			-- Setup `Current' for interactive in-place editing of `Current'.
 			-- Activation is usually achieved by connecting an agent  to
 			-- {EV_GRID}.pointer_double_press_actions' that calls `activate'.
@@ -244,7 +244,7 @@ feature -- Actions
 			implementation.activate
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to `activate'.
 		require
 			not_destroyed: not is_destroyed
@@ -253,7 +253,7 @@ feature -- Actions
 			implementation.deactivate
 		end
 
-	redraw is
+	redraw
 			-- Force `Current' to be re-drawn when next idle.
 		require
 			not_destroyed: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Actions
 
 feature -- Status report
 
-	is_parented: BOOLEAN is
+	is_parented: BOOLEAN
 			-- Does current item belong to an EV_GRID?
 		require
 			not_destroyed: not is_destroyed
@@ -274,7 +274,7 @@ feature -- Status report
 
 feature {NONE} -- Contract Support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- (from EV_ANY)
 			-- (export status {NONE})
@@ -290,7 +290,7 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 			-- Used for initializing `popup_window' for in-place editing.
 			-- `popup_window' will be shown after `activate_action' has executed.
@@ -307,7 +307,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_ITEM_I} implementation.make (Current)
@@ -322,7 +322,7 @@ invariant
 	parented_and_row_is_subrow_implies_width_equals_column_width_less_indent:
 		parent /= Void and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

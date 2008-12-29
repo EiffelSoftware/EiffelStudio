@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a font that has been enumerated"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create the enumerated font details
 		require
 			a_name_exists: a_name /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	fill (styles, sizes: WEL_SINGLE_SELECTION_LIST_BOX) is
+	fill (styles, sizes: WEL_SINGLE_SELECTION_LIST_BOX)
 			-- Fill the style and size details
 		local
 			c : CURSOR
@@ -70,13 +70,13 @@ feature -- Status setting
 			details.go_to (c)
 		end
 
-	set_not_raster is
+	set_not_raster
 			-- Set this to be a Truetype font
 		do
 			not_raster := True
 		end
 
-	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
+	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
 			-- `elf', `tm' and `font_type' contain informations
 			-- about the font.
@@ -135,7 +135,7 @@ feature -- Status setting
 			end
 		end
 
-	find_style (style: STRING): ENUMERATED_FONT_DETAILS_WINDOWS is
+	find_style (style: STRING): ENUMERATED_FONT_DETAILS_WINDOWS
 			-- find style in the details.
 		local
 			c: CURSOR
@@ -156,13 +156,13 @@ feature -- Status setting
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := name < other.name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

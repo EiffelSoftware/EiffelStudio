@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of Colormap."
@@ -19,7 +19,7 @@ create {MEL_SCREEN}
 
 feature {NONE} -- Initialization
 
-	make_from_existing (an_id: like identifier) is
+	make_from_existing (an_id: like identifier)
 			-- Initialize `identifier' with C pointer `an_id'.
 		require
 			id_not_null: an_id /= default_pointer
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			set: identifier = an_id
 		end;
 
-	make_default (a_screen: MEL_SCREEN) is
+	make_default (a_screen: MEL_SCREEN)
 			-- Initialize to default colormap of `screen'.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -42,7 +42,7 @@ feature -- Access
 	identifier: POINTER;
 			-- Associated C identifier
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the resource valid?
 		do
 			Result := identifier /= default_pointer
@@ -52,7 +52,7 @@ feature -- Access
 
 feature {NONE} -- External features
 
-	DefaultColormapOfScreen (a_screen: POINTER): POINTER is
+	DefaultColormapOfScreen (a_screen: POINTER): POINTER
 		external
 			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
 		alias
@@ -63,7 +63,7 @@ invariant
 
 	identifier_not_null: identifier /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

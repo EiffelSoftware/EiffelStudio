@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Tool bar items grouping algorithm. Huffman alogrithm.
 					This class has no relationship with SD_TOOL_BAR_GROUP_INFO.
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_max_group_count: INTEGER) is
+	make (a_max_group_count: INTEGER)
 			-- Creation method
 		require
 			valid: a_max_group_count >= 0
@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_group_count (a_group_count: INTEGER) is
+	set_group_count (a_group_count: INTEGER)
 			-- Set `group_count'
 		require
 			valid: a_group_count > 0 and a_group_count <= max_group_count
@@ -40,7 +40,7 @@ feature -- Command
 			set: a_group_count = group_count
 		end
 
-	set_items_width (a_items_width: like item_width) is
+	set_items_width (a_items_width: like item_width)
 			-- Set `item_width'.
 		require
 			not_void: a_items_width /= Void
@@ -53,7 +53,7 @@ feature -- Command
 
 feature -- Query
 
-	best_grouping: ARRAYED_LIST [ARRAYED_LIST [INTEGER_32]] is
+	best_grouping: ARRAYED_LIST [ARRAYED_LIST [INTEGER_32]]
 			-- Best grouping. Integer is the group index.
 		do
 			Result := best_grouping_when (group_count)
@@ -63,7 +63,7 @@ feature -- Query
 			right_count: is_right_count (Result)
 		end
 
-	best_grouping_when (a_group_count: INTEGER): ARRAYED_LIST [ARRAYED_LIST [INTEGER_32]] is
+	best_grouping_when (a_group_count: INTEGER): ARRAYED_LIST [ARRAYED_LIST [INTEGER_32]]
 			-- Best grouping when `a_group_count'
 		require
 			valid: a_group_count >= 1 and a_group_count <= max_group_count
@@ -76,7 +76,7 @@ feature -- Query
 			right_count: is_right_count (Result)
 		end
 
-	is_right_order (a_grouping: like best_grouping): BOOLEAN is
+	is_right_order (a_grouping: like best_grouping): BOOLEAN
 			-- If a_grouping integer which indicate index of `item_width' order right?
 		require
 			not_void: a_grouping /= Void
@@ -107,7 +107,7 @@ feature -- Query
 			end
 		end
 
-	is_right_count (a_group_info: like best_grouping): BOOLEAN is
+	is_right_count (a_group_info: like best_grouping): BOOLEAN
 			-- If a_group_info count right?
 		require
 			not_void: a_group_info /= Void
@@ -131,7 +131,7 @@ feature -- Query
 	group_count: INTEGER
 			-- Group count is how many group excepted to divide.
 
-	maximum_group_width (a_group_count: INTEGER): INTEGER is
+	maximum_group_width (a_group_count: INTEGER): INTEGER
 			-- Maximum width when divide group number to a_group_count.
 		require
 			valid: a_group_count > 0 and a_group_count <= max_group_count
@@ -139,7 +139,7 @@ feature -- Query
 			Result := maximum_row_width (best_grouping_when (a_group_count))
 		end
 
-	maximum_group_width_index (a_group_count: INTEGER): INTEGER is
+	maximum_group_width_index (a_group_count: INTEGER): INTEGER
 			-- Maximum width group index when divide group number to a_group_count.
 		require
 			valid: a_group_count > 0 and a_group_count <= max_group_count
@@ -157,7 +157,7 @@ feature -- Query
 
 feature {NONE} -- Implementation functions
 
-	calculate_all_best_grouping is
+	calculate_all_best_grouping
 			-- Calculate all best groupings, added the result to `all_best_grouping'.
 		local
 			l_group_count: INTEGER
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	next_best_grouping (a_previous_info: like best_grouping): like best_grouping is
+	next_best_grouping (a_previous_info: like best_grouping): like best_grouping
 			-- Next best grouping info of `a_previous_infos'.
 		local
 			l_group_index: INTEGER
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation functions
 	all_best_grouping: DS_HASH_TABLE [like best_grouping, INTEGER]
 			-- 2nd INTEGER parameter is group count.
 
-	start_condition: like best_grouping is
+	start_condition: like best_grouping
 			-- Prepare start condition
 		local
 			l_item_count, l_max_count: INTEGER
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation functions
 			valid: Result.count = item_width.count
 		end
 
-	minimum_two_group_index (a_condition: like best_grouping): INTEGER is
+	minimum_two_group_index (a_condition: like best_grouping): INTEGER
 			-- Which two items should be together. Result is first index, second item index is Result + 1.
 			-- Huffman alogrithm, for example:
 			-- After calculation:  	  11  2	  2	  2	  2   10
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation functions
 			valid: 0 < Result and Result < a_condition.count
 		end
 
-	maximum_row_width (a_group: like best_grouping): INTEGER is
+	maximum_row_width (a_group: like best_grouping): INTEGER
 			-- Maximum row width of a_group
 		require
 			not_void: a_group /= Void
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation functions
 	internal_maximum_group_index: INTEGER
 			-- Maximum width group index.
 
-	one_group_width (a_group: ARRAYED_LIST [INTEGER]): INTEGER is
+	one_group_width (a_group: ARRAYED_LIST [INTEGER]): INTEGER
 			-- Width of `a_group'.
 		require
 			not_void: a_group /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation functions
 invariant
 	valid: group_count >= 1 and group_count <= max_group_count
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

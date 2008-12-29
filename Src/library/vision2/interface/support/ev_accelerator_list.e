@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that store a list of unique keyboard accelerators."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {EV_ACCELERATOR_LIST}
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Standard creation procedure.
 		do
 			Precursor {EV_ACTIVE_LIST}
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature {NONE} -- Status Setting
 
-	enable_item_parented (an_item: like item) is
+	enable_item_parented (an_item: like item)
 			-- Assign True to `parented' for `an_item'.
 		require
 			key_combination_unique: an_item /= Void implies
@@ -47,7 +47,7 @@ feature {NONE} -- Status Setting
 			end
 		end
 
-	disable_item_parented (an_item: like item) is
+	disable_item_parented (an_item: like item)
 			-- Assign False to `parented' for `an_item'.
 		local
 			accelerator_imp: EV_ACCELERATOR_IMP
@@ -60,7 +60,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Contract support
 
-	key_combination_exists (new_accelerator: like item): BOOLEAN is
+	key_combination_exists (new_accelerator: like item): BOOLEAN
 			-- Does `Current' contain an accelerator with an identical key
 			-- combination to `new_accelerator'?
 		local
@@ -78,7 +78,7 @@ feature {NONE} -- Contract support
 			go_to (old_cursor)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

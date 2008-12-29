@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IDocHostUIHandlerDispatch' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_idoc_host_uihandler_dispatch_impl_proxy_from_pointer(cpp_obj)
@@ -31,7 +31,7 @@ feature -- Basic Operations
 		x: INTEGER; 
 		y: INTEGER; 
 		pcmdt_reserved: ECOM_INTERFACE; 
-		pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT is
+		pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `x' [in].  
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			Result := ccom_show_context_menu (initializer, dw_id, x, y, pcmdt_reserved_item, pdisp_reserved_item)
 		end
 
-	get_host_info (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF) is
+	get_host_info (pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF)
 			-- No description available.
 			-- `pdw_flags' [in, out].  
 			-- `pdw_double_click' [in, out].  
@@ -76,7 +76,7 @@ feature -- Basic Operations
 		p_active_object: ECOM_INTERFACE; 
 		p_command_target: ECOM_INTERFACE; 
 		p_frame: ECOM_INTERFACE; 
-		p_doc: ECOM_INTERFACE): ECOM_HRESULT is
+		p_doc: ECOM_INTERFACE): ECOM_HRESULT
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `p_active_object' [in].  
@@ -129,40 +129,40 @@ feature -- Basic Operations
 			Result := ccom_show_ui (initializer, dw_id, p_active_object_item, p_command_target_item, p_frame_item, p_doc_item)
 		end
 
-	hide_ui is
+	hide_ui
 			-- No description available.
 		do
 			ccom_hide_ui (initializer)
 		end
 
-	update_ui is
+	update_ui
 			-- No description available.
 		do
 			ccom_update_ui (initializer)
 		end
 
-	enable_modeless (f_enable: BOOLEAN) is
+	enable_modeless (f_enable: BOOLEAN)
 			-- No description available.
 			-- `f_enable' [in].  
 		do
 			ccom_enable_modeless (initializer, f_enable)
 		end
 
-	on_doc_window_activate (f_activate: BOOLEAN) is
+	on_doc_window_activate (f_activate: BOOLEAN)
 			-- No description available.
 			-- `f_activate' [in].  
 		do
 			ccom_on_doc_window_activate (initializer, f_activate)
 		end
 
-	on_frame_window_activate (f_activate: BOOLEAN) is
+	on_frame_window_activate (f_activate: BOOLEAN)
 			-- No description available.
 			-- `f_activate' [in].  
 		do
 			ccom_on_frame_window_activate (initializer, f_activate)
 		end
 
-	resize_border (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN) is
+	resize_border (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: ECOM_INTERFACE; f_frame_window: BOOLEAN)
 			-- No description available.
 			-- `left' [in].  
 			-- `top' [in].  
@@ -186,7 +186,7 @@ feature -- Basic Operations
 			ccom_resize_border (initializer, left, top, right, bottom, p_uiwindow_item, f_frame_window)
 		end
 
-	translate_accelerator (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT is
+	translate_accelerator (h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT
 			-- No description available.
 			-- `h_wnd' [in].  
 			-- `n_message' [in].  
@@ -198,7 +198,7 @@ feature -- Basic Operations
 			Result := ccom_translate_accelerator (initializer, h_wnd, n_message, w_param, l_param, bstr_guid_cmd_group, n_cmd_id)
 		end
 
-	get_option_key_path (pbstr_key: CELL [STRING]; dw: INTEGER) is
+	get_option_key_path (pbstr_key: CELL [STRING]; dw: INTEGER)
 			-- No description available.
 			-- `pbstr_key' [out].  
 			-- `dw' [in].  
@@ -206,7 +206,7 @@ feature -- Basic Operations
 			ccom_get_option_key_path (initializer, pbstr_key, dw)
 		end
 
-	get_drop_target (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE]) is
+	get_drop_target (p_drop_target: ECOM_INTERFACE; pp_drop_target: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `p_drop_target' [in].  
 			-- `pp_drop_target' [out].  
@@ -226,14 +226,14 @@ feature -- Basic Operations
 			ccom_get_drop_target (initializer, p_drop_target_item, pp_drop_target)
 		end
 
-	get_external (pp_dispatch: CELL [ECOM_INTERFACE]) is
+	get_external (pp_dispatch: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pp_dispatch' [out].  
 		do
 			ccom_get_external (initializer, pp_dispatch)
 		end
 
-	translate_url (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING]) is
+	translate_url (dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING])
 			-- No description available.
 			-- `dw_translate' [in].  
 			-- `bstr_urlin' [in].  
@@ -242,7 +242,7 @@ feature -- Basic Operations
 			ccom_translate_url (initializer, dw_translate, bstr_urlin, pbstr_urlout)
 		end
 
-	filter_data_object (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE]) is
+	filter_data_object (p_do: ECOM_INTERFACE; pp_doret: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `p_do' [in].  
 			-- `pp_doret' [out].  
@@ -264,7 +264,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_idoc_host_uihandler_dispatch_impl_proxy(initializer)
@@ -272,115 +272,115 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_show_context_menu (cpp_obj: POINTER; dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: POINTER; pdisp_reserved: POINTER): ECOM_HRESULT is
+	ccom_show_context_menu (cpp_obj: POINTER; dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: POINTER; pdisp_reserved: POINTER): ECOM_HRESULT
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,IUnknown *,IDispatch *): EIF_REFERENCE"
 		end
 
-	ccom_get_host_info (cpp_obj: POINTER; pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF) is
+	ccom_get_host_info (cpp_obj: POINTER; pdw_flags: INTEGER_REF; pdw_double_click: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_show_ui (cpp_obj: POINTER; dw_id: INTEGER; p_active_object: POINTER; p_command_target: POINTER; p_frame: POINTER; p_doc: POINTER): ECOM_HRESULT is
+	ccom_show_ui (cpp_obj: POINTER; dw_id: INTEGER; p_active_object: POINTER; p_command_target: POINTER; p_frame: POINTER; p_doc: POINTER): ECOM_HRESULT
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_INTEGER,IUnknown *,IUnknown *,IUnknown *,IUnknown *): EIF_REFERENCE"
 		end
 
-	ccom_hide_ui (cpp_obj: POINTER) is
+	ccom_hide_ui (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"]()"
 		end
 
-	ccom_update_ui (cpp_obj: POINTER) is
+	ccom_update_ui (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"]()"
 		end
 
-	ccom_enable_modeless (cpp_obj: POINTER; f_enable: BOOLEAN) is
+	ccom_enable_modeless (cpp_obj: POINTER; f_enable: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_on_doc_window_activate (cpp_obj: POINTER; f_activate: BOOLEAN) is
+	ccom_on_doc_window_activate (cpp_obj: POINTER; f_activate: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_on_frame_window_activate (cpp_obj: POINTER; f_activate: BOOLEAN) is
+	ccom_on_frame_window_activate (cpp_obj: POINTER; f_activate: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_BOOLEAN)"
 		end
 
-	ccom_resize_border (cpp_obj: POINTER; left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: POINTER; f_frame_window: BOOLEAN) is
+	ccom_resize_border (cpp_obj: POINTER; left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER; p_uiwindow: POINTER; f_frame_window: BOOLEAN)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,IUnknown *,EIF_BOOLEAN)"
 		end
 
-	ccom_translate_accelerator (cpp_obj: POINTER; h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT is
+	ccom_translate_accelerator (cpp_obj: POINTER; h_wnd: INTEGER; n_message: INTEGER; w_param: INTEGER; l_param: INTEGER; bstr_guid_cmd_group: STRING; n_cmd_id: INTEGER): ECOM_HRESULT
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT,EIF_INTEGER): EIF_REFERENCE"
 		end
 
-	ccom_get_option_key_path (cpp_obj: POINTER; pbstr_key: CELL [STRING]; dw: INTEGER) is
+	ccom_get_option_key_path (cpp_obj: POINTER; pbstr_key: CELL [STRING]; dw: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_OBJECT,EIF_INTEGER)"
 		end
 
-	ccom_get_drop_target (cpp_obj: POINTER; p_drop_target: POINTER; pp_drop_target: CELL [ECOM_INTERFACE]) is
+	ccom_get_drop_target (cpp_obj: POINTER; p_drop_target: POINTER; pp_drop_target: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](IUnknown *,EIF_OBJECT)"
 		end
 
-	ccom_get_external (cpp_obj: POINTER; pp_dispatch: CELL [ECOM_INTERFACE]) is
+	ccom_get_external (cpp_obj: POINTER; pp_dispatch: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_translate_url (cpp_obj: POINTER; dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING]) is
+	ccom_translate_url (cpp_obj: POINTER; dw_translate: INTEGER; bstr_urlin: STRING; pbstr_urlout: CELL [STRING])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_filter_data_object (cpp_obj: POINTER; p_do: POINTER; pp_doret: CELL [ECOM_INTERFACE]) is
+	ccom_filter_data_object (cpp_obj: POINTER; p_do: POINTER; pp_doret: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](IUnknown *,EIF_OBJECT)"
 		end
 
-	ccom_delete_idoc_host_uihandler_dispatch_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_idoc_host_uihandler_dispatch_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_idoc_host_uihandler_dispatch_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_idoc_host_uihandler_dispatch_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IDocHostUIHandlerDispatch_impl_proxy %"ecom_control_library_IDocHostUIHandlerDispatch_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

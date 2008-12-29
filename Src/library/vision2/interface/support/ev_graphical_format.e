@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for graphical formats"
 	legal: "See notice at end of class."
@@ -20,14 +20,14 @@ feature -- Access
 	color_mode: INTEGER
 		-- Color output mode of `Current'
 
-	file_extension: STRING_32 is
+	file_extension: STRING_32
 			-- 3 character file extension associated with format.
 		deferred
 		end
 
 feature -- Status Setting
 
-	set_scale_width (a_width: INTEGER) is
+	set_scale_width (a_width: INTEGER)
 			-- Scale the graphic width to `a_width'.
 		require
 			a_width_not_negative: a_width >= 0
@@ -37,7 +37,7 @@ feature -- Status Setting
 			scale_width_set: scale_width = a_width
 		end
 
-	set_scale_height (a_height: INTEGER) is
+	set_scale_height (a_height: INTEGER)
 			-- Scale the graphic height to `a_height'.
 		require
 			a_height_not_negative: a_height >= 0
@@ -47,29 +47,29 @@ feature -- Status Setting
 			scale_height_set: scale_height = a_height
 		end
 		
-	set_truecolor is
+	set_truecolor
 			-- Set `color_mode' to truecolor.
 		do
 		end
 	
-	set_greyscale is
+	set_greyscale
 			-- Set `color_mode' to grayscale.
 		do
 		end
 
-	set_paletted is
+	set_paletted
 			-- Set `color_mode' to paletted mode.
 		do
 		end
 		
 feature {EV_PIXMAP_I} -- Access
 
-	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME) is
+	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME)
 			-- Save `raw_image_data' in `Current' format to `a_filename'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

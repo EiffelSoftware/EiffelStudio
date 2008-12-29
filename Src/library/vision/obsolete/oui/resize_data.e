@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when a window is asked to be resized. %
@@ -26,13 +26,13 @@ create
 
 feature 
 
-	make (a_widget: WIDGET) is
+	make (a_widget: WIDGET)
 			-- Create a context_data for `ResizeRequest' event.
 		do
 			widget := a_widget
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

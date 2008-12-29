@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "Eiffel Vision password field. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Password field style.
 		do
 			Result := Precursor + Es_password
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PASSWORD_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

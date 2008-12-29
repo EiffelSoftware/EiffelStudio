@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -23,7 +23,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make object.
 		do
 			create ecl_message.make(5)
@@ -43,7 +43,7 @@ feature  -- Status report
 
 feature -- Status setting
 
-	set_descriptor (e: EC_DESCRIPTOR) is
+	set_descriptor (e: EC_DESCRIPTOR)
 			-- Set `ecl_descriptor' with `e'.
 		require
 			descriptor_exits: e /= Void
@@ -51,7 +51,7 @@ feature -- Status setting
 			descriptor := e
 		end;
 
-	ecl_analyze (input_string: STRING) is
+	ecl_analyze (input_string: STRING)
 			-- Perform lexical analysis on `input_string'.
 			-- Fill the token list.
 		require
@@ -99,7 +99,7 @@ feature -- Status setting
 			end
 		end;
 
-	ecl_token_array: ARRAY[TOKEN] is
+	ecl_token_array: ARRAY[TOKEN]
 			-- Array of tokens
 		require
 			descriptor_exists: descriptor /= Void;
@@ -108,7 +108,7 @@ feature -- Status setting
 			create Result.make(1,descriptor.ecd_index)
 		end;
 
-	ecl_build (s: STRING) is
+	ecl_build (s: STRING)
 			-- Retrieve analyzer associated with current object description
 			-- if it exists, else build a new one according to current description
 			-- and store it. 
@@ -191,7 +191,7 @@ feature -- Status setting
 
 feature {NONE} -- Conversion
 
-	char2string (c: CHARACTER): STRING is
+	char2string (c: CHARACTER): STRING
 			-- Returns the string "'c'"
 		do
 			create Result.make(3);
@@ -200,7 +200,7 @@ feature {NONE} -- Conversion
 			Result.append ("'")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

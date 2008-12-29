@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision implentation for retrieving a WEL_GDI_OBJECT"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		deferred
 		end
@@ -34,7 +34,7 @@ feature -- Access
 	item: WEL_GDI_ANY
 			-- WEL GDI object.
 
-	value: INTEGER is
+	value: INTEGER
 			-- Weighted value for Current.
 		do
 			Result := weight * age
@@ -42,13 +42,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_weight (a_weight: INTEGER) is
+	set_weight (a_weight: INTEGER)
 			-- Set `weight' to `a_weight'.
 		do
 			weight := a_weight
 		end
 
-	update (new_age: INTEGER) is
+	update (new_age: INTEGER)
 			-- increase `weight' and set `age' to `new_age'.
 		do
 			if weight < 2147483646 then
@@ -57,7 +57,7 @@ feature -- Element change
 			age := new_age
 		end
 
-	set_item (an_item: like item) is
+	set_item (an_item: like item)
 			-- Set the item value to `an_item'
 		do
 			item := an_item
@@ -66,14 +66,14 @@ feature -- Element change
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Delete `Current'.
 		do
 			item.decrement_reference
 			item := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

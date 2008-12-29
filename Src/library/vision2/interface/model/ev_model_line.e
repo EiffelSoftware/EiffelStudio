@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Line from point_a to point_b.
 					
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a line from (0,0) to (0,0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- Since a line has only one dimension, we don't care
 		do
 			Result := 0
 		end
 
-	length: INTEGER is
+	length: INTEGER
 			-- Length of the line.
 		local
 			l_point_array: like point_array
@@ -81,25 +81,25 @@ feature -- Access
 			Result := as_integer (distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise))
 		end
 
-	point_a_x: INTEGER is
+	point_a_x: INTEGER
 			-- `X' position of point_a point.
 		do
 			Result := point_array.item (0).x
 		end
 
-	point_a_y: INTEGER is
+	point_a_y: INTEGER
 			-- `Y' position of point_a point.
 		do
 			Result := point_array.item (0).y
 		end
 
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- `X' position of point_b point.
 		do
 			Result := point_array.item (1).x
 		end
 
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- `Y' position of point_b point.
 		do
 			Result := point_array.item (1).y
@@ -107,18 +107,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Line is rotatable.
 
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Line is scalable.
 
-	is_transformable: BOOLEAN is True
+	is_transformable: BOOLEAN = True
 			-- Line is transformable.
 
 feature -- Element Change
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to (`ax', `ay').
 		do
 			point_array.item (0).set (ax, ay)
@@ -126,7 +126,7 @@ feature -- Element Change
 			invalidate
 		end
 
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to (`ax', `ay')
 		do
 			point_array.item (1).set (ax, ay)
@@ -136,7 +136,7 @@ feature -- Element Change
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is the point on (`a_x', `a_y') on this figure?
 			--| Used to generate events.
 		local
@@ -162,7 +162,7 @@ feature -- Events
 			end
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			max_x, max_y, min_x, min_y, lw, pa_val, pb_val: INTEGER
@@ -200,7 +200,7 @@ feature -- Events
 
 feature -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			--
 		do
 			Result := "(" + point_a_x.out + "," + point_a_y.out + ") <-> (" + point_b_x.out + "," + point_b_y.out + ")"
@@ -208,7 +208,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set the center of the Line.
 		local
 			l_point_array: like point_array
@@ -228,7 +228,7 @@ invariant
 	second_point_is_point_a: point_array.item (0).x = point_a_x and point_array.item (0).y = point_a_y
 	thrid_point_is_point_b: point_array.item (1).x = point_b_x and point_array.item (1).y = point_b_y
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

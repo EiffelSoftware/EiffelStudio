@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision viewport. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 	
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Initialize. 
 		do
 			base_make (an_interface)
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		do
 			if item /= Void then
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		do
 			if item /= Void then
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (an_x: INTEGER) is
+	set_x_offset (an_x: INTEGER)
 			-- Set `x_offset' to `an_x'.
 		do
 			if item /= Void then
@@ -69,7 +69,7 @@ feature -- Element change
 			end
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
 		do
 			if item /= Void then
@@ -77,7 +77,7 @@ feature -- Element change
 			end
 		end
 
-	set_offset (an_x, a_y: INTEGER) is
+	set_offset (an_x, a_y: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
 		do
@@ -88,7 +88,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	compute_minimum_width, compute_minimum_height, compute_minimum_size is
+	compute_minimum_width, compute_minimum_height, compute_minimum_size
 			-- Recompute both minimum_width and minimum_height of `Current'.
 			-- Does nothing since it does not have a sense to compute it,
 			-- it is only what the user set it to.
@@ -109,18 +109,18 @@ feature {NONE} -- Implementation
 		-- Should vertical scrollbar be displayed?
 
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		do
 			Result := Ws_child | Ws_clipchildren | Ws_clipsiblings | Ws_visible
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- The default ex-style of the window.
 		do
 			Result := Ws_ex_controlparent
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 		local
 			t: like resize_actions_internal
 		do
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+				a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize
 				(a_x_position, a_y_position, a_width, a_height, repaint)
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_size_requested (originator: BOOLEAN) is
+	on_size_requested (originator: BOOLEAN)
 			-- Size has changed.
 		require
 			item_not_void: item /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	set_item_size (a_width, a_height: INTEGER) is
+	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
@@ -202,7 +202,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_VIEWPORT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

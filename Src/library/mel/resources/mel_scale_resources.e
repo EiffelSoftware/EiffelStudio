@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Scale resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNdecimalPoints: POINTER is
+	XmNdecimalPoints: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNdecimalPoints"
 		end;
 
-	XmNhighlightOnEnter: POINTER is
+	XmNhighlightOnEnter: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNhighlightOnEnter"
 		end;
 
-	XmNhighlightThickness: POINTER is
+	XmNhighlightThickness: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNhighlightThickness"
 		end;
 
-	XmNmaximum: POINTER is
+	XmNmaximum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNmaximum"
 		end;
 
-	XmNminimum: POINTER is
+	XmNminimum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNminimum"
 		end;
 
-	XmNorientation: POINTER is
+	XmNorientation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNorientation"
 		end;
 
-	XmNprocessingDirection: POINTER is
+	XmNprocessingDirection: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNprocessingDirection"
 		end;
 
-	XmNscaleHeight: POINTER is
+	XmNscaleHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNscaleHeight"
 		end;
 
-	XmNscaleMultiple: POINTER is
+	XmNscaleMultiple: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNscaleMultiple"
 		end;
 
-	XmNscaleWidth: POINTER is
+	XmNscaleWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNscaleWidth"
 		end;
 
-	XmNshowValue: POINTER is
+	XmNshowValue: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNshowValue"
 		end;
 
-	XmNtitleString: POINTER is
+	XmNtitleString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNtitleString"
 		end;
 
-	XmNvalue: POINTER is
+	XmNvalue: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNvalue"
 		end;
 
-	XmNdragCallback: POINTER is
+	XmNdragCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNdragCallback"
 		end;
 
-	XmNvalueChangedCallback: POINTER is
+	XmNvalueChangedCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Scale.h>] : EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNvalueChangedCallback"
 		end;
 
-	XmVERTICAL: INTEGER is
+	XmVERTICAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmVERTICAL"
 		end;
 
-	XmHORIZONTAL: INTEGER is
+	XmHORIZONTAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmHORIZONTAL"
 		end;
 
-	XmMAX_ON_TOP: INTEGER is
+	XmMAX_ON_TOP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmMAX_ON_TOP"
 		end;
 
-	XmMAX_ON_BOTTOM: INTEGER is
+	XmMAX_ON_BOTTOM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmMAX_ON_BOTTOM"
 		end;
 
-	XmMAX_ON_LEFT: INTEGER is
+	XmMAX_ON_LEFT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmMAX_ON_LEFT"
 		end;
 
-	XmMAX_ON_RIGHT: INTEGER is
+	XmMAX_ON_RIGHT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Scale.h>] : EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmMAX_ON_RIGHT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

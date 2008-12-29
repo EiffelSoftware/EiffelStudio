@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision WEL key conversion. Provides a function%N%
 		%for WEL to vision2 conversion and for vision2 to WEL conversion."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Conversion
 
-	key_code_to_wel (a_key_code: INTEGER): INTEGER is
+	key_code_to_wel (a_key_code: INTEGER): INTEGER
 			-- Corresponding WEL code for ``a_key_code''.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
@@ -24,7 +24,7 @@ feature -- Conversion
 			Result := v2_to_wel_table @ a_key_code
 		end
 
-	key_code_from_wel (a_wel_code: INTEGER): INTEGER is
+	key_code_from_wel (a_wel_code: INTEGER): INTEGER
 			-- Corresponding key code for ``a_wel_code''.
 		require
 			a_wel_code_valid: valid_wel_code (a_wel_code)
@@ -34,7 +34,7 @@ feature -- Conversion
 
 feature -- Contract support
 
-	valid_wel_code (a_wel_code: INTEGER): BOOLEAN is
+	valid_wel_code (a_wel_code: INTEGER): BOOLEAN
 			-- Is ``a_wel_code'' valid?
 		do
 			Result := wel_to_v2_table.has (a_wel_code)
@@ -42,7 +42,7 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	v2_to_wel_table: ARRAY [INTEGER] is
+	v2_to_wel_table: ARRAY [INTEGER]
 			-- WEL keycodes indexed by Vision2 key code.
 		once
 			create Result.make (Key_0, Key_menu)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			Result.put (Vk_apps, Key_menu)
 		end
 
-	wel_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
+	wel_to_v2_table: HASH_TABLE [INTEGER, INTEGER]
 			-- Vision2 keycodes indexed by WEL key code.
 		once
 			create Result.make (128)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			Result.put (Key_menu, Vk_apps)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

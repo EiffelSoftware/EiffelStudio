@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool bar button can show a narrow shape even it's wrap."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Redefine
 
-	rectangle: EV_RECTANGLE is
+	rectangle: EV_RECTANGLE
 			-- Redefine
 		do
 			Result := Precursor {SD_TOOL_BAR_BUTTON}
@@ -28,7 +28,7 @@ feature -- Redefine
 			end
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

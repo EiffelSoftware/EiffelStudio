@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A list of observers is associated to a data."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (d: like data) is
+	make (d: like data)
 			-- Initialize
 		require
 			data_exists: d /= Void
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature -- Managment
 
-	add_observer (w: OBSERVER) is
+	add_observer (w: OBSERVER)
 			-- Add an observer to the list.
 		require
 			observer_exists: w /= Void
@@ -41,7 +41,7 @@ feature -- Managment
 			observer_list.extend (w)
 		end
 
-	remove_observer (w: OBSERVER) is
+	remove_observer (w: OBSERVER)
 			-- remove observer 'w' from the list.
 			-- Do nothing if it does not belong to the list.
 		require
@@ -65,7 +65,7 @@ feature -- Managment
 			end
 		end
 
-	update is
+	update
 			-- Update every oberver of data 'data'.
 		local
 			window: OBSERVER
@@ -89,7 +89,7 @@ invariant
 	observer_list_exists: observer_list /= Void
 	data_exists: data /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

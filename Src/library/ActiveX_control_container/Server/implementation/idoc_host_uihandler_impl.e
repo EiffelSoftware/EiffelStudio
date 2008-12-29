@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IDocHostUIHandler' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 	
 feature -- Basic Operations
 
-	show_context_menu (dw_id: INTEGER; ppt: TAG_POINT_RECORD; command_target: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE) is
+	show_context_menu (dw_id: INTEGER; ppt: TAG_POINT_RECORD; command_target: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE)
 			-- MSHTML requests to display its context menu.
 			-- `dw_id' [in].  
 			-- `ppt' [in].  
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			end
 		end
 
-	get_host_info (p_info: X_DOCHOSTUIINFO_RECORD) is
+	get_host_info (p_info: X_DOCHOSTUIINFO_RECORD)
 			-- Called at initialisation to find UI styles from container.
 			-- `p_info' [in, out].  
 		local
@@ -70,7 +70,7 @@ feature -- Basic Operations
 			end
 		end
 
-	show_ui (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE) is
+	show_ui (dw_id: INTEGER; p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; p_command_target: IOLE_COMMAND_TARGET_INTERFACE; p_frame: IOLE_IN_PLACE_FRAME_INTERFACE; p_doc: IOLE_IN_PLACE_UIWINDOW_INTERFACE)
 			-- Allows the host to replace the IE4/MSHTML menus and toolbars.
 			-- `dw_id' [in].  
 			-- `p_active_object' [in].  
@@ -88,7 +88,7 @@ feature -- Basic Operations
 			end
 		end
 
-	hide_ui is
+	hide_ui
 			-- Called when IE4/MSHTML removes its menus and toolbars.
 		do
 			if external_ui_handler /= Void then
@@ -96,7 +96,7 @@ feature -- Basic Operations
 			end
 		end
 
-	update_ui is
+	update_ui
 			-- Notifies the host that the command state has changed.
 		do
 			if external_ui_handler /= Void then
@@ -104,7 +104,7 @@ feature -- Basic Operations
 			end
 		end
 
-	enable_modeless (f_enable: INTEGER) is
+	enable_modeless (f_enable: INTEGER)
 			-- Called from the IE4/MSHTML implementation of
 			-- IOleInPlaceActiveObject::EnableModeless.
 			-- `f_enable' [in].  
@@ -121,7 +121,7 @@ feature -- Basic Operations
 			end
 		end
 
-	on_doc_window_activate (f_activate: INTEGER) is
+	on_doc_window_activate (f_activate: INTEGER)
 			-- Called from the IE4/MSHTML implementation of
 			-- IOleInPlaceActiveObject::OnDocWindowActivate.
 			-- `f_activate' [in].  
@@ -131,7 +131,7 @@ feature -- Basic Operations
 			end
 		end
 
-	on_frame_window_activate (f_activate: INTEGER) is
+	on_frame_window_activate (f_activate: INTEGER)
 			-- Called from the IE4/MSHTML implementation of
 			-- IOleInPlaceActiveObject::OnFrameWindowActivate.
 			-- `f_activate' [in].  
@@ -143,7 +143,7 @@ feature -- Basic Operations
 
 	resize_border (prc_border: TAG_RECT_RECORD; 
 		p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; 
-		f_rame_window: INTEGER) is
+		f_rame_window: INTEGER)
 			-- Called from the IE4/MSHTML implementation of
 			-- IOleInPlaceActiveObject::ResizeBorder.
 			-- `prc_border' [in].  
@@ -160,7 +160,7 @@ feature -- Basic Operations
 			end
 		end
 
-	translate_accelerator (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER) is
+	translate_accelerator (lpmsg: TAG_MSG_RECORD; pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER)
 			-- Called by IE4/MSHTML when
 			-- IOleInPlaceActiveObject::TranslateAccelerator or
 			-- IOleControlSite::TranslateAccelerator is called. 
@@ -185,7 +185,7 @@ feature -- Basic Operations
 			end
 		end
 
-	get_option_key_path (pch_key: CELL [STRING]; dw: INTEGER) is
+	get_option_key_path (pch_key: CELL [STRING]; dw: INTEGER)
 			-- Returns the registry key under which IE4/MSHTML 
 			-- stores user preferences. 
 			-- Returns S_OK if successful, or S_FALSE otherwise. 
@@ -204,7 +204,7 @@ feature -- Basic Operations
 			end
 		end
 
-	get_drop_target (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]) is
+	get_drop_target (p_drop_target: IDROP_TARGET_INTERFACE; pp_drop_target: CELL [IDROP_TARGET_INTERFACE])
 			-- Called by IE4/MSHTML when it is being used as 
 			-- a drop target to allow the host to supply an 
 			-- alternative IDropTarget.
@@ -232,7 +232,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	get_external (pp_dispatch: CELL [ECOM_INTERFACE]) is
+	get_external (pp_dispatch: CELL [ECOM_INTERFACE])
 			-- Called by IE4/MSHTML to obtain the host's IDispatch interface.
 			-- `pp_dispatch' [out].  
 		do
@@ -243,7 +243,7 @@ feature -- Basic Operations
 			end
 		end
 
-	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]) is
+	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING])
 			-- Called by IE4/MSHTML to allow the host an 
 			-- opportunity to modify the URL to be loaded.
 			-- `dw_translate' [in].  
@@ -255,7 +255,7 @@ feature -- Basic Operations
 			end
 		end
 
-	filter_data_object (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE]) is
+	filter_data_object (p_do: IDATA_OBJECT_INTERFACE; pp_doret: CELL [IDATA_OBJECT_INTERFACE])
 			-- Called on the host by IE4/MSHTML to allow 
 			-- the host to replace IE4/MSHTML's data object.
 			-- This allows the host to block certain clipboard 
@@ -284,7 +284,7 @@ feature -- Basic Operations
 			retry
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

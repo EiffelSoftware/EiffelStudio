@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision toggle button, gtk implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk toggle button.
 		do
 			base_make (an_interface)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
@@ -43,7 +43,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 				-- Set `is_selected' `False'.
 		do
 			if is_selected then
@@ -53,7 +53,7 @@ feature -- Status setting
 
 feature -- Status report
 	
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
@@ -63,7 +63,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

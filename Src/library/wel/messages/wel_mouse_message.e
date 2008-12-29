@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about messages Wm_mousemove, %
 		%Wm_lbuttondown, Wm_mbuttondown, Wm_rbuttondown, %
 		%Wm_lbuttonup, Wm_mbuttonup, Wm_rbuttonup, %
@@ -29,20 +29,20 @@ create
 
 feature -- Access
 
-	keys: INTEGER is
+	keys: INTEGER
 			-- Keys flags.
 			-- See class WEL_MK_CONSTANTS for different values.
 		do
 			Result := w_param.to_integer_32
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- Horizontal position of cursor
 		do
 			Result := x_position_from_lparam (l_param)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- Vertical position of cursor
 		do
 			Result := y_position_from_lparam (l_param)
@@ -50,37 +50,37 @@ feature -- Access
 
 feature -- Status report
 
-	control_down: BOOLEAN is
+	control_down: BOOLEAN
 			-- Is the CTRL key down?
 		do
 			Result := flag_set (keys, Mk_control)
 		end
 
-	shift_down: BOOLEAN is
+	shift_down: BOOLEAN
 			-- Is the SHIFT key down?
 		do
 			Result := flag_set (keys, Mk_shift)
 		end
 
-	left_button_down: BOOLEAN is
+	left_button_down: BOOLEAN
 			-- Is the left mouse button down?
 		do
 			Result := flag_set (keys, Mk_lbutton)
 		end
 
-	right_button_down: BOOLEAN is
+	right_button_down: BOOLEAN
 			-- Is the right mouse button down?
 		do
 			Result := flag_set (keys, Mk_rbutton)
 		end
 
-	middle_button_down: BOOLEAN is
+	middle_button_down: BOOLEAN
 			-- Is the middle mouse button down?
 		do
 			Result := flag_set (keys, Mk_mbutton)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

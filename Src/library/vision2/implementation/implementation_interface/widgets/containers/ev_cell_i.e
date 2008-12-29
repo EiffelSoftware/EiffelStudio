@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision cell. Implementation interface."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Element change
 
-	extend (an_item: like item) is
+	extend (an_item: like item)
 			-- Ensure that structure includes `an_item'.
 		do
 			replace (an_item)
@@ -30,7 +30,7 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify `item_imp'.
 		do
 			if item /= Void then
@@ -42,7 +42,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CELL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

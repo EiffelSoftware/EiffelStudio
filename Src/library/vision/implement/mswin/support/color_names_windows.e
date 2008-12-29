@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents the color names"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	names: HASH_TABLE [RGB_TRIPLE, STRING] is
+	names: HASH_TABLE [RGB_TRIPLE, STRING]
 			-- Fill the hash-table when called
 		once
 			create Result.make (800)
@@ -23,7 +23,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	add_names is
+	add_names
 		local
 			color: WEL_COLOR_REF
 		do
@@ -780,7 +780,7 @@ feature {NONE} -- Implementation
 			add_name (color.red, color.green, color.blue, "Color_windowtext")
 		end
 
-	add_name (r, g, b: INTEGER; color_name: STRING) is
+	add_name (r, g, b: INTEGER; color_name: STRING)
 			-- Add a item in the hash-table, with the key color_name
 		require
 			color_name_not_void: color_name /= Void
@@ -791,7 +791,7 @@ feature {NONE} -- Implementation
 			names.put (rgb_tripple, color_name.twin)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

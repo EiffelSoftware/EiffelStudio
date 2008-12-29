@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Constants for use by and with EV_FRAME."
 	legal: "See notice at end of class."
@@ -12,21 +12,21 @@ class
 
 feature -- Constants
 
-	Ev_frame_lowered: INTEGER is 1
+	Ev_frame_lowered: INTEGER = 1
 			-- Inward bevel.
 
-	Ev_frame_raised: INTEGER is 2
+	Ev_frame_raised: INTEGER = 2
 			-- Outward bevel.
 
-	Ev_frame_etched_in: INTEGER is 3
+	Ev_frame_etched_in: INTEGER = 3
 			-- Sunken groove.
 
-	Ev_frame_etched_out: INTEGER is 4
+	Ev_frame_etched_out: INTEGER = 4
 			-- Raised ridge.
 
 feature -- Contract support
 
-	valid_frame_border (a_code: INTEGER): BOOLEAN is
+	valid_frame_border (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a valid code ?
 		do
 			Result := a_code = Ev_frame_lowered or else
@@ -35,7 +35,7 @@ feature -- Contract support
 				a_code = Ev_frame_etched_out
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

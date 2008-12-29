@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "This class represents a MS_IMParrow button"
 	legal: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (an_arrow_button: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (an_arrow_button: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make an arrow button.
 		do
 			create private_attributes
@@ -35,25 +35,25 @@ feature -- Status report
 	center_alignment: BOOLEAN
 			-- Is this ARROW_B currently center_aligned?	
 
-	down: BOOLEAN is
+	down: BOOLEAN
 			-- Is current direction down?
 		do
 			Result := (direction = down_direction)
 		end
 
-	left: BOOLEAN is
+	left: BOOLEAN
 			-- Is current direction left?
 		do
 			Result := (direction = left_direction)
 		end
 
-	right: BOOLEAN is
+	right: BOOLEAN
 			-- Is current direction right?
 		do
 			Result := (direction = right_direction)
 		end
 
-	up: BOOLEAN is
+	up: BOOLEAN
 			-- Is current direction up?
 		do
 			Result := (direction = up_direction)
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_down is
+	set_down
 			-- Set current direction to down.
 		do
 			direction := down_direction
@@ -70,7 +70,7 @@ feature -- Status setting
 			end
 		end
 
-	set_left is
+	set_left
 			-- Set current direction to left.
 		do
 			direction := left_direction
@@ -79,7 +79,7 @@ feature -- Status setting
 			end
 		end
 
-	set_right is
+	set_right
 			-- Set current direction to right.
 		do
 			direction := right_direction
@@ -88,7 +88,7 @@ feature -- Status setting
 			end
 		end
 
-	set_up is
+	set_up
 			-- Set current direction to up.
 		do
 			direction := up_direction
@@ -99,7 +99,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	draw_selected (a_dc: WEL_DC) is
+	draw_selected (a_dc: WEL_DC)
 			-- Draw current button in a selected mode.
 		local
 			old_brush, new_brush: WEL_BRUSH
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_unselected (a_dc: WEL_DC) is
+	draw_unselected (a_dc: WEL_DC)
 			-- Draw current button in an unselected mode.
 		local
 			old_brush, new_brush: WEL_BRUSH
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	triangle (button_is_down: BOOLEAN): ARRAY [INTEGER] is
+	triangle (button_is_down: BOOLEAN): ARRAY [INTEGER]
 			-- Triangle for current arrow button
 		local
 			r: WEL_RECT
@@ -183,23 +183,23 @@ feature {NONE} -- Implementation
 	direction: INTEGER
 			-- Direction of current arrow button
 
-	up_direction: INTEGER is unique
+	up_direction: INTEGER = unique
 			-- Up direction value
 
-	down_direction: INTEGER is unique
+	down_direction: INTEGER = unique
 			-- Down direction value
 
-	left_direction: INTEGER is unique
+	left_direction: INTEGER = unique
 			-- Left direction value
 
-	right_direction: INTEGER is unique
+	right_direction: INTEGER = unique
 			-- Right direction value
 
 invariant
 
         valid_direction: up xor (down xor (right xor left))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

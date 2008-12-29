@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figure groups that are the root of a world of figures.%N%
 		%May be interpreted by any kind of projection.%N%
@@ -29,7 +29,7 @@ create {EV_FIGURE_WORLD}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with a white background.
 		do
 			Precursor
@@ -62,10 +62,10 @@ feature -- Access
 			-- Display visual representation of  grid?
 			-- Default: True.
 
-	Default_grid_x: INTEGER is 20
+	Default_grid_x: INTEGER = 20
 			-- Default horizontal step of grid.
 
-	Default_grid_y: INTEGER is 20
+	Default_grid_y: INTEGER = 20
 			-- Default vertical step of grid.
 
 	grid_x: INTEGER
@@ -76,13 +76,13 @@ feature -- Access
 			-- Vertical step of grid.
 			-- Default: `Default_grid_x'.
 
-	world: EV_FIGURE_WORLD is
+	world: EV_FIGURE_WORLD
 			-- `Current' object.
 		do
 			Result := Current
 		end
 
-	x_to_grid (a_x: INTEGER): INTEGER is
+	x_to_grid (a_x: INTEGER): INTEGER
 			-- Nearest point on grid to absolute `a_x'.
 		local
 			offset, half_grid, grid: INTEGER
@@ -93,7 +93,7 @@ feature -- Access
 			Result := ((a_x + half_grid - offset) // grid) * grid + offset
 		end
 
-	y_to_grid (a_y: INTEGER): INTEGER is
+	y_to_grid (a_y: INTEGER): INTEGER
 			-- Nearest point on grid to absolute `a_y'.
 		local
 			offset, half_grid, grid: INTEGER
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_points is
+	show_points
 			-- Set `points_visible' to `True'.
 		do
 			points_visible := True
@@ -120,7 +120,7 @@ feature -- Status setting
 			points_visible: points_visible
 		end
 
-	hide_points is
+	hide_points
 			-- Set `points_visible' to `False'.
 		do
 			points_visible := False
@@ -128,7 +128,7 @@ feature -- Status setting
 			not_points_visible: not points_visible
 		end
 
-	show_grid is
+	show_grid
 			-- Set `grid_visible' to `True'.
 		do
 			grid_visible := True
@@ -136,7 +136,7 @@ feature -- Status setting
 			grid_visible: grid_visible
 		end
 
-	hide_grid is
+	hide_grid
 			-- Set `grid_visible' to `False'.
 		do
 			grid_visible := False
@@ -144,7 +144,7 @@ feature -- Status setting
 			not_grid_visible: not grid_visible
 		end
 
-	enable_grid is
+	enable_grid
 			-- Set `grid_enabled' `True'.
 		do
 			grid_enabled := True
@@ -152,7 +152,7 @@ feature -- Status setting
 			grid_enabled: grid_enabled
 		end
 
-	disable_grid is
+	disable_grid
 			-- Set `grid_enabled' `False'.
 		do
 			grid_enabled := False
@@ -160,7 +160,7 @@ feature -- Status setting
 			grid_disabled: not grid_enabled
 		end
 
-	full_redraw is
+	full_redraw
 			-- On next projection, mark entire area as invalid.
 		do
 			is_redraw_needed := True
@@ -168,7 +168,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -178,7 +178,7 @@ feature -- Element change
 			assigned: background_color = a_color
 		end
 
-	set_capture_figure (a_figure: EV_FIGURE) is
+	set_capture_figure (a_figure: EV_FIGURE)
 			-- Set `capture_figure' to `a_figure'.
 		require
 			a_figure_not_void: a_figure /= Void
@@ -188,7 +188,7 @@ feature -- Element change
 			assigned: capture_figure = a_figure
 		end
 
-	remove_capture_figure is
+	remove_capture_figure
 			-- Set `capture_figure' to `Void'.
 		require
 			capture_figure_not_void: capture_figure /= Void
@@ -198,7 +198,7 @@ feature -- Element change
 			removed: capture_figure = Void
 		end
 
-	set_grid_x (new_grid_x: INTEGER) is
+	set_grid_x (new_grid_x: INTEGER)
 			-- Assign `new_grid_x' to `grid_x'.
 		require
 			new_grid_x_positive: new_grid_x > 0
@@ -208,7 +208,7 @@ feature -- Element change
 			assigned: grid_x = new_grid_x
 		end
 
-	set_grid_y (new_grid_y: INTEGER) is
+	set_grid_y (new_grid_y: INTEGER)
 			-- Assign `new_grid_y' to `grid_y'.
 		require
 			new_grid_y_positive: new_grid_y > 0
@@ -220,7 +220,7 @@ feature -- Element change
 
 feature {EV_PROJECTOR, EV_FIGURE} -- Access
 
-	full_redraw_performed is
+	full_redraw_performed
 			-- Redraw is not needed anymore.
 		do
 			is_redraw_needed := False
@@ -229,7 +229,7 @@ feature {EV_PROJECTOR, EV_FIGURE} -- Access
 invariant
 	background_color_exists: background_color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

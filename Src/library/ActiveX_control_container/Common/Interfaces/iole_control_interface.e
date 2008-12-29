@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	get_control_info_user_precondition (p_ci: TAG_CONTROLINFO_RECORD): BOOLEAN is
+	get_control_info_user_precondition (p_ci: TAG_CONTROLINFO_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_control_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_mnemonic_user_precondition (p_msg: TAG_MSG_RECORD): BOOLEAN is
+	on_mnemonic_user_precondition (p_msg: TAG_MSG_RECORD): BOOLEAN
 			-- User-defined preconditions for `on_mnemonic'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_ambient_property_change_user_precondition (disp_id: INTEGER): BOOLEAN is
+	on_ambient_property_change_user_precondition (disp_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_ambient_property_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	freeze_events_user_precondition (b_freeze: INTEGER): BOOLEAN is
+	freeze_events_user_precondition (b_freeze: INTEGER): BOOLEAN
 			-- User-defined preconditions for `freeze_events'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_control_info (p_ci: TAG_CONTROLINFO_RECORD) is
+	get_control_info (p_ci: TAG_CONTROLINFO_RECORD)
 			-- No description available.
 			-- `p_ci' [out].  
 		require
@@ -53,7 +53,7 @@ feature -- Basic Operations
 
 		end
 
-	on_mnemonic (p_msg: TAG_MSG_RECORD) is
+	on_mnemonic (p_msg: TAG_MSG_RECORD)
 			-- No description available.
 			-- `p_msg' [in].  
 		require
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-	on_ambient_property_change (disp_id: INTEGER) is
+	on_ambient_property_change (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		require
@@ -73,7 +73,7 @@ feature -- Basic Operations
 
 		end
 
-	freeze_events (b_freeze: INTEGER) is
+	freeze_events (b_freeze: INTEGER)
 			-- No description available.
 			-- `b_freeze' [in].  
 		require
@@ -82,7 +82,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing 
+note 
 	description	: "EiffelVision horizontal separator, windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Status setting
 
-   	set_default_minimum_size is
+   	set_default_minimum_size
    			-- Platform dependant initialization.
    		do
 			ev_set_minimum_height (2)
@@ -33,7 +33,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Repaint 3D separator.
 		local
 			cur_height_div_two: INTEGER
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		end
 
 	draw_horizontal_line (paint_dc: WEL_PAINT_DC;
-			a_pen: WEL_PEN; a_y: INTEGER) is
+			a_pen: WEL_PEN; a_y: INTEGER)
 			-- Draw graphical component of `Current'.
 		do
 			paint_dc.select_pen (a_pen)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_HORIZONTAL_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

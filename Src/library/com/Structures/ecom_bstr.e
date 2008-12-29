@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper around BSTR."
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature -- Access
 
-	string: STRING is
+	string: STRING
 			-- Convert to STRING
 		local
 			l_string: WEL_STRING
@@ -26,7 +26,7 @@ feature -- Access
 			end
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Character count
 		do
 			Result := c_sys_string_len (item)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	memory_free is
+	memory_free
 			-- Free BSTR
 		do
 			c_sys_free_string (item)
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_sys_free_string (a_item: POINTER) is
+	c_sys_free_string (a_item: POINTER)
 			-- `SysFreeString' API
 		external
 			"C inline use <windows.h>"
@@ -51,7 +51,7 @@ feature {NONE} -- Externals
 			"SysFreeString((BSTR)$a_item)"
 		end
 
-	c_sys_string_len (a_item: POINTER): INTEGER is
+	c_sys_string_len (a_item: POINTER): INTEGER
 			-- `SysStringLen' API
 		external
 			"C inline use <windows.h>"
@@ -59,7 +59,7 @@ feature {NONE} -- Externals
 			"(EIF_INTEGER)SysStringLen((BSTR)$a_item)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

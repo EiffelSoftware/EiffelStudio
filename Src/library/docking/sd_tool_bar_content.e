@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contents that have a tool bar items that client programmer want to managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_items (a_unique_title: STRING_GENERAL; a_items: like items) is
+	make_with_items (a_unique_title: STRING_GENERAL; a_items: like items)
 			-- Creation method.
 		require
 			a_title_not_void: a_unique_title /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initlization
 			set: items = a_items
 		end
 
-	make_with_tool_bar (a_unique_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR) is
+	make_with_tool_bar (a_unique_title: STRING_GENERAL; a_tool_bar: EV_TOOL_BAR)
 			-- Creation method. A helper function, actually SD_TOOL_BAR_ZONE only appcept EV_TOOL_BAR_ITEMs.
 			-- Warning: use this method will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
@@ -64,7 +64,7 @@ feature {NONE} -- Initlization
 			set: a_tool_bar.count = items.count
 		end
 
-	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING_GENERAL): SD_TOOL_BAR_ITEM is
+	convert_to_sd_item (a_ev_item: EV_TOOL_BAR_ITEM; a_name: STRING_GENERAL): SD_TOOL_BAR_ITEM
 			-- Convert a EV_TOOL_BAR_ITEM to SD_TOOL_BAR_ITEM.
 			-- Warning: use this method to convert pixmap in `a_ev_item' will lose alpha data, which will show nothing when use AlphaBlend functions!
 		require
@@ -107,7 +107,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	show is
+	show
 			-- Show Current.
 		require
 			not_destroyed: not is_destroyed
@@ -129,7 +129,7 @@ feature -- Command
 			end
 		end
 
-	hide is
+	hide
 			-- Hide Current
 		require
 			not_destroyed: not is_destroyed
@@ -157,7 +157,7 @@ feature -- Command
 			end
 		end
 
-	close is
+	close
 			-- Close Current
 		require
 			not_destroyed: not is_destroyed
@@ -169,7 +169,7 @@ feature -- Command
 			end
 		end
 
-	set_title (a_display_title: STRING_GENERAL) is
+	set_title (a_display_title: STRING_GENERAL)
 			-- Set `title' with `a_display_title'
 		require
 			not_destroyed: not is_destroyed
@@ -180,7 +180,7 @@ feature -- Command
 			set: title.is_equal (a_display_title.as_string_32)
 		end
 
-	set_top (a_direction: INTEGER) is
+	set_top (a_direction: INTEGER)
 			-- Set dock at `a_direction'
 		require
 			not_destroyed: not is_destroyed
@@ -200,7 +200,7 @@ feature -- Command
 			visible: is_visible = True
 		end
 
-	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT) is
+	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT)
 			-- Set Current dock at same row/column with `a_other_content'.
 		require
 			not_destroyed: not is_destroyed
@@ -221,7 +221,7 @@ feature -- Command
 			visible: is_visible = True
 		end
 
-	refresh is
+	refresh
 			-- Refresh tool bar if items visible changed.
 		require
 			not_destroyed: not is_destroyed
@@ -231,7 +231,7 @@ feature -- Command
 			end
 		end
 
-	destroy is
+	destroy
 			-- When a SD_DOCKING_MANAGER destroy, all SD_CONTENTs in it will be destroyed.
 			-- Clear all resources and all references.
 		do
@@ -255,7 +255,7 @@ feature -- Query
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current' including invisible items.
 
-	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	items_visible: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All displayed items.
 		do
 			from
@@ -273,7 +273,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	items_except_sep (a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	items_except_sep (a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -304,7 +304,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	groups_count (a_include_invisible: BOOLEAN): INTEGER is
+	groups_count (a_include_invisible: BOOLEAN): INTEGER
 			-- Group count, group is buttons before one separater.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -350,7 +350,7 @@ feature -- Query
 			end
 		end
 
-	group_items (a_group_index: INTEGER; a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	group_items (a_group_index: INTEGER; a_include_invisible: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Group items.
 		require
 			valid: 0 < a_group_index and a_group_index <= groups_count (False)
@@ -397,7 +397,7 @@ feature -- Query
 			not_contain_separator:
 		end
 
-	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when show requested
 		do
 			if internal_show_request_actions = Void then
@@ -406,7 +406,7 @@ feature -- Query
 			Result := internal_show_request_actions
 		end
 
-	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perfrom when close requested.
 		do
 			if internal_close_request_actions = Void then
@@ -415,7 +415,7 @@ feature -- Query
 			Result := internal_close_request_actions
 		end
 
-	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER is
+	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER
 			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -441,7 +441,7 @@ feature -- Query
 			end
 		end
 
-	is_contain_widget_item: BOOLEAN is
+	is_contain_widget_item: BOOLEAN
 			-- If Current contain normal widget items?
 		local
 			l_widget: SD_TOOL_BAR_WIDGET_ITEM
@@ -457,7 +457,7 @@ feature -- Query
 			end
 		end
 
-	is_added: BOOLEAN is
+	is_added: BOOLEAN
 			-- If Current added to a tool bar manager?
 		do
 			Result := manager /= Void
@@ -483,7 +483,7 @@ feature -- Query
 			end
 		end
 
-	is_menu_bar: BOOLEAN is
+	is_menu_bar: BOOLEAN
 			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM.
 		local
 			l_menu_item: SD_TOOL_BAR_MENU_ITEM
@@ -504,7 +504,7 @@ feature -- Query
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := unique_title.hash_code
@@ -512,7 +512,7 @@ feature -- Query
 
 feature -- Obsolete
 
-	item_count_except_separator: INTEGER is
+	item_count_except_separator: INTEGER
 			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		obsolete
 			"Use item_count_except_sep instead."
@@ -520,7 +520,7 @@ feature -- Obsolete
 			Result := item_count_except_sep (True)
 		end
 
-	group (a_group_index: INTEGER_32): ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	group (a_group_index: INTEGER_32): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Group items except hidden items.
 		obsolete
 			"Use group_items instead."
@@ -528,7 +528,7 @@ feature -- Obsolete
 			Result := group_items (a_group_index, True)
 		end
 
-	group_count: INTEGER is
+	group_count: INTEGER
 			-- Group count, group is buttons before one separater.
 		obsolete
 			"Use groups_count instead."
@@ -536,7 +536,7 @@ feature -- Obsolete
 			Result := groups_count (True)
 		end
 
-	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	items_except_separator: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		obsolete
 			"Use items_except_sep instead."
@@ -548,13 +548,13 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 		SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_MANAGER, SD_OPEN_CONFIG_MEDIATOR,
 		SD_SAVE_CONFIG_MEDIATOR, SD_DOCKING_MANAGER_QUERY, SD_TOOL_BAR, SD_TOOL_BAR_MANAGER}  -- Internal issues.
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			items.wipe_out
 		end
 
-	clear is
+	clear
 			-- Clear widget items' parents and reset state flags.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -609,7 +609,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			valid: Result /= 0
 		end
 
-	separator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
+	separator_after_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR
 			-- Separator after `a_item' if exist, except invisible items.
 		require
 			has: items_visible.has (a_item)
@@ -626,7 +626,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			end
 		end
 
-	separator_before_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR is
+	separator_before_item (a_item: SD_TOOL_BAR_ITEM): SD_TOOL_BAR_SEPARATOR
 			-- Separator before `a_item' if exist, except invisible items.
 		require
 			has: items.has (a_item)
@@ -649,7 +649,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			end
 		end
 
-	item_start_index (a_group_index: INTEGER; a_inclue_invisible: BOOLEAN): INTEGER is
+	item_start_index (a_group_index: INTEGER; a_inclue_invisible: BOOLEAN): INTEGER
 			-- Start index in `items' of a group. Start index not include SD_TOOL_BAR_SEPARATOR.
 		require
 			valid: a_group_index > 0 and a_group_index <= groups_count (False)
@@ -690,7 +690,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			valid: Result > 0 and Result <= items.count
 		end
 
-	item_end_index (a_group_index: INTEGER): INTEGER is
+	item_end_index (a_group_index: INTEGER): INTEGER
 			-- End index in `items' of a group. End index not include SD_TOOL_BAR_SEPARATOR.
 		require
 			valid: a_group_index > 0 and a_group_index <= groups_count (False)
@@ -707,7 +707,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 	zone: SD_TOOL_BAR_ZONE
 			-- Tool bar zone which Current related. May be Void if not exists.
 
-	set_zone (a_zone: SD_TOOL_BAR_ZONE) is
+	set_zone (a_zone: SD_TOOL_BAR_ZONE)
 			-- Set `zone'.
 		require
 			not_void: a_zone /= Void
@@ -720,7 +720,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 	manager: SD_TOOL_BAR_MANAGER
 			-- Manager which manage Current.
 
-	set_manager (a_manager: SD_TOOL_BAR_MANAGER) is
+	set_manager (a_manager: SD_TOOL_BAR_MANAGER)
 			-- Set `manager'
 		do
 			manager := a_manager
@@ -728,7 +728,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 			set: manager = a_manager
 		end
 
-	set_visible (a_bool: BOOLEAN) is
+	set_visible (a_bool: BOOLEAN)
 			-- Set `is_visible'
 		do
 			is_visible := a_bool
@@ -738,7 +738,7 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 
 feature {NONE} -- Implementation
 
-	destroy_container is
+	destroy_container
 			-- Destroy related containers.
 		do
 			if zone /= Void then
@@ -763,7 +763,7 @@ invariant
 
 	items_not_void: items /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

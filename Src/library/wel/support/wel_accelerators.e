@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keyboard accelerators that generates a WM_COMMAND message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_array (an_array: WEL_ARRAY [WEL_ACCELERATOR]) is
+	make_with_array (an_array: WEL_ARRAY [WEL_ACCELERATOR])
 			-- Initialize with accelerators in `an_array'.
 		require
 			an_array_not_void: an_array /= Void
@@ -30,13 +30,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 			-- Load accelerators.
 		do
 			item := cwin_load_accelerators (hinstance, id)
 		end
 
-	destroy_item is
+	destroy_item
 			-- Destroy accelerators.
 		do
 			if item /= default_pointer then
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_load_accelerators (hinstance: POINTER; id: POINTER): POINTER is
+	cwin_load_accelerators (hinstance: POINTER; id: POINTER): POINTER
 			-- SDK LoadAccelerators
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 			"LoadAccelerators"
 		end
 
-	cwin_destroy_accelerator_table (p: POINTER) is
+	cwin_destroy_accelerator_table (p: POINTER)
 			-- SDK DestroyAcceleratorTable
 		external
 			"C [macro <wel.h>] (HACCEL)"
@@ -63,7 +63,7 @@ feature {NONE} -- Externals
 			"DestroyAcceleratorTable"
 		end
 
-	cwin_create_accelerator_table (p: POINTER; entries: INTEGER): POINTER is
+	cwin_create_accelerator_table (p: POINTER; entries: INTEGER): POINTER
 			-- SDK CreateAcceleratorTable
 		external
 			"C [macro <wel.h>] (LPACCEL, int): EIF_POINTER"
@@ -71,7 +71,7 @@ feature {NONE} -- Externals
 			"CreateAcceleratorTable"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

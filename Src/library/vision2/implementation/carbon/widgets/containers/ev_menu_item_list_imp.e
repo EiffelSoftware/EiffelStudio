@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list. Carbon implementation."
 
 deferred class
@@ -31,7 +31,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; pos: INTEGER) is
+	insert_i_th (v: like item; pos: INTEGER)
 			-- Insert the item v in the current menu
 		local
 			menu_item: EV_MENU_ITEM_IMP
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			insert_menu_item(menu_item, pos)
 		end
 
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Generic menu item insertion.
 		local
 			ptr: POINTER
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			child_array.put_left (an_item_imp.interface)
 		end
 
-	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
+	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP
 			-- Separator before item `an_index'.
 		require
 			an_index_within_bounds:
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN is
+	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
 		do
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			Result := sep_imp /= Void
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_ITEM_IMP
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	child_selected (a_id: INTEGER) is
+	child_selected (a_id: INTEGER)
 			--
 		local
 			i: INTEGER
@@ -137,7 +137,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_MENU_ITEM_LIST_IMP
 

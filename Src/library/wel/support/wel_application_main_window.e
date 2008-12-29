@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class to share the application's main window object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	application_main_window: WEL_COMPOSITE_WINDOW is
+	application_main_window: WEL_COMPOSITE_WINDOW
 			-- Application's main window
 		do
 			Result := application_main_window_cell.item
 		end
 
-	application: WEL_APPLICATION is
+	application: WEL_APPLICATION
 			-- Current application
 		do
 			Result := application_cell.item
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_application_main_window (window: WEL_COMPOSITE_WINDOW): BOOLEAN is
+	is_application_main_window (window: WEL_COMPOSITE_WINDOW): BOOLEAN
 			-- Is `window' the application's main window?
 		require
 			window_not_void: window /= Void
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {WEL_APPLICATION} -- Element change
 
-	set_application_main_window (window: WEL_COMPOSITE_WINDOW) is
+	set_application_main_window (window: WEL_COMPOSITE_WINDOW)
 			-- Set `application_main_window' with `window'.
 		require
 			window_not_void: window /= Void
@@ -47,7 +47,7 @@ feature {WEL_APPLICATION} -- Element change
 			application_main_window_set: application_main_window = window
 		end
 
-	set_application (app: WEL_APPLICATION) is
+	set_application (app: WEL_APPLICATION)
 			-- Set the `application' with `app'.
 		require
 			app_not_void: app /= Void
@@ -59,9 +59,9 @@ feature {WEL_APPLICATION} -- Element change
 
 feature {NONE} -- Implementation
 
-	application_main_window_cell: CELL [WEL_COMPOSITE_WINDOW] is
+	application_main_window_cell: CELL [WEL_COMPOSITE_WINDOW]
 			-- Application's main window cell
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
@@ -69,9 +69,9 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	application_cell: CELL [WEL_APPLICATION] is
+	application_cell: CELL [WEL_APPLICATION]
 			-- Application cell
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

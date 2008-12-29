@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Wrapper to perform dispatch for standard dialogs. It is intended to be used through inheritance.
 		Descendants of this class should wrap the call to the Window API to show the dialog with a call
@@ -14,14 +14,14 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	begin_activate is
+	begin_activate
 			-- Initialize the C variables.
 		do
 			cwel_set_standard_dialog_procedure_address ($standard_dialog_procedure)
 			cwel_set_stddlg_dispatcher_object (Current)
 		end
 
-	end_activate is
+	end_activate
 			-- Uninitialize the C variables.
 		local
 			l_null: POINTER
@@ -32,28 +32,28 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	standard_dialog_procedure (hdlg: POINTER; msg: INTEGER_32; wparam, lparam: POINTER): POINTER is
+	standard_dialog_procedure (hdlg: POINTER; msg: INTEGER_32; wparam, lparam: POINTER): POINTER
 		deferred
 		end
 
 feature {NONE} -- Externals
 
-	cwel_set_standard_dialog_procedure_address (address: POINTER) is
+	cwel_set_standard_dialog_procedure_address (address: POINTER)
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-	cwel_set_stddlg_dispatcher_object (dispatcher: like Current) is
+	cwel_set_stddlg_dispatcher_object (dispatcher: like Current)
 		external
 			"C macro signature (EIF_OBJECT) use %"disptchr.h%""
 		end
 
-	cwel_release_stddlg_dispatcher_object is
+	cwel_release_stddlg_dispatcher_object
 		external
 			"C [macro %"disptchr.h%"]"
 		end
 
-	wel_standard_dialog_procedure: POINTER is
+	wel_standard_dialog_procedure: POINTER
 			-- Address of the C routine wrapping `standard_dialog_procedure'.
 		external
 			"C inline use %"disptchr.h%""
@@ -62,7 +62,7 @@ feature {NONE} -- Externals
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

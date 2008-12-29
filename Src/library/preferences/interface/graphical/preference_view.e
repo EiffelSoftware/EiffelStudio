@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Abstraction for a particular graphical view of the preferences.  Implement this to
 			provide a default view of preferences.  For an example see PREFERENCES_WINDOW.
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Initialization
 
-	make (a_preferences: like preferences) is
+	make (a_preferences: like preferences)
 			-- Create with `a_preferences'.
 		require
 			preferences_not_void: a_preferences /= Void
@@ -23,7 +23,7 @@ feature -- Initialization
 			preferences_set: preferences = a_preferences
 		end
 
-	make_with_hidden (a_preferences: like preferences; a_show_hidden_flag: BOOLEAN) is
+	make_with_hidden (a_preferences: like preferences; a_show_hidden_flag: BOOLEAN)
 			-- Create with `a_preferences'
 			-- and show hidden preferences if `a_show_hidden_flag' is True.
 		require
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Access
 
-	show_dialog_modal (w: EV_ANY) is
+	show_dialog_modal (w: EV_ANY)
 			-- Show `dlg' modal to `parent_window' if not Void
 		require
 			w_is_a_dialog: {EV_STANDARD_DIALOG} #? w /= Void or {EV_DIALOG} #? w /= Void
@@ -63,12 +63,12 @@ feature -- Access
 			end
 		end
 
-	parent_window: EV_WINDOW is
+	parent_window: EV_WINDOW
 			-- Parent window.  Used to display this view relative to.
 		deferred
 		end
 
-	preference_widget (a_preference: PREFERENCE): PREFERENCE_WIDGET is
+	preference_widget (a_preference: PREFERENCE): PREFERENCE_WIDGET
 			-- Return the widget required to display `a_preference'.
 		require
 			preference_not_void: a_preference /= Void
@@ -88,7 +88,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	set_show_hidden_preferences (a_flag: BOOLEAN) is
+	set_show_hidden_preferences (a_flag: BOOLEAN)
 			-- Set `show_hidden_preferences'.
 		do
 			show_hidden_preferences := a_flag
@@ -98,7 +98,7 @@ feature -- Status Setting
 
 feature -- Commands
 
-	register_preference_widget (a_preference_widget: PREFERENCE_WIDGET) is
+	register_preference_widget (a_preference_widget: PREFERENCE_WIDGET)
 			-- Register `a_preference_widget'.
 		require
 			preference_widget_not_void: a_preference_widget /= Void
@@ -112,7 +112,7 @@ feature -- Commands
 
 feature {NONE} -- Implementation
 
-	preference_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING] is
+	preference_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING]
 			-- Hash table of preference widgets identified by the type of preference associated with the widget.
 		local
 			l_brw: BOOLEAN_PREFERENCE_WIDGET
@@ -143,7 +143,7 @@ invariant
 	has_preferences: preferences /= Void
 --	has_parent_window: parent_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

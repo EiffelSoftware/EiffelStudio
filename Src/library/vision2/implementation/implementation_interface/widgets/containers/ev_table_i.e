@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision table. Implementation interface"
 	legal: "See notice at end of class.";
@@ -24,13 +24,13 @@ feature -- Access
 	columns: INTEGER
 			-- Number of columns in `Current'.
 
-	item_at_position (a_column, a_row: INTEGER): EV_WIDGET is
+	item_at_position (a_column, a_row: INTEGER): EV_WIDGET
 			-- Widget at coordinates (`row', `column')
 		do
 			Result := internal_array.item ((a_row - 1) * columns + a_column)
 		end
 
-	item_list: ARRAYED_LIST [EV_WIDGET] is
+	item_list: ARRAYED_LIST [EV_WIDGET]
 			-- List of items in `Current'.
 		local
 			i, j: INTEGER
@@ -55,7 +55,7 @@ feature -- Access
 			Result_not_has_void: not Result.has (Void)
 		end
 
-	to_array: ARRAY [EV_WIDGET] is
+	to_array: ARRAY [EV_WIDGET]
 			-- A representation of `Current' as ARRAY. Included to
 			-- ease transition from inheritance of ARRAY to
 			-- inheritance of CHAIN. Contains contents of all cells
@@ -68,19 +68,19 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	has (v: EV_WIDGET): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN
 			-- Does `Current' contain `v'?
 		do
 			Result := internal_item_list.has (v)
 		end
 
-	item: EV_WIDGET is
+	item: EV_WIDGET
 			-- Item at current position.
 		do
 			Result := internal_item_list @ index
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		local
 			used_cell_count: INTEGER
@@ -104,13 +104,13 @@ feature -- Access
 			Result := used_cell_count = rows * columns
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			Result := index = 0
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			Result := index = count + 1
@@ -118,43 +118,43 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	row_spacing: INTEGER is
+	row_spacing: INTEGER
 			-- Spacing between two consecutive rows.
 		deferred
 		end
 
-	column_spacing: INTEGER is
+	column_spacing: INTEGER
 			-- Spacing between two consecutive columns.
 		deferred
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Spacing between edge of `Current' and items.
 		deferred
 		end
 
-	item_column_position (widget: EV_WIDGET): INTEGER is
+	item_column_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is column coordinate of `widget'.
 		deferred
 		end
 
-	item_row_position (widget: EV_WIDGET): INTEGER is
+	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		deferred
 		end
 
 
-	item_row_span (widget: EV_WIDGET): INTEGER is
+	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		deferred
 		end
 
-	item_column_span (widget: EV_WIDGET): INTEGER is
+	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		deferred
 		end
 
-	columns_resizable_to (a_column: INTEGER): BOOLEAN is
+	columns_resizable_to (a_column: INTEGER): BOOLEAN
 			-- May the column count be resized to `a_column'?
 		require
 			a_column_positive: a_column >= 1
@@ -175,7 +175,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			end
 		end
 
-	rows_resizable_to (a_row: INTEGER): BOOLEAN is
+	rows_resizable_to (a_row: INTEGER): BOOLEAN
 			-- May the row count be resized to `a_row'?
 		require
 			a_row_positive: a_row >= 1
@@ -196,7 +196,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			end
 		end
 
-	column_clear (a_column: INTEGER): BOOLEAN is
+	column_clear (a_column: INTEGER): BOOLEAN
 			-- Is column `a_column' free of widgets?
 		require
 			a_column_positive: a_column >= 1
@@ -215,7 +215,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			end
 		end
 
-	row_clear (a_row: INTEGER): BOOLEAN is
+	row_clear (a_row: INTEGER): BOOLEAN
 			-- Is row `a_row' free of widgets?
 		require
 			a_row_positive: a_row >= 1
@@ -234,7 +234,7 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			end
 		end
 
-	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
+	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN
 			-- Are the cells represented by parameters free of widgets? Excludes cells
 			-- filled by `v'.
 		require
@@ -265,43 +265,43 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 
 feature {EV_ANY, EV_ANY_I} -- Status settings
 
-	enable_homogeneous is
+	enable_homogeneous
 			-- Set all item's sizes to that of the largest in `Current'.
 		deferred
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Allow items to be of varying sizes.
 		deferred
 		end
 
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Are all children restriced to be the same size.
 		deferred
 		end
 
-	set_row_spacing (a_value: INTEGER) is
+	set_row_spacing (a_value: INTEGER)
 			-- Spacing between two consecutive rows of `Current'.
 		require
 			positive_value: a_value >= 0
 		deferred
 		end
 
-	set_column_spacing (a_value: INTEGER) is
+	set_column_spacing (a_value: INTEGER)
 			-- Spacing between two consecutive columns of `Current'.
 		require
 			positive_value: a_value >= 0
 		deferred
 		end
 
-	set_border_width (a_value: INTEGER) is
+	set_border_width (a_value: INTEGER)
 			-- Assign `a_value' to `border_width'.
 		require
 			positive_value: a_value >= 0
 		deferred
 		end
 
-	resize (a_column, a_row: INTEGER) is
+	resize (a_column, a_row: INTEGER)
 			-- Resize the table to hold `a_column' by `a_row' widgets.
 		require
 			a_column_positive: a_column >= 1
@@ -345,7 +345,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			items_untouched: item_list.is_equal (old item_list)
 		end
 
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		local
 			a_col_ctr, a_row_ctr, a_cell_index: INTEGER
@@ -383,7 +383,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			rebuild_internal_item_list
 		end
 
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		require
 			v_contained: has (v)
@@ -429,7 +429,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 				rebuild_internal_item_list
 			end
 
-	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 		require
 			v_not_void: v /= Void
@@ -477,7 +477,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 feature -- Element change
 
-	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Set `a_widgets' position in the
 			-- table to be (x1, y1) (x2, y2)
 		require
@@ -509,7 +509,7 @@ feature -- Element change
 			rebuild_internal_item_list
 		end
 
-	remove (v: EV_WIDGET) is
+	remove (v: EV_WIDGET)
 			-- Remove `v' from `Current' if present.
 		require
 			item_not_void: v /= Void
@@ -533,7 +533,7 @@ feature -- Element change
 			item_removed: not has (v)
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add a new occurrence of `v'.
 		local
 			extend_pos: INTEGER
@@ -561,7 +561,7 @@ feature -- Element change
 			put (v, x, y , 1, 1)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			from
@@ -573,7 +573,7 @@ feature -- Element change
 			end
 		end
 
-	cursor: CURSOR  is
+	cursor: CURSOR
 			-- Current cursor position.
 		local
 			an_item: like item
@@ -584,7 +584,7 @@ feature -- Element change
 			create {EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]} Result.make (an_item, index <= 0, index > count)
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_TABLE_CURSOR and
 			-- if it points to an item, `Current' must have it.
@@ -596,7 +596,7 @@ feature -- Element change
 				(dlc.item = Void or else has (dlc.item))
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
 			dlc: EV_DYNAMIC_LIST_CURSOR [EV_WIDGET]
@@ -617,26 +617,26 @@ feature -- Element change
 	index: INTEGER
 		-- Current cursor index.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of widgets contained in `Current'.
 		do
 			Result := internal_item_list.count
 		end
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		do
 			index := index + 1
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		do
 			index := index - 1
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the absolute value of `i'
 			-- is too big.
@@ -668,13 +668,13 @@ feature {NONE} -- Implementation
 		-- An internal version of `item_list' which will only be
 		-- rebuilt when an item is added, removed or moved within the table.
 
-	rebuild_internal_item_list is
+	rebuild_internal_item_list
 			-- Rebuild `internal_item_list'.
 		do
 			internal_item_list := item_list.twin
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify all children.
 		local
 			loc_cursor: CURSOR
@@ -695,13 +695,13 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TABLE
 
-	Default_homogeneous: BOOLEAN is False
+	Default_homogeneous: BOOLEAN = False
 		-- `Current' is not homogeneous by default.
 
-	Default_row_spacing: INTEGER is 0
+	Default_row_spacing: INTEGER = 0
 		-- Default row spacing of `Current'.
 
-	Default_column_spacing: INTEGER is 0
+	Default_column_spacing: INTEGER = 0
 		-- Default column spacing of `Current'.
 
 	internal_array: ARRAY [EV_WIDGET]
@@ -714,7 +714,7 @@ invariant
 	internal_item_list_matches_count: internal_item_list.count = count
 	internal_array_not_void: internal_array /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Header control for dealing with multiple documents in TEXT_PANEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature -- Creation
 
-	make_with_panel (a_text_panel: TEXT_PANEL) is
+	make_with_panel (a_text_panel: TEXT_PANEL)
 			-- Make with `a_text_panel'
 		require
 			panel_not_void: a_text_panel /= Void
@@ -64,7 +64,7 @@ feature -- Creation
 
 feature -- Basic Operations
 
-	open_document (a_doc: like item) is
+	open_document (a_doc: like item)
 			-- Opens `a_doc' and selects it in the tab list.
 		local
 			l_type: STRING
@@ -118,7 +118,7 @@ feature -- Basic Operations
 			selection_actions.call ([Current])
 		end
 
-	remove_document is
+	remove_document
 			-- Remove document
 		require else
 			has_open_document: count > 0
@@ -152,7 +152,7 @@ feature -- Actions
 
 feature {NONE} -- Initialization
 
-	build_header_area is
+	build_header_area
 			-- Build the header area
 		local
 			l_inner_box: EV_HORIZONTAL_BOX
@@ -207,13 +207,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Display functions
 
-	on_focus is
+	on_focus
 			--
 		do
 			--	print ("Focus in %N")
 		end
 
-	on_repaint (x, y, a_width, a_height: INTEGER) is
+	on_repaint (x, y, a_width, a_height: INTEGER)
 			-- Repaint the part of the panel between in the rectangle between
 			-- (`x', `y') and (`x' + `a_width', `y' + `a_height').
 			--| Actually, rectangle defined by (0, y) -> (editor_area.width, y + height) is redrawn.
@@ -224,7 +224,7 @@ feature {NONE} -- Display functions
 			end
 		end
 
-	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
+	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
 			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
@@ -265,7 +265,7 @@ feature {NONE} -- Display functions
 
 		end
 
- 	update_buffered_screen is
+ 	update_buffered_screen
  			-- Update buffered pixmap from `a_x'.
  		local
  			l_index: INTEGER
@@ -290,7 +290,7 @@ feature {NONE} -- Display functions
  			go_i_th (l_index)
  		end
 
-	update_display is
+	update_display
 			-- Update display by drawing the buffered pixmap on `header_area'.
 		do
 			header_area.clear
@@ -318,7 +318,7 @@ feature {NONE} -- Display functions
 			end
 		end
 
-	update_items is
+	update_items
 			-- Update the items
 		local
 			l_index: INTEGER
@@ -345,7 +345,7 @@ feature {NONE} -- Display functions
 			go_i_th (l_index)
 		end
 
-	update_height is
+	update_height
 			--
 		do
 			height := header_font_cell.item.value.height + 10
@@ -361,7 +361,7 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Events
 
-	on_mouse_button_down (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_down (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Mouse button was pressed.
 		local
 			l_index: INTEGER
@@ -409,7 +409,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	scroll_left is
+	scroll_left
 			--
 		do
 			offset := offset - 10
@@ -419,7 +419,7 @@ feature {NONE} -- Events
 			update_display
 		end
 
-	scroll_right is
+	scroll_right
 			--
 		do
 			offset := offset + 10
@@ -429,7 +429,7 @@ feature {NONE} -- Events
 			update_display
 		end
 
-	close_document is
+	close_document
 			--
 		do
 			close_actions.call ([Current])
@@ -443,7 +443,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Update `Current' when the text has been completely loaded.
 		local
 			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
@@ -462,7 +462,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- Update `Current' when the text has been completely loaded.
 		local
 			l_keyboard_panel: KEYBOARD_SELECTABLE_TEXT_PANEL
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 	area: SPECIAL [TEXT_PANEL_HEADER_ITEM]
 		-- Area
 
-	item: TEXT_PANEL_HEADER_ITEM is
+	item: TEXT_PANEL_HEADER_ITEM
 			-- Item
 		do
 			Result := area.item (index - 1)
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 	open_linked_list: LINKED_LIST [like item]
 			--
 
-	update_list_order (a_item: like item) is
+	update_list_order (a_item: like item)
 			-- Update list order with `a_item' at the top.
 		require
 			item_valid: a_item /= Void
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 invariant
 	has_panel: panel /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

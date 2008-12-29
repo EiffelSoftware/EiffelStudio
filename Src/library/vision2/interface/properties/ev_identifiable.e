@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that can be identified by name."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_IDENTIFIABLE is
+	parent: EV_IDENTIFIABLE
 			-- Parent of object
 		require
 			not_destroyed: not is_destroyed
@@ -25,7 +25,7 @@ feature -- Access
 			correct: not has_parent implies Result = Void
 		end
 
-	identifier_name: STRING is
+	identifier_name: STRING
 			-- Name of object
 			-- If no specific name is set, `default_identifier_name' is used.
 		do
@@ -41,7 +41,7 @@ feature -- Access
 			default_name_available: not has_identifier_name_set implies Result.is_equal (default_identifier_name)
 		end
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default name if no other name is set.
 		do
 			Result := "{"+generating_type+"}"
@@ -70,13 +70,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Does identifiable has a parent?
 		do
 			Result := parent /= Void
 		end
 
-	has_identifier_name_set: BOOLEAN is
+	has_identifier_name_set: BOOLEAN
 			-- Is a specific identifier name set?
 		do
 			Result := internal_name /= Void
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_identifier_name (a_name: like identifier_name) is
+	set_identifier_name (a_name: like identifier_name)
 			-- Set `identifier_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -99,7 +99,7 @@ feature -- Element change
 
 feature {EV_IDENTIFIABLE} -- Implementation
 
-	identifier_path_separator: CHARACTER is
+	identifier_path_separator: CHARACTER
 			-- Character used to separate path to children
 		once
 			Result := '.'
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

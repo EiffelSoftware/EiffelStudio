@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE) is
+	make (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE)
 			-- Initialization of message box
 		do
 			create private_attributes
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	selection_text: STRING is
+	selection_text: STRING
 			-- Text in the selection edit
 		do
 			if exists and then selection_edit /= Void and then selection_edit.exists then
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	 hide_apply_button is
+	 hide_apply_button
 			-- Hide the `apply_button'.
 		do
 			if exists and then not apply_button_hidden then
@@ -88,7 +88,7 @@ feature -- Status setting
 			exists_implies_not_shown: exists implies not apply_button.shown
 		end
 
-	show_apply_button is
+	show_apply_button
 			-- Show the `apply_button'.
 		do
 			if exists and then apply_button_hidden then
@@ -105,13 +105,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_apply_action (c: COMMAND; a: ANY) is
+	add_apply_action (c: COMMAND; a: ANY)
 			-- Add command `c' to `apply_button'
 		do
 			apply_actions.add (Current, c, a)
 		end
 
-	set_selection_text (s: STRING) is
+	set_selection_text (s: STRING)
 			-- Set text for `selection_edit'
 		do
 			the_selection_text := s.twin
@@ -120,7 +120,7 @@ feature -- Element change
 			end
 		end
 
-	set_apply_label (s: STRING) is
+	set_apply_label (s: STRING)
 			-- Replace the text on the `apply_button' with `s'
 		do
 			if exists then
@@ -136,7 +136,7 @@ feature -- Element change
 			apply_label_is_equal_to_s: apply_label.is_equal (s)
 		end
 
-	set_selection_label (s: STRING) is
+	set_selection_label (s: STRING)
 			-- Set the text for the `selection_label'.
 		require else
 			s_not_void: s /= Void
@@ -147,7 +147,7 @@ feature -- Element change
 			end
 		end
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set the font for the `selection_label'.
 		do
 			label_font := a_font
@@ -159,7 +159,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (c: COMMAND; a: ANY) is
+	remove_apply_action (c: COMMAND; a: ANY)
 			-- Remove command `c' from `apply_button'
 		do
 			apply_actions.remove (Current, c, a)
@@ -185,10 +185,10 @@ feature {NONE} -- Implementation
 	apply_label: STRING
 			-- Label for `apply_button'
 
-	apply_id: INTEGER is 4
+	apply_id: INTEGER = 4
 			-- Id for `apply_button'.
 
-	selection_edit_id: INTEGER is 4001
+	selection_edit_id: INTEGER = 4001
 			-- Id for `selection_edit'
 
 	selection_static: WEL_STATIC
@@ -197,13 +197,13 @@ feature {NONE} -- Implementation
 	selection_edit: WEL_SINGLE_LINE_EDIT
 			-- Edit control
 
-	Minimum_width: INTEGER is 100
+	Minimum_width: INTEGER = 100
 			-- Minimum width of dialog
 
-	Minimum_height: INTEGER is 100
+	Minimum_height: INTEGER = 100
 			-- Minimum height of dialog
 
-	set_font_on_buttons is
+	set_font_on_buttons
 			-- Set the font on the buttons.
 		require else
 			button_font_not_void: button_font /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			apply_button.set_font (windows_font.wel_font)
 		end
 
-	set_font_on_text is
+	set_font_on_text
 			-- Set the font on the `selection_edit'
 		require else
 			text_font_not_void: text_font /= Void
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			selection_edit.set_font (windows_font.wel_font)
 		end
 
-	total_buttons_width: INTEGER is
+	total_buttons_width: INTEGER
 			-- Total width of the buttons.
 		local
 			number_of_buttons_shown: INTEGER
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_font_on_label is
+	set_font_on_label
 			-- Set the font on the `selection_label'.
 		require else
 			label_font_not_void: label_font /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			selection_static.set_font (windows_font.wel_font)
 		end
 
-	dialog_width: INTEGER is
+	dialog_width: INTEGER
 			-- Width of the dialog
 		do
 			Result := total_buttons_width.max (label_width.max (Minimum_width))
@@ -273,13 +273,13 @@ feature {NONE} -- Implementation
 			result_greater_equal_minimum: Result >= Minimum_width
 		end
 
-	label_width: INTEGER is
+	label_width: INTEGER
 			-- Width of the label
 		do
 			Result := text_width (selection_label, label_font) + 4 * Dialog_unit
 		end
 
-	label_height: INTEGER is
+	label_height: INTEGER
 			-- Height of the `selection_label'
 		do
 			if the_selection_text /= Void then
@@ -288,14 +288,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dialog_height: INTEGER is
+	dialog_height: INTEGER
 			-- Height of the dialog
 		do
 			Result := (selection_edit.height + button_height +
 				label_height + 6 * Dialog_unit).max (minimum_height)
 		end
 
-	reposition_children is
+	reposition_children
 			-- Move the children if necessary.
 		require else
 			exists: exists
@@ -306,13 +306,13 @@ feature {NONE} -- Implementation
 			set_text_on_control (selection_label, selection_static)
 		end
 
-	determine_focus is
+	determine_focus
 			-- Focus on the default
 		do
 			selection_edit.set_focus
 		end
 
-	reposition_selection_label is
+	reposition_selection_label
 			-- Reposition the and resize `selection_edit'
 		require
 			selection_static_not_void: selection_static /= Void
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 				client_rect.width - 4 * Dialog_unit, selection_static.height, True)
 		end
 
-	reposition_selection_edit is
+	reposition_selection_edit
 			-- Reposition and resize the `selection_label'
 		require
 			selection_edit_not_void: selection_edit /= Void
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 				selection_edit.height, True)
 		end
 
-	reposition_buttons is
+	reposition_buttons
 			-- Move the buttons if necessary.
 		require else
 			ok_button_exists: ok_button.exists
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_buttons is
+	resize_buttons
 			-- Resize the buttons according to the button
 			-- which is visible and has the largest label.
 		require else
@@ -405,21 +405,21 @@ feature {NONE} -- Implementation
 				b_height.min (Maximum_window_height))
 		end
 
-	resize_selection_label is
+	resize_selection_label
 			-- Resize the `selection_static'.
 		do
 			selection_static.resize (label_width.min (Maximum_window_width),
 				label_height.min (Maximum_window_height))
 		end
 
-	resize_selection_edit is
+	resize_selection_edit
 			-- Resize the `selection_edit'
 		do
 			selection_edit.resize (selection_edit_width.min (Maximum_window_width),
 				selection_edit_height.min (Maximum_window_height))
 		end
 
-	selection_edit_width: INTEGER is
+	selection_edit_width: INTEGER
 			-- Width of the `selection_edit'
 		local
 			s: STRING
@@ -428,13 +428,13 @@ feature {NONE} -- Implementation
 			Result := (text_width (s, text_font)).max (Minimum_width)
 		end
 
-	selection_edit_height: INTEGER is
+	selection_edit_height: INTEGER
 			-- Height of the `selection_edit'
 		do
 			Result := text_height ("Y", text_font) + Dialog_unit
 		end
 
-	update_visibility is
+	update_visibility
 			-- Update visibilty of buttons
 		do
 			standard_update_visibility
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_children is
+	resize_children
 			-- Resize the children if necessary.
 		do
 			resize_buttons
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			resize_selection_edit
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- Perform the "ok action" when user
 			-- hits return key.
 		do
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_control_id_command (an_id: INTEGER) is
+	on_control_id_command (an_id: INTEGER)
 		do
 			inspect
 				an_id
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_default_attributes is
+	set_default_attributes
 			-- Set the attributes before creation
 		local
 			default_font: FONT
@@ -510,14 +510,14 @@ feature {NONE} -- Implementation
 			alignment := Left_alignment
 		end
 
-	create_buttons is
+	create_buttons
 			-- Create the buttons and hide them if necessary.
 		do
 			create apply_button.make (Current, apply_label, 0, 0, 0, 0, apply_id)
 			create_default_buttons
 		end
 
-	create_controls is
+	create_controls
 			-- Create the controls for this dialog.
 		local
 			a_dc: WEL_CLIENT_DC
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			set_selection_label (selection_label)
 		end
 
-	set_default_button is
+	set_default_button
 			-- Set the default button for the dialog.
 		local
 			default_button_set: BOOLEAN
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_fonts is
+	set_fonts
 			-- Set the font's on the controls.
 		do
 			set_button_font (button_font)
@@ -577,13 +577,13 @@ feature {NONE} -- Implementation
 			set_label_font (label_font)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionPromptDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

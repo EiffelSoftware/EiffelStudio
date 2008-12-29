@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry keys constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status
 
-	basic_valid_value_for_hkey (value: POINTER): BOOLEAN is
+	basic_valid_value_for_hkey (value: POINTER): BOOLEAN
 		-- Return True if 'value' is one of the basic following values.
 		do
 			if
@@ -26,7 +26,7 @@ feature -- Status
 			end
 		end
 
-	basic_valid_name_for_hkey (name: STRING_GENERAL): BOOLEAN is
+	basic_valid_name_for_hkey (name: STRING_GENERAL): BOOLEAN
 			-- Return True if 'name' correspond to one of the
 			-- value names below.
 		require
@@ -49,7 +49,7 @@ feature -- Status
 			end
 		end
 
-	index_value_for_root_keys (name: STRING_GENERAL): POINTER is
+	index_value_for_root_keys (name: STRING_GENERAL): POINTER
 			-- Return the index corresponding to a root key.
 		require
 			name_not_void: name /= Void
@@ -78,56 +78,56 @@ feature -- Status
 
 feature -- Access
 
-	frozen Hkey_classes_root: POINTER is
+	frozen Hkey_classes_root: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CLASSES_ROOT"
 		end
 
-	frozen Hkey_current_user: POINTER is
+	frozen Hkey_current_user: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_USER"
 		end
 
-	frozen Hkey_local_machine: POINTER is
+	frozen Hkey_local_machine: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_LOCAL_MACHINE"
 		end
 
-	frozen Hkey_users: POINTER is
+	frozen Hkey_users: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_USERS"
 		end
 
-	frozen Hkey_performance_data: POINTER is
+	frozen Hkey_performance_data: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_PERFORMANCE_DATA"
 		end
 
-	frozen Hkey_current_config: POINTER is
+	frozen Hkey_current_config: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_CONFIG"
 		end
 
-	frozen Hkey_dyn_data: POINTER is
+	frozen Hkey_dyn_data: POINTER
 		external
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_DYN_DATA"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

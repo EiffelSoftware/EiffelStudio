@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide common attributes for transport mechanisms."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access EV_PICK_AND_DROPABLE.
 
-	default_accept_cursor: EV_POINTER_STYLE is
+	default_accept_cursor: EV_POINTER_STYLE
 			-- Used in lieu of a user defined `accept_cursor'.
 		once
 			Result := Default_pixmaps.Standard_cursor
 		end
 
-	default_deny_cursor: EV_POINTER_STYLE is
+	default_deny_cursor: EV_POINTER_STYLE
 			-- Used in lieu of a user defined `deny_cursor'.
 		once
 			Result := Default_pixmaps.No_cursor
@@ -25,7 +25,7 @@ feature -- Access EV_PICK_AND_DROPABLE.
 	rubber_band_is_drawn: BOOLEAN
 			-- Is a rubber band line currently on the screen?
 
-	global_pnd_targets: HASH_TABLE [INTEGER, INTEGER] is
+	global_pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Shortcut to EV_APPLICATION.pnd_targets.
 		local
 			env: EV_ENVIRONMENT
@@ -34,7 +34,7 @@ feature -- Access EV_PICK_AND_DROPABLE.
 			Result := env.application.implementation.pnd_targets
 		end
 
-	Default_pixmaps: EV_STOCK_PIXMAPS is
+	Default_pixmaps: EV_STOCK_PIXMAPS
 			-- Default pixmaps
 		once
 			create Result
@@ -53,7 +53,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 		-- Original x_offset and original_y_offset of transport
 		-- realtive to widget. Only used for dragable transports.
 
-	global_drag_targets: ARRAYED_LIST [INTEGER] is
+	global_drag_targets: ARRAYED_LIST [INTEGER]
 			-- Shortcut to EV_APPLICATION.pnd_targets.
 		local
 			env: EV_ENVIRONMENT
@@ -62,7 +62,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			Result := env.application.implementation.dockable_targets
 		end
 
-	frozen insert_label: EV_CELL is
+	frozen insert_label: EV_CELL
 			-- Label used to indicate where `Current' will be placed in target.
 		local
 			pixmap: EV_PIXMAP
@@ -82,7 +82,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			result_not_void: Result /= Void
 		end
 
-	insert_label_imp: EV_CELL_I is
+	insert_label_imp: EV_CELL_I
 			-- Once access to implementation of `insert_label'.
 		once
 			Result ?= insert_label.implementation
@@ -90,7 +90,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			Result /= Void
 		end
 
-	remove_insert_label is
+	remove_insert_label
 			-- Remove `insert_label' from its current `parent'.
 			-- We must handle a special case for cells. If the parent is a cell,
 			-- then we remove the cell from its parent, and then restore it.
@@ -129,14 +129,14 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			not_parented: insert_label.parent = Void
 		end
 
-	insert_sep: EV_TOOL_BAR_SEPARATOR is
+	insert_sep: EV_TOOL_BAR_SEPARATOR
 			-- Once access to a separator used to indicate the insertion position
 			-- when moving tool bar items.
 		once
 			Create Result
 		end
 
-	insert_sep_imp: EV_TOOL_BAR_SEPARATOR_I is
+	insert_sep_imp: EV_TOOL_BAR_SEPARATOR_I
 			-- Once access to implementation of `insert_sep'.
 		once
 			Result ?= insert_sep.implementation
@@ -144,7 +144,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			Result /= Void
 		end
 
-	remove_insert_sep is
+	remove_insert_sep
 			-- Ensure `inset_sep' is not parented.
 		do
 			if insert_sep.parent /= Void then
@@ -159,7 +159,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 	 	-- necessary. This is not a local, to avoid it
 	 	-- being garbage collected.
 
-	internal_screen: EV_SCREEN is
+	internal_screen: EV_SCREEN
 			-- Once access to an EV_SCREEN.
 		once
 			create Result
@@ -171,7 +171,7 @@ feature -- Access common.
 
 	pointer_x, pointer_y: INTEGER_16;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

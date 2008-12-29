@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"An unix stream socket."
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make an unix socket stream.
 		do
 			c_reset_error
@@ -49,7 +49,7 @@ feature -- Initialization
 			make_socket
 		end;
 
-	make_client (a_peer: STRING) is
+	make_client (a_peer: STRING)
 			-- Create an unix stream client socket with peer
 			-- address set to `a_peer'.
 		require
@@ -60,7 +60,7 @@ feature -- Initialization
 			peer_address.set_path (a_peer.twin)
 		end;
 
-	make_server (a_name: STRING) is
+	make_server (a_name: STRING)
 			-- Create an unix stream server socket bound to local
 			-- address `a_name'.
 		require
@@ -72,7 +72,7 @@ feature -- Initialization
 			bind
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

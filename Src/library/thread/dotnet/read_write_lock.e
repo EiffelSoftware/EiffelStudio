@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Read/Write synchronization object, allows multiple reader threads to have %
 		%access to a resource, and only one writer thread."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Create read/write lock.
 		obsolete
 			"Use make instead"
@@ -33,7 +33,7 @@ feature -- Initialization
 			item_set: is_set
 		end
 
-	make is
+	make
 			-- Create read/write lock.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is read/write lock initialized?
 		do
 			Result := (item /= Void)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status setting
 
-	acquire_read_lock is
+	acquire_read_lock
 			-- Lock current on a read.
 		require
 			exists: is_set
@@ -62,7 +62,7 @@ feature -- Status setting
 			item.acquire_reader_lock (-1)
 		end
 
-	acquire_write_lock is
+	acquire_write_lock
 			-- Lock current on a write.
 		require
 			exists: is_set
@@ -71,7 +71,7 @@ feature -- Status setting
 			item.acquire_writer_lock (-1)
 		end
 
-	release_reader_lock is
+	release_reader_lock
 			-- Unlock Reader lock.
 		require
 			exists: is_set
@@ -79,7 +79,7 @@ feature -- Status setting
 			item.release_reader_lock
 		end
 
-	release_writer_lock is
+	release_writer_lock
 			-- Unlock writer lock.
 		require
 			exists: is_set
@@ -87,7 +87,7 @@ feature -- Status setting
 			item.release_writer_lock
 		end
 
-	destroy is
+	destroy
 			-- Destroy read/write lock.
 		require
 			exists: is_set
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

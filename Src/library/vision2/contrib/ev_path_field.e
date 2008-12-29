@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provide a text field with a browse button on its right."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,20 +19,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a widget that is made to browse for directory.
 		do
 			make_with_text (Void)
 		end
 
-	make_with_text (t: STRING_GENERAL) is
+	make_with_text (t: STRING_GENERAL)
 			-- Create a widget that is made to browse for directory.
 		do
 			default_create
 			build_widget (t)
 		end
 
-	make_with_parent (win: like parent_window) is
+	make_with_parent (win: like parent_window)
 			-- Create a widget that is made to browse for directory.
 		require
 			win_not_void: win /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			make_with_text_and_parent (Void, win)
 		end
 
-	make_with_text_and_parent (t: STRING_GENERAL; win: like parent_window) is
+	make_with_text_and_parent (t: STRING_GENERAL; win: like parent_window)
 			-- Create a widget that is made to browse for directory.
 		require
 			win_not_void: win /= Void
@@ -56,7 +56,7 @@ feature -- Access
 	field: EV_TEXT_FIELD
 			-- Text field holding path value.
 
-	parent_window: EV_WINDOW is
+	parent_window: EV_WINDOW
 			-- Window to which browsing dialog will be modal.
 		do
 			Result := internal_parent_window
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status
 
-	text, path: STRING_32 is
+	text, path: STRING_32
 			-- Current path set by user.
 		require
 			not_destroyed: not is_destroyed
@@ -84,13 +84,13 @@ feature -- Status
 
 feature -- Settings
 
-	set_parent_window (win: EV_WINDOW) is
+	set_parent_window (win: EV_WINDOW)
 			-- Set `internal_parent_window' with `win'
 		do
 			internal_parent_window := win
 		end
 
-	set_text, set_path (p: STRING_GENERAL) is
+	set_text, set_path (p: STRING_GENERAL)
 			-- Assign `p' to `path'.
 		require
 			not_destroyed: not is_destroyed
@@ -101,7 +101,7 @@ feature -- Settings
 			path_set: path.is_equal (p)
 		end
 
-	set_browse_for_file (filter: STRING_GENERAL) is
+	set_browse_for_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		obsolete "Please use `set_browse_for_open_file' or `set_browse_for_save_file' ."
@@ -109,7 +109,7 @@ feature -- Settings
 			set_browse_for_open_file (filter)
 		end
 
-	set_browse_for_open_file (filter: STRING_GENERAL) is
+	set_browse_for_open_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -117,7 +117,7 @@ feature -- Settings
 			browse_button.select_actions.extend (agent browse_for_open_file (filter))
 		end
 
-	set_browse_for_save_file (filter: STRING_GENERAL) is
+	set_browse_for_save_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -125,7 +125,7 @@ feature -- Settings
 			browse_button.select_actions.extend (agent browse_for_save_file (filter))
 		end
 
-	set_browse_for_directory is
+	set_browse_for_directory
 			-- Force directory browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -133,7 +133,7 @@ feature -- Settings
 			browse_button.select_actions.extend (agent browse_for_directory)
 		end
 
-	set_default_start_directory (t: STRING_32) is
+	set_default_start_directory (t: STRING_32)
 			-- Set Default start directory for browsing dialog
 		do
 			default_start_directory := t
@@ -141,7 +141,7 @@ feature -- Settings
 
 feature -- Removal
 
-	remove_text, remove_path is
+	remove_text, remove_path
 			-- Remove printed path from screen.
 		do
 			field.remove_text
@@ -151,7 +151,7 @@ feature -- Removal
 
 feature {NONE} -- GUI building
 
-	build_widget (t: STRING_GENERAL) is
+	build_widget (t: STRING_GENERAL)
 			-- Create Current using `t' as text label.
 		local
 			l_label: EV_LABEL
@@ -180,7 +180,7 @@ feature {NONE} -- GUI building
 	browse_button: EV_BUTTON
 			-- Browse for a file or a directory.
 
-	browse_for_directory is
+	browse_for_directory
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
@@ -203,19 +203,19 @@ feature {NONE} -- GUI building
 			end
 		end
 
-	browse_for_save_file (filter: STRING_GENERAL) is
+	browse_for_save_file (filter: STRING_GENERAL)
 			-- Popup a "select save file" dialog
 		do
 			browse_for_file (filter, True)
 		end
 
-	browse_for_open_file (filter: STRING_GENERAL) is
+	browse_for_open_file (filter: STRING_GENERAL)
 			-- Popup a "select open file" dialog
 		do
 			browse_for_file (filter, False)
 		end
 
-	browse_for_file (filter: STRING_GENERAL; allow_new: BOOLEAN) is
+	browse_for_file (filter: STRING_GENERAL; allow_new: BOOLEAN)
 			-- Popup a open or save "select file" dialog according to `allow_new' value
 		local
 			fd: EV_FILE_DIALOG
@@ -245,7 +245,7 @@ feature {NONE} -- GUI building
 			end
 		end
 
-	start_directory: STRING_32 is
+	start_directory: STRING_32
 			-- Start directory for browsing dialog.
 		do
 			Result := field.text
@@ -256,11 +256,11 @@ feature {NONE} -- GUI building
 
 feature {NONE} -- Interface names
 
-	Label_browse: STRING is "Browse..."
-	Label_select_directory: STRING is "Select a directory"
-	Label_select_file: STRING is "Select a file"
-	Label_all_files: STRING is "All Files (*.*)"
-	Label_files_of_type (f: STRING_GENERAL): STRING_32 is
+	Label_browse: STRING = "Browse..."
+	Label_select_directory: STRING = "Select a directory"
+	Label_select_file: STRING = "Select a file"
+	Label_all_files: STRING = "All Files (*.*)"
+	Label_files_of_type (f: STRING_GENERAL): STRING_32
 		require
 			f_not_void: f /= Void
 		do
@@ -271,7 +271,7 @@ feature {NONE} -- Interface names
 
 feature {NONE} -- Parent window
 
-	parent_window_of (w: EV_WIDGET): EV_WINDOW is
+	parent_window_of (w: EV_WIDGET): EV_WINDOW
 			-- Window to which browsing dialog will be modal.
 		do
 			if w /= Void then
@@ -289,7 +289,7 @@ invariant
 	field_not_void: field /= Void
 	browse_button_not_void: browse_button /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

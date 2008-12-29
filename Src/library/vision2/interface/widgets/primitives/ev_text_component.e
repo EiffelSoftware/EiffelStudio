@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Eiffel Vision text component. Base class for text editing widgets.
@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Number of characters making up `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -42,7 +42,7 @@ feature -- Access
 			Result_not_negative: Result >= 0
 		end
 
-	selected_text: STRING_32 is
+	selected_text: STRING_32
 			-- Currently selected text.
 		require
 			not_destroyed: not is_destroyed
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is `text' editable?
 		require
 			not_destroyed: not is_destroyed
@@ -65,7 +65,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_editable
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of caret.
 		require
 			not_destroyed: not is_destroyed
@@ -75,7 +75,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.caret_position
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Does current have a selection?
 		require
 			not_destroyed: not is_destroyed
@@ -85,7 +85,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.has_selection
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of first selected character.
 		require
 			not_destroyed: not is_destroyed
@@ -98,7 +98,7 @@ feature -- Status report
 			consistent_with_selection_end: selection_end >= Result
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of last character selected.
 		require
 			not_destroyed: not is_destroyed
@@ -111,7 +111,7 @@ feature -- Status report
 			consistent_with_selection_start: Result >= selection_start
 		end
 
-	valid_caret_position (pos: INTEGER): BOOLEAN is
+	valid_caret_position (pos: INTEGER): BOOLEAN
 			-- Is `pos' a valid caret position?
 		require
 			not_destroyed: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_edit is
+	enable_edit
 			-- Make `Current' editable.
 		require
 			not_destroyed: not is_destroyed
@@ -133,7 +133,7 @@ feature -- Status setting
 			is_editable: is_editable
 		end
 
-	disable_edit is
+	disable_edit
 			-- Make `Current' read-only.
 		require
 			not_destroyed: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status setting
 			is_editable: not is_editable
 		end
 
-	set_caret_position (a_caret_position: INTEGER) is
+	set_caret_position (a_caret_position: INTEGER)
 			-- Assign `a_caret_position' to `caret_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -156,7 +156,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_text (a_text: STRING_GENERAL) is
+	insert_text (a_text: STRING_GENERAL)
 			-- Insert `a_text' to right of `caret_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Element change
 			caret_not_moved: old caret_position = caret_position
 		end
 
-	append_text (a_text: STRING_GENERAL) is
+	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Element change
 			caret_not_moved: old caret_position = caret_position
 		end
 
-	prepend_text (a_text: STRING_GENERAL) is
+	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -199,7 +199,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	set_minimum_width_in_characters (nb: INTEGER) is
+	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make a minimum of `nb' of the widest character visible
 			-- on one line.
 		require
@@ -215,7 +215,7 @@ feature -- Resizing
 
 feature -- Basic operation
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select text between `start_pos' and `end_pos' inclusive.
 		require
 			not_destroyed: not is_destroyed
@@ -230,7 +230,7 @@ feature -- Basic operation
 				selection_start = end_pos and selection_end = start_pos
 		end
 
-	select_all is
+	select_all
 			-- Select all text.
 		require
 			not_destroyed: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Basic operation
 			selection_end_set: selection_end = text_length
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect current selection.
 		require
 			not_destroyed: not is_destroyed
@@ -255,7 +255,7 @@ feature -- Basic operation
 			not_has_selection: not has_selection
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete current selection.
 		require
 			not_destroyed: not is_destroyed
@@ -270,7 +270,7 @@ feature -- Basic operation
 				(old selection_end + 1, (old text).count))
 		end
 
-	cut_selection is
+	cut_selection
 			-- Move `selected_text' to clipboard.
 		require
 			not_destroyed: not is_destroyed
@@ -286,7 +286,7 @@ feature -- Basic operation
 				(old selection_end + 1, (old text).count))
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy `selected_text' to clipboard.
 		require
 			not_destroyed: not is_destroyed
@@ -299,7 +299,7 @@ feature -- Basic operation
 			caret_not_moved: caret_position = old caret_position
 		end
 
-	paste (a_position: INTEGER) is
+	paste (a_position: INTEGER)
 			-- Insert text from `clipboard' at `a_position'.
 			-- No effect if clipboard is empty.
 		require
@@ -323,19 +323,19 @@ feature -- Basic operation
 
 feature {NONE} -- Contract support
 
-	maximum_character_width: INTEGER is
+	maximum_character_width: INTEGER
 			-- Maximum width of a single character in `Current'.
 		do
 			Result := implementation.maximum_character_width
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is contents of the clipboard.
 		do
 			Result := implementation.clipboard_content
 		end
 
-	check_text_modification (old_text, added_text: STRING_32): BOOLEAN is
+	check_text_modification (old_text, added_text: STRING_32): BOOLEAN
 			-- Ensure that `text' is equal to `old_text' + `added_text' with
 			-- all %R removed.
 		do
@@ -343,7 +343,7 @@ feature {NONE} -- Contract support
 			Result := text.is_equal (old_text + added_text)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and text.is_empty and
@@ -362,7 +362,7 @@ invariant
 	selection_consistent: has_selection implies text.substring (selection_start, selection_end).is_equal (selected_text)
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

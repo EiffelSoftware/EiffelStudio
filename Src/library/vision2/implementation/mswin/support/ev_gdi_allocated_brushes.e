@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		" EiffelVision utility used to retrieve an allocated WEL item. %
 		% This class has been created in order to decrease the number of %
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	get (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF): WEL_BRUSH is
+	get (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF): WEL_BRUSH
 			-- `Result' is WEL_BRUSH with `a_pattern' as pattern
 			-- and `a_color' as color.
 			--| If an identical brush exists in our system then we return that
@@ -69,7 +69,7 @@ feature -- Access
 			Result_exists: Result /= Void and then Result.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

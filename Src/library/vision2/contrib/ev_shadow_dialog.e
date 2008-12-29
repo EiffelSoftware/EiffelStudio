@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A dialog have a drop down shadow. Now the shadow effect it's only supported on Windows Xp."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 create
 	default_create
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

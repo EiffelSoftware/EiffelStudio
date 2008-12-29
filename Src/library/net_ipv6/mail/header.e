@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contains all the information relative to any header.%
 				  % Headers can only have email addresses informations."
 	legal: "See notice at end of class."
@@ -15,14 +15,14 @@ create
 
 feature -- Initialization
 
-	make (item: STRING) is
+	make (item: STRING)
 			-- Initialize the header with one 'item'.
 		do
 			create entries.make (1)
 			entries.extend (item)
 		end
 
-	make_with_entries (list: ARRAY [STRING]) is
+	make_with_entries (list: ARRAY [STRING])
 			-- Initialize the header with a 'list' of entries.
 		do
 			create entries.make (list.count)
@@ -42,7 +42,7 @@ feature -- Status report
 	multiple_entries: BOOLEAN
 		-- Has the header multiple entries.
 
-	unique_entry: STRING is
+	unique_entry: STRING
 			-- Entry,
 			-- Useful if not multiple entries.
 		require
@@ -53,20 +53,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_multiple_entries is
+	enable_multiple_entries
 			-- Enable multiple entries.
 		do
 			multiple_entries:= True
 		end
 
-	enable_contains_addresses is
+	enable_contains_addresses
 		do
 			contains_addresses:= True
 		end
 
 feature -- Basic operations
 
-	add_entry (s: STRING) is
+	add_entry (s: STRING)
 			-- Add a new entry 's' to the header.
 		do
 			if not multiple_entries and entries.count > 0 then
@@ -78,7 +78,7 @@ feature -- Basic operations
 			entry_inserted: entries.has (s)
 		end
 
-	add_entries (list: ARRAY [STRING]) is
+	add_entries (list: ARRAY [STRING])
 			-- Add multiple entries at once.
 		require
 			entries_exist: entries /= Void
@@ -89,7 +89,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_entry (entry: STRING) is
+	remove_entry (entry: STRING)
 			-- Remove 'entry'
 		require
 			has_entry: entries.has (entry)
@@ -97,7 +97,7 @@ feature -- Basic operations
 			entries.prune (entry)
 		end
 
-	remove_i_th_entry (i: INTEGER) is
+	remove_i_th_entry (i: INTEGER)
 			-- Remove 'i'-th entry.
 		require
 			valid_index: entries.valid_cursor_index (i)
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 	contains_addresses: BOOLEAN
 			-- Does header contain addresses?
 
-	from_array_to_entries (src: ARRAY [STRING]) is
+	from_array_to_entries (src: ARRAY [STRING])
 			-- Convert 'array' into entries.
 		require
 			entries_exists: entries /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

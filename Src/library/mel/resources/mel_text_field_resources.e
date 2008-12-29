@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Text Field defines"
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNcursorPosition: POINTER is
+	XmNcursorPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNcursorPosition"
 		end;
 
-	XmNeditable: POINTER is
+	XmNeditable: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNeditable"
 		end;
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNmaxLength: POINTER is
+	XmNmaxLength: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNmaxLength"
 		end;
 
-	XmNvalue: POINTER is
+	XmNvalue: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNvalue"
 		end;
 
-	XmNvalueWcs: POINTER is
+	XmNvalueWcs: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNvalueWcs"
 		end;
 
-	XmNverifyBell: POINTER is
+	XmNverifyBell: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNverifyBell"
 		end;
 
-	XmNpendingDelete: POINTER is
+	XmNpendingDelete: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNpendingDelete"
 		end;
 
-	XmNselectionArray: POINTER is
+	XmNselectionArray: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNselectionArray"
 		end;
 
-	XmNselectionArrayCount: POINTER is
+	XmNselectionArrayCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNselectionArrayCount"
 		end;
 
-	XmNselectThreshold: POINTER is
+	XmNselectThreshold: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNselectThreshold"
 		end;
 
-	XmNblinkRate: POINTER is
+	XmNblinkRate: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNblinkRate"
 		end;
 
-	XmNcolumns: POINTER is
+	XmNcolumns: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNcolumns"
 		end;
 
-	XmNcursorPositionVisible: POINTER is
+	XmNcursorPositionVisible: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNcursorPositionVisible"
 		end;
 
-	XmNresizeWidth: POINTER is
+	XmNresizeWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNresizeWidth"
 		end;
 
-	XmNactivateCallback: POINTER is
+	XmNactivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNactivateCallback"
 		end;
 
-	XmNfocusCallback: POINTER is
+	XmNfocusCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNfocusCallback"
 		end;
 
-	XmNgainPrimaryCallback: POINTER is
+	XmNgainPrimaryCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNgainPrimaryCallback"
 		end;
 
-	XmNlosePrimaryCallback: POINTER is
+	XmNlosePrimaryCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmNlosePrimaryCallback"
 		end;
 
-	XmNlosingFocusCallback: POINTER is
+	XmNlosingFocusCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmNlosingFocusCallback"
 		end;
 
-	XmNmodifyVerifyCallback: POINTER is
+	XmNmodifyVerifyCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmNmodifyVerifyCallback"
 		end;
 
-	XmNmodifyVerifyCallbackWcs: POINTER is
+	XmNmodifyVerifyCallbackWcs: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmNmodifyVerifyCallbackWcs"
 		end;
 
-	XmNmotionVerifyCallback: POINTER is
+	XmNmotionVerifyCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmNmotionVerifyCallback"
 		end;
 
-	XmNvalueChangedCallback: POINTER is
+	XmNvalueChangedCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/TextF.h>]: EIF_POINTER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmNvalueChangedCallback"
 		end;
 
-	XmSELECT_POSITION: INTEGER is
+	XmSELECT_POSITION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/TextF.h>]: EIF_INTEGER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmSELECT_POSITION"
 		end;
 
-	XmSELECT_WORD: INTEGER is
+	XmSELECT_WORD: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/TextF.h>]: EIF_INTEGER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"XmSELECT_WORD"
 		end;
 
-	XmSELECT_LINE: INTEGER is
+	XmSELECT_LINE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/TextF.h>]: EIF_INTEGER"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"XmSELECT_LINE"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actions used by the various 'formatting' elements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Time related actions
 
-	hour_12_padded_action (a_time: TIME): STRING_32 is
+	hour_12_padded_action (a_time: TIME): STRING_32
 			-- Returns  Hours with leading zeros for
 			-- single-digit hours (12-hour clock).
 			-- associated to formatting character `hour_12_padded'
@@ -34,7 +34,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	hour_12_action (a_time: TIME): STRING_32 is
+	hour_12_action (a_time: TIME): STRING_32
 			-- Returns Hours without leading zeros
 			-- for single-digit hours (12-hour clock).
 			-- associated to formatting character `hour_12'
@@ -50,7 +50,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	hour_24_action (a_time: TIME): STRING_32 is
+	hour_24_action (a_time: TIME): STRING_32
 			-- Returns Hours without leading zeros
 			-- for single-digit hours (24-hour clock)
 			-- associated to formatting character `hour_24'
@@ -62,7 +62,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	hour_24_padded_action (a_time: TIME): STRING_32 is
+	hour_24_padded_action (a_time: TIME): STRING_32
 			-- Returns Hours with leading zeros
 			-- for single-digit hours (24-hour clock)
 			-- associated to `'
@@ -75,7 +75,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	minutes_action (a_time: TIME): STRING_32 is
+	minutes_action (a_time: TIME): STRING_32
 			-- Returns  Minutes without leading
 			-- zeros for single-digit minutes.
 			-- associated to formatting character `minutes'
@@ -87,7 +87,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	minutes_padded_action (a_time: TIME): STRING_32 is
+	minutes_padded_action (a_time: TIME): STRING_32
 			-- Returns the minute as a decimal number
 			-- with leading zeros for single-digit minutes.
 			-- associated to formatting character `minutes_padded'
@@ -99,7 +99,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	seconds_action (a_time: TIME): STRING_32 is
+	seconds_action (a_time: TIME): STRING_32
 			-- Returns seconds without leading zeros for single-digit seconds.
 			-- associated to formatting character `seconds'
 		require
@@ -110,7 +110,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	seconds_padded_action (a_time: TIME): STRING_32 is
+	seconds_padded_action (a_time: TIME): STRING_32
 			-- Returns seconds with leading zeros for single-digit seconds.
 			-- associated to formatting character `seconds_padded'
 		require
@@ -121,7 +121,7 @@ feature -- Time related actions
 			result_exists: Result /= Void
 		end
 
-	am_pm_1_action (a_time: TIME): STRING_32 is
+	am_pm_1_action (a_time: TIME): STRING_32
 			-- Returns one-character time marker string. (Am/pm -> a/p)
 			-- associated to formatting character `am_pm_1'
 		require
@@ -138,7 +138,7 @@ feature -- Time related actions
 							(a_time.hour > 12 implies Result.is_equal ("p"))
 		end
 
-	am_pm_lowercase_action (a_time: TIME; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	am_pm_lowercase_action (a_time: TIME; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns multi-character time marker string  Lowercase
 			-- associated to formatting character `am_pm_lowercase'
 		require
@@ -158,7 +158,7 @@ feature -- Time related actions
 			is_lower: Result.is_valid_as_string_8 implies Result.as_lower.is_equal (Result)
 		end
 
-	am_pm_uppercase_action (a_time: TIME; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	am_pm_uppercase_action (a_time: TIME; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns multi-character time marker string (Uppercase)
 			-- associated to formatting character `am_pm_uppercase'
 		require
@@ -180,7 +180,7 @@ feature -- Time related actions
 
 feature -- Date related actions
 
-	day_of_month_action (a_date: DATE): STRING_32 is
+	day_of_month_action (a_date: DATE): STRING_32
 			-- Returns day of the month as digits without
 			-- leading zeros for single digit days.
 			-- associated to formatting character `day_of_month'
@@ -192,7 +192,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	day_of_month_padded_action (a_date: DATE): STRING_32 is
+	day_of_month_padded_action (a_date: DATE): STRING_32
 			-- Returns the day of the month as a decimal number (range 01 to 31)
 			-- associated to formatting character `day_of_month_padded'
 		require
@@ -203,7 +203,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	abbreviated_day_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	abbreviated_day_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns the abbreviated day name
 			-- associated to formatting character `abbreviated_day_name'
 		require
@@ -215,7 +215,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	day_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	day_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns the abbreviated day name
 			-- associated to formatting character `day_name'
 		require
@@ -227,7 +227,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	day_of_year_action (a_date: DATE): STRING_32 is
+	day_of_year_action (a_date: DATE): STRING_32
 			-- Returns the day of the year as a decimal number (range 001 366)
 			-- associated to formatting character `day_of_year'
 		require
@@ -238,7 +238,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	day_of_week_action (a_date: DATE): STRING_32 is
+	day_of_week_action (a_date: DATE): STRING_32
 			-- Retunr the fay of the weel as a decimal number,
 			-- range 1 to 7, Monday being 1
 			-- associated to formatting character `day_of_week'
@@ -250,7 +250,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	day_of_week_0_action (a_date: DATE): STRING_32 is
+	day_of_week_0_action (a_date: DATE): STRING_32
 			-- Returns the day of the week as a decimal,
 			-- range 0 to 6, Sunday being 0.
 			-- associated to formatting character `day_of_week_0'
@@ -262,7 +262,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	month_action (a_date: DATE): STRING_32 is
+	month_action (a_date: DATE): STRING_32
 			-- Returns month as digits without leading zeros for single digit months.
 			-- associated to formatting character `month'
 		require
@@ -273,7 +273,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	month_padded_action (a_date: DATE): STRING_32 is
+	month_padded_action (a_date: DATE): STRING_32
 			-- Returns the month as a decimal number (range 01 to 12).
 			-- associated to formatting character `month_padded'
 		require
@@ -284,7 +284,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	abbreviated_month_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	abbreviated_month_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns the abbreviated month name
 			-- associated to formatting character `abbreviated_month_name'
 		require
@@ -296,7 +296,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	month_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32 is
+	month_name_action (a_date: DATE; a_locale_info: I18N_LOCALE_INFO): STRING_32
 			-- Returns the full month name
 			-- associated to formatting character `month_name'
 		require
@@ -308,7 +308,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	century_number_action (a_date: DATE): STRING_32 is
+	century_number_action (a_date: DATE): STRING_32
 			-- Returns the century number (year/100) as a 2-digit integer
 			-- associated to formatting character `century_number'
 		require
@@ -319,7 +319,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	week_number_iso_action (a_date: DATE): STRING_32 is
+	week_number_iso_action (a_date: DATE): STRING_32
 			-- Returns the ISO 8601:1988 week number of the current year as a decimal number,
 			-- range 01 to 53, where week 1 is the first
 			-- associated to formatting character `week_number_iso'
@@ -331,7 +331,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	week_number_sunday_as_first_action (a_date: DATE): STRING_32 is
+	week_number_sunday_as_first_action (a_date: DATE): STRING_32
 			-- Returns the week number of the current year as a decimal number, range 00 to 53,
 			-- starting with the first Monday as the first day of week 01
 			-- associated to formatting character `week_number_sunday'
@@ -343,7 +343,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	week_number_monday_as_first_action (a_date: DATE): STRING_32 is
+	week_number_monday_as_first_action (a_date: DATE): STRING_32
 			-- Not supported, result is the same as `week_number_sunday_as_first_action'
 			-- associated to formatting character `week_number_monday'
 		require
@@ -354,7 +354,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	iso_year_with_century_action (a_date: DATE): STRING_32 is
+	iso_year_with_century_action (a_date: DATE): STRING_32
 			-- Same result as Year_4_action
 			-- associated to formatting character `iso_year_with_century'
 		require
@@ -365,7 +365,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	iso_year_without_century_action (a_date: DATE): STRING_32 is
+	iso_year_without_century_action (a_date: DATE): STRING_32
 			-- Same result as Year_2_action
 			-- associated to formatting character `iso_year_without_century'
 		require
@@ -376,7 +376,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-	year_1_action (a_date: DATE): STRING_32 is
+	year_1_action (a_date: DATE): STRING_32
 			--  Year represented only by the last digit.
 			-- associated to formatting character `year_1'
 		require
@@ -388,7 +388,7 @@ feature -- Date related actions
 			correct_lenght: Result.count = 1
 		end
 
-	year_2_action (a_date: DATE): STRING_32 is
+	year_2_action (a_date: DATE): STRING_32
 			--  Returns the year as a decimal number without a century (range 00 to 99).
 			-- associated to formatting character `year_2'
 		require
@@ -400,7 +400,7 @@ feature -- Date related actions
 			correct_lenght: Result.count = 2
 		end
 
-	year_4_action (a_date: DATE): STRING_32 is
+	year_4_action (a_date: DATE): STRING_32
 			-- Returns the Year represented by full four or five digits, depending on the calendar used.
 			-- associated to formatting character `year_4'
 		require
@@ -411,7 +411,7 @@ feature -- Date related actions
 			result_exists: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

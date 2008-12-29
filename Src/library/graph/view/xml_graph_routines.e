@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Common routines for XML extraction, saving and deserialization
 		]"
@@ -31,13 +31,13 @@ create {EG_XML_STORABLE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an XML_ROUTINE
 		do
 			create valid_tag_read_actions
 		end
 
-	make (a_relative_window: like relative_window) is
+	make (a_relative_window: like relative_window)
 			-- Initialization
 		require
 			non_void_relative_window: a_relative_window /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Access
 
 feature {EG_XML_STORABLE} -- Access
 
-	number_of_tags (node: XM_ELEMENT): INTEGER is
+	number_of_tags (node: XM_ELEMENT): INTEGER
 			-- Number of tags in node and all childrens of node.
 		require
 			node_not_void: node /= Void
@@ -92,7 +92,7 @@ feature {EG_XML_STORABLE} -- Status report
 
 feature {EG_XML_STORABLE} -- Status setting
 
-	reset_valid_tags is
+	reset_valid_tags
 			-- Reset `valid_tags'.
 		do
 			valid_tags := 0
@@ -100,7 +100,7 @@ feature {EG_XML_STORABLE} -- Status setting
 			valid_tags_is_nul: valid_tags = 0
 		end
 
-	valid_tags_read is
+	valid_tags_read
 			-- A valid tag was just read.
 		do
 			valid_tags := valid_tags + 1
@@ -111,7 +111,7 @@ feature {EG_XML_STORABLE} -- Status setting
 
 feature {EG_XML_STORABLE} -- Processing
 
-	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER is
+	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -132,7 +132,7 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN is
+	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -153,7 +153,7 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE is
+	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -174,7 +174,7 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING is
+	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -189,7 +189,7 @@ feature {EG_XML_STORABLE} -- Processing
 			elem.forth
 		end
 
-	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR is
+	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -231,7 +231,7 @@ feature {EG_XML_STORABLE} -- Processing
 			retry
 		end
 
-	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT is
+	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT
 			-- Find in sub-elemement of `e' an element with tag `n'.
 		require
 			e_not_void: e /= Void
@@ -239,13 +239,13 @@ feature {EG_XML_STORABLE} -- Processing
 			Result := e.element_by_name (n)
 		end
 
-	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA is
+	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA
 			-- New node with `s' as content.
 		do
 			create Result.make (a_parent, s)
 		end
 
-	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT is
+	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT
 			-- New node with `s' as content and named `tag_name'.
 		local
 			l_namespace: XM_NAMESPACE
@@ -257,7 +257,7 @@ feature {EG_XML_STORABLE} -- Processing
 
 feature -- Saving
 
-	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
+	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT)
 			-- Save `a_doc' in `ptf'
 		require
 			file_not_void: a_file_name /= Void
@@ -289,7 +289,7 @@ feature -- Saving
 
 feature -- Deserialization
 
-	deserialize_document (a_file_path: STRING): XM_DOCUMENT is
+	deserialize_document (a_file_path: STRING): XM_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- serialized in `a_file_path'.
 			-- If deserialization fails, return Void.
@@ -323,7 +323,7 @@ feature -- Deserialization
 
 feature {NONE} -- Error management
 
-	display_warning_message (a_warning_msg: STRING) is
+	display_warning_message (a_warning_msg: STRING)
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
@@ -334,7 +334,7 @@ feature {NONE} -- Error management
 			l_warning_window.show
 		end
 
-	display_error_message (an_error_msg: STRING) is
+	display_error_message (an_error_msg: STRING)
 			-- Display `an_error_msg' in an error popup window.
 		require
 			valid_error_message: an_error_msg /= Void and then not an_error_msg.is_empty
@@ -345,7 +345,7 @@ feature {NONE} -- Error management
 			l_error_window.show
 		end
 
-	display_warning_message_relative (a_warning_msg: STRING; a_parent_window: EV_WINDOW) is
+	display_warning_message_relative (a_warning_msg: STRING; a_parent_window: EV_WINDOW)
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
@@ -357,7 +357,7 @@ feature {NONE} -- Error management
 			l_warning_window.show_modal_to_window (a_parent_window)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

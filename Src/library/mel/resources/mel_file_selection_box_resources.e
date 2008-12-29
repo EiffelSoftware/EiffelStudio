@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif File Selection Box resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNdirectory: POINTER is
+	XmNdirectory: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNdirectory"
 		end;
 
-	XmNdirectoryValid: POINTER is
+	XmNdirectoryValid: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNdirectoryValid"
 		end;
 
-	XmNdirListItems: POINTER is
+	XmNdirListItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNdirListItems"
 		end;
 
-	XmNdirListItemCount: POINTER is
+	XmNdirListItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNdirListItemCount"
 		end;
 
-	XmNdirListLabelString: POINTER is
+	XmNdirListLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNdirListLabelString"
 		end;
 
-	XmNdirMask: POINTER is
+	XmNdirMask: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNdirMask"
 		end;
 
-	XmNdirSearchProc: POINTER is
+	XmNdirSearchProc: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNdirSearchProc"
 		end;
 
-	XmNdirSpec: POINTER is
+	XmNdirSpec: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNdirSpec"
 		end;
 
-	XmNfileListItems: POINTER is
+	XmNfileListItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNfileListItems"
 		end;
 
-	XmNfileListItemCount: POINTER is
+	XmNfileListItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNfileListItemCount"
 		end;
 
-	XmNfileListLabelString: POINTER is
+	XmNfileListLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNfileListLabelString"
 		end;
 
-	XmNfileSearchProc: POINTER is
+	XmNfileSearchProc: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNfileSearchProc"
 		end;
 
-	XmNfileTypeMask: POINTER is
+	XmNfileTypeMask: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNfileTypeMask"
 		end;
 
-	XmNfilterLabelString: POINTER is
+	XmNfilterLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNfilterLabelString"
 		end;
 
-	XmNlistUpdated: POINTER is
+	XmNlistUpdated: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNlistUpdated"
 		end;
 
-	XmNnoMatchString: POINTER is
+	XmNnoMatchString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNnoMatchString"
 		end;
 
-	XmNpattern: POINTER is
+	XmNpattern: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNpattern"
 		end;
 
-	XmNqualifySearchDataProc: POINTER is
+	XmNqualifySearchDataProc: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNqualifySearchDataProc"
 		end;
 
-	XmFILE_DIRECTORY: INTEGER is
+	XmFILE_DIRECTORY: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmFILE_DIRECTORY"
 		end;
 
-	XmFILE_REGULAR: INTEGER is
+	XmFILE_REGULAR: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmFILE_REGULAR"
 		end;
 
-	XmFILE_ANY_TYPE: INTEGER is
+	XmFILE_ANY_TYPE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/FileSB.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmFILE_ANY_TYPE"
 		end;
 
-	XmDIALOG_DIR_LIST: INTEGER is
+	XmDIALOG_DIR_LIST: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmDIALOG_DIR_LIST"
 		end;
 
-	XmDIALOG_DIR_LIST_LABEL: INTEGER is
+	XmDIALOG_DIR_LIST_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmDIALOG_DIR_LIST_LABEL"
 		end;
 
-	XmDIALOG_FILTER_LABEL: INTEGER is
+	XmDIALOG_FILTER_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmDIALOG_FILTER_LABEL"
 		end;
 
-	XmDIALOG_FILTER_TEXT: INTEGER is
+	XmDIALOG_FILTER_TEXT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmDIALOG_FILTER_TEXT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

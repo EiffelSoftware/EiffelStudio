@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Parent of any graphic application. %
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	global_cursor: SCREEN_CURSOR is
+	global_cursor: SCREEN_CURSOR
 			-- Global cursor for the whole application.
 			-- Void if no global cursor has been defined
 			-- with `set_global_cursor'.
@@ -33,19 +33,19 @@ feature -- Access
 
 feature -- Basic operations
 
-	exit is
+	exit
 			-- Exit from the application.
 		do
 			toolkit.exit
 		end;
 
-	iterate is
+	iterate
 			-- Loop the application.
 		do
 			toolkit.iterate
 		end;
 
-	restore_cursors is
+	restore_cursors
 			-- Restore the cursors as they were before `set_global_cursor'.
 		require
 --			a_global_cursor_set_before: global_cursor /= Void
@@ -55,7 +55,7 @@ feature -- Basic operations
 			no_global_cursor_anymore: (global_cursor = Void)
 		end;
 
-	set_global_cursor (cursor: SCREEN_CURSOR) is
+	set_global_cursor (cursor: SCREEN_CURSOR)
 			-- Set a global cursor for the whole application.
 			-- Warning: the effect of calling `set_type' on a CURSOR or
 			-- `set_cursor' on a WIDGET is not defined.
@@ -69,7 +69,7 @@ feature -- Basic operations
 			correctly_set: global_cursor = cursor
 		end; 
 
-	show_tree (a_file: PLAIN_TEXT_FILE) is
+	show_tree (a_file: PLAIN_TEXT_FILE)
 			-- Print a textual representation of the widgets tree on `a_file'.
 		require
 			a_file_exists: a_file /= Void
@@ -78,7 +78,7 @@ feature -- Basic operations
 			widget_manager.show_tree (a_file)
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

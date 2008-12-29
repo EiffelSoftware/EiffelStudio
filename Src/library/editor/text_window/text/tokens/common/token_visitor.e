@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor of EDITOR_TOKEN"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,91 +11,91 @@ deferred class
 
 feature -- Visit
 
-	process_editor_token_line_number (a_tok: EDITOR_TOKEN_LINE_NUMBER) is
+	process_editor_token_line_number (a_tok: EDITOR_TOKEN_LINE_NUMBER)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_space (a_tok: EDITOR_TOKEN_SPACE) is
+	process_editor_token_space (a_tok: EDITOR_TOKEN_SPACE)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_tabulation (a_tok: EDITOR_TOKEN_TABULATION) is
+	process_editor_token_tabulation (a_tok: EDITOR_TOKEN_TABULATION)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_text (a_tok: EDITOR_TOKEN_TEXT) is
+	process_editor_token_text (a_tok: EDITOR_TOKEN_TEXT)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_comment (a_tok: EDITOR_TOKEN_COMMENT) is
+	process_editor_token_comment (a_tok: EDITOR_TOKEN_COMMENT)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_operator (a_tok: EDITOR_TOKEN_OPERATOR) is
+	process_editor_token_operator (a_tok: EDITOR_TOKEN_OPERATOR)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_keyword (a_tok: EDITOR_TOKEN_KEYWORD) is
+	process_editor_token_keyword (a_tok: EDITOR_TOKEN_KEYWORD)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_character (a_tok: EDITOR_TOKEN_CHARACTER) is
+	process_editor_token_character (a_tok: EDITOR_TOKEN_CHARACTER)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_number (a_tok: EDITOR_TOKEN_NUMBER) is
+	process_editor_token_number (a_tok: EDITOR_TOKEN_NUMBER)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_string (a_tok: EDITOR_TOKEN_STRING) is
+	process_editor_token_string (a_tok: EDITOR_TOKEN_STRING)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL) is
+	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_group (a_tok: EDITOR_TOKEN_GROUP) is
+	process_editor_token_group (a_tok: EDITOR_TOKEN_GROUP)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_symbol (a_tok: EDITOR_TOKEN_SYMBOL) is
+	process_editor_token_symbol (a_tok: EDITOR_TOKEN_SYMBOL)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH) is
+	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

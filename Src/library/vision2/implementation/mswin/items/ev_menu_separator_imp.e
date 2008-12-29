@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision menu separator. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with `an_interface'.
 		do
 			base_make (an_interface)
@@ -48,7 +48,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radio items following this separator.
 
-	create_radio_group is
+	create_radio_group
 			-- Create `radio_group'.
 		require
 			radio_group_void: radio_group = Void
@@ -58,7 +58,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 			radio_group_not_void: radio_group /= Void
 		end
 
-	set_radio_group (a_list: like radio_group) is
+	set_radio_group (a_list: like radio_group)
 			-- Assign `a_list' to `radio_group'.
 		require
 			a_list_not_void: a_list /= Void
@@ -68,7 +68,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 			assigned: radio_group = a_list
 		end
 
-	remove_radio_group is
+	remove_radio_group
 			-- Set `radio_group' to `Void'.
 		do
 			radio_group := Void
@@ -78,7 +78,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 
 feature -- WEL Implementation
 
-	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
 		local
 			draw_dc: WEL_CLIENT_DC
@@ -131,7 +131,7 @@ feature -- WEL Implementation
 			end
 		end
 
-	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Process `Wm_measureitem' message.
 		do
 			measure_item_struct.set_item_width (0)
@@ -140,7 +140,7 @@ feature -- WEL Implementation
 		
 feature {EV_ANY_I} -- Implementation
 
-	desired_height: INTEGER is
+	desired_height: INTEGER
 			-- Desired height.
 		do
 			Result := (menu_font.string_height ("W") // 2) + 2
@@ -150,7 +150,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

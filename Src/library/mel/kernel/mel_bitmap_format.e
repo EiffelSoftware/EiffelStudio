@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Implementation of the X bitmap format."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_file (a_screen: MEL_SCREEN; filename: STRING) is
+	make_from_file (a_screen: MEL_SCREEN; filename: STRING)
 			-- Retrieve the pixmap with file name `path'
 			-- for `a_display'.
 		require
@@ -61,20 +61,20 @@ feature -- Access
 	y_hot: INTEGER;
 			-- Vertical position of "hot" point
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current `pixmap' valid?
 		do
 			Result := status = BitmapSuccess
 		end;
 
-	is_bitmap_file_invalid: BOOLEAN is
+	is_bitmap_file_invalid: BOOLEAN
 			-- Was the filename used to retrieve the
 			-- bitmap invalid?
 		do
 			Result := status = BitmapFileInvalid
 		end;
 
-	is_bitmap_no_memory: BOOLEAN is
+	is_bitmap_no_memory: BOOLEAN
 			-- Did the retrieval of the bitmap failed
 			-- due to no memory?
 		do
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Transformation
 
-	to_pixmap (a_screen: MEL_SCREEN; a_gc: MEL_GC): MEL_PIXMAP is
+	to_pixmap (a_screen: MEL_SCREEN; a_gc: MEL_GC): MEL_PIXMAP
 			-- Convert bitmap to a pixmap using the default	
 			-- depth of `a_screen' and values from `a_gc'
 		require
@@ -104,26 +104,26 @@ feature {NONE} -- Implementation
 feature {NONE} -- External features
 
 	x_read_bitmap_from_file (a_screen: POINTER; fname: POINTER;
-			a_status, a_width, a_height, x1, y1: POINTER): POINTER is
+			a_status, a_width, a_height, x1, y1: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	BitmapSuccess: INTEGER is 
+	BitmapSuccess: INTEGER 
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"BitmapSuccess"
 		end;
 
-	BitmapFileInvalid: INTEGER is
+	BitmapFileInvalid: INTEGER
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
 			"BitmapFileInvalid"
 		end;
 
-	BitmapNoMemory: INTEGER is 
+	BitmapNoMemory: INTEGER 
 		external
 			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
 		alias
@@ -134,7 +134,7 @@ invariant
 
 	valid_bitmap: is_valid implies bitmap /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

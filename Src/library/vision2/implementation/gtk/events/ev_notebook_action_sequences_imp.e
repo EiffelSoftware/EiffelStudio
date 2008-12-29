@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_NOTEBOOK_IMP."
 	legal: "See notice at end of class."
@@ -16,13 +16,13 @@ inherit
 
 feature -- Event handling
 
-	create_selection_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a selection action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

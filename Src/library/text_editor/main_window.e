@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"MAIN_WINDOW class of the hello world example."
 	legal: "See notice at end of class."
@@ -38,7 +38,7 @@ feature --Access
 	
 feature -- Initialization
 
-	test_draw is
+	test_draw
 		do
 			create draw_box.make (main_box)
 			draw_box.set_minimum_size (250,150)
@@ -46,7 +46,7 @@ feature -- Initialization
 	
 		end	
 
-	make_top_level is
+	make_top_level
 			-- Creation of the window.
 		do
 --			print ("%N")
@@ -80,7 +80,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_my_commands is
+	add_my_commands
 		local
 			cmd: EV_COMMAND
 			accelerator: EV_ACCELERATOR
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	get_pos: INTEGER is
+	get_pos: INTEGER
 		do
 			if
 				argument_count >= 2 and then argument (2).is_integer
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	on_save (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	on_save (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			file.close
 		end
 
-	on_toggle_highlight (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	on_toggle_highlight (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		do
 			if
 				rich_window.syntax_highlighting_enabled
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_basic_auto_intending (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	on_basic_auto_intending (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		do
 			if
 				rich_window.basic_auto_intending_enabled
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_test (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	on_test (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		local
 			t: STRING
 			ln, ln2: STRING
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 
 		end
 		
-	on_draw_box (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	on_draw_box (arg: EV_ARGUMENT; data: EV_EVENT_DATA)
 		local
 			pt: EV_COORDINATES
 		do
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			
 	file_name: STRING
 	
-	load_file (new_file_name: STRING) is
+	load_file (new_file_name: STRING)
 		local
 			file: PLAIN_TEXT_FILE
 			buffer : STRING
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			file.close
 		end
 
-	remove_carrige_return_from_string (s: STRING) is
+	remove_carrige_return_from_string (s: STRING)
 			-- Remove all '%R' characters from `s'.
 		do
 			s.prune_all ('%R')
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

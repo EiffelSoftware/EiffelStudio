@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Allows non GUI threads to add idle actions to GUI thread"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ obsolete
 inherit
 	EV_APPLICATION
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

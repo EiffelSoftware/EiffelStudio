@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Implementation of XVisibilityEvent."
 	legal: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	state: INTEGER is
+	state: INTEGER
 			-- Visibility state
 		do
 			Result := c_event_state (handle)
@@ -28,19 +28,19 @@ feature -- Access
 				is_visibility_full_obscured
 		end;
 
-	is_visibility_unobscured: BOOLEAN is
+	is_visibility_unobscured: BOOLEAN
 			-- Is visibility unobscured?
 		do
 			Result := state = VisibilityUnobscured
 		end;
 
-	is_visibility_partially_obscured: BOOLEAN is
+	is_visibility_partially_obscured: BOOLEAN
 			-- Is visibility partially obscured?
 		do
 			Result := state = VisibilityPartiallyObscured
 		end;
 
-	is_visibility_full_obscured: BOOLEAN is
+	is_visibility_full_obscured: BOOLEAN
 			-- Is visibility fully obscured?
 		do
 			Result := state = VisibilityFullyObscured
@@ -48,12 +48,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XVisibilityEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

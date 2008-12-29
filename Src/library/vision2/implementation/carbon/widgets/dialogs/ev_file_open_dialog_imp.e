@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file open dialog. Carbon implementation."
 
 
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			set_title ("Open")
@@ -35,7 +35,7 @@ feature {NONE} -- Access
 	multiple_selection_enabled: BOOLEAN
 		-- Is dialog enabled to select multiple files.
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- List of filenames selected by user
 		do
 			create Result.make_from_array (<<>>)
@@ -43,26 +43,26 @@ feature {NONE} -- Access
 
 feature {NONE} -- Setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Enable multiple file selection
 		do
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Disable multiple file selection
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	file_chooser_action: INTEGER is
+	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
 		end
 
 	interface: EV_FILE_OPEN_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_FILE_OPEN_DIALOG_IMP
 

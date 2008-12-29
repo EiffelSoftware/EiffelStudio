@@ -1,6 +1,6 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
-indexing	
+note	
 	description: 
 		"EiffelVision item. Implementation interface"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ indexing
 deferred class 
 	EV_SIMPLE_ITEM_I
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

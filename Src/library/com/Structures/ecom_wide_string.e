@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapping of LPWSTR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (string: STRING) is
+	make_from_string (string: STRING)
 			-- Create wide string from `string'
 		require
 			nonvoid_string: string /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			not_shared: not shared
 		end
 
-	make_from_pointer (a_wide_string: POINTER) is
+	make_from_pointer (a_wide_string: POINTER)
 			-- Creation procedure
 			-- Set `item' to `a_wide_string'
 		require
@@ -59,7 +59,7 @@ feature -- Accsess
 			-- be destroyed by `destroy_item'.
 			-- If True, `item' will not be destroyed.
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the `item' exist?
 		do
 			Result := item /= default_pointer
@@ -69,7 +69,7 @@ feature -- Accsess
 
 feature -- Basic Operations
 
-	to_string: STRING is
+	to_string: STRING
 			-- Convert wide string to string
 		do
 			Result := ccom_wide_str_to_string (item)
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			nonvoid_result: Result /= Void
 		end
 
-	set_shared is
+	set_shared
 			-- Set `shared' to True.
 		do
 			shared := True
@@ -85,7 +85,7 @@ feature -- Basic Operations
 			shared: shared
 		end
 
-	set_unshared is
+	set_unshared
 			-- Set `shared' to False.
 		do
 			shared := False
@@ -95,7 +95,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Ensure `item' is destroyed when
 			-- garbage collected by calling `destroy_item'
 		do
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy_item is
+	destroy_item
 			-- Free `item'
 		do
 			if item /= default_pointer then
@@ -115,18 +115,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_from_string (str: POINTER): POINTER is
+	ccom_create_from_string (str: POINTER): POINTER
 		external
 			"C (char *): EIF_POINTER | %"E_wide_string.h%""
 		end
 
 
-	ccom_wide_str_to_string (a_wstring: POINTER): STRING is
+	ccom_wide_str_to_string (a_wstring: POINTER): STRING
 		external
 			"C (WCHAR *): EIF_REFERENCE | %"E_wide_string.h%""
 		end
 
-	c_calloc (a_num, a_size: INTEGER): POINTER is
+	c_calloc (a_num, a_size: INTEGER): POINTER
 			-- C calloc
 		external
 			"C (size_t, size_t): EIF_POINTER | <malloc.h>"
@@ -134,7 +134,7 @@ feature {NONE} -- Externals
 			"calloc"
 		end
 
-	c_free (ptr: POINTER) is
+	c_free (ptr: POINTER)
 			-- C free
 		external
 			"C (void *) | <malloc.h>"
@@ -142,7 +142,7 @@ feature {NONE} -- Externals
 			"free"
 		end
 
-	c_memcpy (destination, source: POINTER; count: INTEGER) is
+	c_memcpy (destination, source: POINTER; count: INTEGER)
 			-- C memcpy
 		external
 			"C (void *, void *, size_t) | <memory.h>"
@@ -150,7 +150,7 @@ feature {NONE} -- Externals
 			"memcpy"
 		end
 
-	c_enomem is
+	c_enomem
 			-- Eiffel run-time function to raise an
 			-- "Out of memory" exception.
 		external
@@ -162,7 +162,7 @@ feature {NONE} -- Externals
 invariant
 	exists: exists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

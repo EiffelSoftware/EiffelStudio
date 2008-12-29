@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that provide access to a set of shared objects that may be used on a temporary
 		basis to increase performance. These objects should only be used in the case where an
@@ -17,19 +17,19 @@ class
 
 feature -- Access
 
-	wel_rect: WEL_RECT is
+	wel_rect: WEL_RECT
 			-- Once access to an object of type WEL_RECT
 		once
 			create Result.make (0, 0, 0, 0)
 		end
 		
-	wel_string: WEL_STRING is
+	wel_string: WEL_STRING
 			-- Once access to an object of type WEL_STRING
 		once
 			create Result.make_empty (256)
 		end
 		
-	wel_string_restricted (characters: INTEGER): WEL_STRING is
+	wel_string_restricted (characters: INTEGER): WEL_STRING
 			-- Return shared `wel_string' as `Result' if `characters'
 			-- is less than `maximum_buffered_string_size', otherwise return a
 			-- new WEL_STRING object. This is used to prevent huge strings
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 		
-	wel_string_from_string (s: STRING_GENERAL): WEL_STRING is
+	wel_string_from_string (s: STRING_GENERAL): WEL_STRING
 			-- Return a shared wel string set to `s' if
 			-- `s.count' < `maximum_buffered_string_size', otherwise
 			-- return a new WEL_STRING object set to `s'.
@@ -55,11 +55,11 @@ feature -- Access
 			end
 		end
 		
-	maximum_buffered_string_size: INTEGER is 10000;
+	maximum_buffered_string_size: INTEGER = 10000;
 		-- Maximum size of string permitting a shared WEL_STRING object to 
 		-- be returned by `wel_string_restricted'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

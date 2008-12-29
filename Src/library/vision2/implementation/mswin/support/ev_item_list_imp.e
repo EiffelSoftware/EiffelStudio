@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			" EiffelVision item container. This class%
 			% has been created to centralise the%
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			create new_item_actions
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: H
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			new_item_actions.call ([v_imp.interface])
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			v_imp: H
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- implementation
 
-	insert_item (v_imp: EV_ITEM_IMP; pos: INTEGER) is
+	insert_item (v_imp: EV_ITEM_IMP; pos: INTEGER)
 			-- Graphically insert `v_imp' at `pos'.
 		require
 			v_imp_not_void: v_imp /= Void
@@ -81,7 +81,7 @@ feature {EV_ANY_I} -- implementation
 		deferred
 		end
 
-	remove_item (v_imp: EV_ITEM_IMP) is
+	remove_item (v_imp: EV_ITEM_IMP)
 			-- Graphically remove `v_imp'.
 		require
 			v_imp_not_void: v_imp /= Void
@@ -102,17 +102,17 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		deferred
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset of `Current' relative to screen.
 		deferred
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset of `Current' relative to screen.
 		deferred
 		end
@@ -121,7 +121,7 @@ invariant
 	new_item_actions_not_void: is_usable implies new_item_actions /= Void
 	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

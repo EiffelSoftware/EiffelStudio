@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font family used by Gdi+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		local
 			l_result: INTEGER
@@ -30,7 +30,7 @@ feature{NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_with_name (a_font_name: STRING_GENERAL) is
+	make_with_name (a_font_name: STRING_GENERAL)
 			-- Creation method
 		local
 			l_wel_string: WEL_STRING
@@ -45,7 +45,7 @@ feature{NONE} -- Initlization
 
 feature -- Query
 
-	height (a_style: INTEGER): INTEGER is
+	height (a_style: INTEGER): INTEGER
 			-- Height
 		require
 			vaild: (create {WEL_GDIP_FONT_STYLE}).is_valid (a_style)
@@ -58,7 +58,7 @@ feature -- Query
 
 feature -- Delete
 
-	destroy_item is
+	destroy_item
 			-- Redefine
 		local
 			l_result: INTEGER
@@ -72,7 +72,7 @@ feature -- Delete
 
 feature {NONE} -- C externals
 
-	c_gdip_create_font_family_from_name (a_gdiplus_handle: POINTER; a_name: POINTER; a_font_collection: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_font_family_from_name (a_gdiplus_handle: POINTER; a_name: POINTER; a_font_collection: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create font family from `a_name' which in `a_font_collection'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -100,7 +100,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_get_generic_font_family_sans_serif (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_get_generic_font_family_sans_serif (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Get generic font family sans serif
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -123,7 +123,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_get_em_height (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_style: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): INTEGER is
+	c_gdip_get_em_height (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_style: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): INTEGER
 			-- Get height of `a_font_family' which style is `a_style'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -148,7 +148,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_delete_font_family (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_delete_font_family (a_gdiplus_handle: POINTER; a_font_family: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Dispose `a_font_family'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -172,7 +172,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

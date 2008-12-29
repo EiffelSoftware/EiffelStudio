@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Edit Notification mask (ENM) constants for the rich %
 		%edit control."
 	legal: "See notice at end of class."
@@ -11,31 +11,31 @@ class
 
 feature -- Access
 
-	Enm_none: INTEGER is 0
+	Enm_none: INTEGER = 0
 
-	Enm_change: INTEGER is 1
+	Enm_change: INTEGER = 1
 
-	Enm_update: INTEGER is 2
+	Enm_update: INTEGER = 2
 
-	Enm_scroll: INTEGER is 4
+	Enm_scroll: INTEGER = 4
 
-	Enm_keyevents: INTEGER is 65536
+	Enm_keyevents: INTEGER = 65536
 
-	Enm_mouseevents: INTEGER is 131072
+	Enm_mouseevents: INTEGER = 131072
 
-	Enm_requestresize: INTEGER is 262144
+	Enm_requestresize: INTEGER = 262144
 
-	Enm_selchange: INTEGER is 524288
+	Enm_selchange: INTEGER = 524288
 
-	Enm_dropfiles: INTEGER is 1048576
+	Enm_dropfiles: INTEGER = 1048576
 
-	Enm_protected: INTEGER is 2097152
+	Enm_protected: INTEGER = 2097152
 
-	Enm_correcttext: INTEGER is 4194304
+	Enm_correcttext: INTEGER = 4194304
 
-	Enm_imechange: INTEGER is 8388608;
+	Enm_imechange: INTEGER = 8388608;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

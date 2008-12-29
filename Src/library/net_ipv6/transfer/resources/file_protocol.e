@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"The FILE protocol"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize file protocol.
 		do
 			create file.make (address.name)
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	Read_mode_id, Write_mode_id, Append_mode_id: INTEGER is unique
+	Read_mode_id, Write_mode_id, Append_mode_id: INTEGER = unique
 			-- File mode IDs
 
-	Default_buffer_size: INTEGER is 65535
+	Default_buffer_size: INTEGER = 65535
 			-- Default read buffer size
 
 feature -- Access
@@ -50,7 +50,7 @@ feature -- Measurement
 	last_packet_size: INTEGER
 			-- Size of last packet
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of data resource
 		do
 			Result := file.count
@@ -61,21 +61,21 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- Is resource open?
 		do
 			Result := file.is_open_read or file.is_open_write or
 				file.is_open_append
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is it possible to open in read mode currently?
 		do
 			Result := file.is_open_read or else
 				(file.exists and then file.is_readable)
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is it possible to open in write mode currently?
 		do
 			if file.is_open_write then
@@ -87,53 +87,53 @@ feature -- Status report
 			end
 		end
 
-	address_exists: BOOLEAN is
+	address_exists: BOOLEAN
 			-- Does address exist?
 		do
 			Result := is_readable or is_writable
 		end
 
-	Is_local: BOOLEAN is True
+	Is_local: BOOLEAN = True
 			-- Is protocol not networked? (Answer: yes)
 
-	is_proxy_used: BOOLEAN is False
+	is_proxy_used: BOOLEAN = False
 			-- Does resource use a proxy? (Answer: no)
 
-	valid_mode (n: INTEGER): BOOLEAN is
+	valid_mode (n: INTEGER): BOOLEAN
 			-- Is mode `n' valid?
 		do
 			Result := Read_mode_id <= n and n <= Append_mode_id
 		end
 
-	is_packet_pending: BOOLEAN is
+	is_packet_pending: BOOLEAN
 			-- Can another packet currently be read out?
 		do
 			Result := not error and then file.is_open_read and then
 				not file.after
 		end
 
-	read_mode: BOOLEAN is
+	read_mode: BOOLEAN
 			-- Is read mode set?
 		do
 			Result := (mode = Read_mode_id)
 		end
 
-	write_mode: BOOLEAN is
+	write_mode: BOOLEAN
 			-- Is write mode set?
 		do
 			Result := (mode = Write_mode_id) or (mode = Append_mode_id)
 		end
 
-	Is_count_valid: BOOLEAN is True
+	Is_count_valid: BOOLEAN = True
 			-- Is value in `count' valid? (Answer: yes)
 
-	Supports_multiple_transactions: BOOLEAN is False
+	Supports_multiple_transactions: BOOLEAN = False
 			-- Does resource support multiple tranactions per connection?
 			-- (Answer: no)
 
 feature -- Status setting
 
-	open is
+	open
 			-- Open file resource.
 		do
 			if not is_open then
@@ -152,20 +152,20 @@ feature -- Status setting
 			counter_reset: bytes_transferred = 0
 		end
 
-	close is
+	close
 			-- Close.
 		do
 			file.close
 			transfer_initiated := False
 		end
 
-	initiate_transfer is
+	initiate_transfer
 			-- Initiate transfer.
 		do
 			transfer_initiated := True
 		end
 
-	set_read_buffer_size (n: INTEGER) is
+	set_read_buffer_size (n: INTEGER)
 			-- Set size of read buffer.
 		do
 			read_buffer_size := n
@@ -174,38 +174,38 @@ feature -- Status setting
 			buffer_size_correct: buffer.count = read_buffer_size
 		end
 
-	set_overwrite_mode is
+	set_overwrite_mode
 			-- Switch on file overwrite mode on.
 		do
 			overwrite_mode := True
 		end
 
-	reset_overwrite_mode is
+	reset_overwrite_mode
 			-- Switch on file overwrite mode on.
 		do
 			overwrite_mode := False
 		end
 
-	set_read_mode is
+	set_read_mode
 			-- Set read mode.
 		do
 			mode := Read_mode_id
 		end
 
-	set_write_mode is
+	set_write_mode
 			-- Set write mode.
 		do
 			mode := Write_mode_id
 		end
 
-	reuse_connection (other: DATA_RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE)
 			-- Reuse connection of `other'.
 		do
 		end
 
 feature -- Output
 
-	put (other: DATA_RESOURCE) is
+	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
 		do
 			from until not other.is_packet_pending loop
@@ -221,7 +221,7 @@ feature -- Output
 
 feature -- Input
 
-	read is
+	read
 			-- Read packet.
 		do
 			file.read_stream (read_buffer_size)
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 
 	overwrite_mode: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects that may be compared according to a total order relation
@@ -24,14 +24,14 @@ deferred class COMPARABLE inherit
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		deferred
 		ensure then
 			asymmetric: Result implies not (other < Current)
 		end
 
-	infix "<=" (other: like Current): BOOLEAN is
+	infix "<=" (other: like Current): BOOLEAN
 			-- Is current object less than or equal to `other'?
 		do
 			Result := not (other < Current)
@@ -39,7 +39,7 @@ feature -- Comparison
 			definition: Result = ((Current < other) or is_equal (other))
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	infix ">" (other: like Current): BOOLEAN
 			-- Is current object greater than `other'?
 		do
 			Result := other < Current
@@ -47,7 +47,7 @@ feature -- Comparison
 			definition: Result = (other < Current)
 		end
 
-	infix ">=" (other: like Current): BOOLEAN is
+	infix ">=" (other: like Current): BOOLEAN
 			-- Is current object greater than or equal to `other'?
 		do
 			Result := not (Current < other)
@@ -55,7 +55,7 @@ feature -- Comparison
 			definition: Result = (other <= Current)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
@@ -64,7 +64,7 @@ feature -- Comparison
 			trichotomy: Result = (not (Current < other) and not (other < Current))
 		end
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		require
@@ -81,7 +81,7 @@ feature -- Comparison
 			greater_positive: (Result = 1) = (Current > other)
 		end
 
-	max (other: like Current): like Current is
+	max (other: like Current): like Current
 			-- The greater of current object and `other'
 		require
 			other_exists: other /= Void
@@ -96,7 +96,7 @@ feature -- Comparison
 			other_if_smaller: Current < other implies Result = other
 		end
 
-	min (other: like Current): like Current is
+	min (other: like Current): like Current
 			-- The smaller of current object and `other'
 		require
 			other_exists: other /= Void
@@ -115,7 +115,7 @@ invariant
 
 	irreflexive_comparison: not (Current < Current)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

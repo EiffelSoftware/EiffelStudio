@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatting element that consists of a constant string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {I18N_FORMAT_STRING_PARSER} -- Initialization
 
-	make (a_string: STRING_32) is
+	make (a_string: STRING_32)
 			-- set the `user_string'
 		do
 			user_string := a_string
@@ -24,7 +24,7 @@ feature {I18N_FORMAT_STRING_PARSER} -- Initialization
 
 feature -- Output
 
-	filled (a_date: DATE; a_time: TIME): STRING_32 is
+	filled (a_date: DATE; a_time: TIME): STRING_32
  			-- Return the `user_string'
  		do
 			Result := user_string
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 invariant
 	correct_user_string: user_string /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

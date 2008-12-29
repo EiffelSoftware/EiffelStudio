@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Combo-box item. An item that handle a text and%
 		% a bitmap."
 	legal: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_index (value: INTEGER) is
+	make_with_index (value: INTEGER)
 			-- Create an item with `value' as index.
 		do
 			make
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Array of flags that indicate which of the other
 			-- structure members contain valid data or which are
 			-- to be filled in. This member can be a combination
@@ -54,7 +54,7 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_mask (item)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Zero-based index of the item.
 		require
 			exists: exists
@@ -62,7 +62,7 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_iitem (item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the current item
 		require
 			exists: exists
@@ -77,7 +77,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	image: INTEGER is
+	image: INTEGER
 			-- Zero-based index of an image within the image list.
 			-- The specified image will be displayed for the item
 			-- when it is not selected.
@@ -88,7 +88,7 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_iimage (item)
 		end
 
-	selected_image: INTEGER is
+	selected_image: INTEGER
 			-- Zero-based index of an image within the image list.
 			-- The specified image will be displayed for the item
 			-- when it is selected.
@@ -99,7 +99,7 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_iselectedimage (item)
 		end
 
-	overlay: INTEGER is
+	overlay: INTEGER
 			-- One-based index of an overlay image within the image
 			-- list.
 		require
@@ -109,7 +109,7 @@ feature -- Access
 			Result := cwel_comboboxex_item_get_ioverlay (item)
 		end
 
-	indent: INTEGER is
+	indent: INTEGER
 			-- Number of indent space to display for the item.
 			-- Each indentation equals 10 pixels.
 		require
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_index (value: INTEGER) is
+	set_index (value: INTEGER)
 			-- Make `value' the new index.
 		require
 			exists: exists
@@ -131,7 +131,7 @@ feature -- Element change
 			value_set: index = value
 		end
 
-	set_text (txt: STRING_GENERAL) is
+	set_text (txt: STRING_GENERAL)
 			-- Make `txt' the new text.
 		require
 			exists: exists
@@ -145,7 +145,7 @@ feature -- Element change
 			text_set: text.is_equal (txt)
 		end
 
-	set_image (value: INTEGER) is
+	set_image (value: INTEGER)
 			-- Make `value' the new image index.
 		require
 			exists: exists
@@ -156,7 +156,7 @@ feature -- Element change
 			value_set: image = value
 		end
 
-	set_selected_image (value: INTEGER) is
+	set_selected_image (value: INTEGER)
 			-- Make `value' the new selected image index.
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Element change
 			value_set: selected_image = value
 		end
 
-	set_overlay (value: INTEGER) is
+	set_overlay (value: INTEGER)
 			-- Make `value' the new overlay.
 		require
 			exists: exists
@@ -178,7 +178,7 @@ feature -- Element change
 			value_set: overlay = value
 		end
 
-	set_indent (value: INTEGER) is
+	set_indent (value: INTEGER)
 			-- Make `value' the new indent.
 		require
 			exists: exists
@@ -191,7 +191,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	clear_mask is
+	clear_mask
 			-- Clear the current `mask'.
 			-- Call it before to call a set_? feature when you
 			-- want to change only one parameter.
@@ -203,7 +203,7 @@ feature -- Basic operation
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_comboboxex_item
@@ -214,7 +214,7 @@ feature {WEL_COMBO_BOX_EX} -- Implementation
 	str_text: WEL_STRING
 			-- C string to save the text
 
-	set_mask (value: INTEGER) is
+	set_mask (value: INTEGER)
 			-- Make `value' the new mask.
 		require
 			exists: exists
@@ -224,7 +224,7 @@ feature {WEL_COMBO_BOX_EX} -- Implementation
 			mask_set: mask = value
 		end
 
-	set_cchtextmax (value: INTEGER) is
+	set_cchtextmax (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
 		do
 			cwel_comboboxex_item_set_cchtextmax (item, value)
@@ -232,104 +232,104 @@ feature {WEL_COMBO_BOX_EX} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_comboboxex_item: INTEGER is
+	c_size_of_comboboxex_item: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"sizeof (COMBOBOXEXITEM)"
 		end
 
-	cwel_comboboxex_item_set_mask (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_mask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_iitem (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_iitem (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_psztext (ptr, value: POINTER) is
+	cwel_comboboxex_item_set_psztext (ptr, value: POINTER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_cchtextmax (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_cchtextmax (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_iimage (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_iimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_iselectedimage (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_iselectedimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_ioverlay (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_ioverlay (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_iindent (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_iindent (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_set_lparam (ptr: POINTER; value: INTEGER) is
+	cwel_comboboxex_item_set_lparam (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_mask (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_mask (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_iitem (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_iitem (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_psztext (ptr: POINTER): POINTER is
+	cwel_comboboxex_item_get_psztext (ptr: POINTER): POINTER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_cchtextmax (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_cchtextmax (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_iimage (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_iimage (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_iselectedimage (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_iselectedimage (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_ioverlay (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_ioverlay (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_iindent (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_iindent (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-	cwel_comboboxex_item_get_lparam (ptr: POINTER): INTEGER is
+	cwel_comboboxex_item_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [macro %"comboboxexitem.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

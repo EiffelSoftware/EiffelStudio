@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Closed figures (e.g. circles, polygons). % 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access 
 	
-	center: COORD_XY_FIG is
+	center: COORD_XY_FIG
 			-- Center of the closed figure
 		deferred
 		end;
@@ -33,12 +33,12 @@ feature -- Access
 
 feature -- Status setting
 
-	set_origin_to_center is
+	set_origin_to_center
 			-- Set origin to `center'
 		deferred
 		end;
 
-	set_interior (an_interior: INTERIOR) is
+	set_interior (an_interior: INTERIOR)
 			-- Set `interior' to `an_interior'.
 		do
 			interior := an_interior;
@@ -46,7 +46,7 @@ feature -- Status setting
 			interior = an_interior
 		end;
 
-	set_path (a_path: PATH) is
+	set_path (a_path: PATH)
 			-- Set `path' to `a_path'.
 		do
 			path := a_path;
@@ -54,7 +54,7 @@ feature -- Status setting
 			path = a_path
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

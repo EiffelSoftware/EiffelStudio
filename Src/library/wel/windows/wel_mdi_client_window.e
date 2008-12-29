@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MDI client window to insert into a MDI frame window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_COMPOSITE_WINDOW; a_menu: WEL_MENU;
-			first_child: INTEGER) is
+			first_child: INTEGER)
 			-- Make a MDI client window named `a_name' using
 			-- `a_menu' as the application's Window menu.
 			-- `first_child' specifies the child window identifier
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_active_window: BOOLEAN is
+	has_active_window: BOOLEAN
 			-- Is a window currently active?
 		require
 			exists: exists
@@ -65,7 +65,7 @@ feature -- Status report
 				Wm_mdigetactive, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	active_window: WEL_MDI_CHILD_WINDOW is
+	active_window: WEL_MDI_CHILD_WINDOW
 			-- Currently active window.
 		require
 			exists: exists
@@ -79,14 +79,14 @@ feature -- Status report
 
 feature -- Basic operations
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
 			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
-	arrange_icons is
+	arrange_icons
 			-- Arrange iconized child windows.
 		require
 			exists: exists
@@ -94,7 +94,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_mdiiconarrange, to_wparam (0), to_lparam (0))
 		end
 
-	cascade_children is
+	cascade_children
 			-- Cascade the child windows.
 		require
 			exists: exists
@@ -102,7 +102,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_mdicascade, to_wparam (0), to_lparam (0))
 		end
 
-	tile_children_horizontal is
+	tile_children_horizontal
 			-- Horizontally tile the child windows.
 		require
 			exists: exists
@@ -110,7 +110,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_mditile, to_wparam (Mditile_horizontal), to_lparam (0))
 		end
 
-	tile_children_vertical is
+	tile_children_vertical
 			-- Vertically tile the child windows.
 		require
 			exists: exists
@@ -118,7 +118,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_mditile, to_wparam (Mditile_vertical), to_lparam (0))
 		end
 
-	destroy_window (child: WEL_MDI_CHILD_WINDOW) is
+	destroy_window (child: WEL_MDI_CHILD_WINDOW)
 			-- Destroy the child window `child'.
 		require
 			exists: exists
@@ -130,20 +130,20 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "MDICLIENT"
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the window
 		once
 			Result := Ws_child + Ws_visible + Ws_clipchildren +
 				Ws_vscroll + Ws_hscroll
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

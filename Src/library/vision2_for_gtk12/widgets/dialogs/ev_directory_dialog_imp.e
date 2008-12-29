@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision directory dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a window with a parent.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			)
 		end
 
-	initialize is
+	initialize
 			-- Setup action sequences.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	directory: STRING_32 is
+	directory: STRING_32
 			-- Path of the current selected file
 		do
 			if
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_start_directory (a_path: STRING_32) is
+	set_start_directory (a_path: STRING_32)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_DIRECTORY_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

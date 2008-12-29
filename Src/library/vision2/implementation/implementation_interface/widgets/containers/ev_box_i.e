@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision box, implementation interface."
 	legal: "See notice at end of class."
@@ -24,25 +24,25 @@ inherit
 	
 feature -- Constants
 	
-	Default_homogeneous: BOOLEAN is False
-	Default_spacing: INTEGER is 0
-	Default_border_width: INTEGER is 0
+	Default_homogeneous: BOOLEAN = False
+	Default_spacing: INTEGER = 0
+	Default_border_width: INTEGER = 0
 
 feature -- Access
 
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Are all children restriced to be the same size.
 		deferred
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of border around container in pixels.
 		deferred
 		ensure
 			positive_result: Result >= 0
 		end
 
-	padding: INTEGER is
+	padding: INTEGER
 			-- Space between children in pixels.
 		deferred
 		ensure
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	is_item_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN
 			-- Is `child' expanded to occupy available spare space.
 		require
 			has_child: interface.has (child)
@@ -60,14 +60,14 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 	
 feature {EV_ANY, EV_ANY_I} -- Status settings
 	
-	set_homogeneous (flag: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN)
 			-- Set whether every child is the same size.
 		deferred
 		ensure
 			homogeneous_set: is_homogeneous = flag
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			-- Assign `value' to `border_width'.
 		require
 			positive_value: value >= 0
@@ -76,14 +76,14 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			border_assigned: border_width = value
 		end	
 	
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Assign `value' to `padding'.
 		require
 			positive_value: value >= 0
 		deferred
 		end	
 
-	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill avalible spare space.
 		require
 			has_child: interface.has (child)
@@ -94,22 +94,22 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	pointer_offset: INTEGER is
+	pointer_offset: INTEGER
 			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		deferred
 		end
 		
-	docking_dimension_of_current_item: INTEGER is
+	docking_dimension_of_current_item: INTEGER
 			-- Dimension of `interface.item' matching orientation of `Current'.
 		deferred
 		end
 		
-	docking_dimension_of_current: INTEGER is
+	docking_dimension_of_current: INTEGER
 			-- Dimension of `Current' matching orientation of `Current'
 		deferred
 		end
 
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is insertion position in `Current' based on
 			-- Current screen pointer.
 		local
@@ -169,7 +169,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

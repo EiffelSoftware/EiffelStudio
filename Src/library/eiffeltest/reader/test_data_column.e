@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Columns in a table representing test input data"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ deferred class TEST_DATA_COLUMN inherit
 
 feature -- Status report
 
-	input_accepted (s: STRING): BOOLEAN is
+	input_accepted (s: STRING): BOOLEAN
 			-- Is `s' acceptable input for this column?
 		do
 			Result := True
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	frozen inject (t: TEST_CASE; s: STRING) is
+	frozen inject (t: TEST_CASE; s: STRING)
 			-- Inject data `s' into test case `t'.
 		require
 			test_case_exists: t /= Void
@@ -43,14 +43,14 @@ feature {NONE} -- Implementation
 			-- Test case to be injected
 			-- (To be redefined.)
 			
-	inject_data (s: STRING) is
+	inject_data (s: STRING)
 			-- Inject `s' into `test_case'.
 		require
 			test_case_set: test_case /= Void
 		deferred
 		end
 	 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

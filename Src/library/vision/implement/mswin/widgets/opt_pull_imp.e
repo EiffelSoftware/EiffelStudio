@@ -1,4 +1,4 @@
-indexing
+note
     status: "See notice at end of class.";
     date: "$Date$";
     revision: "$Revision$"
@@ -68,7 +68,7 @@ create
 
 feature -- Initialization
 
-	make (a_pulldown: OPT_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_pulldown: OPT_PULL; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create an option pull
 		local
 			opt_b_windows: OPTION_B_IMP
@@ -85,7 +85,7 @@ feature -- Initialization
 			opt_b_windows.set_option_pull (Current)
 		end
 
-	realize_current, realize is
+	realize_current, realize
 			-- Display a  option pull
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -112,7 +112,7 @@ feature -- Access
 
 	caption : STRING
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 			-- Selected button
 		do
 			if exists and then selected then
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Element change
 
-	manage_item (bw: WIDGET_IMP) is
+	manage_item (bw: WIDGET_IMP)
 			-- Manage a item in the combobox.
 		local
 			b: BUTTON
@@ -134,7 +134,7 @@ feature -- Element change
 			adjust_size (b)
 		end
 
-	unmanage_item (bw: WIDGET_IMP) is
+	unmanage_item (bw: WIDGET_IMP)
 			-- Unmanage a item in the combobox.
 		local
 			b: BUTTON
@@ -144,7 +144,7 @@ feature -- Element change
 			adjust_size (b)
 		end
 
-	add_a_child (button: BUTTON_IMP) is
+	add_a_child (button: BUTTON_IMP)
 			-- Add a button to the option pull.
 		require
 			button_not_void: button /= Void
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Removal
 
-	remove_title is
+	remove_title
 			-- Remove the tile
 		do
 			title := Void
@@ -186,7 +186,7 @@ feature -- Removal
 
 feature -- Status setting
 
-	adjust_size (b: BUTTON) is
+	adjust_size (b: BUTTON)
 			-- Adjust the width and height on
 			-- managing and unmanaging, no shrinking is allowed.
 		local
@@ -204,7 +204,7 @@ feature -- Status setting
 				--| Add 24 to set visible the whole text.
 		end
 
-	set_caption (a_caption: STRING) is
+	set_caption (a_caption: STRING)
 		do
 			if a_caption /= Void then
 				caption := a_caption.twin
@@ -213,7 +213,7 @@ feature -- Status setting
 			end
 		end
 
-	set_selected_button (b: BUTTON) is
+	set_selected_button (b: BUTTON)
 			-- Select the entry in the menu
 			-- corresponding the button
 		do
@@ -223,7 +223,7 @@ feature -- Status setting
 			end
 		end
 
-	set_text (s: STRING) is
+	set_text (s: STRING)
 			-- Set text for option pull.
 		do
 			if s /= Void then
@@ -233,7 +233,7 @@ feature -- Status setting
 			end
 		end
 
-	set_title (t: STRING) is
+	set_title (t: STRING)
 			-- Set title for option pull.
 		do
 			title := t
@@ -241,7 +241,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	unmanaged_count (b: BUTTON): INTEGER is
+	unmanaged_count (b: BUTTON): INTEGER
 			-- Number of unmanaged buttons in the list before `b'.
 			-- Including `b' itself
 		do
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_index (b: BUTTON): INTEGER is
+	button_index (b: BUTTON): INTEGER
 			-- The index of the button `b' in the `button_list'.
 		require
 			has_button: button_list.has (b)
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			Result := button_list.index
 		end
 
-	on_cbn_killfocus is
+	on_cbn_killfocus
 			-- Hide the list when the focus is removed.
 		do
 			if list_shown then
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 
 	button_list: ARRAYED_LIST [BUTTON]
 
-	set_default_size is
+	set_default_size
 		do
 		end
 
@@ -288,13 +288,13 @@ feature {NONE} -- Implementation
 
 	exists: BOOLEAN
 
-	wel_set_menu (a_menu: WEL_MENU) is
+	wel_set_menu (a_menu: WEL_MENU)
 		do
 		end
 
 	wel_children: LINKED_LIST [WEL_WINDOW]
 
-	item_height: INTEGER is
+	item_height: INTEGER
 		local
 			screen_dc: WEL_SCREEN_DC
 		once
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			screen_dc.release
 		end
 
-	number_of_buttons: INTEGER is
+	number_of_buttons: INTEGER
 			-- Number of buttons in option pull
 		do
 			if not button_list.is_empty then
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 	private_selected_button: BUTTON;
 			-- Button selected before realization
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

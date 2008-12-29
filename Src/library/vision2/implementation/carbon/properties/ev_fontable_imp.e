@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision fontable, Carbon implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Character appearance for `Current'.
 		do
 			if private_font = void then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		do
 			private_font := a_font
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FONTABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

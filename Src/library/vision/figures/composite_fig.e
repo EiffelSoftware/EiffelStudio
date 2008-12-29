@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Composite figure, ex: world, complex_fig ..."
 	legal: "See notice at end of class.";
@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	item: FIGURE is
+	item: FIGURE
 			-- figure at cursor position
 		require
 			not_off: not off
@@ -35,32 +35,32 @@ feature -- Access
 
 feature -- Element change
 
-	add (v: FIGURE) is
+	add (v: FIGURE)
 			-- Append `v' 
 		deferred
 		end;
 
-	attach_drawing (a_drawing: DRAWING) is
+	attach_drawing (a_drawing: DRAWING)
 			-- Attach a drawing to the figure.
 		do
 			attach_drawing_imp (a_drawing.implementation)
 		end;
 
-	 	merge (other: like Current) is
+	 	merge (other: like Current)
 			-- Merge `other' 
 			-- Do not move cursor.
 			-- Empty other.
 		deferred
 		end;
 
-	put (v: FIGURE) is
+	put (v: FIGURE)
 			-- Put item `v' at cursor position.
 		require else
 			not_off: not off
 		deferred
 		end;
 
-	rotate (a: REAL; p: like origin) is
+	rotate (a: REAL; p: like origin)
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in degrees.
 		do
@@ -77,7 +77,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	scale (f: REAL; p: like origin) is
+	scale (f: REAL; p: like origin)
 			-- Scale figure by `f' relative to `p'.
 		do
 			composite_mark;
@@ -93,7 +93,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	self_rotate (a: REAL) is
+	self_rotate (a: REAL)
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
 		do
@@ -110,7 +110,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	self_scale (f: REAL) is
+	self_scale (f: REAL)
 			-- Scale figure by `f' relative to `origin'.
 		do
 			composite_mark;
@@ -126,7 +126,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	translate (v: VECTOR) is
+	translate (v: VECTOR)
 			-- Translate current figure by `v'.
 		do
 			composite_mark;
@@ -142,7 +142,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -162,7 +162,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -180,7 +180,7 @@ feature -- Element change
 			set_conf_modified	
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			composite_mark;
@@ -198,7 +198,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (fig: FIGURE) is
+	remove (fig: FIGURE)
 			-- remove `fig`
 		require
 			fig_not_void: fig /= Void 
@@ -207,32 +207,32 @@ feature -- Removal
 
 feature -- Cursor movement 
 
-	start is
+	start
 		-- Move to first position
 		deferred
 		end;
 
-	finish is
+	finish
 		-- Move to last position
 		deferred 
 		end;
 
-	forth is
+	forth
 		-- Move to next position
 		deferred
 		end;
 
-	composite_mark is
+	composite_mark
 		deferred
 		end;
 
-	composite_return is
+	composite_return
 		deferred
 		end;
 
 feature -- Output
 		
-	draw is
+	draw
 			-- Draw the figure in `drawing'.
 		require else
 			drawing_is_drawable: true
@@ -254,7 +254,7 @@ feature -- Output
 
 feature -- Updating
 
-	conf_recompute is
+	conf_recompute
 		do
 			from
 				composite_mark;
@@ -275,12 +275,12 @@ feature -- Updating
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off edge ?
 		deferred
 		end;
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the figure superimposable to `other' ?
 		do
 			composite_mark;
@@ -302,7 +302,7 @@ feature -- Status report
 
 feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Element change
 
-	attach_drawing_imp (a_drawing: DRAWING_I) is
+	attach_drawing_imp (a_drawing: DRAWING_I)
 			-- Attach a drawing to the figure.
 		do
 			drawing := a_drawing;
@@ -319,7 +319,7 @@ feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Element change
 			set_conf_modified_with (surround_box)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The TV_DISPINFO structure retrieves and sets%
 				% information about a tree-view item."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_tv_dispinfo_get_hdr (item))
@@ -37,7 +37,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	tree_item: WEL_TREE_VIEW_ITEM is
+	tree_item: WEL_TREE_VIEW_ITEM
 			-- Virtual key number.
 		do
 			create Result.make_by_pointer (cwel_tv_dispinfo_get_item (item))
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tv_dispinfo
@@ -55,24 +55,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_tv_dispinfo: INTEGER is
+	c_size_of_tv_dispinfo: INTEGER
 		external
 			"C [macro <tvdispinfo.h>]"
 		alias
 			"sizeof (TV_DISPINFO)"
 		end
 
-	cwel_tv_dispinfo_get_hdr (ptr: POINTER): POINTER is
+	cwel_tv_dispinfo_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro <tvdispinfo.h>] (TV_DISPINFO*): EIF_POINTER"
 		end
 
-	cwel_tv_dispinfo_get_item (ptr: POINTER): POINTER is
+	cwel_tv_dispinfo_get_item (ptr: POINTER): POINTER
 		external
 			"C [macro <tvdispinfo.h>] (TV_DISPINFO*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

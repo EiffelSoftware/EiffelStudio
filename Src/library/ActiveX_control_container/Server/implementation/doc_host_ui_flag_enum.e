@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DOCHOSTUIFLAG enumeration. From <mshtmhst.h>"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,29 +10,29 @@ class
 	
 feature -- Accsss
 
-	Dochostuiflag_dialog            		: INTEGER is 1
+	Dochostuiflag_dialog            		: INTEGER = 1
 	
-	Dochostuiflag_disable_help_menu 		: INTEGER is 2
+	Dochostuiflag_disable_help_menu 		: INTEGER = 2
 	
-	Dochostuiflag_no3dborder        		: INTEGER is 4
+	Dochostuiflag_no3dborder        		: INTEGER = 4
 	
-	Dochostuiflag_scroll_no         		: INTEGER is 8
+	Dochostuiflag_scroll_no         		: INTEGER = 8
 	
-	Dochostuiflag_disable_script_inactive 	: INTEGER is 16
+	Dochostuiflag_disable_script_inactive 	: INTEGER = 16
 	
-	Dochostuiflag_opennewwin        		: INTEGER is 32
+	Dochostuiflag_opennewwin        		: INTEGER = 32
 	
-	Dochostuiflag_disable_offscreen 		: INTEGER is 64
+	Dochostuiflag_disable_offscreen 		: INTEGER = 64
 	
-	Dochostuiflag_flat_scrollbar 			: INTEGER is 128
+	Dochostuiflag_flat_scrollbar 			: INTEGER = 128
 	
-	Dochostuiflag_div_blockdefault 			: INTEGER is 256
+	Dochostuiflag_div_blockdefault 			: INTEGER = 256
 	
-	Dochostuiflag_activate_clienthit_only 	: INTEGER is 512
+	Dochostuiflag_activate_clienthit_only 	: INTEGER = 512
 	
-	Dochostuiflag_disable_cookie 			: INTEGER is 1024;
+	Dochostuiflag_disable_cookie 			: INTEGER = 1024;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

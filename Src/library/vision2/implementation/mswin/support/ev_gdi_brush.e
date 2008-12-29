@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision implentation for retrieving a WEL_BRUSH"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make_with_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
+	make_with_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF)
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		do
 			Result := (color_red |<< 16) | (color_green |<< 8) | color_blue
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `Current' look the same as `other'?
 		local
 			equal_color: BOOLEAN -- are colors equal ?
@@ -80,7 +80,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF) is
+	set_values (a_pattern: WEL_BITMAP; a_color: WEL_COLOR_REF)
 			-- Set the pattern of the brush to `a_pattern' (can
 			-- be equal to Void if no pattern is defined), and
 			-- the color to `a_color'.
@@ -97,7 +97,7 @@ feature -- Element change
 			end				
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

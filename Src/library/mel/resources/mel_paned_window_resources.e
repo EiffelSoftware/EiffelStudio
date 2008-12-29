@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Paned Window resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNrefigureMode: POINTER is
+	XmNrefigureMode: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNrefigureMode"
 		end;
 
-	XmNsashHeight: POINTER is
+	XmNsashHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNsashHeight"
 		end;
 
-	XmNsashIndent: POINTER is
+	XmNsashIndent: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNsashIndent"
 		end;
 
-	XmNsashShadowThickness: POINTER is
+	XmNsashShadowThickness: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNsashShadowThickness"
 		end;
 
-	XmNsashWidth: POINTER is
+	XmNsashWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNsashWidth"
 		end;
 
-	XmNseparatorOn: POINTER is
+	XmNseparatorOn: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNseparatorOn"
 		end;
 
-	XmNspacing: POINTER is
+	XmNspacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -85,7 +85,7 @@ feature -- Implementation
 		end;
 
 
-	XmNorientation: POINTER is
+	XmNorientation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -93,7 +93,7 @@ feature -- Implementation
 			"XmNorientation"
 		end;
 
-	XmVertical: INTEGER is
+	XmVertical: INTEGER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_INTEGER"
@@ -101,7 +101,7 @@ feature -- Implementation
 			"XmVERTICAL"
 		end;	
 
-	XmHorizontal: INTEGER is
+	XmHorizontal: INTEGER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_INTEGER"
@@ -109,7 +109,7 @@ feature -- Implementation
 			"XmHORIZONTAL"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Dialog which exists when initlized.
 					EV_DIALOG only exists after show.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_parent: WEL_WINDOW) is
+	make (a_parent: WEL_WINDOW)
 				-- Creation method.
 		require
 			not_void: a_parent /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initlization
 
 feature {NONE} -- Implementation
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;	a_name: STRING_GENERAL) is
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;	a_name: STRING_GENERAL)
 				-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			cwin_show_window (item, Sw_show)
 		end
 
-	cwin_create_dialog_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
+	cwin_create_dialog_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER
 			-- SDK DialogBoxIndirect
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): HWND"
@@ -66,14 +66,14 @@ feature {NONE} -- Implementation
 			"CreateDialogIndirect"
         end
 
-	dlg_template: WEL_DLG_TEMPLATE is
+	dlg_template: WEL_DLG_TEMPLATE
 			-- Dialog template, so we can created a dialog which not included in resource.
 		do
 			create Result.make_with_global_alloc
 			Result.set_style ({WEL_WS_CONSTANTS}.ws_popupwindow)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

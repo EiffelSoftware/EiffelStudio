@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="testing" uuid="B77B3A44-A1A9-4050-8DF9-053598561C33" library_target="testing">
 	<target name="testing">
 		<root all_classes="true"/>
-		<option namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library" syntax_level="1">
 		</option>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

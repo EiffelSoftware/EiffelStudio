@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container to hold attachments for forms"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	find_widget (w: WIDGET_IMP): ATTACHMENT_WINDOWS is
+	find_widget (w: WIDGET_IMP): ATTACHMENT_WINDOWS
 			-- Find the attachment that contains widget `w'
 		require
 			non_void: w /= Void
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status setting
 
-	add (w: WIDGET_IMP) is
+	add (w: WIDGET_IMP)
 		local
 			a: ATTACHMENT_WINDOWS
 		do
@@ -54,7 +54,7 @@ feature -- Status setting
 		end
 
 	attach_left (w,l : WIDGET_IMP; pos: INTEGER;
-			relative: BOOLEAN) is
+			relative: BOOLEAN)
 			-- Attach the left of `w' to `l' separated by `pos' 
 			-- which is `relative'
 		local
@@ -69,7 +69,7 @@ feature -- Status setting
 		end
 
 	attach_right (w,r : WIDGET_IMP; pos: INTEGER;
-			relative: BOOLEAN) is
+			relative: BOOLEAN)
 			-- Attach the right of `w' to `l' separated by `pos' 
 			-- which is `relative'
 		local
@@ -84,7 +84,7 @@ feature -- Status setting
 		end
 
 	attach_top (w,t : WIDGET_IMP; pos: INTEGER;
-			relative: BOOLEAN) is
+			relative: BOOLEAN)
 			-- Attach the top of `w' to `l' separated by `pos' 
 			-- which is `relative'
 		local
@@ -98,7 +98,7 @@ feature -- Status setting
 			a.attach_top (t, pos, relative);
 		end
 
-	attach_bottom (w,b : WIDGET_IMP; pos: INTEGER; relative: BOOLEAN) is
+	attach_bottom (w,b : WIDGET_IMP; pos: INTEGER; relative: BOOLEAN)
 			-- Attach the bottom of `w' to `l' separated by `pos' 
 			-- which is `relative'
 		local
@@ -112,7 +112,7 @@ feature -- Status setting
 			a.attach_bottom (b, pos, relative);
 		end
 
-	clear_all is
+	clear_all
 			-- Set all processing flags to false
 		local
 			c: CURSOR
@@ -131,7 +131,7 @@ feature -- Status setting
 			go_to (c)
 		end
 
-	height (form: FORM_IMP): INTEGER is
+	height (form: FORM_IMP): INTEGER
 			-- Height of all the widgets in this
 			-- list, includes sizing based on positioning
 		local
@@ -167,7 +167,7 @@ feature -- Status setting
 			end
 		end
 
-	width (form: FORM_IMP): INTEGER is
+	width (form: FORM_IMP): INTEGER
 			-- Width of all the widgets in this
 			-- list, includes sizing based on positioning
 		local
@@ -203,7 +203,7 @@ feature -- Status setting
 			end
 		end
 
-	process (form: FORM_IMP) is
+	process (form: FORM_IMP)
 			-- Position each widget in the list
 			-- If more than 100 passes are required 
 			-- we presume there is a circularity
@@ -242,7 +242,7 @@ feature -- Status setting
 			go_to (c)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

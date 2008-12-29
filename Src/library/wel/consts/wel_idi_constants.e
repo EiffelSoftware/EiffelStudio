@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Icon (IDI) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,42 +10,42 @@ class
 
 feature -- Access
 
-	frozen Idi_application: POINTER is
+	frozen Idi_application: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_APPLICATION"
 		end
 
-	frozen Idi_hand, frozen Idi_error: POINTER is
+	frozen Idi_hand, frozen Idi_error: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_HAND"
 		end
 
-	frozen Idi_question: POINTER is
+	frozen Idi_question: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_QUESTION"
 		end
 
-	frozen Idi_exclamation, frozen Idi_warning: POINTER is
+	frozen Idi_exclamation, frozen Idi_warning: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_EXCLAMATION"
 		end
 
-	frozen Idi_asterisk, frozen Idi_information: POINTER is
+	frozen Idi_asterisk, frozen Idi_information: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDI_ASTERISK"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that is an movable edge of an polyline link figure (the black dot)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create {EG_EDGE}
 
 feature {NONE} -- Initialization
 
-	make (owner: like corresponding_line) is
+	make (owner: like corresponding_line)
 			-- Create a move handle used to move the edges (the black circle).
 			-- | If you change this you might also have to change the drawers in EG_FIGURE_DRAWER
 		local
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {EG_POLYLINE_LINK_FIGURE} -- Element change
 
-	set_corresponding_point (a_corresponding_point: like corresponding_point) is
+	set_corresponding_point (a_corresponding_point: like corresponding_point)
 			-- Set `corresponding_point' to `a_corresponding_point'.
 		require
 			a_corresponding_point_not_void: a_corresponding_point /= Void
@@ -63,7 +63,7 @@ feature {EG_POLYLINE_LINK_FIGURE} -- Element change
 invariant
 	corresponding_point_not_void: corresponding_point /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

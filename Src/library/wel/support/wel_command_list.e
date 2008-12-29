@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command which executes a list of commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Element change
 
-	add_command (command: WEL_COMMAND; argument: ANY) is
+	add_command (command: WEL_COMMAND; argument: ANY)
 			-- Add `command' with `argument' to list of commands.
 		local
 			exec: WEL_COMMAND_EXEC
@@ -30,7 +30,7 @@ feature -- Element change
 			extend (exec)
 		end
 
-	remove_command (command: WEL_COMMAND; argument: ANY) is
+	remove_command (command: WEL_COMMAND; argument: ANY)
 			-- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Execution
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute list of commands
 		do
 			from
@@ -65,7 +65,7 @@ feature -- Execution
 			end
 		end
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

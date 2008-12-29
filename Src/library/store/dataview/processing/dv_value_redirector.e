@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convert a data to its string representation according%
 			%to an agent. Use this class when `out' cannot be used."
 	legal: "See notice at end of class."
@@ -16,14 +16,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create storage hash-tables.
 		do
 			create result_table.make (10)
 			create inversion_table.make (10)
 		end
 
-	make_with_default_size (n_items: INTEGER) is
+	make_with_default_size (n_items: INTEGER)
 			-- Make with and allocate space to store at least `n_items'.
 		do
 			create result_table.make (n_items)
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Access
 
-	redirected_value (data: ANY): STRING is
+	redirected_value (data: ANY): STRING
 			-- Return the redirected value from redirector.
 		require
 			at_least_one_result_set: at_least_one_result_set
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	inverted_value (s: STRING): ANY is
+	inverted_value (s: STRING): ANY
 			-- 
 		require
 			can_invert: can_invert
@@ -77,13 +77,13 @@ feature -- Access
 
 feature -- Status report
 
-	at_least_one_result_set: BOOLEAN is
+	at_least_one_result_set: BOOLEAN
 			-- Is one way to get a result set?
 		do
 			Result := redirector /= Void or else result_table /= Void
 		end
 
-	can_invert: BOOLEAN is
+	can_invert: BOOLEAN
 			-- Can component retrieve data from its indirection?
 		do
 			Result := invertor /= Void or else inversion_table /= Void
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_results (res_t: HASH_TABLE [STRING, HASHABLE]) is
+	set_results (res_t: HASH_TABLE [STRING, HASHABLE])
 			-- Set values of the redirector result table with `res_t'.
 		require
 			not_void: res_t /= Void
@@ -101,7 +101,7 @@ feature -- Basic operations
 			at_least_one_result_set: at_least_one_result_set
 		end
 
-	set_inversion_table (inv_t: HASH_TABLE [ANY, STRING]) is
+	set_inversion_table (inv_t: HASH_TABLE [ANY, STRING])
 			-- Set values of the invertor result table with `res_t'.
 		require
 			not_void: inv_t /= Void
@@ -111,7 +111,7 @@ feature -- Basic operations
 			can_invert: can_invert
 		end
 
-	set_redirector (red: FUNCTION [ANY, TUPLE [ANY], STRING]) is
+	set_redirector (red: FUNCTION [ANY, TUPLE [ANY], STRING])
 			-- Set the redirector to use.
 			-- PLEASE set a procedure keeping argument of type ANY to avoid cat calls.
 		require
@@ -122,7 +122,7 @@ feature -- Basic operations
 			at_least_one_result_set: at_least_one_result_set
 		end
 
-	set_invertor (inv: FUNCTION [ANY, TUPLE [STRING], ANY]) is
+	set_invertor (inv: FUNCTION [ANY, TUPLE [STRING], ANY])
 			-- Set the invertor to use.
 			-- Warning: set a procedure keeping result of type ANY to avoid cat calls.
 		require
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	inversion_table: HASH_TABLE [ANY, STRING];
 			--  Table to store and access data from its string representation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

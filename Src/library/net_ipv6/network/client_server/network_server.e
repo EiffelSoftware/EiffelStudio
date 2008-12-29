@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A server for a network socket."
@@ -20,7 +20,7 @@ feature -- Access
 	in: NETWORK_STREAM_SOCKET;
 			-- Receive socket.
 
-	make (a_port: INTEGER) is
+	make (a_port: INTEGER)
 			-- Make a network server listening to `a_port'.
 		require 
 			valid_port: a_port >= 0
@@ -33,13 +33,13 @@ feature -- Access
 			end
 		end;
 
-	cleanup is
+	cleanup
 			-- Clean close of server.
 		do
 			in.close
 		end;
 
-	receive is
+	receive
 			-- Receive activity of server.
 		do
 			in.accept;
@@ -47,13 +47,13 @@ feature -- Access
 			received ?= outflow.retrieved
 		end;
 
-	resend (msg: ANY) is
+	resend (msg: ANY)
 			-- Send back message `msg'.
 		do
 			outflow.independent_store (msg)
 		end;
 	
-	close is
+	close
 			-- Close server socket.
 		do
 			if outflow /= Void and then not outflow.is_closed then
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

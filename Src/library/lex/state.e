@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"States of finite automata"
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_final (i: INTEGER) is
+	set_final (i: INTEGER)
 			-- Make current state final for `i'-th regular expression.
 		do
 			if final_array = Void then
@@ -48,7 +48,7 @@ invariant
 	lower_entry_is_final: (final = 0 and final_array = Void)
 			or else final_array.item (final_array.lower) = final
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

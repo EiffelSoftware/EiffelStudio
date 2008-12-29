@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of composite widget %
@@ -21,13 +21,13 @@ inherit
 
 feature -- Access
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 			-- Parent of composite
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
 
-	children: ARRAYED_LIST [WIDGET] is
+	children: ARRAYED_LIST [WIDGET]
 			-- List of children for Current composite
 		require
 			exists: not destroyed
@@ -37,7 +37,7 @@ feature -- Access
 			valid_result: Result /= Void
 		end;
 
-	descendants: ARRAYED_LIST [WIDGET] is
+	descendants: ARRAYED_LIST [WIDGET]
 			-- List of descendants for Current composite
 		require
 			exists: not destroyed
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Measurement
 
-	children_count: INTEGER is
+	children_count: INTEGER
 			-- Number of children
 		require
 			exists: not destroyed;
@@ -68,7 +68,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: COMPOSITE_I;;
 			-- Implementation of Current
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

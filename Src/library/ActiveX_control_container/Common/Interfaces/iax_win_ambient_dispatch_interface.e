@@ -1,4 +1,4 @@
-indexing
+note
 	description: "IAxWinAmbientDispatch Interface Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,196 +12,196 @@ inherit
 
 feature -- Status Report
 
-	set_allow_windowless_activation_user_precondition (pb_can_windowless_activate: BOOLEAN): BOOLEAN is
+	set_allow_windowless_activation_user_precondition (pb_can_windowless_activate: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_allow_windowless_activation'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	allow_windowless_activation_user_precondition: BOOLEAN is
+	allow_windowless_activation_user_precondition: BOOLEAN
 			-- User-defined preconditions for `allow_windowless_activation'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_back_color_user_precondition (pclr_background: INTEGER): BOOLEAN is
+	set_back_color_user_precondition (pclr_background: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_back_color'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	back_color_user_precondition: BOOLEAN is
+	back_color_user_precondition: BOOLEAN
 			-- User-defined preconditions for `back_color'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_fore_color_user_precondition (pclr_foreground: INTEGER): BOOLEAN is
+	set_fore_color_user_precondition (pclr_foreground: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_fore_color'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	fore_color_user_precondition: BOOLEAN is
+	fore_color_user_precondition: BOOLEAN
 			-- User-defined preconditions for `fore_color'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_locale_id_user_precondition (plcid_locale_id: INTEGER): BOOLEAN is
+	set_locale_id_user_precondition (plcid_locale_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_locale_id'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	locale_id_user_precondition: BOOLEAN is
+	locale_id_user_precondition: BOOLEAN
 			-- User-defined preconditions for `locale_id'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_user_mode_user_precondition (pb_user_mode: BOOLEAN): BOOLEAN is
+	set_user_mode_user_precondition (pb_user_mode: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_user_mode'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	user_mode_user_precondition: BOOLEAN is
+	user_mode_user_precondition: BOOLEAN
 			-- User-defined preconditions for `user_mode'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_display_as_default_user_precondition (pb_display_as_default: BOOLEAN): BOOLEAN is
+	set_display_as_default_user_precondition (pb_display_as_default: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_display_as_default'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	display_as_default_user_precondition: BOOLEAN is
+	display_as_default_user_precondition: BOOLEAN
 			-- User-defined preconditions for `display_as_default'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_font_user_precondition (p_font: FONT_INTERFACE): BOOLEAN is
+	set_font_user_precondition (p_font: FONT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_font'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	font_user_precondition: BOOLEAN is
+	font_user_precondition: BOOLEAN
 			-- User-defined preconditions for `font'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_message_reflect_user_precondition (pb_msg_reflect: BOOLEAN): BOOLEAN is
+	set_message_reflect_user_precondition (pb_msg_reflect: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_message_reflect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	message_reflect_user_precondition: BOOLEAN is
+	message_reflect_user_precondition: BOOLEAN
 			-- User-defined preconditions for `message_reflect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	show_grab_handles_user_precondition (pb_show_grab_handles: BOOLEAN_REF): BOOLEAN is
+	show_grab_handles_user_precondition (pb_show_grab_handles: BOOLEAN_REF): BOOLEAN
 			-- User-defined preconditions for `show_grab_handles'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	show_hatching_user_precondition (pb_show_hatching: BOOLEAN_REF): BOOLEAN is
+	show_hatching_user_precondition (pb_show_hatching: BOOLEAN_REF): BOOLEAN
 			-- User-defined preconditions for `show_hatching'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_doc_host_flags_user_precondition (pdw_doc_host_flags: INTEGER): BOOLEAN is
+	set_doc_host_flags_user_precondition (pdw_doc_host_flags: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_doc_host_flags'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	doc_host_flags_user_precondition: BOOLEAN is
+	doc_host_flags_user_precondition: BOOLEAN
 			-- User-defined preconditions for `doc_host_flags'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_doc_host_double_click_flags_user_precondition (pdw_doc_host_double_click_flags: INTEGER): BOOLEAN is
+	set_doc_host_double_click_flags_user_precondition (pdw_doc_host_double_click_flags: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_doc_host_double_click_flags'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	doc_host_double_click_flags_user_precondition: BOOLEAN is
+	doc_host_double_click_flags_user_precondition: BOOLEAN
 			-- User-defined preconditions for `doc_host_double_click_flags'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_allow_context_menu_user_precondition (pb_allow_context_menu: BOOLEAN): BOOLEAN is
+	set_allow_context_menu_user_precondition (pb_allow_context_menu: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_allow_context_menu'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	allow_context_menu_user_precondition: BOOLEAN is
+	allow_context_menu_user_precondition: BOOLEAN
 			-- User-defined preconditions for `allow_context_menu'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_allow_show_ui_user_precondition (pb_allow_show_ui: BOOLEAN): BOOLEAN is
+	set_allow_show_ui_user_precondition (pb_allow_show_ui: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_allow_show_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	allow_show_ui_user_precondition: BOOLEAN is
+	allow_show_ui_user_precondition: BOOLEAN
 			-- User-defined preconditions for `allow_show_ui'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_option_key_path_user_precondition (pbstr_option_key_path: STRING): BOOLEAN is
+	set_option_key_path_user_precondition (pbstr_option_key_path: STRING): BOOLEAN
 			-- User-defined preconditions for `set_option_key_path'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	option_key_path_user_precondition: BOOLEAN is
+	option_key_path_user_precondition: BOOLEAN
 			-- User-defined preconditions for `option_key_path'.
 			-- Redefine in descendants if needed.
 		do
@@ -210,7 +210,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	set_allow_windowless_activation (pb_can_windowless_activate: BOOLEAN) is
+	set_allow_windowless_activation (pb_can_windowless_activate: BOOLEAN)
 			-- Enable or disable windowless activation
 			-- `pb_can_windowless_activate' [in].  
 		require
@@ -219,7 +219,7 @@ feature -- Basic Operations
 
 		end
 
-	allow_windowless_activation: BOOLEAN is
+	allow_windowless_activation: BOOLEAN
 			-- Enable or disable windowless activation
 		require
 			allow_windowless_activation_user_precondition: allow_windowless_activation_user_precondition
@@ -227,7 +227,7 @@ feature -- Basic Operations
 
 		end
 
-	set_back_color (pclr_background: INTEGER) is
+	set_back_color (pclr_background: INTEGER)
 			-- Set the background color
 			-- `pclr_background' [in].  
 		require
@@ -236,7 +236,7 @@ feature -- Basic Operations
 
 		end
 
-	back_color: INTEGER is
+	back_color: INTEGER
 			-- Set the background color
 		require
 			back_color_user_precondition: back_color_user_precondition
@@ -244,7 +244,7 @@ feature -- Basic Operations
 
 		end
 
-	set_fore_color (pclr_foreground: INTEGER) is
+	set_fore_color (pclr_foreground: INTEGER)
 			-- Set the ambient foreground color
 			-- `pclr_foreground' [in].  
 		require
@@ -253,7 +253,7 @@ feature -- Basic Operations
 
 		end
 
-	fore_color: INTEGER is
+	fore_color: INTEGER
 			-- Set the ambient foreground color
 		require
 			fore_color_user_precondition: fore_color_user_precondition
@@ -261,7 +261,7 @@ feature -- Basic Operations
 
 		end
 
-	set_locale_id (plcid_locale_id: INTEGER) is
+	set_locale_id (plcid_locale_id: INTEGER)
 			-- Set the ambient locale
 			-- `plcid_locale_id' [in].  
 		require
@@ -270,7 +270,7 @@ feature -- Basic Operations
 
 		end
 
-	locale_id: INTEGER is
+	locale_id: INTEGER
 			-- Set the ambient locale
 		require
 			locale_id_user_precondition: locale_id_user_precondition
@@ -278,7 +278,7 @@ feature -- Basic Operations
 
 		end
 
-	set_user_mode (pb_user_mode: BOOLEAN) is
+	set_user_mode (pb_user_mode: BOOLEAN)
 			-- Set the ambient user mode
 			-- `pb_user_mode' [in].  
 		require
@@ -287,7 +287,7 @@ feature -- Basic Operations
 
 		end
 
-	user_mode: BOOLEAN is
+	user_mode: BOOLEAN
 			-- Set the ambient user mode
 		require
 			user_mode_user_precondition: user_mode_user_precondition
@@ -295,7 +295,7 @@ feature -- Basic Operations
 
 		end
 
-	set_display_as_default (pb_display_as_default: BOOLEAN) is
+	set_display_as_default (pb_display_as_default: BOOLEAN)
 			-- Enable or disable the control as default
 			-- `pb_display_as_default' [in].  
 		require
@@ -304,7 +304,7 @@ feature -- Basic Operations
 
 		end
 
-	display_as_default: BOOLEAN is
+	display_as_default: BOOLEAN
 			-- Enable or disable the control as default
 		require
 			display_as_default_user_precondition: display_as_default_user_precondition
@@ -312,7 +312,7 @@ feature -- Basic Operations
 
 		end
 
-	set_font (p_font: FONT_INTERFACE) is
+	set_font (p_font: FONT_INTERFACE)
 			-- Set the ambient font
 			-- `p_font' [in].  
 		require
@@ -321,7 +321,7 @@ feature -- Basic Operations
 
 		end
 
-	font: FONT_INTERFACE is
+	font: FONT_INTERFACE
 			-- Set the ambient font
 		require
 			font_user_precondition: font_user_precondition
@@ -331,7 +331,7 @@ feature -- Basic Operations
 			valid_font: Result.item /= default_pointer
 		end
 
-	set_message_reflect (pb_msg_reflect: BOOLEAN) is
+	set_message_reflect (pb_msg_reflect: BOOLEAN)
 			-- Enable or disable message reflection
 			-- `pb_msg_reflect' [in].  
 		require
@@ -340,7 +340,7 @@ feature -- Basic Operations
 
 		end
 
-	message_reflect: BOOLEAN is
+	message_reflect: BOOLEAN
 			-- Enable or disable message reflection
 		require
 			message_reflect_user_precondition: message_reflect_user_precondition
@@ -348,7 +348,7 @@ feature -- Basic Operations
 
 		end
 
-	show_grab_handles (pb_show_grab_handles: BOOLEAN_REF) is
+	show_grab_handles (pb_show_grab_handles: BOOLEAN_REF)
 			-- Show or hide grab handles
 			-- `pb_show_grab_handles' [out].  
 		require
@@ -357,7 +357,7 @@ feature -- Basic Operations
 
 		end
 
-	show_hatching (pb_show_hatching: BOOLEAN_REF) is
+	show_hatching (pb_show_hatching: BOOLEAN_REF)
 			-- Are grab handles enabled
 			-- `pb_show_hatching' [out].  
 		require
@@ -366,7 +366,7 @@ feature -- Basic Operations
 
 		end
 
-	set_doc_host_flags (pdw_doc_host_flags: INTEGER) is
+	set_doc_host_flags (pdw_doc_host_flags: INTEGER)
 			-- Set the DOCHOSTUIFLAG flags
 			-- `pdw_doc_host_flags' [in].  
 		require
@@ -375,7 +375,7 @@ feature -- Basic Operations
 
 		end
 
-	doc_host_flags: INTEGER is
+	doc_host_flags: INTEGER
 			-- Set the DOCHOSTUIFLAG flags
 		require
 			doc_host_flags_user_precondition: doc_host_flags_user_precondition
@@ -383,7 +383,7 @@ feature -- Basic Operations
 
 		end
 
-	set_doc_host_double_click_flags (pdw_doc_host_double_click_flags: INTEGER) is
+	set_doc_host_double_click_flags (pdw_doc_host_double_click_flags: INTEGER)
 			-- Set the DOCHOSTUIDBLCLK flags
 			-- `pdw_doc_host_double_click_flags' [in].  
 		require
@@ -392,7 +392,7 @@ feature -- Basic Operations
 
 		end
 
-	doc_host_double_click_flags: INTEGER is
+	doc_host_double_click_flags: INTEGER
 			-- Set the DOCHOSTUIDBLCLK flags
 		require
 			doc_host_double_click_flags_user_precondition: doc_host_double_click_flags_user_precondition
@@ -400,7 +400,7 @@ feature -- Basic Operations
 
 		end
 
-	set_allow_context_menu (pb_allow_context_menu: BOOLEAN) is
+	set_allow_context_menu (pb_allow_context_menu: BOOLEAN)
 			-- Enable or disable context menus
 			-- `pb_allow_context_menu' [in].  
 		require
@@ -409,7 +409,7 @@ feature -- Basic Operations
 
 		end
 
-	allow_context_menu: BOOLEAN is
+	allow_context_menu: BOOLEAN
 			-- Enable or disable context menus
 		require
 			allow_context_menu_user_precondition: allow_context_menu_user_precondition
@@ -417,7 +417,7 @@ feature -- Basic Operations
 
 		end
 
-	set_allow_show_ui (pb_allow_show_ui: BOOLEAN) is
+	set_allow_show_ui (pb_allow_show_ui: BOOLEAN)
 			-- Enable or disable UI
 			-- `pb_allow_show_ui' [in].  
 		require
@@ -426,7 +426,7 @@ feature -- Basic Operations
 
 		end
 
-	allow_show_ui: BOOLEAN is
+	allow_show_ui: BOOLEAN
 			-- Enable or disable UI
 		require
 			allow_show_ui_user_precondition: allow_show_ui_user_precondition
@@ -434,7 +434,7 @@ feature -- Basic Operations
 
 		end
 
-	set_option_key_path (pbstr_option_key_path: STRING) is
+	set_option_key_path (pbstr_option_key_path: STRING)
 			-- Set the option key path
 			-- `pbstr_option_key_path' [in].  
 		require
@@ -443,7 +443,7 @@ feature -- Basic Operations
 
 		end
 
-	option_key_path: STRING is
+	option_key_path: STRING
 			-- Set the option key path
 		require
 			option_key_path_user_precondition: option_key_path_user_precondition
@@ -451,7 +451,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

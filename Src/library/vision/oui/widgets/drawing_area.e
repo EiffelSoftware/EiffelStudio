@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Special area to draw"
 	legal: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a drawing area with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged drawing area with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a drawing area with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_input_action (a_command: COMMAND; argument: ANY) is
+	add_input_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- a key is pressed or when a mouse button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -83,7 +83,7 @@ feature -- Element change
 			implementation.add_input_action (a_command, argument)
 		end;
 
-	add_resize_action (a_command: COMMAND; argument: ANY) is
+	add_resize_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- current area is resized.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -97,7 +97,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_input_action (a_command: COMMAND; argument: ANY) is
+	remove_input_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when a key is pressed or when a mouse button
 			-- is pressed.
@@ -108,7 +108,7 @@ feature -- Removal
 			implementation.remove_input_action (a_command, argument)
 		end;
 
-	remove_resize_action (a_command: COMMAND; argument: ANY) is
+	remove_resize_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when current area is resized.
 		require
@@ -125,12 +125,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementaiton
 
 feature {NONE} -- Implementaiton
 
-	set_default is
+	set_default
 			-- Set default values to current drawing area.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

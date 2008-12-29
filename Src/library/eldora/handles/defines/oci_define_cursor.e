@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Define Variable of type CURSOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,14 +23,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_variable (Sqlt_cur, Pointer_bytes)
 		end
 
 feature -- Access
 
-	value: OCI_STATEMENT is
+	value: OCI_STATEMENT
 			-- Current value of define variable
 		local
 			cursor_handle: POINTER
@@ -39,13 +39,13 @@ feature -- Access
 			create Result.make_by_handle (cursor_handle)
 		end
 	
-	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN is
+	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN
 			-- Are `type' and `size' valid values for `data_type' and `data_size' ?
 		do
 			Result := type = Sqlt_cur and size = Pointer_bytes
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

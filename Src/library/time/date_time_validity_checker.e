@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facility routines to check the validity of DATE_TIMEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	date_time_valid (s: STRING; code_string: STRING): BOOLEAN is
+	date_time_valid (s: STRING; code_string: STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE_TIME
 			-- And does the string `s' correspond to `code_string'?
@@ -39,7 +39,7 @@ feature -- Preconditions
 		end
 
 	date_time_valid_with_base (s: STRING; code_string: STRING;
-					base: INTEGER): BOOLEAN is
+					base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE_TIME
 			-- And does the string `s' correspond to `code_string'?
@@ -58,7 +58,7 @@ feature -- Preconditions
 		end
 
 	is_correct_date_time (y, mo, d, h, mi: INTEGER; s: DOUBLE;
-					 	  twelve_hour_scale: BOOLEAN): BOOLEAN is
+					 	  twelve_hour_scale: BOOLEAN): BOOLEAN
 			-- Is date-time specified by `y', `mo', `d', `h', `mi', `s'
 			-- correct?
 			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
@@ -68,7 +68,7 @@ feature -- Preconditions
 				is_correct_time (h, mi, s, twelve_hour_scale)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

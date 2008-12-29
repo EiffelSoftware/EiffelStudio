@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Convertor to do string to integer/natural conversion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			reset (type_no_limitation)
@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 
 feature	-- State machine setting
 
-	reset (type: INTEGER) is
+	reset (type: INTEGER)
 			-- Reset current convertor to parse integer of type `type'.
 		do
 			last_state := 0
@@ -51,7 +51,7 @@ feature	-- State machine setting
 
 feature -- Status reporting
 
-	separators_valid (separators: STRING): BOOLEAN is
+	separators_valid (separators: STRING): BOOLEAN
 			-- Are separators contained in `separators' valid?
 		local
 			i: INTEGER
@@ -76,19 +76,19 @@ feature -- Status reporting
 			end
 		end
 
-	overflowed: BOOLEAN is
+	overflowed: BOOLEAN
 			-- Is integer parsed so fa overflowed?
 		do
 			Result := (internal_overflowed and then sign = 0)
 		end
 
-	underflowed: BOOLEAN is
+	underflowed: BOOLEAN
 			-- Is integer parsed so fa underflowed?
 		do
 			Result := (internal_overflowed and then sign = 1)
 		end
 
-	parse_successful: BOOLEAN is
+	parse_successful: BOOLEAN
 			-- This only means we didn't enter an invalid state when parsing,
 			-- it doesn't mean that we have got an valid integer.
 			-- You need to check `is_integral_integer' or `is_part_of_integer'.
@@ -99,7 +99,7 @@ feature -- Status reporting
 
 feature -- String parsing
 
-	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+	parse_string_with_type (s: STRING_GENERAL; type: INTEGER)
 			-- Parse string `s' as integer of type `type'.
 		local
 			i: INTEGER
@@ -117,7 +117,7 @@ feature -- String parsing
 			end
 		end
 
-	parse_character (c: CHARACTER) is
+	parse_character (c: CHARACTER)
 			-- Parse next character `c'.
 		local
 			temp_p1: like max_natural_type
@@ -207,13 +207,13 @@ feature -- String parsing
 
 feature -- Status reporting
 
-	conversion_type_valid (type: INTEGER): BOOLEAN is
+	conversion_type_valid (type: INTEGER): BOOLEAN
 			-- If conversion `type' valid?
 		do
 			Result := integer_natural_type_valid (type)
 		end
 
-	is_part_of_integer: BOOLEAN is
+	is_part_of_integer: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid start part of an integer?
 		do
 			Result := ((last_state = 0) or (last_state = 1) or
@@ -221,14 +221,14 @@ feature -- Status reporting
 					  (not internal_overflowed)
 		end
 
-	is_integral_integer: BOOLEAN is
+	is_integral_integer: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid integral integer?
 		do
 			Result := ((last_state = 2) or (last_state = 3)) and
 					  (not internal_overflowed)
 		end
 
-	parsed_integer_8: INTEGER_8 is
+	parsed_integer_8: INTEGER_8
 			-- INTEGER_8 representation of parsed string
 		local
 			l1: INTEGER_8
@@ -243,7 +243,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_integer_16: INTEGER_16 is
+	parsed_integer_16: INTEGER_16
 			-- INTEGER_16 representation of parsed string
 		local
 			l1: INTEGER_16
@@ -257,7 +257,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_integer_32, parsed_integer: INTEGER is
+	parsed_integer_32, parsed_integer: INTEGER
 			-- INTEGER representation of parsed string
 		local
 			l1: INTEGER
@@ -271,7 +271,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_integer_64: INTEGER_64 is
+	parsed_integer_64: INTEGER_64
 			-- INTEGER_64 representation of parsed string
 		local
 			l1: INTEGER_64
@@ -285,7 +285,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_natural_8: NATURAL_8 is
+	parsed_natural_8: NATURAL_8
 			-- NATURAL_8 representation of parsed string
 		local
 			l1: NATURAL_8
@@ -295,7 +295,7 @@ feature -- Status reporting
 			Result := l1 + part2.as_natural_8
 		end
 
-	parsed_natural_16: NATURAL_16 is
+	parsed_natural_16: NATURAL_16
 			-- NATURAL_16 representation of parsed string
 		local
 			l1: NATURAL_16
@@ -305,7 +305,7 @@ feature -- Status reporting
 			Result := l1 + part2.as_natural_16
 		end
 
-	parsed_natural_32, parsed_natural: NATURAL_32 is
+	parsed_natural_32, parsed_natural: NATURAL_32
 			-- NATURAL_32 representation of parsed string
 		local
 			l1: NATURAL_32
@@ -315,7 +315,7 @@ feature -- Status reporting
 			Result := l1 + part2.as_natural_32
 		end
 
-	parsed_natural_64: NATURAL_64 is
+	parsed_natural_64: NATURAL_64
 			-- NATURAL_64 representation of parsed string
 		local
 			l1: NATURAL_64
@@ -327,7 +327,7 @@ feature -- Status reporting
 
 feature{NONE} -- Implementation
 
-	overflow_checker: INTEGER_OVERFLOW_CHECKER is
+	overflow_checker: INTEGER_OVERFLOW_CHECKER
 			-- Overflow checker
 		once
 			create Result.make
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 	internal_overflowed: BOOLEAN;
 			-- Internal overflow flag
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

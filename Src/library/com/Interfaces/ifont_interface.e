@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font Object. OLE Automation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,154 +12,154 @@ inherit
 
 feature -- Status Report
 
-	name_user_precondition: BOOLEAN is
+	name_user_precondition: BOOLEAN
 			-- User-defined preconditions for `name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_name_user_precondition (pname: STRING): BOOLEAN is
+	set_name_user_precondition (pname: STRING): BOOLEAN
 			-- User-defined preconditions for `set_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	size_user_precondition: BOOLEAN is
+	size_user_precondition: BOOLEAN
 			-- User-defined preconditions for `size'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_size_user_precondition (psize: ECOM_CURRENCY): BOOLEAN is
+	set_size_user_precondition (psize: ECOM_CURRENCY): BOOLEAN
 			-- User-defined preconditions for `set_size'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	bold_user_precondition: BOOLEAN is
+	bold_user_precondition: BOOLEAN
 			-- User-defined preconditions for `bold'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_bold_user_precondition (pbold: BOOLEAN): BOOLEAN is
+	set_bold_user_precondition (pbold: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_bold'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	italic_user_precondition: BOOLEAN is
+	italic_user_precondition: BOOLEAN
 			-- User-defined preconditions for `italic'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_italic_user_precondition (pitalic: BOOLEAN): BOOLEAN is
+	set_italic_user_precondition (pitalic: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_italic'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	underline_user_precondition: BOOLEAN is
+	underline_user_precondition: BOOLEAN
 			-- User-defined preconditions for `underline'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_underline_user_precondition (punderline: BOOLEAN): BOOLEAN is
+	set_underline_user_precondition (punderline: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_underline'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	strikethrough_user_precondition: BOOLEAN is
+	strikethrough_user_precondition: BOOLEAN
 			-- User-defined preconditions for `strikethrough'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_strikethrough_user_precondition (pstrikethrough: BOOLEAN): BOOLEAN is
+	set_strikethrough_user_precondition (pstrikethrough: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_strikethrough'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	weight_user_precondition: BOOLEAN is
+	weight_user_precondition: BOOLEAN
 			-- User-defined preconditions for `weight'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_weight_user_precondition (pweight: INTEGER): BOOLEAN is
+	set_weight_user_precondition (pweight: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_weight'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	charset_user_precondition: BOOLEAN is
+	charset_user_precondition: BOOLEAN
 			-- User-defined preconditions for `charset'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_charset_user_precondition (pcharset: INTEGER): BOOLEAN is
+	set_charset_user_precondition (pcharset: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_charset'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	h_font_user_precondition: BOOLEAN is
+	h_font_user_precondition: BOOLEAN
 			-- User-defined preconditions for `h_font'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	clone1_user_precondition (ppfont: CELL [IFONT_INTERFACE]): BOOLEAN is
+	clone1_user_precondition (ppfont: CELL [IFONT_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `clone1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_equal1_user_precondition (pfont_other: IFONT_INTERFACE): BOOLEAN is
+	is_equal1_user_precondition (pfont_other: IFONT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `is_equal1'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_ratio_user_precondition (cy_logical: INTEGER; cy_himetric: INTEGER): BOOLEAN is
+	set_ratio_user_precondition (cy_logical: INTEGER; cy_himetric: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_ratio'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	add_ref_hfont_user_precondition (a_h_font: INTEGER): BOOLEAN is
+	add_ref_hfont_user_precondition (a_h_font: INTEGER): BOOLEAN
 			-- User-defined preconditions for `add_ref_hfont'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	release_hfont_user_precondition (a_h_font: INTEGER): BOOLEAN is
+	release_hfont_user_precondition (a_h_font: INTEGER): BOOLEAN
 			-- User-defined preconditions for `release_hfont'.
 			-- Redefine in descendants if needed.
 		do
@@ -168,7 +168,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	name: STRING is
+	name: STRING
 			-- No description available.
 		require
 			name_user_precondition: name_user_precondition
@@ -178,7 +178,7 @@ feature -- Basic Operations
 			non_void_name: Result /= Void
 		end
 
-	set_name (pname: STRING) is
+	set_name (pname: STRING)
 			-- No description available.
 			-- `pname' [in].
 		require
@@ -187,7 +187,7 @@ feature -- Basic Operations
 
 		end
 
-	size: ECOM_CURRENCY is
+	size: ECOM_CURRENCY
 			-- No description available.
 		require
 			size_user_precondition: size_user_precondition
@@ -198,7 +198,7 @@ feature -- Basic Operations
 			valid_size: Result.item /= default_pointer
 		end
 
-	set_size (psize: ECOM_CURRENCY) is
+	set_size (psize: ECOM_CURRENCY)
 			-- No description available.
 			-- `psize' [in].
 		require
@@ -209,7 +209,7 @@ feature -- Basic Operations
 
 		end
 
-	bold: BOOLEAN is
+	bold: BOOLEAN
 			-- No description available.
 		require
 			bold_user_precondition: bold_user_precondition
@@ -217,7 +217,7 @@ feature -- Basic Operations
 
 		end
 
-	set_bold (pbold: BOOLEAN) is
+	set_bold (pbold: BOOLEAN)
 			-- No description available.
 			-- `pbold' [in].
 		require
@@ -226,7 +226,7 @@ feature -- Basic Operations
 
 		end
 
-	italic: BOOLEAN is
+	italic: BOOLEAN
 			-- No description available.
 		require
 			italic_user_precondition: italic_user_precondition
@@ -234,7 +234,7 @@ feature -- Basic Operations
 
 		end
 
-	set_italic (pitalic: BOOLEAN) is
+	set_italic (pitalic: BOOLEAN)
 			-- No description available.
 			-- `pitalic' [in].
 		require
@@ -243,7 +243,7 @@ feature -- Basic Operations
 
 		end
 
-	underline: BOOLEAN is
+	underline: BOOLEAN
 			-- No description available.
 		require
 			underline_user_precondition: underline_user_precondition
@@ -251,7 +251,7 @@ feature -- Basic Operations
 
 		end
 
-	set_underline (punderline: BOOLEAN) is
+	set_underline (punderline: BOOLEAN)
 			-- No description available.
 			-- `punderline' [in].
 		require
@@ -260,7 +260,7 @@ feature -- Basic Operations
 
 		end
 
-	strikethrough: BOOLEAN is
+	strikethrough: BOOLEAN
 			-- No description available.
 		require
 			strikethrough_user_precondition: strikethrough_user_precondition
@@ -268,7 +268,7 @@ feature -- Basic Operations
 
 		end
 
-	set_strikethrough (pstrikethrough: BOOLEAN) is
+	set_strikethrough (pstrikethrough: BOOLEAN)
 			-- No description available.
 			-- `pstrikethrough' [in].
 		require
@@ -277,7 +277,7 @@ feature -- Basic Operations
 
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- No description available.
 		require
 			weight_user_precondition: weight_user_precondition
@@ -285,7 +285,7 @@ feature -- Basic Operations
 
 		end
 
-	set_weight (pweight: INTEGER) is
+	set_weight (pweight: INTEGER)
 			-- No description available.
 			-- `pweight' [in].
 		require
@@ -294,7 +294,7 @@ feature -- Basic Operations
 
 		end
 
-	charset: INTEGER is
+	charset: INTEGER
 			-- No description available.
 		require
 			charset_user_precondition: charset_user_precondition
@@ -302,7 +302,7 @@ feature -- Basic Operations
 
 		end
 
-	set_charset (pcharset: INTEGER) is
+	set_charset (pcharset: INTEGER)
 			-- No description available.
 			-- `pcharset' [in].
 		require
@@ -311,7 +311,7 @@ feature -- Basic Operations
 
 		end
 
-	h_font: INTEGER is
+	h_font: INTEGER
 			-- No description available.
 		require
 			h_font_user_precondition: h_font_user_precondition
@@ -319,7 +319,7 @@ feature -- Basic Operations
 
 		end
 
-	clone1 (ppfont: CELL [IFONT_INTERFACE]) is
+	clone1 (ppfont: CELL [IFONT_INTERFACE])
 			-- No description available.
 			-- `ppfont' [out].
 		require
@@ -331,7 +331,7 @@ feature -- Basic Operations
 			valid_ppfont: ppfont.item /= Void
 		end
 
-	is_equal1 (pfont_other: IFONT_INTERFACE) is
+	is_equal1 (pfont_other: IFONT_INTERFACE)
 			-- No description available.
 			-- `pfont_other' [in].
 		require
@@ -342,7 +342,7 @@ feature -- Basic Operations
 
 		end
 
-	set_ratio (cy_logical: INTEGER; cy_himetric: INTEGER) is
+	set_ratio (cy_logical: INTEGER; cy_himetric: INTEGER)
 			-- No description available.
 			-- `cy_logical' [in].
 			-- `cy_himetric' [in].
@@ -352,7 +352,7 @@ feature -- Basic Operations
 
 		end
 
-	add_ref_hfont (a_h_font: INTEGER) is
+	add_ref_hfont (a_h_font: INTEGER)
 			-- No description available.
 			-- `a_h_font' [in].
 		require
@@ -361,7 +361,7 @@ feature -- Basic Operations
 
 		end
 
-	release_hfont (a_h_font: INTEGER) is
+	release_hfont (a_h_font: INTEGER)
 			-- No description available.
 			-- `a_h_font' [in].
 		require
@@ -370,7 +370,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

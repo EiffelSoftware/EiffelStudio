@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Button which can set maximum width, when not enough space, it will truncate button text to ellipsis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Command
 
-	set_maximum_width (a_width: INTEGER) is
+	set_maximum_width (a_width: INTEGER)
 			-- Set `maximum_width' with `a_width'
 		require
 			valid: a_width > 0
@@ -32,7 +32,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Redefine
 		do
 			Result := Precursor {SD_TOOL_BAR_RADIO_BUTTON}
@@ -41,7 +41,7 @@ feature -- Query
 			end
 		end
 
-	text_rectangle: EV_RECTANGLE is
+	text_rectangle: EV_RECTANGLE
 			-- Redefine
 		local
 			l_text_width: INTEGER
@@ -59,7 +59,7 @@ feature -- Query
 	maximum_width: INTEGER;
 			-- Maximum button width
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

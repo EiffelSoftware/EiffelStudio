@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,20 +20,20 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE) is
+	make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			build_default_icon (to_windows_constants ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor))
 			set_is_initialized (True)
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Initialize from `a_pixel_buffer'
 		do
 			destroy_gdi_objects
@@ -46,13 +46,13 @@ feature {NONE} -- Initlization
 			wel_mask_bitmap := Void
 		end
 
-	init_from_cursor (a_cursor: EV_CURSOR) is
+	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
 		do
 			init_from_pixmap (a_cursor, a_cursor.x_hotspot, a_cursor.y_hotspot)
 		end
 
-	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER) is
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER)
 			-- Initalize from `a_pixmap'
 		local
 			l_simple_imp: EV_PIXMAP_IMP
@@ -74,7 +74,7 @@ feature {NONE} -- Initlization
 			not_void: wel_cursor /= Void
 		end
 
-	init_predefined (a_constants: INTEGER) is
+	init_predefined (a_constants: INTEGER)
 			-- Initialized a predefined cursor.
 		do
 			destroy_gdi_objects
@@ -83,19 +83,19 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_x_hotspot (a_x: INTEGER) is
+	set_x_hotspot (a_x: INTEGER)
 			-- Set `x_hotspot' to `a_x'.
 		do
 			set_hotspot_imp (a_x, True)
 		end
 
-	set_y_hotspot (a_y: INTEGER) is
+	set_y_hotspot (a_y: INTEGER)
 			-- Set `y_hotspot' to `a_y'.
 		do
 			set_hotspot_imp (a_y, False)
 		end
 
-	set_hotspot_imp (a_position: INTEGER; a_is_x: BOOLEAN) is
+	set_hotspot_imp (a_position: INTEGER; a_is_x: BOOLEAN)
 			-- Set hotspot implementation
 		local
 			l_icon_info: WEL_ICON_INFO
@@ -116,7 +116,7 @@ feature -- Command
 			changed: old wel_cursor /= wel_cursor
 		end
 
-	destroy is
+	destroy
 			-- Destroy
 		do
 			set_is_in_destroy (True)
@@ -129,7 +129,7 @@ feature -- Query
 	wel_cursor: WEL_CURSOR
 			-- Windows native cursor
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width
 		local
 			l_icon_info: WEL_ICON_INFO
@@ -139,7 +139,7 @@ feature -- Query
 			l_icon_info.delete
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height
 		local
 			l_icon_info: WEL_ICON_INFO
@@ -149,19 +149,19 @@ feature -- Query
 			l_icon_info.delete
 		end
 
-	x_hotspot: INTEGER is
+	x_hotspot: INTEGER
 			-- Specifies the x-coordinate of a cursor's hot spot.
 		do
 			Result := wel_cursor.x_hotspot
 		end
 
-	y_hotspot: INTEGER is
+	y_hotspot: INTEGER
 			-- Specifies the y-coordinate of a cursor's hot spot.
 		do
 			Result := wel_cursor.y_hotspot
 		end
 
-	to_windows_constants (a_constants: INTEGER): POINTER is
+	to_windows_constants (a_constants: INTEGER): POINTER
 			-- Convert from EV_POINTER_STYLE_CONSTANTS to windows native constants
 		require
 			vaild: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_constants)
@@ -215,7 +215,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	build_default_icon (a_idi_constant: POINTER) is
+	build_default_icon (a_idi_constant: POINTER)
 			-- Create the pixmap corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		require
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			created: wel_cursor /= Void and then wel_cursor.exists
 		end
 
-	build_native_cursor (a_width, a_height, a_x_hotspot, a_y_hotspot: INTEGER) is
+	build_native_cursor (a_width, a_height, a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Build `wel_cursor'
 		require
 			valid: a_width > 0 and a_height > 0
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			created: wel_cursor /= Void and then wel_cursor.exists
 		end
 
-	build_bitmap (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	build_bitmap (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Build `wel_bitmap' for `wel_cursor'
 		require
 			not_craeted: wel_bitmap = Void
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			created: wel_bitmap /= Void
 		end
 
-	build_mask_bitmap (a_width, a_height: INTEGER) is
+	build_mask_bitmap (a_width, a_height: INTEGER)
 			-- Build `wel_mask_bitmap' for `wel_cursor'
 		require
 			not_created: wel_mask_bitmap = Void
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			created: wel_mask_bitmap /= Void
 		end
 
-	destroy_gdi_objects is
+	destroy_gdi_objects
 			-- destroy all gdi objects
 		do
 			if wel_cursor /= Void and then wel_cursor.exists then
@@ -325,13 +325,13 @@ feature {NONE} -- Implementation
 	wel_mask_bitmap: WEL_BITMAP;
 			-- Mask bitmap
 
-	Idc_constants: WEL_IDC_CONSTANTS is
+	Idc_constants: WEL_IDC_CONSTANTS
 			-- Idc constants
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

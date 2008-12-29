@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM Stub."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Is stub initialized?
 		do
 			Result := item /= default_pointer
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_item (an_item: POINTER) is
+	set_item (an_item: POINTER)
 			-- Set `item' with `an_item'.
 		do
 			item := an_item
@@ -32,7 +32,7 @@ feature -- Basic operations
 			valid_item: item = an_item
 		end
 
-	create_item is
+	create_item
 			-- Create COM stub.
 		require
 			not_exists: not exists
@@ -41,7 +41,7 @@ feature -- Basic operations
 			exists: exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

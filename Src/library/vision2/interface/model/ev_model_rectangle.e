@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	
 						An EV_FIGURE_RECTANGLE is defined by pa and pb
@@ -44,7 +44,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	default_create is
+	default_create
 			-- Create a EV_FIGURE_RECTANGLE at (0,0) with no dimension.
 		do
 			Precursor {EV_MODEL_CLOSED}
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			is_center_valid := True
 		end
 
-	make_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	make_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Create a EV_FIGURE_RECTANLGE with top left position at (`a_x', `a_y') 
 			-- and `width' `a_width' and `height' `a_height'
 		do
@@ -66,19 +66,19 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- Since not rotatable.
 
-	is_rotatable: BOOLEAN is False
+	is_rotatable: BOOLEAN = False
 			-- Rectangle is not rotatable.
 		
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Rectangle is scalable.
 
-	is_transformable: BOOLEAN is False
+	is_transformable: BOOLEAN = False
 			-- Rectangle is not transformable.
 		
-	width: INTEGER is
+	width: INTEGER
 			-- The horizontal distance between `point_a' and `point_b'
 		local
 			l_point_array: like point_array
@@ -91,7 +91,7 @@ feature -- Access
 			Result := as_integer (p0.x_precise - p1.x_precise).abs
 		end
 		
-	height: INTEGER is
+	height: INTEGER
 			-- The vertical distance between `point_a' and `point_b'.
 		local
 			l_point_array: like point_array
@@ -103,7 +103,7 @@ feature -- Access
 			Result := as_integer (p0.y_precise - p1.y_precise).abs
 		end
 		
-	top_left: EV_COORDINATE is
+	top_left: EV_COORDINATE
 			-- position of the top left corner.
 		local
 			l_array: like point_array
@@ -119,25 +119,25 @@ feature -- Access
 			create Result.set (left, top)	
 		end
 		
-	point_a_x: INTEGER is
+	point_a_x: INTEGER
 			-- x position of `point_a'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	point_a_y: INTEGER is
+	point_a_y: INTEGER
 			-- y position of `point_a'.
 		do
 			Result := point_array.item (0).y
 		end
 		
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (1).x
 		end
 		
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (1).y
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		require
 			a_width_positive: a_width >= 0 
@@ -168,7 +168,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 	
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		require
 			a_height_positive: a_height >= 0 
@@ -192,7 +192,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position of (`ax', `ay').
 		do
 			point_array.item (0).set_precise (ax, ay)
@@ -201,7 +201,7 @@ feature -- Element change
 			center_invalidate
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 		do
 			point_array.item (1).set_precise (ax, ay)
@@ -212,7 +212,7 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is the point on (`a_x', `a_y') on this figure?
 			--| Used to generate events.
 		local
@@ -225,7 +225,7 @@ feature -- Events
 			Result := point_on_rectangle (a_x, a_y, p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise)
 		end
 		
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Is (`ax', `ay') on this figure?
 		local
 			min_x, min_y, max_x, max_y, lw2, v1, v2: DOUBLE
@@ -269,7 +269,7 @@ feature -- Events
 		
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set position of the center.
 		local
 			pa: like point_array
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

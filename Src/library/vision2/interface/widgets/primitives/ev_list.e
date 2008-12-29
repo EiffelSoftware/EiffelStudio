@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"[
 			Displays a list of items from which the user can select.
@@ -32,7 +32,7 @@ create
 
 feature -- Access
 
-	selected_items: DYNAMIC_LIST [EV_LIST_ITEM] is
+	selected_items: DYNAMIC_LIST [EV_LIST_ITEM]
 			-- Currently selected items.
 			-- `is_empty' if no item selected.
 		require
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 		require
 			not_destroyed: not is_destroyed
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 	
-	ensure_item_visible (an_item: EV_LIST_ITEM) is
+	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_item' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -67,7 +67,7 @@ feature -- Status setting
 			implementation.ensure_item_visible (an_item)
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one item to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Status setting
 			multiple_selection_enabled: multiple_selection_enabled
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -94,7 +94,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_LIST_IMP} implementation.make (Current)
@@ -113,7 +113,7 @@ invariant
 	selection_size_within_bounds: is_usable implies
 		selected_items.count <= count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

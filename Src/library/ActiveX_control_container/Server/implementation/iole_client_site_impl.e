@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleClientSite' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Basic Operations
 
-	save_object is
+	save_object
 			-- Saves the object associated with the client site. 
 			-- This function is synchronous; by the time it returns, 
 			-- the save will be completed.
@@ -30,7 +30,7 @@ feature -- Basic Operations
 			-- No implementation.
 		end
 
-	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]) is
+	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE])
 			-- Returns a moniker to an object's client site. 
 			-- An object can force the assignment of its own 
 			-- or its container's moniker by specifying a value for `dw_assign'.
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			-- No implementation.
 		end
 
-	get_container (pp_container: CELL [IOLE_CONTAINER_INTERFACE]) is
+	get_container (pp_container: CELL [IOLE_CONTAINER_INTERFACE])
 			-- Returns a pointer to the container's IOleContainer interface.
 			-- `pp_container' [out].  
 		local
@@ -58,7 +58,7 @@ feature -- Basic Operations
 			end
 		end
 
-	show_object is
+	show_object
 			-- Tells the container to position the object 
 			-- so it is visible to the user. This method 
 			-- ensures that the container itself is visible 
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			end
 		end
 
-	on_show_window (f_show: INTEGER) is
+	on_show_window (f_show: INTEGER)
 			-- Notifies a container when an embedded object's 
 			-- window is about to become visible or invisible. 
 			-- This method does not apply to an object that is 
@@ -101,7 +101,7 @@ feature -- Basic Operations
 			-- No implementation.
 		end
 
-	request_new_object_layout is
+	request_new_object_layout
 			-- Asks container to allocate more or less space 
 			-- for displaying an embedded object.
 		do
@@ -110,12 +110,12 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	m_Position: TAG_RECT_RECORD is
+	m_Position: TAG_RECT_RECORD
 			-- Client rectangle.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

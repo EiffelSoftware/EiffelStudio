@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that have a tooltip property."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 			-- If `Result' is empty then no tooltip displayed.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			not_destroyed: not is_destroyed
@@ -46,7 +46,7 @@ feature -- Element change
 			cloned: tooltip /= a_tooltip
 		end
 
-	remove_tooltip is
+	remove_tooltip
 			-- Make `tooltip' empty.
 		require
 			not_destroyed: not is_destroyed
@@ -58,13 +58,13 @@ feature -- Element change
 
 feature -- Contract support
 
-	is_bridge_ok (a_string: STRING_32): BOOLEAN is
+	is_bridge_ok (a_string: STRING_32): BOOLEAN
 			-- If `a_string' equal implementation's `tooltip'?
 		do
 			Result := a_string.is_equal (a_string)
 		end
 
-	is_cloned (a_string: STRING_32): BOOLEAN is
+	is_cloned (a_string: STRING_32): BOOLEAN
 			-- If `a_string' same instance as implementation's `tooltip'?
 		do
 			Result := a_string /= implementation.tooltip
@@ -72,7 +72,7 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and tooltip.is_empty
@@ -83,7 +83,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_TOOLTIPABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

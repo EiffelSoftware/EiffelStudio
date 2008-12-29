@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String of formatting elements that can be filled at any time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_format_string: STRING_32; a_locale_info: I18N_LOCALE_INFO) is
+	make (a_format_string: STRING_32; a_locale_info: I18N_LOCALE_INFO)
 			-- parse `a_format_string' and put parsed data
 			-- in `element_list', this can than be filled
 			-- with `filled()'
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature --Output
 
- 	filled (a_date: DATE; a_time: TIME): STRING_32 is
+ 	filled (a_date: DATE; a_time: TIME): STRING_32
  			-- fill `elemets_list' with the data in `a_date'
  			-- and `a_time'
  		do
@@ -53,7 +53,7 @@ feature {NONE} -- Actions
 invariant
 	correct_element_list: elements_list /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

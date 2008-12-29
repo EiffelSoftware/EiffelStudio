@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequence for PND drop events."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create {SD_PND_ACTION_SEQUENCE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a ready to use action sequence.
 		do
 			Precursor {ACTION_SEQUENCE}
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	call (a_pebble_tuple: TUPLE [ANY, SD_CONTENT]) is
+	call (a_pebble_tuple: TUPLE [ANY, SD_CONTENT])
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -86,7 +86,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]) is
+	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN])
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	accepts_pebble (a_pebble: ANY; a_content: SD_CONTENT): BOOLEAN is
+	accepts_pebble (a_pebble: ANY; a_content: SD_CONTENT): BOOLEAN
 			-- Do any actions accept `a_pebble'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -129,7 +129,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL) is
+	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		do
 			names.force (a_name, an_item)
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 invariant
 	names_not_void: names /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

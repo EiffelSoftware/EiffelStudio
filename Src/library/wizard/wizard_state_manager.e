@@ -1,4 +1,4 @@
-indexing
+note
 	description: "State navigator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basic Operations
 
-	back is
+	back
 			-- Go to the previous state.
 		require
 			possible: history.count > 1 and then not history.isfirst
@@ -35,7 +35,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basi
 			moved_back: history.index = old history.index - 1
 		end
 
-	next is
+	next
 			-- Go to the next step.
 		require
 			can_move: can_go_back
@@ -72,7 +72,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basi
 			moved_forth: not history.item.is_final_state implies history.index = old history.index + 1
 		end
 
-	cancel_actions is
+	cancel_actions
 			-- Actions performed by Current when the user
 			-- exits the wizard ( i.e. he presses "Cancel") .
 		require
@@ -106,7 +106,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basi
 			ready_to_exit: history.count=0
 		end
 
-	show_help is
+	show_help
 			-- Show contextual help.
 		do
 			history.item.display_help
@@ -114,7 +114,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basi
 
 feature {NONE} -- Internal Operations
 
-	proceed_with_new_state(a_window: WIZARD_STATE_WINDOW) is
+	proceed_with_new_state(a_window: WIZARD_STATE_WINDOW)
 			-- Proceed with new step , the next step being 'a_window'.
 		require
 			user_entries_checked: history.count>0 implies history.item.entries_checked
@@ -131,25 +131,25 @@ feature {NONE} -- Internal Operations
 
 feature -- Validation
 
-	can_go_back: BOOLEAN is
+	can_go_back: BOOLEAN
 			-- can wizard move backwards?
 		do
 			Result := True
 		end
 
-	can_go_next: BOOLEAN is
+	can_go_next: BOOLEAN
 			-- can wizard move forward?
 		do
 			Result := True
 		end
 
-	can_cancel: BOOLEAN is
+	can_cancel: BOOLEAN
 			-- can wizard cancel?
 		do
 			Result := True
 		end
 
-	check_wizard_status is
+	check_wizard_status
 			-- checks wizard status to see if it can back or next and enables
 			-- disables next and back navigation methods
 		do
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	destroying_wizard: BOOLEAN;
 			-- Is the wizard being currently destroyed?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

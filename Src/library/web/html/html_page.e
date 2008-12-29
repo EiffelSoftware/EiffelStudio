@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which contains the information relative to an html page."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an HTML page.
 		do
 			image := "<HTML>%N</HTML>"
 		end
 
-	make_from_template(fi_n: STRING) is
+	make_from_template(fi_n: STRING)
 			-- Create an HTML page from a template whose path name is
 			-- 'fi'. The template may contains special symbols/words, which
 			-- will allow smart replacing (see feature 'replace').
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Basic Operations
 
-	replace_marker (a_marker, s: STRING) is
+	replace_marker (a_marker, s: STRING)
 			-- Replace marker 'a_marker' by string 's' 
 			-- within the template.
 			-- Do nothing if it does not exist.
@@ -63,7 +63,7 @@ feature -- Basic Operations
 			image.replace_substring_all (a_marker,s)
 		end
 
-	add_html_code (s: STRING) is
+	add_html_code (s: STRING)
 			-- Add html code 's'.
 		require
 			code_exists: s/=Void
@@ -83,7 +83,7 @@ feature -- Basic Operations
 			image.replace_substring_all (s1, s)
 		end 
 
-	insert_hidden_field (name,value: STRING) is
+	insert_hidden_field (name,value: STRING)
 				-- Insert hidden field with name 'name' and value 'value'.
 			require
 				has_form: out.substring_index ("</form>", 1) > 0 or
@@ -106,7 +106,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	out: STRING is
+	out: STRING
 			-- Usable copy of the output.
 		do
 			if image /= Void then
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 invariant
 	page_exists: out /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

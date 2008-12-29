@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XKeyEvent."
@@ -19,67 +19,67 @@ create
 
 feature -- Access
 
-	time: INTEGER is
+	time: INTEGER
 			-- Timestamp in milliseconds
 		do
 			Result := c_event_time (handle)
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- X positive in window
 		do
 			Result := c_event_x (handle)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y positive in window
 		do
 			Result := c_event_y (handle)
 		end;
 
-	x_root: INTEGER is
+	x_root: INTEGER
 			-- X positive relative to root
 		do
 			Result := c_event_x_root (handle)
 		end;
-	y_root: INTEGER is
+	y_root: INTEGER
 			-- Y positive relative to root
 		do
 			Result := c_event_y_root (handle)
 		end;
 
-	state: INTEGER is
+	state: INTEGER
 			-- State of key and buttons
 		do
 			Result := c_event_state (handle)
 		end;
 
-	same_screen: BOOLEAN is
+	same_screen: BOOLEAN
 			-- Is the pointer is currently on the
 			-- same screen as window
 		do
 			Result := c_event_same_screen (handle)
 		end
 
-	subwindow_widget: MEL_WIDGET is
+	subwindow_widget: MEL_WIDGET
 			-- Subwindow widget
 		do
 			Result := retrieve_widget_from_window (subwindow)
 		end
 
-	keycode: INTEGER is
+	keycode: INTEGER
 			-- Keycode value of key pressed
 		do
 			Result := c_event_keycode (handle)
 		end;
 
-	keysym: INTEGER is
+	keysym: INTEGER
 			-- Keysym value of key pressed
 		do
 			Result := c_event_keysym (handle)
 		end;
 
-	string: STRING is
+	string: STRING
 			-- String value of key pressed
 		do
 			Result := c_event_string (handle)
@@ -87,13 +87,13 @@ feature -- Access
 
 feature -- Pointer access
 
-	root: POINTER is
+	root: POINTER
 			-- Root window pointer
 		do
 			Result := c_event_root (handle)
 		end;
 
-	subwindow: POINTER is
+	subwindow: POINTER
 			-- Pointer is in this child
 		do
 			Result := c_event_subwindow (handle)
@@ -101,67 +101,67 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_root (event_ptr: POINTER): POINTER is
+	c_event_root (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_POINTER"
 		end;
 
-	c_event_subwindow (event_ptr: POINTER): POINTER is
+	c_event_subwindow (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_POINTER"
 		end;
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x_root (event_ptr: POINTER): INTEGER is
+	c_event_x_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y_root (event_ptr: POINTER): INTEGER is
+	c_event_y_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_keycode (event_ptr: POINTER): INTEGER is
+	c_event_keycode (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_same_screen (event_ptr: POINTER): BOOLEAN is
+	c_event_same_screen (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XKeyEvent *): EIF_BOOLEAN"
 		end;
 
-	c_event_string (event_ptr: POINTER): STRING is
+	c_event_string (event_ptr: POINTER): STRING
 		external
 			"C"
 		end
 
-	c_event_keysym (event_ptr: POINTER): INTEGER is
+	c_event_keysym (event_ptr: POINTER): INTEGER
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

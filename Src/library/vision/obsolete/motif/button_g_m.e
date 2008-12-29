@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif gadget button."
@@ -30,13 +30,13 @@ inherit
 
 feature -- Access
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 			-- Is the Current widget stackable?
 		do
 			Result := True
 		end;
 
-	is_label: BOOLEAN is
+	is_label: BOOLEAN
 			-- Is current button a label?
 			-- (False by default)
 		do
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status report
 
-	text: STRING is
+	text: STRING
 			-- Text of button
 		local
 			keysym: CHARACTER;
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button text to `a_text'.
 		require
 			not_text_void: a_text /= Void
@@ -77,13 +77,13 @@ feature -- Status setting
 			text_set: text.is_equal (a_text)
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment to left.
 		do
 			set_beginning_alignment
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set text alignment to left.
 		do
 			set_end_alignment
@@ -91,7 +91,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		do
@@ -99,7 +99,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	is_able_have_accerlators: BOOLEAN is
+	is_able_have_accerlators: BOOLEAN
 			-- Can the button able to have accelerators?
 			-- True if it is not a label and not in an
 			-- option pull
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN) is
+	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN)
 			-- Extract the mnemonic from `a_text' and set it and then
 			-- set the button text to `a_text' if `set_text_explicity' is True.
 		local
@@ -163,38 +163,38 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of gadget (Is Void)
 		do
 		end
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 		do
 		end; 
 
-	set_background_color (new_color: COLOR) is
+	set_background_color (new_color: COLOR)
 			-- Set background color to `new_color'.
 		do
 		end; 
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground_color color to `new_color'.
 		do
 		end;
 
-	update_foreground_color is
+	update_foreground_color
 			-- Do nothing.
 		do
 		end;
 
-	set_background_pixmap (new_pixmap: PIXMAP) is
+	set_background_pixmap (new_pixmap: PIXMAP)
 			-- Set background_pixmap to `new_color'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

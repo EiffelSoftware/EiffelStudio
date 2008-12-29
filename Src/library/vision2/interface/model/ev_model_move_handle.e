@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Handles that allow the user to control certain EV_MODELs%N%
 		%in an EV_MODEL_WORLD."
@@ -25,7 +25,7 @@ create {EV_MODEL_MOVE_HANDLE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize actions.
 		do
 			Precursor {EV_MODEL_GROUP}
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_always_shown is
+	enable_always_shown
 			-- Set `is_always_shown' `True'.
 		do
 			if not is_always_shown then
@@ -122,7 +122,7 @@ feature -- Status setting
 			is_always_shown: is_always_shown
 		end
 
-	disable_always_shown is
+	disable_always_shown
 			-- Set `is_always_shown' `False'.
 		do
 			if is_always_shown then
@@ -135,7 +135,7 @@ feature -- Status setting
 			not_always_shown: not is_always_shown
 		end
 
-	enable_snapping is
+	enable_snapping
 			-- Set `is_snapping' `True'.
 		do
 			is_snapping := True
@@ -143,7 +143,7 @@ feature -- Status setting
 			snap_enabled: is_snapping
 		end
 
-	disable_snapping is
+	disable_snapping
 			-- Set `is_snapping' `False'.
 		do
 			is_snapping := False
@@ -151,7 +151,7 @@ feature -- Status setting
 			snap_disabled: not is_snapping
 		end
 
-	snap_to_grid is
+	snap_to_grid
 			-- Move to the most nearby point on the grid.
 		do
 			if is_snapping then
@@ -160,7 +160,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_moving is
+	enable_moving
 			-- Set `is_moving' to `True'.
 		do
 			is_moving := True
@@ -168,7 +168,7 @@ feature -- Status setting
 			moving_enabled: is_moving = True
 		end
 
-	disable_moving is
+	disable_moving
 			-- Set `is_moving' to `False'.
 		do
 			is_moving := False
@@ -176,7 +176,7 @@ feature -- Status setting
 			moving_disabled: is_moving = False
 		end
 
-	enable_rotating is
+	enable_rotating
 			-- Set `is_moving' to `True'.
 		do
 			is_rotating := True
@@ -184,7 +184,7 @@ feature -- Status setting
 			rotating_enabled: is_rotating = True
 		end
 
-	disable_rotating is
+	disable_rotating
 			-- Set `is_moving' to `False'.
 		do
 			is_rotating := False
@@ -192,7 +192,7 @@ feature -- Status setting
 			rotating_disabled: is_rotating = False
 		end
 
-	enable_scaling is
+	enable_scaling
 			-- Set `is_moving' to `True'.
 		do
 			is_scaling := True
@@ -200,7 +200,7 @@ feature -- Status setting
 			scaling_enabled: is_scaling = True
 		end
 
-	disable_scaling is
+	disable_scaling
 			-- Set `is_moving' to `False'.
 		do
 			is_scaling := False
@@ -210,31 +210,31 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_minimum_x (a_x: INTEGER) is
+	set_minimum_x (a_x: INTEGER)
 			-- Assign `a_x' to `minimum_x'.
 		do
 			minimum_x := a_x
 		end
 
-	set_minimum_y (a_y: INTEGER) is
+	set_minimum_y (a_y: INTEGER)
 			-- Assign `a_y' to `minimum_y'.
 		do
 			minimum_y := a_y
 		end
 
-	set_maximum_x (a_x: INTEGER) is
+	set_maximum_x (a_x: INTEGER)
 			-- Assign `a_x' to `maximum_x'.
 		do
 			maximum_x := a_x
 		end
 
-	set_maximum_y (a_y: INTEGER) is
+	set_maximum_y (a_y: INTEGER)
 			-- Assign `a_y' to `maximum_y'.
 		do
 			maximum_y := a_y
 		end
 
-	set_real_position_agent (an_agent: like real_position_agent) is
+	set_real_position_agent (an_agent: like real_position_agent)
 			-- Assign `an_agent' to `real_position_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -244,7 +244,7 @@ feature -- Element change
 			real_position_agent_assigned: real_position_agent = an_agent
 		end
 
-	set_move_button (nr: INTEGER) is
+	set_move_button (nr: INTEGER)
 			-- Set `move_button' to `nr'.
 		do
 			move_button := nr
@@ -252,7 +252,7 @@ feature -- Element change
 			set: move_button = nr
 		end
 
-	set_scale_button (nr: INTEGER) is
+	set_scale_button (nr: INTEGER)
 			-- Set `scale_button' to `nr'.
 		do
 			scale_button := nr
@@ -260,7 +260,7 @@ feature -- Element change
 			set: scale_button = nr
 		end
 
-	set_rotate_button (nr: INTEGER) is
+	set_rotate_button (nr: INTEGER)
 			-- Set `rotate_button' to `nr'.
 		do
 			rotate_button := nr
@@ -290,10 +290,10 @@ feature -- Actions
 
 feature {NONE} -- Events
 
-	Max_integer: INTEGER is 100000
+	Max_integer: INTEGER = 100000
 			-- Highest possible integer value.
 
-	Min_integer: INTEGER is -100000
+	Min_integer: INTEGER = -100000
 			-- Lowest possible integer value.
 
 	show_agent: PROCEDURE [ANY, TUPLE]
@@ -302,12 +302,12 @@ feature {NONE} -- Events
 	hide_agent: PROCEDURE [ANY, TUPLE]
 			-- Connected to `leave_actions'.
 
-	on_enter is
+	on_enter
 		do
 			show
 		end
 
-	on_leave is
+	on_leave
 		do
 			hide
 		end
@@ -327,7 +327,7 @@ feature {NONE} -- Events
 	is_rotate: BOOLEAN
 			-- Is in rotate mode?
 
-	snapped_x (ax: INTEGER): INTEGER is
+	snapped_x (ax: INTEGER): INTEGER
 			-- Nearest point on horizontal grid to `ax'.
 		do
 			if ax \\ world.grid_x < world.grid_x // 2 then
@@ -337,7 +337,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	snapped_y (ay: INTEGER): INTEGER is
+	snapped_y (ay: INTEGER): INTEGER
 			-- Nearest point on vertical grid to `ay'.
 		do
 			if ay \\ world.grid_y < world.grid_y // 2 then
@@ -347,7 +347,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_start_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_start_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User pressed pointer button on `Current'.
 		do
 			if world /= Void and then world.capture_figure = Void then
@@ -386,7 +386,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_resizing (ax, ay: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_resizing (ax, ay: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- Mouse moved over `Current'.
 		local
 			new_x, new_y, a_delta_x, a_delta_y: INTEGER
@@ -473,7 +473,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_stop_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER) is
+	on_stop_resizing (ax, ay, b: INTEGER; xt, yt, p: DOUBLE; sx, sy: INTEGER)
 			-- User release pointer button from `Current'.
 		do
 			if has_capture then
@@ -485,13 +485,13 @@ feature {NONE} -- Events
 			is_move := False
 		end
 
-	ev_application: EV_APPLICATION is
+	ev_application: EV_APPLICATION
 			-- The application `Current' is part of.
 		once
 			Result := (create {EV_ENVIRONMENT}).application
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

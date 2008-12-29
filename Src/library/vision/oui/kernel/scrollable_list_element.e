@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Element for a scrollable list"
 	legal: "See notice at end of class.";
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- String to appear in scrollable list box
 		deferred
 		end
@@ -21,7 +21,7 @@ invariant
 
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision Implementation of a Motif file selection box."
@@ -61,7 +61,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_select_dialog: FILE_SEL_D; oui_parent: COMPOSITE) is
+	make (a_file_select_dialog: FILE_SEL_D; oui_parent: COMPOSITE)
 			-- Create a motif file selection dialog.
 		local
 			mc: MEL_COMPOSITE
@@ -80,17 +80,17 @@ feature -- Access
 
 feature -- Status setting
 
-	set_open_file is
+	set_open_file
 			-- Set dialog to open file dialog.
 		do
 		end
 
-	set_save_file is
+	set_save_file
 			-- Set dialog to save file dialog.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

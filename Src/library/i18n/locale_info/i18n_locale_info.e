@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that encapsulates formatting information for one specific locale"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object with default values.
 		do
 				-- initialise to arbitrary default values so we can ensure
@@ -61,7 +61,7 @@ feature	-- Access
 
 feature	-- Element change
 
-	set_id (an_id: I18N_LOCALE_ID) is
+	set_id (an_id: I18N_LOCALE_ID)
 			-- Set `id' to `an_id'.
 		require
 			an_id_exists: an_id /= Void
@@ -75,7 +75,7 @@ invariant
 
 	id_not_void: id /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

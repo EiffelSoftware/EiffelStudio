@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,43 +33,43 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	user: INTEGER_REF is
+	user: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_user (item)
 		end
 
-	user_length: INTEGER is
+	user_length: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_user_length (item)
 		end
 
-	domain: INTEGER_REF is
+	domain: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_domain (item)
 		end
 
-	domain_length: INTEGER is
+	domain_length: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_domain_length (item)
 		end
 
-	password: INTEGER_REF is
+	password: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_password (item)
 		end
 
-	password_length: INTEGER is
+	password_length: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_password_length (item)
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_coauthidentity_flags (item)
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_coauthidentity
@@ -85,7 +85,7 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_user (a_user: INTEGER_REF) is
+	set_user (a_user: INTEGER_REF)
 			-- Set `user' with `a_user'.
 		require
 			non_void_a_user: a_user /= Void
@@ -93,13 +93,13 @@ feature -- Basic Operations
 			ccom_x_coauthidentity_set_user (item, a_user)
 		end
 
-	set_user_length (a_user_length: INTEGER) is
+	set_user_length (a_user_length: INTEGER)
 			-- Set `user_length' with `a_user_length'.
 		do
 			ccom_x_coauthidentity_set_user_length (item, a_user_length)
 		end
 
-	set_domain (a_domain: INTEGER_REF) is
+	set_domain (a_domain: INTEGER_REF)
 			-- Set `domain' with `a_domain'.
 		require
 			non_void_a_domain: a_domain /= Void
@@ -107,13 +107,13 @@ feature -- Basic Operations
 			ccom_x_coauthidentity_set_domain (item, a_domain)
 		end
 
-	set_domain_length (a_domain_length: INTEGER) is
+	set_domain_length (a_domain_length: INTEGER)
 			-- Set `domain_length' with `a_domain_length'.
 		do
 			ccom_x_coauthidentity_set_domain_length (item, a_domain_length)
 		end
 
-	set_password (a_password: INTEGER_REF) is
+	set_password (a_password: INTEGER_REF)
 			-- Set `password' with `a_password'.
 		require
 			non_void_a_password: a_password /= Void
@@ -121,13 +121,13 @@ feature -- Basic Operations
 			ccom_x_coauthidentity_set_password (item, a_password)
 		end
 
-	set_password_length (a_password_length: INTEGER) is
+	set_password_length (a_password_length: INTEGER)
 			-- Set `password_length' with `a_password_length'.
 		do
 			ccom_x_coauthidentity_set_password_length (item, a_password_length)
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 		do
 			ccom_x_coauthidentity_set_flags (item, a_flags)
@@ -135,7 +135,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_coauthidentity: INTEGER is
+	c_size_of_x_coauthidentity: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__COAUTHIDENTITY_s.h%"]"
@@ -143,91 +143,91 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_COAUTHIDENTITY)"
 		end
 
-	ccom_x_coauthidentity_user (a_pointer: POINTER): INTEGER_REF is
+	ccom_x_coauthidentity_user (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_REFERENCE"
 		end
 
-	ccom_x_coauthidentity_set_user (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_x_coauthidentity_set_user (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, EIF_OBJECT)"
 		end
 
-	ccom_x_coauthidentity_user_length (a_pointer: POINTER): INTEGER is
+	ccom_x_coauthidentity_user_length (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_INTEGER"
 		end
 
-	ccom_x_coauthidentity_set_user_length (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_coauthidentity_set_user_length (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, ULONG)"
 		end
 
-	ccom_x_coauthidentity_domain (a_pointer: POINTER): INTEGER_REF is
+	ccom_x_coauthidentity_domain (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_REFERENCE"
 		end
 
-	ccom_x_coauthidentity_set_domain (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_x_coauthidentity_set_domain (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, EIF_OBJECT)"
 		end
 
-	ccom_x_coauthidentity_domain_length (a_pointer: POINTER): INTEGER is
+	ccom_x_coauthidentity_domain_length (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_INTEGER"
 		end
 
-	ccom_x_coauthidentity_set_domain_length (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_coauthidentity_set_domain_length (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, ULONG)"
 		end
 
-	ccom_x_coauthidentity_password (a_pointer: POINTER): INTEGER_REF is
+	ccom_x_coauthidentity_password (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_REFERENCE"
 		end
 
-	ccom_x_coauthidentity_set_password (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_x_coauthidentity_set_password (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, EIF_OBJECT)"
 		end
 
-	ccom_x_coauthidentity_password_length (a_pointer: POINTER): INTEGER is
+	ccom_x_coauthidentity_password_length (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_INTEGER"
 		end
 
-	ccom_x_coauthidentity_set_password_length (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_coauthidentity_set_password_length (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, ULONG)"
 		end
 
-	ccom_x_coauthidentity_flags (a_pointer: POINTER): INTEGER is
+	ccom_x_coauthidentity_flags (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *):EIF_INTEGER"
 		end
 
-	ccom_x_coauthidentity_set_flags (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_coauthidentity_set_flags (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__COAUTHIDENTITY_s_impl.h%"](ecom_control_library::_COAUTHIDENTITY *, ULONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

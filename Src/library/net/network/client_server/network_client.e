@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A client for a network socket."
@@ -20,7 +20,7 @@ feature -- Access
 	in_out: NETWORK_STREAM_SOCKET;
 			-- Receive and send sockets.
 
-	make (a_peer_port: INTEGER; a_peer_name: STRING) is
+	make (a_peer_port: INTEGER; a_peer_name: STRING)
 			-- Make client with port `a_peer_port' and host `a_peer_name'.
 		require
 			a_valid_port: a_peer_port > 0;
@@ -30,19 +30,19 @@ feature -- Access
 			in_out.connect
 		end;
 
-	cleanup is
+	cleanup
 			-- Shut down client.
 		do
 			in_out.close
 		end;
 
-	send (msg : ANY) is
+	send (msg : ANY)
 			-- Send `msg' to server.
 		do
 			in_out.independent_store (msg)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

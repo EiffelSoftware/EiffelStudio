@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision check button. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the check button with no label.
 		do
 			base_make (an_interface)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Reset `Current' to its default minimum size.
 		do
 				-- This extra width only needs to be added if
@@ -60,14 +60,14 @@ feature -- Status setting
 			Precursor {EV_TOGGLE_BUTTON_IMP}
 		end
 
-	enable_select is
+	enable_select
 			-- Make `is_selected' True.
 		do
 			{WEL_API}.send_message (wel_item, bm_setcheck, to_wparam (1), to_lparam (0))
 			Precursor {EV_TOGGLE_BUTTON_IMP}
 		end
 
-	disable_select is
+	disable_select
 			-- Make `is_selected' False.
 		do
 			{WEL_API}.send_message (wel_item, bm_setcheck, to_wparam (0), to_lparam (0))
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	internal_default_height: INTEGER is
+	internal_default_height: INTEGER
 			-- The default minimum height of `Current' with no text.
 			-- This is used in set_default_size.
 		do
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			Result := 13
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Not visible or child at creation
 		do
 			Result := Ws_child | Ws_visible | Ws_group
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 					| Bs_autocheckbox
 		end
 		
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_CHECK_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

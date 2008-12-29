@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is used for transport one class name from object grid to filter button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initlization
 
-	make (a_class_name: STRING) is
+	make (a_class_name: STRING)
 			-- Creation method
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initlization
 		end
 		
 feature -- Access
-	class_name: STRING is
+	class_name: STRING
 			-- Class name transported
 		do
 			Result := internal_class_name
@@ -37,7 +37,7 @@ feature {NONE}  -- Implementation
 	internal_class_name: STRING;
 			-- The class name used for transportation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

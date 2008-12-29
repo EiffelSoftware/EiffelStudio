@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XmTextSource."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_existing (a_xm_text_source: POINTER) is
+	make_from_existing (a_xm_text_source: POINTER)
 			-- Create the MEL_TEXT_SOURCE object from an existing text source.
 		require	
 			xm_text_source_not_null: a_xm_text_source /= default_pointer
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is the text source destroyed?
 		do
 			Result := handle = default_pointer
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the object.
 		require
 			exists: not is_destroyed
@@ -50,7 +50,7 @@ feature -- Removal
 			destroyed: is_destroyed
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,6 +1,6 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
-indexing
+note
 	description:
 		"EiffelVision dynamic table. Implementation interface."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Status report
 	
 feature -- Status setting
 
-	set_finite_dimension (a_number: INTEGER) is
+	set_finite_dimension (a_number: INTEGER)
 			-- Set number of columns if row
 			-- layout, or number of row if column
 			-- layout.
@@ -36,7 +36,7 @@ feature -- Status setting
 			finite_dimension := a_number
 		end
 
-	set_row_layout (flag: BOOLEAN) is
+	set_row_layout (flag: BOOLEAN)
 			-- Lay the children out in rows if True,
 			-- in colum otherwise.
 		require
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 		-- child
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

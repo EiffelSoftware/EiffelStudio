@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Button drawn on screen with an arrow"
 	legal: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an arrow button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			-- Default_orientation: up
 		end
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged arrow button with `a_name'
 			-- as identifier, `a_parent' as parent and
 			-- call `set_default'.
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			-- default_orientation: up
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create an arrow button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	down: BOOLEAN is
+	down: BOOLEAN
 			-- Is the arrow direction down ?
 		require
 			exists: not destroyed
@@ -84,7 +84,7 @@ feature -- Status report
 			Result := implementation.down
 		end;
 
-	left: BOOLEAN is
+	left: BOOLEAN
 			-- Is the arrow direction left ?
 		require
 			exists: not destroyed
@@ -92,7 +92,7 @@ feature -- Status report
 			Result := implementation.left
 		end;
 
-	right: BOOLEAN is
+	right: BOOLEAN
 			-- Is the arrow direction right ?
 		require
 			exists: not destroyed
@@ -100,7 +100,7 @@ feature -- Status report
 			Result := implementation.right
 		end;
 
-	up: BOOLEAN is
+	up: BOOLEAN
 			-- Is the arrow direction up ?
 		require
 			exists: not destroyed
@@ -108,7 +108,7 @@ feature -- Status report
 			Result := implementation.up
 		end;
 
-	is_valid (other: COMPOSITE): BOOLEAN is
+	is_valid (other: COMPOSITE): BOOLEAN
 			-- Is `other' a valid parent?
 		local
 			a_bar: BAR
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_down is
+	set_down
 			-- Set the arrow direction to down.
 		require
 			exists: not destroyed
@@ -127,7 +127,7 @@ feature -- Status setting
 			implementation.set_down
 		end;
 
-	set_left is
+	set_left
 			-- Set the arrow direction to left.
 		require
 			exists: not destroyed
@@ -135,7 +135,7 @@ feature -- Status setting
 			implementation.set_left
 		end;
 
-	set_right is
+	set_right
 			-- Set the arrow direction to right.
 		require
 			exists: not destroyed
@@ -143,7 +143,7 @@ feature -- Status setting
 			implementation.set_right
 		end;
 
-	set_up is
+	set_up
 			-- Set the arrow direction to up.
 		require
 			exists: not destroyed
@@ -158,49 +158,49 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current arrow button.
 		do
 		end;
 
 feature {NONE} -- Inapplicable
 
-	font: FONT is
+	font: FONT
 			-- Font of arrow button
 		do
 		end;
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set font to `a_font'.
 		do
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Text of current button
 		do
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Do nothing.
 		do
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment to left.
 		do
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment to center.
 		do
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set text alignment to right.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

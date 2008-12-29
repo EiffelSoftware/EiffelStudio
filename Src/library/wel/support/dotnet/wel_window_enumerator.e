@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enumerate all child windows of a WEL_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	enumerate (a_window: WEL_WINDOW): LIST [WEL_WINDOW] is
+	enumerate (a_window: WEL_WINDOW): LIST [WEL_WINDOW]
 			-- Construct a linear representation with all children of `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 	internal_children: ARRAYED_LIST [WEL_WINDOW]
 			-- Temporary container for `enumerate'. Used by `enumerate_child_windows_callback'.
 	
-	enumerate_child_windows_callback (child_hwnd: POINTER) is
+	enumerate_child_windows_callback (child_hwnd: POINTER)
 			-- Callback feature called by `enumerate'.
 		require
 			child_hwnd_not_null: child_hwnd /= default_pointer
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 
-	cwel_enum_child_windows_procedure (callback: WEL_ENUM_WINDOW_DELEGATE; hwnd: POINTER) is
+	cwel_enum_child_windows_procedure (callback: WEL_ENUM_WINDOW_DELEGATE; hwnd: POINTER)
 			-- SDK EnumChildWindows
 			-- (from WEL_COMPOSITE_WINDOW)
 			-- (export status {NONE})
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			"C signature (EIF_POINTER, HWND) use %"wel_enum_child_windows.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

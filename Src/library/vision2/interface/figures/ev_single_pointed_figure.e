@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures consisting of one point."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_with_point (a_point: EV_RELATIVE_POINT) is
+	make_with_point (a_point: EV_RELATIVE_POINT)
 			-- Create on `a_point'.
 		require
 			a_point_not_void: a_point /= Void
@@ -23,13 +23,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	point_count: INTEGER is
+	point_count: INTEGER
 			-- `Current' has one point.
 		do
 			Result := 1
 		end
 
-	point: EV_RELATIVE_POINT is
+	point: EV_RELATIVE_POINT
 			-- First point of `Current'.
 		do
 			Result := points.i_th (1)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_point (a_point: EV_RELATIVE_POINT) is
+	set_point (a_point: EV_RELATIVE_POINT)
 			-- Assign `a_point' to `point'.
 		require
 			a_point_not_void: a_point /= Void
@@ -49,12 +49,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 	
-	points: ARRAYED_LIST [EV_RELATIVE_POINT] is
+	points: ARRAYED_LIST [EV_RELATIVE_POINT]
 			-- Relative points `Current' consists of.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog with a bulletin in it."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -85,7 +85,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_bulletin_d : BULLETIN_D; oui_parent: COMPOSITE) is
+	make (a_bulletin_d : BULLETIN_D; oui_parent: COMPOSITE)
 			-- Create a bulletin for a dialog
 		do
 			create private_attributes
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Status setting
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 		do
 			if size_type = size_restored then
@@ -114,7 +114,7 @@ feature -- Status setting
 			end
 		end
 
-	unrealize is
+	unrealize
 		do
 			if insensitive_list /= Void then
 				set_windows_sensitive
@@ -123,13 +123,13 @@ feature -- Status setting
 			wel_destroy
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EVisionBulletinDialog"
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= a_height then
@@ -143,7 +143,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set size to `new_width' and `new_height'.
 		do
 			if private_attributes.width /= new_width
@@ -159,7 +159,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -173,7 +173,7 @@ feature -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

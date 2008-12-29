@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Poylgon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Drawing
 
-	draw_polygon is
+	draw_polygon
 		-- Draw 	
 		local
 			gp1,gp2: TUPLE[INTEGER,INTEGER]
@@ -41,14 +41,14 @@ feature -- Drawing
 						gp2.integer_item(1), gp2.integer_item(2), color_index)			
 		end
 
-	fill_polygon(r,g,b: INTEGER) is
+	fill_polygon(r,g,b: INTEGER)
 		--Fill Polygon with color (r,g,b)
 		do
 			ind := color(r,g,b)
 			--gdimagefillto_border()
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

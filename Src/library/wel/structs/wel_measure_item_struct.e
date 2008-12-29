@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the Wm_measureitem message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,20 +16,20 @@ create
 
 feature -- Access
 
-	ctl_type: INTEGER is
+	ctl_type: INTEGER
 			-- Control type.
 			-- See class WEL_ODT_CONSTANTS.
 		do
 			Result := cwel_measureitemstruct_get_ctltype (item)
 		end
 
-	ctl_id: INTEGER is
+	ctl_id: INTEGER
 			-- Control identifier
 		do
 			Result := cwel_measureitemstruct_get_ctlid (item)
 		end
 
-	item_id: INTEGER is
+	item_id: INTEGER
 			-- Menu item identifier for a menu item or
 			-- the index of the item in a list box or
 			-- combo box
@@ -37,7 +37,7 @@ feature -- Access
 			Result := cwel_measureitemstruct_get_itemid (item)
 		end
 
-	item_width: INTEGER is
+	item_width: INTEGER
 			-- Width, in pixels, of a menu item. Before returning from 
 			-- the message, the owner of the owner-drawn menu item must
 			-- fill this member. 
@@ -45,7 +45,7 @@ feature -- Access
 			Result := cwel_measureitemstruct_get_itemwidth (item)
 		end
 
-	item_height: INTEGER is
+	item_height: INTEGER
 			-- Height, in pixels, of a menu item. Before returning from 
 			-- the message, the owner of the owner-drawn menu item must
 			-- fill this member. 
@@ -53,7 +53,7 @@ feature -- Access
 			Result := cwel_measureitemstruct_get_itemheight (item)
 		end
 
-	item_data: INTEGER is
+	item_data: INTEGER
 			-- 32-bit value associated with the menu item.
 		do
 			Result := cwel_measureitemstruct_get_itemdata (item)
@@ -61,13 +61,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_item_width (a_width: INTEGER) is
+	set_item_width (a_width: INTEGER)
 			-- Set `item_width' to `a_width'. 
 		do
 			cwel_measureitemstruct_set_itemwidth (item, a_width)
 		end
 
-	set_item_height (a_height: INTEGER) is
+	set_item_height (a_height: INTEGER)
 			-- Set `item_height' to `a_height'. 
 		do
 			cwel_measureitemstruct_set_itemheight (item, a_height)
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_measureitemstruct
@@ -83,54 +83,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_measureitemstruct: INTEGER is
+	c_size_of_measureitemstruct: INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		alias
 			"sizeof (MEASUREITEMSTRUCT)"
 		end
 
-	cwel_measureitemstruct_get_ctltype (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_ctltype (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_get_ctlid (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_ctlid (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_get_itemid (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_itemid (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_get_itemwidth (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_itemwidth (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_get_itemheight (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_itemheight (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_get_itemdata (ptr: POINTER): INTEGER is
+	cwel_measureitemstruct_get_itemdata (ptr: POINTER): INTEGER
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_set_itemwidth (ptr: POINTER; a_width: INTEGER) is
+	cwel_measureitemstruct_set_itemwidth (ptr: POINTER; a_width: INTEGER)
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-	cwel_measureitemstruct_set_itemheight (ptr: POINTER; a_height: INTEGER) is
+	cwel_measureitemstruct_set_itemheight (ptr: POINTER; a_height: INTEGER)
 		external
 			"C [macro <measureitem.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

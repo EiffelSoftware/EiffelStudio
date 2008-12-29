@@ -20,7 +20,7 @@ inherit
 
 	CONF_ACCESS
 
-	SHARED_ERROR_HANDLER
+	SHARED_EIFFEL_PARSER_WRAPPER
 		export
 			{NONE} all
 		end
@@ -706,25 +706,21 @@ feature {TEST_CLASS_LOCATOR_I} -- Implementation
 			-- <Precursor>
 		local
 			l_ast: ?CLASS_AS
-			l_parser: EIFFEL_PARSER
-			l_file: KL_BINARY_INPUT_FILE
+			l_text: STRING_32
+			l_parser: like eiffel_parser
 		do
 			if not test_class_map.has (a_class) and file_system.file_exists (a_class.file_name) then
 				if a_class.is_compiled then
 					l_ast := a_class.compiled_class.ast
 				else
-					create l_file.make (a_class.file_name)
-					l_file.open_read
-					if l_file.is_open_read then
-						check
-							error_handler_empty: error_handler.error_list.is_empty and
-								error_handler.warning_list.is_empty
-						end
+					l_text := a_class.text
+					if l_text /= Void then
 						l_parser := eiffel_parser
-						l_parser.parse (l_file)
-						l_ast := l_parser.root_node
-						error_handler.wipe_out
-						l_file.close
+						eiffel_parser_wrapper.parse_with_option (l_parser, l_text, a_class.options, True)
+						if {l_class_ast: CLASS_AS} eiffel_parser_wrapper.ast_node then
+							l_ast := l_class_ast
+						end
+						l_parser.reset
 					end
 				end
 				if l_ast /= Void and then is_valid_class_as (l_ast) then

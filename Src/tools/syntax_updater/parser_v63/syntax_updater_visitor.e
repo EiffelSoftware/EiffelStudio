@@ -10,10 +10,11 @@ class
 inherit
 	AST_ROUNDTRIP_PRINTER_VISITOR
 		redefine
-			process_tilda_routine_creation_as,
 			process_bang_creation_as,
 			process_bang_creation_expr_as,
+			process_body_as,
 			process_create_as,
+			process_indexing_clause_as,
 			process_static_access_as,
 			context,
 			reset
@@ -37,43 +38,6 @@ feature -- Reset
 		end
 
 feature -- AST visiting
-
-	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
-			-- Process `l_as'.
-		local
-			l_tilda: SYMBOL_AS
-		do
-			is_updated := True
-			process_following_breaks
-			context.add_string ("agent ")
-			l_tilda := l_as.tilda_symbol (match_list)
-			if l_as.target /= Void then
-				safe_process (l_as.lparan_symbol (match_list))
-				l_as.target.process (Current)
-				safe_process (l_as.rparan_symbol (match_list))
-				remove_following_spaces
-				if l_tilda /= Void then
-					if l_tilda.code = {EIFFEL_TOKENS}.te_curlytilde then
-						context.add_string ("}.")
-					else
-						context.add_string (".")
-					end
-					process_leading_leaves (l_as.tilda_symbol_index)
-					last_index := l_as.tilda_symbol_index
-				else
-					context.add_string (".")
-				end
-			elseif l_tilda /= Void then
-				process_leading_leaves (l_as.tilda_symbol_index)
-				if l_tilda.code = {EIFFEL_TOKENS}.te_curlytilde then
-					context.add_string ("}")
-				end
-				last_index := l_as.tilda_symbol_index
-			end
-			remove_following_spaces
-			safe_process (l_as.feature_name)
-			safe_process (l_as.internal_operands)
-		end
 
 	process_bang_creation_as (l_as: BANG_CREATION_AS) is
 			-- Process `l_as'.
@@ -132,15 +96,48 @@ feature -- AST visiting
 			safe_process (l_as.call)
 		end
 
+	process_body_as (l_as: BODY_AS) is
+			-- <Precursor>
+		local
+			c_as: CONSTANT_AS
+		do
+			safe_process (l_as.internal_arguments)
+			safe_process (l_as.colon_symbol (match_list))
+			safe_process (l_as.type)
+			safe_process (l_as.assign_keyword (match_list))
+			safe_process (l_as.assigner)
+			c_as ?= l_as.content
+			if {l_keyword: KEYWORD_AS} l_as.is_keyword (match_list) then
+				if l_keyword.code = {EIFFEL_TOKENS}.te_is then
+					if c_as /= Void then
+						process_leading_leaves (l_as.is_keyword_index)
+						if c_as /= Void then
+							context.add_string ("=")
+						end
+					else
+						remove_following_spaces
+					end
+					last_index := l_as.is_keyword_index
+				else
+					l_keyword.process (Current)
+				end
+			end
+			if c_as /= Void then
+				l_as.content.process (Current)
+				safe_process (l_as.indexing_clause)
+			else
+				safe_process (l_as.indexing_clause)
+				safe_process (l_as.content)
+			end
+		end
+
 	process_create_as (l_as: CREATE_AS) is
 		local
-			l_str: STRING
 			l_keyword: KEYWORD_AS
 		do
 			l_keyword := l_as.create_creation_keyword (match_list)
 			if l_keyword /= Void then
-				l_str := l_keyword.literal_text (match_list)
-				if l_str.is_case_insensitive_equal ("creation") then
+				if l_keyword.code = {EIFFEL_TOKENS}.te_creation then
 					is_updated := True
 					process_leading_leaves (l_as.create_creation_keyword_index)
 					last_index := l_as.create_creation_keyword_index
@@ -151,6 +148,26 @@ feature -- AST visiting
 			end
 			safe_process (l_as.clients)
 			safe_process (l_as.feature_list)
+		end
+
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+			-- <Precursor>'
+		local
+			l_keyword: KEYWORD_AS
+		do
+			l_keyword := l_as.indexing_keyword (match_list)
+			if l_keyword /= Void then
+				if l_keyword.code = {EIFFEL_TOKENS}.te_indexing then
+					is_updated := True
+					process_leading_leaves (l_as.indexing_keyword_index)
+					last_index := l_as.indexing_keyword_index
+					context.add_string ("note")
+				else
+					l_keyword.process (Current)
+				end
+			end
+			process_eiffel_list (l_as)
+			safe_process (l_as.end_keyword (match_list))
 		end
 
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
@@ -256,7 +273,7 @@ feature {NONE} -- Access
 
 
 indexing
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -281,7 +298,7 @@ indexing
 		]"
 	source: "[
 			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
+			 5949 Hollister Ave., Goleta, CA 93117 USA
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com

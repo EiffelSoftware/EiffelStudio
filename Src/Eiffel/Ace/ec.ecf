@@ -43,6 +43,7 @@
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
+		<library name="parser_extension" location="$EIFFEL_SRC\framework\parser_extension\parser_extension.ecf" readonly="false" use_application_options="true"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf" readonly="false" use_application_options="true"/>

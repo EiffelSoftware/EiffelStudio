@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			"Abstract description of a nested call `target.message' %
 			%Version for Bench."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; m: like message; d_as: like dot_symbol) is
+	initialize (t: like target; m: like message; d_as: like dot_symbol)
 			-- Create a new NESTED CALL AST node.
 		require
 			t_not_void: t /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_nested_as (Current)
@@ -73,19 +73,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := target.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := message.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (message, other.message) and
@@ -94,14 +94,14 @@ feature -- Comparison
 
 feature {NESTED_AS} -- Replication
 
-	set_target (t: like target) is
+	set_target (t: like target)
 		require
 			valid_arg: t /= Void
 		do
 			target := t
 		end
 
-	set_message (m: like message) is
+	set_message (m: like message)
 		require
 			valid_arg: m /= Void
 		do
@@ -112,7 +112,7 @@ invariant
 	message_not_void: message /= Void
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

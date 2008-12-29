@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represent basic utility used in general tooltip support"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	tooltip_window: EVS_GENERAL_TOOLTIP_WINDOW is
+	tooltip_window: EVS_GENERAL_TOOLTIP_WINDOW
 			-- Window to display tooltip
 		once
 			create Result.make
@@ -23,7 +23,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	tooltip_delay_time: INTEGER is
+	tooltip_delay_time: INTEGER
 			-- Delay time to display tooltip when pointer is hovering on some region
 		do
 			Result := ev_application.tooltip_delay
@@ -31,7 +31,7 @@ feature{NONE} -- Implementation
 			good_result: Result >= 0
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen used to get pointer position
 		once
 			create Result
@@ -44,7 +44,7 @@ invariant
 	screen_attached: screen /= Void
 	tooltip_delay_time_non_negative: tooltip_delay_time >= 0
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

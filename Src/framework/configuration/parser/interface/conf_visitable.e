@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Configuration nodes that can be visited."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,12 +10,12 @@ deferred class
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation for a GUI lookup interface which has direct access on EV_APPLICATION"
 	legal: "See notice at end of class."
@@ -14,13 +14,13 @@ inherit
 
 feature -- Access
 
-	application_under_test: EV_APPLICATION is
+	application_under_test: EV_APPLICATION
 			-- Application under test
 		do
 			Result := environment.application
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen
 		once
 			create Result
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_active_window (a_window: like active_window) is
+	set_active_window (a_window: like active_window)
 			-- Set `active_window' to `a_window'.
 		do
 			active_window := a_window
@@ -39,7 +39,7 @@ feature -- Element change
 
 feature -- Window lookup
 
-	window_by_identifier (an_identifier: STRING): EV_WINDOW is
+	window_by_identifier (an_identifier: STRING): EV_WINDOW
 			-- Window which has `an_identifier' as `identifier_name'.
 		local
 			l_windows: LINEAR [EV_WINDOW]
@@ -47,7 +47,7 @@ feature -- Window lookup
 			Result ?= window ([an_identifier, Void])
 		end
 
-	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW] is
+	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW]
 			-- All windows which have `an_identifier' as `identifier_name'.
 		do
 			-- TODO: check if this cast is valid
@@ -56,7 +56,7 @@ feature -- Window lookup
 
 feature -- Identifiable lookup
 
-	identifiable (a_pattern: STRING): EV_IDENTIFIABLE is
+	identifiable (a_pattern: STRING): EV_IDENTIFIABLE
 			-- Identifiable corresponding to `a_pattern'.
 		local
 			l_tokens: LIST [STRING]
@@ -117,7 +117,7 @@ feature -- Identifiable lookup
 --			end
 		end
 
-	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE] is
+	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE]
 			-- All identifiablkes corresponding to `a_pattern.
 		local
 			l_active_elements: LIST [EV_IDENTIFIABLE]
@@ -178,13 +178,13 @@ feature -- Identifiable lookup
 
 feature {NONE} -- Implementation
 
-	environment: EV_ENVIRONMENT is
+	environment: EV_ENVIRONMENT
 			-- Vision2 environment
 		once
 			create Result
 		end
 
-	children (an_identifiable: EV_IDENTIFIABLE): LINEAR [EV_IDENTIFIABLE] is
+	children (an_identifiable: EV_IDENTIFIABLE): LINEAR [EV_IDENTIFIABLE]
 			-- Linear representation of all direct children of `an_identifiable'.
 		require
 			an_identifiable_not_void: an_identifiable /= Void
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	parse_info_token (a_token: STRING): TUPLE [name, type: STRING] is
+	parse_info_token (a_token: STRING): TUPLE [name, type: STRING]
 			-- Parse `a_token'.
 		require
 			a_token_not_void: a_token /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			result_has_name_or_type: Result.name /= Void or Result.type /= Void
 		end
 
-	matches_info (an_identifiable: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): BOOLEAN is
+	matches_info (an_identifiable: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): BOOLEAN
 			-- Does `an_identifiable' match `an_info's name and type?
 		require
 			an_identifiable_not_void: an_identifiable /= Void
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	window (an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+	window (an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
 			-- Window which has `a_name' and `a_type'
 		require
 			an_info_not_void: an_info /= Void
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	windows (an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+	windows (an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
 			-- Windows which have `a_name' and `a_type'
 		require
 			an_info_not_void: an_info /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	identifiable_child (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+	identifiable_child (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
 			-- Child identifiable of `a_parent' which match `an_info's name and type
 		require
 			a_parent_not_void: a_parent /= Void
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	identifiable_children (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+	identifiable_children (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
 			-- All child identifiables of `a_parent' which match `an_info's name and type
 		require
 			a_parent_not_void: a_parent /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	identifiable_child_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+	identifiable_child_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE
 			-- Identifiable matching `an_info's name and type recursive searched starting at `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	identifiable_children_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+	identifiable_children_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE]
 			-- All identifiables matching `an_info's name and type recursive searched starting at `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

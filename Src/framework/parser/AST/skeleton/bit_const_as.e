@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for bit constant. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (b: ID_AS) is
+	initialize (b: ID_AS)
 			-- Create a new BIT_CONSTANT AST node with
 			-- with bit sequence contained in `b'.
 		require
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bit_const_as (Current)
@@ -45,19 +45,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := value.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := value.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (value, other.value)
@@ -65,7 +65,7 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			create Result.make (value.name.count)
 			Result.append (value.name)
@@ -75,7 +75,7 @@ invariant
 	value_not_void: value /= Void
 	value_minimum_length: not value.name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

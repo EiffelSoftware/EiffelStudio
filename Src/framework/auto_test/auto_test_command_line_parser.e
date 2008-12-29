@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Parsing
 
-	process_arguments (a_arguments: DS_LIST [STRING]) is
+	process_arguments (a_arguments: DS_LIST [STRING])
 			-- Process `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void

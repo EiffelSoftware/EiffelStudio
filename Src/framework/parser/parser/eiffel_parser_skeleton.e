@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Eiffel parser skeletons"
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new pure Eiffel parser.
 		local
 			l_factory: AST_FACTORY
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			make_with_factory (l_factory)
 		end
 
-	make_with_factory (a_factory: AST_FACTORY) is
+	make_with_factory (a_factory: AST_FACTORY)
 		require
 			a_factory_not_void: a_factory /= Void
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Parser type setting
 
-	set_il_parser is
+	set_il_parser
 			-- Create a new IL Eiffel parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -73,7 +73,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_type_parser is
+	set_type_parser
 			-- Create a new Eiffel type parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -84,7 +84,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_expression_parser is
+	set_expression_parser
 			-- Create a new Eiffel expression parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -95,7 +95,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_feature_parser is
+	set_feature_parser
 			-- Create a new Eiffel feature parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -106,7 +106,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_indexing_parser is
+	set_indexing_parser
 			-- Create a new Eiffel indexing clause parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -117,7 +117,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_invariant_parser is
+	set_invariant_parser
 			-- Create a new Eiffel invariant clause parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -128,7 +128,7 @@ feature -- Parser type setting
 			parsing_type_set: has_parsing_type
 		end
 
-	set_entity_declaration_parser is
+	set_entity_declaration_parser
 			-- Create a new Eiffel entity decalration parser.
 		require
 			parsing_type_not_set: not has_parsing_type
@@ -141,7 +141,7 @@ feature -- Parser type setting
 
 feature -- Status report [hide]
 
-	has_parsing_type: BOOLEAN is
+	has_parsing_type: BOOLEAN
 			-- Has parsing type been specified?
 		do
 			Result := il_parser or type_parser or expression_parser or
@@ -151,7 +151,7 @@ feature -- Status report [hide]
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset Parser before parsing next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature -- Parsing
 
-	parse (a_file: KL_BINARY_INPUT_FILE) is
+	parse (a_file: KL_BINARY_INPUT_FILE)
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -212,7 +212,7 @@ feature -- Parsing
 			parse_class (a_file, Void)
 		end
 
-	parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C) is
+	parse_class (a_file: KL_BINARY_INPUT_FILE; a_class: ABSTRACT_CLASS_C)
 			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -247,7 +247,7 @@ feature -- Parsing
 			reset
 		end
 
-	parse_from_string (a_string: STRING) is
+	parse_from_string (a_string: STRING)
 			-- Parse Eiffel class text in `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -336,7 +336,7 @@ feature -- Access
 
 feature -- Removal
 
-	reset_nodes is
+	reset_nodes
 			-- Clean all top nodes.
 		do
 			root_node := Void
@@ -356,7 +356,7 @@ feature -- Removal
 			match_list_void: match_list = Void
 		end
 
-	wipe_out is
+	wipe_out
 			-- Release unused objects to garbage collector.
 		do
 			reset_nodes
@@ -369,7 +369,7 @@ feature -- Removal
 			entity_declaration_node_void: entity_declaration_node = Void
 		end
 
-	clear_all is
+	clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting.)
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			is_parsing_class_head_is_set: is_parsing_class_head = a_flag_value
 		end
 
-	id_level: INTEGER is
+	id_level: INTEGER
 			-- Boolean for controlling the semantic
 			-- action of rule `A_feature'
 		require
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			Result := feature_stack.item.id_level
 		end
 
-	set_id_level (a_id_level: INTEGER) is
+	set_id_level (a_id_level: INTEGER)
 			-- Sets the current id_level to `a_id_level'
 		require
 			not feature_stack.is_empty
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			feature_stack.item.id_level := a_id_level
 		end
 
-	fbody_pos: INTEGER is
+	fbody_pos: INTEGER
 			-- To memorize the beginning of a feature body
 		require
 			not feature_stack.is_empty
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			Result := feature_stack.item.fbody_pos
 		end
 
-	set_fbody_pos (a_fbody_pos: INTEGER) is
+	set_fbody_pos (a_fbody_pos: INTEGER)
 		require
 			not feature_stack.is_empty
 		do
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			-- we need a stack of them. It may be, that there is no feature at all when its used
 			-- for an invariant. We never remove the first element of the stack.
 
-	add_feature_frame is
+	add_feature_frame
 		do
 			feature_stack.force ([Normal_level, 0])
 		end
@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Counters
 
-	counter_value: INTEGER is
+	counter_value: INTEGER
 			-- Value of the last counter registered
 		require
 			counters_not_empty: not counters.is_empty
@@ -520,7 +520,7 @@ feature {NONE} -- Counters
 			value_positive: Result >= 0
 		end
 
-	counter2_value: INTEGER is
+	counter2_value: INTEGER
 			-- Value of the last counter registered
 		require
 			counters2_not_empty: not counters2.is_empty
@@ -530,7 +530,7 @@ feature {NONE} -- Counters
 			value_positive: Result >= 0
 		end
 
-	add_counter is
+	add_counter
 			-- Register a new counter.
 		do
 			counters.force (0)
@@ -539,7 +539,7 @@ feature {NONE} -- Counters
 			value_zero: counter_value = 0
 		end
 
-	add_counter2 is
+	add_counter2
 			-- Register a new counter.
 		do
 			counters2.force (0)
@@ -548,7 +548,7 @@ feature {NONE} -- Counters
 			value_zero: counter2_value = 0
 		end
 
-	remove_counter is
+	remove_counter
 			-- Unregister last registered counter.
 		require
 			counters_not_empty: not counters.is_empty
@@ -558,7 +558,7 @@ feature {NONE} -- Counters
 			one_less: counters.count = old counters.count - 1
 		end
 
-	remove_counter2 is
+	remove_counter2
 			-- Unregister last registered counter.
 		require
 			counters2_not_empty: not counters2.is_empty
@@ -568,7 +568,7 @@ feature {NONE} -- Counters
 			one_less: counters2.count = old counters2.count - 1
 		end
 
-	increment_counter is
+	increment_counter
 			-- Increment `counter_value'.
 		require
 			counters_not_empty: not counters.is_empty
@@ -582,7 +582,7 @@ feature {NONE} -- Counters
 			one_more: counter_value = old counter_value + 1
 		end
 
-	increment_counter2 is
+	increment_counter2
 			-- Increment `counter_value'.
 		require
 			counters2_not_empty: not counters2.is_empty
@@ -610,7 +610,7 @@ feature {NONE} -- Actions
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		a_parent_list_1: PARENT_LIST_AS; a_parent_list_2: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
-		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS is
+		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
@@ -641,7 +641,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- ID factory
 
-	new_none_id: NONE_ID_AS is
+	new_none_id: NONE_ID_AS
 			-- New ID AST node for "NONE"
 		do
 			Result := ast_factory.new_filled_none_id_as (line, column, position, 4)
@@ -652,7 +652,7 @@ feature {NONE} -- Type factory
 	is_supplier_recorded: BOOLEAN
 			-- Are suppliers recorded in `suppliers'?
 
-	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -705,7 +705,7 @@ feature {NONE} -- Type factory
 
 feature {NONE} -- Instruction factory
 
-	new_call_instruction_from_expression (e: EXPR_AS): INSTR_CALL_AS is
+	new_call_instruction_from_expression (e: EXPR_AS): INSTR_CALL_AS
 			-- Check if expression `e' represents a call
 			-- and create a call instruction from it if this is the case.
 			-- Report syntax error otherwise.
@@ -737,7 +737,7 @@ feature {NONE} -- Instruction factory
 
 feature {AST_FACTORY} -- Error handling
 
-	report_basic_generic_type_error is
+	report_basic_generic_type_error
 			-- Basic types cannot have generic devivation.
 		local
 			an_error: BASIC_GEN_TYPE_ERR
@@ -746,7 +746,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING) is
+	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING)
 			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
 		require
 			a_type_not_void: a_type /= Void
@@ -760,7 +760,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING) is
+	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING)
 			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
 		require
 			a_type_not_void: a_type /= Void
@@ -774,7 +774,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING) is
+	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. greater than maximum_integer_value).
 		require
@@ -793,7 +793,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING) is
+	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. less than minimum_integer_value).
 		require
@@ -812,7 +812,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_character_code_too_large_error (a_code: STRING) is
+	report_character_code_too_large_error (a_code: STRING)
 			-- Integer encoded by `a_code' is too large to fit into a CHARACTER_32
 		require
 			a_code_not_void: a_code /= Void
@@ -825,7 +825,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_one_error (a_error: ERROR) is
+	report_one_error (a_error: ERROR)
 			-- An error was reported.
 		do
 			Precursor (a_error)
@@ -834,7 +834,7 @@ feature {AST_FACTORY} -- Error handling
 			abort
 		end
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- A syntax error has been detected.
 			-- Print error message.
 		do
@@ -853,16 +853,16 @@ feature{NONE} -- Roundtrip
 
 feature {NONE} -- Constants
 
-	Initial_counters_capacity: INTEGER is 20
+	Initial_counters_capacity: INTEGER = 20
 			-- Initial capacity for `counters'
 
-	Initial_formal_parameters_capacity: INTEGER is 8
+	Initial_formal_parameters_capacity: INTEGER = 8
 				-- Initial capacity for `formal_parameters'
 				-- (See `eif_rtlimits.h')
 
-	Normal_level: INTEGER is 0
-	Assert_level: INTEGER is 1
-	Invariant_level: INTEGER is 2
+	Normal_level: INTEGER = 0
+	Assert_level: INTEGER = 1
+	Invariant_level: INTEGER = 2
 
 invariant
 
@@ -874,7 +874,7 @@ invariant
 	is_external_class_not_set: not il_parser implies not is_external_class
 	is_partial_class_not_set: not il_parser implies not is_partial_class
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

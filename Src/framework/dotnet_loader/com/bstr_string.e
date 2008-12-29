@@ -1,4 +1,4 @@
-indexing
+note
 	description: "BSTR string for COM Interop"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_by_uni_string (astring: UNI_STRING) is
+	make_by_uni_string (astring: UNI_STRING)
 			-- creates new instance from a unistring
 		require
 			non_void_string: astring /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			string_created: item /= default_pointer
 		end
 		
-	make_by_pointer (p: POINTER) is
+	make_by_pointer (p: POINTER)
 			-- create a BSTR from a pointer
 		require
 			non_void_pointer: p /= default_pointer
@@ -42,13 +42,13 @@ feature -- Access
 		
 feature -- Basic Oprtations
 
-	string: STRING is
+	string: STRING
 			-- return a STRING
 		do
 			Result := uni_string.string
 		end
 		
-	uni_string: UNI_STRING is
+	uni_string: UNI_STRING
 			-- returns a UNI_STRING
 		do
 			create Result.make_by_pointer (item)
@@ -56,7 +56,7 @@ feature -- Basic Oprtations
 		
 feature -- Destruction
 
-	dispose is
+	dispose
 			-- free up used resources
 		do
 			c_free_bstr (item)
@@ -64,7 +64,7 @@ feature -- Destruction
 		
 feature {NONE} -- Implementation
 
-	c_get_bstr (astring: POINTER): POINTER is
+	c_get_bstr (astring: POINTER): POINTER
 			-- returns a BSTR from a UNI_STRING
 		external
 			"C signature (LPWSTR): EIF_POINTER use %"OleAuto.h%""
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			"SysAllocString"
 		end
 		
-	c_free_bstr (abstr: POINTER) is
+	c_free_bstr (abstr: POINTER)
 			-- frees a BSTR
 		external
 			"C signature (BSTR) use %"OleAuto.h%""
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			"SysFreeString"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

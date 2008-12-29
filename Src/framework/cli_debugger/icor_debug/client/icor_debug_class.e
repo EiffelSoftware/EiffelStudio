@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_module: ICOR_DEBUG_MODULE is
+	get_module: ICOR_DEBUG_MODULE
 		local
 			p: POINTER
 		do
@@ -41,7 +41,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_static_field_value (mdfielddef: NATURAL_32; a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE is
+	get_static_field_value (mdfielddef: NATURAL_32; a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_VALUE
 			-- GetStaticFieldValue returns a value object (ICorDebugValue)
 			-- for the given static field
 			-- variable. If the static field could possibly be relative to either
@@ -61,7 +61,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Access
 
-	get_token: like token is
+	get_token: like token
 		do
 			last_call_success := cpp_get_token (item, $Result)
 		ensure
@@ -70,7 +70,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugClass signature(ICorDebugModule**): EIF_INTEGER 
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			"GetModule"
 		end
 
-	cpp_get_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugClass signature(mdTypeDef*): EIF_INTEGER 
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			"GetToken"
 		end
 
-	cpp_get_static_field_value (obj: POINTER; a_mdfielddef: NATURAL_32; a_p_frame: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_static_field_value (obj: POINTER; a_mdfielddef: NATURAL_32; a_p_frame: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugClass signature(mdFieldDef, ICorDebugFrame*, ICorDebugValue**): EIF_INTEGER 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			"GetStaticFieldValue"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

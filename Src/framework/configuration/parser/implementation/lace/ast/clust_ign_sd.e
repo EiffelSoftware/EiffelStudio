@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ignore cluster adapt."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (cn: like cluster_name) is
+	initialize (cn: like cluster_name)
 			-- Create a new CLUST_IGN AST node.
 		require
 			cn_not_void: cn /= Void
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			cluster_name_set: cluster_name = cn
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

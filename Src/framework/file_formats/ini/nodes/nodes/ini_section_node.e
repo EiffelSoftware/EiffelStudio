@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a INI document section AS node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_open: like open_bracket; a_label: like label; a_close: like close_bracket) is
+	make (a_open: like open_bracket; a_label: like label; a_close: like close_bracket)
 			-- Initialize section.
 		do
 			make_prop_container
@@ -49,7 +49,7 @@ feature -- Node Access
 
 feature -- Access
 
-	span: INI_TEXT_SPAN is
+	span: INI_TEXT_SPAN
 			-- Span of abstract syntax node
 		local
 			l_props: like properties
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Extension
 
-	extend_property (a_item: INI_PROPERTY_NODE) is
+	extend_property (a_item: INI_PROPERTY_NODE)
 			-- Extends container with item `a_item'.
 		do
 			Precursor {INI_PROPERTY_CONTAINER_NODE} (a_item)
@@ -85,7 +85,7 @@ feature -- Extension
 
 feature -- Visitation
 
-	visit (a_visitor: INI_NODE_VISITOR) is
+	visit (a_visitor: INI_NODE_VISITOR)
 			-- Visit current node using vistor `a_vistor'
 		do
 			a_visitor.process_section (Current)
@@ -102,7 +102,7 @@ invariant
 	label_attached: label /= Void
 	close_bracket_attached: close_bracket /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

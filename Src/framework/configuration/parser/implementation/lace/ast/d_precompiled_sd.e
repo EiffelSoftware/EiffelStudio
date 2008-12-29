@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Precompilation options"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like option; v: like value; r: like renamings) is
+	initialize (o: like option; v: like value; r: like renamings)
 			-- Create a new D_PRECOMPILED AST node.
 		require
 			o_not_void: o /= Void
@@ -45,10 +45,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_precompiled: BOOLEAN is True;
+	is_precompiled: BOOLEAN = True;
 			-- Current is an instance of `D_PRECOMPILED_SD'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

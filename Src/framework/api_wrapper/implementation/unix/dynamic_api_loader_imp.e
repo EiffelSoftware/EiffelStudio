@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The GTK implementation of the dynamic API loader {DYNAMIC_API_LOADER}.
 	]"
@@ -70,7 +70,7 @@ feature -- Basic operations
 			check library_freed: l_result end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A simple syntax error found when parsing an INI text buffer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text; a_line: like line; a_column: like column) is
+	make (a_text: like text; a_line: like line; a_column: like column)
 			-- Initialize a generic sytax error with a message `a_message' on
 			-- line `a_line', column position `a_column'
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Full error message
 		do
 			create Result.make (sytax_error_prefix.count + text.count)
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation Access
 	text: STRING
 			-- Syntax error text
 
-	sytax_error_prefix: STRING is "Syntax Error: "
+	sytax_error_prefix: STRING = "Syntax Error: "
 			-- Syntax error message prefix
 
 invariant
@@ -64,7 +64,7 @@ invariant
 	line_positive: line > 0
 	column_positive: column > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

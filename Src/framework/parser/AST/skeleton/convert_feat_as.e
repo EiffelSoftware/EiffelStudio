@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract syntax node representing a conversion feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as, lc_as, rc_as: SYMBOL_AS)
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		require
 			fn_not_void: fn /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_convert_feat_as (Current)
@@ -87,7 +87,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol '{' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
@@ -100,7 +100,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol '}' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
@@ -113,7 +113,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -126,7 +126,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -152,12 +152,12 @@ feature -- Access
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := feature_name.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rparan_symbol_index /= 0 then
 				Result := rparan_symbol (a_list)
@@ -170,7 +170,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := is_creation_procedure = other.is_creation_procedure and
@@ -183,7 +183,7 @@ invariant
 	conversion_types_not_void: conversion_types /= Void
 	conversion_types_not_empty: not conversion_types.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

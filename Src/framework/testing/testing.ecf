@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
+		<option syntax_level="1" namespace="EiffelSoftware.Framework">
 			<assertions precondition="true"/>
 		</option>
 		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf"/>

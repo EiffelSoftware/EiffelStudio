@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Region modifier for replace text of AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_index: INTEGER; a_region: ERT_TOKEN_REGION; a_text: STRING) is
+	make (a_index: INTEGER; a_region: ERT_TOKEN_REGION; a_text: STRING)
 			-- Initialize instance.
 		require
 			a_region_not_void: a_region /= Void
@@ -31,7 +31,7 @@ feature{NONE} -- Initialization
 
 feature{LEAF_AS_LIST} -- Modify
 
-	apply (a_list: LEAF_AS_LIST) is
+	apply (a_list: LEAF_AS_LIST)
 			-- Apply current modifier.
 		local
 			i: INTEGER
@@ -54,31 +54,31 @@ feature{LEAF_AS_LIST} -- Modify
 
 feature -- Vadility
 
-	can_prepend (other_region: like region): BOOLEAN is
+	can_prepend (other_region: like region): BOOLEAN
 			-- Can `other_region' be prepended by some text according to current modifier?
 		do
 			Result := region.is_disjoint_region (other_region) or region.is_sub_region (other_region)
 		end
 
-	can_append (other_region: like region): BOOLEAN is
+	can_append (other_region: like region): BOOLEAN
 			-- Can `other_region' be appended by some text according to current modifier?
 		do
 			Result := region.is_disjoint_region (other_region) or region.is_sub_region (other_region)
 		end
 
-	can_replace (other_region: like region): BOOLEAN is
+	can_replace (other_region: like region): BOOLEAN
 			-- Can `other_region' be replaced by some text according to current modifier?
 		do
 			Result := region.is_disjoint_region (other_region) or region.is_sub_region (other_region)
 		end
 
-	can_remove (other_region: like region): BOOLEAN is
+	can_remove (other_region: like region): BOOLEAN
 			-- Can `other_region' be removed according to current modifier?
 		do
 			Result := region.is_disjoint_region (other_region) or region.is_sub_region (other_region)
 		end
 
-	is_text_available (other_region: like region): BOOLEAN is
+	is_text_available (other_region: like region): BOOLEAN
 			-- Is text of `other_region' available according to current modifier?
 		do
 			Result := region.is_disjoint_region (other_region) or region.is_sub_region (other_region)
@@ -93,7 +93,7 @@ invariant
 
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

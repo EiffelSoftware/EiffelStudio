@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of features needed for parsing of Lace files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Parsing
 
-	build_ast (file_name: STRING) is
+	build_ast (file_name: STRING)
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
@@ -34,7 +34,7 @@ feature -- Parsing
 			end
 		end
 
-	parse_file (file_name: STRING; in_use_file: BOOLEAN) is
+	parse_file (file_name: STRING; in_use_file: BOOLEAN)
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		do
@@ -45,14 +45,14 @@ feature -- Parsing
 
 feature -- Shared once
 
-	last_syntax_error: STRING is
+	last_syntax_error: STRING
 			-- Last syntax error generated after calling
 			-- routine `parse_ast'
 		do
 			Result := last_syntax_cell.item
 		end
 
-	set_last_syntax_error (s: STRING) is
+	set_last_syntax_error (s: STRING)
 			-- Put the last syntax error in last_syntax_error
 		do
 			last_syntax_cell.put (s)
@@ -60,14 +60,14 @@ feature -- Shared once
 
 feature {NONE} -- Implementation
 
-	last_syntax_cell: CELL [STRING] is
+	last_syntax_cell: CELL [STRING]
 			-- Stored value of last generated syntax error generated calling
 			-- routine `parse_ast'
 		once
 			create Result.put (Void)
 		end
 
-	parse_lace (a_file: KL_BINARY_INPUT_FILE) is
+	parse_lace (a_file: KL_BINARY_INPUT_FILE)
 			-- Call lace parser with a source file.
 		require
 			a_file_not_void: a_file /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

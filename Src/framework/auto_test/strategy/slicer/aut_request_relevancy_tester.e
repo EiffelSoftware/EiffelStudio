@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables) is
+	make (a_variables: like variables)
 			-- Create new strategy.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -44,33 +44,33 @@ feature -- Access
 
 feature {AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			is_relevant := False
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			is_relevant := False
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
 			is_relevant := variables.has (a_request.target)
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		do
 			is_relevant := variables.has (a_request.target) or
 							(a_request.receiver /= Void and then variables.has (a_request.receiver))
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		do
 			is_relevant := variables.has (a_request.receiver)
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
 			is_relevant := variables.has (a_request.variable)
 		end

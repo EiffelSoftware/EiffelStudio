@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents basic utilities used in Vision2 support"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature{NONE} -- Agent registration
 
-	safe_register_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+	safe_register_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE])
 			-- If `a_action_sequence' doesn't has `a_agent' already, register `a_agent' into `a_action_sequence'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -27,7 +27,7 @@ feature{NONE} -- Agent registration
 			a_agent_registered: a_action_sequence.has (a_agent)
 		end
 
-	safe_remove_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+	safe_remove_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE])
 			-- If `a_action_sequence' has `a_agent', remove it from `a_action_sequence'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -42,7 +42,7 @@ feature{NONE} -- Agent registration
 
 feature -- Accelerator
 
-	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN is
+	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN
 			-- Does `a_accelerator' match current keyboard status?
 		require
 			a_key_attached: a_key /= Void
@@ -65,7 +65,7 @@ feature -- Accelerator
 
 feature -- Focus
 
-	has_focus_on_widgets_content (a_widget: EV_WIDGET): BOOLEAN is
+	has_focus_on_widgets_content (a_widget: EV_WIDGET): BOOLEAN
 			-- Does `a_widget' or its sub-widgets if it is a container has focus?
 		local
 			l_container: EV_CONTAINER
@@ -97,7 +97,7 @@ feature -- Focus
 
 feature -- Fonts
 
-	grid_row_height_for_fonts (a_fonts: SPECIAL [EV_FONT]): INTEGER is
+	grid_row_height_for_fonts (a_fonts: SPECIAL [EV_FONT]): INTEGER
 			-- Suitable row height in pixel to display all fonts in `a_fonts' and pixmaps with height `a_pixmap_height'
 		require
 			a_fonts_attached: a_fonts /= Void
@@ -120,7 +120,7 @@ feature -- Fonts
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

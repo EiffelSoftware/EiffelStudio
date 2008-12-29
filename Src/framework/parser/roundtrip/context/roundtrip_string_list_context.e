@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores formatted Eiffel code in linked list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create ctxt.make
@@ -22,7 +22,7 @@ feature{NONE} -- Initialization
 
 feature -- Operation
 
-	add_string (s: STRING) is
+	add_string (s: STRING)
 		do
 			ctxt.extend (s)
 			byte_count := byte_count + s.count
@@ -31,7 +31,7 @@ feature -- Operation
 			string_added: ctxt.count = old ctxt.count + 1
 		end
 
-	clear is
+	clear
 		do
 			ctxt.wipe_out
 			byte_count := 0
@@ -39,7 +39,7 @@ feature -- Operation
 			ctxt_is_empty: ctxt.is_empty
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 		do
 			if byte_count > 0 then
 				from
@@ -56,7 +56,7 @@ feature -- Operation
 			end
 		end
 
-	count: INTEGER is
+	count: INTEGER
 		do
 			Result := byte_count
 		end
@@ -66,7 +66,7 @@ feature{NONE} -- Implementation
 	ctxt: LINKED_LIST [STRING]
 			-- Internal linked list to store formatted code
 
-	initial_list_capacity: INTEGER is 2000
+	initial_list_capacity: INTEGER = 2000
 			-- Initial capacity of `ctxt'.
 
 	byte_count: INTEGER
@@ -75,7 +75,7 @@ feature{NONE} -- Implementation
 invariant
 	ctxt_not_void: ctxt /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

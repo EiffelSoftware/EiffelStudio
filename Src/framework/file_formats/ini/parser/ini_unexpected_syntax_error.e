@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An INI syntax error where a string was unexpected in the INI file text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Full error message
 		do
 			create Result.make (sytax_error_prefix.count + unexpected_error_prefix.count + text.count + unexpected_error_suffix.count)
@@ -30,13 +30,13 @@ feature -- Access
 
 feature -- Implementation
 
-	unexpected_error_prefix: STRING is "Unxpected '"
+	unexpected_error_prefix: STRING = "Unxpected '"
 			-- Expected error prefix
 
-	unexpected_error_suffix: STRING is "'.";
+	unexpected_error_suffix: STRING = "'.";
 			-- Expected error prefix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

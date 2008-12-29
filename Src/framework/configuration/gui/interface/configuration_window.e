@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project configuration window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -94,7 +94,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make_for_target (a_system: like conf_system; a_target: STRING; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
+	make_for_target (a_system: like conf_system; a_target: STRING; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command)
 			-- Create and select `a_target'.
 		require
 			a_target_ok: a_target /= Void and then not a_target.is_empty
@@ -122,7 +122,7 @@ feature {NONE}-- Initialization
 			selected_target_set: selected_target = a_target
 		end
 
-	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
+	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command)
 			-- Create.
 		require
 			a_system_not_void: a_system /= Void
@@ -137,7 +137,7 @@ feature {NONE}-- Initialization
 			debug_clauses_set: a_debugs /= Void implies debug_clauses = a_debugs
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -237,7 +237,7 @@ feature -- Access
 	external_editor_command: FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
 			-- Command that builds an external editor command line by taking a target and a line number.
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Split position.
 		require
 			initialized: is_initialized
@@ -247,7 +247,7 @@ feature -- Access
 
 feature -- Update
 
-	set_split_position (a_position: like split_position) is
+	set_split_position (a_position: like split_position)
 			-- Set split position if possible to `a_position' otherwise
 			-- closer to the range of possible position of `split_area'.
 		require
@@ -269,7 +269,7 @@ feature -- Update
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
@@ -282,14 +282,14 @@ feature {NONE} -- Agents
 	refresh_current: PROCEDURE [ANY, TUPLE[]]
 			-- What to call to refresh the current view.
 
-	on_cancel is
+	on_cancel
 			-- Quit without saving.
 		do
 			is_canceled := True
 			hide
 		end
 
-	on_ok is
+	on_ok
 			-- Quit with saving
 		do
 			if conf_system /= Void then
@@ -331,7 +331,7 @@ feature {NONE} -- Layout components
 
 feature {NONE} -- Element initialization
 
-	initialize_properties is
+	initialize_properties
 			-- Prepare `properties'.
 		require
 			not_properties_and_grid: properties = Void or grid = Void
@@ -398,7 +398,7 @@ feature {NONE} -- Element initialization
 			buttons_void: add_button = Void and remove_button = Void
 		end
 
-	initialize_grid is
+	initialize_grid
 			-- Prepare `grid'.
 		require
 			not_properties_and_grid: properties = Void or grid = Void
@@ -475,7 +475,7 @@ feature {NONE} -- Element initialization
 			properties_void: properties = Void
 		end
 
-	initialize_section_tree is
+	initialize_section_tree
 			-- Initialize `section_tree'.
 		do
 				-- system section
@@ -493,7 +493,7 @@ feature {NONE} -- Element initialization
 
 feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 
-	add_target_sections (a_target: CONF_TARGET; a_root: EV_TREE_NODE_LIST) is
+	add_target_sections (a_target: CONF_TARGET; a_root: EV_TREE_NODE_LIST)
 			-- Add sections for `a_target' under `a_root'.
 		require
 			a_target_not_void: a_target /= Void
@@ -612,7 +612,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			unlock_update
 		end
 
-	show_properties_system is
+	show_properties_system
 			-- Show configuration for system properties.
 		require
 			is_initialized: is_initialized
@@ -633,7 +633,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_general (a_target: CONF_TARGET) is
+	show_properties_target_general (a_target: CONF_TARGET)
 			-- Show general properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -656,7 +656,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_warning (a_target: CONF_TARGET) is
+	show_properties_target_warning (a_target: CONF_TARGET)
 			-- Show warning properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -679,7 +679,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_debugs (a_target: CONF_TARGET) is
+	show_properties_target_debugs (a_target: CONF_TARGET)
 			-- Show debug properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -702,7 +702,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_assertions (a_target: CONF_TARGET) is
+	show_properties_target_assertions (a_target: CONF_TARGET)
 			-- Show assertion properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -725,7 +725,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_externals (a_target: CONF_TARGET; a_external: CONF_EXTERNAL) is
+	show_properties_target_externals (a_target: CONF_TARGET; a_external: CONF_EXTERNAL)
 			-- Show external properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -749,7 +749,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			properties_ok: properties /= Void and then not properties.is_destroyed
 		end
 
-	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING_32) is
+	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING_32)
 			-- Show task properties for `a_task'.
 		require
 			is_initialized: is_initialized
@@ -775,7 +775,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_groups (a_target: CONF_TARGET; a_group: CONF_GROUP) is
+	show_properties_target_groups (a_target: CONF_TARGET; a_group: CONF_GROUP)
 			-- Show groups properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -800,7 +800,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			not_refreshing: not is_refreshing
 		end
 
-	show_properties_target_variables (a_target: CONF_TARGET) is
+	show_properties_target_variables (a_target: CONF_TARGET)
 			-- Show variables properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -881,7 +881,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			grid_ok: grid /= Void and then not grid.is_destroyed
 		end
 
-	show_properties_target_mapping (a_target: CONF_TARGET) is
+	show_properties_target_mapping (a_target: CONF_TARGET)
 			-- Show mapping properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -961,7 +961,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			grid_ok: grid /= Void and then not grid.is_destroyed
 		end
 
-	show_properties_target_advanced (a_target: CONF_TARGET) is
+	show_properties_target_advanced (a_target: CONF_TARGET)
 			-- Show advanced properties for `a_target'.
 		require
 			is_initialized: is_initialized
@@ -986,7 +986,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 
 feature {NONE} -- Implementation
 
-	commit_changes is
+	commit_changes
 			-- Commits configuration changes
 		require
 			conf_system_attached: conf_system /= Void
@@ -995,7 +995,7 @@ feature {NONE} -- Implementation
 			conf_system.set_file_date
 		end
 
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL]
 			-- Expanded status of sections of groups.
 		once
 			create Result.make (5)
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_advanced)
 		end
 
-	refresh is
+	refresh
 			-- Regenerate currently displayed data.
 		do
 			if refresh_current /= Void then
@@ -1016,7 +1016,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_value_changes (a_has_group_changed: BOOLEAN) is
+	handle_value_changes (a_has_group_changed: BOOLEAN)
 			-- Store changes to disk.
 		local
 			l_section: CONFIGURATION_SECTION
@@ -1040,7 +1040,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_text_editor is
+	open_text_editor
 			-- Open editor to edit the configuration file by hand.
 		local
 			l_cmd_string: STRING
@@ -1057,7 +1057,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_properties_system is
+	initialize_properties_system
 			-- Initialize `properties' for system settings.
 		require
 			properties_ok: properties /= Void and then not properties.is_destroyed
@@ -1156,7 +1156,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	initialize_properties_target_externals (an_external: CONF_EXTERNAL) is
+	initialize_properties_target_externals (an_external: CONF_EXTERNAL)
 			-- Initialize `properties' for externals target settings.
 		require
 			properties_ok: properties /= Void and then not properties.is_destroyed
@@ -1235,7 +1235,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	initialize_properties_target_tasks (a_task: CONF_ACTION; a_type: STRING_GENERAL) is
+	initialize_properties_target_tasks (a_task: CONF_ACTION; a_type: STRING_GENERAL)
 			-- Initialize `properties' for task target settings.
 		require
 			properties_ok: properties /= Void and then not properties.is_destroyed
@@ -1317,7 +1317,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Configuration setting
 
-	add_variable is
+	add_variable
 			-- Add a new variable.
 		require
 			current_target: current_target /= Void
@@ -1328,7 +1328,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	remove_variable is
+	remove_variable
 			-- Remove a variable.
 		require
 			current_target: current_target /= Void
@@ -1347,7 +1347,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	update_variable_key (an_old_key: STRING; a_new_key: STRING) is
+	update_variable_key (an_old_key: STRING; a_new_key: STRING)
 			-- Update key part of a variable.
 		require
 			current_target: current_target /= Void
@@ -1360,7 +1360,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_variables (current_target)
 		end
 
-	update_variable_value (a_key: STRING; a_value: STRING) is
+	update_variable_value (a_key: STRING; a_value: STRING)
 			-- Update value part of a variable.
 		require
 			current_target: current_target /= Void
@@ -1373,7 +1373,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_variables (current_target)
 		end
 
-	add_mapping is
+	add_mapping
 			-- Add a new mapping.
 		require
 			current_target: current_target /= Void
@@ -1384,7 +1384,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	remove_mapping is
+	remove_mapping
 			-- Remove a mapping.
 		require
 			current_target: current_target /= Void
@@ -1402,7 +1402,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	update_mapping_key (an_old_key: STRING; a_new_key: STRING) is
+	update_mapping_key (an_old_key: STRING; a_new_key: STRING)
 			-- Update key part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1415,7 +1415,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_mapping (current_target)
 		end
 
-	update_mapping_value (a_key: STRING; a_value: STRING) is
+	update_mapping_value (a_key: STRING; a_value: STRING)
 			-- Update value part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1430,7 +1430,7 @@ feature {NONE} -- Configuration setting
 
 feature {NONE} -- Validation and warning generation
 
-	check_library_target (a_target: STRING_32): BOOLEAN is
+	check_library_target (a_target: STRING_32): BOOLEAN
 			-- Is `a_target' a valid library target?
 		require
 			target_of_system: a_target /= Void and then not a_target.is_empty implies conf_system.targets.has (a_target)
@@ -1451,7 +1451,7 @@ feature {NONE} -- Validation and warning generation
 
 feature {NONE} -- Wrappers
 
-	list_wrapper (a_list: LIST [STRING_GENERAL]; a_call: PROCEDURE [ANY, TUPLE [LIST [STRING]]]) is
+	list_wrapper (a_list: LIST [STRING_GENERAL]; a_call: PROCEDURE [ANY, TUPLE [LIST [STRING]]])
 			-- Wrapper to allow to call agents that only accept LIST [STRING].
 		require
 			valid_8_string: a_list.for_all (agent {STRING_GENERAL}.is_valid_as_string_8)
@@ -1475,12 +1475,12 @@ feature {NONE} -- Wrappers
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 			-- Is `Current' in its default state?
 
 feature {NONE} -- Constants
 
-	description_height: INTEGER is 50
+	description_height: INTEGER = 50
 
 invariant
 	configuration_space: is_initialized implies configuration_space /= Void
@@ -1497,7 +1497,7 @@ invariant
 	hide_actions_not_void: is_initialized implies hide_actions /= Void
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

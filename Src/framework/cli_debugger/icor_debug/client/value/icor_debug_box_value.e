@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ICorDebugBoxValue
 		]"
@@ -18,7 +18,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_object: ICOR_DEBUG_OBJECT_VALUE is
+	get_object: ICOR_DEBUG_OBJECT_VALUE
 			-- GetObject
 		local
 			p: POINTER
@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_object (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_object (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugBoxValue signature(ICorDebugObjectValue**): EIF_INTEGER 
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			"GetObject"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel routine object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN) is
+	initialize (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN)
 			-- Create a new ROUTINE_CREATION AST node.
 			-- When `t' is Void it means it is a question mark.
 		do
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_routine_creation_as (Current)
@@ -51,7 +51,7 @@ feature -- Roundtrip
 	lparan_symbol_index, rparan_symbol_index: INTEGER
 			-- Symbol "(" and ")" associated with Current AST node
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -64,7 +64,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -77,7 +77,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_lparan_symbol (s_as: SYMBOL_AS) is
+	set_lparan_symbol (s_as: SYMBOL_AS)
 			-- Set `lparan_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -87,7 +87,7 @@ feature -- Roundtrip
 			lparan_symbol_index_set: s_as /= Void implies lparan_symbol_index = s_as.index
 		end
 
-	set_rparan_symbol (s_as: SYMBOL_AS) is
+	set_rparan_symbol (s_as: SYMBOL_AS)
 			-- Set `rparan_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -105,7 +105,7 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Feature name.
 
-	operands : EIFFEL_LIST [OPERAND_AS] is
+	operands : EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
 		local
 			l_internal_operands: like internal_operands
@@ -132,7 +132,7 @@ feature -- Roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name) and then
@@ -143,7 +143,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		require
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
@@ -157,7 +157,7 @@ invariant
 	operands_correct: (internal_operands /= Void implies operands = internal_operands.meaningful_content) and
 					  (internal_operands = Void implies operands = Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

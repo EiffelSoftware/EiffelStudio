@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Matcher for completion names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Match
 
-	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN is
+	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN
 			-- Is `a_prefix' start of `a_string'?
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -27,7 +27,7 @@ feature -- Match
 
 feature -- Status report
 
-	binary_searchable (a_str: STRING_32): BOOLEAN is
+	binary_searchable (a_str: STRING_32): BOOLEAN
 			-- With current matcher, is binary search appliable to `a_str'?
 		do
 			Result := True
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

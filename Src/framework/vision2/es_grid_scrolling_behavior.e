@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that implemente the scrolling behavior of a GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Scrolling : initialization
 
-	make (g: EV_GRID) is
+	make (g: EV_GRID)
 		do
 			grid := g
 			mouse_wheel_scroll_size := 3 --| default value
@@ -46,7 +46,7 @@ feature -- Properties
 
 feature -- change
 
-	enable_mouse_wheel is
+	enable_mouse_wheel
 		require
 			mouse_wheel_disabled: not mouse_wheel_enabled
 		do
@@ -57,7 +57,7 @@ feature -- change
 			mouse_wheel_enabled := True
 		end
 
-	disable_mouse_wheel is
+	disable_mouse_wheel
 		require
 			mouse_wheel_enabled: mouse_wheel_enabled
 		do
@@ -67,7 +67,7 @@ feature -- change
 			mouse_wheel_enabled := False
 		end
 
-	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
+	set_mouse_wheel_scroll_full_page (v: BOOLEAN)
 			-- Set the mouse wheel scroll page mode
 		do
 			mouse_wheel_scroll_full_page := v
@@ -75,7 +75,7 @@ feature -- change
 			mouse_wheel_scroll_full_page_set: mouse_wheel_scroll_full_page = v
 		end
 
-	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size) is
+	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size)
 			-- Set the mouse wheel scroll size
 		require
 			v_positive: v > 0
@@ -85,7 +85,7 @@ feature -- change
 			mouse_wheel_scroll_size_set: mouse_wheel_scroll_size = v
 		end
 
-	set_scrolling_common_line_count (v: like scrolling_common_line_count) is
+	set_scrolling_common_line_count (v: like scrolling_common_line_count)
 			-- Set `scrolling_common_line_count' with `v'.
 		do
 			scrolling_common_line_count := v
@@ -95,7 +95,7 @@ feature -- change
 
 feature -- Scrolling
 
-	scroll_to_top is
+	scroll_to_top
 			-- Scroll to top
 		local
 			g: EV_GRID
@@ -106,7 +106,7 @@ feature -- Scrolling
 			end
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll to end
 		local
 			g: EV_GRID
@@ -117,13 +117,13 @@ feature -- Scrolling
 			end
 		end
 
-	scroll_page (a_step: INTEGER) is
+	scroll_page (a_step: INTEGER)
 			-- Scroll `a_step' pages
 		do
 			scroll_rows (a_step, True)
 		end
 
-	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
+	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN)
 			-- Scroll `a_step' rows
 			-- or `a_step' page if `is_full_page_scrolling' is True
 		local
@@ -258,7 +258,7 @@ feature {NONE} -- Scrolling : Action implementation
 	on_mouse_wheel_action_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
 			-- Agent representing `agent on_mouse_wheel_action' .
 
-	on_mouse_wheel_action (a_step: INTEGER) is
+	on_mouse_wheel_action (a_step: INTEGER)
 			-- Action called on mouse wheel event
 		do
 			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
@@ -266,7 +266,7 @@ feature {NONE} -- Scrolling : Action implementation
 
 feature{NONE} -- Implementation
 
-	visible_row_count (a_visible_rows: LIST [INTEGER]): INTEGER is
+	visible_row_count (a_visible_rows: LIST [INTEGER]): INTEGER
 			-- Number of visible rows whose indexes are stored in `a_visible_rows'.
 			-- Used in case when rows are of different height and rows of 0-height are not taken into consideration.
 		require
@@ -298,7 +298,7 @@ feature{NONE} -- Implementation
 			a_visible_rows.go_to (l_cursor)
 		end
 
-	average_row_height (a_row_list: LIST [INTEGER]): INTEGER is
+	average_row_height (a_row_list: LIST [INTEGER]): INTEGER
 			-- Average height of rows whose indexes are stored in `a_row_list'
 			-- Rows of 0-height are not taken into consideration.
 		require
@@ -332,7 +332,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

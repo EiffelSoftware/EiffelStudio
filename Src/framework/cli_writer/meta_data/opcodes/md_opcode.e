@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data about opcodes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (an_opcode_value: INTEGER_16; a_stack_depth_transition: INTEGER; a_format: INTEGER) is
+	make (an_opcode_value: INTEGER_16; a_stack_depth_transition: INTEGER; a_format: INTEGER)
 			-- Initialize current opcode with `an_opcode_value'
 			-- and `a_format'.
 		do
@@ -39,7 +39,7 @@ feature -- Access
 	stack_depth_transition: INTEGER;
 			-- Stack depth transition.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

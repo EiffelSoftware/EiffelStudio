@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects provide possibilities for code completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,21 +14,21 @@ feature -- Access
 	code_completable: CODE_COMPLETABLE
 			-- A code completable.
 
-	completion_possibilities: SORTABLE_ARRAY [like name_type] is
+	completion_possibilities: SORTABLE_ARRAY [like name_type]
 			-- Completions proposals found by `prepare_auto_complete'
 		require
 			is_prepared : is_prepared
 		deferred
 		end
 
-	insertion: STRING_32 is
+	insertion: STRING_32
 			-- String to be partially completed
 		require
 			is_prepared : is_prepared
 		deferred
 		end
 
-	insertion_remainder: INTEGER is
+	insertion_remainder: INTEGER
 			-- The number of characters in the insertion remaining from the cursor position to the
 			-- end of the token
 		require
@@ -40,7 +40,7 @@ feature -- Access
 
 feature {CODE_COMPLETABLE} -- Basic operation
 
-	prepare_completion is
+	prepare_completion
 			-- Prepare completion possibilities.
 		require
 			code_completable_attached: code_completable /= Void
@@ -50,7 +50,7 @@ feature {CODE_COMPLETABLE} -- Basic operation
 			is_prepared: is_prepared
 		end
 
-	reset is
+	reset
 			-- Reset
 		do
 			is_prepared := False
@@ -61,7 +61,7 @@ feature -- Status report
 	is_prepared: BOOLEAN
 			-- Is completion possibilities prepared?
 
-	completion_possible: BOOLEAN is
+	completion_possible: BOOLEAN
 			-- Is completion possible?
 		do
 			Result := completion_possibilities /= Void and then not completion_possibilities.is_empty
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_code_completable (a_completable: like code_completable) is
+	set_code_completable (a_completable: like code_completable)
 			-- Set `code_completable' with `a_completable'.
 		require
 			a_completable_attached: a_completable /= Void
@@ -80,7 +80,7 @@ feature -- Element change
 			code_completable_not_void: code_completable /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects implementing {TEST_I}.
 	]"
@@ -71,7 +71,7 @@ feature -- Access
 			Result := name.hash_code
 		end
 
-	memento: !TEST_MEMENTO_I is
+	memento: !TEST_MEMENTO_I
 			-- <Precursor>
 		do
 			Result := Current
@@ -148,7 +148,7 @@ feature -- Status report
 	is_interface_usable: BOOLEAN = True
 			-- <Precursor>
 
-	has_changed: BOOLEAN is
+	has_changed: BOOLEAN
 			-- <Precursor>
 		do
 			Result := internal_added_tags /= Void or internal_removed_tags /= Void or
@@ -171,7 +171,7 @@ feature -- Status report: Memento
 
 feature {ACTIVE_COLLECTION_I} -- Status setting
 
-	clear_changes is
+	clear_changes
 			-- <Precursor>
 		do
 			internal_added_tags := Void
@@ -182,7 +182,7 @@ feature {ACTIVE_COLLECTION_I} -- Status setting
 
 feature {TEST_SUITE_S} -- Status setting
 
-	set_explicit_tags (a_list: !DS_LINEAR [!STRING]) is
+	set_explicit_tags (a_list: !DS_LINEAR [!STRING])
 			-- <Precursor>
 		do
 			old_tags := internal_tags
@@ -197,7 +197,7 @@ feature {TEST_SUITE_S} -- Status setting
 			old_tags := Void
 		end
 
-	set_queued (a_executor: like executor) is
+	set_queued (a_executor: like executor)
 			-- <Precursor>
 		do
 			is_queued := True
@@ -205,7 +205,7 @@ feature {TEST_SUITE_S} -- Status setting
 			internal_executor := a_executor
 		end
 
-	set_running is
+	set_running
 			-- <Precursor>
 		do
 			is_queued := False
@@ -213,7 +213,7 @@ feature {TEST_SUITE_S} -- Status setting
 			is_running := True
 		end
 
-	add_outcome (an_outcome: like last_outcome) is
+	add_outcome (an_outcome: like last_outcome)
 			-- Add `an_outcome' to the end of `outcomes'. Addopt outcome tag
 			-- according to `an_outcome' and set `has_changed' to True if `tags'
 			-- has changed. Otherwise `has_changed' is False.
@@ -246,7 +246,7 @@ feature {TEST_SUITE_S} -- Status setting
 			tags_contain_outcome_tag: tags.has (outcome_tag)
 		end
 
-	abort is
+	abort
 			-- <Precursor>
 		do
 			internal_executor := Void
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

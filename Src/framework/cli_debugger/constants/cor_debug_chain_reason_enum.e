@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			typedef enum CorDebugChainReason
 			{
@@ -29,98 +29,98 @@ class
 
 feature -- enum CorDebugChainReason
 
-	frozen enum_cor_debug_chain_reason__CHAIN_NONE: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_NONE: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_NONE"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_CLASS_INIT: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_CLASS_INIT: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_CLASS_INIT"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_EXCEPTION_FILTER: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_EXCEPTION_FILTER: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_EXCEPTION_FILTER"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_SECURITY: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_SECURITY: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_SECURITY"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_CONTEXT_POLICY: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_CONTEXT_POLICY: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_CONTEXT_POLICY"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_INTERCEPTION: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_INTERCEPTION: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_INTERCEPTION"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_PROCESS_START: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_PROCESS_START: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_PROCESS_START"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_THREAD_START: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_THREAD_START: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_THREAD_START"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_ENTER_MANAGED: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_ENTER_MANAGED: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_ENTER_MANAGED"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_ENTER_UNMANAGED: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_ENTER_UNMANAGED: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_ENTER_UNMANAGED"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_DEBUGGER_EVAL: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_DEBUGGER_EVAL: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_DEBUGGER_EVAL"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_CONTEXT_SWITCH: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_CONTEXT_SWITCH: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_CONTEXT_SWITCH"
 		end
 
-	frozen enum_cor_debug_chain_reason__CHAIN_FUNC_EVAL: INTEGER is
+	frozen enum_cor_debug_chain_reason__CHAIN_FUNC_EVAL: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"CHAIN_FUNC_EVAL"
 		end
 
-	enum_cor_debug_chain_reason_to_string (e: INTEGER): STRING is
+	enum_cor_debug_chain_reason_to_string (e: INTEGER): STRING
 		do
 			if e = enum_cor_debug_chain_reason__CHAIN_NONE then
 				Result := "CHAIN_NONE"
@@ -153,7 +153,7 @@ feature -- enum CorDebugChainReason
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

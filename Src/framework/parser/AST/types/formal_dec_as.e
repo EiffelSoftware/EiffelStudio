@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a formal generic parameter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword) is
+	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword)
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_formal_dec_as (Current)
@@ -68,7 +68,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
 
-	constrain_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	constrain_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "->" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -81,7 +81,7 @@ feature -- Roundtrip
 			end
 		end
 
-	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "create" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -94,7 +94,7 @@ feature -- Roundtrip
 			end
 		end
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "end" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -109,7 +109,7 @@ feature -- Roundtrip
 
 feature -- Convenience
 
-	name: ID_AS is
+	name: ID_AS
 			--
 		do
 			Result := formal.name
@@ -125,7 +125,7 @@ feature -- Convenience
 			Result := formal.is_expanded
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			--
 		do
 			Result := formal.position
@@ -134,7 +134,7 @@ feature -- Convenience
 
 feature -- Attributes
 
-	constraint: CONSTRAINING_TYPE_AS is
+	constraint: CONSTRAINING_TYPE_AS
 			-- Constraint of the formal generic
 			-- Only valid to call if there's exactly one constraint.
 		require
@@ -155,12 +155,12 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := formal.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
@@ -173,13 +173,13 @@ feature -- Roundtrip/Token
 
 feature -- Status
 
-	has_constraint: BOOLEAN is
+	has_constraint: BOOLEAN
 			-- Does the formal generic parameter have a constraint?
 		do
 			Result := constraints /= Void and then not constraints.is_empty
 		end
 
-	has_multi_constraints: BOOLEAN is
+	has_multi_constraints: BOOLEAN
 			-- Does the formal generic parameter have multiple constraints in it's own constraint list?
 		do
 			Result := constraints /= Void and then constraints.count > 1
@@ -233,7 +233,7 @@ feature -- Status
 		 	--Result := False
 		end
 
-	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN is
+	is_multi_constrained (a_generics: EIFFEL_LIST [FORMAL_DEC_AS]): BOOLEAN
 			-- Does the formal generic parameter have multiple constraints?
 			-- The difference between `has_multi_constraints' is the following:
 			-- [G -> H, H -> {A,B}] (Each is called for G.)
@@ -271,7 +271,7 @@ feature -- Status
 			-- Result := True
 		end
 
-	has_creation_constraint: BOOLEAN is
+	has_creation_constraint: BOOLEAN
 			-- Does the construct have a creation constraint?
 		do
 			Result := creation_feature_list /= Void
@@ -282,7 +282,7 @@ feature -- Status
 			-- Has the construct list a version of `default_create' as a creation procedure?
 			-- Set after a call to `constraint_creation_list'.
 
-	has_creation_feature_id (a_feature_id: ID_AS): BOOLEAN is
+	has_creation_feature_id (a_feature_id: ID_AS): BOOLEAN
 			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_id'.
 			--
 			-- `a_feature_name_id' is the names heap id of the feature.
@@ -292,7 +292,7 @@ feature -- Status
 			Result := has_creation_feature_name_id (a_feature_id.name_id)
 		end
 
-	has_creation_feature_name_id (a_feature_name_id: INTEGER): BOOLEAN is
+	has_creation_feature_name_id (a_feature_name_id: INTEGER): BOOLEAN
 			-- Check in `creation_feature_list' if it contains a feature with id `a_feature_name_id'.
 			--
 			-- `a_feature_name_id' is the names heap id of the feature.
@@ -386,7 +386,7 @@ feature {FORMAL_DEC_AS} -- Status implementation
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (formal, other.formal)
@@ -394,7 +394,7 @@ feature -- Comparison
 				and then equivalent (creation_feature_list, other.creation_feature_list)
 		end
 
-	equiv (other: like Current): BOOLEAN is
+	equiv (other: like Current): BOOLEAN
 			-- Is `other' equivalent to `Current'
 			-- Incrementality of the generic parameters
 		require
@@ -408,7 +408,7 @@ feature -- Comparison
 
 feature -- Output
 
-	constraint_string: STRING is
+	constraint_string: STRING
 			-- Produce a STRING version of the CONSTRAINT
 		do
 			create Result.make (50)
@@ -444,7 +444,7 @@ invariant
 	constraints_not_void: constraints /= Void
 	formal_not_void: formal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

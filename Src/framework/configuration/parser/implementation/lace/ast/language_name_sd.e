@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a language name in Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (ln: like language_name) is
+	initialize (ln: like language_name)
 			-- Create a new LANGUAGE_NAME AST node.
 		require
 			ln_not_void: ln /= Void
@@ -32,37 +32,37 @@ feature -- Properties
 	language_name: ID_SD
 			-- Language name
 
-	is_c: BOOLEAN is
+	is_c: BOOLEAN
 			-- Is the language "C"?
 		do
 			Result := c_name.is_equal (language_name)
 		end
 
-	is_make: BOOLEAN is
+	is_make: BOOLEAN
 			-- Is the language "Make"?
 		do
 			Result := make_name.is_equal (language_name)
 		end
 
-	is_object: BOOLEAN is
+	is_object: BOOLEAN
 			-- Is the language "Object"?
 		do
 			Result := object_name.is_equal (language_name)
 		end
 
-	is_include_path: BOOLEAN is
+	is_include_path: BOOLEAN
 			-- Is the language "Include_path"?
 		do
 			Result := include_name.is_equal (language_name)
 		end
 
-	is_assembly: BOOLEAN is
+	is_assembly: BOOLEAN
 			-- Is the language "Assembly"?
 		do
 			Result := assembly_name.is_equal (language_name)
 		end
 
-	is_dotnet_resource: BOOLEAN is
+	is_dotnet_resource: BOOLEAN
 			-- Is the language "dotnet_resource"?
 		do
 			Result := dotnet_resource_name.is_equal (language_name)
@@ -70,25 +70,25 @@ feature -- Properties
 
 feature {NONE} -- Constants
 
-	c_name: STRING is "c"
+	c_name: STRING = "c"
 			-- C language name.
 
-	make_name: STRING is "make"
+	make_name: STRING = "make"
 			-- Make language name.
 
-	object_name: STRING is "object"
+	object_name: STRING = "object"
 			-- Object language name.
 
-	include_name: STRING is "include_path"
+	include_name: STRING = "include_path"
 			-- Include path specification.
 
-	assembly_name: STRING is "assembly"
+	assembly_name: STRING = "assembly"
 			-- Assembly name.
 
-	dotnet_resource_name: STRING is "dotnet_resource";
+	dotnet_resource_name: STRING = "dotnet_resource";
 			-- Dotnet resource name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class to execute a Vision2 test case"
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Start application and execute test
 		do
 			launch_application_threaded
@@ -39,14 +39,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	launch_application is
+	launch_application
 			-- Launch application under test
 			-- This must be implemented by the test case. Create the
 			-- original root class with the root feature.
 		deferred
 		end
 
-	launch_application_threaded is
+	launch_application_threaded
 			-- Launch application under test in a separate thread
 		local
 			l_thread: WORKER_THREAD
@@ -62,7 +62,7 @@ feature -- Basic operations
 			application_under_test_not_void: gui.application_under_test /= Void
 		end
 
-	wait_until_destroyed is
+	wait_until_destroyed
 			-- Wait until `application_under_test' is destroyed.
 		require
 			application_under_test_not_void: gui.application_under_test /= Void
@@ -100,12 +100,12 @@ feature -- Basic operations
 			retry
 		end
 
-	run_test is
+	run_test
 			-- Run a test.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of an Eiffel expression pointer. %
 		%Version for Bench"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr; a_as, lp_as, rp_as: like address_symbol) is
+	initialize (e: like expr; a_as, lp_as, rp_as: like address_symbol)
 			-- Create a new EXPR_ADDRESS AST node.
 		require
 			e_not_void: e /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_expr_address_as (Current)
@@ -69,7 +69,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -82,7 +82,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -102,7 +102,7 @@ feature -- Properties
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and address_symbol_index /= 0 then
 				Result := address_symbol (a_list)
@@ -113,7 +113,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rparan_symbol_index /= 0 then
 				Result := rparan_symbol (a_list)
@@ -124,7 +124,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expr, other.expr)
@@ -133,7 +133,7 @@ feature -- Comparison
 invariant
 	expr_not_void: expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

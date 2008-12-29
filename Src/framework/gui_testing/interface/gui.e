@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Access to GUI elements"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create {GUI_IMP}implementation
@@ -29,19 +29,19 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	application_under_test: EV_APPLICATION is
+	application_under_test: EV_APPLICATION
 			-- Application under test
 		do
 			Result := implementation.application_under_test
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen
 		do
 			Result := implementation.screen
 		end
 
-	active_window: EV_WINDOW is
+	active_window: EV_WINDOW
 			-- Window to use for input and search for widgets
 		do
 			Result := implementation.active_window
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_active_window (a_window: EV_WINDOW) is
+	set_active_window (a_window: EV_WINDOW)
 			-- Set `window' to `a_window' and request focus for it.
 		require
 			a_window_not_void: a_window /= Void
@@ -73,7 +73,7 @@ feature -- Element change
 			active_window_set: active_window = a_window
 		end
 
-	set_active_window_by_title (a_title: STRING) is
+	set_active_window_by_title (a_title: STRING)
 			-- Set `active_window' to window with title `a_title'.
 		local
 			l_window: EV_WINDOW
@@ -103,7 +103,7 @@ feature -- Element change
 			active_window_correct: has_window_with_title (a_title) implies active_window /= Void
 		end
 
-	set_active_window_by_name (a_name: STRING) is
+	set_active_window_by_name (a_name: STRING)
 			-- Set `active_window' to window which has `a_name' as `identifier_name'.
 		local
 			l_window: EV_WINDOW
@@ -119,7 +119,7 @@ feature -- Element change
 			active_window_correct: has_window_with_name (a_name) implies active_window /= Void
 		end
 
-	set_active_window_to_current_focus is
+	set_active_window_to_current_focus
 			-- Set `active_window' to window which has currently the focus.
 		local
 			l_window: EV_WINDOW
@@ -149,7 +149,7 @@ feature -- Element change
 
 feature -- Status report
 
-	has_identifiable (a_pattern: STRING): BOOLEAN is
+	has_identifiable (a_pattern: STRING): BOOLEAN
 			-- Does an identifiable corresponding to `a_pattern' exist in GUI?
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -158,7 +158,7 @@ feature -- Status report
 			Result := implementation.identifiable (a_pattern) /= Void
 		end
 
-	has_widget_with_name (a_name: STRING): BOOLEAN is
+	has_widget_with_name (a_name: STRING): BOOLEAN
 			-- Does a widget with `identifier_name' `a_name' exist in GUI?
 		require
 			a_name_not_void: a_name /= Void
@@ -167,7 +167,7 @@ feature -- Status report
 			-- TODO
 		end
 
-	has_window_with_title (a_title: STRING): BOOLEAN is
+	has_window_with_title (a_title: STRING): BOOLEAN
 			-- Does a window with title `a_title' exist in GUI?
 		require
 			a_title_not_void: a_title /= Void
@@ -176,7 +176,7 @@ feature -- Status report
 			-- TODO
 		end
 
-	has_window_with_name (a_name: STRING): BOOLEAN is
+	has_window_with_name (a_name: STRING): BOOLEAN
 			-- Does a window with `identifier_name' `a_name' exist in GUI?
 		require
 			a_name_not_void: a_name /= Void
@@ -185,7 +185,7 @@ feature -- Status report
 			-- TODO
 		end
 
-	has_window_with_focus: BOOLEAN is
+	has_window_with_focus: BOOLEAN
 			-- Does a window with focus exist in GUI?
 		do
 			-- TODO
@@ -193,7 +193,7 @@ feature -- Status report
 
 feature -- Basic lookup
 
-	identifiable (a_pattern: STRING): EV_IDENTIFIABLE is
+	identifiable (a_pattern: STRING): EV_IDENTIFIABLE
 			-- Identifiable according to `a_pattern'
 			-- Pattern syntax:
 			--   name				lookup a name
@@ -220,7 +220,7 @@ feature -- Basic lookup
 			result_correct: has_identifiable (a_pattern) implies Result /= Void
 		end
 
-	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE] is
+	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE]
 			-- All identifiables according to `a_pattern'
 			-- See `identifiable' for more information about pattern syntax.
 		require
@@ -301,7 +301,7 @@ feature -- Advanced lookup
 
 feature -- Menu lookup
 
-	menu_by_name (a_name: STRING): EV_MENU_ITEM is
+	menu_by_name (a_name: STRING): EV_MENU_ITEM
 			-- Menu on main menu bar of `active_window' with `identifier_name' `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -316,7 +316,7 @@ feature -- Menu lookup
 			result_correct: -- has_menu_with_name (a_name) implies Result /= Void
 		end
 
-	sub_menu_by_name (a_parent: EV_MENU_ITEM; a_name: STRING): EV_MENU_ITEM is
+	sub_menu_by_name (a_parent: EV_MENU_ITEM; a_name: STRING): EV_MENU_ITEM
 			-- Menu item of `a_parent' with `identifier_name' `a_name'
 		require
 			a_parent_not_void: a_parent /= Void
@@ -332,7 +332,7 @@ feature -- Menu lookup
 			result_correct: -- has_sub_menu_with_name (a_parent, a_name) implies Result /= Void
 		end
 
-	menu_by_path (a_path: STRING): EV_MENU_ITEM is
+	menu_by_path (a_path: STRING): EV_MENU_ITEM
 			-- Menu item on menu bar of `active_window' denoted by `a_path'.
 		require
 			a_path_not_void: a_path /= Void
@@ -355,7 +355,7 @@ feature -- Menu lookup
 			end
 		end
 
-	menu_items_by_path (a_path: STRING): LIST [EV_MENU_ITEM] is
+	menu_items_by_path (a_path: STRING): LIST [EV_MENU_ITEM]
 			-- Menu items of `active_window' on `a_path'.
 		require
 			a_path_not_void: a_path /= Void
@@ -383,7 +383,7 @@ feature -- Menu lookup
 
 feature -- Support
 
-	valid_pattern (a_pattern: STRING): BOOLEAN is
+	valid_pattern (a_pattern: STRING): BOOLEAN
 			-- Is `a_pattern' valid to use for searching?
 		do
 			Result := implementation.valid_pattern (a_pattern)
@@ -398,7 +398,7 @@ invariant
 
 	implementation_not_void: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

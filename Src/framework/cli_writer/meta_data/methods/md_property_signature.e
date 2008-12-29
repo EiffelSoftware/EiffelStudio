@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation a property signature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
@@ -32,7 +32,7 @@ feature {NONE} -- Creation
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset current for new signature definition.
 		do
 			current_position := 0
@@ -44,7 +44,7 @@ feature -- Reset
 
 feature -- Settings
 
-	set_property_type (t: INTEGER_8) is
+	set_property_type (t: INTEGER_8)
 			-- Set type of property.
 		require
 			valid_state: state = property_type_state
@@ -59,7 +59,7 @@ feature -- Settings
 			state_set: state = parameter_count_state
 		end
 
-	set_parameter_count (n: INTEGER) is
+	set_parameter_count (n: INTEGER)
 			-- Set number of method parameters to `n'.
 			-- To be compressed.
 		require
@@ -72,7 +72,7 @@ feature -- Settings
 			state_set: state = type_state
 		end
 
-	set_type (element_type: INTEGER_8; token: INTEGER) is
+	set_type (element_type: INTEGER_8; token: INTEGER)
 			-- Set return type of method.
 		require
 			valid_state: state = type_state
@@ -91,12 +91,12 @@ feature -- State
 	state: INTEGER
 			-- Current state of signature settings.
 
-	property_type_state: INTEGER is 1
-	parameter_count_state: INTEGER is 2
-	type_state: INTEGER is 3
-	parameter_state: INTEGER is 4;
+	property_type_state: INTEGER = 1
+	parameter_count_state: INTEGER = 2
+	type_state: INTEGER = 3
+	parameter_state: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

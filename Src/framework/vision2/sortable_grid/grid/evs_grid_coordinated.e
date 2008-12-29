@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object represents an item as some position (column, row)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Position
 
-	column_index: INTEGER is
+	column_index: INTEGER
 			-- Index of column
 		require
 			column_index_available: is_column_index_available
 		deferred
 		end
 
-	row_index: INTEGER is
+	row_index: INTEGER
 			-- Index of row
 		require
 			row_index_available: is_row_index_available
@@ -27,17 +27,17 @@ feature -- Position
 
 feature -- Status report
 
-	is_column_index_available: BOOLEAN is
+	is_column_index_available: BOOLEAN
 			-- Is `column_index' available?
 		deferred
 		end
 
-	is_row_index_available: BOOLEAN is
+	is_row_index_available: BOOLEAN
 			-- Is `row_index' available?
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

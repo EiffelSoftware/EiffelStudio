@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Create a new error reporting that parameter
 			-- `a_value' is not a valid time-out value.
 		require
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: '$1' is not a valid time-out value. Only integers are allowed (they represent minutes)."
+	default_template: STRING = "$0: '$1' is not a valid time-out value. Only integers are allowed (they represent minutes)."
 			-- Default template used to built the error message
 
-	code: STRING is "AUT0001"
+	code: STRING = "AUT0001"
 			-- Error code
 
 invariant

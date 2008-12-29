@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base class for user defined errors (for example errors from a compiler should inherit
 		from this class).
@@ -19,12 +19,12 @@ inherit
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_user_defined_error (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

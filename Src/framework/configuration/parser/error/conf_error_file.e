@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File open error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: STRING) is
+	make (a_file: STRING)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			file := a_file
 		end
 
-	make_with_config (a_file, a_orig_file, a_config: STRING) is
+	make_with_config (a_file, a_orig_file, a_config: STRING)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	config: STRING
 			-- Config where the file was referenced.
 
-	text: STRING is
+	text: STRING
 			-- The error message.
 		do
 			check
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Update
 
-	set_config (a_config: like config) is
+	set_config (a_config: like config)
 			-- Set `config' to `a_config'.
 		require
 			a_config_not_void: a_config /= Void
@@ -70,7 +70,7 @@ feature -- Update
 			config := a_config
 		end
 
-	set_original_file (a_file: like orig_file) is
+	set_original_file (a_file: like orig_file)
 			-- Set `orig_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -80,7 +80,7 @@ feature -- Update
 			orig_file_set: orig_file = a_file
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

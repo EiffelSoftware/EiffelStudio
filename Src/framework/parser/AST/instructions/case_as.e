@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description ao an alternative of a multi_branch %
 				  %instruction. Version for Bench."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like interval; c: like compound; w_as, t_as: like when_keyword) is
+	initialize (i: like interval; c: like compound; w_as, t_as: like when_keyword)
 			-- Create a new WHEN AST node.
 		require
 			i_not_void: i /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_case_as (Current)
@@ -52,7 +52,7 @@ feature -- Roundtrip
 	when_keyword_index, then_keyword_index: INTEGER
 			-- Index of keyword "when" and "then" associated with this structure
 
-	when_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	when_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "when" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -65,7 +65,7 @@ feature -- Roundtrip
 			end
 		end
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "then" ssociated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -88,7 +88,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and when_keyword_index /= 0 then
 				Result := when_keyword (a_list)
@@ -97,7 +97,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
@@ -110,7 +110,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (compound, other.compound) and
@@ -119,14 +119,14 @@ feature -- Comparison
 
 feature {CASE_AS} -- Replication
 
-	set_interval (i: like interval) is
+	set_interval (i: like interval)
 		require
 			valid_arg: i /= Void
 		do
 			interval := i
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 		do
 			compound := c
 		end
@@ -134,7 +134,7 @@ feature {CASE_AS} -- Replication
 invariant
 	interval_not_void: interval /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

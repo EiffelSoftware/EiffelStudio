@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		String formatter exception.
 	]"
@@ -24,7 +24,7 @@ feature {NONE} -- Accesss
 			Result := "Invalid format string."
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a token found when scanning a INI text buffer line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text; a_type: like type; a_start_index: INTEGER) is
+	make (a_text: like text; a_type: like type; a_start_index: INTEGER)
 			-- Initialize scanner token info.
 		require
 			a_text_attached: a_text /= Void
@@ -46,7 +46,7 @@ feature -- Access
 	start_index: INTEGER
 			-- Start position index of token
 
-	end_index: INTEGER is
+	end_index: INTEGER
 			-- End position index of token
 		do
 			Result := (start_index + text.count) - 1
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		local
 			l_type: STRING
@@ -94,7 +94,7 @@ invariant
 	start_index_positive: start_index > 0
 	end_index_big_enough: end_index >= start_index
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

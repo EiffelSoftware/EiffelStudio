@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an export clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients) is
+	initialize (c: like clients)
 			-- Create a new CLIENT AST node.
 		require
 			c_not_void: c /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_client_as (Current)
@@ -44,19 +44,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := clients.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := clients.last_token (a_list)
 		end
 
 feature -- Roundtrip
 
-	is_client_list_empty: BOOLEAN is
+	is_client_list_empty: BOOLEAN
 			-- Is client list empty? e.g. in form of {}
 			--|If a client list is in form of {}, a NONE_ID_AS object will be inserted
 			--|into the list automatically. Because it is not in source code, we must
@@ -72,14 +72,14 @@ feature -- Roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 				-- FIXME: use mechanism similar to `is_equiv'!!!!
 			Result := equivalent (clients, other.clients)
 		end
 
-	is_equiv (other: like Current): BOOLEAN is
+	is_equiv (other: like Current): BOOLEAN
 			-- Is `other' equivalent to Current?
 		local
 			other_clients: EIFFEL_LIST [ID_AS]
@@ -113,7 +113,7 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dump for comparison purposes.
 		do
 			create Result.make (3)
@@ -137,7 +137,7 @@ invariant
 	clients_not_void: clients /= Void
 	clients_not_empty: not clients.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

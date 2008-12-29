@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (l_as: like lparan_symbol; r_as: like rparan_symbol; o_as: like operand) is
+	make (l_as: like lparan_symbol; r_as: like rparan_symbol; o_as: like operand)
 			-- Create new ALIAS_TRIPLE sturcture.
 		do
 			lparan_symbol := l_as
@@ -34,7 +34,7 @@ feature -- Access
 
 	operand: OPERAND_AS;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

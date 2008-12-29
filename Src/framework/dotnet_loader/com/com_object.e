@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To free allocated COM objects throug call to `Release'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_pointer (an_item: POINTER) is
+	make_by_pointer (an_item: POINTER)
 			-- Initialize Current with `an_item'.
 		require
 			an_item_not_null: an_item /= default_pointer
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_successful: BOOLEAN is
+	is_successful: BOOLEAN
 			-- Was last call to a COM routine of `Current' successful?
 		do
 			Result := last_call_success = 0
@@ -45,7 +45,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Disposal
 
-	dispose is
+	dispose
 			-- Free `item'.
 		local
 			l_nb_ref: INTEGER
@@ -64,7 +64,7 @@ feature {NONE} -- Disposal
 			item_null: item = default_pointer
 		end
 
-	dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER; a_nb_ref: INTEGER) is
+	dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER; a_nb_ref: INTEGER)
 			-- Safe display while disposing. If `type' is `1' then
 			-- we are entering `dispose', else we are leaving it.
 			-- `a_ptr' is the item being freed in current object `an_obj'.
@@ -85,7 +85,7 @@ feature {NONE} -- Disposal
 
 feature {NONE} -- COM Ref management
 
-	cpp_addref (a_pointer: POINTER): INTEGER is
+	cpp_addref (a_pointer: POINTER): INTEGER
 			-- AddRef COM objects
 		external
 			"C++ IUnknown use %"unknwn.h%""
@@ -93,7 +93,7 @@ feature {NONE} -- COM Ref management
 			"AddRef"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

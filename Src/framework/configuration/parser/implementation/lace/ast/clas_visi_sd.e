@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a visible class in Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	initialize (cn: like class_name; vn: like visible_name;
 		cr: like creation_restriction; er: like export_restriction;
-		r: like renamings) is
+		r: like renamings)
 			-- Create a new CLAS_VISI AST node.
 		require
 			cn_not_void: cn /= Void
@@ -63,7 +63,7 @@ invariant
 	class_name_in_upper: class_name.as_upper.is_equal (class_name)
 	visible_name_in_upper: visible_name /= Void implies visible_name.as_upper.is_equal (visible_name)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

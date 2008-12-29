@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_thread: ICOR_DEBUG_THREAD is
+	get_thread: ICOR_DEBUG_THREAD
 			-- Debuggee Thread for `a_thread_id'
 		local
 			p: POINTER
@@ -35,7 +35,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_active_frame: ICOR_DEBUG_FRAME is
+	get_active_frame: ICOR_DEBUG_FRAME
 		local
 			p: POINTER
 		do
@@ -47,7 +47,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_caller: ICOR_DEBUG_CHAIN is
+	get_caller: ICOR_DEBUG_CHAIN
 		local
 			p: POINTER
 		do
@@ -59,7 +59,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_callee: ICOR_DEBUG_CHAIN is
+	get_callee: ICOR_DEBUG_CHAIN
 		local
 			p: POINTER
 		do
@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_previous: ICOR_DEBUG_CHAIN is
+	get_previous: ICOR_DEBUG_CHAIN
 		local
 			p: POINTER
 		do
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_next: ICOR_DEBUG_CHAIN is
+	get_next: ICOR_DEBUG_CHAIN
 		local
 			p: POINTER
 		do
@@ -95,7 +95,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	is_managed: BOOLEAN is
+	is_managed: BOOLEAN
 		local
 			r: INTEGER
 		do
@@ -105,7 +105,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_frames: ICOR_DEBUG_FRAME_ENUM is
+	enumerate_frames: ICOR_DEBUG_FRAME_ENUM
 		local
 			p: POINTER
 		do
@@ -117,7 +117,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_reason: INTEGER is
+	get_reason: INTEGER
 			-- CHAIN_NONE              = 0x000,
 			-- CHAIN_CLASS_INIT        = 0x001,
 			-- CHAIN_EXCEPTION_FILTER  = 0x002,
@@ -137,14 +137,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_reason_to_string: STRING is
+	get_reason_to_string: STRING
 		do
 			Result := enum_cor_debug_chain_reason_to_string (get_reason)
 		end
 
 feature {NONE} -- Implementation
 
-	cpp_get_thread (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_thread (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugThread**): EIF_INTEGER 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			"GetThread"
 		end
 
-	cpp_get_active_frame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_active_frame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrame**): EIF_INTEGER 
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			"GetActiveFrame"
 		end
 
-	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			"GetCaller"
 		end
 
-	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			"GetCallee"
 		end
 
-	cpp_get_previous (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_previous (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			"GetPrevious"
 		end
 
-	cpp_get_next (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_next (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			"GetNext"
 		end
 
-	cpp_is_managed (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_managed (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(BOOL*): EIF_INTEGER 
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			"IsManaged"
 		end
 
-	cpp_enumerate_frames (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_enumerate_frames (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrameEnum **): EIF_INTEGER 
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			"EnumerateFrames"
 		end
 
-	cpp_get_reason (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_reason (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugChain signature(CorDebugChainReason*): EIF_INTEGER 
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			"GetReason"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

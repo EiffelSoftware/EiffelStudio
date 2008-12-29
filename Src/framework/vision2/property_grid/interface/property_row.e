@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a row in a property grid."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Update
 
-	set_property (a_property: like property) is
+	set_property (a_property: like property)
 			-- Set `property' to `a_property'.
 		require
 			a_property_not_void: a_property /= Void

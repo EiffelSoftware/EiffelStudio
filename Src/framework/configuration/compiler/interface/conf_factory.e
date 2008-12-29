@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for configuration objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	new_class (a_file_name: STRING; a_group: CONF_CLUSTER; a_path: STRING; a_classname: STRING): CONF_CLASS is
+	new_class (a_file_name: STRING; a_group: CONF_CLUSTER; a_path: STRING; a_classname: STRING): CONF_CLASS
 			-- Create a `CONF_CLASS' object.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -27,7 +27,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: CONF_PHYSICAL_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY is
+	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: CONF_PHYSICAL_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY
 			-- Create a `CONF_CLASS_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -41,7 +41,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_DIRECTORY_LOCATION): CONF_CLASS_PARTIAL is
+	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CONF_CLUSTER; a_base_location: CONF_DIRECTORY_LOCATION): CONF_CLASS_PARTIAL
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -53,7 +53,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): CONF_PHYSICAL_ASSEMBLY is
+	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): CONF_PHYSICAL_ASSEMBLY
 			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -65,7 +65,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

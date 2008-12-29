@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property where the value can be changed in a dialog."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_dialog (a_name: like name; a_dialog: like dialog) is
+	make_with_dialog (a_name: like name; a_dialog: like dialog)
 			-- Create with `a_name' and `a_dialog'.
 		require
 			a_name_ok: a_name /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			dialog_set: dialog = a_dialog
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -44,7 +44,7 @@ feature -- Status
 
 feature {NONE} -- Agents
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 		end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Holds all basic inforamation on an assembly.
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location: like location; a_name: like name; a_hash: like hash_algorithim; a_key: like public_key_token; a_flags: like flags; a_metadata: ASSEMBLY_METADATA) is
+	make (a_location: like location; a_name: like name; a_hash: like hash_algorithim; a_key: like public_key_token; a_flags: like flags; a_metadata: ASSEMBLY_METADATA)
 			-- Initialize assembly properties.
 		require
 			a_location_attached: a_location /= Void
@@ -84,25 +84,25 @@ feature -- Access
 
 feature -- Status report
 
-	is_signed: BOOLEAN is
+	is_signed: BOOLEAN
 			-- Indicates if assembly is signed, i.e. has a public key token.
 		do
 			Result := public_key_token /= Void and then not public_key_token.is_empty
 		end
 
-	is_neutral_locale: BOOLEAN is
+	is_neutral_locale: BOOLEAN
 			-- Indicates if assembly is of a language-neutral locale
 		do
 			Result := locales = Void or else locales.is_empty
 		end
 
-	is_msil: BOOLEAN is
+	is_msil: BOOLEAN
 			-- Indicate if assembly is processor architecture independent
 		do
 			Result := has_flag_set (af_pa_msil) or ((flags & af_pa_mask) = af_none)
 		end
 
-	is_x64: BOOLEAN is
+	is_x64: BOOLEAN
 			-- Indicate if assembly is for x64 processors, or is processor independent
 		do
 			Result := has_flag_set (af_pa_amd64) or has_flag_set (af_pa_ia64) or else is_msil
@@ -110,7 +110,7 @@ feature -- Status report
 			is_x64_implies_is_msil: is_x64 implies is_msil
 		end
 
-	is_x86: BOOLEAN is
+	is_x86: BOOLEAN
 			-- Indicate if assembly is for x86 processors
 		do
 			Result := has_flag_set (af_pa_x86) or else is_msil
@@ -123,7 +123,7 @@ feature -- Status report
 
 feature -- Query
 
-	public_key_token_string: STRING is
+	public_key_token_string: STRING
 			-- Retrieves string representation of `public_key_token'
 		do
 			if is_signed then
@@ -136,7 +136,7 @@ feature -- Query
 			not_empty_if_signed: is_signed implies not Result.is_empty
 		end
 
-	version_string: STRING is
+	version_string: STRING
 			-- Retrieve a string representation of `major_version',  `minor_version',
 			-- `build_number' and `revision_number'
 		do
@@ -147,7 +147,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	locale_string: STRING is
+	locale_string: STRING
 			-- Locale as a string
 		do
 			if is_neutral_locale then
@@ -160,7 +160,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	architecture_string: STRING is
+	architecture_string: STRING
 			-- Processor architecture, as a string
 		do
 			if is_msil then
@@ -180,7 +180,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	has_flag_set (a_flag: like flags): BOOLEAN is
+	has_flag_set (a_flag: like flags): BOOLEAN
 			-- Determines if `a_flag' is set for current assembly reference
 		do
 			Result := (a_flag & flags) = a_flag
@@ -188,7 +188,7 @@ feature {NONE} -- Query
 
 feature {ASSEMBLY_PROPERTIES_READER} -- Status setting
 
-	set_is_locatable_in_gac is
+	set_is_locatable_in_gac
 			-- Manipulates state to indicate that the current assembly can
 			-- be located in the GAC.
 		do
@@ -245,7 +245,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	encoded_key (a_key: ARRAY [NATURAL_8]): STRING is
+	encoded_key (a_key: ARRAY [NATURAL_8]): STRING
 			-- Printable representation of `a_key'
 		require
 			a_key_attached: a_key /= Void
@@ -304,7 +304,7 @@ invariant
 	not_locales_is_empty: locales /= Void implies not locales.is_empty
 	x86_x64_exclusive: (is_x64 and not is_x86) or (not is_x64 and is_x86)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

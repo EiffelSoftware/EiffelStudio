@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A C/C++ interop structure corresponding to ASSEMBYMETADATA in cor.h
 	]"
@@ -21,7 +21,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initializes a default instance
 		do
 		ensure then
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Clean up
 
-	dispose is
+	dispose
 			-- Cleans up allocated resources
 		do
 		ensure then
@@ -39,31 +39,31 @@ feature -- Clean up
 
 feature -- Access
 
-	major_version: NATURAL_8 is
+	major_version: NATURAL_8
 			-- The major version number of the referenced assembly
 		do
 			check False end
 		end
 
-	minor_version: NATURAL_8 is
+	minor_version: NATURAL_8
 			-- The minor version number of the referenced assembly
 		do
 			check False end
 		end
 
-	build_number: NATURAL_8 is
+	build_number: NATURAL_8
 			-- The build number of the referenced assembly
 		do
 			check False end
 		end
 
-	revision_number: NATURAL_8 is
+	revision_number: NATURAL_8
 			-- The revision number of the referenced assembly
 		do
 			check False end
 		end
 
-	locales: LIST [STRING_8] is
+	locales: LIST [STRING_8]
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
 		do
 			check False end
@@ -73,7 +73,7 @@ feature -- Access
 
 feature {ASSEMBLY_PROPERTIES_READER} -- Conversion
 
-	to_pointer: POINTER is
+	to_pointer: POINTER
 		do
 			check False end
 		ensure
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	item: POINTER;
 			-- Pointer to allocated ASSEMBLYMETADATA struct
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

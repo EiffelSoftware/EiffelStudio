@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Decription of an inline agent"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_body: like body; o: like internal_operands; a_as: like agent_keyword) is
+	make (a_body: like body; o: like internal_operands; a_as: like agent_keyword)
 			-- Create a new INLINE_AGENT_CREATION_AS AST node.
 		require
 			body_not_void: a_body /= Void
@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_inline_agent_creation_as (Current)
@@ -50,7 +50,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (operands, other.operands) and then
@@ -61,7 +61,7 @@ feature -- Comparison
 
 feature -- Access
 
-	set_feature_name (a_fn: ID_AS) is
+	set_feature_name (a_fn: ID_AS)
 		require
 			fn_not_void: a_fn /= Void
 		do
@@ -79,13 +79,13 @@ feature -- Access
 	inl_rout_id: INTEGER
 			-- Routine id of the FEATURE_I. (Set by semantic check)
 
-	set_inl_class_id (a_class_id: INTEGER) is
+	set_inl_class_id (a_class_id: INTEGER)
 			-- Set the inl_class_id to `a_class_id'
 		do
 			inl_class_id := a_class_id
 		end
 
-	set_inl_rout_id (a_rout_id: INTEGER) is
+	set_inl_rout_id (a_rout_id: INTEGER)
 			-- Set the inl_rout_id to `a_rout_id'
 		do
 			inl_rout_id := a_rout_id
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and agent_keyword_index /= 0 then
 				Result := agent_keyword (a_list)
@@ -102,7 +102,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if internal_operands /= Void then
 				Result := internal_operands.last_token (a_list)
@@ -114,7 +114,7 @@ feature -- Roundtrip/Token
 invariant
 	body_not_void: body /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

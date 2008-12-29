@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,21 +28,21 @@ inherit
 
 feature -- Element update
 
-	add_external is
+	add_external
 			-- Add a new external.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

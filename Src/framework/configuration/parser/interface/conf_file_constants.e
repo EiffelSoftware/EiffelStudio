@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for the file format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,58 +10,58 @@ class
 
 feature {NONE} -- Constants
 
-	Header: STRING is "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
+	Header: STRING = "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
 			-- xml header
 
-	namespace_1_0_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	namespace_1_0_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-0-0"
 			-- Namespace of the 5.7 release
 
-	schema_1_0_0: STRING is
+	schema_1_0_0: STRING
 			-- Schema of the 5.7 release
 		once
 			Result := namespace_1_0_0 +" http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 		end
 
-	namespace_1_2_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-2-0"
+	namespace_1_2_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-2-0"
 			-- Namespace of the 6.0 release
 
-	schema_1_2_0: STRING is
+	schema_1_2_0: STRING
 			-- Schema of the 6.0 release
 		once
 			Result := namespace_1_2_0 +" http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd"
 		end
 
-	namespace_1_3_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-3-0"
+	namespace_1_3_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-3-0"
 			-- Namespace of the 6.1 release
 
-	schema_1_3_0: STRING is
+	schema_1_3_0: STRING
 			-- Schema of the 6.1 release
 		once
 			Result := namespace_1_3_0 +" http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd"
 		end
 
-	namespace_1_4_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-4-0"
+	namespace_1_4_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-4-0"
 			-- Namespace of the 6.2 release
 
-	schema_1_4_0: STRING is
+	schema_1_4_0: STRING
 			-- Schema of the 6.2 release
 		once
 			Result := namespace_1_4_0 +" http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd"
 		end
 
-	Latest_namespace: STRING is
+	Latest_namespace: STRING
 			-- Latest configuration namespace
 		once
 			Result := namespace_1_4_0
 		end
 
-	Latest_schema: STRING is
+	Latest_schema: STRING
 			-- Latest schema location
 		once
 			Result := schema_1_4_0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

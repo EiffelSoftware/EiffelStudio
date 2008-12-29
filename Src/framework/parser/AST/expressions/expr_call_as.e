@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of a call as an expression. %
 		%Version for Bench."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like call) is
+	initialize (c: like call)
 			-- Create a new EXPR_CALL AST node.
 		require
 			c_not_void: c /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_expr_call_as (Current)
@@ -42,19 +42,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := call.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := call.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (call, other.call)
@@ -62,7 +62,7 @@ feature -- Comparison
 
 feature {EXPR_CALL_AS, OPERAND_AS}
 
-	set_call (c: like call) is
+	set_call (c: like call)
 		require
 			valid_arg: c /= Void
 		do
@@ -72,7 +72,7 @@ feature {EXPR_CALL_AS, OPERAND_AS}
 invariant
 	call_not_void: call /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

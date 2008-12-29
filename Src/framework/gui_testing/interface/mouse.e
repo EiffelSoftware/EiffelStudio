@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Interface to control mouse"
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create {MOUSE_IMP}implementation
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Clicking button
 
-	click (a_mouse_button: INTEGER; a_click_count: INTEGER) is
+	click (a_mouse_button: INTEGER; a_click_count: INTEGER)
 			-- Click `a_mouse_button' `a_click_count' times.
 		require
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
@@ -66,7 +66,7 @@ feature -- Clicking button
 			sleep (clicking_delay)
 		end
 
-	click_on (a_widget: EV_IDENTIFIABLE; a_mouse_button: INTEGER; a_click_count: INTEGER) is
+	click_on (a_widget: EV_IDENTIFIABLE; a_mouse_button: INTEGER; a_click_count: INTEGER)
 			-- Click on `a_widget' with `a_mouse_button' `a_click_count' times.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -79,19 +79,19 @@ feature -- Clicking button
 
 feature -- Clicking left button
 
-	left_click is
+	left_click
 			-- Click with left mouse button.
 		do
 			click (left, 1)
 		end
 
-	left_double_click is
+	left_double_click
 			-- Double click with left mouse button.
 		do
 			click (left, 2)
 		end
 
-	left_click_on (a_widget: EV_IDENTIFIABLE) is
+	left_click_on (a_widget: EV_IDENTIFIABLE)
 			-- Click on `a_widget' with left mouse button.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -101,19 +101,19 @@ feature -- Clicking left button
 
 feature -- Clicking right button
 
-	right_click is
+	right_click
 			-- Click with right mouse button.
 		do
 			click (right, 1)
 		end
 
-	right_double_click is
+	right_double_click
 			-- Double click with right mouse button.
 		do
 			click (right, 2)
 		end
 
-	right_click_on (a_widget: EV_IDENTIFIABLE) is
+	right_click_on (a_widget: EV_IDENTIFIABLE)
 			-- Click on `a_widget' with right mouse button.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -123,19 +123,19 @@ feature -- Clicking right button
 
 feature -- Clicking middle button
 
-	middle_click is
+	middle_click
 			-- Click with middle mouse button.
 		do
 			click (middle, 1)
 		end
 
-	middle_double_click is
+	middle_double_click
 			-- Double click with middle mouse button.
 		do
 			click (middle, 2)
 		end
 
-	middle_click_on (a_widget: EV_IDENTIFIABLE) is
+	middle_click_on (a_widget: EV_IDENTIFIABLE)
 			-- Click on `a_widget' with middle mouse button.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -145,7 +145,7 @@ feature -- Clicking middle button
 
 feature -- Pressing button
 
-	press_button (a_mouse_button: INTEGER) is
+	press_button (a_mouse_button: INTEGER)
 			-- Press `a_mouse_button'.
 		require
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
@@ -154,19 +154,19 @@ feature -- Pressing button
 			sleep (pressing_delay)
 		end
 
-	press_left is
+	press_left
 			-- Press left button.
 		do
 			press_button (left)
 		end
 
-	press_right is
+	press_right
 			-- Press right button.
 		do
 			press_button (right)
 		end
 
-	press_middle is
+	press_middle
 			-- Press middle button.
 		do
 			press_button (middle)
@@ -174,7 +174,7 @@ feature -- Pressing button
 
 feature -- Releasing button
 
-	release_button (a_mouse_button: INTEGER) is
+	release_button (a_mouse_button: INTEGER)
 			-- Release `a_mouse_button'.
 		require
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
@@ -183,19 +183,19 @@ feature -- Releasing button
 			sleep (releasing_delay)
 		end
 
-	release_left is
+	release_left
 			-- Release left button.
 		do
 			release_button (left)
 		end
 
-	release_right is
+	release_right
 			-- Release right button.
 		do
 			release_button (right)
 		end
 
-	release_middle is
+	release_middle
 			-- Release middle button.
 		do
 			release_button (middle)
@@ -203,7 +203,7 @@ feature -- Releasing button
 
 feature -- Moving
 
-	move_to_absolute_position (an_x, a_y: INTEGER) is
+	move_to_absolute_position (an_x, a_y: INTEGER)
 			-- Move mouse to absolute screen position `an_x' `a_y'.
 		local
 			l_start: EV_COORDINATE
@@ -235,7 +235,7 @@ feature -- Moving
 			end
 		end
 
-	move_relative (a_dx, a_dy: INTEGER) is
+	move_relative (a_dx, a_dy: INTEGER)
 			-- Move mouse `a_dx' pixels in x direction and `a_dy' pixels in y direction.
 		local
 			l_current: EV_COORDINATE
@@ -244,7 +244,7 @@ feature -- Moving
 			move_to_absolute_position (l_current.x + a_dx, l_current.y + a_dy)
 		end
 
-	move_to_widget (an_identifiable: EV_IDENTIFIABLE) is
+	move_to_widget (an_identifiable: EV_IDENTIFIABLE)
 			-- Move mouse to center of `an_identifiable'.
 		local
 			a_positioned: EV_POSITIONED
@@ -258,7 +258,7 @@ feature -- Moving
 			end
 		end
 
-	move_relative_to_widget (an_identifiable: EV_IDENTIFIABLE; a_dx, a_dy: INTEGER) is
+	move_relative_to_widget (an_identifiable: EV_IDENTIFIABLE; a_dx, a_dy: INTEGER)
 			-- Move mouse `a_dx' `a_dy' pixels relative to top-left corner of `an_identifiable'.
 		local
 			a_positioned: EV_POSITIONED
@@ -274,7 +274,7 @@ feature -- Moving
 
 feature -- Scrolling
 
-	scroll_up is
+	scroll_up
 			-- Scroll mouse wheel up.
 		do
 			implementation.scroll_up
@@ -282,7 +282,7 @@ feature -- Scrolling
 			sleep (releasing_delay)
 		end
 
-	scroll_down is
+	scroll_down
 			-- Scroll mouse wheel down.
 		do
 			implementation.scroll_down
@@ -292,7 +292,7 @@ feature -- Scrolling
 
 feature -- Advanced window commands
 
-	window_click_title_bar (a_window: EV_WINDOW) is
+	window_click_title_bar (a_window: EV_WINDOW)
 			-- Click title bar of `a_window'.
 		local
 			l_titled_window: EV_TITLED_WINDOW
@@ -315,7 +315,7 @@ feature -- Advanced window commands
 			end
 		end
 
-	window_resize_lower_right (a_width, a_height: INTEGER) is
+	window_resize_lower_right (a_width, a_height: INTEGER)
 			-- Resize `window' by `a_width' `a_height' using mouse on lower right corner.
 		local
 			lower_right_x, lower_right_y: INTEGER
@@ -355,13 +355,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	activate_movement_infering is
+	activate_movement_infering
 			-- Infer movement events between mouse clicks.
 		do
 			is_movement_infered := True
 		end
 
-	deactivate_movement_infering is
+	deactivate_movement_infering
 			-- Don't infer movement events between mouse clicks.
 		do
 			is_movement_infered := False
@@ -369,7 +369,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_clicking_delay (a_value: INTEGER) is
+	set_clicking_delay (a_value: INTEGER)
 			-- Set `clicking_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -379,7 +379,7 @@ feature -- Element change
 			clicking_delay_set: clicking_delay = a_value
 		end
 
-	set_pressing_delay (a_value: INTEGER) is
+	set_pressing_delay (a_value: INTEGER)
 			-- Set `pressing_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -389,7 +389,7 @@ feature -- Element change
 			pressing_delay_set: pressing_delay = a_value
 		end
 
-	set_releasing_delay (a_value: INTEGER) is
+	set_releasing_delay (a_value: INTEGER)
 			-- Set `releasing_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -399,7 +399,7 @@ feature -- Element change
 			releasing_delay_set: releasing_delay = a_value
 		end
 
-	set_movement_delay (a_value: INTEGER) is
+	set_movement_delay (a_value: INTEGER)
 			-- Set `movement_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -414,17 +414,17 @@ feature {NONE} -- Implementation
 	implementation: MOUSE_I
 			-- Implementation of mouse interface
 
-	x_movement: INTEGER is 10
+	x_movement: INTEGER = 10
 			-- Mouse movement step in pixels in x direction
 
-	y_movement: INTEGER is 10
+	y_movement: INTEGER = 10
 			-- Mouse movement step in pixels in y direction
 
 invariant
 
 	implementation_not_void: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

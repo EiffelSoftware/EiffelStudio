@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An EiffelVision2 link-like label with highlighting.
 	]"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Font used to display labels.
 		do
 			Result := internal_font.twin
@@ -94,7 +94,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Query
 
-	maximum_label_width (a_text: STRING_GENERAL): INTEGER is
+	maximum_label_width (a_text: STRING_GENERAL): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -110,7 +110,7 @@ feature {NONE} -- Query
 			Result := l_width.max (l_other)
 		end
 
-	maximum_label_height (a_text: STRING_GENERAL): INTEGER is
+	maximum_label_height (a_text: STRING_GENERAL): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation: Internal cache
 	internal_font: !EV_FONT
 			-- Cached internal font
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

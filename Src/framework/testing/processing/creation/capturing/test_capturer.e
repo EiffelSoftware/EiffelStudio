@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects retrieving the application state for given call stack elements. Each object referenced by
 		    the given call stack elements will be reported to `observers' in form of a
@@ -115,7 +115,7 @@ feature {NONE} -- Query
 			Result := an_adv.kind = {VALUE_TYPES}.immediate_value
 		end
 
-	is_reference_value (an_adv: !ABSTRACT_DEBUG_VALUE): BOOLEAN is
+	is_reference_value (an_adv: !ABSTRACT_DEBUG_VALUE): BOOLEAN
 			-- Is `an_adv' a reference to some object?
 		do
 			inspect

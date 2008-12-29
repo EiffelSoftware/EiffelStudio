@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of an assembly reference in AST for Lace."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a_cluster_name, a_assembly_name, a_prefix, a_version, a_culture, a_public_key_token: ID_SD) is
+	initialize (a_cluster_name, a_assembly_name, a_prefix, a_version, a_culture, a_public_key_token: ID_SD)
 			-- New Instance of an assembly reference.
 		require
 			cluster_name_not_void: a_cluster_name /= Void
@@ -55,7 +55,7 @@ invariant
 	cluster_name_not_void: cluster_name /= Void
 	assembly_name_not_void: assembly_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

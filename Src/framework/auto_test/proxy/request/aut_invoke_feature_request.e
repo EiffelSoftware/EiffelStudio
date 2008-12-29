@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Instruction that requests the execution of a feature and optionally the assignment of its result (if applicable)"
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; a_feature_name: like feature_name; a_target: like target; an_argument_list: like argument_list) is
+	make (a_system: like system; a_feature_name: like feature_name; a_target: like target; an_argument_list: like argument_list)
 			-- Create new request to invoke a feature.
 			-- If `a_feature' is a query its result will be ignored.
 		require
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			argument_list_set:  argument_list = an_argument_list
 		end
 
-	make_assign (a_system: like system; a_receiver: like receiver; a_feature_name: like feature_name; a_target: like target; an_argument_list: like argument_list) is
+	make_assign (a_system: like system; a_receiver: like receiver; a_feature_name: like feature_name; a_target: like target; an_argument_list: like argument_list)
 			-- Create new request to invoke a query and to store its result in a
 			-- variable.
 		require
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_setup_ready: BOOLEAN is
+	is_setup_ready: BOOLEAN
 			-- Is setup of current request ready?
 		do
 			Result := target_type /= Void and then target_type.has_associated_class
@@ -84,7 +84,7 @@ feature -- Access
 	feature_name: STRING
 			-- Name of feature to invoke
 
-	feature_to_call: FEATURE_I is
+	feature_to_call: FEATURE_I
 			-- Feature to invoke
 		do
 			Result := class_of_target_type.feature_named (feature_name)
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_target_type (a_type: like target_type) is
+	set_target_type (a_type: like target_type)
 			-- Set `target_type' to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -108,7 +108,7 @@ feature -- Settings
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		do
 			a_processor.process_invoke_feature_request (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Unit tests for {TAG_COMPARATOR}.
 	]"
@@ -108,7 +108,7 @@ feature -- Tests
 			assert ("suffix_comparison", comparator.less_equal (tagable2, tagable1))
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

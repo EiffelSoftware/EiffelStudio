@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of an access to the precursor of%
 		%an Eiffel feature. Version for Bench."
@@ -26,7 +26,7 @@ create
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like class_type; f: like feature_name; p: like internal_parameters; f_as: like feature_keyword; d_as: like dot_symbol) is
+	initialize (c: like class_type; f: like feature_name; p: like internal_parameters; f_as: like feature_keyword; d_as: like dot_symbol)
 			-- Create a new STATIC_ACCESS_AS AST node.
 		require
 			c_not_void: c /= Void
@@ -51,7 +51,7 @@ feature {AST_FACTORY} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_static_access_as (Current)
@@ -59,7 +59,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and feature_keyword_index /= 0 then
 				Result := feature_keyword (a_list)
@@ -109,7 +109,7 @@ feature -- Attributes
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := Precursor {ACCESS_FEAT_AS} (other) and then
@@ -118,7 +118,7 @@ feature -- Comparison
 
 feature {AST_EIFFEL} -- Output
 
-	string_value: STRING is
+	string_value: STRING
 			-- Printed value of Current
 		do
 			Result := "{" + class_type.dump + "}." + feature_name.name
@@ -128,7 +128,7 @@ invariant
 	class_type_not_void: class_type /= Void
 	feature_name_not_void: feature_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Correspondance between names and integers.
 		The structure is very efficient for accessing from an integer
@@ -24,7 +24,7 @@ create {SYSTEM_EXPORT, SHARED_NAMES_HEAP}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new instance of NAMES_HEAP
 		do
 			top_index := 1
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): STRING is
+	item (i: INTEGER): STRING
 			-- Access `i'-th element.
 		require
 			valid_index: valid_index (i)
@@ -53,7 +53,7 @@ feature -- Access
 	found: BOOLEAN
 			-- Has last search been successful?
 
-	id_of (s: STRING): INTEGER is
+	id_of (s: STRING): INTEGER
 			-- Id of `s' if inserted, otherwise 0.
 		require
 			s_not_void: s /= Void
@@ -73,19 +73,19 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	string_type: STRING is ""
+	string_type: STRING = ""
 			-- Manifest string used in precondition to
 			-- ensure that Current only contains STRING instances.
 
 feature -- Status report
 
-	has (i: INTEGER): BOOLEAN is
+	has (i: INTEGER): BOOLEAN
 			-- Is there an entry for ID `i'?
 		do
 			Result := valid_index (i) and then area.item (i) /= Void
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within bounds?
 		do
 			Result := i >= 0 and then i < top_index
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (s: STRING) is
+	put (s: STRING)
 			-- Insert `s' in Current if not present,
 			-- otherwise does nothing.
 			-- In both cases, `found_item' is updated
@@ -132,7 +132,7 @@ feature -- Element change
 
 feature -- Convenience
 
-	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING] is
+	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING]
 			-- Convert `t' an array of indexes in NAMES_HEAP into an
 			-- array of STRINGs, each string being item of Current associated
 			-- with current value in `t'.
@@ -166,10 +166,10 @@ feature {NONE} -- Implementation: access
 	top_index: INTEGER
 			-- Number of elements in Current
 
-	Chunk: INTEGER is 5000
+	Chunk: INTEGER = 5000
 			-- Default chunk size.
 
-	initialize_constants is
+	initialize_constants
 			-- Initialize Current with predefined constants value
 		do
 			put ("put") check found_item = put_name_id end
@@ -375,7 +375,7 @@ invariant
 	top_index_positive: top_index >= 0
 	found_item_positive: found_item >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

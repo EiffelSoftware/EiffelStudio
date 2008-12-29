@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Syntax error for verbatim string: Verbatim_string_closer missing"
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	syntax_message: STRING is
+	syntax_message: STRING
 			-- Specific syntax message
 		do
 			Result := "incomplete verbatim string: missing Verbatim_string_closer"
@@ -34,12 +34,12 @@ feature -- Access
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_verbatim_string_uncompleted (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

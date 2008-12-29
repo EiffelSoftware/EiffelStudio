@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Proxy for Erl-G interpreters"
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			a_system: like system;
 			an_interpreter_log_filename: STRING;
 			a_proxy_log_filename: STRING;
-			a_error_handler: like error_handler) is
+			a_error_handler: like error_handler)
 			-- Create a new proxy for the interpreter found at `an_executable_file_name'.
 		require
 			an_executable_file_name_not_void: an_executable_file_name /= Void
@@ -129,7 +129,7 @@ feature -- Status
 	is_ready: BOOLEAN
 			-- Is client ready for new commands?
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 			-- Is the client currently running?
 		do
 			Result := process /= Void and then process.is_running
@@ -138,7 +138,7 @@ feature -- Status
 			result_implies_running: Result implies process.is_running
 		end
 
-	is_launched: BOOLEAN is
+	is_launched: BOOLEAN
 			-- Has the client been launched?
 			-- Note that `is_launched' will be True also when the child has
 			-- terminated in the meanwhile.
@@ -171,7 +171,7 @@ feature -- Access
 	variable_table: AUT_VARIABLE_TABLE
 			-- Table for index and types of object in object pool
 
-	proxy_log_filename: STRING is
+	proxy_log_filename: STRING
 			-- File name of proxy log
 		do
 			Result := proxy_log_file.name
@@ -182,7 +182,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_timeout (a_timeout: INTEGER) is
+	set_timeout (a_timeout: INTEGER)
 			-- Set `timeout' with `a_timeout'.
 		require
 			a_timeout_valid: a_timeout > 0
@@ -192,7 +192,7 @@ feature -- Settings
 			timeout_set: timeout = a_timeout
 		end
 
-	set_is_logging_enabled (b: BOOLEAN) is
+	set_is_logging_enabled (b: BOOLEAN)
 			-- Set `is_logging_enabled' with `b'.
 		do
 			is_logging_enabled := b
@@ -200,7 +200,7 @@ feature -- Settings
 			is_logging_enabled_set: is_logging_enabled = b
 		end
 
-	set_is_in_replay_mode (b: BOOLEAN) is
+	set_is_in_replay_mode (b: BOOLEAN)
 			-- Set `is_in_replay_mode' with `b'.
 		do
 			is_in_replay_mode := b
@@ -208,7 +208,7 @@ feature -- Settings
 			is_in_replay_mode_set: is_in_replay_mode = b
 		end
 
-	set_proxy_log_filename (a_filename: like proxy_log_filename) is
+	set_proxy_log_filename (a_filename: like proxy_log_filename)
 			-- Make `a_filename' the new proxy filename.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -223,7 +223,7 @@ feature -- Settings
 
 feature -- Execution
 
-	start is
+	start
 			-- Start the client.
 		require
 			not_running: not is_running
@@ -293,7 +293,7 @@ feature -- Execution
 			last_request_not_void: last_request /= Void
 		end
 
-	stop is
+	stop
 			-- Close connection to client and terminate it.
 			-- If the client is not responsive to a regular shutdown,
 			-- its process will be forced to shut down
@@ -337,7 +337,7 @@ feature -- Execution
 			retry
 		end
 
-	create_object (a_receiver: ITP_VARIABLE; a_type: TYPE_A; a_procedure: FEATURE_I; an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	create_object (a_receiver: ITP_VARIABLE; a_type: TYPE_A; a_procedure: FEATURE_I; an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Create new object of type `a_type' using creation
 			-- procedure `a_feature' and the arguments `an_argument_list'.
 			-- Store the created object in variable `a_receiver'.
@@ -386,7 +386,7 @@ feature -- Execution
 			last_request_not_void: last_request /= Void
 		end
 
-	invoke_feature (a_type: TYPE_A; a_feature: FEATURE_I; a_target: ITP_VARIABLE; an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	invoke_feature (a_type: TYPE_A; a_feature: FEATURE_I; a_target: ITP_VARIABLE; an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Invoke feature `a_feature' from `a_type' with arguments `an_argument_list'.
 		require
 			is_running: is_launched
@@ -430,7 +430,7 @@ feature -- Execution
 			last_request_not_void: last_request /= Void
 		end
 
-	invoke_and_assign_feature (a_receiver: ITP_VARIABLE; a_type: TYPE_A; a_query: FEATURE_I; a_target: ITP_VARIABLE; an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	invoke_and_assign_feature (a_receiver: ITP_VARIABLE; a_type: TYPE_A; a_query: FEATURE_I; a_target: ITP_VARIABLE; an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Invoke query `a_query' from `a_type' with arguments `an_argument_list'.
 			-- Store result in variable `a_receiver'.
 		require
@@ -482,7 +482,7 @@ feature -- Execution
 			last_request_not_void: last_request /= Void
 		end
 
-	assign_expression (a_receiver: ITP_VARIABLE; an_expression: ITP_EXPRESSION) is
+	assign_expression (a_receiver: ITP_VARIABLE; an_expression: ITP_EXPRESSION)
 			-- Assign `a_constant' to `a_receiver'.
 		require
 			is_launched: is_launched
@@ -512,7 +512,7 @@ feature -- Execution
 			last_request_not_void: last_request /= Void
 		end
 
-	retrieve_type_of_variable (a_variable: ITP_VARIABLE) is
+	retrieve_type_of_variable (a_variable: ITP_VARIABLE)
 			-- Retrieve the type of variable `a_variable' and
 			-- store the result in `variable_type_table'.
 		require
@@ -550,7 +550,7 @@ feature -- Execution
 
 feature -- Response parsing
 
-	parse_response is
+	parse_response
 			-- Parse response from interpreter, store it in `last_response'.
 		do
 			Precursor
@@ -561,7 +561,7 @@ feature -- Response parsing
 			end
 		end
 
-	parse_start_response is
+	parse_start_response
 			-- Parse the response issued by the interpreter after it has been
 			-- started.
 		do
@@ -570,7 +570,7 @@ feature -- Response parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_stop_response is
+	parse_stop_response
 			-- Parse the response issued by the interpreter after it received a stop request.
 		do
 			parse_empty_response
@@ -578,7 +578,7 @@ feature -- Response parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_invoke_response is
+	parse_invoke_response
 			-- Parse the response issued by the interpreter after a
 			-- create-object/create-object-default/invoke-feature/invoke-and-assign-feature
 			-- request has been sent.
@@ -588,7 +588,7 @@ feature -- Response parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_assign_expression_response  is
+	parse_assign_expression_response
 			-- Parse response issued by interpreter after receiving an
 			-- assign-expresion request.
 		do
@@ -597,7 +597,7 @@ feature -- Response parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_type_of_variable_response is
+	parse_type_of_variable_response
 			-- Parse response issued by interpreter after receiving a
 			-- retrieve-type-of-variable request.
 		do
@@ -606,7 +606,7 @@ feature -- Response parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_empty_response is
+	parse_empty_response
 			-- Parse a response consisting of no characters.
 		do
 			raw_response_analyzer.set_raw_response (create {AUT_RAW_RESPONSE}.make ("", "", False))
@@ -633,7 +633,7 @@ feature{NONE} -- Process scheduling
 			-- This is a walkaround for the problem that the process libarry
 			-- cannot launch interpreter just with input redirected.
 
-	launch_process is
+	launch_process
 			-- Launch `process'.
 		local
 			arguments: ARRAYED_LIST [STRING]
@@ -652,7 +652,7 @@ feature{NONE} -- Process scheduling
 			process.launch (agent stdout_reader.put_string)
 		end
 
-	flush_process is
+	flush_process
 			-- Send request data into interpreter through `socket'.
 			-- If error occurs, close `socket'.
 		local
@@ -679,7 +679,7 @@ feature{NONE} -- Process scheduling
 			retry
 		end
 
-	stop_process_on_problems (a_response: AUT_RESPONSE) is
+	stop_process_on_problems (a_response: AUT_RESPONSE)
 			-- Stop `process' if a class invariant has occured in the interpreter or
 			-- a bad response has been received.
 			-- The interpreter will shut down in case of a class invariant, because the
@@ -722,7 +722,7 @@ feature -- Socket IPC
 	min_port: INTEGER = 49152
 			-- Minimal port number
 
-	port_cell: CELL [INTEGER] is
+	port_cell: CELL [INTEGER]
 			-- Cell to contain port number.
 		once
 			create Result.put (min_port)
@@ -730,7 +730,7 @@ feature -- Socket IPC
 			result_attached: Result /= Void
 		end
 
-	next_port_number: INTEGER is
+	next_port_number: INTEGER
 			-- Next port number to connect through socket
 		do
 			fixme ("Ideally, we should reuse the same port number.")
@@ -741,7 +741,7 @@ feature -- Socket IPC
 	socket: NETWORK_STREAM_SOCKET
 			-- Socked used to
 
-	cleanup is
+	cleanup
 			-- Clean up Current proxy.
 		do
 			if socket /= Void then
@@ -749,7 +749,7 @@ feature -- Socket IPC
 			end
 		end
 
-	cleanup_socket is
+	cleanup_socket
 			-- Cleanup `socket'.
 		require
 			socket_attached: socket /= Void
@@ -759,7 +759,7 @@ feature -- Socket IPC
 			end
 		end
 
-	retrieve_response is
+	retrieve_response
 			-- Retrieve response from the interpreter,
 			-- store it in `last_raw_response'.
 		local
@@ -800,7 +800,7 @@ feature -- Socket IPC
 			retry
 		end
 
-	replace_output_from_socket_by_pipe_data is
+	replace_output_from_socket_by_pipe_data
 			-- Replace output received from `socket' by output received from
 			-- pipe reader `stdout_reader'.
 			-- Fixme: This is a walk around for the issue that we cannot launch a process
@@ -823,7 +823,7 @@ feature -- Socket IPC
 
 feature -- Logging
 
-	log_line (a_string: STRING) is
+	log_line (a_string: STRING)
 			-- Log `a_string' followed by a new-line character to `log_file'.
 		require
 			a_string_not_void: a_string /= Void
@@ -834,7 +834,7 @@ feature -- Logging
 
 feature {NONE} -- Logging
 
-	log (a_string: STRING) is
+	log (a_string: STRING)
 			-- Log `a_string' to `log_file'.
 		require
 			a_string_not_void: a_string /= Void
@@ -845,13 +845,13 @@ feature {NONE} -- Logging
 			end
 		end
 
-	log_bad_response is
+	log_bad_response
 			-- Log that we received a bad response.
 		do
 			log_line ("-- Proxy received a bad response.")
 		end
 
-	log_time_stamp (a_tag: STRING) is
+	log_time_stamp (a_tag: STRING)
 			-- Log tag `a_tag' with timing information.
 		local
 			time_now: DT_DATE_TIME
@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 	proxy_log_file: KL_TEXT_OUTPUT_FILE
 			-- Proxy log file
 
-	default_timeout: INTEGER is 5
+	default_timeout: INTEGER = 5
 			-- Default value in second for `timeout'
 
 invariant

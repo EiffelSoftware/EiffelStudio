@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an incremental search engine"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Setting
 
-	enable_wrap_search is
+	enable_wrap_search
 			-- Enable case sensitive match.
 		do
 			is_wrap_search_enabled := True
@@ -22,7 +22,7 @@ feature -- Setting
 			wrap_search_enabled: is_wrap_search_enabled
 		end
 
-	disable_wrap_search is
+	disable_wrap_search
 			-- Disable case sensitive match.
 		do
 			is_wrap_search_enabled := False
@@ -30,7 +30,7 @@ feature -- Setting
 			wrap_search_disabled: not is_wrap_search_enabled
 		end
 
-	ensure_search_by_row is
+	ensure_search_by_row
 			-- Ensure search by rows.
 		do
 			is_search_by_row := True
@@ -38,7 +38,7 @@ feature -- Setting
 			search_by_rows_enabled: is_search_by_row
 		end
 
-	ensure_search_by_column is
+	ensure_search_by_column
 			-- Ensure search by columns.
 		do
 			is_search_by_row := False
@@ -46,7 +46,7 @@ feature -- Setting
 			search_by_columns_enabled: not is_search_by_row
 		end
 
-	ensure_search_foreward is
+	ensure_search_foreward
 			-- Ensure search foreward.
 		do
 			is_search_foreward := True
@@ -54,7 +54,7 @@ feature -- Setting
 			search_forewards_enabled: is_search_foreward
 		end
 
-	ensure_search_backward is
+	ensure_search_backward
 			-- Ensure search backward.
 		do
 			is_search_foreward := False
@@ -67,7 +67,7 @@ feature -- Status report
 	is_wrap_search_enabled: BOOLEAN
 			-- Is wrap search enabled
 
-	is_search_by_column: BOOLEAN is
+	is_search_by_column: BOOLEAN
 			-- Is search by columns?
 		do
 			Result := not is_search_by_row
@@ -81,7 +81,7 @@ feature -- Status report
 	is_search_foreward: BOOLEAN
 			-- Is search foreward?
 
-	is_search_backward: BOOLEAN is
+	is_search_backward: BOOLEAN
 			-- Is search backward?
 		do
 			Result := not is_search_foreward
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	grid_iterator (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]): EVS_GRID_ORDERED_ITERATOR is
+	grid_iterator (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]): EVS_GRID_ORDERED_ITERATOR
 			-- Grid iterator for `a_grid_wrapper' according to current search order.
 			-- See `ensure_search_by_row' and `ensure_search_by_column' for search order information.
 		do
@@ -112,7 +112,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

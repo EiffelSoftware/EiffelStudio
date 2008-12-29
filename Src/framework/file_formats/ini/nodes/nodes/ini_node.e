@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base interface for all INI Abstract Syntax (AS) nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	span: INI_TEXT_SPAN is
+	span: INI_TEXT_SPAN
 			-- Span of asbstract syntax node
 		deferred
 		ensure
@@ -19,14 +19,14 @@ feature -- Access
 
 feature -- Visitation
 
-	visit (a_visitor: INI_NODE_VISITOR) is
+	visit (a_visitor: INI_NODE_VISITOR)
 			-- Visit current node using vistor `a_vistor'
 		require
 			a_visitor_attached: a_visitor /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

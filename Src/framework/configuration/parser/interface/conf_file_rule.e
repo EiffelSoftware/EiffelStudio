@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that specify rules for files to be excluded or included."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,14 +19,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create
 		do
 		end
 
 feature -- Status
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is this file rule empty?
 		do
 			Result := (exclude = Void or else exclude.is_empty) and (include = Void or else include.is_empty)
@@ -45,7 +45,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	add_exclude (a_pattern: STRING) is
+	add_exclude (a_pattern: STRING)
 			-- Add an exclude pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
@@ -58,7 +58,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	add_include (a_pattern: STRING) is
+	add_include (a_pattern: STRING)
 			-- Add an include pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
@@ -70,7 +70,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	del_exclude (a_pattern: STRING) is
+	del_exclude (a_pattern: STRING)
 			-- Delete an exclude pattern.
 		require
 			a_pattern_ok: exclude /= Void and then exclude.has (a_pattern)
@@ -82,7 +82,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	del_include (a_pattern: STRING) is
+	del_include (a_pattern: STRING)
 			-- Delete an include pattern.
 		require
 			a_pattern_ok: include /= Void and then include.has (a_pattern)
@@ -94,7 +94,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'
 		do
 			description := a_description
@@ -104,7 +104,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Merging
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge with other.
 		require
 			other_valid: other.valid_excludes and other.valid_includes
@@ -133,7 +133,7 @@ feature {CONF_ACCESS} -- Merging
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is it the same file_rule as `other'?
 		do
 			Result := equal (include, other.include) and equal (exclude, other.exclude)
@@ -141,7 +141,7 @@ feature -- Comparison
 
 feature -- Basic operation
 
-	is_included (a_location: STRING): BOOLEAN is
+	is_included (a_location: STRING): BOOLEAN
 			-- Test if `a_location' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
 		local
@@ -166,14 +166,14 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	compile is
+	compile
 			-- (Re)compile the regexp patterns.
 		do
 			exclude_regexp := compile_list (exclude)
 			include_regexp := compile_list (include)
 		end
 
-	compile_list (a_list: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION is
+	compile_list (a_list: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
 		local
 			l_regexp_str: STRING
@@ -212,7 +212,7 @@ feature {CONF_FILE_RULE} -- Implementation, merging
 
 feature -- Contracts
 
-	valid_excludes: BOOLEAN is
+	valid_excludes: BOOLEAN
 			-- Are excludes valid?
 		do
 			if exclude = Void or else exclude.is_empty then
@@ -222,7 +222,7 @@ feature -- Contracts
 			end
 		end
 
-	valid_includes: BOOLEAN is
+	valid_includes: BOOLEAN
 			-- Are includes valid?
 		do
 			if include = Void or else include.is_empty then
@@ -236,7 +236,7 @@ invariant
 	exclude_patterns_valid: valid_excludes
 	include_patterns_valid: valid_includes
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

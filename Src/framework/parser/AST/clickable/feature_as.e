@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract class for abstract description of Eiffel features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_names; b: like body; i: like indexes; an_id: like id; a_pos: like next_position) is
+	initialize (f: like feature_names; b: like body; i: like indexes; an_id: like id; a_pos: like next_position)
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_feature_as (Current)
@@ -81,12 +81,12 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := feature_names.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := body.last_token (a_list)
@@ -112,7 +112,7 @@ feature -- Roundtrip/Break token inclusion
 			-- This will affect result of `last_token' and `comment' if
 			-- curernt feature is a constant or an attribute.
 
-	set_break_included (b: BOOLEAN) is
+	set_break_included (b: BOOLEAN)
 			-- Set `break_included' with `b'.
 		do
 			break_included := b
@@ -122,7 +122,7 @@ feature -- Roundtrip/Break token inclusion
 
 feature -- Roundtrip/Comment
 
-	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
+	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS
 			-- Associated comment of current feature
 			-- Result affected by `break_included'.
 		require
@@ -170,7 +170,7 @@ feature -- Roundtrip/Comment
 
 feature -- Roundtrip/Trailing break
 
-	trailing_break_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION is
+	trailing_break_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION
 			-- Break region after an attribute or a constant
 		require
 			a_list_not_void: a_list /= Void
@@ -193,22 +193,22 @@ feature -- Roundtrip/Trailing break
 
 feature -- Property
 
-	is_feature: BOOLEAN is True
+	is_feature: BOOLEAN = True
 			-- Does the Current AST represent a feature?
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Does Current AST represent an attribute?
 		do
 			Result := body.content = Void
 		end
 
-	is_function: BOOLEAN is
+	is_function: BOOLEAN
 			-- Does Current AST represent a function?
 		do
 			Result := body.type /= Void and not is_attribute
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Does Current AST represent a deferred feature?
 		require
 			body_has_content: body.content /= Void
@@ -225,7 +225,7 @@ feature -- Property
 			end
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 			-- Does Current AST represent a constant?
 		local
 			l_constant: CONSTANT_AS
@@ -236,7 +236,7 @@ feature -- Property
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_names (f: like feature_names) is
+	set_feature_names (f: like feature_names)
 			-- Set `feature_names' to `f'
 		require
 			f_not_void: f /= Void
@@ -286,7 +286,7 @@ feature -- Query
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (body, other.body) and
@@ -295,13 +295,13 @@ feature -- Comparison
 
 feature -- Access
 
-	feature_name: ID_AS is
+	feature_name: ID_AS
 			-- Feature name representing AST
 		do
 			Result := feature_names.first.internal_name
 		end
 
-	feature_with_name (n: INTEGER): FEATURE_AS is
+	feature_with_name (n: INTEGER): FEATURE_AS
 			-- Feature ast with internal name `n'
 		local
 			l_area: SPECIAL [FEATURE_NAME]
@@ -322,7 +322,7 @@ feature -- Access
 			end
 		end
 
-	has_feature_name (n: FEATURE_NAME): BOOLEAN is
+	has_feature_name (n: FEATURE_NAME): BOOLEAN
 			-- Does this feature have the name `n'?
 		local
 			cur: INTEGER
@@ -341,20 +341,20 @@ feature -- Access
 			feature_names.go_i_th (cur)
 		end
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does this feature has the instruction `i'?
 		do
 			Result := body.has_instruction (i)
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of instruction `i' in this feature.
 			-- Result is `0' if not found.
 		do
 			Result := body.index_of_instruction (i)
 		end
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if indexes /= Void then
@@ -362,7 +362,7 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Class custom attributes of current class if any.
 		do
 			if indexes /= Void then
@@ -370,7 +370,7 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Interface custom attributes of current class if any.
 		do
 			if indexes /= Void then
@@ -378,7 +378,7 @@ feature -- Access
 			end
 		end
 
-	property_name: STRING is
+	property_name: STRING
 			-- Name of the associated property (if any).
 		do
 			if indexes /= Void then
@@ -386,7 +386,7 @@ feature -- Access
 			end
 		end
 
-	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of a property (if any).
 		do
 			if indexes /= Void then
@@ -396,7 +396,7 @@ feature -- Access
 
 feature -- Update
 
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
 			-- Assign values to Unique features defined in the current class
 		do
 			if body.is_unique then
@@ -413,7 +413,7 @@ feature -- Update
 
 feature -- empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 				-- Is body empty?
 		do
 			Result := (body = Void) or else (body.is_empty)
@@ -421,7 +421,7 @@ feature -- empty body
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name_id: INTEGER) is
+	create_default_rescue (def_resc_name_id: INTEGER)
 				-- Create default rescue if necessary
 		require
 			valid_feature_name_id: def_resc_name_id > 0
@@ -433,7 +433,7 @@ feature -- default rescue
 
 feature -- Conveniences
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 			if feature_names = Void then
 				Result := False
@@ -446,7 +446,7 @@ feature -- Conveniences
 
 feature {COMPILER_EXPORTER} -- Incrementality
 
-	is_body_equiv (other: like Current): BOOLEAN is
+	is_body_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
 		require
 			valid_body: body /= Void
@@ -466,7 +466,7 @@ feature {COMPILER_EXPORTER} -- Incrementality
 			end
 		end
 
-	is_assertion_equiv (other: like Current): BOOLEAN is
+	is_assertion_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
 		require
 			valid_body: body /= Void
@@ -480,7 +480,7 @@ invariant
 	body_not_void: body /= Void
 	next_position_non_negative: next_position >= 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

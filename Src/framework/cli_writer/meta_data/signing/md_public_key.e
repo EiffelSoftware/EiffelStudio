@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a public key"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_file (a_file_name: STRING; a_signing: MD_STRONG_NAME) is
+	make_from_file (a_file_name: STRING; a_signing: MD_STRONG_NAME)
 			-- Create a public key from private key stored in `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -50,7 +50,7 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Did an error occurred in `read_key_pair_from_file'?
 
-	public_key_token_string: STRING is
+	public_key_token_string: STRING
 			-- String representation of `public_key_token'.
 		require
 			key_is_valid: is_valid
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	read_key_pair_from_file (a_file_name: STRING): MANAGED_POINTER is
+	read_key_pair_from_file (a_file_name: STRING): MANAGED_POINTER
 			-- Read key pair from file `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -110,7 +110,7 @@ invariant
 	item_not_void: item /= Void
 	key_pair_not_void: key_pair /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

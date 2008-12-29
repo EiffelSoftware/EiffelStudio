@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Callback "COM Object" used to manage the dotnet debugger's callbacks
 		]"
@@ -22,25 +22,25 @@ create {ICOR_DEBUG_FACTORY}
 	
 feature -- Initialization
 
-	initialize_callback is
+	initialize_callback
 			-- Initialize the eiffel feature related to the Managed Callback.
 		do
 		end
 		
-	terminate_callback is
+	terminate_callback
 			-- Terminate callback
 		do
 		end
 		
 feature -- disposable
 
-	dispose is
+	dispose
 		do
 			terminate_callback
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

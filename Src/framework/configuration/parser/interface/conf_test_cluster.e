@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object representing a cluster which is intended to contain classes specifically for testing.
 	]"
@@ -20,7 +20,7 @@ create {CONF_PARSE_FACTORY}
 
 feature -- Status report
 
-	is_test_cluster: BOOLEAN is
+	is_test_cluster: BOOLEAN
 			-- <Precursor>
 		once
 			Result := True
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'
 		do
 			a_visitor.process_test_cluster (Current)

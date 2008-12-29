@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_object_file_icon
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Element update
 
-	remove_external is
+	remove_external
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		do
@@ -39,7 +39,7 @@ feature -- Element update
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

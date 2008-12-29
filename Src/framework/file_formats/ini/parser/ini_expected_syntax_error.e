@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An INI syntax error where a string was expected in the INI file text and not found."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Full error message
 		do
 			create Result.make (sytax_error_prefix.count + expected_error_prefix.count + text.count + expected_error_suffix.count)
@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Implementation
 
-	expected_error_prefix: STRING is "Expected '"
+	expected_error_prefix: STRING = "Expected '"
 			-- Expected error prefix
 
-	expected_error_suffix: STRING is "'.";
+	expected_error_suffix: STRING = "'.";
 			-- Expected error prefix
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

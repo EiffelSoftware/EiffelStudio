@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A marshaller for converting Eiffel types to C types and vice-versa.
 		
@@ -28,7 +28,7 @@ feature {NONE} -- Access
 
 	marshalled_data: !HASH_TABLE [!STRING_HANDLER, POINTER]
 			-- Shared marshalled data
-		indexing
+		note
 			once_status: thread
 		once
 			create Result.make (13)
@@ -285,7 +285,7 @@ feature {NONE} -- Externals
 			"return (sizeof (%"%") != sizeof (T(%" %")));"
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

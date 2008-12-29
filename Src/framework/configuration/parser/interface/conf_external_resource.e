@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an external ressource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- Status
 
-	is_resource: BOOLEAN is
+	is_resource: BOOLEAN
 			-- Is `Current' an external ressource?
 		once
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

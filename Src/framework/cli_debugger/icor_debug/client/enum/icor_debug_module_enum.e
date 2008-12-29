@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,19 +58,19 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	icor_object_made_by_pointer (a_p: POINTER): ICOR_DEBUG_MODULE is
+	icor_object_made_by_pointer (a_p: POINTER): ICOR_DEBUG_MODULE
 			-- ICOR_DEBUG_MODULE from `a_p'
 			-- be sure to use Icor_objects_manager since those objects are cached.
 		do
 			Result := Icor_objects_manager.icd_module (a_p)
 		end
 
-	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
+	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER
 		do
 			Result := cpp_next (obj, a_celt, a_p, a_pceltfetched)
 		end
 
-	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugModuleEnum signature(ULONG,ICorDebugModule**, ULONG*): EIF_INTEGER 
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			"Next"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

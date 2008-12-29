@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class called NONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_file, a_config: STRING) is
+	make (a_file, a_config: STRING)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
@@ -29,7 +29,7 @@ feature -- Access
 	text: STRING;
 		-- The error message.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

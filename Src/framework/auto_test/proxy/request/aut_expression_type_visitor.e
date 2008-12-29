@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {AUT_EXPRESSION_TYPE_VISITOR}."
 	author: ""
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_system: SYSTEM_I; a_variable_table: like variable_table) is
+	make (a_system: SYSTEM_I; a_variable_table: like variable_table)
 			-- Initialize.
 		require
 			a_system_attached: a_system /= Void
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	type (a_expression: ITP_EXPRESSION): TYPE_A is
+	type (a_expression: ITP_EXPRESSION): TYPE_A
 			-- Type of `a_expression'
 		require
 			a_expression_attached: a_expression /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	types (a_expression_list: DS_LINEAR [ITP_EXPRESSION]): ARRAYED_LIST [TYPE_A] is
+	types (a_expression_list: DS_LINEAR [ITP_EXPRESSION]): ARRAYED_LIST [TYPE_A]
 			-- List of type for each expression in `a_expression_list'
 			-- Return an empty list if `a_expression_list' is Void or empty.
 		local
@@ -68,13 +68,13 @@ feature -- Access
 
 feature {ITP_EXPRESSION} -- Processing
 
-	process_constant (a_value: ITP_CONSTANT) is
+	process_constant (a_value: ITP_CONSTANT)
 			-- Process `a_value', store type of `a_value' into `last_type'.
 		do
 			last_type := base_type (a_value.type_name)
 		end
 
-	process_variable (a_value: ITP_VARIABLE) is
+	process_variable (a_value: ITP_VARIABLE)
 			-- Process `a_value', store type of `a_value' into `last_type'.
 		do
 			last_type := variable_table.variable_type (a_value)

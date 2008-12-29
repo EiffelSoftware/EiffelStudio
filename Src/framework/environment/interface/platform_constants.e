@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Platform specific constants."
 	todo: "Could maybe use stuff from {PLATFORM}"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	frozen is_unix: BOOLEAN is
+	frozen is_unix: BOOLEAN
 			-- Is it a Unix platform?
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -26,7 +26,7 @@ feature -- Access
 			"return EIF_TEST(!(EIF_IS_VMS || EIF_IS_WINDOWS));"
 		end
 
-	frozen is_vms: BOOLEAN is
+	frozen is_vms: BOOLEAN
 			-- Is the platform VMS?
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -34,7 +34,7 @@ feature -- Access
 			"EIF_IS_VMS"
 		end
 
-	frozen is_64_bits: BOOLEAN is
+	frozen is_64_bits: BOOLEAN
 			-- Is Current running on Windows 64 bits?
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -42,7 +42,7 @@ feature -- Access
 			"EIF_IS_64_BITS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

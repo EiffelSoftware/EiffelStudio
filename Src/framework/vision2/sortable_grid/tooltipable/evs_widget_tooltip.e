@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General tooltip that displays a widget as its content"
 	author: ""
 	date: "$Date$"
@@ -23,7 +23,7 @@ feature{NONE} -- Initialization
 	make (a_enter_actions: like pointer_enter_actions;
 	      a_leave_actions: like pointer_leave_actions;
 	      a_select_actions: like select_actions;
-	      a_destroy_function: like owner_destroy_function; a_widget: like widget) is
+	      a_destroy_function: like owner_destroy_function; a_widget: like widget)
 			-- Initialize agents used for current tooltip.
 			-- See `pointer_enter_actions', `pointer_leave_actions',
 			-- `owner_destroy_function', for more information.
@@ -80,19 +80,19 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget to be displayed in Current tooltip
 
-	tooltip_width: INTEGER is
+	tooltip_width: INTEGER
 			-- Required width for tooltip
 		do
 			Result := left_border + widget.width + right_border + border_line_width * 2
 		end
 
-	tooltip_height: INTEGER is
+	tooltip_height: INTEGER
 			-- Required height for tooltip
 		do
 			Result := top_border + widget.height + bottom_border + border_line_width * 2
 		end
 
-	actual_widget: like widget is
+	actual_widget: like widget
 			-- Actual widget
 		do
 			Result := widget_container
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_tooltip_text: BOOLEAN is
+	has_tooltip_text: BOOLEAN
 			-- Does current tooltip has any text?
 		do
 			if has_tooltip_text_function /= Void then
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_has_tooltip_text_function (a_function: like has_tooltip_text_function) is
+	set_has_tooltip_text_function (a_function: like has_tooltip_text_function)
 			-- Set `has_tooltip_text_function' with `a_function'.
 		do
 			has_tooltip_text_function := a_function
@@ -125,7 +125,7 @@ feature -- Setting
 			has_tooltip_text_function_set: has_tooltip_text_function = a_function
 		end
 
-	set_widget (a_widget: like widget) is
+	set_widget (a_widget: like widget)
 			-- Set `widget' with `a_widget'.
 		do
 			widget := a_widget
@@ -133,7 +133,7 @@ feature -- Setting
 			widget_set: widget = a_widget
 		end
 
-	unify_background_color is
+	unify_background_color
 			-- Unify background color for `widget'.
 			-- i.e., set background color of `widget' to `actual_tooltip_background_color'.
 		do
@@ -142,7 +142,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	on_setting_change is
+	on_setting_change
 			-- Action to be performed when setting chanages
 		local
 			l_background_color: like actual_tooltip_background_color

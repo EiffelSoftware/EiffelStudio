@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to add a library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
@@ -561,7 +561,7 @@ feature {NONE} -- Constants
 	name_column: INTEGER = 1
 	location_column: INTEGER = 2
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

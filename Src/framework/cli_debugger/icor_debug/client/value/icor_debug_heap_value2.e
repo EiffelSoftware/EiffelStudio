@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	interface ICorDebugHeapValue2 : IUnknown
 	{
@@ -30,7 +30,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	create_strong_handle: ICOR_DEBUG_HANDLE_VALUE is
+	create_strong_handle: ICOR_DEBUG_HANDLE_VALUE
 			-- Creates a handle of HANDLE_STRONG for this heap value
 		local
 			p: POINTER
@@ -43,7 +43,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 		
-	create_weak_track_resurrection_handle: ICOR_DEBUG_HANDLE_VALUE is
+	create_weak_track_resurrection_handle: ICOR_DEBUG_HANDLE_VALUE
 			-- Creates a handle of HANDLE_WEAK_TRACK_RESURRECTION for this heap value
 		local
 			p: POINTER
@@ -56,7 +56,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	create_handle (hdl_type: INTEGER): ICOR_DEBUG_HANDLE_VALUE is
+	create_handle (hdl_type: INTEGER): ICOR_DEBUG_HANDLE_VALUE
 			-- Creates a handle of the given type for this heap valu	
 		local
 			p: POINTER
@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_DEBUG_VALUE} -- Implementation
 
-	frozen cpp_create_handle (obj: POINTER; a_hdl_type: INTEGER; a_handle_value_ptr: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_create_handle (obj: POINTER; a_hdl_type: INTEGER; a_handle_value_ptr: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugHeapValue2 signature(CorDebugHandleType, ICorDebugHandleValue**): EIF_INTEGER 
@@ -81,7 +81,7 @@ feature {ICOR_DEBUG_VALUE} -- Implementation
 			"CreateHandle"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

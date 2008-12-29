@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[ 
 		interface ICorDebugILFrame : ICorDebugFrame
 			GetIP
@@ -34,7 +34,7 @@ feature {ICOR_EXPORTER} -- Properties
 
 	last_cordebugmapping_result: INTEGER
 
-	last_cordebugmapping_result_to_string: STRING is
+	last_cordebugmapping_result_to_string: STRING
 		do
 			Result := enum_cor_debug_mapping_result_to_string (last_cordebugmapping_result)
 		end
@@ -47,7 +47,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := get_ip.as_integer_32
 		end
 
-	get_ip: NATURAL_32 is
+	get_ip: NATURAL_32
 			-- get OffSet
 			-- set `last_cordebugmapping_result' value
 		local
@@ -66,7 +66,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_local_variables: ICOR_DEBUG_VALUE_ENUM is
+	enumerate_local_variables: ICOR_DEBUG_VALUE_ENUM
 		local
 			p: POINTER
 		do
@@ -78,7 +78,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_local_variable (a_index: INTEGER): ICOR_DEBUG_VALUE is
+	get_local_variable (a_index: INTEGER): ICOR_DEBUG_VALUE
 		local
 			p: POINTER
 		do
@@ -90,7 +90,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed
 		end
 
-	enumerate_arguments: ICOR_DEBUG_VALUE_ENUM is
+	enumerate_arguments: ICOR_DEBUG_VALUE_ENUM
 		local
 			p: POINTER
 		do
@@ -102,7 +102,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed
 		end
 
-	get_argument (a_index: INTEGER): ICOR_DEBUG_VALUE is
+	get_argument (a_index: INTEGER): ICOR_DEBUG_VALUE
 		local
 			p: POINTER
 		do
@@ -112,14 +112,14 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_stack_depth: NATURAL_32 is
+	get_stack_depth: NATURAL_32
 		do
 			last_call_success := cpp_get_stack_depth (item, $Result)
 		end
 
 feature {NONE} -- Implementation
 
-	cpp_get_ip (obj: POINTER; a_p_offset: TYPED_POINTER [NATURAL_32]; a_p_mapping: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_ip (obj: POINTER; a_p_offset: TYPED_POINTER [NATURAL_32]; a_p_mapping: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32*, CorDebugMappingResult*): EIF_INTEGER 
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			"GetIP"
 		end
 
-	cpp_enumerate_local_variables (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_enumerate_local_variables (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			"EnumerateLocalVariables"
 		end
 
-	cpp_get_local_variable (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_local_variable (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			"GetLocalVariable"
 		end
 
-	cpp_enumerate_arguments (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_enumerate_arguments (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			"EnumerateArguments"
 		end
 
-	cpp_get_argument (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_argument (obj: POINTER; a_index: INTEGER; a_result: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			"GetArgument"
 		end
 
-	cpp_get_stack_depth (obj: POINTER; a_depth: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_stack_depth (obj: POINTER; a_depth: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32 *): EIF_INTEGER 
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			"GetStackDepth"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that is able to auto complete code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize_code_complete is
+	initialize_code_complete
 			-- Initialization
 		require
 			key_press_actions_attached: key_press_actions /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	choices: CODE_COMPLETION_WINDOW is
+	choices: CODE_COMPLETION_WINDOW
 			-- Completion choice window.
 		once
 			create Result.make
@@ -52,7 +52,7 @@ feature -- Access
 	key_completable : FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
 			-- EV_KEY can activate text completion?
 
-	key_press_actions: EV_KEY_ACTION_SEQUENCE is
+	key_press_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
 		deferred
 		ensure
@@ -84,7 +84,7 @@ feature -- Element change
 
 feature -- Status change
 
-	set_can_complete (a_fun: like key_completable) is
+	set_can_complete (a_fun: like key_completable)
 			-- Set `key_completable' with `a_fun'.
 		require
 			a_fun_attached: a_fun /= Void
@@ -94,13 +94,13 @@ feature -- Status change
 			key_completable_not_void: key_completable /= Void
 		end
 
-	set_completion_possibilities_provider (a_provider: like possibilities_provider) is
+	set_completion_possibilities_provider (a_provider: like possibilities_provider)
 			-- Set `completion_possibilities_provider'.
 		do
 			possibilities_provider := a_provider
 		end
 
-	set_save_list_position_action (a_action: like save_list_position_action) is
+	set_save_list_position_action (a_action: like save_list_position_action)
 			-- Set `save_list_position_action' with `a_action'.
 		do
 			save_list_position_action := a_action
@@ -108,7 +108,7 @@ feature -- Status change
 			save_list_position_action_set: save_list_position_action = a_action
 		end
 
-	refresh is
+	refresh
 			-- Refresh current display.
 		do
 		end
@@ -118,7 +118,7 @@ feature -- Status report
 	is_completing: BOOLEAN
 			-- Is completion currently being processed?
 
-	is_focus_back_needed: BOOLEAN is
+	is_focus_back_needed: BOOLEAN
 			-- Should focus be set back after code completion?
 		do
 			Result := True
@@ -126,7 +126,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	auto_complete_is_possible: BOOLEAN is
+	auto_complete_is_possible: BOOLEAN
 			-- Is auto complete possible.
 		do
 			if possibilities_provider /= Void then
@@ -134,45 +134,45 @@ feature {NONE} -- Status report
 			end
 		end
 
-	completing_word: BOOLEAN is
+	completing_word: BOOLEAN
 			-- Is in completing word mode?
 		deferred
 		end
 
 feature -- Text operation
 
-	back_delete_char is
+	back_delete_char
 			-- Back delete character.
 		deferred
 		end
 
-	delete_char is
+	delete_char
 			-- Delete char.
 		deferred
 		end
 
-	insert_string (a_str: STRING_32) is
+	insert_string (a_str: STRING_32)
 			-- Insert `a_str' at cursor position.
 		require
 			a_str_attached: a_str /= Void
 		deferred
 		end
 
-	insert_char (a_char: CHARACTER_32) is
+	insert_char (a_char: CHARACTER_32)
 			-- Insert `a_char' at cursor position.
 		deferred
 		end
 
 feature -- Cursor
 
-	place_post_cursor is
+	place_post_cursor
 			-- Place cursor after completion.
 		deferred
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 
-	complete_from_window (cmp: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
+	complete_from_window (cmp: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER)
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- `appended_character' is a character that should be appended after. '%U' if none.
 		local
@@ -190,7 +190,7 @@ feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 			refresh
 		end
 
-	complete_call (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
+	complete_call (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER)
 			-- Finish completion process by inserting the completed expression.
 		local
 			i: INTEGER
@@ -218,21 +218,21 @@ feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 
 feature -- Basic operation
 
-	trigger_completion is
+	trigger_completion
 			-- Start timer, let timer to start code completion.
 		do
 			completion_timeout.reset_count
 			completion_timeout.actions.resume
 		end
 
-	block_completion is
+	block_completion
 			-- Stop timer, block code completion.
 		do
 			completion_timeout.reset_count
 			completion_timeout.actions.block
 		end
 
-	complete_code is
+	complete_code
 			-- Prepare auto complete and show choice window directly.
 		local
 			retried: BOOLEAN
@@ -260,7 +260,7 @@ feature -- Basic operation
 			retry
 		end
 
-	position_completion_choice_window is
+	position_completion_choice_window
 			-- Reposition the completion choice window
 		require
 			choices_not_void: choices /= Void
@@ -292,7 +292,7 @@ feature -- Basic operation
 			choices.set_position (l_x, l_y)
 		end
 
-	exit_complete_mode is
+	exit_complete_mode
 			-- Set mode to normal (not completion mode).
 		do
 			is_completing := False
@@ -302,39 +302,39 @@ feature -- Basic operation
 			not_is_completing: is_completing = false
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus.
 		deferred
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Basic operation
 
-	block_focus_in_actions is
+	block_focus_in_actions
 			-- Block focus in actions
 		deferred
 		end
 
-	resume_focus_in_actions is
+	resume_focus_in_actions
 			-- Resume focus in actions
 		deferred
 		end
 
-	block_focus_out_actions is
+	block_focus_out_actions
 			-- Block focus out actions.
 		deferred
 		end
 
-	resume_focus_out_actions is
+	resume_focus_out_actions
 			-- Resume focus out actions.
 		deferred
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 
-	Completion_border_size: INTEGER is 5
+	Completion_border_size: INTEGER = 5
 			-- Size in pixels that the completion list can go to (virtual border)
 
-	unwanted_characters: SPECIAL [BOOLEAN] is
+	unwanted_characters: SPECIAL [BOOLEAN]
 			-- Unwanted characters: backspace, tabulation, carriage return and escape.
 		local
 			c: CHARACTER
@@ -352,7 +352,7 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			end
 		end
 
-	calculate_completion_list_width: INTEGER is
+	calculate_completion_list_width: INTEGER
 			-- Determine the width the completion list should have
 		local
 			l_grid: EV_GRID
@@ -392,39 +392,39 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			Result := l_screen.width.min (Result)
 		end
 
-	handle_character (a_char: CHARACTER_32) is
+	handle_character (a_char: CHARACTER_32)
 			-- Handle `a_char'
 		deferred
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
  		deferred
  		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
  		deferred
  		end
 
-	calculate_completion_list_x_position: INTEGER is
+	calculate_completion_list_x_position: INTEGER
 			-- Determine the x position to display the completion list
 		deferred
 		end
 
-	calculate_completion_list_y_position: INTEGER is
+	calculate_completion_list_y_position: INTEGER
 			-- Determine the y position to display the completion list
 		deferred
 		end
 
-	calculate_completion_list_height: INTEGER is
+	calculate_completion_list_height: INTEGER
 			-- Determine the height the completion should list should have
 		deferred
 		end
 
 feature {NONE} -- Trigger completion
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- If `a_key' can activate text completion, activate it.
 		require
 			a_key_attached: a_key /= Void
@@ -444,25 +444,25 @@ feature {NONE} -- Trigger completion
 			end
 		end
 
-	shifted_key: BOOLEAN is
+	shifted_key: BOOLEAN
 			-- Is any of the shift key pushed?
 		do
 			Result := ev_application.shift_pressed
 		end
 
-	ctrled_key: BOOLEAN is
+	ctrled_key: BOOLEAN
 			-- Is any of the ctrl key pushed?
 		do
 			Result := ev_application.ctrl_pressed
 		end
 
-	alt_key: BOOLEAN is
+	alt_key: BOOLEAN
 			-- Is any of the alt key pushed?
 		do
 			Result := ev_application.alt_pressed
 		end
 
-	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
+	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN
 			-- `a_key' can activate text completion?
 		require
 			a_key_attached: a_key /= Void
@@ -471,7 +471,7 @@ feature {NONE} -- Trigger completion
 
 feature {NONE} -- Implementation
 
-	show_completion_list is
+	show_completion_list
 			-- Show completion window.
 		do
 			choices.common_initialization
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_auto_complete is
+	prepare_auto_complete
 			-- Prepare possibilities in provider.
 		do
 			possibilities_provider.prepare_completion
@@ -504,13 +504,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Complete essentials
 
-	name_part_to_be_completed: STRING_32 is
+	name_part_to_be_completed: STRING_32
 			-- Word, which is being completed.
 		do
 			Result := possibilities_provider.insertion
 		end
 
-	name_part_to_be_completed_remainder: INTEGER is
+	name_part_to_be_completed_remainder: INTEGER
 			-- Number of characters past the cursor on the token currenly being completed.
 		do
 			Result := possibilities_provider.insertion_remainder
@@ -518,7 +518,7 @@ feature {NONE} -- Complete essentials
 
 feature -- Timer
 
-	set_delay (l_time: INTEGER) is
+	set_delay (l_time: INTEGER)
 			-- Set timer interval.
 		do
 			completion_timeout.set_interval (l_time)
@@ -529,7 +529,7 @@ feature {NONE} -- Timer
 	completion_timeout: EV_TIMEOUT
 			-- Timeout for showing completion list
 
-	default_timer_interval: INTEGER is
+	default_timer_interval: INTEGER
 			-- Default completion window appearance time out interval
 		once
 			Result := 10
@@ -547,7 +547,7 @@ feature {NONE} -- Timer
 			Result := 400
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

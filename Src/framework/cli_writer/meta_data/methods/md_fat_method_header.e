@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a fat method header"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature -- Initialization
 
-	make, remake (a_max_stack: INTEGER_16; a_code_size, a_locals_token: INTEGER) is
+	make, remake (a_max_stack: INTEGER_16; a_code_size, a_locals_token: INTEGER)
 			-- Create fat method header.
 		do
 			max_stack := a_max_stack
@@ -45,7 +45,7 @@ feature -- Access
 	locals_token: INTEGER
 			-- Token for local signature.
 
-	flags: INTEGER_8 is
+	flags: INTEGER_8
 			-- Current flags.
 		do
 			Result := (internal_data & 0x00FF).to_integer_8
@@ -53,12 +53,12 @@ feature -- Access
 
 feature -- Access
 
-	count: INTEGER is 12
+	count: INTEGER = 12
 			-- Size of structure once emitted.
 		
 feature -- Saving
 
-	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos'.
 		do
 			m.put_integer_16 (internal_data, pos)
@@ -69,7 +69,7 @@ feature -- Saving
 		
 feature -- Settings
 
-	set_flags (f: INTEGER_8) is
+	set_flags (f: INTEGER_8)
 			-- Set `flags' with `f'.
 		do
 			internal_data := Header_size | (f |
@@ -82,14 +82,14 @@ feature {NONE} -- Implementation
 	internal_data: INTEGER_16
 			-- To hold `size' of current and `flags'.
 
-	Header_size: INTEGER_16 is 0x3000
+	Header_size: INTEGER_16 = 0x3000
 			-- Size of current structure.
 
 invariant
 	valid_flags: flags & {MD_METHOD_CONSTANTS}.Fat_format = 
 			{MD_METHOD_CONSTANTS}.Fat_format
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

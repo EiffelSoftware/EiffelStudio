@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error if there was no class in a file where a class was expected."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file, a_config: STRING) is
+	make (a_file, a_config: STRING)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
@@ -29,7 +29,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

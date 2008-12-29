@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Object representing Value from dotnet debugger.
 		]"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_value_by_pointer (an_item: POINTER) is
+	make_value_by_pointer (an_item: POINTER)
 			-- Make Current by pointer.
 		do
 			make_by_pointer (an_item)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {ICOR_EXPORTER} -- Pseudo twin
 
-	duplicated_object: like Current is
+	duplicated_object: like Current
 		do
 			Result := twin
 			Result.add_ref
@@ -55,7 +55,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Query
 
-	get_strong_reference_value is
+	get_strong_reference_value
 		local
 			l_icd: ICOR_DEBUG_VALUE
 			l_ref: ICOR_DEBUG_REFERENCE_VALUE
@@ -81,7 +81,7 @@ feature {ICOR_EXPORTER} -- Query
 			end
 		end
 
-	update_strong_reference_value (v: like strong_reference_value) is
+	update_strong_reference_value (v: like strong_reference_value)
 		do
 			strong_reference_value := v
 		end
@@ -91,7 +91,7 @@ feature {ICOR_EXPORTER} -- References Properties
 	is_null_reference: BOOLEAN
 			-- If Current is a reference value, return True if Current is null
 
-	set_is_null_reference (v: like is_null_reference) is
+	set_is_null_reference (v: like is_null_reference)
 			-- Set value `v' to `is_null_reference' attribute
 		do
 			is_null_reference := v
@@ -99,7 +99,7 @@ feature {ICOR_EXPORTER} -- References Properties
 
 feature {ICOR_EXPORTER} -- helpers
 
-	error_code_is_object_neutered (lcs: INTEGER): BOOLEAN is
+	error_code_is_object_neutered (lcs: INTEGER): BOOLEAN
 			-- `lcs' is `cordbg_e_object_neutered' error value
 		do
 			Result := Api_error_code_formatter.error_code_is_CORDBG_E_OBJECT_NEUTERED (lcs)
@@ -134,7 +134,7 @@ feature {ICOR_EXPORTER} -- helpers
 
 feature -- Cleaning / Dispose
 
-	clean_on_dispose is
+	clean_on_dispose
 			-- Call this, to clean the object as if it is about to be disposed
 		do
 			if strong_reference_value /= Void then
@@ -146,7 +146,7 @@ feature -- Cleaning / Dispose
 
 feature {ICOR_EXPORTER} -- QueryInterface
 
-	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE is
+	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -158,7 +158,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE is
+	query_interface_icor_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -170,7 +170,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_handle_value: ICOR_DEBUG_HANDLE_VALUE is
+	query_interface_icor_debug_handle_value: ICOR_DEBUG_HANDLE_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -182,7 +182,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_heap_value: ICOR_DEBUG_HEAP_VALUE is
+	query_interface_icor_debug_heap_value: ICOR_DEBUG_HEAP_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -194,7 +194,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_heap_value2: ICOR_DEBUG_HEAP_VALUE2 is
+	query_interface_icor_debug_heap_value2: ICOR_DEBUG_HEAP_VALUE2
 		require
 			item_not_null: item_not_null
 		local
@@ -206,7 +206,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
+	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -220,7 +220,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
-	query_interface_icor_debug_box_value: ICOR_DEBUG_BOX_VALUE is
+	query_interface_icor_debug_box_value: ICOR_DEBUG_BOX_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -232,7 +232,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			end
 		end
 
-	query_interface_icor_debug_string_value: ICOR_DEBUG_STRING_VALUE is
+	query_interface_icor_debug_string_value: ICOR_DEBUG_STRING_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -244,7 +244,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 			end
 		end
 
-	query_interface_icor_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
+	query_interface_icor_debug_array_value: ICOR_DEBUG_ARRAY_VALUE
 		require
 			item_not_null: item_not_null
 		local
@@ -258,7 +258,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_size: NATURAL_32 is
+	get_size: NATURAL_32
 			-- GetSize returns the size in bytes
 		require
 			item_not_null: item_not_null
@@ -268,7 +268,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0 or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_address: NATURAL_64 is
+	get_address: NATURAL_64
 			-- GetAddress returns the address of the value in the debugee
 			-- process.  This might be useful information for the debugger to
 			-- show.
@@ -283,7 +283,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- External Implementation
 
-	cpp_get_type (obj: POINTER; a_p_type: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_type (obj: POINTER; a_p_type: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugValue signature(CorElementType*): EIF_INTEGER 
@@ -293,7 +293,7 @@ feature {NONE} -- External Implementation
 			"GetType"
 		end
 
-	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugValue signature(ULONG32*): EIF_INTEGER 
@@ -303,7 +303,7 @@ feature {NONE} -- External Implementation
 			"GetSize"
 		end
 
-	cpp_get_address (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_64]): INTEGER is
+	cpp_get_address (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_64]): INTEGER
 		external
 			"[
 				C++ ICorDebugValue signature(CORDB_ADDRESS*): EIF_INTEGER 
@@ -315,7 +315,7 @@ feature {NONE} -- External Implementation
 
 feature {NONE } -- Access
 
-	get_type: like type is
+	get_type: like type
 			-- GetType
 		require
 			item_not_null: item_not_null
@@ -327,7 +327,7 @@ feature {NONE } -- Access
 
 feature {NONE} -- Implementation / Constants
 
-	cpp_query_interface_ICorDebugGenericValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugGenericValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugGenericValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugReferenceValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugReferenceValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHandleValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugHandleValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHandleValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHeapValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugHeapValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHeapValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugHeapValue2 (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugHeapValue2 (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation / Constants
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugHeapValue2, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugObjectValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugObjectValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation / Constants
 
 feature {NONE} -- Implementation / QueryInterface HEAP
 
-	cpp_query_interface_ICorDebugBoxValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugBoxValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugBoxValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugStringValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugStringValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugStringValue, (void **) $a_p)"
 		end
 
-	cpp_query_interface_ICorDebugArrayValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugArrayValue (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		require
 			obj /= Default_pointer
 		external
@@ -423,7 +423,7 @@ feature -- only for test purpose (evaluation in debugger)
 					STRING, ICOR_DEBUG_VALUE, -- gene
 					STRING, ICOR_DEBUG_VALUE, -- array
 					STRING, ICOR_DEBUG_VALUE  -- heap2
-					] is
+					]
 			-- Debug purpose only, will be removed soon
 		local
 			i_obj: like query_interface_icor_debug_object_value
@@ -495,7 +495,7 @@ feature -- only for test purpose (evaluation in debugger)
 --			end			
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

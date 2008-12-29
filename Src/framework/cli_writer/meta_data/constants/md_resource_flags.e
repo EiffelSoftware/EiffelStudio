@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Possible flags you can pass to `define_manifest_resource' from `MD_ASSEMBLY_EMIT'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	public: INTEGER is 1
+	public: INTEGER = 1
 			-- The Resource is exported from the Assembly.
 			
-	private: INTEGER is 2;
+	private: INTEGER = 2;
 			-- The Resource is private to the Assembly.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

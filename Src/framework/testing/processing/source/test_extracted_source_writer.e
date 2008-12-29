@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that print source code for extracted test sets.
 	]"
@@ -436,7 +436,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Output
 
-	put_indexing is
+	put_indexing
 			-- Append indexing clause.
 		do
 			stream.put_line ("indexing")
@@ -525,7 +525,7 @@ feature {NONE} -- Constants
 
 	max_string_length: INTEGER = 80
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

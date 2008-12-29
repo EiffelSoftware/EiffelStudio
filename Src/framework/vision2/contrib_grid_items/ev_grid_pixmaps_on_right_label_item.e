@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The Cell is similar to EV_GRID_LABEL_ITEM, except it has extra pixmaps on the right
 		See description of EV_GRID_LABEL_ITEM for more details
@@ -23,19 +23,19 @@ create
 
 feature -- Access
 
-	pixmaps_on_right: ARRAY [EV_PIXMAP] is
+	pixmaps_on_right: ARRAY [EV_PIXMAP]
 		do
 			Result := implementation.pixmaps_on_right
 		end
 
 feature -- Change
 
-	set_pixmaps_on_right_count (c: INTEGER) is
+	set_pixmaps_on_right_count (c: INTEGER)
 		do
 			implementation.set_pixmaps_on_right_count (c)
 		end
 
-	put_pixmap_on_right (p: EV_PIXMAP; i: INTEGER) is
+	put_pixmap_on_right (p: EV_PIXMAP; i: INTEGER)
 		do
 			implementation.put_pixmap_on_right (p, i)
 		end
@@ -47,13 +47,13 @@ feature {EV_ANY, EV_ANY_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM_I} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

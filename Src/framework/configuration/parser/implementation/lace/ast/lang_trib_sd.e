@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Describe one external clause node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (ln: like language_name; fn: like file_names) is
+	initialize (ln: like language_name; fn: like file_names)
 			-- Create a new LANG_TRIB AST node.
 		require
 			ln_not_void: ln /= Void
@@ -36,7 +36,7 @@ feature -- Properties
 	file_names: LACE_LIST [ID_SD];
 			-- File names
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

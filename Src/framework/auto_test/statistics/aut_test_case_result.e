@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Test case result"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_witness: like witness; a_class: like class_; a_feature: like feature_) is
+	make (a_witness: like witness; a_class: like class_; a_feature: like feature_)
 			-- Create new classification of feature `a_feature' from class `a_class' based on
 			-- witness `a_witness'.
 		require
@@ -35,26 +35,26 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_pass: BOOLEAN is
+	is_pass: BOOLEAN
 			-- Did test case pass?
 		do
 			Result := witness.is_pass
 		end
 
-	is_fail: BOOLEAN is
+	is_fail: BOOLEAN
 			-- Did test case fail? This means a bug was found.
 		do
 			Result := witness.is_fail
 		end
 
-	is_invalid: BOOLEAN is
+	is_invalid: BOOLEAN
 			-- Was test case not executable because a prerequisite was not
 			-- established? Most often this means a precondition was violated.
 		do
 			Result := witness.is_invalid
 		end
 
-	is_bad_response: BOOLEAN is
+	is_bad_response: BOOLEAN
 			-- Did an unknown error occure that made the interpreter respond
 			-- in an unexpected way?
 		do

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Filtered subset of an active collection which represents an active collection itself. Subset is
 		defined by an expression used to filter the items.
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create item_added_event
@@ -196,7 +196,7 @@ feature -- Status setting
 			not_has_expression: not has_expression
 		end
 
-	connect (a_collection: like collection) is
+	connect (a_collection: like collection)
 			-- Connect to `a_collection' and filter its items.
 		require
 			a_collection_usable: a_collection.is_interface_usable
@@ -290,7 +290,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 
 feature {NONE} -- Query
 
-	matches (an_item: G): BOOLEAN is
+	matches (an_item: G): BOOLEAN
 			-- Does `an_item' match `expression'?
 		require
 			has_expression: has_expression
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_matchers (a_expr: !STRING) is
+	add_matchers (a_expr: !STRING)
 			-- Add matchers to `positive_matchers' and `negative_matchers' according to given expression.
 			--
 			-- `a_expression': Expression from which matchers are created.
@@ -508,7 +508,7 @@ invariant
 	positive_matchers_compiled: positive_matchers.for_all (agent {like create_matcher}.is_compiled)
 	negative_matchers_compiled: negative_matchers.for_all (agent {like create_matcher}.is_compiled)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

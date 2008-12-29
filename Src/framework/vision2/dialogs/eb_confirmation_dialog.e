@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to ask for confirmation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_CONFIRMATION_DIALOG}
@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_ok_selected: BOOLEAN is
+	is_ok_selected: BOOLEAN
 			-- Is last selected button OK?
 		do
 			Result := selected_button.is_equal (ok)
 		end
 
-	is_cancel_selected: BOOLEAN is
+	is_cancel_selected: BOOLEAN
 			-- Is last selected button Cancel?
 		do
 			Result := selected_button.is_equal (cancel)
@@ -56,17 +56,17 @@ feature -- Status report
 
 feature -- Constants
 
-	ok: STRING_GENERAL is
+	ok: STRING_GENERAL
 		once
 			Result := names.b_ok
 		end
 
-	cancel: STRING_GENERAL is
+	cancel: STRING_GENERAL
 		once
 			Result := names.b_cancel
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

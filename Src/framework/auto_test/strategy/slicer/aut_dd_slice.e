@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,7 +21,7 @@ create {AUT_DD_SLICE}
 
 feature {NONE} -- Initialization
 
-	make_from_witness (a_witness: like witness) is
+	make_from_witness (a_witness: like witness)
 			-- Create a slice containing all requests from `a_wintess'.
 		do
 			witness := a_witness
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			witness_set: witness = a_witness
 		end
 
-	make_with_list (a_witness: like witness; a_index_list: like index_list) is
+	make_with_list (a_witness: like witness; a_index_list: like index_list)
 			-- Create new slice.
 		do
 			witness := a_witness
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	include_all is
+	include_all
 			-- Make this slice include all requests from `a_witness'.
 		local
 			i: INTEGER
@@ -68,13 +68,13 @@ feature -- Access
 	witness: AUT_WITNESS
 			-- Witness this slice is a slice of
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of requests in this slice
 		do
 			Result := index_list.count
 		end
 
-	list: DS_LIST [AUT_REQUEST] is
+	list: DS_LIST [AUT_REQUEST]
 			-- List of request from `witness' that make up this slice
 		local
 			cs: DS_LINEAR_CURSOR [INTEGER]
@@ -96,7 +96,7 @@ feature -- Access
 			list_doesnt_have_void: not list.has (Void)
 		end
 
-	fresh_list: DS_LIST [AUT_REQUEST] is
+	fresh_list: DS_LIST [AUT_REQUEST]
 			-- List of fresh requests from `witness' that make up this slice
 		local
 			cs: DS_LINEAR_CURSOR [INTEGER]
@@ -118,7 +118,7 @@ feature -- Access
 			list_doesnt_have_void: not list.has (Void)
 		end
 
-	deltas (n: INTEGER): DS_LINEAR [AUT_DD_SLICE] is
+	deltas (n: INTEGER): DS_LINEAR [AUT_DD_SLICE]
 			-- `n' sub-slices of this slice (each approximately of the same size)
 		require
 			n_big_enough: n >= 2
@@ -177,7 +177,7 @@ feature -- Access
 			list_doesnt_have_void: not Result.has (Void)
 		end
 
-	delta_complements (n: INTEGER): DS_LINEAR [AUT_DD_SLICE] is
+	delta_complements (n: INTEGER): DS_LINEAR [AUT_DD_SLICE]
 			-- Complements of the `n' sub-slices of this slice
 		require
 			n_big_enough: n >= 2
@@ -240,7 +240,7 @@ feature -- Access
 
 feature -- Debugging
 
-	append_debugging_info (a_stream: KI_TEXT_OUTPUT_STREAM) is
+	append_debugging_info (a_stream: KI_TEXT_OUTPUT_STREAM)
 			-- Append debugging info about this slice to `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -266,7 +266,7 @@ feature -- Debugging
 
 feature {AUT_DD_SLICE} -- Implementation
 
-	set_index_list (a_index_list: like index_list) is
+	set_index_list (a_index_list: like index_list)
 			-- Make `a_index_list' the new `index_list'.
 		require
 			a_index_list_not_void: a_index_list /= Void

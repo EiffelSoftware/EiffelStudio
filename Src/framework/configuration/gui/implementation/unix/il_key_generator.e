@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To generate private key for .NET systems."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature -- Initialization
 
-	generate_key (a_filename, a_runtime_version: STRING) is
+	generate_key (a_filename, a_runtime_version: STRING)
 			-- Generate a new key pair with 'a_filename' as filename for the specified
 			-- .NET version
 		require
@@ -31,10 +31,10 @@ feature -- Status report
 	successful: BOOLEAN
 			-- Was call to `generate_key' successful?
 
-	error_message: STRING is "No supported on UNIX systems.";
+	error_message: STRING = "No supported on UNIX systems.";
 			-- Associated error message if not successful.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

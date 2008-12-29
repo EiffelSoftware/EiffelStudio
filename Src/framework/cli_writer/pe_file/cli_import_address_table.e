@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of both an Import Lookup table and an Import Address Table (IAT) in a PE File for CLI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- New instance of CLI_IMPORT_ADDRESS_TABLE.
 		do
 			managed_pointer_make (structure_size)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_import_by_name_rva (rva: INTEGER) is
+	set_import_by_name_rva (rva: INTEGER)
 			-- Set `import_by_name_rva' to `rva'.
 		do
 			c_set_import_by_name_rva (item, rva)
@@ -35,7 +35,7 @@ feature -- Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of CLI_IMPORT_ADDRESS_TABLE.
 		external
 			"C macro use %"cli_writer.h%""
@@ -45,13 +45,13 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER) is
+	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER)
 			-- Set `ImportByNameRVA' to `i'.
 		external
 			"C struct CLI_IMPORT_ADDRESS_TABLE access ImportByNameRVA type DWORD use %"cli_writer.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

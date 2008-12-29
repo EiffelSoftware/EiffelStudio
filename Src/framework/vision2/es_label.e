@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a label with word wrapping."
 	upgrade: "It might be good to use EVS_LABEL instead, but they are not really compatible."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Element change
 
-	set_and_wrap_text (a_text: STRING_GENERAL) is
+	set_and_wrap_text (a_text: STRING_GENERAL)
 			-- Set `text' to `a_text' and enable word wrapping.
 		local
 			l_no_width: BOOLEAN
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 	previous_lines: ARRAYED_LIST [STRING_32];
 			-- Previously generated lines for word wrapping.
 
-	refresh_wrapped_text is
+	refresh_wrapped_text
 			-- Display `text' as a wrapped text.
 			-- Replace all '%N' characters as spaces.
 		require
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a mutable INI document."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current INI document.
 		do
 			Precursor {INI_PROPERTY_CONTAINER}
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: INI_DOCUMENT is
+	document: INI_DOCUMENT
 			-- Document section belongs to
 		do
 			Result := Current
@@ -37,7 +37,7 @@ feature -- Access
 	sections: ARRAYED_LIST [INI_SECTION]
 			-- Document sections
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is document empty?
 		do
 			Result := sections.is_empty and properties.is_empty
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Query
 
-	sections_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_SECTION] is
+	sections_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_SECTION]
 			-- Retrieves a list of sections by name
 		require
 			a_name_attached: a_name /= Void
@@ -78,7 +78,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	section_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_SECTION is
+	section_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_SECTION
 			-- Retrieves first section of name `a_name'
 		require
 			a_name_attached: a_name /= Void

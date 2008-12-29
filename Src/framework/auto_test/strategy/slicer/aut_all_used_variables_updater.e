@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Processor that keeps track of all variables used in a minimized slice"
 	copyright: "Copyright (c) 2008, Ilinca Ciupa and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system) is
+	make (a_system: like system)
 			-- Initialize.
 		require
 			a_system_attached: a_system /= Void
@@ -46,17 +46,17 @@ feature -- Access
 
 feature{AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			variables.wipe_out
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		local
 			l_type: TYPE_A
 			l_name: STRING
@@ -71,7 +71,7 @@ feature{AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		local
 			l_type: TYPE_A
 			l_name: STRING
@@ -87,7 +87,7 @@ feature{AUT_REQUEST} -- Processing
 			process_argument_list (a_request.argument_list)
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
 			l_rec: TUPLE [type: TYPE_A; name: STRING; a_check: BOOLEAN]
 		do
@@ -109,7 +109,7 @@ feature{AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		local
 			norm_response: AUT_NORMAL_RESPONSE
 			l_name: STRING
@@ -134,7 +134,7 @@ feature{AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	process_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Add variables in `an_argument_list' to `variables'.
 		require
 			an_argument_list_not_void: an_argument_list /= Void

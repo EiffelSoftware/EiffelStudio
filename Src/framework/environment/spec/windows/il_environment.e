@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about current .NET environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_version: STRING) is
+	make (a_version: STRING)
 			-- Create an instance of IL_ENVIRONMENT targeting a specific .NET version `a_version'.
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			version_set: version /= Void and (a_version /= Void implies version = a_version)
 		end
 
-	default_create is
+	default_create
 			-- Create an instance of IL_ENVIRONMENT targetting `default_version' of .NET runtime.
 		do
 			version := default_version
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	register_environment_variable is
+	register_environment_variable
 			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environement variable.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
@@ -56,13 +56,13 @@ feature -- Initialization
 
 feature -- Access
 
-	ise_dotnet_framework_env: STRING is "ISE_DOTNET_FRAMEWORK"
+	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
 			-- .NET framework environment variable
 
 	version: STRING
 			-- Currently selected version, if none `default_version'.
 
-	default_version: STRING is
+	default_version: STRING
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take the most recent version of the run-time.
 		local
@@ -82,13 +82,13 @@ feature -- Access
 			default_version_not_void: Result /= Void
 		end
 
-	is_dotnet_installed: BOOLEAN is
+	is_dotnet_installed: BOOLEAN
 			-- Is dotnet version `version' installed?
 		do
 			Result := installed_runtimes.has (version)
 		end
 
-	installed_runtimes: DS_ARRAYED_LIST [STRING] is
+	installed_runtimes: DS_ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		local
 			l_runtime_path: STRING
@@ -135,7 +135,7 @@ feature -- Access
 			installed_runtimes_not_void: Result /= Void
 		end
 
-	dotnet_framework_path: STRING is
+	dotnet_framework_path: STRING
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
@@ -149,7 +149,7 @@ feature -- Access
 			end
 		end
 
-	dotnet_framework_sdk_path: STRING is
+	dotnet_framework_sdk_path: STRING
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		local
@@ -174,7 +174,7 @@ feature -- Access
 			end
 		end
 
-	Dotnet_framework_sdk_bin_path: STRING is
+	Dotnet_framework_sdk_bin_path: STRING
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
 			l_path: STRING
@@ -190,19 +190,19 @@ feature -- Access
 
 feature -- Query
 
-	use_cordbg (a_string: STRING): BOOLEAN is
+	use_cordbg (a_string: STRING): BOOLEAN
 			-- Should Current use cordbg.exe?
 		do
 			Result := a_string /= Void and then a_string.is_equal ("cordbg")
 		end
 
-	use_dbgclr (a_string: STRING): BOOLEAN is
+	use_dbgclr (a_string: STRING): BOOLEAN
 			-- Should Current use DbgCLR.exe?
 		do
 			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
 
-	Dotnet_debugger_path (a_debug: STRING): STRING is
+	Dotnet_debugger_path (a_debug: STRING): STRING
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
@@ -222,7 +222,7 @@ feature -- Query
 			end
 		end
 
-	resource_compiler: STRING is
+	resource_compiler: STRING
 			-- Path to `resgen' tool from .NET Framework SDK.
 		local
 			l_path: STRING
@@ -235,7 +235,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	sdk_keys: HASH_TABLE [STRING, STRING] is
+	sdk_keys: HASH_TABLE [STRING, STRING]
 			-- List of keys associated to each known version of the .NET runtime.
 		once
 			create Result.make (2)
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			sdk_keys_not_void: Result /= Void
 		end
 
-	dotnet_runtime_path: STRING is
+	dotnet_runtime_path: STRING
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
@@ -273,24 +273,24 @@ feature {NONE} -- Implementation
 
 feature -- Constants
 
-	v1_0: STRING is "v1.0"
+	v1_0: STRING = "v1.0"
 			-- Version number of v1.0 of Microsoft .NET
 
-	v1_1: STRING is "v1.1"
+	v1_1: STRING = "v1.1"
 			-- Version number of v1.1 of Microsoft .NET
 
-	v2_0: STRING is "v2.0"
+	v2_0: STRING = "v2.0"
 			-- Version number of v2.0 of Microsoft .NET
 
 feature {NONE} -- Constants
 
-	runtime_root_key: STRING is "InstallRoot"
+	runtime_root_key: STRING = "InstallRoot"
 			-- Name of key specifiying where runtimes are installed.
 
 invariant
 	version_not_void: version /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

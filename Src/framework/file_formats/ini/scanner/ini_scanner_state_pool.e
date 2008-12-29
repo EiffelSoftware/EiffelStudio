@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A state scanner state pool for retrieving cached states by a corresponding TYPE [G]."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize scanner state pool.
 		local
 			l_pool: like state_pool
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	state (a_type: TYPE [INI_SCANNER_STATE]): INI_SCANNER_STATE is
+	state (a_type: TYPE [INI_SCANNER_STATE]): INI_SCANNER_STATE
 			-- Retrieve a scanner state for type `a_type'
 		require
 			a_type_attached: a_type /= Void
@@ -62,7 +62,7 @@ invariant
 	state_pool_attahed: state_pool /= Void
 	state_pool_compares_objects: state_pool.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation for a mouse interface which sends event via Vision2's EV_SCREEN"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Pressing
 
-	press_button (a_mouse_button: INTEGER) is
+	press_button (a_mouse_button: INTEGER)
 			-- Press `a_mouse_button'.
 		local
 			l_widget: EV_WIDGET
@@ -30,7 +30,7 @@ feature -- Pressing
 			screen.fake_pointer_button_press (a_mouse_button)
 		end
 
-	release_button (a_mouse_button: INTEGER) is
+	release_button (a_mouse_button: INTEGER)
 			-- Release `a_mouse_button'.
 		do
 			screen.fake_pointer_button_release (a_mouse_button)
@@ -38,7 +38,7 @@ feature -- Pressing
 
 feature -- Moving
 
-	move_to_absolute_position (an_x, a_y: INTEGER) is
+	move_to_absolute_position (an_x, a_y: INTEGER)
 			-- Move mouse to absolute coordinates `an_x' `a_y'.
 		do
 			screen.set_pointer_position (an_x, a_y)
@@ -46,13 +46,13 @@ feature -- Moving
 
 feature -- Scrolling
 
-	scroll_up is
+	scroll_up
 			-- Scroll mouse wheel up.
 		do
 			screen.fake_pointer_wheel_up
 		end
 
-	scroll_down is
+	scroll_down
 			-- Scroll mouse wheel down.
 		do
 			screen.fake_pointer_wheel_down
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

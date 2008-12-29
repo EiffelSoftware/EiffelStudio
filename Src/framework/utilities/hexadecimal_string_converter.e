@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -9,7 +9,7 @@ inherit
 
 feature {NONE}
 
-	hex_to_integer_32 (s: STRING): INTEGER_32 is
+	hex_to_integer_32 (s: STRING): INTEGER_32
 			-- Hexadecimal string `s' converted to INTEGER_32 value
 		require
 			s_not_void: s /= Void
@@ -40,7 +40,7 @@ feature {NONE}
 			end
 		end
 
-	hex_to_integer_64 (s: STRING): INTEGER_64 is
+	hex_to_integer_64 (s: STRING): INTEGER_64
 			-- Hexadecimal string `s' converted to INTEGER_64 value
 		require
 			s_not_void: s /= Void
@@ -71,7 +71,7 @@ feature {NONE}
 			end
 		end
 
-	hex_to_pointer (s: STRING): POINTER is
+	hex_to_pointer (s: STRING): POINTER
 			-- Hexadecimal string `s' converted to POINTER value
 		require
 			s_not_void: s /= Void
@@ -88,7 +88,7 @@ feature {NONE}
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

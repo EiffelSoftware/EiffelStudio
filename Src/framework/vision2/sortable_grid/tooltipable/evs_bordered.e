@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a bordered general tooltip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Setting
 
-	set_left_border (a_left_border: INTEGER) is
+	set_left_border (a_left_border: INTEGER)
 			-- Assign `a_left_border' to `left_border'.
 		require
 			a_left_border_non_negative: a_left_border >= 0
@@ -27,7 +27,7 @@ feature -- Setting
 			left_border_set: left_border = a_left_border
 		end
 
-	set_right_border (a_right_border: INTEGER) is
+	set_right_border (a_right_border: INTEGER)
 			-- Assign `a_right_border' to `right_border'.
 		require
 			a_right_border_non_negative: a_right_border >= 0
@@ -40,7 +40,7 @@ feature -- Setting
 			right_border_set: right_border = a_right_border
 		end
 
-	set_top_border (a_top_border: INTEGER) is
+	set_top_border (a_top_border: INTEGER)
 			-- Assign `a_top_border' to `top_border'.
 		require
 			a_top_border_non_negative: a_top_border >= 0
@@ -53,7 +53,7 @@ feature -- Setting
 			top_border_set: top_border = a_top_border
 		end
 
-	set_bottom_border (a_bottom_border: INTEGER) is
+	set_bottom_border (a_bottom_border: INTEGER)
 			-- Assign `a_bottom_border' to `bottom_border'.
 		require
 			a_bottom_border_non_negative: a_bottom_border >= 0
@@ -66,7 +66,7 @@ feature -- Setting
 			bottom_border_set: bottom_border = a_bottom_border
 		end
 
-	set_border_line_width (a_width: INTEGER) is
+	set_border_line_width (a_width: INTEGER)
 			-- Set `border_line_width' with `a_width'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -79,7 +79,7 @@ feature -- Setting
 			tooltip_border_line_width_set: border_line_width = a_width
 		end
 
-	set_border_line_color (a_color: EV_COLOR) is
+	set_border_line_color (a_color: EV_COLOR)
 			-- Set `border_line_color' with `a_color'.
 		require
 			a_color_attached: a_color /= Void
@@ -112,7 +112,7 @@ feature -- Access
 	bottom_border: INTEGER
 			-- Spacing between the contents of `Current' and the bottom edge of `Current' in pixels.
 
-	actual_border_line_color: EV_COLOR is
+	actual_border_line_color: EV_COLOR
 			-- Actual border line color used to draw border line
 		do
 			if border_line_color = Void then
@@ -126,7 +126,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	border_line_color_internal: EV_COLOR is
+	border_line_color_internal: EV_COLOR
 		local
 			l_colors: EV_STOCK_COLORS
 		once
@@ -145,7 +145,7 @@ invariant
 	bottom_border_non_negative: bottom_border >= 0
 	border_line_width_non_negative: border_line_width >= 0
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

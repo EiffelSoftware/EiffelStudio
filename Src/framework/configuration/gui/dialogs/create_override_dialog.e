@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Add an override cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: like factory) is
+	make (a_target: CONF_TARGET; a_factory: like factory)
 		-- Create.
 	do
 		Precursor {CREATE_CLUSTER_DIALOG} (a_target, a_factory)
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Actions
 
-	on_ok is
+	on_ok
 			-- Add group and close the dialog.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
@@ -62,7 +62,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

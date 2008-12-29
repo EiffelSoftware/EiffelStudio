@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Abstract ancestor to all responses received from the interpreter"
@@ -12,7 +12,7 @@ deferred class AUT_RESPONSE
 
 feature {NONE} -- Initialization
 
-	make (a_response_text: like raw_text) is
+	make (a_response_text: like raw_text)
 			-- Create new response.
 		require
 			a_response_text_not_void: a_response_text /= Void
@@ -24,17 +24,17 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_bad: BOOLEAN is
+	is_bad: BOOLEAN
 			-- Is response not well formed syntacticly?
 		deferred
 		end
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Is response an error message?
 		deferred
 		end
 
-	is_normal: BOOLEAN is
+	is_normal: BOOLEAN
 			-- Is response a normal response?
 		do
 			Result := not is_bad and not is_error
@@ -42,14 +42,14 @@ feature -- Status report
 			definition: Result = (not is_bad and not is_error)
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Does response contain an exception from testee feature?
 		do
 		end
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Response as received in unparsed form
 		do
 			Result := raw_text
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: AUT_RESPONSE_VISITOR) is
+	process (a_visitor: AUT_RESPONSE_VISITOR)
 			-- Process `Current' using `a_visitor'.
 		require
 			a_visitor_attached: a_visitor /= Void

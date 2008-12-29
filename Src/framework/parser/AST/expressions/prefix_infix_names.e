@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal names for infix and prefix functions, Bench version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Queries
 
-	is_mangled_name (name: STRING): BOOLEAN is
+	is_mangled_name (name: STRING): BOOLEAN
 			-- Is `name' a mangled name that does not match an original name?
 			-- (Does it need special decoding? Cannot it be used as an identifier?)
 		require
@@ -24,7 +24,7 @@ feature -- Queries
 			Result := name.has ('"')
 		end
 
-	is_mangled_alias_name (alias_name: STRING): BOOLEAN is
+	is_mangled_alias_name (alias_name: STRING): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
 		require
 			alias_name_not_void: alias_name /= Void
@@ -47,7 +47,7 @@ feature -- Queries
 			end
 		end
 
-	is_mangled_infix (name: STRING): BOOLEAN is
+	is_mangled_infix (name: STRING): BOOLEAN
 			-- Does `name' represent an internal name of an infix feature?
 		require
 			name_not_void: name /= Void
@@ -57,7 +57,7 @@ feature -- Queries
 			end
 		end
 
-	is_mangled_prefix (name: STRING): BOOLEAN is
+	is_mangled_prefix (name: STRING): BOOLEAN
 			-- Does `name' represent an internal name of a prefix feature?
 		require
 			name_not_void: name /= Void
@@ -69,7 +69,7 @@ feature -- Queries
 
 feature -- Basic operations
 
-	prefix_feature_name_with_symbol (symbol: STRING): STRING is
+	prefix_feature_name_with_symbol (symbol: STRING): STRING
 			-- Internal name corresponding to prefix `symbol'.
 		require
 			symbol_not_void: symbol /= Void
@@ -85,7 +85,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	infix_feature_name_with_symbol (symbol: STRING): STRING is
+	infix_feature_name_with_symbol (symbol: STRING): STRING
 			-- Internal name corresponding to prefix `symbol'
 		require
 			symbol_not_void: symbol /= Void
@@ -101,7 +101,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_infix (op: STRING): STRING is
+	extract_symbol_from_infix (op: STRING): STRING
 			-- Get the symbol part from infix qualified operator `op'.
 		require
 			op_not_void: op /= Void
@@ -111,7 +111,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_prefix (op: STRING): STRING is
+	extract_symbol_from_prefix (op: STRING): STRING
 			-- Get the symbol part from prefix qualified operator `op'.
 		require
 			op_not_void: op /= Void
@@ -121,7 +121,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	extract_alias_name (op: STRING): STRING is
+	extract_alias_name (op: STRING): STRING
 			-- Extract symbol part from alias name encoded as any of the following:
 			--   prefix "..."
 			--   infix "..."
@@ -150,13 +150,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	syntax_checker: EIFFEL_SYNTAX_CHECKER is
+	syntax_checker: EIFFEL_SYNTAX_CHECKER
 			-- Checker for feature alias names
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

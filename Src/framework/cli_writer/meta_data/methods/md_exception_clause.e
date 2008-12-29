@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an exception clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	frozen make is
+	frozen make
 			-- Set all fields to "undefined" state.
 		do
 			reset
@@ -27,7 +27,7 @@ feature {NONE} -- Creation
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Restore default values.
 		do
 			try_offset := -1
@@ -44,7 +44,7 @@ feature -- Reset
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is current a fully described exception clause?
 		do
 			Result :=
@@ -57,7 +57,7 @@ feature -- Status report
 			valid_handler_length: Result implies handler_length >= 0
 		end
 	
-	is_fat: BOOLEAN is
+	is_fat: BOOLEAN
 			-- Has this exception clause to be stored using fat form?
 		require
 			is_defined: is_defined
@@ -67,7 +67,7 @@ feature -- Status report
 				handler_offset > 65535 or else handler_length >= 256
 		end
 	
-	flags: INTEGER_16 is
+	flags: INTEGER_16
 			-- Flags of exception clause
 		deferred
 		end
@@ -88,7 +88,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	class_token_or_filter_offset: INTEGER is
+	class_token_or_filter_offset: INTEGER
 			-- Value of `class_token' or `filter_offset' fields depending on type of exception clause
 			-- (0 by default)
 		do
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 
 feature -- Modification
 
-	set_try_offset (offset: like try_offset) is
+	set_try_offset (offset: like try_offset)
 			-- Set `try_offset' to `offset'.
 		require
 			valid_offset: offset >= 0
@@ -106,7 +106,7 @@ feature -- Modification
 			try_offset_set: try_offset = offset
 		end
 
-	set_try_length (length: like try_length) is
+	set_try_length (length: like try_length)
 			-- Set `try_length' to `length'.
 		require
 			valid_length: length >= 0
@@ -116,7 +116,7 @@ feature -- Modification
 			try_length_set: try_length = length
 		end
 
-	set_try_end (offset: like try_offset) is
+	set_try_end (offset: like try_offset)
 			-- Set `try_length' to `offset - try_offset'.
 			-- Convenience routine that can be used instead of `set_try_length'.
 		require
@@ -128,7 +128,7 @@ feature -- Modification
 			try_length_set: try_length = offset - try_offset
 		end
 
-	set_handler_offset (offset: like handler_offset) is
+	set_handler_offset (offset: like handler_offset)
 			-- Set `handler_offset' to `offset'.
 		require
 			valid_offset: offset >= 0
@@ -138,7 +138,7 @@ feature -- Modification
 			handler_offset_set: handler_offset = offset
 		end
 
-	set_handler_length (length: like handler_length) is
+	set_handler_length (length: like handler_length)
 			-- Set `handler_length' to `length'.
 		require
 			valid_length: length >= 0
@@ -148,7 +148,7 @@ feature -- Modification
 			handler_length_set: handler_length = length
 		end
 
-	set_handler_end (offset: like handler_offset) is
+	set_handler_end (offset: like handler_offset)
 			-- Set `handler_length' to `offset - handler_offset'.
 			-- Convenience routine that can be used instead of `set_handler_length'.
 		require
@@ -162,7 +162,7 @@ feature -- Modification
 
 feature -- Measurement
 
-	count (is_fat_form: BOOLEAN): INTEGER is
+	count (is_fat_form: BOOLEAN): INTEGER
 			-- Number of bytes when stored in PE file in fat form or small form depending on `is_fat_form'
 		require
 			is_defined: is_defined
@@ -179,7 +179,7 @@ feature -- Measurement
 
 feature -- Saving
 
-	write_to_stream (is_fat_form: BOOLEAN; m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (is_fat_form: BOOLEAN; m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos' using fat form or small form depending on `is_fat_form'.
 		require
 			is_defined: is_defined
@@ -206,7 +206,7 @@ feature -- Saving
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

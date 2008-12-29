@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Styles needed to draw tooltip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	tooltip_background_color: EV_COLOR is
+	tooltip_background_color: EV_COLOR
 			-- Background color for tooltips		
 		local
 			l_retriever: EVS_THEME_DRAWER_RETRIEVER
@@ -26,7 +26,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	stock_colors: WEL_COLOR_CONSTANTS is
+	stock_colors: WEL_COLOR_CONSTANTS
 			-- Stock colors
 		once
 			create Result
@@ -34,7 +34,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

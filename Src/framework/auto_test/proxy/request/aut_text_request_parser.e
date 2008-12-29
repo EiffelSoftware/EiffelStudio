@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parser for requests stored in text form"
 	author: ""
 	date: "$Date$"
@@ -18,7 +18,7 @@ inherit
 	AUT_SHARED_INTERPRETER_INFO
 
 feature{NONE} -- Initialization
-	make is
+	make
 			-- Create new parser.
 		do
 			create last_string.make (200)
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	set_input (an_input: like input) is
+	set_input (an_input: like input)
 			-- Make `an_input' the new `input'.
 		require
 			an_input_not_void: an_input /= Void
@@ -54,7 +54,7 @@ feature -- Status Setting
 			no_error: not has_error
 		end
 
-	end_of_input: BOOLEAN is
+	end_of_input: BOOLEAN
 			-- Has parsing reached end of input?
 		require
 			input: input /= Void
@@ -66,21 +66,21 @@ feature -- Status Setting
 
 feature -- Lexical validity
 
-	is_valid_identifier (a_name: STRING): BOOLEAN is
+	is_valid_identifier (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid identifier?
 			-- TODO: Implement more strict rules ([a-zA-Z][a-zA-Z0-9_]*)
 		do
 			Result := a_name.count > 0
 		end
 
-	is_valid_entity_name (a_name: STRING): BOOLEAN is
+	is_valid_entity_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid variable/feature name?
 			-- TODO: Implement more strict rules ([a-zA-Z][a-zA-Z0-9_]*) minus keywords
 		do
 			Result := a_name.count > 0
 		end
 
-	is_valid_type_name (a_name: STRING): BOOLEAN is
+	is_valid_type_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid type name?
 			-- TODO: Implement more strict rules:
 				-- type_name 		:= 	class_name 	| 	class_name gen_list
@@ -90,7 +90,7 @@ feature -- Lexical validity
 			Result := a_name.count > 0
 		end
 
-	is_input_ready: BOOLEAN is
+	is_input_ready: BOOLEAN
 			-- Is input ready to be parsed?
 		do
 			Result := input /= Void
@@ -100,7 +100,7 @@ feature -- Lexical validity
 
 feature -- Parsing
 
-	parse is
+	parse
 			-- Parse input and call corresponing handler routines (`report_*').
 		require
 			input_ready: input /= Void
@@ -171,7 +171,7 @@ feature -- Parsing
 
 feature {NONE} -- Handlers
 
-	report_create_request (a_type_name: STRING; a_target_variable_name: STRING; a_creation_procedure_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+	report_create_request (a_type_name: STRING; a_target_variable_name: STRING; a_creation_procedure_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
 			-- Report "create" request. Note that a void `a_creation_procedure_name'
 			-- represents the default creation procedure.
 		require
@@ -184,7 +184,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_invoke_request (a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+	report_invoke_request (a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
 			-- Report an "invoke" request.
 		require
 			a_target_variable_name_not_void: a_target_variable_name /= Void
@@ -194,7 +194,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_invoke_and_assign_request (a_left_hand_variable_name: STRING; a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+	report_invoke_and_assign_request (a_left_hand_variable_name: STRING; a_target_variable_name: STRING; a_feature_name: STRING; an_argument_list: ERL_LIST [ITP_EXPRESSION])
 			-- Report an "invoke_and_assign" request.
 		require
 			a_left_hand_variable_name_not_void: a_left_hand_variable_name /= Void
@@ -206,12 +206,12 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_execute_request is
+	report_execute_request
 			-- Report execute request.
 		deferred
 		end
 
-	report_assign_request (a_left_hand_variable_name: STRING; an_expression: ITP_EXPRESSION) is
+	report_assign_request (a_left_hand_variable_name: STRING; an_expression: ITP_EXPRESSION)
 			-- Report an "assign" request.
 		require
 			a_left_hand_variable_name_not_void: a_left_hand_variable_name /= Void
@@ -220,7 +220,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_type_request (a_variable_name: STRING) is
+	report_type_request (a_variable_name: STRING)
 			-- Report type of object assigned to variable named `a_variable_name'.
 		require
 			a_variable_name_not_void: a_variable_name /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Handlers
 		deferred
 		end
 
-	report_quit_request is
+	report_quit_request
 			-- Report a "quit" request.
 		deferred
 		end
@@ -240,7 +240,7 @@ feature {NONE} -- Handlers
 
 feature -- Error reporting
 
-	report_error (a_reason: STRING) is
+	report_error (a_reason: STRING)
 			-- Report error `a_reason'.
 		require
 			a_reason_not_void: a_reason /= Void
@@ -250,7 +250,7 @@ feature -- Error reporting
 			has_error: has_error
 		end
 
-	report_and_set_error_at_position (a_reason: STRING; a_position: INTEGER) is
+	report_and_set_error_at_position (a_reason: STRING; a_position: INTEGER)
 			-- Report error `a_reason' at position `a_position' and set `has_error'.
 		require
 			a_reason_not_void: a_reason /= Void
@@ -264,7 +264,7 @@ feature -- Error reporting
 
 feature {NONE} -- Parsing
 
-	parse_create_request is
+	parse_create_request
 			-- Parse "create" request and call `report_create_request' or `report_and_set_error'.
 		require
 			input: input /= Void
@@ -320,7 +320,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_invoke_or_invoke_and_assign_or_assign_request is
+	parse_invoke_or_invoke_and_assign_or_assign_request
 			-- Parse "invoke", "invoke_and_assign", "assign" request and call
 			-- corresponding `report_' routines.
 		require
@@ -367,7 +367,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_invoke_request (a_target_variable_name: STRING) is
+	parse_invoke_request (a_target_variable_name: STRING)
 			-- Parse "invoke" request with the target variable name
 			-- already parsed and being `a_target_variable_name'.
 		require
@@ -394,7 +394,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_invoke_and_assign_or_assign_request (a_left_hand_variable_name: STRING) is
+	parse_invoke_and_assign_or_assign_request (a_left_hand_variable_name: STRING)
 			-- Parse "invoke_and_assign" request with the left hand side variable variable name
 			-- already parsed and being `a_left_hand_variable_name'.
 		require
@@ -449,7 +449,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_type_name_in_braces is
+	parse_type_name_in_braces
 			-- Parse type name in braces (e.g.: "{STRING}") and
 			-- make resulting type name available via `last_string' or
 			-- call any of the `report_and_set_error_*' routines on error.
@@ -491,7 +491,7 @@ feature {NONE} -- Parsing
 			error_or_type_name: not has_error implies (is_valid_type_name (last_string))
 		end
 
-	parse_optional_argument_list_in_parethesis is
+	parse_optional_argument_list_in_parethesis
 			-- Parse optional argument list in parenthesis (e.g.: "(1, foo, True)") and
 			-- make resulting type name available via `last_argument_list' or
 			-- call any of the `report_and_set_error_*' routines on error.
@@ -539,7 +539,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_expression is
+	parse_expression
 			-- Parse expression (e.g: "{INTEGER_8} 7") and
 			-- make resulting expression available via `last_expresson' or call
 			-- any of the `report_and_set_error_*' routines on error.
@@ -690,7 +690,7 @@ feature {NONE} -- Parsing
 			error_or_type_name: not has_error implies last_expression /= Void
 		end
 
-	skip_whitespace is
+	skip_whitespace
 			-- Move current parsing position to next non whitespace character.
 		require
 			input: input /= Void
@@ -707,7 +707,7 @@ feature {NONE} -- Parsing
 			no_error: not has_error
 		end
 
-	parse_integer is
+	parse_integer
 			-- Parse next integer ([1-9][0-9]*) and make it available via `last_string' or
 			-- set error if no integer could be parsed.
 		require
@@ -728,7 +728,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	parse_identifier is
+	parse_identifier
 			-- Parse next identifier ([A-Za-z][A-Za-z_0-9]*) and make it available via `last_string' or
 			-- set error if no identifier could be parsed.
 		require
@@ -764,7 +764,7 @@ feature {NONE} -- Parsing
 			error_or_type_name: not has_error implies is_valid_identifier (last_string)
 		end
 
-	parse_constant_or_variable is
+	parse_constant_or_variable
 			-- Read next token. Make result available via `last_string'
 			-- and `last_token'. Set `has_error' to `True' if an
 			-- error occurs.
@@ -912,7 +912,7 @@ feature {NONE} -- Parsing
 			valid_integer: has_error or (last_token = integer_token_code implies last_string.is_integer_64 or last_string.is_natural_64)
 		end
 
-	parse_character is
+	parse_character
 			-- Parse next token and try to interpret it as character. Make it available via the first item of `last_string'.
 			-- Set `has_error' to `True' if an error occurs.
 		require
@@ -1014,31 +1014,31 @@ feature {NONE} -- Parsing
 	last_token: INTEGER
 			-- Type of last token; See `*_token_code' for possible values.
 
-	character_token_code: INTEGER is unique
+	character_token_code: INTEGER = unique
 			-- Token code for characters
 
-	double_token_code: INTEGER is unique
+	double_token_code: INTEGER = unique
 			-- Token code for doubles
 
-	identifier_token_code: INTEGER is unique
+	identifier_token_code: INTEGER = unique
 			-- Token code for indentifiers
 
-	integer_token_code: INTEGER is unique
+	integer_token_code: INTEGER = unique
 			-- Token code for integers
 
-	false_token_code: INTEGER is unique
+	false_token_code: INTEGER = unique
 			-- Token code for false
 
-	true_token_code: INTEGER is unique
+	true_token_code: INTEGER = unique
 			-- Token code for true
 
-	void_token_code: INTEGER is unique
+	void_token_code: INTEGER = unique
 			-- Token code for void
 
-	default_pointer_token_code: INTEGER is unique
+	default_pointer_token_code: INTEGER = unique
 			-- Token code for void
 
-	parse_string (a_string: STRING) is
+	parse_string (a_string: STRING)
 			-- Read `a_string.count' characters from `input'.
 			-- Set `has_error' to `True' if the read string and
 			-- `a_string' do not match or end of input is reached
@@ -1068,7 +1068,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	matches (a_string: STRING): BOOLEAN is
+	matches (a_string: STRING): BOOLEAN
 			-- `True' only if the next characters in the input match
 			-- `a_string' followed by a non letter or digit or end of intput. Case is irrelevant.
 		require
@@ -1106,7 +1106,7 @@ feature {NONE} -- Implementation
 
 	last_argument_list: ERL_LIST [ITP_EXPRESSION]
 
-	forth is
+	forth
 			-- Move position one character forth
 		require
 			input: input /= Void
@@ -1117,7 +1117,7 @@ feature {NONE} -- Implementation
 			definition: position = old position + 1
 		end
 
-	item: CHARACTER is
+	item: CHARACTER
 			-- Character at current position
 		require
 			input: input /= Void
@@ -1128,7 +1128,7 @@ feature {NONE} -- Implementation
 			definition: Result = input.item (position)
 		end
 
-	substring (a_start_index, an_end_index: INTEGER): STRING is
+	substring (a_start_index, an_end_index: INTEGER): STRING
 			-- Substring of index from `a_start_index' to `an_end_index'
 		require
 			input: input /= Void
@@ -1138,7 +1138,7 @@ feature {NONE} -- Implementation
 			Result := input.substring (a_start_index, an_end_index)
 		end
 
-	is_valid_position (an_index: INTEGER): BOOLEAN is
+	is_valid_position (an_index: INTEGER): BOOLEAN
 			-- Is `an_index' a valid position in `index'?
 		require
 			input: input /= Void
@@ -1146,7 +1146,7 @@ feature {NONE} -- Implementation
 			Result := an_index > 0 and an_index <= input.count
 		end
 
-	is_letter_number_underscore (a_char: CHARACTER): BOOLEAN is
+	is_letter_number_underscore (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' a letter, a number or an underscore ('_') character?
 		do
 			Result := True
@@ -1160,7 +1160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_number (a_char: CHARACTER): BOOLEAN is
+	is_number (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' a a number character?
 		do
 			Result := True
@@ -1171,7 +1171,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_letter (a_char: CHARACTER): BOOLEAN is
+	is_letter (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' a letter character?
 		do
 			Result := True
@@ -1183,7 +1183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_whitespace (a_char: CHARACTER): BOOLEAN is
+	is_whitespace (a_char: CHARACTER): BOOLEAN
 			-- Is `a_char' a whitespace character?
 		do
 			Result := True
@@ -1195,34 +1195,34 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_keyword: STRING is "create"
+	create_keyword: STRING = "create"
 			-- 'create' keyword
 
-	quit_keyword: STRING is "quit"
+	quit_keyword: STRING = "quit"
 			-- 'quit' keyword
 
-	type_keyword: STRING is "type"
+	type_keyword: STRING = "type"
 			-- 'type' keyword
 
-	execute_keyword: STRING is "execute"
+	execute_keyword: STRING = "execute"
 		-- 'execute' keyword
 
 	default_pointer_keyword: STRING = "default_pointer"
 			-- 'default_pointer' keyword
 
-	itp_default_pointer_keyword: STRING is "itp_default_pointer"
+	itp_default_pointer_keyword: STRING = "itp_default_pointer"
 			-- 'itp_default_pointer' keyword
 
-	void_keyword: STRING is "void"
+	void_keyword: STRING = "void"
 			-- 'void' keyword
 
-	true_keyword: STRING is "true"
+	true_keyword: STRING = "true"
 			-- 'true' keyword
 
-	false_keyword: STRING is "false"
+	false_keyword: STRING = "false"
 			-- 'false' keyword
 
-	comment_prefix: STRING is "--"
+	comment_prefix: STRING = "--"
 			-- Line comment prefix
 
 invariant

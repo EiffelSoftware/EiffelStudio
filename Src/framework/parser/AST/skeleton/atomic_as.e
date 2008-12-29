@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Atomic node: strings, integers, reals etc. %
 				%Version for Bench version."
 	legal: "See notice at end of class."
@@ -13,13 +13,13 @@ inherit
 
 feature -- Properties
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN
 			-- Is the terminal a unique constant ?
 		do
 			-- Do nothing
 		end
 
-	is_id: BOOLEAN is
+	is_id: BOOLEAN
 			-- Is the atomic an id value ?
 		do
 			-- Do nothing
@@ -27,11 +27,11 @@ feature -- Properties
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

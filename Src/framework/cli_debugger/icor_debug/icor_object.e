@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents abstraction of ICorDebug.. classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,14 +34,14 @@ inherit
 
 feature {ICOR_EXPORTER} -- Initialisation
 
-	make_by_pointer (an_item: POINTER) is
+	make_by_pointer (an_item: POINTER)
 			-- Make Current by pointer.
 		do
 			Precursor (an_item)
 			init_icor
 		end
 
-	init_icor is
+	init_icor
 			-- Initialize special field
 			-- to be redefined
 		do
@@ -49,7 +49,7 @@ feature {ICOR_EXPORTER} -- Initialisation
 
 feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
 
-	update_item (p: POINTER) is
+	update_item (p: POINTER)
 		require
 			p_valid: p /= Default_pointer
 			item_previously_removed: item = Default_pointer
@@ -61,7 +61,7 @@ feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
 
 feature -- dispose
 
-	clean_on_dispose is
+	clean_on_dispose
 			-- Call this, to clean the object as if it is about to be disposed
 		do
 			dispose_impl (False)
@@ -69,7 +69,7 @@ feature -- dispose
 
 feature {NONE}
 
-	dispose_impl (on_dispose: BOOLEAN) is
+	dispose_impl (on_dispose: BOOLEAN)
 			-- Implementation of cleaning for the current object
 			-- if on_dispose , be careful to have safe GC code
 			-- and display related output
@@ -102,13 +102,13 @@ feature {NONE}
 			retry
 		end
 
-	dispose is
+	dispose
 			-- Free `item'.
 		do
 			dispose_impl (True)
 		end
 
-	clean_on_dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER; a_nb_ref: INTEGER) is
+	clean_on_dispose_debug_output (type: INTEGER; a_ptr: POINTER; an_obj: POINTER; a_nb_ref: INTEGER)
 			-- Safe display while disposing. If `type' is `1' then
 			-- we are entering `dispose', else we are leaving it.
 			-- `a_ptr' is the item being freed in current object `an_obj'.
@@ -135,7 +135,7 @@ feature {NONE}
 
 feature -- Ref management
 
-	add_ref is
+	add_ref
 			-- Call to the AddRef feature
 		local
 			l_nb_ref: INTEGER
@@ -151,7 +151,7 @@ feature -- Ref management
 			end
 		end
 
-	release is
+	release
 			-- Call to the Release feature
 		local
 			l_nb_ref: INTEGER
@@ -171,7 +171,7 @@ feature -- Ref management
 
 feature -- Equality
 
-	is_equal_as_icor_object (other: like Current): BOOLEAN is
+	is_equal_as_icor_object (other: like Current): BOOLEAN
 			-- Comparison of pointer
 		require
 			other_not_void: other /= Void
@@ -184,7 +184,7 @@ feature -- Equality
 
 feature {ICOR_EXPORTER} -- Access
 
-	check_last_call_succeed: BOOLEAN is
+	check_last_call_succeed: BOOLEAN
 			-- Check last call
 		do
 			Result := last_call_success = 0
@@ -195,7 +195,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	out: STRING is
+	out: STRING
 			-- Output value
 		do
 			Result := generating_type + "[" + item.out + "]"
@@ -203,12 +203,12 @@ feature {ICOR_EXPORTER} -- Access
 
 feature -- Access status
 
-	item_not_null: BOOLEAN is
+	item_not_null: BOOLEAN
 		do
 			Result := item /= Default_pointer
 		end
 
-	last_call_succeed: BOOLEAN is
+	last_call_succeed: BOOLEAN
 			-- Is last call a success ?
 		do
 			Result := last_call_success = 0
@@ -216,13 +216,13 @@ feature -- Access status
 				--| HRESULT .. < 0 if error ...
 		end
 
-	last_error_code: INTEGER is
+	last_error_code: INTEGER
 			-- Convert `last_call_success' to hex and keep the last word
 		do
 			Result := Api_error_code_formatter.error_code_to_id (last_call_success)
 		end
 
-	last_error_code_id: STRING is
+	last_error_code_id: STRING
 			-- Convert `last_call_success' to hex and keep the last word
 		do
 			Result := last_error_code.to_hex_string
@@ -231,12 +231,12 @@ feature -- Access status
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	Api_error_code_formatter: ICOR_DEBUG_API_ERROR_CODE_FORMATTER is
+	Api_error_code_formatter: ICOR_DEBUG_API_ERROR_CODE_FORMATTER
 		once
 			create Result
 		end
 
-	frozen cwin_close_handle (a_hdl: POINTER): INTEGER is
+	frozen cwin_close_handle (a_hdl: POINTER): INTEGER
 				-- CloseHandle (HANDLE)
 		external
 			"[
@@ -249,7 +249,7 @@ feature {ICOR_EXPORTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	sizeof_WCHAR: INTEGER is
+	sizeof_WCHAR: INTEGER
 			-- Number of bytes in a value of type `WCHAR'
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			"sizeof(WCHAR)"
 		end
 
-	sizeof_CORDB_ADDRESS: INTEGER is
+	sizeof_CORDB_ADDRESS: INTEGER
 			-- Number of bytes in a value of type `CORDB_ADDRESS'
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			"sizeof(CORDB_ADDRESS)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

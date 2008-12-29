@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation a field signature used for defining a field."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset content.
 		do
 			internal_put ({MD_SIGNATURE_CONSTANTS}.field_sig, 0)
@@ -40,7 +40,7 @@ feature -- Reset
 			current_position_set: current_position = 1
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

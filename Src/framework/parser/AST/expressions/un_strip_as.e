@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST represenation of a unary `strip' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS) is
+	initialize (i: like id_list; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS)
 			-- Create a new UN_STRIP AST node.
 		require
 			i_not_void: i /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_un_strip_as (Current)
@@ -58,7 +58,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and strip_keyword_index /= 0 then
 				Result := strip_keyword (a_list)
@@ -67,7 +67,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rparan_symbol_index /= 0 then
 				Result := rparan_symbol (a_list)
@@ -76,7 +76,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equal (id_list, other.id_list)
@@ -103,7 +103,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -116,7 +116,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -132,7 +132,7 @@ feature -- Roundtrip
 invariant
 	id_list_not_void: id_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of the content of a standard %
 				  %feature. Version for Bench."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		l: like internal_locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
 		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword;
-		ot_locals: like object_test_locals) is
+		ot_locals: like object_test_locals)
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_routine_as (Current)
@@ -77,7 +77,7 @@ feature -- Roundtrip
 	obsolete_keyword_index, rescue_keyword_index: INTEGER
 			-- Index of keyword "obsolete" and "rescue" associated with this class
 
-	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "obsolete" associated with this class
 		require
 			a_list_not_void: a_list /= Void
@@ -117,7 +117,7 @@ feature -- Attributes
 	precondition: REQUIRE_AS
 			-- Precondition list
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS] is
+	locals: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Local declarations
 		do
 			if
@@ -156,7 +156,7 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and obsolete_keyword_index /= 0 then
 				Result := obsolete_keyword (a_list)
@@ -183,14 +183,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Properties
 
-	is_require_else: BOOLEAN is
+	is_require_else: BOOLEAN
 			-- Is the precondition block of the content preceeded by
 			-- `require else' ?
 			--|Note: It is valid to not include a precondition in
@@ -199,7 +199,7 @@ feature -- Properties
 			Result := precondition = Void or else precondition.is_else
 		end
 
-	is_ensure_then: BOOLEAN is
+	is_ensure_then: BOOLEAN
 			-- Is the postcondition block of the content preceeded by
 			-- `ensure then' ?
 			--|Note: It is valid to not include a postcondition in
@@ -208,7 +208,7 @@ feature -- Properties
 			Result := postcondition = Void or else postcondition.is_then
 		end
 
-	has_precondition: BOOLEAN is
+	has_precondition: BOOLEAN
 			-- Has the routine content a preconditions ?
 		do
 			Result := not (	precondition = Void
@@ -216,7 +216,7 @@ feature -- Properties
 							precondition.assertions = Void)
 		end
 
-	has_postcondition: BOOLEAN is
+	has_postcondition: BOOLEAN
 			-- Has the routine content postconditions ?
 		do
 			Result := not (	postcondition = Void
@@ -224,7 +224,7 @@ feature -- Properties
 							postcondition.assertions = Void)
 		end
 
-	has_rescue: BOOLEAN is
+	has_rescue: BOOLEAN
 			-- Has the routine a non-empty rescue clause ?
 		do
 			Result := (rescue_clause /= Void) and then
@@ -237,25 +237,25 @@ feature -- Properties
 			Result := routine_body.is_attribute
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is the routine body a deferred one ?
 		do
 			Result := routine_body.is_deferred
 		end
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 			-- Is the routine body a once one ?
 		do
 			Result := routine_body.is_once
 		end
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is the routine body an external one ?
 		do
 			Result := routine_body.is_external
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the routine body a built_in one?
 		do
 			Result := routine_body.is_built_in
@@ -267,13 +267,13 @@ feature -- Access
 			-- Number of stop points for AST (inherited pre/postconditions
 			-- are taken into account)
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does this routine has instruction `i'?
 		do
 			Result := routine_body.has_instruction (i)
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this routine.
 		do
 			Result := routine_body.index_of_instruction (i)
@@ -281,13 +281,13 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := is_body_equiv (other) and is_assertion_equiv (other)
 		end
 
-	is_body_equiv (other: like Current): BOOLEAN is
+	is_body_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
 		do
 			Result := equivalent (routine_body, other.routine_body) and then
@@ -296,7 +296,7 @@ feature -- Comparison
 				equivalent (obsolete_message, other.obsolete_message)
 		end
 
-	is_assertion_equiv (other: like Current): BOOLEAN is
+	is_assertion_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
 		require else
 			valid_other: other /= Void
@@ -307,26 +307,26 @@ feature -- Comparison
 
 feature -- test for empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 		do
 			Result := (routine_body = Void) or else (routine_body.is_empty)
 		end
 
 feature {COMPILER_EXPORTER} -- Element Change
 
-	set_locals (a_locals: like internal_locals) is
+	set_locals (a_locals: like internal_locals)
 			-- Set locals with `a_locals'.
 		do
 			internal_locals := a_locals
 		end
 
-	set_rescue_clause (a_rescue_clause: like rescue_clause) is
+	set_rescue_clause (a_rescue_clause: like rescue_clause)
 			-- Set rescue_clause with `a_rescue_clause'.
 		do
 			rescue_clause := a_rescue_clause
 		end
 
-	set_routine_body (a_routine_body: like routine_body) is
+	set_routine_body (a_routine_body: like routine_body)
 			-- Set routine_body with `a_routine_body'.
 		do
 			routine_body := a_routine_body
@@ -334,7 +334,7 @@ feature {COMPILER_EXPORTER} -- Element Change
 
 feature {AST_FEATURE_CHECKER_EXPORT} -- Setting
 
-	set_number_of_breakpoint_slots (nr: INTEGER) is
+	set_number_of_breakpoint_slots (nr: INTEGER)
 			-- Set `number_of_breakpoint_slots' to `nr'
 		do
 			number_of_breakpoint_slots := nr
@@ -344,7 +344,7 @@ feature {AST_FEATURE_CHECKER_EXPORT} -- Setting
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name_id: INTEGER) is
+	create_default_rescue (def_resc_name_id: INTEGER)
 		local
 			def_resc_id   : ID_AS
 			def_resc_call : ACCESS_ID_AS
@@ -366,7 +366,7 @@ invariant
 	routine_body_not_void: routine_body /= Void
 --	end_keyword_not_void: end_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

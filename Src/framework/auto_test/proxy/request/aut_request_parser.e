@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Request language parser for line based Eiffel like interpreter language.
 		]"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_error_handler: like error_handler) is
+	make (a_system: like system; an_error_handler: like error_handler)
 			-- Create new parses for requests that deal in `system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_line_number (a_line_number: like line_number) is
+	set_line_number (a_line_number: like line_number)
 			-- Set `line_number' to `a_line_number'.
 		require
 			a_line_number_positive: a_line_number > 0
@@ -71,7 +71,7 @@ feature -- Setting
 			line_number_set: line_number = a_line_number
 		end
 
-	set_filename (a_filename: like filename) is
+	set_filename (a_filename: like filename)
 			-- Set `filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -81,7 +81,7 @@ feature -- Setting
 			filname_set: filename = a_filename
 		end
 
-	unset_filename is
+	unset_filename
 			-- Set `filename' to `Void'.
 		do
 			filename := Void
@@ -89,7 +89,7 @@ feature -- Setting
 			filename_void: filename = Void
 		end
 
-	clear_last_request is
+	clear_last_request
 			-- Set `last_request' to Void.
 		do
 			last_request := Void
@@ -102,7 +102,7 @@ feature {NONE} -- Handlers
 	report_create_request (a_type_name: STRING;
 							a_target_variable_name: STRING;
 							a_creation_procedure_name: STRING;
-							an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+							an_argument_list: ERL_LIST [ITP_EXPRESSION])
 		local
 			receiver: ITP_VARIABLE
 			type: TYPE_A
@@ -134,7 +134,7 @@ feature {NONE} -- Handlers
 
 	report_invoke_request (a_target_variable_name: STRING;
 							a_feature_name: STRING;
-							an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+							an_argument_list: ERL_LIST [ITP_EXPRESSION])
 		local
 			target: ITP_VARIABLE
 			argument_list: DS_LINEAR [ITP_EXPRESSION]
@@ -147,7 +147,7 @@ feature {NONE} -- Handlers
 	report_invoke_and_assign_request (a_left_hand_variable_name: STRING;
 										a_target_variable_name: STRING;
 										a_feature_name: STRING;
-										an_argument_list: ERL_LIST [ITP_EXPRESSION]) is
+										an_argument_list: ERL_LIST [ITP_EXPRESSION])
 		local
 			receiver: ITP_VARIABLE
 			target: ITP_VARIABLE
@@ -162,7 +162,7 @@ feature {NONE} -- Handlers
 		end
 
 	report_assign_request (a_left_hand_variable_name: STRING;
-							an_expression: ITP_EXPRESSION) is
+							an_expression: ITP_EXPRESSION)
 		local
 			receiver: ITP_VARIABLE
 		do
@@ -171,7 +171,7 @@ feature {NONE} -- Handlers
 																		an_expression)
 		end
 
-	report_type_request (a_variable_name: STRING) is
+	report_type_request (a_variable_name: STRING)
 		local
 			variable: ITP_VARIABLE
 		do
@@ -179,7 +179,7 @@ feature {NONE} -- Handlers
 			create {AUT_TYPE_REQUEST} last_request.make (system, variable)
 		end
 
-	report_quit_request is
+	report_quit_request
 		do
 			create {AUT_STOP_REQUEST} last_request.make (system)
 		end
@@ -191,7 +191,7 @@ feature {NONE} -- Handlers
 			last_request.set_response (create {AUT_NORMAL_RESPONSE}.make (""))
 		end
 
-	report_execute_request is
+	report_execute_request
 			-- Report execute request.
 		local
 			create_keyword_count: INTEGER
@@ -217,7 +217,7 @@ feature {NONE} -- Handlers
 
 feature {NONE} -- Error Reporting
 
-	report_error (a_reason: STRING) is
+	report_error (a_reason: STRING)
 		do
 			error_handler.report_log_parsing_error (filename, line_number, a_reason)
 			has_error := True
@@ -225,7 +225,7 @@ feature {NONE} -- Error Reporting
 
 feature {NONE} -- Implementation
 
-	arrayed_list_from_erl_list (an_erl_list: ERL_LIST [ITP_EXPRESSION]): DS_ARRAYED_LIST [ITP_EXPRESSION] is
+	arrayed_list_from_erl_list (an_erl_list: ERL_LIST [ITP_EXPRESSION]): DS_ARRAYED_LIST [ITP_EXPRESSION]
 		require
 			an_erl_list_not_void: an_erl_list /= Void
 		local

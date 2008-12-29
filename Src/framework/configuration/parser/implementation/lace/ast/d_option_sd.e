@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Default option"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like option; v: like value) is
+	initialize (o: like option; v: like value)
 			-- Create a new D_OPTION AST node.
 		require
 			o_not_void: o /= Void
@@ -38,17 +38,17 @@ feature -- Properties
 
 feature -- Status report
 
-	is_optional: BOOLEAN is
+	is_optional: BOOLEAN
 			-- Is Current an instance of `O_OPTION_SD'.
 		do
 		end
 
-	is_precompiled: BOOLEAN is
+	is_precompiled: BOOLEAN
 			-- Is Current an instance of `D_PRECOMPILED_SD'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

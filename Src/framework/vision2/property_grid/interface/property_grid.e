@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property grid"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_description (a_field: like description_field) is
+	make_with_description (a_field: like description_field)
 			-- Create with `a_field' to put descriptions.
 		require
 			a_field_not_void: a_field /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			description_field_set: description_field = a_field
 		end
 
-	initialize is
+	initialize
 			-- Create.
 		do
 			Precursor
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	valid_current_section: BOOLEAN is
+	valid_current_section: BOOLEAN
 			-- Is there a valid current section?
 		do
 			Result := current_section /= Void
@@ -61,7 +61,7 @@ feature -- Status
 
 feature -- Access
 
-	section (a_name: STRING): EV_GRID_ROW is
+	section (a_name: STRING): EV_GRID_ROW
 			-- Get section with `a_name' if it exists.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Update
 
-	reset is
+	reset
 			-- Reset to empty property grid.
 		local
 			l_column_width1, l_column_width2, l_column_width3: INTEGER
@@ -105,7 +105,7 @@ feature -- Update
 			enable_border
 		end
 
-	clear_description is
+	clear_description
 			-- Clear the description in the `description_field'.
 		do
 			if description_field /= Void and then not description_field.is_destroyed then
@@ -113,7 +113,7 @@ feature -- Update
 			end
 		end
 
-	add_section (a_name: STRING_GENERAL) is
+	add_section (a_name: STRING_GENERAL)
 			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
 			-- Else use the existing section.
 		require
@@ -160,7 +160,7 @@ feature -- Update
 			valid_current_section: valid_current_section
 		end
 
-	add_property (a_property: PROPERTY) is
+	add_property (a_property: PROPERTY)
 			-- Add `a_property'.
 		require
 			not_destroyed: not is_destroyed
@@ -199,7 +199,7 @@ feature -- Update
 			end
 		end
 
-	set_description_field (a_field: like description_field) is
+	set_description_field (a_field: like description_field)
 			-- Set place for descriptions.
 		do
 			description_field := a_field
@@ -207,7 +207,7 @@ feature -- Update
 			description_field_set: description_field = a_field
 		end
 
-	set_expanded_section_store (a_store: HASH_TABLE [BOOLEAN, STRING_GENERAL]) is
+	set_expanded_section_store (a_store: HASH_TABLE [BOOLEAN, STRING_GENERAL])
 			-- Store for the expanded sections, will get updated if sections are expanded or collapsed.
 		require
 			a_store_not_void: a_store /= Void
@@ -234,7 +234,7 @@ feature -- Update
 			expanded_section_store_set: expanded_section_store = a_store
 		end
 
-	mark_all_readonly is
+	mark_all_readonly
 			-- Mark all properties as readonly.
 		local
 			l_section: EV_GRID_ROW
@@ -263,7 +263,7 @@ feature -- Update
 			end
 		end
 
-	recompute_column_width is
+	recompute_column_width
 			-- Update widths of columns.
 		do
 			if parent /= Void and then not is_destroyed and then row_count > 0 then
@@ -274,7 +274,7 @@ feature -- Update
 
 feature {NONE} -- Actions
 
-	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			-- Draw borders.
 		local
 			l_row_height: INTEGER
@@ -293,7 +293,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	switch_expand_section (a_section: EV_GRID_ROW; a_dummy: EV_POPUP_WINDOW) is
+	switch_expand_section (a_section: EV_GRID_ROW; a_dummy: EV_POPUP_WINDOW)
 			-- Expand/collapse `a_section'.
 		require
 			a_section_not_void: a_section /= Void
@@ -307,7 +307,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	activate_property (a_property: PROPERTY; a_dummy: EV_POPUP_WINDOW) is
+	activate_property (a_property: PROPERTY; a_dummy: EV_POPUP_WINDOW)
 			-- Activate `a_property'.
 		require
 			a_property_ok: a_property /= void
@@ -315,7 +315,7 @@ feature {NONE} -- Actions
 			a_property.activate
 		end
 
-	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING_GENERAL) is
+	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING_GENERAL)
 			-- Update expanded status to `a_is_expanded' of `a_section'.
 		require
 			a_section_ok: a_section /= Void and then not a_section.is_empty
@@ -323,7 +323,7 @@ feature {NONE} -- Actions
 			expanded_section_store.force (a_is_expanded, a_section)
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- `a_key' was pressed.
 		local
 			l_row: EV_GRID_ROW
@@ -387,7 +387,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	select_name_item (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER) is
+	select_name_item (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- Select name item of the current row.
 		local
 			l_row: like row_type
@@ -403,7 +403,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	show_description (a_property: PROPERTY) is
+	show_description (a_property: PROPERTY)
 			-- Show description for `a_property'.
 		require
 			a_property_not_void: a_property /= Void
@@ -425,14 +425,14 @@ feature -- Type anchors
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 			-- Is `Current' in its default state?
 
 feature {NONE} -- Constants
 
 		-- columns
-	name_column: INTEGER is 2
-	value_column: INTEGER is 3
+	name_column: INTEGER = 2
+	value_column: INTEGER = 3
 
 feature {NONE} -- Implementation
 
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Once
 
-	bold_font: EV_FONT is
+	bold_font: EV_FONT
 			-- Bold standard font.
 		once
 			create Result
@@ -457,7 +457,7 @@ feature {NONE} -- Once
 invariant
 	expanded_section_store_not_void: expanded_section_store /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

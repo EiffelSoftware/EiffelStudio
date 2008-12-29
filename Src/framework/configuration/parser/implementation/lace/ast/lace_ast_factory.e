@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Lace AST node factories"
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ class LACE_AST_FACTORY
 
 feature -- Checking
 
-	valid_identifier (st: STRING): BOOLEAN is
+	valid_identifier (st: STRING): BOOLEAN
 			-- Is `st' a valid identifer for Lace syntax.
 		local
 			i, nb: INTEGER
@@ -32,7 +32,7 @@ feature -- Checking
 			end
 		end
 
-	valid_first_identifier_character (c: CHARACTER): BOOLEAN is
+	valid_first_identifier_character (c: CHARACTER): BOOLEAN
 			-- Is `c' a good character as first character of a Lace identifier?
 		do
 			inspect
@@ -43,7 +43,7 @@ feature -- Checking
 			end
 		end
 
-	valid_identifier_character (c: CHARACTER): BOOLEAN is
+	valid_identifier_character (c: CHARACTER): BOOLEAN
 			-- Is `c' a good character as first character of a Lace identifier?
 		do
 			inspect
@@ -56,7 +56,7 @@ feature -- Checking
 
 feature -- Access
 
-	new_id_sd (s: STRING; is_str: BOOLEAN): ID_SD is
+	new_id_sd (s: STRING; is_str: BOOLEAN): ID_SD
 			-- New ID AST node
 		require
 			s_not_void: s /= Void
@@ -71,7 +71,7 @@ feature -- Access
 		end
 
 	new_clas_visi_sd (cn, vn: ID_SD; cr, er: LACE_LIST [ID_SD];
-		r: LACE_LIST [TWO_NAME_SD]): CLAS_VISI_SD is
+		r: LACE_LIST [TWO_NAME_SD]): CLAS_VISI_SD
 			-- New CLAS_VISI AST node
 		require
 			cn_not_void: cn /= Void
@@ -86,7 +86,7 @@ feature -- Access
 			renamings_set: Result.renamings = r
 		end
 
-	new_file_name_sd (fn: ID_SD): FILE_NAME_SD is
+	new_file_name_sd (fn: ID_SD): FILE_NAME_SD
 			-- New EXCLUDE AST node
 		require
 			fn_not_void: fn /= Void
@@ -97,7 +97,7 @@ feature -- Access
 			file__name: Result.file__name = fn
 		end
 
-	new_special_option_sd (type_id: INTEGER; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
+	new_special_option_sd (type_id: INTEGER; a_name: STRING; flag: BOOLEAN): D_OPTION_SD
 			-- Create new `D_OPTION_SD' node corresponding to a free
 			-- option clause. If `a_name' Void then it is `free_option (flag)'.
 		require
@@ -122,7 +122,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

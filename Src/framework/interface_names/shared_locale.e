@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Locale used by interface name translation."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	locale: I18N_LOCALE is
+	locale: I18N_LOCALE
 			-- Current locale
         do
 			Result := locale_internal.item
@@ -32,7 +32,7 @@ feature -- Access
 			locale_not_void: Result /= Void
 		end
 
-	locale_manager: I18N_LOCALE_MANAGER is
+	locale_manager: I18N_LOCALE_MANAGER
 			-- Locale manager
 		once
 			check
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status change
 
-	set_locale_with_id (a_id: STRING) is
+	set_locale_with_id (a_id: STRING)
 			-- Set `locale' with `a_id'.
 			-- `a_id' is a Locale Id.
 			-- If locale of `a_id' not found, an empty locale is set.
@@ -61,7 +61,7 @@ feature -- Status change
 			end
 		end
 
-	set_locale (a_locale: like locale) is
+	set_locale (a_locale: like locale)
 			-- Set `locale' with `a_locale'.
 		require
 			a_locale_not_void: a_locale /= Void
@@ -69,13 +69,13 @@ feature -- Status change
 			locale_internal.put (a_locale)
 		end
 
-	set_system_locale is
+	set_system_locale
 			-- Set `locale' `system_locale'
 		do
 			locale_internal.put (system_locale)
 		end
 
-	set_empty_locale is
+	set_empty_locale
 			-- Set locale to be an empty locale.
 		do
 			locale_internal.put (empty_locale)
@@ -83,7 +83,7 @@ feature -- Status change
 
 feature -- Output
 
-	localized_print (a_str: STRING_GENERAL) is
+	localized_print (a_str: STRING_GENERAL)
 			-- Print `a_str' as localized encoding.
 			-- `a_str' is taken as a UTF-32 string.
 		local
@@ -102,7 +102,7 @@ feature -- Output
 			end
 		end
 
-	localized_print_error (a_str: STRING_GENERAL) is
+	localized_print_error (a_str: STRING_GENERAL)
 			-- Print an error, `a_str', as localized encoding.
 			-- `a_str' is taken as a UTF-32 string.
 		local
@@ -121,7 +121,7 @@ feature -- Output
 
 feature -- Conversion
 
-	utf32_to_console_encoding (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+	utf32_to_console_encoding (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL
 			-- Convert `a_str' to console encoding if possible.
 			-- `a_str' is taken as a UTF-32 string.
 		require
@@ -149,7 +149,7 @@ feature -- Conversion
 			end
 		end
 
-	console_encoding_to_utf32 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL is
+	console_encoding_to_utf32 (a_console_encoding: ENCODING; a_str: STRING_GENERAL): STRING_GENERAL
 			-- Convert `a_str' to UTF-32 if possible.
 			-- `a_str' is taken as a console encoding string.
 		require
@@ -179,7 +179,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	locale_internal: CELL [I18N_LOCALE] is
+	locale_internal: CELL [I18N_LOCALE]
 		once
 			create Result.put (Void)
 		ensure
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 
 feature -- File saving
 
-	save_string_32_in_file (a_file: FILE; a_str: STRING_32) is
+	save_string_32_in_file (a_file: FILE; a_str: STRING_32)
 			-- Save `a_str' in `a_file', according to current locale.
 			-- `a_str' should be UTF-32 string.
 		require
@@ -225,7 +225,7 @@ feature -- File saving
 
 feature -- String
 
-	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is
+	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
 			-- First character to upper case if possible.
 			-- Be careful to apply this to a translated word.
 			-- Since translation might result in more than one word from one in English.
@@ -246,7 +246,7 @@ feature -- String
 			Identity: Result /= a_s
 		end
 
-	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -264,7 +264,7 @@ feature -- String
 			Identity: Result /= a_s
 		end
 
-	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -282,7 +282,7 @@ feature -- String
 			Identity: Result /= a_s
 		end
 
-	string_general_as_left_adjusted (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_left_adjusted (a_s: STRING_GENERAL): STRING_GENERAL
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -300,7 +300,7 @@ feature -- String
 			Identity: Result /= a_s
 		end
 
-	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN is
+	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in lower case?
 		local
 			l_str: STRING
@@ -313,7 +313,7 @@ feature -- String
 			end
 		end
 
-	is_string_general_upper (a_str: STRING_GENERAL): BOOLEAN is
+	is_string_general_upper (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in upper case?
 		local
 			l_str: STRING
@@ -326,7 +326,7 @@ feature -- String
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

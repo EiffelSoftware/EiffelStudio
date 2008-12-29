@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new tester.
 			-- `a_feature' of type `a_type'.
 		do
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	test (v, u: ITP_VARIABLE): BOOLEAN is
+	test (v, u: ITP_VARIABLE): BOOLEAN
 		do
 			if v = u then
 				Result := True

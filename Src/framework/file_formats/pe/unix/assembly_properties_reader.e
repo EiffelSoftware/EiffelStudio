@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to read assemblies and extract basic metadata information.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_runtime_version: STRING) is
+	make (a_runtime_version: STRING)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialize
 
 feature -- Clean up
 
-	dispose is
+	dispose
 			-- Cleans up any allocated resources
 		do
 		ensure then
@@ -37,7 +37,7 @@ feature -- Clean up
 
 feature -- Basic operations
 
-	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES is
+	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES
 			-- Retrieves assembly properties for `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -51,13 +51,13 @@ feature -- Basic operations
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Indicates if reader was successfully initialized and is read for use.
 		once
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

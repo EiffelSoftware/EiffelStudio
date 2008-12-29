@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_GENERATED_SOURCE_WRITER}."
 	author: ""
 	date: "$Date$"
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature {NONE} -- Output
 
-	put_indexing is
+	put_indexing
 			-- Append indexing clause.
 		do
 			stream.put_line ("indexing%N")

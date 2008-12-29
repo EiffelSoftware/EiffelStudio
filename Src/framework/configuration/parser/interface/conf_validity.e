@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specifies constants and validity check against the constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,19 +19,19 @@ inherit
 
 feature -- Basic validity queries
 
-	valid_platform (a_platform: INTEGER): BOOLEAN is
+	valid_platform (a_platform: INTEGER): BOOLEAN
 			-- Is `a_platform' a valid platform?
 		do
 			Result := platform_names.has (a_platform)
 		end
 
-	valid_build (a_build: INTEGER): BOOLEAN is
+	valid_build (a_build: INTEGER): BOOLEAN
 			-- Is `a_build' a valid build?
 		do
 			Result := build_names.has (a_build)
 		end
 
-	valid_warning (a_warning: STRING): BOOLEAN is
+	valid_warning (a_warning: STRING): BOOLEAN
 			-- Is `a_warning' a valid warning?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -42,7 +42,7 @@ feature -- Basic validity queries
 			end
 		end
 
-	valid_regexp (a_regexp: STRING): BOOLEAN is
+	valid_regexp (a_regexp: STRING): BOOLEAN
 			-- is `a_regexp' a valid regular expression?
 		local
 			l_regexp: RX_PCRE_REGULAR_EXPRESSION
@@ -54,19 +54,19 @@ feature -- Basic validity queries
 			end
 		end
 
-	valid_setting (a_setting: STRING): BOOLEAN is
+	valid_setting (a_setting: STRING): BOOLEAN
 			-- Is `a_setting' a valid setting?
 		do
 			Result := a_setting /= Void and then valid_settings.has (a_setting)
 		end
 
-	valid_version_type (a_version_type: STRING): BOOLEAN is
+	valid_version_type (a_version_type: STRING): BOOLEAN
 			-- Is `a_version_type' valid?
 		do
 			Result := a_version_type /= Void and then valid_version_types.has (a_version_type)
 		end
 
-	valid_eiffel_extension (a_file: STRING): BOOLEAN is
+	valid_eiffel_extension (a_file: STRING): BOOLEAN
 			-- Does `a_file' have a correct eiffel file extension?
 		local
 			l_ext: CHARACTER
@@ -79,7 +79,7 @@ feature -- Basic validity queries
 			end
 		end
 
-	valid_config_extension (a_file: STRING): BOOLEAN is
+	valid_config_extension (a_file: STRING): BOOLEAN
 			-- Does `a_file' have a correct eiffel config file extension?
 		local
 			l_ext: STRING
@@ -95,7 +95,7 @@ feature -- Basic validity queries
 
 feature {NONE} -- Basic operation
 
-	get_platform_name (a_platform: INTEGER): STRING is
+	get_platform_name (a_platform: INTEGER): STRING
 			-- Get the name of `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -105,7 +105,7 @@ feature {NONE} -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-	get_build_name (a_build: INTEGER): STRING is
+	get_build_name (a_build: INTEGER): STRING
 			-- Get the name of `a_build'.
 		require
 			valid_build: valid_build (a_build)
@@ -115,7 +115,7 @@ feature {NONE} -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-	get_platform (a_name: STRING): INTEGER is
+	get_platform (a_name: STRING): INTEGER
 			-- Get the platform with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -134,7 +134,7 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_platform (Result)
 		end
 
-	get_build (a_name: STRING): INTEGER is
+	get_build (a_name: STRING): INTEGER
 			-- Get the build with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -155,7 +155,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Onces
 
-	platform_names: HASH_TABLE [STRING, INTEGER] is
+	platform_names: HASH_TABLE [STRING, INTEGER]
 			-- The platform names mapped to their integer.
 		once
 			create Result.make (4)
@@ -167,7 +167,7 @@ feature {NONE} -- Onces
 			Result_not_void: Result /= Void
 		end
 
-	build_names: HASH_TABLE [STRING, INTEGER] is
+	build_names: HASH_TABLE [STRING, INTEGER]
 			-- The build names mapped to their integer.
 		once
 			create Result.make (2)
@@ -179,7 +179,7 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	valid_warnings: SEARCH_TABLE [STRING] is
+	valid_warnings: SEARCH_TABLE [STRING]
 			-- The codes of valid warnings.
 		once
 			create Result.make (13)
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	valid_version_types: SEARCH_TABLE [STRING] is
+	valid_version_types: SEARCH_TABLE [STRING]
 			-- The codes of valid version types.
 		once
 			create Result.make (2)
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	valid_settings: SEARCH_TABLE [STRING] is
+	valid_settings: SEARCH_TABLE [STRING]
 			-- The codes of valid settings.
 		once
 			create Result.make (37)
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	boolean_settings: SEARCH_TABLE [STRING] is
+	boolean_settings: SEARCH_TABLE [STRING]
 			-- Settings that have a boolean value.
 		once
 			create Result.make (23)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

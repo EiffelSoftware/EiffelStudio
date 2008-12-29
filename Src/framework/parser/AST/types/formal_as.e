@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			"Abstract description for formal generic type. %
 			%Version for Bench."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_or_expanded_keyword) is
+	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_or_expanded_keyword)
 			-- Create a new FORMAL AST node.
 		require
 			n_not_void: n /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_formal_as (Current)
@@ -51,7 +51,7 @@ feature -- Roundtrip
 	reference_or_expanded_keyword_index: INTEGER
 			-- Index of keyword "reference" or "expanded" associated with this structure
 
-	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "reference" or "expanded" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -81,7 +81,7 @@ feature -- Properties
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -93,7 +93,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -103,7 +103,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := position = other.position
@@ -115,7 +115,7 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 		do
 			if has_attached_mark then
 				create Result.make (4)
@@ -132,13 +132,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Settings
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `position'.
 		do
 			position := i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

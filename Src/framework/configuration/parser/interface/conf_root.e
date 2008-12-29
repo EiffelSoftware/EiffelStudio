@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The root feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster, a_class_type, a_feature: STRING; a_all_root: BOOLEAN) is
+	make (a_cluster, a_class_type, a_feature: STRING; a_all_root: BOOLEAN)
 			-- Create with `a_cluster', `a_class' and `a_feature'.
 			-- `a_all_root' indicates that all classes are considered to be root.
 		require
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is it the same file_rule as `other'?
 		do
 			Result := equal (cluster_name, other.cluster_name) and
@@ -66,7 +66,7 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New string with printable representation.
 		do
 			if is_all_root then
@@ -99,7 +99,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_cluster_name (a_name: like cluster_name) is
+	set_cluster_name (a_name: like cluster_name)
 			-- Set `cluster_name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -110,7 +110,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: cluster_name = a_name
 		end
 
-	set_class_type_name (a_name: like class_type_name) is
+	set_class_type_name (a_name: like class_type_name)
 			-- Set `class_type_name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -121,7 +121,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: class_type_name = a_name
 		end
 
-	set_feature_name (a_name: like feature_name) is
+	set_feature_name (a_name: like feature_name)
 			-- Set `feature_name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void implies not a_name.is_empty
@@ -140,7 +140,7 @@ invariant
 	feature_name_ok: feature_name /= Void implies not feature_name.is_empty
 	feature_name_lower: feature_name /= Void implies feature_name.is_equal (feature_name.as_lower)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

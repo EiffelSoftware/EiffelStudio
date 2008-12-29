@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel creation expression call (using keyword create) "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (t: like type; c: like call; k_as: like create_keyword) is
+	make (t: like type; c: like call; k_as: like create_keyword)
 			-- new CREATE_CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
@@ -53,7 +53,7 @@ feature -- Roundtrip
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_create_creation_expr_as (Current)
@@ -61,7 +61,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and create_keyword_index /= 0 then
 				Result := create_keyword (a_list)
@@ -70,7 +70,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if call /= Void then
 				Result := call.last_token (a_list)
@@ -78,7 +78,7 @@ feature -- Roundtrip/Token
 				Result := type.last_token (a_list)
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

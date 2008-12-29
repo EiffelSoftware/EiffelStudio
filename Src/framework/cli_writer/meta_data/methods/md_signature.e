@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a signature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocated `item'.
 		do
 			create item.make (Default_size)
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of structure once emitted.
 		do
 			Result := current_position
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_byref_type (element_type: INTEGER_8; a_token: INTEGER) is
+	set_byref_type (element_type: INTEGER_8; a_token: INTEGER)
 			-- Set type as a byref type in current signature.
 		require
 			token_valid: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_class or
@@ -42,7 +42,7 @@ feature -- Settings
 			set_type (element_type, a_token)
 		end
 
-	set_type (element_type: INTEGER_8; token: INTEGER) is
+	set_type (element_type: INTEGER_8; token: INTEGER)
 			-- Set type in current signature.
 		require
 			token_valid: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_class or
@@ -64,7 +64,7 @@ feature -- Settings
 
 feature -- Copy
 
-	as_special: SPECIAL [NATURAL_8] is
+	as_special: SPECIAL [NATURAL_8]
 			-- Copy of Current as SPECIAL.
 		local
 			i, nb: INTEGER
@@ -86,7 +86,7 @@ feature -- Copy
 
 feature {NONE} -- Implementation
 
-	compress_data (i: INTEGER) is
+	compress_data (i: INTEGER)
 			-- Compress `i' using Partition II 22.2 specification
 			-- and store it at currrent_position in current.
 		require
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			current_position := l_pos + l_incr
 		end
 
-	compress_type_token (i: INTEGER) is
+	compress_type_token (i: INTEGER)
 			-- Compress token `i' using Partition II 22.2.8 specification
 			-- and store it at current_position in current.
 		local
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			compress_data (l_val)
 		end
 
-	internal_put (val: INTEGER_8; pos: INTEGER) is
+	internal_put (val: INTEGER_8; pos: INTEGER)
 			-- Safe insertion that will resize `internal_body' if needed.
 		require
 			valid_pos: pos >= 0
@@ -164,12 +164,12 @@ feature {NONE} -- Internal signature
 	current_position: INTEGER
 			-- Current position in `internal_body' for next insertion.
 
-	default_size: INTEGER is 20
+	default_size: INTEGER = 20
 			-- Default allocated size for a signature.
 
 feature {NONE} -- Stack depth management
 
-	allocate (new_size: INTEGER) is
+	allocate (new_size: INTEGER)
 			-- Resize `item' if needed so that it can accomdate `new_size'.
 		local
 			l_capacity: INTEGER
@@ -185,7 +185,7 @@ feature {NONE} -- Stack depth management
 invariant
 	item_not_void: item /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

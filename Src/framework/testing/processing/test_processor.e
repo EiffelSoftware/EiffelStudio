@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that provide common functionality needed for implementations of {TEST_PROCESSOR_I}
 	]"
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	request_stop is
+	request_stop
 			-- <Precursor>
 		do
 			is_stop_requested := True
@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature {TEST_SUITE_S} -- Status setting
 
-	frozen proceed is
+	frozen proceed
 			-- <Precursor>
 		do
 			is_idle := False
@@ -98,7 +98,7 @@ feature {TEST_SUITE_S} -- Status setting
 			is_idle := True
 		end
 
-	frozen stop is
+	frozen stop
 			-- <Precursor>
 		do
 			stop_process
@@ -129,7 +129,7 @@ feature {NONE} -- Status setting
 		deferred
 		end
 
-	proceed_process is
+	proceed_process
 			-- Proceed with actual task
 		require
 			running: is_running
@@ -137,7 +137,7 @@ feature {NONE} -- Status setting
 		deferred
 		end
 
-	stop_process is
+	stop_process
 			-- Stop task
 		require
 			running: is_running
@@ -160,7 +160,7 @@ feature {TEST_SUITE_S} -- Events
 invariant
 	internal_progress_valid: internal_progress >= {REAL} 0.0 and internal_progress <= {REAL} 1.0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

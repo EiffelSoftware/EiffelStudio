@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_output_stream: like output_stream) is
+	make (a_system: like system; an_output_stream: like output_stream)
 			-- Create new request.
 		require
 			a_system_not_void: a_system /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			output_stream_set: output_stream = an_output_stream
 		end
 
-	make_null (a_system: like system) is
+	make_null (a_system: like system)
 			-- Create a new AST printer, initialized with a null output stream.
 		do
 			make (a_system, null_output_stream)
@@ -84,7 +84,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	set_output_stream (an_output_stream: like output_stream) is
+	set_output_stream (an_output_stream: like output_stream)
 			-- Set `output_stream' to `an_output_stream'.
 		require
 			an_output_stream_not_void: an_output_stream /= Void
@@ -221,17 +221,17 @@ feature -- Basic operations
 
 feature {AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		local
 			l_args: ?DS_LINEAR [ITP_EXPRESSION]
 			l_type: STRING
@@ -303,7 +303,7 @@ feature {AUT_REQUEST} -- Processing
 			ot_counter := ot_counter + 1
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		local
 			l_rec_type: TYPE_A
 			l_use_ot: BOOLEAN
@@ -383,7 +383,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
 			l_use_ot: BOOLEAN
 			l_type: TYPE_A
@@ -423,7 +423,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_new_line
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
 			-- Do nothing.
 		end
@@ -438,7 +438,7 @@ feature {NONE} -- Printing
 			output_stream.put_line ("test")
 		end
 
-	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]; a_print_types: BOOLEAN) is
+	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]; a_print_types: BOOLEAN)
 			-- Print argument list `an_arinstruction' to `output_stream'.
 			--
 			-- If `a_print_types' is true, the argument definition will be printed instead.
@@ -526,19 +526,19 @@ feature {NONE} -- Indentation
 	indentation: INTEGER
 			-- Indentation in `output_stream'
 
-	indent is
+	indent
 			-- Increment indentation.
 		do
 			indentation := indentation + 1
 		end
 
-	dedent is
+	dedent
 			-- Decrement indentation.
 		do
 			indentation := indentation - 1
 		end
 
-	print_indentation is
+	print_indentation
 			-- Print indentation to `output_stream'.
 		local
 			i, nb: INTEGER
@@ -563,7 +563,7 @@ invariant
 	expression_printer_not_void: expression_printer /= Void
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

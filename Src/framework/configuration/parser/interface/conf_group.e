@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base class for configuration groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
+	make (a_name: like name; a_location: like location; a_target: CONF_TARGET)
 			-- Create associated to `a_target'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -51,7 +51,7 @@ feature -- Status
 	last_error: CONF_ERROR
 			-- The last error.
 
-	classes_set: BOOLEAN is
+	classes_set: BOOLEAN
 			-- Are the classes of this cluster set?
 		do
 			Result := classes /= Void
@@ -60,42 +60,42 @@ feature -- Status
 	is_valid: BOOLEAN
 			-- Is `Current' still valid and exists in the current system?
 
-	is_library: BOOLEAN is
+	is_library: BOOLEAN
 			-- Is this a library?
 		once
 		end
 
-	is_precompile: BOOLEAN is
+	is_precompile: BOOLEAN
 			-- Is this a precompile?
 		once
 		end
 
-	is_assembly: BOOLEAN is
+	is_assembly: BOOLEAN
 			-- Is this an assembly?
 		once
 		end
 
-	is_physical_assembly: BOOLEAN is
+	is_physical_assembly: BOOLEAN
 			-- Is this a physical assembly?
 		once
 		end
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Is this a cluster?
 		once
 		end
 
-	is_test_cluster: BOOLEAN is
+	is_test_cluster: BOOLEAN
 			-- Is this a test cluster?
 		once
 		end
 
-	is_override: BOOLEAN is
+	is_override: BOOLEAN
 			-- Is this an override?
 		once
 		end
 
-	is_used_in_library: BOOLEAN is
+	is_used_in_library: BOOLEAN
 			-- Is this this cluster used in a library? (as opposed to directly in the application system)
 		do
 			if target.system.is_fully_parsed then
@@ -110,14 +110,14 @@ feature -- Status
 
 feature -- Status update
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
 		do
 			is_error := True
 			last_error := an_error
 		end
 
-	reset_error is
+	reset_error
 			-- Reset error.
 		do
 			is_error := False
@@ -143,7 +143,7 @@ feature -- Access, stored in configuration file
 	location: CONF_LOCATION
 			-- The location of the group.
 
-	is_readonly: BOOLEAN is
+	is_readonly: BOOLEAN
 			-- Is this group read only?
 		do
 			Result := internal_read_only
@@ -160,7 +160,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	classes: HASH_TABLE [like class_type, STRING]
 			-- All the classes in this group, indexed by the renamed class name.
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 				-- compute hash code on demand
@@ -172,20 +172,20 @@ feature -- Access, in compiled only, not stored to configuration file
 
 feature -- Access queries
 
-	is_overriden: BOOLEAN is
+	is_overriden: BOOLEAN
 			-- Is this group overriden by an override cluster?
 		do
 			Result := overriders /= Void and then not overriders.is_empty
 		end
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	mapping_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32] is
+	mapping_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
 			-- Same as `mapping' but with STRING_32.
 		do
 			create Result.make (mapping.count)
@@ -201,21 +201,21 @@ feature -- Access queries
 			mapping_32_not_void: Result /= Void
 		end
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	class_options: HASH_TABLE [CONF_OPTION, STRING] is
+	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Options for classes.
 		deferred
 		ensure
 			Result_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	class_options_32: HASH_TABLE [CONF_OPTION, STRING_32] is
+	class_options_32: HASH_TABLE [CONF_OPTION, STRING_32]
 			-- Classes with specific options of this group itself.
 		local
 			l_options: like class_options
@@ -236,7 +236,7 @@ feature -- Access queries
 			class_options_32_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	get_class_options (a_class: STRING): CONF_OPTION is
+	get_class_options (a_class: STRING): CONF_OPTION
 			-- Get the options for `a_class'.
 		local
 			l_name: STRING
@@ -266,7 +266,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'
 			-- (if `a_dependencies' then we check dependencies)
 		require
@@ -285,7 +285,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		require
 			a_class_ok: a_class /= Void and then a_class.is_valid
@@ -314,7 +314,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 		require
 			classes_set: classes_set
@@ -324,7 +324,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	accessible_classes: like classes is
+	accessible_classes: like classes
 			-- Classes that are accessible within `Current'.
 		require
 			classes_set: classes_set
@@ -351,7 +351,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP is
+	sub_group_by_name (a_name: STRING): CONF_GROUP
 			-- Return sub group with `a_name' if there is any.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -361,7 +361,7 @@ feature -- Access queries
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Group name alphabetic order
 		do
 			Result := name < other.name
@@ -369,7 +369,7 @@ feature -- Comparison
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	invalidate is
+	invalidate
 			-- Set `is_valid' to False.
 		do
 			is_valid := False
@@ -377,7 +377,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			not_valid: not is_valid
 		end
 
-	revalidate is
+	revalidate
 			-- Set `is_valid' to True.
 		do
 			is_valid := True
@@ -385,7 +385,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_valid: is_valid
 		end
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -396,7 +396,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: name = a_name
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -404,7 +404,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_location (a_location: like location) is
+	set_location (a_location: like location)
 			-- Set `location' to `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -414,7 +414,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			location_set: location = a_location
 		end
 
-	set_readonly (b: BOOLEAN) is
+	set_readonly (b: BOOLEAN)
 			-- Set `internal_readonly' bo `b'.
 		do
 			is_readonly_set := True
@@ -424,7 +424,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_read_only_set: internal_read_only = b
 		end
 
-	set_readonly_set (b: BOOLEAN) is
+	set_readonly_set (b: BOOLEAN)
 			-- Set `is_readonly_set' bo `b'.
 		do
 			is_readonly_set := b
@@ -432,7 +432,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			readonly_set: is_readonly_set = b
 		end
 
-	set_options (a_option: like internal_options) is
+	set_options (a_option: like internal_options)
 			-- Set `a_option'.
 		do
 			internal_options := a_option
@@ -440,7 +440,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			option_set: internal_options = a_option
 		end
 
-	set_class_options (a_options: like class_options) is
+	set_class_options (a_options: like class_options)
 			-- Set `a_options'.
 		do
 			internal_class_options := a_options
@@ -448,7 +448,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			class_options_set: internal_class_options = a_options
 		end
 
-	set_class_options_32 (a_options_32: like class_options_32) is
+	set_class_options_32 (a_options_32: like class_options_32)
 			-- Set `a_options'.
 		do
 			if a_options_32 = Void then
@@ -466,7 +466,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	add_class_options (a_option: CONF_OPTION; a_class: STRING) is
+	add_class_options (a_option: CONF_OPTION; a_class: STRING)
 			-- Add class options.
 		require
 			a_option_not_void: a_option /= Void
@@ -483,7 +483,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	set_classes (a_classes: like classes) is
+	set_classes (a_classes: like classes)
 			-- Set `classes' to `a_classes'
 		require
 			a_classes_not_void: a_classes /= Void
@@ -493,7 +493,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			classes_set: classes = a_classes
 		end
 
-	set_classes_by_filename (a_classes: like classes_by_filename) is
+	set_classes_by_filename (a_classes: like classes_by_filename)
 			-- Set `classes_by_filename' to `a_classes'
 		require
 			classes_up_to_date: classes /= Void and classes.count = a_classes.count
@@ -505,7 +505,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			same_as_classes: classes.count = classes_by_filename.count
 		end
 
-	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS]) is
+	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS])
 			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'
 			-- and classes that where compiled but do now override something in `a_removed_classes'.
 		require
@@ -577,7 +577,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := name.is_equal (other.name) and then location.is_equal (other.location) and then
@@ -586,7 +586,7 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_group (Current)
@@ -594,7 +594,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Generate a nice representation of Current to be seen
 			-- in debugger.
 		do
@@ -612,7 +612,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	internal_class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Classes with specific options of this group itself.
 
-	changeable_internal_options: like internal_options is
+	changeable_internal_options: like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
 		do
 			if internal_options = Void then
@@ -623,7 +623,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 			Result_not_void: Result /= Void
 		end
 
-	changeable_class_options (a_class: CONF_CLASS): like internal_options is
+	changeable_class_options (a_class: CONF_CLASS): like internal_options
 			-- A possibility to change settings of `a_class' without knowing if we have some options already set.
 		require
 			a_class_not_void: a_class /= Void
@@ -645,7 +645,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configurati
 
 feature {NONE} -- Type anchors
 
-	class_type: CONF_CLASS is
+	class_type: CONF_CLASS
 			-- Class type anchor.
 		do
 		end
@@ -671,7 +671,7 @@ invariant
 	location_not_void: location /= Void
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

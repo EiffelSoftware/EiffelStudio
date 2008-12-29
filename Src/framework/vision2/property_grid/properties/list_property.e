@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property for an ordered list of strings."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	displayed_value: STRING_32 is
+	displayed_value: STRING_32
 			-- Convert `data' into a text representation.
 		do
 			if value /= Void then

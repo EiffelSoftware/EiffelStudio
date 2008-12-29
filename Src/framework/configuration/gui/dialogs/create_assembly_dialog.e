@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to create a new assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
@@ -195,7 +195,7 @@ feature -- Access
 
 feature {NONE} -- Actions
 
-	populate_assemblies is
+	populate_assemblies
 			-- Populates assembly list
 		local
 			l_il_env: IL_ENVIRONMENT
@@ -262,7 +262,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	fill_assembly (a_name, a_path: STRING) is
+	fill_assembly (a_name, a_path: STRING)
 			-- Fill location and name from `a_path' and `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -287,7 +287,7 @@ feature {NONE} -- Actions
 			location.set_text (l_loc)
 		end
 
-	browse_dialog: EV_FILE_OPEN_DIALOG is
+	browse_dialog: EV_FILE_OPEN_DIALOG
 			-- Dialog to browse to a library
 		local
 			l_dir: DIRECTORY
@@ -303,7 +303,7 @@ feature {NONE} -- Actions
 			Result_not_void: Result /= Void
 		end
 
-	browse is
+	browse
 			-- Browse for a location.
 		local
 			l_loc: CONF_FILE_LOCATION
@@ -321,7 +321,7 @@ feature {NONE} -- Actions
 			browse_dialog.show_modal_to_window (Current)
 		end
 
-	fill_fields is
+	fill_fields
 			-- Set location from `browse_dialog'.
 		local
 			l_il_env: IL_ENVIRONMENT
@@ -352,13 +352,13 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Close the dialog.
 		do
 			destroy
 		end
 
-	on_ok is
+	on_ok
 			-- Add group and close the dialog.
 		local
 			l_local: STRING
@@ -385,7 +385,7 @@ feature {NONE} -- Actions
 			is_ok_last_assembly: is_ok implies last_group /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

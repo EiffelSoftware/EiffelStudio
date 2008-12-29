@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a CLI section header."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create new section with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of IMAGE_SECTION_HEADER.
 		external
 			"C macro use <windows.h>"
@@ -49,31 +49,31 @@ feature -- Measurement
 
 feature -- Settings
 
-	set_virtual_size (i: INTEGER) is
+	set_virtual_size (i: INTEGER)
 			-- Set `virtual_size' to `i'.
 		do
 			c_set_virtual_size (item, i)
 		end
 
-	set_virtual_address (i: INTEGER) is
+	set_virtual_address (i: INTEGER)
 			-- Set `virtual_address' to `i'.
 		do
 			c_set_virtual_address (item, i)
 		end
 
-	set_raw_data_size (i: INTEGER) is
+	set_raw_data_size (i: INTEGER)
 			-- Set `raw_data_size' to `i'.
 		do
 			c_set_size_of_raw_data (item, i)
 		end
 
-	set_pointer_to_raw_data (i: INTEGER) is
+	set_pointer_to_raw_data (i: INTEGER)
 			-- Set `pointer_to_raw_data' to `i'.
 		do
 			c_set_pointer_to_raw_data (item, i)
 		end
 
-	set_characteristics (i: INTEGER) is
+	set_characteristics (i: INTEGER)
 			-- Set `characteristics' to `i'.
 		do
 			c_set_characteristics (item, i)
@@ -81,7 +81,7 @@ feature -- Settings
 
 feature {NONE} -- Access
 
-	c_name (an_item: POINTER): POINTER is
+	c_name (an_item: POINTER): POINTER
 			-- Get `Name'.
 		external
 			"C struct IMAGE_SECTION_HEADER access &Name use <windows.h>"
@@ -89,61 +89,61 @@ feature {NONE} -- Access
 
 feature {NONE} -- Settings
 
-	c_set_virtual_size (an_item: POINTER; i: INTEGER) is
+	c_set_virtual_size (an_item: POINTER; i: INTEGER)
 			-- Set `VirtualSize' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access Misc.VirtualSize type DWORD use <windows.h>"
 		end
 
-	c_set_virtual_address (an_item: POINTER; i: INTEGER) is
+	c_set_virtual_address (an_item: POINTER; i: INTEGER)
 			-- Set `VirtualAddress' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access VirtualAddress type DWORD use <windows.h>"
 		end
 
-	c_set_size_of_raw_data (an_item: POINTER; i: INTEGER) is
+	c_set_size_of_raw_data (an_item: POINTER; i: INTEGER)
 			-- Set `SizeOfRawData' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access SizeOfRawData type DWORD use <windows.h>"
 		end
 
-	c_set_pointer_to_raw_data (an_item: POINTER; i: INTEGER) is
+	c_set_pointer_to_raw_data (an_item: POINTER; i: INTEGER)
 			-- Set `PointerToRawData' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access PointerToRawData type DWORD use <windows.h>"
 		end
 
-	c_set_pointer_to_relocations (an_item: POINTER; i: INTEGER) is
+	c_set_pointer_to_relocations (an_item: POINTER; i: INTEGER)
 			-- Set `PointerToRelocations' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access PointerToRelocations type DWORD use <windows.h>"
 		end
 
-	c_set_pointer_to_line_numbers (an_item: POINTER; i: INTEGER) is
+	c_set_pointer_to_line_numbers (an_item: POINTER; i: INTEGER)
 			-- Set `PointerToLinenumbers' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access PointerToLinenumbers type DWORD use <windows.h>"
 		end
 
-	c_set_number_of_relocations (an_item: POINTER; i: INTEGER_16) is
+	c_set_number_of_relocations (an_item: POINTER; i: INTEGER_16)
 			-- Set `NumberOfRelocations' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access NumberOfRelocations type WORD use <windows.h>"
 		end
 
-	c_set_number_of_line_numbers (an_item: POINTER; i: INTEGER_16) is
+	c_set_number_of_line_numbers (an_item: POINTER; i: INTEGER_16)
 			-- Set `NumberOfLinenumbers' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access NumberOfLinenumbers type WORD use <windows.h>"
 		end
 
-	c_set_characteristics (an_item: POINTER; i: INTEGER) is
+	c_set_characteristics (an_item: POINTER; i: INTEGER)
 			-- Set `Characteristics' to `i'.
 		external
 			"C struct IMAGE_SECTION_HEADER access Characteristics type DWORD use <windows.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

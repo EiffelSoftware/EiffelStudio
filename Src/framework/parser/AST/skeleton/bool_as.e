@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Node for boolean constant. Version for Bench."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (b: BOOLEAN; l, c, p, s: INTEGER) is
+	initialize (b: BOOLEAN; l, c, p, s: INTEGER)
 			-- Create a new BOOLEAN AST node.
 		do
 			value := b
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bool_as (Current)
@@ -50,7 +50,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := value = other.value
@@ -58,12 +58,12 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			Result := value.out
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

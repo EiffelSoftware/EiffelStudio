@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an added item in EIFFEL_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,15 +22,15 @@ feature
 
 feature	-- Status reporting
 
-	has_text_changed: BOOLEAN is True
+	has_text_changed: BOOLEAN = True
 
-	is_removed: BOOLEAN is False
+	is_removed: BOOLEAN = False
 
 invariant
 
 	attached_ast_not_void: attached_ast /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

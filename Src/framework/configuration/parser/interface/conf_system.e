@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The configuration system. Every configuration file corresponds to one CONF_SYSTEM object.
 		It can be loaded from a configuration file by using CONF_LOAD and stored to a configuration file
@@ -29,7 +29,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_name: STRING; a_uuid: UUID) is
+	make_with_uuid (a_name: STRING; a_uuid: UUID)
 			-- Creation with `a_name' and `a_uuid'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -51,7 +51,7 @@ feature -- Status
 	store_successful: BOOLEAN
 			-- Was the last `store' operation successful?
 
-	date_has_changed: BOOLEAN is
+	date_has_changed: BOOLEAN
 			-- Did the file modification date of the configuration file change?
 		require
 			is_location_set: is_location_set
@@ -71,7 +71,7 @@ feature -- Status
 			Result := file_name /= Void and then not file_name.is_empty
 		end
 
-	deep_date_has_changed: BOOLEAN is
+	deep_date_has_changed: BOOLEAN
 			-- Did the date on any configuration file used in this system change?
 		require
 			fully_parsed: is_fully_parsed
@@ -147,7 +147,7 @@ feature -- Access, in compiled only
 
 feature -- Update, in compiled only
 
-	set_file_name (a_file_name: like file_name) is
+	set_file_name (a_file_name: like file_name)
 			-- Set `file_name' to `a_file_name' and set `directory'.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -168,7 +168,7 @@ feature -- Update, in compiled only
 			name_set: file_name = a_file_name
 		end
 
-	set_file_date is
+	set_file_date
 			-- Set `file_date' to last modified date of `file_name'.
 		require
 			is_location_set: is_location_set
@@ -178,7 +178,7 @@ feature -- Update, in compiled only
 
 feature {CONF_ACCESS} -- Access, in compiled only
 
-	set_application_target (a_target: CONF_TARGET) is
+	set_application_target (a_target: CONF_TARGET)
 			-- Set `application_target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -188,7 +188,7 @@ feature {CONF_ACCESS} -- Access, in compiled only
 			application_target_set: application_target = a_target
 		end
 
-	set_level (a_level: like level) is
+	set_level (a_level: like level)
 			-- Set `level' to `level'.
 		do
 			level := a_level
@@ -196,7 +196,7 @@ feature {CONF_ACCESS} -- Access, in compiled only
 			level_set: level = a_level
 		end
 
-	set_all_libraries (a_libraries: like all_libraries) is
+	set_all_libraries (a_libraries: like all_libraries)
 			-- Set `all_libraries' to `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -206,7 +206,7 @@ feature {CONF_ACCESS} -- Access, in compiled only
 			libraries_set: all_libraries = a_libraries
 		end
 
-	set_all_assemblies (an_assemblies: like all_assemblies) is
+	set_all_assemblies (an_assemblies: like all_assemblies)
 			-- Set `all_assemlibes' to `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
@@ -216,7 +216,7 @@ feature {CONF_ACCESS} -- Access, in compiled only
 			assemblies_set: all_assemblies = an_assemblies
 		end
 
-	add_library_usage (a_library: CONF_LIBRARY) is
+	add_library_usage (a_library: CONF_LIBRARY)
 			-- Current system is library of `a_library'.
 		require
 			fully_parsed: is_fully_parsed
@@ -239,7 +239,7 @@ feature {CONF_ACCESS} -- Access, in compiled only
 
 feature -- Store to disk
 
-	store is
+	store
 			-- Store system back to its config file (only system itself is stored, libraries are not stored).
 		require
 			is_location_set: is_location_set
@@ -263,7 +263,7 @@ feature -- Store to disk
 
 feature -- Access queries
 
-	compilable_targets: like targets is
+	compilable_targets: like targets
 			-- The compilable targets.
 		local
 			l_target: CONF_TARGET
@@ -284,7 +284,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE] is
+	all_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]
 			-- All external include files including the ones from libraries.
 		require
 			fully_parsed: is_fully_parsed
@@ -302,7 +302,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT] is
+	all_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- All external object files including the ones from libraries.
 		require
 			fully_parsed: is_fully_parsed
@@ -320,7 +320,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY] is
+	all_external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY]
 			-- All external library files including the ones from libraries.
 		require
 			fully_parsed: is_fully_parsed
@@ -338,7 +338,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE] is
+	all_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 			-- All external ressource files including the ones from libraries.
 		require
 			fully_parsed: is_fully_parsed
@@ -356,7 +356,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE] is
+	all_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE]
 			-- All external make files including the ones from libraries.
 		require
 			fully_parsed: is_fully_parsed
@@ -374,7 +374,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_pre_compile_action: ARRAYED_LIST [CONF_ACTION] is
+	all_pre_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- All Aactions to be executed before compilation.
 		require
 			fully_parsed: is_fully_parsed
@@ -392,7 +392,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_post_compile_action: ARRAYED_LIST [CONF_ACTION] is
+	all_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- All Aactions to be executed after compilation.
 		require
 			fully_parsed: is_fully_parsed
@@ -412,7 +412,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -422,7 +422,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: name.is_case_insensitive_equal (a_name)
 		end
 
-	set_readonly (a_readonly: like is_readonly) is
+	set_readonly (a_readonly: like is_readonly)
 			-- Set `is_readonly' to `a_readonly'.
 		do
 			is_readonly := a_readonly
@@ -430,7 +430,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_readonly_set: is_readonly = a_readonly
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -438,7 +438,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_uuid (an_uuid: like uuid) is
+	set_uuid (an_uuid: like uuid)
 			-- Set `uuid' to `a_uuid'.
 		require
 			an_uuid_valid: an_uuid /= Void
@@ -448,7 +448,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			uuid_set: uuid = an_uuid
 		end
 
-	add_target (a_target: CONF_TARGET) is
+	add_target (a_target: CONF_TARGET)
 			-- Add `a_target' to `targets'.
 		require
 			a_target_not_void: a_target /= Void
@@ -457,7 +457,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			target_order.force (a_target)
 		end
 
-	remove_target (a_name: STRING) is
+	remove_target (a_name: STRING)
 			-- Remove the target with name `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -474,7 +474,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	set_library_target (a_target: like library_target) is
+	set_library_target (a_target: like library_target)
 			-- Set `library_target' to `a_target'.
 		require
 			no_overrides: a_target /= Void implies a_target.overrides.is_empty
@@ -482,7 +482,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			library_target := a_target
 		end
 
-	set_library_target_by_name (a_target: STRING) is
+	set_library_target_by_name (a_target: STRING)
 			-- Set `library_target' to `a_target'.
 		require
 			a_target_valid: a_target /= Void and then not a_target.is_empty implies targets.has (a_target)
@@ -496,7 +496,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		local
 			l_o_targets: like targets
@@ -520,7 +520,7 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_system (Current)
@@ -528,7 +528,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := name
@@ -541,7 +541,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation
 
 feature {NONE} -- Contract helper
 
-	same_targets: BOOLEAN is
+	same_targets: BOOLEAN
 			-- Do targets and target_order have the same content?
 		do
 			Result := targets.count = target_order.count and then target_order.for_all (agent (a_target: CONF_TARGET): BOOLEAN
@@ -550,7 +550,7 @@ feature {NONE} -- Contract helper
 				end)
 		end
 
-	valid_level: BOOLEAN is
+	valid_level: BOOLEAN
 			-- Is the current level valid?
 			-- It has to be either 0 or the target has to be used in a library whose system has a lower level.
 		do
@@ -576,7 +576,7 @@ invariant
 	application_target_library_in_used: application_target_library /= Void implies used_in_libraries /= Void and then used_in_libraries.has (application_target_library)
 	valid_level: valid_level
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

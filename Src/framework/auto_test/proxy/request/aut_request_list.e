@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"List of requests"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like list; a_first_index: like first_index; a_last_index: like last_index) is
+	make (a_list: like list; a_first_index: like first_index; a_last_index: like last_index)
 			-- Create new list.
 		require
 			a_list_not_void: a_list /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			last_index_set: last_index = a_last_index
 		end
 
-	make_default (a_list: like list) is
+	make_default (a_list: like list)
 			-- Create new witness.
 		do
 			make (a_list, 1, a_list.count)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of requests
 		do
 			Result := last_index - first_index + 1
@@ -52,7 +52,7 @@ feature -- Access
 			definition: Result = (last_index - first_index + 1)
 		end
 
-	item (an_index: INTEGER): AUT_REQUEST is
+	item (an_index: INTEGER): AUT_REQUEST
 			-- `an_index'-th request
 		require
 			an_index_large_enough: an_index >= 1
@@ -64,7 +64,7 @@ feature -- Access
 			definition: Result = list.item (first_index + an_index - 1)
 		end
 
-	request_list: DS_LIST [AUT_REQUEST] is
+	request_list: DS_LIST [AUT_REQUEST]
 			-- List of all requests
 		local
 			arrayed_list: DS_ARRAYED_LIST [AUT_REQUEST]
@@ -86,7 +86,7 @@ feature -- Access
 			counts_match: count = Result.count
 		end
 
-	fresh_request_list: DS_LIST [AUT_REQUEST] is
+	fresh_request_list: DS_LIST [AUT_REQUEST]
 			-- Fresh (as in requests without responses) list of all requests
 		local
 			arrayed_list: DS_ARRAYED_LIST [AUT_REQUEST]
@@ -108,7 +108,7 @@ feature -- Access
 			counts_match: count = Result.count
 		end
 
-	all_but_i_requests (i: INTEGER): DS_LIST [AUT_REQUEST] is
+	all_but_i_requests (i: INTEGER): DS_LIST [AUT_REQUEST]
 			-- List of all requests except the `i'-th
 		require
 			i_big_enough: i >= 1
@@ -135,7 +135,7 @@ feature -- Access
 			counts_match: count - 1= Result.count
 		end
 
-	all_but_i_requests_fresh (i: INTEGER): DS_LIST [AUT_REQUEST] is
+	all_but_i_requests_fresh (i: INTEGER): DS_LIST [AUT_REQUEST]
 			-- Fresh (as in requests without responses) list of all requests except the `i'-th
 		require
 			i_big_enough: i >= 1

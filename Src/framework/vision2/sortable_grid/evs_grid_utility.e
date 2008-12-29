@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Utilities for EV_GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	grid_item_at_position (a_grid: EV_GRID; a_x, a_y: INTEGER): EV_GRID_ITEM is
+	grid_item_at_position (a_grid: EV_GRID; a_x, a_y: INTEGER): EV_GRID_ITEM
 			-- Item at position (`a_x', `a_y') which is related to the top-left coordinate of `a_grid'
 			-- Void if no item is found.
 		require
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Resizeing
 
-	auto_resize_columns (a_grid: EV_GRID; a_size_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER] ,INTEGER]) is
+	auto_resize_columns (a_grid: EV_GRID; a_size_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER] ,INTEGER])
 			-- Auto resize columns in `a_grid'.
 			-- Keys of `a_size_table' are column indexes indicating those columns to be resized.
 			-- Value of a key indicates the min and max width of that column.
@@ -75,7 +75,7 @@ feature -- Resizeing
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

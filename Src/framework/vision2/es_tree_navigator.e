@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree navigation key shortcut support"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Shortcut/Status report
 
-	is_shortcut_registered (a_shortcut: ES_KEY_SHORTCUT): BOOLEAN is
+	is_shortcut_registered (a_shortcut: ES_KEY_SHORTCUT): BOOLEAN
 			-- Is `a_shortcut' registered?
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -21,7 +21,7 @@ feature -- Shortcut/Status report
 
 feature -- Shortcut/Access
 
-	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): LIST [PROCEDURE [ANY, TUPLE]] is
+	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): LIST [PROCEDURE [ANY, TUPLE]]
 			-- Trigger agent for `a_shortcut'
 			-- Void if no agent is registered for `a_shortcut'.
 		do
@@ -32,7 +32,7 @@ feature -- Shortcut/Access
 
 feature -- Call
 
-	call_shortcut_actions (a_shortcut: ES_KEY_SHORTCUT) is
+	call_shortcut_actions (a_shortcut: ES_KEY_SHORTCUT)
 			-- Call registered actions for `a_shortcut'.
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -53,7 +53,7 @@ feature -- Call
 
 feature -- Shortcut/Register key shortcuts
 
-	register_shortcut (a_shortcut: ES_KEY_SHORTCUT; a_agent: PROCEDURE [ANY, TUPLE]) is
+	register_shortcut (a_shortcut: ES_KEY_SHORTCUT; a_agent: PROCEDURE [ANY, TUPLE])
 			-- Register `a_agent' for `a_shortcut'.
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -72,7 +72,7 @@ feature -- Shortcut/Register key shortcuts
 			shortcut_registered: is_shortcut_registered (a_shortcut) and then shortcut_actions (a_shortcut).has (a_agent)
 		end
 
-	deregister_shortcut (a_shortcut: ES_KEY_SHORTCUT) is
+	deregister_shortcut (a_shortcut: ES_KEY_SHORTCUT)
 			-- Remove registered shortcut key along with its trigger agent.
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_expand_selected_rows_agent (a_agent: like expand_selected_rows_agent) is
+	set_expand_selected_rows_agent (a_agent: like expand_selected_rows_agent)
 			-- Set `expand_selected_rows_agent' with `a_agent'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -109,7 +109,7 @@ feature -- Setting
 			expand_selected_rows_agent_set: expand_selected_rows_agent = a_agent
 		end
 
-	set_expand_selected_rows_recursive_agent (a_agent: like expand_selected_rows_recursive_agent) is
+	set_expand_selected_rows_recursive_agent (a_agent: like expand_selected_rows_recursive_agent)
 			-- Set `expand_selected_rows_recursive_agent' with `a_agent'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -119,7 +119,7 @@ feature -- Setting
 			expand_selected_rows_recursive_agent_set: expand_selected_rows_recursive_agent = a_agent
 		end
 
-	set_collapse_selected_rows_agent (a_agent: like collapse_selected_rows_agent) is
+	set_collapse_selected_rows_agent (a_agent: like collapse_selected_rows_agent)
 			-- Set `collapse_selected_rows_agent' with `a_agent'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -129,7 +129,7 @@ feature -- Setting
 			collapse_selected_rows_agent_set: collapse_selected_rows_agent = a_agent
 		end
 
-	set_collapse_selected_rows_recursive_agent (a_agent: like collapse_selected_rows_recursive_agent) is
+	set_collapse_selected_rows_recursive_agent (a_agent: like collapse_selected_rows_recursive_agent)
 			-- Set `collapse_selected_rows_recursive_agent' with `a_agent'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -139,7 +139,7 @@ feature -- Setting
 			collapse_selected_rows_recursive_agent_set: collapse_selected_rows_recursive_agent = a_agent
 		end
 
-	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN)
 			-- Enable default tree navigation behavior.
 			-- `a_expand' indicates if expanding a node should be enabled.
 			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
@@ -150,7 +150,7 @@ feature -- Setting
 
 feature -- Access
 
-	default_expand_rows_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT] is
+	default_expand_rows_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT]
 			-- List of shortcuts used to expand selected rows
 		once
 			create Result.make (2)
@@ -160,7 +160,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	default_expand_rows_recursive_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT] is
+	default_expand_rows_recursive_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT]
 			-- List of shortcuts used to recursively expand selected rows
 		once
 			create Result.make (1)
@@ -169,7 +169,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	default_collapse_rows_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT] is
+	default_collapse_rows_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT]
 			-- List of shortcuts used to expand selected rows
 		once
 			create Result.make (2)
@@ -179,7 +179,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	default_collapse_rows_recursive_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT] is
+	default_collapse_rows_recursive_shortcuts: ARRAYED_LIST [ES_KEY_SHORTCUT]
 			-- List of shortcuts used to recursively expand selected rows
 		once
 			create Result.make (2)
@@ -190,7 +190,7 @@ feature -- Access
 
 feature{NONE} -- Shortcut/Implementation
 
-	key_table: HASH_TABLE [LIST [PROCEDURE [ANY, TUPLE]], ES_KEY_SHORTCUT] is
+	key_table: HASH_TABLE [LIST [PROCEDURE [ANY, TUPLE]], ES_KEY_SHORTCUT]
 			-- Table of actions to be performed indexed by the key shortcut to trigger that action
 		do
 			if key_table_internal = Void then
@@ -204,7 +204,7 @@ feature{NONE} -- Shortcut/Implementation
 	key_table_internal: like key_table;
 			-- Implementation of `key_table'	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

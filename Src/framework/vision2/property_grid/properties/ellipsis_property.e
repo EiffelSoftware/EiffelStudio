@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Properties that can be edited by an extended action."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create ellipsis_actions
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does this property have the focus?
 		require
 			is_activated
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Update
 
-	disable_text_editing is
+	disable_text_editing
 			-- Disable editing the text directly in the text field.
 		do
 			is_text_editing := False
@@ -67,7 +67,7 @@ feature -- Update
 			not_is_text_editing: not is_text_editing
 		end
 
-	enable_text_editing is
+	enable_text_editing
 			-- Enable editing the text directly in the text field.
 		do
 			is_text_editing := True
@@ -82,7 +82,7 @@ feature -- Events
 
 feature {NONE} -- Agents
 
-	update_text_on_deactivation is
+	update_text_on_deactivation
 			-- Update text on deactivation.
 		do
 			if is_text_editing then
@@ -90,7 +90,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the actions sequences when the item is shown.
 		do
 			text_field.set_focus
@@ -102,7 +102,7 @@ feature {NONE} -- Agents
 			button.select_actions.append (ellipsis_actions)
 		end
 
-	focus_lost is
+	focus_lost
 			-- Check if no other element in the popup has the focus.
 		do
 			if {PLATFORM}.is_windows then
@@ -123,7 +123,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	activate_action (a_popup_window: EV_POPUP_WINDOW) is
+	activate_action (a_popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
 			l_hb: EV_HORIZONTAL_BOX
@@ -169,7 +169,7 @@ feature {NONE} -- Agents
 			text_editing_implies_activation: is_text_editing implies is_activated and text_field /= Void and button /= Void
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to `activate'.
 		do
 			Precursor {TEXT_PROPERTY}
@@ -189,7 +189,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	ellipsis: EV_PIXMAP is
+	ellipsis: EV_PIXMAP
 			-- Icon for ellipsis
 		local
 			l_mask: EV_BITMAP

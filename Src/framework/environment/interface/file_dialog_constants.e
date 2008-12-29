@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that contain constants used with EiffelVision2 file dialogs.
 		To add a new file type for use in EiffelStudio, you must declare the two constants
@@ -15,67 +15,67 @@ class
 
 feature -- Access
 
-	Eiffel_project_files_filter: STRING is "*.epr"
+	Eiffel_project_files_filter: STRING = "*.epr"
 
-	Eiffel_project_files_description: STRING is "Eiffel Project Files (*.epr)"
+	Eiffel_project_files_description: STRING = "Eiffel Project Files (*.epr)"
 
-	All_files_filter: STRING is "*.*"
+	All_files_filter: STRING = "*.*"
 
-	All_files_description: STRING is "All Files (*.*)"
+	All_files_description: STRING = "All Files (*.*)"
 
-	Text_files_filter: STRING is "*.txt"
+	Text_files_filter: STRING = "*.txt"
 
-	Text_files_description: STRING is "Text Files (*.txt)"
+	Text_files_description: STRING = "Text Files (*.txt)"
 
-	Png_files_filter: STRING is "*.png"
+	Png_files_filter: STRING = "*.png"
 
-	Png_files_description: STRING is "PNG Files (*.png)"
+	Png_files_description: STRING = "PNG Files (*.png)"
 
-	Xml_files_filter: STRING is "*.xml"
+	Xml_files_filter: STRING = "*.xml"
 
-	Xml_files_description: STRING is "XML Files (*.xml)"
+	Xml_files_description: STRING = "XML Files (*.xml)"
 
-	Config_files_filter: STRING is "*.ecf"
+	Config_files_filter: STRING = "*.ecf"
 
-	Config_files_description: STRING is "Eiffel Configuration Files (*.ecf)"
+	Config_files_description: STRING = "Eiffel Configuration Files (*.ecf)"
 
-	Ace_files_filter: STRING is "*.ace"
+	Ace_files_filter: STRING = "*.ace"
 
-	Ace_files_description: STRING is "Eiffel Ace Files (*.ace)"
+	Ace_files_description: STRING = "Eiffel Ace Files (*.ace)"
 
-	Strong_name_key_files_filter: STRING is "*.snk"
+	Strong_name_key_files_filter: STRING = "*.snk"
 
-	Strong_name_key_files_description: STRING is "Strong Name Key Files (*.snk)"
+	Strong_name_key_files_description: STRING = "Strong Name Key Files (*.snk)"
 
-	Eiffel_class_files_filter: STRING is "*.e"
+	Eiffel_class_files_filter: STRING = "*.e"
 
-	Eiffel_class_files_description: STRING is "Eiffel Class Files (*.e)"
+	Eiffel_class_files_description: STRING = "Eiffel Class Files (*.e)"
 
-	Resx_files_filter: STRING is "*.resx"
+	Resx_files_filter: STRING = "*.resx"
 
-	Resx_files_description: STRING is "Resx Files (*.resx)"
+	Resx_files_description: STRING = "Resx Files (*.resx)"
 
-	Definition_files_filter: STRING is "*.def"
+	Definition_files_filter: STRING = "*.def"
 
-	Definition_files_description: STRING is "Dynamic Library Definition (*.def)"
+	Definition_files_description: STRING = "Dynamic Library Definition (*.def)"
 
-	Dll_files_filter: STRING is "*.dll"
+	Dll_files_filter: STRING = "*.dll"
 
-	Dll_files_description: STRING is ".NET library (*.dll)"
+	Dll_files_description: STRING = ".NET library (*.dll)"
 
-	Exe_files_filter: STRING is "*.exe"
+	Exe_files_filter: STRING = "*.exe"
 
-	Exe_files_description: STRING is ".NET Application (*.exe)"
+	Exe_files_description: STRING = ".NET Application (*.exe)"
 
-	All_assemblies_filter: STRING is "*.exe;*.dll"
+	All_assemblies_filter: STRING = "*.exe;*.dll"
 
-	All_assemblies_description: STRING is "All Assemblies (*.exe; *.dll)"
+	All_assemblies_description: STRING = "All Assemblies (*.exe; *.dll)"
 
-	Profile_files_filter: STRING is "*.pfi"
+	Profile_files_filter: STRING = "*.pfi"
 
-	Profile_files_description: STRING is "Profile files (*.pfi)"
+	Profile_files_description: STRING = "Profile files (*.pfi)"
 
-	supported_filters: ARRAYED_LIST [STRING] is
+	supported_filters: ARRAYED_LIST [STRING]
 			-- `Result' is list of all supported filters.
 		do
 			create Result.make (14)
@@ -101,7 +101,7 @@ feature -- Access
 
 feature -- Status report
 
-	file_description_from_filter (a_filter: STRING): STRING is
+	file_description_from_filter (a_filter: STRING): STRING
 			-- For filter `a_filter', return corresponding file description.
 		require
 			supported_filter: supported_filters.has (a_filter)
@@ -145,7 +145,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

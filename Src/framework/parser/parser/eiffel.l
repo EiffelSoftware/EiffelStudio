@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
@@ -1209,7 +1209,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

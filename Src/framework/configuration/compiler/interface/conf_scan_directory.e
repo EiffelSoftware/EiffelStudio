@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scan and process a cluster directory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Event handling
 
-	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING_8) is
+	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING_8)
 			-- (Sub)directory a_path of a_cluster is processed.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -23,7 +23,7 @@ feature -- Event handling
 
 feature -- Processing
 
-	process_cluster_recursive (a_path: STRING; a_cluster: CONF_CLUSTER; a_file_rule: CONF_FILE_RULE) is
+	process_cluster_recursive (a_path: STRING; a_cluster: CONF_CLUSTER; a_file_rule: CONF_FILE_RULE)
 			-- Recursively process `a_path'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -98,7 +98,7 @@ feature -- Processing
 			end
 		end
 
-	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER) is
+	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER)
 			-- Handle class in `a_file' with `a_path' in `a_cluster'
 		require
 			a_file_not_void: a_file /= Void
@@ -108,7 +108,7 @@ feature -- Processing
 		deferred
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

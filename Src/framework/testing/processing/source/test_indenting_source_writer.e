@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Outputstream filter that transparently indents lines
 	]"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_output_stream: like output_stream) is
+	make (a_output_stream: like output_stream)
 			-- Create a new filter, using `a_output_stream' as output stream.
 		require
 			a_output_stream_not_void: a_output_stream /= Void
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Can items be written to output stream?
 		do
 			Result := output_stream.is_open_write
 		end
 
-	is_closable: BOOLEAN is
+	is_closable: BOOLEAN
 			-- Can current output stream be closed?
 		do
 			Result := output_stream.is_closable
@@ -67,13 +67,13 @@ feature -- Access
 	indentation: INTEGER
 			-- Level by which lines should be currently indented
 
-	eol: STRING is
+	eol: STRING
 			-- Line separator
 		do
 			Result := output_stream.eol
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name of output stream
 		do
 			Result := output_stream.name
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Level Change
 
-	indent is
+	indent
 			-- Increase level of indentation.
 		do
 			indentation := indentation + 1
@@ -89,7 +89,7 @@ feature -- Level Change
 			indent_level_increased: indentation = old indentation + 1
 		end
 
-	dedent is
+	dedent
 			-- Decrease level of indentation.
 		require
 			indent_level_big_enough: indentation > 0
@@ -101,7 +101,7 @@ feature -- Level Change
 
 feature -- Output
 
-	put_character (v: CHARACTER) is
+	put_character (v: CHARACTER)
 			-- Write `v' to output stream.
 		do
 			if not indentation_printed then
@@ -110,14 +110,14 @@ feature -- Output
 			output_stream.put_character (v)
 		end
 
-	put_new_line is
+	put_new_line
 			-- Write a line separator to output stream.
 		do
 			Precursor
 			indentation_printed := False
 		end
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		do
 			if not indentation_printed then
@@ -128,13 +128,13 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flush buffered data to disk.
 		do
 			output_stream.flush
 		end
 
-	close is
+	close
 			-- Try to close output stream if it is closable. Set
 			-- `is_open_write' to false if operation was successful.
 		do
@@ -143,7 +143,7 @@ feature -- Basic operations
 
 feature -- Setting
 
-	set_output_stream (a_output_stream: like output_stream) is
+	set_output_stream (a_output_stream: like output_stream)
 			-- Set `output_stream' to `a_output_stream'.
 		require
 			a_output_stream_not_void: a_output_stream /= Void
@@ -154,7 +154,7 @@ feature -- Setting
 			output_stream_set: output_stream = a_output_stream
 		end
 
-	set_null_output_stream is
+	set_null_output_stream
 			-- Set `output_stream' to `null_output_stream'.
 		do
 			output_stream := null_output_stream
@@ -164,7 +164,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	print_indentation is
+	print_indentation
 			-- Print currentl level of indentation to `output_stream'.
 		require
 			not_printed: not indentation_printed

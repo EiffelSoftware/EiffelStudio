@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Version number."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create with default version number.
 		do
 			major := 0
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			build := 1
 		end
 
-	make_version (a_major, a_minor, a_release, a_build: NATURAL_16) is
+	make_version (a_major, a_minor, a_release, a_build: NATURAL_16)
 			-- Create a version.
 		do
 			major := a_major
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			build := a_build
 		end
 
-	make_from_string (a_version: STRING) is
+	make_from_string (a_version: STRING)
 			-- Parse `a_version' or set an error
 			-- Has to be of format XXX.XXX.XXX.XXX where only the first part is obligatory.
 			-- regexp to match it is \d*(\.\d*){0,3}
@@ -99,7 +99,7 @@ feature -- Access, stored in configuration file
 	build: NATURAL_16
 			-- The build version.
 
-	version: STRING is
+	version: STRING
 			-- The complete version.
 		do
 			create Result.make_empty
@@ -126,7 +126,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS}  -- Update, stored in configuration file
 
-	increase_major is
+	increase_major
 			-- Increase `major'.
 		do
 			major := major + 1
@@ -134,7 +134,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			major_greater: old (major) < major
 		end
 
-	increase_minor is
+	increase_minor
 			-- Increase `minor'.
 		do
 			minor := minor + 1
@@ -142,7 +142,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			minor_greater: old (minor) < minor
 		end
 
-	increase_release is
+	increase_release
 			-- Increase `release'.
 		do
 			release := release + 1
@@ -150,7 +150,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			release_greater: old (release) < release
 		end
 
-	increase_build is
+	increase_build
 			-- Increase `build'.
 		do
 			build := build + 1
@@ -158,7 +158,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			build_greater: old (build) < build
 		end
 
-	set_major (a_major: like major) is
+	set_major (a_major: like major)
 			-- Set `major' to `a_major'
 		do
 			major := a_major
@@ -166,7 +166,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			major_set: major = a_major
 		end
 
-	set_minor (a_minor: like minor) is
+	set_minor (a_minor: like minor)
 			-- Set `minor' to `a_minorr'
 		do
 			minor := a_minor
@@ -174,7 +174,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			minor_set: minor = a_minor
 		end
 
-	set_release (a_release: like release) is
+	set_release (a_release: like release)
 			-- Set `release' to `a_release'
 		do
 			release := a_release
@@ -182,7 +182,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			release_set: release = a_release
 		end
 
-	set_build (a_build: like build) is
+	set_build (a_build: like build)
 			-- Set `build' to `a_build'
 		do
 			build := a_build
@@ -190,7 +190,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			build_set: build = a_build
 		end
 
-	set_company (a_company: like company) is
+	set_company (a_company: like company)
 			-- Set `company' to `a_company'.
 		do
 			company := a_company
@@ -198,7 +198,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			company_set: company = a_company
 		end
 
-	set_product (a_product: like product) is
+	set_product (a_product: like product)
 			-- Set `producat' to `a_product'.
 		do
 			product := a_product
@@ -206,7 +206,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			product_set: product = a_product
 		end
 
-	set_trademark (a_trademark: like trademark) is
+	set_trademark (a_trademark: like trademark)
 			-- Set `trademark' to `a_trademark'.
 		do
 			trademark := a_trademark
@@ -214,7 +214,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 			trademark_set: trademark = a_trademark
 		end
 
-	set_copyright (a_copyright: like copyright) is
+	set_copyright (a_copyright: like copyright)
 			-- Set `copyright' to `a_copyright'.
 		do
 			copyright := a_copyright
@@ -224,7 +224,7 @@ feature {CONF_ACCESS}  -- Update, stored in configuration file
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Compare
 		do
 			Result := major < other.major or
@@ -235,7 +235,7 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New string with printable representation.
 		local
 			l_ext: STRING
@@ -261,7 +261,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

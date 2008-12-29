@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Warning object sent by the compiler to the workbench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature -- Property
 
-	error_string: STRING is
+	error_string: STRING
 		do
 			Result := "Warning"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

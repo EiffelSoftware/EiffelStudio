@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "AST representation of a require statement."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (a: like assertions; k_as: KEYWORD_AS) is
+	make (a: like assertions; k_as: KEYWORD_AS)
 			-- Create new REQUIRE AST node.
 		do
 			initialize (a)
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_require_as (Current)
@@ -42,7 +42,7 @@ feature -- Roundtrip
 	require_keyword_index: INTEGER
 			-- Index of keyword "require" accosiated with this structure.
 
-	require_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	require_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "require" accosiated with this structure.
 		require
 			a_list_not_void: a_list /= Void
@@ -57,7 +57,7 @@ feature -- Roundtrip
 
 feature -- Properties
 
-	is_else: BOOLEAN is
+	is_else: BOOLEAN
 			-- Is the assertion list a require else ?
 		do
 			-- Do nothing
@@ -65,7 +65,7 @@ feature -- Properties
 
 feature -- Roundtrip/Location
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if assertions /= Void then
@@ -78,7 +78,7 @@ feature -- Roundtrip/Location
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if assertions /= Void then
@@ -95,7 +95,7 @@ feature -- Roundtrip/Location
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

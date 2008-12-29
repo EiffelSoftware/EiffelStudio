@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all atomic/terminal AS nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text; a_span: like span) is
+	make (a_text: like text; a_span: like span)
 			-- Initialize abstract syntax node.
 		require
 			a_text_attached: a_text /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- String valur of `Current'
 		do
 			Result := internal_text
@@ -38,7 +38,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	span: INI_TEXT_SPAN is
+	span: INI_TEXT_SPAN
 			-- Span of abstract syntax node
 		do
 			Result := internal_span
@@ -58,7 +58,7 @@ invariant
 	not_internal_text_is_empty: not internal_text.is_empty
 	internal_span_attached: internal_span /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

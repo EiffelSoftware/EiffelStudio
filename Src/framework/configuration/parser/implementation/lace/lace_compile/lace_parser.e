@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Lace parsers"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -33,12 +33,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			yyvsp29 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		do
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			yyvs1.put (last_any_value, yyvsp1)
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			yyvs1.put (yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -790,7 +790,7 @@ feature {NONE} -- Semantic actions
 			end
 		end
 
-	yy_do_action_1 is
+	yy_do_action_1
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -825,7 +825,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_2 is
+	yy_do_action_2
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -860,7 +860,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_3 is
+	yy_do_action_3
 			--|#line <not available> "lace.y"
 		local
 			yyval2: ACE_SD
@@ -901,7 +901,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_4 is
+	yy_do_action_4
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -919,7 +919,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_5 is
+	yy_do_action_5
 			--|#line <not available> "lace.y"
 		local
 			yyval15: ROOT_SD
@@ -956,7 +956,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_6 is
+	yy_do_action_6
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -989,7 +989,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_7 is
+	yy_do_action_7
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1007,7 +1007,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_8 is
+	yy_do_action_8
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1040,7 +1040,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_9 is
+	yy_do_action_9
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1058,7 +1058,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_10 is
+	yy_do_action_10
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1076,7 +1076,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_11 is
+	yy_do_action_11
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1111,7 +1111,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_12 is
+	yy_do_action_12
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1149,7 +1149,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_13 is
+	yy_do_action_13
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1170,7 +1170,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_14 is
+	yy_do_action_14
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1206,7 +1206,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_15 is
+	yy_do_action_15
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1242,7 +1242,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_16 is
+	yy_do_action_16
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1278,7 +1278,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_17 is
+	yy_do_action_17
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1315,7 +1315,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_18 is
+	yy_do_action_18
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1352,7 +1352,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_19 is
+	yy_do_action_19
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1389,7 +1389,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_20 is
+	yy_do_action_20
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1422,7 +1422,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_21 is
+	yy_do_action_21
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1440,7 +1440,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_22 is
+	yy_do_action_22
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1481,7 +1481,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_23 is
+	yy_do_action_23
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1521,7 +1521,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_24 is
+	yy_do_action_24
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1560,7 +1560,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_25 is
+	yy_do_action_25
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1599,7 +1599,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_26 is
+	yy_do_action_26
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1637,7 +1637,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_27 is
+	yy_do_action_27
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1674,7 +1674,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_28 is
+	yy_do_action_28
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1710,7 +1710,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_29 is
+	yy_do_action_29
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1745,7 +1745,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_30 is
+	yy_do_action_30
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1763,7 +1763,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_31 is
+	yy_do_action_31
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1797,7 +1797,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_32 is
+	yy_do_action_32
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1835,7 +1835,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_33 is
+	yy_do_action_33
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1856,7 +1856,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_34 is
+	yy_do_action_34
 			--|#line <not available> "lace.y"
 		local
 			yyval17: DEPEND_SD
@@ -1893,7 +1893,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_35 is
+	yy_do_action_35
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1926,7 +1926,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_36 is
+	yy_do_action_36
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1943,7 +1943,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_37 is
+	yy_do_action_37
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1961,7 +1961,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_38 is
+	yy_do_action_38
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -1994,7 +1994,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_39 is
+	yy_do_action_39
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2011,7 +2011,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_40 is
+	yy_do_action_40
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2029,7 +2029,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_41 is
+	yy_do_action_41
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2063,7 +2063,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_42 is
+	yy_do_action_42
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2096,7 +2096,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_43 is
+	yy_do_action_43
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2113,7 +2113,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_44 is
+	yy_do_action_44
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2131,7 +2131,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_45 is
+	yy_do_action_45
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2165,7 +2165,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_46 is
+	yy_do_action_46
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2203,7 +2203,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_47 is
+	yy_do_action_47
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2224,7 +2224,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_48 is
+	yy_do_action_48
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2262,7 +2262,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_49 is
+	yy_do_action_49
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2283,7 +2283,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_50 is
+	yy_do_action_50
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -2320,7 +2320,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_51 is
+	yy_do_action_51
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -2341,7 +2341,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_52 is
+	yy_do_action_52
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2374,7 +2374,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_53 is
+	yy_do_action_53
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2391,7 +2391,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_54 is
+	yy_do_action_54
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2409,7 +2409,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_55 is
+	yy_do_action_55
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2443,7 +2443,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_56 is
+	yy_do_action_56
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2481,7 +2481,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_57 is
+	yy_do_action_57
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2502,7 +2502,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_58 is
+	yy_do_action_58
 			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
@@ -2538,7 +2538,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_59 is
+	yy_do_action_59
 			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
@@ -2575,7 +2575,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_60 is
+	yy_do_action_60
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -2612,7 +2612,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_61 is
+	yy_do_action_61
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -2633,7 +2633,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_62 is
+	yy_do_action_62
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -2669,7 +2669,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_63 is
+	yy_do_action_63
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2702,7 +2702,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_64 is
+	yy_do_action_64
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2719,7 +2719,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_65 is
+	yy_do_action_65
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2737,7 +2737,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_66 is
+	yy_do_action_66
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2771,7 +2771,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_67 is
+	yy_do_action_67
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2804,7 +2804,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_68 is
+	yy_do_action_68
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2821,7 +2821,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_69 is
+	yy_do_action_69
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2839,7 +2839,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_70 is
+	yy_do_action_70
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2873,7 +2873,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_71 is
+	yy_do_action_71
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2911,7 +2911,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_72 is
+	yy_do_action_72
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2932,7 +2932,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_73 is
+	yy_do_action_73
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -2968,7 +2968,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_74 is
+	yy_do_action_74
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3004,7 +3004,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_75 is
+	yy_do_action_75
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3041,7 +3041,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_76 is
+	yy_do_action_76
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3077,7 +3077,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_77 is
+	yy_do_action_77
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3112,7 +3112,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_78 is
+	yy_do_action_78
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3147,7 +3147,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_79 is
+	yy_do_action_79
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3182,7 +3182,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_80 is
+	yy_do_action_80
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3217,7 +3217,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_81 is
+	yy_do_action_81
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3252,7 +3252,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_82 is
+	yy_do_action_82
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3291,7 +3291,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_83 is
+	yy_do_action_83
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -3329,7 +3329,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_84 is
+	yy_do_action_84
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -3350,7 +3350,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_85 is
+	yy_do_action_85
 			--|#line <not available> "lace.y"
 		local
 			yyval12: O_OPTION_SD
@@ -3387,7 +3387,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_86 is
+	yy_do_action_86
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3420,7 +3420,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_87 is
+	yy_do_action_87
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3438,7 +3438,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_88 is
+	yy_do_action_88
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3475,7 +3475,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_89 is
+	yy_do_action_89
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3496,7 +3496,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_90 is
+	yy_do_action_90
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3529,7 +3529,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_91 is
+	yy_do_action_91
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3547,7 +3547,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_92 is
+	yy_do_action_92
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3564,7 +3564,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_93 is
+	yy_do_action_93
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3581,7 +3581,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_94 is
+	yy_do_action_94
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3616,7 +3616,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_95 is
+	yy_do_action_95
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3651,7 +3651,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_96 is
+	yy_do_action_96
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3686,7 +3686,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_97 is
+	yy_do_action_97
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3721,7 +3721,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_98 is
+	yy_do_action_98
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3756,7 +3756,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_99 is
+	yy_do_action_99
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3791,7 +3791,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_100 is
+	yy_do_action_100
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3826,7 +3826,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_101 is
+	yy_do_action_101
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3861,7 +3861,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_102 is
+	yy_do_action_102
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3896,7 +3896,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_103 is
+	yy_do_action_103
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -3929,7 +3929,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_104 is
+	yy_do_action_104
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -3947,7 +3947,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_105 is
+	yy_do_action_105
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -3981,7 +3981,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_106 is
+	yy_do_action_106
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4019,7 +4019,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_107 is
+	yy_do_action_107
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4040,7 +4040,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_108 is
+	yy_do_action_108
 			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
@@ -4078,7 +4078,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_109 is
+	yy_do_action_109
 			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
@@ -4116,7 +4116,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_110 is
+	yy_do_action_110
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -4149,7 +4149,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_111 is
+	yy_do_action_111
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -4167,7 +4167,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_112 is
+	yy_do_action_112
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4200,7 +4200,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_113 is
+	yy_do_action_113
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4218,7 +4218,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_114 is
+	yy_do_action_114
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4252,7 +4252,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_115 is
+	yy_do_action_115
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4290,7 +4290,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_116 is
+	yy_do_action_116
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4311,7 +4311,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_117 is
+	yy_do_action_117
 			--|#line <not available> "lace.y"
 		local
 			yyval10: LANG_TRIB_SD
@@ -4348,7 +4348,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_118 is
+	yy_do_action_118
 			--|#line <not available> "lace.y"
 		local
 			yyval11: LANGUAGE_NAME_SD
@@ -4383,7 +4383,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_119 is
+	yy_do_action_119
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4416,7 +4416,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_120 is
+	yy_do_action_120
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4433,7 +4433,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_121 is
+	yy_do_action_121
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4450,7 +4450,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_122 is
+	yy_do_action_122
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4470,7 +4470,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_123 is
+	yy_do_action_123
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4490,7 +4490,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_124 is
+	yy_do_action_124
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4509,7 +4509,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_125 is
+	yy_do_action_125
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4542,7 +4542,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_126 is
+	yy_do_action_126
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4559,7 +4559,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_127 is
+	yy_do_action_127
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4575,7 +4575,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_128 is
+	yy_do_action_128
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4591,7 +4591,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_129 is
+	yy_do_action_129
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4624,7 +4624,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_130 is
+	yy_do_action_130
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4641,7 +4641,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_131 is
+	yy_do_action_131
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4659,7 +4659,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_132 is
+	yy_do_action_132
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4693,7 +4693,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_133 is
+	yy_do_action_133
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4731,7 +4731,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_134 is
+	yy_do_action_134
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4752,7 +4752,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_135 is
+	yy_do_action_135
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4787,7 +4787,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_136 is
+	yy_do_action_136
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4823,7 +4823,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_137 is
+	yy_do_action_137
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4860,7 +4860,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_138 is
+	yy_do_action_138
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4898,7 +4898,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_139 is
+	yy_do_action_139
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4936,7 +4936,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_140 is
+	yy_do_action_140
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4974,7 +4974,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_141 is
+	yy_do_action_141
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -4992,7 +4992,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_142 is
+	yy_do_action_142
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5025,7 +5025,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_143 is
+	yy_do_action_143
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5042,7 +5042,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_144 is
+	yy_do_action_144
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5060,7 +5060,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_145 is
+	yy_do_action_145
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5093,7 +5093,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_146 is
+	yy_do_action_146
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5110,7 +5110,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_147 is
+	yy_do_action_147
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5128,7 +5128,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_148 is
+	yy_do_action_148
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5161,7 +5161,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_149 is
+	yy_do_action_149
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5198,7 +5198,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_150 is
+	yy_do_action_150
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5219,7 +5219,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_151 is
+	yy_do_action_151
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5252,7 +5252,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_152 is
+	yy_do_action_152
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5269,7 +5269,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_153 is
+	yy_do_action_153
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5287,7 +5287,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_154 is
+	yy_do_action_154
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5324,7 +5324,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_155 is
+	yy_do_action_155
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5345,7 +5345,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_156 is
+	yy_do_action_156
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -5378,7 +5378,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_157 is
+	yy_do_action_157
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -5414,7 +5414,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_158 is
+	yy_do_action_158
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -5449,7 +5449,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_159 is
+	yy_do_action_159
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -5484,7 +5484,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_160 is
+	yy_do_action_160
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -5517,7 +5517,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_161 is
+	yy_do_action_161
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -5533,7 +5533,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			if yy_act <= 199 then
@@ -5546,7 +5546,7 @@ end
 			end
 		end
 
-	yy_do_error_action_0_199 (yy_act: INTEGER) is
+	yy_do_error_action_0_199 (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -5556,7 +5556,7 @@ end
 			end
 		end
 
-	yy_do_error_action_200_399 (yy_act: INTEGER) is
+	yy_do_error_action_200_399 (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -5571,7 +5571,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -5610,7 +5610,7 @@ feature {NONE} -- Table templates
 			   45, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    0,  112,  112,   46,   58,   70,   59,   59,   60,   60,
@@ -5633,7 +5633,7 @@ feature {NONE} -- Table templates
 			  114,  114, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -5669,7 +5669,7 @@ feature {NONE} -- Table templates
 			    9,    9,    1,    9,    9,    1,    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -5679,7 +5679,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    0,  160,    0,    0,  160,  160,  160,  160,  160,  160,
@@ -5715,7 +5715,7 @@ feature {NONE} -- Table templates
 			  124,    0,    0,  110,  109,    0,    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			   10,   24,   11,   56,  183,  209,   52,   35,   82,   12,
@@ -5728,7 +5728,7 @@ feature {NONE} -- Table templates
 			  250,  262,  272, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			  106,   59,    3,    3,   45,   59,   59,   59,  283,   59,
@@ -5764,7 +5764,7 @@ feature {NONE} -- Table templates
 			 -32768,   48,    3,   -6, -32768,   33,   30, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			 -32768,  202, -163,  181,   46,   15,  175,   -1, -32768,  203,
@@ -5777,7 +5777,7 @@ feature {NONE} -- Table templates
 			  -50, -32768, -32768, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			   25,   28,   29,  109,   40,   43,   48,   70,   57,   19,
@@ -5834,7 +5834,7 @@ feature {NONE} -- Table templates
 			    0,    0,  274, yyDummy>>)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 		once
 			Result := yyfixed_array (<<
 			    1,    2,    3,   65,    5,    6,    7,   18,    9,    0,
@@ -6243,29 +6243,29 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 287
+	yyFinal: INTEGER = 287
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 46
+	yyNtbase: INTEGER = 46
 			-- Number of tokens
 
-	yyLast: INTEGER is 472
+	yyLast: INTEGER = 472
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 300
+	yyMax_token: INTEGER = 300
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 119
+	yyNsyms: INTEGER = 119
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
 feature -- User-defined features
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a section header for a method."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Create fat method section header.
 		do
 		ensure
@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset all data to default values.
 		do
 			is_fat := False
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Access
 
-	count: INTEGER is 4
+	count: INTEGER = 4
 			-- Size of header in bytes once emitted.
 
 	is_fat: BOOLEAN
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Modification
 
-	register_exception_clause (clause: MD_EXCEPTION_CLAUSE) is
+	register_exception_clause (clause: MD_EXCEPTION_CLAUSE)
 			-- Update current header information to reflect exception `clause' in section.
 		require
 			clause_not_void: clause /= Void
@@ -65,7 +65,7 @@ feature -- Modification
 
 feature -- Saving
 
-	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos'.
 		local
 			kind: INTEGER_8
@@ -90,7 +90,7 @@ feature {NONE} -- Internal data
 	clause_count: INTEGER;
 			-- Number of registered exception clauses
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

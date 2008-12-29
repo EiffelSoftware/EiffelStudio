@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Instruction that requests the assignment of an expression to a variable"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; a_receiver: like receiver; an_expression: like expression) is
+	make (a_system: like system; a_receiver: like receiver; an_expression: like expression)
 			-- Create new request.
 		require
 			a_system_not_void: a_system /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		do
 			a_processor.process_assign_expression_request (Current)

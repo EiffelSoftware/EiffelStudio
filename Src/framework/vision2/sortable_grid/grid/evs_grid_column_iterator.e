@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a row iterator for EV_GRID_WRAPPER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		do
 			Result := x_internal * grid_wrapper.grid_row_count + y_internal
@@ -36,7 +36,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	internal_after: BOOLEAN is
+	internal_after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			Result := is_empty or else y_internal = grid_wrapper.grid_row_count + 1
@@ -44,7 +44,7 @@ feature{NONE} -- Implementation
 			good_result: Result implies is_empty or else y_internal = grid_wrapper.grid_row_count + 1
 		end
 
-	internal_before: BOOLEAN is
+	internal_before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			Result := is_empty or else y_internal = 0
@@ -52,7 +52,7 @@ feature{NONE} -- Implementation
 			good_result: Result implies (is_empty or else y_internal = 0)
 		end
 
-	next_position: EV_COORDINATE is
+	next_position: EV_COORDINATE
 			-- Next position relative to current position.
 		local
 			l_grid_wrapper: like grid_wrapper
@@ -77,7 +77,7 @@ feature{NONE} -- Implementation
 			create Result.make (x_internal, y_internal)
 		end
 
-	previous_position: EV_COORDINATE is
+	previous_position: EV_COORDINATE
 			-- Previous position relative to current position.
 		local
 			l_grid_wrapper: like grid_wrapper
@@ -103,13 +103,13 @@ feature{NONE} -- Implementation
 			create Result.make (x_internal, y_internal)
 		end
 
-	default_invalid_coordinate: EV_COORDINATE is
+	default_invalid_coordinate: EV_COORDINATE
 			-- Default invalid coordinate
 		do
 			create Result.make (1, 0)
 		end
 
-	comparator_by_column: EVS_GRID_ITEM_COLUMN_POSITION_COMPARATOR is
+	comparator_by_column: EVS_GRID_ITEM_COLUMN_POSITION_COMPARATOR
 			-- Comparator to decide position relationship between two grid items
 		do
 			create Result
@@ -118,7 +118,7 @@ feature{NONE} -- Implementation
 invariant
 	x_internal_positive: x_internal > 0
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

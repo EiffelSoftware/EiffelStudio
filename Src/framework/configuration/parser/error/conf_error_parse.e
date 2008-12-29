@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parse parse error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: STRING) is
+	make (a_message: STRING)
 			-- Create.
 		require
 			a_message_not_void: a_message /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	column: INTEGER;
 		-- Column of error.
 
-	text: STRING is
+	text: STRING
 			-- Error text.
 		do
 			Result := "Parse error"
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Update
 
-	set_position (a_file: like file; a_row: like row; a_column: like column) is
+	set_position (a_file: like file; a_row: like row; a_column: like column)
 			-- Set position of an error.
 		do
 			file := a_file
@@ -61,13 +61,13 @@ feature -- Update
 			column := a_column
 		end
 
-	set_message (a_message: like message) is
+	set_message (a_message: like message)
 			-- Set the extended error message to `a_message'.
 		do
 			message := a_message
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

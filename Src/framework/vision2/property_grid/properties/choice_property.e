@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property with several values to choose from."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_choices (a_name: like name; a_choices: ARRAY [G]) is
+	make_with_choices (a_name: like name; a_choices: ARRAY [G])
 			-- Initialize with some choices.
 		require
 			a_choices_ok: a_choices /= Void and not a_choices.is_empty
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			item_strings := create {ARRAYED_LIST [G]}.make_from_array (a_choices)
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does this property have the focus?
 		do
 			Result := Precursor {ELLIPSIS_PROPERTY} or has_combo_focus
 		end
 
-	has_combo_focus: BOOLEAN is
+	has_combo_focus: BOOLEAN
 			-- Does the combo popup have the focus?
 		do
 			Result := (combo_grid /= Void and then combo_grid.has_focus) or (combo_popup /= Void and then combo_popup.has_focus)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {NONE} -- Agents
 
-	activate_action (a_popup_window: EV_POPUP_WINDOW) is
+	activate_action (a_popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
 			l_te: BOOLEAN
@@ -72,7 +72,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	switch is
+	switch
 			-- Switch value.
 		local
 			l_done: BOOLEAN
@@ -101,7 +101,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the actions sequences when the item is shown.
 		do
 			Precursor
@@ -110,7 +110,7 @@ feature {NONE} -- Agents
 			text_field.key_press_actions.extend (agent on_text_field_key)
 		end
 
-	show_ellipsis is
+	show_ellipsis
 			-- Called when ellipsis is pressed.
 		require
 			popup_window: popup_window /= Void
@@ -164,14 +164,14 @@ feature {NONE} -- Agents
 			combo_grid.set_focus
 		end
 
-	deactivate is
+	deactivate
 			-- Called on deactivate.
 		do
 			Precursor {ELLIPSIS_PROPERTY}
 			destroy_combo_popup
 		end
 
-	combo_focus_lost is
+	combo_focus_lost
 			-- Called if focus of the combo popup is lost.
 		do
 			if not has_combo_focus then
@@ -180,7 +180,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	combo_select (an_item: EV_GRID_ITEM) is
+	combo_select (an_item: EV_GRID_ITEM)
 			-- Change the selected item in the combo.
 		do
 			if combo_grid /= Void then
@@ -189,7 +189,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	combo_click (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+	combo_click (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			-- Choose a different value.
 		local
 			l_item: GENERIC_GRID_ITEM [G]
@@ -204,7 +204,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_combo_key (a_key: EV_KEY) is
+	on_combo_key (a_key: EV_KEY)
 			-- A key was pressed in `combo_grid'.
 		require
 			a_key_not_void: a_key /= Void
@@ -224,7 +224,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_text_field_key (a_key: EV_KEY) is
+	on_text_field_key (a_key: EV_KEY)
 			-- A key was pressed in `text_field'.
 		require
 			a_key_not_void: a_key /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	ellipsis: EV_PIXMAP is
+	ellipsis: EV_PIXMAP
 			-- Icon for combo box button.
 		local
 			l_mask: EV_BITMAP
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 	combo_grid: EV_GRID
 			-- Grid that shows the available choices.
 
-	destroy_combo_popup is
+	destroy_combo_popup
 			-- Destroy combo popup.
 		do
 			if combo_grid /= Void then

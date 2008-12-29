@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,19 +23,19 @@ create
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_tasks
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_tasks_icon
 		end
 
-	pre_tasks: TARGET_PRE_TASKS_SECTION is
+	pre_tasks: TARGET_PRE_TASKS_SECTION
 			-- Header for pre compilation tasks.
 		do
 			if internal_pre_tasks /= Void and then has (internal_pre_tasks) then
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	post_tasks: TARGET_POST_TASKS_SECTION is
+	post_tasks: TARGET_POST_TASKS_SECTION
 			-- Header for post compilation tasks.
 		do
 			if internal_post_tasks /= Void and then has (internal_post_tasks) then
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Simple operations
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_pre_task_button.select_actions.wipe_out
@@ -83,7 +83,7 @@ feature -- Simple operations
 
 feature -- Element update
 
-	add_pre_compilation is
+	add_pre_compilation
 			-- Add a new pre compilation task.
 		do
 			if pre_tasks = Void then
@@ -93,7 +93,7 @@ feature -- Element update
 			internal_pre_tasks.add_task
 		end
 
-	add_post_compilation is
+	add_post_compilation
 			-- Add a new post compilation task.
 		do
 			if post_tasks = Void then
@@ -103,7 +103,7 @@ feature -- Element update
 			internal_post_tasks.add_task
 		end
 
-	set_pre_compilation (a_tasks: ARRAYED_LIST [CONF_ACTION]) is
+	set_pre_compilation (a_tasks: ARRAYED_LIST [CONF_ACTION])
 			-- Set pre compilation tasks to `a_tasks'.
 		local
 			l_task: TASK_SECTION
@@ -123,7 +123,7 @@ feature -- Element update
 			end
 		end
 
-	set_post_compilation (a_tasks: ARRAYED_LIST [CONF_ACTION]) is
+	set_post_compilation (a_tasks: ARRAYED_LIST [CONF_ACTION])
 			-- Set post compilation tasks to `a_tasks'.
 		local
 			l_task: TASK_SECTION
@@ -151,14 +151,14 @@ feature {NONE} -- Implementation
 	internal_post_tasks: TARGET_POST_TASKS_SECTION
 			-- Header for post compilation tasks. (Could still be present even if it removed from Current)
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

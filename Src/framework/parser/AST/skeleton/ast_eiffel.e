@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract node produce by yacc. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		require
 			v_not_void: v /= Void
@@ -26,7 +26,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		require
 			arg_non_void: other /= Void
@@ -34,7 +34,7 @@ feature -- Comparison
 		deferred
 		end
 
-	frozen equivalent (o1, o2: AST_EIFFEL): BOOLEAN is
+	frozen equivalent (o1, o2: AST_EIFFEL): BOOLEAN
 			-- Are `o1' and `o2' equivalent ?
 			-- this feature is similar to `deep_equal'
 			-- but ARRAYs and STRINGs are processed correctly
@@ -50,7 +50,7 @@ feature -- Comparison
 
 feature -- Location
 
-	frozen start_location: LOCATION_AS is
+	frozen start_location: LOCATION_AS
 			-- Starting point for current construct.
 		do
 			Result := first_token (Void)
@@ -61,7 +61,7 @@ feature -- Location
 			start_location_not_void: Result /= Void
 		end
 
-	frozen end_location: LOCATION_AS is
+	frozen end_location: LOCATION_AS
 			-- Ending point for current construct.
 		do
 			Result := last_token (Void)
@@ -72,7 +72,7 @@ feature -- Location
 			end_location_not_void: Result /= Void
 		end
 
-	frozen start_position: INTEGER is
+	frozen start_position: INTEGER
 			-- Starting position for current construct.
 		do
 			Result := start_location.position
@@ -80,7 +80,7 @@ feature -- Location
 			start_position_non_negative: Result >= 0
 		end
 
-	frozen end_position: INTEGER is
+	frozen end_position: INTEGER
 			-- End position for current construct
 		do
 			Result := end_location.final_position
@@ -90,7 +90,7 @@ feature -- Location
 
 feature -- Roundtrip/Location
 
-	frozen complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	frozen complete_start_location (a_list: LEAF_AS_LIST): LOCATION_AS
 			-- Absolute start location for current construct
 		require
 			a_list_not_void: a_list /= Void
@@ -103,7 +103,7 @@ feature -- Roundtrip/Location
 			result_not_void: Result /= Void
 		end
 
-	frozen complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS is
+	frozen complete_end_location (a_list: LEAF_AS_LIST): LOCATION_AS
 			-- Absolute end location for current construct
 		require
 			a_list_not_void: a_list /= Void
@@ -116,7 +116,7 @@ feature -- Roundtrip/Location
 			result_not_void: Result /= Void
 		end
 
-	frozen complete_start_position (a_list: LEAF_AS_LIST): INTEGER is
+	frozen complete_start_position (a_list: LEAF_AS_LIST): INTEGER
 			-- Absolute start position for current construct
 		require
 			a_list_not_void: a_list /= Void
@@ -124,7 +124,7 @@ feature -- Roundtrip/Location
 			Result := complete_start_location (a_list).position
 		end
 
-	frozen complete_end_position (a_list: LEAF_AS_LIST): INTEGER is
+	frozen complete_end_position (a_list: LEAF_AS_LIST): INTEGER
 			-- Absolute end position for current construct
 		require
 			a_list_not_void: a_list /= Void
@@ -134,7 +134,7 @@ feature -- Roundtrip/Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 			--| Note for implementors of this routine as `last_token'.
 			--| Do not rely on `a_list' non-voidness to figure out the
@@ -149,13 +149,13 @@ feature -- Roundtrip/Token
 		deferred
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 			--| Note: see comment on `last_token'.
 		deferred
 		end
 
-	token_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION is
+	token_region (a_list: LEAF_AS_LIST): ERT_TOKEN_REGION
 			-- Token region of current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -167,7 +167,7 @@ feature -- Roundtrip/Token
 			token_region_not_void: Result /= Void
 		end
 
-	index_of_matching_leaf (a_list: LEAF_AS_LIST; a_start_index: INTEGER; a_forward_search: BOOLEAN; a_matching: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): INTEGER is
+	index_of_matching_leaf (a_list: LEAF_AS_LIST; a_start_index: INTEGER; a_forward_search: BOOLEAN; a_matching: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): INTEGER
 			-- Index of the first matching leaf for `a_matching' in `a_list' starting from
 			-- `a_start_index' in the direction indicated by `a_forward_search'.
 		require
@@ -210,7 +210,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Text modification
 
-	can_append_text (a_list: LEAF_AS_LIST): BOOLEAN is
+	can_append_text (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Can some text be appended to current AST node?
 		require
 			a_list_not_void: a_list /= Void
@@ -220,7 +220,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-	can_prepend_text (a_list: LEAF_AS_LIST): BOOLEAN is
+	can_prepend_text (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Can some text be prepended to current AST node?
 		require
 			a_list_not_void: a_list /= Void
@@ -230,7 +230,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-	can_replace_text (a_list: LEAF_AS_LIST): BOOLEAN is
+	can_replace_text (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Can text of current AST node be replaced by some other text?
 		require
 			a_list_not_void: a_list /= Void
@@ -240,7 +240,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-	can_remove_text (a_list: LEAF_AS_LIST): BOOLEAN is
+	can_remove_text (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Can text of current AST node be removed?
 		require
 			a_list_not_void: a_list /= Void
@@ -250,7 +250,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-	is_text_available (a_list: LEAF_AS_LIST): BOOLEAN is
+	is_text_available (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Is text of current AST node available?
 		require
 			a_list_not_void: a_list /= Void
@@ -260,7 +260,7 @@ feature -- Roundtrip/Text modification
 			end
 		end
 
-	is_text_modified (a_list: LEAF_AS_LIST): BOOLEAN is
+	is_text_modified (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Has text of current AST node been modified?
 		require
 			a_list_not_void: a_list /= Void
@@ -272,7 +272,7 @@ feature -- Roundtrip/Text modification
 
 feature -- Roundtrip/Text modification
 
-	prepend_text (a_text: STRING; a_list: LEAF_AS_LIST) is
+	prepend_text (a_text: STRING; a_list: LEAF_AS_LIST)
 			-- Prepend `a_text' to current AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -282,7 +282,7 @@ feature -- Roundtrip/Text modification
 			a_list.prepend_region (token_region (a_list), a_text)
 		end
 
-	append_text (a_text: STRING; a_list: LEAF_AS_LIST) is
+	append_text (a_text: STRING; a_list: LEAF_AS_LIST)
 			-- Append `a_text' to current AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -292,7 +292,7 @@ feature -- Roundtrip/Text modification
 			a_list.append_region (token_region (a_list), a_text)
 		end
 
-	remove_text (a_list: LEAF_AS_LIST) is
+	remove_text (a_list: LEAF_AS_LIST)
 			-- Remove current AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -301,7 +301,7 @@ feature -- Roundtrip/Text modification
 			a_list.remove_region (token_region (a_list))
 		end
 
-	replace_text (a_text: STRING; a_list: LEAF_AS_LIST) is
+	replace_text (a_text: STRING; a_list: LEAF_AS_LIST)
 			-- Replace text of current AST node by `a_text'.
 		require
 			a_list_not_void: a_list /= Void
@@ -311,7 +311,7 @@ feature -- Roundtrip/Text modification
 			a_list.replace_region (token_region (a_list), a_text)
 		end
 
-	replace_subtext (old_str, new_str: STRING; is_case_sensitive:BOOLEAN; a_list: LEAF_AS_LIST) is
+	replace_subtext (old_str, new_str: STRING; is_case_sensitive:BOOLEAN; a_list: LEAF_AS_LIST)
 			-- Replace `old_str' by `new_str' in text of current AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -350,7 +350,7 @@ feature -- Roundtrip/Text modification
 
 feature -- Roundtrip/Text
 
-	original_text (a_list: LEAF_AS_LIST): STRING is
+	original_text (a_list: LEAF_AS_LIST): STRING
 			-- Original text of current AST structure
 		require
 			a_list_not_void: a_list /= Void
@@ -362,7 +362,7 @@ feature -- Roundtrip/Text
 			Result_not_void: Result /= Void
 		end
 
-	original_text_count (a_list: LEAF_AS_LIST): INTEGER is
+	original_text_count (a_list: LEAF_AS_LIST): INTEGER
 			-- Count in bytes of original text of current AST structure
 		require
 			a_list_not_void: a_list /= Void
@@ -372,7 +372,7 @@ feature -- Roundtrip/Text
 			Result := a_list.original_text_count (token_region (a_list))
 		end
 
-	text (a_list: LEAF_AS_LIST): STRING is
+	text (a_list: LEAF_AS_LIST): STRING
 			-- Text (with modification, if any, applied) of current AST structure
 		require
 			a_list_not_void: a_list /= Void
@@ -383,7 +383,7 @@ feature -- Roundtrip/Text
 			Result_not_void: Result /= Void
 		end
 
-	text_count (a_list: LEAF_AS_LIST): INTEGER is
+	text_count (a_list: LEAF_AS_LIST): INTEGER
 			-- Count in bytes of text (with all modification, if any, applied)
 		require
 			a_list_not_void: a_list /= Void
@@ -394,7 +394,7 @@ feature -- Roundtrip/Text
 
 feature -- Roundtrip/Separator
 
-	has_leading_separator (a_list: LEAF_AS_LIST): BOOLEAN is
+	has_leading_separator (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Does any separator structure (break or semicolon) appear before current AST node?
 		require
 			a_list_not_void: a_list /= Void
@@ -405,7 +405,7 @@ feature -- Roundtrip/Separator
 			Result := a_list.has_leading_separator (token_region (a_list))
 		end
 
-	has_trailing_separator (a_list: LEAF_AS_LIST): BOOLEAN is
+	has_trailing_separator (a_list: LEAF_AS_LIST): BOOLEAN
 			-- Does any separator structure (break or semicolon) appear after current AST node?
 		require
 			a_list_not_void: a_list /= Void
@@ -418,7 +418,7 @@ feature -- Roundtrip/Separator
 
 feature {NONE} -- Constants
 
-	null_location: LOCATION_AS is
+	null_location: LOCATION_AS
 			-- Null location
 		once
 			create Result.make_null
@@ -426,7 +426,7 @@ feature {NONE} -- Constants
 			null_location_not_void: Result /= Void and then Result.is_null
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

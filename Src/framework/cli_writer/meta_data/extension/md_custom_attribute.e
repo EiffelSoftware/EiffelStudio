@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a custom attribute blob as specified in Partition II 22.3."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	put_boolean (v: BOOLEAN) is
+	put_boolean (v: BOOLEAN)
 			-- Insert `v' at `current_position'.
 		do
 			if v then
@@ -43,13 +43,13 @@ feature -- Settings
 			end
 		end
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Insert `c' at `current_position'.
 		do
 			put_integer_16 (c.code.to_integer_16)
 		end
 
-	put_real_32 (r: REAL) is
+	put_real_32 (r: REAL)
 			-- Insert `r' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -60,7 +60,7 @@ feature -- Settings
 			current_position := l_pos + 4
 		end
 
-	put_real_64 (d: DOUBLE) is
+	put_real_64 (d: DOUBLE)
 			-- Insert `d' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -71,7 +71,7 @@ feature -- Settings
 			current_position := l_pos + 8
 		end
 		
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Insert `i' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -82,7 +82,7 @@ feature -- Settings
 			current_position := l_pos + 1
 		end
 
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Insert `i' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -93,7 +93,7 @@ feature -- Settings
 			current_position := l_pos + 2
 		end
 		
-	put_integer_32 (i: INTEGER) is
+	put_integer_32 (i: INTEGER)
 			-- Insert `i' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -104,7 +104,7 @@ feature -- Settings
 			current_position := l_pos + 4
 		end
 	
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Insert `i' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -115,7 +115,7 @@ feature -- Settings
 			current_position := l_pos + 8
 		end
 
-	put_natural_8 (n: NATURAL_8) is
+	put_natural_8 (n: NATURAL_8)
 			-- Insert `n' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -126,7 +126,7 @@ feature -- Settings
 			current_position := l_pos + 1
 		end
 
-	put_natural_16 (n: NATURAL_16) is
+	put_natural_16 (n: NATURAL_16)
 			-- Insert `n' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -137,7 +137,7 @@ feature -- Settings
 			current_position := l_pos + 2
 		end
 		
-	put_natural_32 (n: NATURAL_32) is
+	put_natural_32 (n: NATURAL_32)
 			-- Insert `n' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -148,7 +148,7 @@ feature -- Settings
 			current_position := l_pos + 4
 		end
 	
-	put_natural_64 (n: NATURAL_64) is
+	put_natural_64 (n: NATURAL_64)
 			-- Insert `n' at `current_position'.
 		local
 			l_pos: INTEGER
@@ -159,7 +159,7 @@ feature -- Settings
 			current_position := l_pos + 8
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Insert `s' at `current_position' using PackedLen encoding and
 			-- UTF-8.
 		local
@@ -184,7 +184,7 @@ feature -- Settings
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

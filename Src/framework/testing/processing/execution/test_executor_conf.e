@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Simple implementation of {TEST_EXECUTOR_CONF_I}.
 	]"

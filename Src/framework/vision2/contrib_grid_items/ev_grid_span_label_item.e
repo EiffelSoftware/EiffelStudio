@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a span grid label."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_master (a_master_col: INTEGER) is
+	make_master (a_master_col: INTEGER)
 			-- Make as `master' cell which hold the text data
 		do
 			is_master := True
 			make_span (a_master_col)
 		end
 
-	make_span (a_master_col: INTEGER) is
+	make_span (a_master_col: INTEGER)
 			-- Make as `slave' cell which "span" the master's cell's text data	
 		do
 			default_create
@@ -46,7 +46,7 @@ feature -- Access
 	pixmap: EV_PIXMAP
 			-- Master pixmap.
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Require width when resize_to_content occurs.
 		do
 			Result := Precursor
@@ -63,12 +63,12 @@ feature -- Properties
 	span_master_column: INTEGER
 			-- Master item's column index
 
-	extra_space_after_pixmap: INTEGER is 5
+	extra_space_after_pixmap: INTEGER = 5
 			-- Space between pixmap and text.
 
 feature -- change
 
-	set_text (v: STRING_GENERAL) is
+	set_text (v: STRING_GENERAL)
 			-- Set text
 			--  available only for the master cell
 		require
@@ -79,7 +79,7 @@ feature -- change
 			end
 		end
 
-	set_font (v: like font) is
+	set_font (v: like font)
 			-- Set font
 			--  available only for the master cell	
 		require
@@ -90,7 +90,7 @@ feature -- change
 			end
 		end
 
-	set_pixmap (v: like pixmap) is
+	set_pixmap (v: like pixmap)
 			-- Set pixmap
 			--  available only for the master cell	
 		require
@@ -104,7 +104,7 @@ feature -- change
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove pixmap
 			--  available only for the master cell	
 		require
@@ -120,7 +120,7 @@ feature -- change
 
 feature {NONE} -- Implementation
 
-	master_item: like Current is
+	master_item: like Current
 			-- Master cell's item
 		require
 			row /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-	redraw_span (a_drawable: EV_DRAWABLE) is
+	redraw_span (a_drawable: EV_DRAWABLE)
 			-- Redraw span cell
 		local
 			l_text: like text
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

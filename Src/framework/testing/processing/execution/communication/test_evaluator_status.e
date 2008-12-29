@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing testing progress of an evaluator. Since result retreival is done in a
 		separate thread, mutexes are used to controll access.

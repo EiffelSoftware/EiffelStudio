@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_module: ICOR_DEBUG_MODULE is
+	get_module: ICOR_DEBUG_MODULE
 			-- Reference to the ICorDebugModule.
 		local
 			p: POINTER
@@ -32,7 +32,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_module (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugModuleBreakpoint signature(ICorDebugModule**): EIF_INTEGER 
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			"GetModule"
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

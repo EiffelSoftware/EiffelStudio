@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared constants for the proxy"
 	author: ""
 	date: "$Date$"
@@ -12,34 +12,34 @@ inherit
 
 feature -- Access
 
-	interpreter_log_prefix: STRING is "%T-- > "
+	interpreter_log_prefix: STRING = "%T-- > "
 			-- Prefix of messages sent from interpreter in log file
 
-	multi_line_value_start_tag: STRING is "---multi-line-value-start---"
+	multi_line_value_start_tag: STRING = "---multi-line-value-start---"
 			-- Multi line start tag
 
-	multi_line_value_end_tag: STRING is "---multi-line-value-end---"
+	multi_line_value_end_tag: STRING = "---multi-line-value-end---"
 			-- Multi line end tag
 
-	interpreter_error_prefix: STRING is "error: "
+	interpreter_error_prefix: STRING = "error: "
 			-- Prefix for interpreter error message
 
-	interpreter_done_message: STRING is "done:"
+	interpreter_done_message: STRING = "done:"
 
-	interpreter_success_message: STRING is "status: success"
+	interpreter_success_message: STRING = "status: success"
 
-	interpreter_exception_message: STRING is "status: exception"
+	interpreter_exception_message: STRING = "status: exception"
 
-	proxy_has_started_and_connected_message: STRING is "-- Proxy has started and connected to interpreter."
+	proxy_has_started_and_connected_message: STRING = "-- Proxy has started and connected to interpreter."
 			-- Message printed to the log when a new interpreter is started
 
-	time_passed_mark: STRING is "-- Time passed: "
+	time_passed_mark: STRING = "-- Time passed: "
 			-- String used in proxy log to mark the passing of every minute
 
-	itp_start_time_message: STRING is "-- Interpreter started after: "
+	itp_start_time_message: STRING = "-- Interpreter started after: "
 			-- String used in proxy log to mark the time of every intepreter start
 
-	exception_thrown_message: STRING is "-- Exception thrown after: "
+	exception_thrown_message: STRING = "-- Exception thrown after: "
 			-- String used in proxy log to mark the time elpased until an exception is thrown
 
 end

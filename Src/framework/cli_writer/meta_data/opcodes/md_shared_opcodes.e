@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List all known opcodes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	opcodes: HASH_TABLE [MD_OPCODE, INTEGER_16] is
+	opcodes: HASH_TABLE [MD_OPCODE, INTEGER_16]
 			-- All opcodes indexed by their opcode value.
 		once
 			create Result.make (300)
@@ -1186,7 +1186,7 @@ feature -- Access
 -- 					feature {MD_OPCODE_FORMAT}.no_arg),
 -- 				feature {MD_OPCODES}.unused70)
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

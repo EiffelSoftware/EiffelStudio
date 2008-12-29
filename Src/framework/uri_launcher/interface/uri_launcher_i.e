@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The interface used to launch URIs in the platform's default browser.
 	]"
@@ -95,7 +95,7 @@ feature {NONE} -- Basic operations
 			Result := l_process.is_running or else l_process.exit_code = 0
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

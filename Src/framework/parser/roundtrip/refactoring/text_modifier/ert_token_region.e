@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a region of tokens of an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_start_index, a_end_index: INTEGER) is
+	make (a_start_index, a_end_index: INTEGER)
 			--
 		require
 			valid_region: is_valid_region (a_start_index, a_end_index)
@@ -28,20 +28,20 @@ feature{NONE} -- Implementation
 
 feature -- Status reporting
 
-	is_valid_region (a_start_index, a_end_index: INTEGER): BOOLEAN is
+	is_valid_region (a_start_index, a_end_index: INTEGER): BOOLEAN
 			-- Is region specified by `a_start_index' and `a_end_index' valid?
 		do
 			Result := a_start_index > 0 and a_end_index >= a_start_index
 		end
 
-	is_overlap_region (other: like Current): BOOLEAN is
+	is_overlap_region (other: like Current): BOOLEAN
 			-- Is `other' overlap with current?
 		do
 			Result := (other.start_index < start_index and other.end_index > start_index and other.end_index < end_index) or
 					 (other.start_index > start_index and other.start_index < end_index and other.end_index > end_index)
 		end
 
-	is_disjoint_region (other: like Current): BOOLEAN is
+	is_disjoint_region (other: like Current): BOOLEAN
 			-- Is `other' disjoint from current?
 		require
 			other_not_void: other /= Void
@@ -50,7 +50,7 @@ feature -- Status reporting
 			Result := other.end_index < start_index or other.start_index > end_index
 		end
 
-	is_sub_region (other: like Current): BOOLEAN is
+	is_sub_region (other: like Current): BOOLEAN
 			-- Is current a sub region of `other'?
 		require
 			other_not_void: other /= Void
@@ -59,7 +59,7 @@ feature -- Status reporting
 			Result := start_index >= other.start_index and end_index <= other.end_index
 		end
 
-	is_true_sub_region (other: like Current): BOOLEAN is
+	is_true_sub_region (other: like Current): BOOLEAN
 			-- Is current a true sub region of `other'?
 		require
 			other_not_void: other /= Void
@@ -68,7 +68,7 @@ feature -- Status reporting
 			Result := start_index > other.start_index and end_index < other.end_index
 		end
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to current?
 		require
 			other_not_void: other /= Void
@@ -86,7 +86,7 @@ feature -- Access
 	end_index: INTEGER;
 			-- End index (in LEAF_AS_LIST)of current region
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

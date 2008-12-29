@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A recoverable INI parser that creates an Abstract Syntax Tree (AST)
 		reprentation of a parsed buffer.
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_max_errors: like max_syntax_errors) is
+	make (a_max_errors: like max_syntax_errors)
 			-- Initialize a recoverable parser.
 		require
 			a_max_errors_positive: a_max_errors > 0
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			max_syntax_errors_set: max_syntax_errors = a_max_errors
 		end
 
-	make_with_factory (a_max_errors: like max_syntax_errors; a_factory: like factory) is
+	make_with_factory (a_max_errors: like max_syntax_errors; a_factory: like factory)
 			-- Initialize a recoverable parser.
 		require
 			a_max_errors_positive: a_max_errors > 0
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	syntax_errors: LIST [INI_SYNTAX_ERROR] is
+	syntax_errors: LIST [INI_SYNTAX_ERROR]
 			-- Syntax errors found in last parsed ini file
 		local
 			l_result: like internal_syntax_errors
@@ -58,7 +58,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Was last parse successful?
 		do
 			Result := syntax_errors.is_empty
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	parse_source (a_buffer: STRING) is
+	parse_source (a_buffer: STRING)
 			-- Parses source buffer `a_buffer'.
 		require
 			a_buffer_attached: a_buffer /= Void
@@ -141,7 +141,7 @@ feature -- Basic Operations
 			parsed_root_node_attached: parsed_root_node /= Void
 		end
 
-	reset is
+	reset
 			-- Resets parser
 		local
 			l_errors: like internal_syntax_errors
@@ -156,7 +156,7 @@ feature -- Basic Operations
 
 feature -- Status Setting
 
-	set_ignore_syntax_errors (a_ignore: like ignore_syntax_errors) is
+	set_ignore_syntax_errors (a_ignore: like ignore_syntax_errors)
 			-- Set `ignore_syntax_errors' to `a_ignore'.
 		do
 			ignore_syntax_errors := a_ignore
@@ -166,7 +166,7 @@ feature -- Status Setting
 
 feature {NONE} -- Token Processing
 
-	process_line_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER) is
+	process_line_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER)
 			-- Processes list of tokens `a_token' which are on line `a_line'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -193,7 +193,7 @@ feature {NONE} -- Token Processing
 			end
 		end
 
-	process_section_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER) is
+	process_section_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER)
 			-- Processes list of tokens `a_token' which are on line `a_line'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -247,7 +247,7 @@ feature {NONE} -- Token Processing
 			end
 		end
 
-	process_property_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER) is
+	process_property_tokens (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]; a_line: INTEGER)
 			-- Processes list of tokens `a_token' which are on line `a_line'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -327,7 +327,7 @@ feature {NONE} -- Token Processing
 			end
 		end
 
-	token_line_type (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]): INI_PARSER_TOKEN_LINE_TYPE is
+	token_line_type (a_tokens: LIST [INI_SCANNER_TOKEN_INFO]): INI_PARSER_TOKEN_LINE_TYPE
 			-- Retrieve type of toke line for list of tokens `a_token'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -347,7 +347,7 @@ feature {NONE} -- Token Processing
 
 feature {NONE} -- Error Handling
 
-	extend_syntax_error (a_error: INI_SYNTAX_ERROR) is
+	extend_syntax_error (a_error: INI_SYNTAX_ERROR)
 			-- Add a syntax error.
 		require
 			a_error_attached: a_error /= Void
@@ -365,7 +365,7 @@ feature {NONE} -- Error Handling
 
 feature {NONE} -- Implementation
 
-	token_span (a_token: INI_SCANNER_TOKEN_INFO; a_line: INTEGER): INI_TEXT_SPAN is
+	token_span (a_token: INI_SCANNER_TOKEN_INFO; a_line: INTEGER): INI_TEXT_SPAN
 			--
 		require
 			a_token_attached: a_token /= Void
@@ -390,7 +390,7 @@ invariant
 	internal_syntax_errors_attached: internal_syntax_errors /= Void
 	factory_attached: factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

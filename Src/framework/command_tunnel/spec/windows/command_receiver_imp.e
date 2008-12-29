@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Comand recevier implementation"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Operation
 
-	destroy is
+	destroy
 			-- <precursor>
 		do
 			if message_window /= Void and then message_window.exists then
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	setup_callback is
+	setup_callback
 			-- Setup callback to handle WM_COPYDATA message.
 		do
 			create message_window.make_top (interface.key)
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			message_window.enable_commands
 		end
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute the command with `argument'.
 		local
 			l_wel_string: WEL_STRING
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 
 	message_window: ?EV_INTERNAL_SILLY_WINDOW_IMP
 
-	command_string (a_pointer: POINTER): WEL_STRING is
+	command_string (a_pointer: POINTER): WEL_STRING
 			-- `a_pointer' points to COPYDATASTRUCT structure.
 		local
 			l_p: POINTER
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_pointer_and_count (l_p, l_count)
 		end
 
-	frozen to_lresult (i: INTEGER): POINTER is
+	frozen to_lresult (i: INTEGER): POINTER
 			-- Convert integer value `i' in a valid LRESULT value.
 		external
 			"C inline use <windows.h>"
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			"(EIF_POINTER) (LRESULT) $i"
 		end
 
-	frozen c_pointer_from_wm_copydata (a_pointer: POINTER; a_count: TYPED_POINTER [INTEGER]): POINTER is
+	frozen c_pointer_from_wm_copydata (a_pointer: POINTER; a_count: TYPED_POINTER [INTEGER]): POINTER
 			-- Data from COPYDATASTRUCT structure.
 		external
 			"C inline"
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 
 	interface: !COMMAND_RECEIVER;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

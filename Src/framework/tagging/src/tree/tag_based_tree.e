@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that take a collection of {TAGABLE_I} and create a tree based on their tags.
 		
@@ -148,7 +148,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	connect (a_collection: like collection; a_prefix: like tag_prefix) is
+	connect (a_collection: like collection; a_prefix: like tag_prefix)
 			-- Build tree for collection and given tag.
 			--
 			-- `a_collection': Active collection containing items for which tree shall be built.
@@ -172,7 +172,7 @@ feature -- Status setting
 			collection_set: collection = a_collection
 		end
 
-	disconnect is
+	disconnect
 			-- Disconnect from `collection' and clear tree
 		require
 			connected: is_connected
@@ -187,7 +187,7 @@ feature -- Status setting
 
 feature {NONE} -- Element change
 
-	add_untagged_item (a_item: !G) is
+	add_untagged_item (a_item: !G)
 			-- Add `a_item' to `untagged_items'.
 		require
 			a_item_not_added: not untagged_items.has (a_item)
@@ -208,7 +208,7 @@ feature {NONE} -- Element change
 			a_item_removed: not untagged_items.has (a_item)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out all nodes and items.
 		do
 			cached_children := Void
@@ -220,7 +220,7 @@ feature {NONE} -- Element change
 			empty: is_empty
 		end
 
-	fill is
+	fill
 			-- Add all items from `observed_collection' to tree.
 		require
 			empty: is_empty
@@ -264,7 +264,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	frozen on_item_changed (a_collection: like collection; a_item: !G) is
+	frozen on_item_changed (a_collection: like collection; a_item: !G)
 			-- <Precursor>
 		require else
 			a_collection_valid: a_collection = collection
@@ -307,7 +307,7 @@ feature {NONE} -- Events
 			untagged_items_empty: untagged_items.is_empty
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

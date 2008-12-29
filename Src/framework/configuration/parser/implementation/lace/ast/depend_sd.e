@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Depend clause in Ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (d: like depend_on; s: like script) is
+	initialize (d: like depend_on; s: like script)
 			-- Create a new TWO_NAME AST node.
 		require
 			d_not_void: d /= Void
@@ -37,7 +37,7 @@ feature -- Properties
 	script: ID_SD;
 			-- Script to run when file changes.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

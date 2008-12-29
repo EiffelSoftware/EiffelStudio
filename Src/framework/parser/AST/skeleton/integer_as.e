@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for integer constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,7 +54,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_type: like constant_type; is_neg: BOOLEAN; s: STRING) is
+	make_from_string (a_type: like constant_type; is_neg: BOOLEAN; s: STRING)
 			-- Create a new INTEGER AST node.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			constant_type_set: constant_type = a_type
 		end
 
-	make_from_hexa_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
+	make_from_hexa_string (a_type: like constant_type; sign: CHARACTER; s: STRING)
 			-- Create a new INTEGER AST node from `s' string representing
 			-- an integer in hexadecimal starting with the following sequence "0x"
 			-- and given `sign'.
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			constant_type_set: constant_type = a_type
 		end
 
-	make_from_octal_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
+	make_from_octal_string (a_type: like constant_type; sign: CHARACTER; s: STRING)
 			-- Create a new INTEGER AST node from `s' string representing
 			-- an integer in octal starting with the following sequence "0c"
 			-- and given `sign'.
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			constant_type_set: constant_type = a_type
 		end
 
-	make_from_binary_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
+	make_from_binary_string (a_type: like constant_type; sign: CHARACTER; s: STRING)
 			-- Create a new INTEGER AST node from `s' string representing
 			-- an integer in binary starting with the following sequence "0b"
 			-- and given `sign'.
@@ -133,7 +133,7 @@ feature -- Roundtrip
 	sign_symbol_index: INTEGER
 			-- Index of symbol "+" or "-" associated with this structure
 
-	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "+" or "-" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -146,7 +146,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_sign_symbol (s_as: SYMBOL_AS) is
+	set_sign_symbol (s_as: SYMBOL_AS)
 			-- Set `sign_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -158,7 +158,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
@@ -175,7 +175,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Text
 
-	number_text (a_match_list: LEAF_AS_LIST): STRING is
+	number_text (a_match_list: LEAF_AS_LIST): STRING
 			-- Text of the number part (not including `constant_type' and `sign_symbol')
 		require
 			a_match_list_attached: a_match_list /= Void
@@ -188,7 +188,7 @@ feature -- Access
 	constant_type: TYPE_AS
 			-- Type of integer constant if specified.
 
-	has_constant_type: BOOLEAN is
+	has_constant_type: BOOLEAN
 			-- Has constant an explicit type?
 		do
 			Result := constant_type /= Void
@@ -203,7 +203,7 @@ feature -- Properties
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_integer_as (Current)
@@ -211,7 +211,7 @@ feature -- Visitor
 
 feature -- Status report
 
-	natural_8_value: NATURAL_8 is
+	natural_8_value: NATURAL_8
 			-- 8-bit natural value
 		require
 			has_natural: has_natural (8)
@@ -219,7 +219,7 @@ feature -- Status report
 			Result := value.as_natural_8
 		end
 
-	natural_16_value: NATURAL_16 is
+	natural_16_value: NATURAL_16
 			-- 16-bit natural value
 		require
 			has_natural: has_natural (16)
@@ -227,7 +227,7 @@ feature -- Status report
 			Result := value.as_natural_16
 		end
 
-	natural_32_value: NATURAL_32 is
+	natural_32_value: NATURAL_32
 			-- 32-bit natural value
 		require
 			has_natural: has_natural (32)
@@ -235,7 +235,7 @@ feature -- Status report
 			Result := value.as_natural_32
 		end
 
-	natural_64_value: NATURAL_64 is
+	natural_64_value: NATURAL_64
 			-- 64-bit natural value
 		require
 			has_natural: has_natural (64)
@@ -243,7 +243,7 @@ feature -- Status report
 			Result := value
 		end
 
-	integer_8_value: INTEGER_8 is
+	integer_8_value: INTEGER_8
 			-- 8-bit integer value
 		require
 			has_integer: has_integer (8)
@@ -254,7 +254,7 @@ feature -- Status report
 			end
 		end
 
-	integer_16_value: INTEGER_16 is
+	integer_16_value: INTEGER_16
 			-- 16-bit integer value
 		require
 			has_integer: has_integer (16)
@@ -265,7 +265,7 @@ feature -- Status report
 			end
 		end
 
-	integer_32_value: INTEGER is
+	integer_32_value: INTEGER
 			-- 32-bit integer value
 		require
 			has_integer: has_integer (32)
@@ -276,7 +276,7 @@ feature -- Status report
 			end
 		end
 
-	integer_64_value: INTEGER_64 is
+	integer_64_value: INTEGER_64
 			-- 64-bit integer value
 		require
 			has_integer: has_integer (64)
@@ -287,7 +287,7 @@ feature -- Status report
 			end
 		end
 
-	has_integer (s: INTEGER_8): BOOLEAN is
+	has_integer (s: INTEGER_8): BOOLEAN
 			-- Is there INTEGER_nn type among possible constant types, where nn is `s'?
 		require
 			valid_size: s = 8 or s = 16 or s = 32 or s = 64
@@ -297,7 +297,7 @@ feature -- Status report
 			definition: Result = (types & integer_mask (s) /= 0)
 		end
 
-	has_natural (s: INTEGER_8): BOOLEAN is
+	has_natural (s: INTEGER_8): BOOLEAN
 			-- Is there NATURAL_nn type among possible constant types, where nn is `s'?
 		require
 			valid_size: s = 8 or s = 16 or s = 32 or s = 64
@@ -309,7 +309,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := value = other.value and then default_type = other.default_type and then
@@ -318,7 +318,7 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 			-- String representation of manifest constant.
 		do
 			inspect default_type
@@ -352,7 +352,7 @@ feature {INTEGER_AS} -- Types
 
 feature {NONE} -- Translation
 
-	read_hexadecimal_value (sign: CHARACTER; s: STRING) is
+	read_hexadecimal_value (sign: CHARACTER; s: STRING)
 			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
 		require
 			valid_sign: ("%U+-").has (sign)
@@ -417,7 +417,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	read_octal_value (sign: CHARACTER; s: STRING) is
+	read_octal_value (sign: CHARACTER; s: STRING)
 			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
 		require
 			valid_sign: ("%U+-").has (sign)
@@ -477,7 +477,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	read_binary_value (sign: CHARACTER; s: STRING) is
+	read_binary_value (sign: CHARACTER; s: STRING)
 			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
 		require
 			valid_sign: ("%U+-").has (sign)
@@ -538,10 +538,10 @@ feature {NONE} -- Translation
 			end
 		end
 
-	largest_natural_64: STRING is "18446744073709551615"
+	largest_natural_64: STRING = "18446744073709551615"
 			-- Largest string representation of 2^64 - 1
 
-	read_decimal_value (is_neg: BOOLEAN; s: STRING) is
+	read_decimal_value (is_neg: BOOLEAN; s: STRING)
 			-- Read integer or natural expressed in decimal representation.
 		require
 			s_not_void: s /= Void
@@ -593,7 +593,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	compute_type is
+	compute_type
 			-- Compute `types' and `default_type' from the value of the constant.
 		local
 			v: like value
@@ -672,7 +672,7 @@ feature {NONE} -- Translation
 			end
 		end
 
-	adjust_type is
+	adjust_type
 			-- Make sure that this constant matches `constant_type' if possible.
 			-- Set `is_initialized' to `False' otherwise.
 		require
@@ -699,7 +699,7 @@ invariant
 		default_type = natural_mask (64)))
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

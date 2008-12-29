@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List used in abstract syntax trees. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Creation of the list with the comparison set on object
 		do
 				-- We always use 1 for lower so we can optimize array setup.
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			object_comparison := True
 		end
 
-	make_filled (n: INTEGER) is
+	make_filled (n: INTEGER)
 			-- Creation of the list with the comparison set on object
 		do
 				-- We always use 1 for lower so we can optimize array setup.
@@ -53,7 +53,7 @@ feature -- Roundtrip
 	separator_list: CONSTRUCT_LIST [INTEGER]
 			-- List to store terminals that appear in between every 2 items of this list
 
-	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS is
+	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
 		require
 			valid_index: separator_list.valid_index (i)
@@ -67,7 +67,7 @@ feature -- Roundtrip
 			end
 		end
 
-	reverse_extend_separator (l_as: LEAF_AS) is
+	reverse_extend_separator (l_as: LEAF_AS)
 			-- Add `l_as' into `separator_list'.
 		do
 			if separator_list = Void then
@@ -83,7 +83,7 @@ feature -- Roundtrip
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_eiffel_list (Current)
@@ -91,7 +91,7 @@ feature -- Visitor
 
 feature -- Access
 
-	reversed_first: T is
+	reversed_first: T
 		require
 			not_empty: not is_empty
 		do
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if not is_empty then
@@ -115,7 +115,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if not is_empty then
@@ -132,7 +132,7 @@ feature -- Roundtrip/Token
 
 feature -- Element change
 
-	merge_after_position (p: INTEGER; other: LIST [T]) is
+	merge_after_position (p: INTEGER; other: LIST [T])
 			-- Merge `other' after position `p', i.e. replace
 			-- items after `p' with items from `other'.
 		require
@@ -161,7 +161,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		local
 			l_area, o_area: SPECIAL [T]
@@ -182,7 +182,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Captured eiffel object containing arbitrary attributes.
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_function: ICOR_DEBUG_FUNCTION is
+	get_function: ICOR_DEBUG_FUNCTION
 			-- Reference to the ICorDebugFunction.
 		local
 			p: POINTER
@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_offset: NATURAL_32 is
+	get_offset: NATURAL_32
 			-- Get Offset.
 		do
 			last_call_success := cpp_get_offset (item, $Result)
@@ -40,7 +40,7 @@ feature {ICOR_EXPORTER} -- Access
 		
 feature {NONE} -- Implementation
 
-	cpp_get_function (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_function (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ICorDebugFunction**): EIF_INTEGER 
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end	
 
-	cpp_get_offset (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_offset (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ULONG32*): EIF_INTEGER 
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			"GetOffset"
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

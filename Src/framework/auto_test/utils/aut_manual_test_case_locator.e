@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system) is
+	make (a_system: like system)
 			-- Create a new client/supplier relationship tester.
 		require
 			a_system_not_void: a_system /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	locate (a_test_scope: DS_LINEAR [CLASS_C]; a_deep: BOOLEAN) is
+	locate (a_test_scope: DS_LINEAR [CLASS_C]; a_deep: BOOLEAN)
 			-- Locate relevant test case classes for `a_test_scope'.
 			-- Make result available via `relevant_test_case_classes'. A
 			-- relevant test case is a test case that depends on a class
@@ -100,7 +100,7 @@ feature -- Settings
 
 feature -- Status report
 
-	is_test_case_class (a_class: CLASS_C): BOOLEAN is
+	is_test_case_class (a_class: CLASS_C): BOOLEAN
 			-- Is `a_class' a manual unit test classs?
 		require
 			a_class_not_void: a_class /= Void
@@ -110,7 +110,7 @@ feature -- Status report
 			definition: Result = (test_case_ancestor /= Void) and then ancestors (a_class).has (test_case_ancestor)
 		end
 
-	is_test_procedure (a_procedure: FEATURE_I): BOOLEAN is
+	is_test_procedure (a_procedure: FEATURE_I): BOOLEAN
 			-- Is `a_procedure' a test procedure?
 			-- (Test procedure by definition start with `test_procedure_prefix'.)
 		require
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	test_case_ancestor: CLASS_C
 			-- Ancestor class to all manual test case classes
 
-	test_procedure_prefix: STRING is "test_"
+	test_procedure_prefix: STRING = "test_"
 			-- Prefix of test routines
 
 --	recursive_providers (a_class: ET_CLASS): DS_HASH_SET [ET_CLASS] is
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 ----			suppliers_built: a_class.suppliers /= Void
 --		end
 
-	ancestors (a_class: CLASS_C): DS_HASH_SET [CLASS_C] is
+	ancestors (a_class: CLASS_C): DS_HASH_SET [CLASS_C]
 			-- Ancestors of `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	compute_recursive_ancestors (a_class: CLASS_C; a_ancestors: DS_HASH_SET [CLASS_C]) is
+	compute_recursive_ancestors (a_class: CLASS_C; a_ancestors: DS_HASH_SET [CLASS_C])
 			-- Compute all the recursive ancestors for `a_class' and store result in `a_ancestors'.
 		require
 			a_class_not_void: a_class /= Void

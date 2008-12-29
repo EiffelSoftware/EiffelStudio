@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	includes: like internal_includes is
+	includes: like internal_includes
 			-- Include externals.
 		do
 			if internal_includes /= Void and then has (internal_includes) then
@@ -31,7 +31,7 @@ feature -- Access
 			end
 		end
 
-	objects: like internal_objects is
+	objects: like internal_objects
 			-- Object externals.
 		do
 			if internal_objects /= Void and then has (internal_objects) then
@@ -39,7 +39,7 @@ feature -- Access
 			end
 		end
 
-	libraries: like internal_libraries is
+	libraries: like internal_libraries
 			-- Library externals.
 		do
 			if internal_libraries /= Void and then has (internal_libraries) then
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	makefiles: like internal_makefiles is
+	makefiles: like internal_makefiles
 			-- Make externals.
 		do
 			if internal_makefiles /= Void and then has (internal_makefiles) then
@@ -63,13 +63,13 @@ feature -- Access
 			end
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_external
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_externals_icon
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Element update
 
-	add_include is
+	add_include
 			-- Add a new include external.
 		do
 			if includes = Void then
@@ -88,7 +88,7 @@ feature -- Element update
 			internal_includes.add_external
 		end
 
-	add_object is
+	add_object
 			-- Add a new object external.
 		do
 			if objects = Void then
@@ -99,7 +99,7 @@ feature -- Element update
 			internal_objects.add_external
 		end
 
-	add_library is
+	add_library
 			-- Add a new library external.
 		do
 			if libraries = Void then
@@ -110,7 +110,7 @@ feature -- Element update
 			internal_libraries.add_external
 		end
 
-	add_make is
+	add_make
 			-- Add a new make external.
 		do
 			if makefiles = Void then
@@ -121,7 +121,7 @@ feature -- Element update
 			internal_makefiles.add_external
 		end
 
-	add_resource is
+	add_resource
 			-- Add a new resource external.
 		do
 			if resources = Void then
@@ -132,7 +132,7 @@ feature -- Element update
 			internal_resources.add_external
 		end
 
-	set_includes (a_externals: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]) is
+	set_includes (a_externals: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE])
 			-- Set include externals.
 		local
 			l_external: EXTERNAL_INCLUDE_SECTION
@@ -152,7 +152,7 @@ feature -- Element update
 			end
 		end
 
-	set_objects (a_externals: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]) is
+	set_objects (a_externals: ARRAYED_LIST [CONF_EXTERNAL_OBJECT])
 			-- Set object externals.
 		local
 			l_external: EXTERNAL_OBJECT_SECTION
@@ -172,7 +172,7 @@ feature -- Element update
 			end
 		end
 
-	set_libraries (a_externals: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY]) is
+	set_libraries (a_externals: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY])
 			-- Set library externals.
 		local
 			l_external: EXTERNAL_LIBRARY_SECTION
@@ -192,7 +192,7 @@ feature -- Element update
 			end
 		end
 
-	set_makefiles (a_externals: ARRAYED_LIST [CONF_EXTERNAL_MAKE]) is
+	set_makefiles (a_externals: ARRAYED_LIST [CONF_EXTERNAL_MAKE])
 			-- Set make externals.
 		local
 			l_external: EXTERNAL_MAKE_SECTION
@@ -212,7 +212,7 @@ feature -- Element update
 			end
 		end
 
-	set_resources (a_externals: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]) is
+	set_resources (a_externals: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE])
 			-- Set resource externals.
 		local
 			l_external: EXTERNAL_RESOURCE_SECTION
@@ -232,7 +232,7 @@ feature -- Element update
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -262,7 +262,7 @@ feature -- Element update
 
 feature -- Simple operations
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_include_button.select_actions.wipe_out
@@ -303,14 +303,14 @@ feature {NONE} -- Implementation
 	internal_resources: TARGET_RESOURCE_EXTERNALS_SECTION
 			-- Resource externals (Could still be present even if it removed from Current)
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
-	order_headers is
+	order_headers
 			-- Order headers in correct order.
 		local
 			l_inc, l_obj, l_lib, l_mak, l_res: BOOLEAN
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that adapts a configuration so that it accesses the information from the backup directory."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Update
 
-	set_backup_directory (a_dir: like backup_directory) is
+	set_backup_directory (a_dir: like backup_directory)
 			-- Set `backup_directory' to `a_dir'.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -47,7 +47,7 @@ feature -- Update
 
 feature -- Visit nodes
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
@@ -70,13 +70,13 @@ feature -- Visit nodes
 			l_dir.recursive_create_directory
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		do
 			process_cluster (an_override)
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		local
 			l_loc: CONF_FILE_LOCATION
@@ -92,13 +92,13 @@ feature -- Visit nodes
 			end
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 			process_library (a_precompile)
 		end
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
 			l_as, l_new_as: STRING

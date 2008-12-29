@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a class on the configuration level, if the project is compiled."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_group: like group; a_path, a_classname: STRING; a_factory: like factory) is
+	make (a_file_name: STRING; a_group: like group; a_path, a_classname: STRING; a_factory: like factory)
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -75,7 +75,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	name: STRING
 			-- Class name without any renamings.
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
 			Result := actual_class.group.get_class_options (name)
@@ -93,13 +93,13 @@ feature -- Access, in compiled only, not stored to configuration file
 	is_valid: BOOLEAN
 			-- Is `Current' still valid, ie. still part of the system?
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Has the class been compiled?
 		once
 			Result := False
 		end
 
-	is_always_compile: BOOLEAN is
+	is_always_compile: BOOLEAN
 			-- Does this class have to be always compiled?
 		do
 			Result := visible /= Void
@@ -108,7 +108,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	is_partial: BOOLEAN
 			-- Is the class generated out of partial classes?
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is the class read only?
 		local
 			l_file: RAW_FILE
@@ -121,19 +121,19 @@ feature -- Access, in compiled only, not stored to configuration file
 			end
 		end
 
-	is_overriden: BOOLEAN is
+	is_overriden: BOOLEAN
 			-- Is the class overridden?
 		do
 			Result := overriden_by /= Void
 		end
 
-	is_class_assembly: BOOLEAN is
+	is_class_assembly: BOOLEAN
 			-- Is class from an assembly?
 		do
 
 		end
 
-	does_override: BOOLEAN is
+	does_override: BOOLEAN
 			-- Does the class override other classes?
 		do
 			Result := overrides /= Void
@@ -157,7 +157,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	file_name: STRING
 			-- The file name of the class.
 
-	full_file_name: STRING is
+	full_file_name: STRING
 			-- The full file name of the class (including path).
 		do
 			Result := group.location.build_path (path, file_name)
@@ -180,7 +180,7 @@ feature -- Access, in compiled only, not stored to configuration file
 
 feature -- Status report
 
-	has_modification_date_changed: BOOLEAN is
+	has_modification_date_changed: BOOLEAN
 			-- Did modification date changed since last call to `check_changed'?
 		local
 			l_date: INTEGER
@@ -191,7 +191,7 @@ feature -- Status report
 
 feature -- Access queries
 
-	actual_class: like class_type is
+	actual_class: like class_type
 			-- Return the actual class (takes overriding into account).
 		do
 			if is_overriden then
@@ -205,7 +205,7 @@ feature -- Access queries
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 				-- compute hash code on demand
@@ -217,13 +217,13 @@ feature -- Access
 
 feature -- Status update
 
-	set_modified is
+	set_modified
 			-- Mark the class as modified.
 		do
 			is_modified := True
 		end
 
-	reset_error is
+	reset_error
 			-- Reset the error.
 		do
 			is_error := False
@@ -233,7 +233,7 @@ feature -- Status update
 			last_error_empty: last_error = Void
 		end
 
-	set_up_to_date is
+	set_up_to_date
 			-- The class has been recompiled and is now up to date.
 		do
 			is_modified := False
@@ -245,7 +245,7 @@ feature -- Status update
 			not_removed: not is_removed
 		end
 
-	confirm_class_name is
+	confirm_class_name
 			-- Class name of Current was confirmed.
 		do
 			is_class_name_confirmed := True
@@ -255,7 +255,7 @@ feature -- Status update
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	add_visible (a_vis: like visible) is
+	add_visible (a_vis: like visible)
 			-- Add visible rules to `visible'. Set `is_error' and `last_error' if there is a conflict.
 		require
 			a_vis_not_void: a_vis /= Void
@@ -337,19 +337,19 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			end
 		end
 
-	invalidate is
+	invalidate
 			-- Set `is_valid' to False.
 		do
 			is_valid := False
 		end
 
-	resurect is
+	resurect
 			-- Set `is_valid' to True.
 		do
 			is_valid := True
 		end
 
-	rebuild (a_file_name: STRING; a_group: like group; a_path: STRING) is
+	rebuild (a_file_name: STRING; a_group: like group; a_path: STRING)
 			-- Update the informations during a rebuild.
 			-- More or less the same thing as we during `make'.
 		require
@@ -388,7 +388,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			last_class_name_set: (last_class_name = Void and not is_class_name_confirmed) or else (last_class_name /= Void and then not last_class_name.is_empty)
 		end
 
-	check_changed is
+	check_changed
 			-- Check if the file was changed.
 			-- And update name if necessary
 		local
@@ -406,7 +406,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			end
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Compute and set (if we are not rebuilding) `name' and `renamed_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -417,7 +417,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			name_set: name ~ a_name.as_upper
 		end
 
-	name_from_associated_file: STRING is
+	name_from_associated_file: STRING
 			-- Read associated file and extract the name from it if possible.
 		local
 			l_file: KL_BINARY_INPUT_FILE
@@ -442,7 +442,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			valid_name_in_upper: Result = Void or else Result.as_upper.is_equal (Result)
 		end
 
-	set_overriden_by (a_class: like class_type) is
+	set_overriden_by (a_class: like class_type)
 			-- `a_class' overrides `Current'.
 		require
 			a_class_not_void: a_class /= Void
@@ -456,7 +456,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			is_overriden: is_overriden
 		end
 
-	add_does_override (a_class: like class_type) is
+	add_does_override (a_class: like class_type)
 			-- `Current' overrides `a_class'.
 		do
 			if overrides = Void then
@@ -467,7 +467,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Class name alphabetic order
 		do
 			Result := name < other.name
@@ -475,7 +475,7 @@ feature -- Comparison
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Generate a nice representation of Current to be seen
 			-- in debugger.
 		do
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 	old_overriden_by: like overriden_by
 			-- `overriden_by' from last compilation.
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
 		do
 			is_error := True
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchors
 
-	class_type: CONF_CLASS is
+	class_type: CONF_CLASS
 			-- Class type anchor.
 		do
 		end
@@ -517,7 +517,7 @@ invariant
 	compiled_or_overrides: is_compiled implies not does_override
 	factory_not_void: factory /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

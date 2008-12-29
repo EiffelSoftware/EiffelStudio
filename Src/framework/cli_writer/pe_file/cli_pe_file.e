@@ -1,4 +1,4 @@
-indexing
+note
 	description: "In memory representation of a PE file for CLI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like file_name; console_app, dll_app, is_32bits_app: BOOLEAN) is
+	make (a_name: like file_name; console_app, dll_app, is_32bits_app: BOOLEAN)
 			-- Create new PE file with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -98,7 +98,7 @@ feature -- Status
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
 
-	has_resources: BOOLEAN is
+	has_resources: BOOLEAN
 			-- Does current have some resources attached?
 		do
 			Result := resources /= Void
@@ -151,7 +151,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_method_writer (m: like method_writer) is
+	set_method_writer (m: like method_writer)
 			-- Set `method_writer' to `m'.
 		require
 			m_not_void: m /= Void
@@ -161,7 +161,7 @@ feature -- Settings
 			method_writer_set: method_writer = m
 		end
 
-	set_emitter (e: like emitter) is
+	set_emitter (e: like emitter)
 			-- Set `emitter' to `e'.
 		require
 			e_not_void: e /= Void
@@ -171,7 +171,7 @@ feature -- Settings
 			emitter_set: emitter = e
 		end
 
-	set_entry_point_token (token: INTEGER) is
+	set_entry_point_token (token: INTEGER)
 			-- Set `token' as entry point of current CLI image.
 		require
 			token_not_null: token /= 0
@@ -181,7 +181,7 @@ feature -- Settings
 
 	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
 			a_debug_info: MANAGED_POINTER)
-		is
+		
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		require
@@ -196,7 +196,7 @@ feature -- Settings
 			debug_info_set: debug_info = a_debug_info
 		end
 
-	set_public_key (a_key: like public_key; a_signing: like signing) is
+	set_public_key (a_key: like public_key; a_signing: like signing)
 			-- Set `public_key' to `a_key'.
 		require
 			key_not_void: a_key /= Void
@@ -215,7 +215,7 @@ feature -- Settings
 			cli_header_flags_set: (cli_header.flags & {CLI_HEADER}.strong_name_signed) = {CLI_HEADER}.strong_name_signed
 		end
 
-	set_resources (r: like resources) is
+	set_resources (r: like resources)
 			-- Set `resources' with `r'
 		require
 			r_not_void: r /= Void
@@ -227,7 +227,7 @@ feature -- Settings
 
 feature -- Saving
 
-	save is
+	save
 			--
 		local
 			l_pe_file, l_meta_data_file: RAW_FILE
@@ -347,7 +347,7 @@ feature -- Saving
 
 feature {NONE} -- Saving
 
-	compute_sizes is
+	compute_sizes
 			-- Compute sizes and basic locations of headers and sections,
 			-- both real, on disk and in memory.
 		do
@@ -409,7 +409,7 @@ feature {NONE} -- Saving
 				import_table_padding
 		end
 
-	update_rvas is
+	update_rvas
 			-- Update all PE files data structures with correct RVAs.
 		local
 			import_directory, reloc_directory,
@@ -519,7 +519,7 @@ feature {NONE} -- Saving
 
 feature {NONE} -- Implementation
 
-	dos_header: MANAGED_POINTER is
+	dos_header: MANAGED_POINTER
 			-- DOS header.
 		once
 			create Result.make_from_array ( <<
@@ -565,7 +565,7 @@ invariant
 	dos_header_not_void: is_valid implies dos_header /= Void
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

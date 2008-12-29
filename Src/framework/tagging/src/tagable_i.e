@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of an object that contains tags
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate properties for groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	add_group_properties (a_group: CONF_GROUP; a_target: CONF_TARGET) is
+	add_group_properties (a_group: CONF_GROUP; a_target: CONF_TARGET)
 			-- Add `properties' for `a_group'.
 		require
 			properties_not_void: properties /= Void
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Configuration settings
 
-	update_group_location (a_group: CONF_GROUP; a_location: STRING_32; a_target: CONF_TARGET) is
+	update_group_location (a_group: CONF_GROUP; a_location: STRING_32; a_target: CONF_TARGET)
 			-- Update location of `a_group' to be `a_location'.
 		require
 			a_group: a_group /= Void
@@ -433,7 +433,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_eifgens_location (a_precompile: CONF_PRECOMPILE; a_location: STRING_32; a_target: CONF_TARGET) is
+	update_eifgens_location (a_precompile: CONF_PRECOMPILE; a_location: STRING_32; a_target: CONF_TARGET)
 			-- Update eifgens location of `a_precompile' to be `a_location'.
 		require
 			a_precompile: a_precompile /= Void
@@ -449,7 +449,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_dependencies (a_cluster: CONF_CLUSTER; a_dependencies: LIST [STRING_32]; a_target: CONF_TARGET) is
+	update_dependencies (a_cluster: CONF_CLUSTER; a_dependencies: LIST [STRING_32]; a_target: CONF_TARGET)
 			-- Update dependencies of `a_cluster'.
 		require
 			a_target_not_void: a_target /= Void
@@ -470,7 +470,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_overrides (an_override: CONF_OVERRIDE; an_overriding: LIST [STRING_32]; a_target: CONF_TARGET) is
+	update_overrides (an_override: CONF_OVERRIDE; an_overriding: LIST [STRING_32]; a_target: CONF_TARGET)
 			-- Update groups we override of `a_cluster'.
 		require
 			a_target_not_void: a_target /= Void
@@ -493,7 +493,7 @@ feature {NONE} -- Configuration settings
 
 feature {NONE} -- Output generation
 
-	output_renaming (a_table: EQUALITY_HASH_TABLE [STRING_32, STRING_32]): STRING_32 is
+	output_renaming (a_table: EQUALITY_HASH_TABLE [STRING_32, STRING_32]): STRING_32
 			-- Generate a text representation of `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -512,7 +512,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_class_options (a_table: HASH_TABLE [CONF_OPTION, STRING_32]): STRING_32 is
+	output_class_options (a_table: HASH_TABLE [CONF_OPTION, STRING_32]): STRING_32
 			-- Generate a text representation of class options table `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -535,7 +535,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]): STRING_32 is
+	output_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]): STRING_32
 			-- Generate a text representation for `a_visible'.
 		do
 			if a_visible /= Void and then not a_visible.is_empty then
@@ -556,7 +556,7 @@ feature {NONE} -- Output generation
 
 feature {NONE} -- Validation and warning generation
 
-	check_group_name (a_name: STRING_GENERAL; a_group: CONF_GROUP; a_target: CONF_TARGET): BOOLEAN is
+	check_group_name (a_name: STRING_GENERAL; a_group: CONF_GROUP; a_target: CONF_TARGET): BOOLEAN
 			-- Is `a_name' a valid name for `a_group' in `a_target'?
 		require
 			a_target: a_target /= Void
@@ -582,7 +582,7 @@ feature {NONE} -- Validation and warning generation
 
 feature {NONE} -- Inheritance handling
 
-	update_inheritance_file_rule_cluster (a_dummy: ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY; a_group: CONF_GROUP) is
+	update_inheritance_file_rule_cluster (a_dummy: ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY; a_group: CONF_GROUP)
 			-- Enable inheritance/override on `a_property' depending on if there are file rules in the `a_group'.
 		require
 			a_property_not_void: a_property /= Void
@@ -598,7 +598,7 @@ feature {NONE} -- Inheritance handling
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

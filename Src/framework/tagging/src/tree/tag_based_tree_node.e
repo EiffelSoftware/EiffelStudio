@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a child node in {TAG_BASED_TREE}.
 	]"
@@ -21,7 +21,7 @@ create {TAG_BASED_TREE_NODE_CONTAINER}
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; a_token: like token) is
+	make (a_parent: like parent; a_token: like token)
 			-- Initialize `Current'.
 			--
 			-- `a_parent': Parent node for `Current'.

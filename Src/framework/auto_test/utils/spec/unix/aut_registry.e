@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dummy registry implementation"
 	author: "Ilinca Ciupa and Andreas Leitner"
 	date: "$Date$"
@@ -13,14 +13,14 @@ inherit
 
 feature -- Access
 		
-	subkeys (key: STRING): DS_LINEAR [STRING] is
+	subkeys (key: STRING): DS_LINEAR [STRING]
 		do
 			check 
 				dead_end: False 
 			end
 		end
 
-	string_value (key: STRING): STRING is
+	string_value (key: STRING): STRING
 		do
 			check 
 				dead_end: False 
@@ -29,6 +29,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_available: BOOLEAN is False
+	is_available: BOOLEAN = False
 
 end

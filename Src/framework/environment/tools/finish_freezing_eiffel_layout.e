@@ -1,4 +1,4 @@
-indexing
+note
 	description: "finish freezing layout"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ feature -- Files
 			not_result_is_empty: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

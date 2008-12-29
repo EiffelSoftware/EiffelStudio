@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog that allows to choose a list of groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor {LIST_DIALOG}
@@ -44,7 +44,7 @@ feature {NONE} -- GUI elements
 
 feature -- Update
 
-	set_conf_target (a_target: like conf_target) is
+	set_conf_target (a_target: like conf_target)
 			-- Set `conf_target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -63,12 +63,12 @@ feature -- Update
 
 feature {NONE} -- Agents
 
-	on_select is
+	on_select
 			-- Called if an item is selected.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

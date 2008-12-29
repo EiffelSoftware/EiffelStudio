@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Layout constants."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,22 +11,22 @@ inherit
 
 feature {NONE} -- Button constants
 
-	button_width: INTEGER is 75
-	small_button_width: INTEGER is 20
+	button_width: INTEGER = 75
+	small_button_width: INTEGER = 20
 
-	padding_size: INTEGER is
+	padding_size: INTEGER
 		do
 			Result := internal_padding_size.item
 		end
 
 feature {NONE} -- Margin constants
 
-	margin_size: INTEGER is 10
-	small_margin_size: INTEGER is 5
+	margin_size: INTEGER = 10
+	small_margin_size: INTEGER = 5
 
 feature {NONE} -- Margin elements
 
-	append_margin (a_box: EV_BOX) is
+	append_margin (a_box: EV_BOX)
 			-- Append a small margin to `a_box'.
 		require
 			a_box_not_void: a_box /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Margin elements
 			a_box.disable_item_expand (cl)
 		end
 
-	append_small_margin (a_box: EV_BOX) is
+	append_small_margin (a_box: EV_BOX)
 			-- Append a small margin to `a_box'.
 		require
 			a_box_not_void: a_box /= Void
@@ -54,13 +54,13 @@ feature {NONE} -- Margin elements
 
 feature {NONE} -- Colors
 
-	override_color: EV_COLOR is
+	override_color: EV_COLOR
 			-- Background color for properties that do override.
 		once
 			create Result.make_with_8_bit_rgb (255, 245, 245)
 		end
 
-	inherit_color: EV_COLOR is
+	inherit_color: EV_COLOR
 			-- Background color for properties that are inherited.
 		once
 			create Result.make_with_8_bit_rgb (245, 245, 245)
@@ -68,23 +68,23 @@ feature {NONE} -- Colors
 
 feature {NONE} -- Text
 
-	force_inheritance: STRING_GENERAL is do Result := names.l_force_inheritance	end
-	use_inherited: STRING_GENERAL is do Result := names.l_use_inherited	end
-	up_button_text: STRING_GENERAL is do Result := names.b_Up_text	end
-	down_button_text: STRING_GENERAL is do Result := names.b_Down_text	end
-	change_button_text: STRING_GENERAL is do Result := names.b_change	end
+	force_inheritance: STRING_GENERAL do Result := names.l_force_inheritance	end
+	use_inherited: STRING_GENERAL do Result := names.l_use_inherited	end
+	up_button_text: STRING_GENERAL do Result := names.b_Up_text	end
+	down_button_text: STRING_GENERAL do Result := names.b_Down_text	end
+	change_button_text: STRING_GENERAL do Result := names.b_change	end
 
-	dialog_title (a_name: STRING_GENERAL): STRING_GENERAL is
+	dialog_title (a_name: STRING_GENERAL): STRING_GENERAL
 		do
 			Result := names.t_dialog_title (a_name)
 		end
 
-	plus_button_text: STRING_GENERAL is do Result := "+"	end
-	minus_button_text: STRING_GENERAL is do Result := "-"	end
+	plus_button_text: STRING_GENERAL do Result := "+"	end
+	minus_button_text: STRING_GENERAL do Result := "-"	end
 
 feature -- Update set default global settings.
 
-	set_padding_size (a_size: like padding_size) is
+	set_padding_size (a_size: like padding_size)
 			-- Set default padding size.
 		do
 			internal_padding_size.put (a_size)
@@ -92,7 +92,7 @@ feature -- Update set default global settings.
 
 feature {NONE} -- Onces for global setting of layout values.
 
-	internal_padding_size: CELL [INTEGER] is
+	internal_padding_size: CELL [INTEGER]
 		once
 			create Result.put (0)
 		end

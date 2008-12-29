@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -56,7 +56,7 @@ create
 
 feature -- Execution
 
-	execute (a_project: E_PROJECT; a_arguments: DS_LIST [STRING]; a_project_helper: like project_helper) is
+	execute (a_project: E_PROJECT; a_arguments: DS_LIST [STRING]; a_project_helper: like project_helper)
 			-- Start testing.
 		do
 			project_helper := a_project_helper
@@ -174,7 +174,7 @@ feature {NONE} -- Interpreter generation
 
 feature{NONE} -- Test case generation and execution
 
-	build_types_and_classes_under_test is
+	build_types_and_classes_under_test
 			-- Build `types_under_test' and `classes_under_test' from `class_names'.
 		require
 			system_attached: system /= Void
@@ -256,7 +256,7 @@ feature{NONE} -- Test case generation and execution
 			end
 		end
 
-	execute_tests is
+	execute_tests
 			-- Execute testing strategies.
 		do
 --			if is_manual_testing_enabled then
@@ -308,7 +308,7 @@ feature{NONE} -- Test case generation and execution
 --			execute_task_until_time_out (strategy)
 --		end
 
-	execute_random_tests is
+	execute_random_tests
 			-- Execute random tests.
 		require
 			system_not_empty: system /= Void
@@ -333,7 +333,7 @@ feature{NONE} -- Test case generation and execution
 			execute_task_until_time_out (strategy)
 		end
 
-	execute_task (a_task: AUT_TASK) is
+	execute_task (a_task: AUT_TASK)
 			-- Execute task `a_task'.
 		require
 			a_task_not_void: a_task /= Void
@@ -348,7 +348,7 @@ feature{NONE} -- Test case generation and execution
 			end
 		end
 
-	execute_task_until_time_out (a_task: AUT_TASK) is
+	execute_task_until_time_out (a_task: AUT_TASK)
 			-- Execute task `a_task', but abort if we reach the time-out.
 		require
 			a_task_not_void: a_task /= Void
@@ -364,7 +364,7 @@ feature{NONE} -- Test case generation and execution
 			end
 		end
 
-	update_remaining_time is
+	update_remaining_time
 			-- Update `error_handler.remaining_time' and mark in the proxy log every elapsed minute.
 		local
 			duration: DT_DATE_TIME_DURATION
@@ -391,7 +391,7 @@ feature{NONE} -- Test case generation and execution
 
 feature{NONE} -- Test result analyizing
 
-	replay_log (a_log_file: STRING) is
+	replay_log (a_log_file: STRING)
 			-- Replay log stored in `a_log_file'.
 		local
 			l_replay_strategy: AUT_REQUEST_PLAYER
@@ -403,7 +403,7 @@ feature{NONE} -- Test result analyizing
 			execute_task (l_replay_strategy)
 		end
 
-	requests_from_file (a_log_file_name: STRING; a_log_loader: AUT_LOG_PARSER): DS_ARRAYED_LIST [AUT_REQUEST] is
+	requests_from_file (a_log_file_name: STRING; a_log_loader: AUT_LOG_PARSER): DS_ARRAYED_LIST [AUT_REQUEST]
 			-- Result repository from log file `a_log_file_name' loaded by `a_log_loader'
 		require
 			a_log_file_name_attached: a_log_file_name /= Void
@@ -427,7 +427,7 @@ feature{NONE} -- Test result analyizing
 			result_attached: Result /= Void
 		end
 
-	build_result_repository is
+	build_result_repository
 			-- Build result repository from log file.
 		local
 			log_stream: KL_TEXT_INPUT_FILE
@@ -508,7 +508,7 @@ feature{NONE} -- Test result analyizing
 	printer: AUT_TEST_CASE_PRINTER
 	ddminer: AUT_DD_MINIMIZER
 
-	slice_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR) is
+	slice_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR)
 			-- Slice witness and make minimzied version available via `last_witness'.
 		require
 			a_witness_not_void: a_witness /= Void
@@ -570,7 +570,7 @@ feature{NONE} -- Test result analyizing
 			error_handler.report_benchmark_message ("slice successful: " + (sliced_witness.is_fail and then a_witness.is_same_bug (sliced_witness)).out)
 		end
 
-	ddmin_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR; a_step_name_generator: AUT_UNIQUE_NAME_GENERATOR) is
+	ddmin_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR; a_step_name_generator: AUT_UNIQUE_NAME_GENERATOR)
 			-- Use ddmin to minimize witness `a_witness' (using ddmin algorithm by Andreas Zeller).
 		require
 			a_witness_not_void: a_witness /= Void
@@ -627,7 +627,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	generate_pre_minimize_statistics is
+	generate_pre_minimize_statistics
 			-- Generate statistics about executed tests.
 		require
 			result_repository_not_void: result_repository /= Void
@@ -645,7 +645,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	generate_statistics is
+	generate_statistics
 			-- Generate statistics about executed tests.
 		require
 			result_repository_not_void: result_repository /= Void
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 	result_repository: AUT_TEST_CASE_RESULT_REPOSITORY
 			-- Repository storing test case results
 
-	application_name: STRING is "ec"
+	application_name: STRING = "ec"
 			-- Name of EiffelStudio exe;
 			-- Needed to locate the correct registry keys on windows
 			-- in order to find it's install path.

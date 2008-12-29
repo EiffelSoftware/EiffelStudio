@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manage unique instance of COR_RUNTIME_HOST."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	runtime_host (version: STRING): CLR_HOST is
+	runtime_host (version: STRING): CLR_HOST
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/grfuncorbindtoruntimeex.asp
@@ -37,7 +37,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_cor_runtime_host (version: POINTER; flags: INTEGER): POINTER is
+	new_cor_runtime_host (version: POINTER; flags: INTEGER): POINTER
 			-- Create a new instance of ICorRuntimeHost. Used to fix version of the CLR
 			-- being used by compiler to generate IL code.
 		external
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

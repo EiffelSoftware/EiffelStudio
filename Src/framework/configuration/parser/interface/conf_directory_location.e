@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a directory location."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING; a_target: CONF_TARGET) is
+	make (a_path: STRING; a_target: CONF_TARGET)
 			-- Create with `a_path' (without a filename).
 			-- e.g. aa/bb/cc =>
 			-- directory = aa/bb/cc
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature {CONF_ACCESS} -- Update stored in configuration file.
 
-	set_path (a_path: like original_path) is
+	set_path (a_path: like original_path)
 			-- Set `original_path' to `a_path'.
 			-- e.g. aa/bb/cc =>
 			-- directory = aa/bb/cc
@@ -50,7 +50,7 @@ feature {CONF_ACCESS} -- Update stored in configuration file.
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

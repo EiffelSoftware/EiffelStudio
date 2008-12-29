@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract visitor which finds groups in a {CONF_TARGET} or {CONF_SYSTEM} based on a criteria.
 	]"
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			create found_groups.make
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	reset is
+	reset
 			-- Clear any previous search results.
 		do
 			found_groups.wipe_out

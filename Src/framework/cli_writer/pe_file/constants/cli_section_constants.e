@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used with CLI_SECTION_HEADER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	code: INTEGER is 0x00000020
+	code: INTEGER = 0x00000020
 			-- Section contains code.
 
-	initialized_data: INTEGER is 0x00000040
+	initialized_data: INTEGER = 0x00000040
 			-- Section contains initialized data.
 
-	uninitialized_data: INTEGER is 0x00000080
+	uninitialized_data: INTEGER = 0x00000080
 			-- Section contains uninitialized data.
 
-	discardable: INTEGER is 0x02000000
+	discardable: INTEGER = 0x02000000
 			-- Section is discardable.
 
-	execute: INTEGER is 0x20000000
+	execute: INTEGER = 0x20000000
 			-- Section is executable.
 
-	read: INTEGER is 0x40000000
+	read: INTEGER = 0x40000000
 			-- Section is readable.
 
-	write: INTEGER is 0x80000000;
+	write: INTEGER = 0x80000000;
 			-- Section is writable.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

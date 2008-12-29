@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fake class for Windows."
 	author: "Andreas Leitner"
 	date: "$Date$"
@@ -8,7 +8,7 @@ class POSIX_PROCESS
 
 feature
 
-	kill (a_signal: INTEGER) is
+	kill (a_signal: INTEGER)
 			-- Do nothing.
 		do
 			-- Do nothing.

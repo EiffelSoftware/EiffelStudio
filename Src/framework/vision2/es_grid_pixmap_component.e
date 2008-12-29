@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a pixmap trailer displayed in a grid editor token item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_pixmap: like pixmap) is
+	make (a_pixmap: like pixmap)
 			-- Initialize `pixmap' with `a_pixmap'.
 		do
 			set_pixmap (a_pixmap)
@@ -30,7 +30,7 @@ feature -- Access
 	pixmap: EV_PIXMAP
 			-- Pixmap associated with Current
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Required width in pixel
 		do
 			Result := pixmap.width
@@ -38,7 +38,7 @@ feature -- Access
 			good_result: Result = pixmap.width
 		end
 
-	required_height: INTEGER is
+	required_height: INTEGER
 			-- Required height in pixel
 		do
 			Result := pixmap.height
@@ -46,7 +46,7 @@ feature -- Access
 			good_result: Result = pixmap.height
 		end
 
-	pebble_at_position (a_x, a_y: INTEGER): ANY is
+	pebble_at_position (a_x, a_y: INTEGER): ANY
 			-- Pebble at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		do
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Drawing
 
-	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER) is
+	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER)
 			-- Draw current trailer in `a_drawable' starting from (`a_start_x', `a_start_y').
 			-- `a_start_x' and `a_start_y' are 0-based.
 		do
@@ -63,7 +63,7 @@ feature -- Drawing
 
 feature -- Setting
 
-	set_pixmap (a_pixmap: like pixmap) is
+	set_pixmap (a_pixmap: like pixmap)
 			-- Set `pixmap' with `a_pixmap'.
 		require
 			a_pixmap_attached: a_pixmap /= Void
@@ -75,12 +75,12 @@ feature -- Setting
 
 feature -- Actions
 
-	on_pick (a_x, a_y: INTEGER) is
+	on_pick (a_x, a_y: INTEGER)
 			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
 		do
 		end
 
-	on_pick_ended is
+	on_pick_ended
 			-- Action to be performed when pick-and-drop process ended
 		do
 		end
@@ -88,7 +88,7 @@ feature -- Actions
 invariant
 	pixmap_attached: pixmap /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

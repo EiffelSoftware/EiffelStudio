@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines for use by classes that need to print eiffel strings and characters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	char_text (char: CHARACTER): STRING is
+	char_text (char: CHARACTER): STRING
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -20,7 +20,7 @@ feature -- Access
 			char_text_not_void: Result /= Void
 		end
 
-	wchar_text (char32: CHARACTER_32): STRING_32 is
+	wchar_text (char32: CHARACTER_32): STRING_32
 			-- "Readable" representation of `wchar' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -30,7 +30,7 @@ feature -- Access
 			char32_text_not_void: Result /= Void
 		end
 
-	eiffel_string (s: STRING): STRING is
+	eiffel_string (s: STRING): STRING
 			-- "eiffel" representation of `s'
 			-- Translation of special characters
 			--| "%T" -> "%%T", "%N" -> "%%N", "%%" -> "%%%%"
@@ -56,7 +56,7 @@ feature -- Access
 			eiffel_string_not_void: Result /= Void
 		end
 
-	eiffel_string_32 (s: STRING_32): STRING_32 is
+	eiffel_string_32 (s: STRING_32): STRING_32
 			-- "eiffel" representation of `s'
 			-- Translation of special characters
 			--| "%T" -> "%%T", "%N" -> "%%N", "%%" -> "%%%%"
@@ -86,7 +86,7 @@ feature -- Unescape
 
 	last_unescaping_raised_error: BOOLEAN
 
-	unescaped_string (s: STRING): STRING is
+	unescaped_string (s: STRING): STRING
 			-- Unescaped Eiffel String.
 			--| "%%T" -> "%T", "%%N" -> "%N", "%%%%" -> "%%"
 			--| but for printable char "%%A" -> "@", "%%(" -> "["
@@ -187,7 +187,7 @@ feature -- Unescape
 			last_unescaping_raised_error := error
 		end
 
-	unescaped_string_32 (s: STRING_32): STRING_32 is
+	unescaped_string_32 (s: STRING_32): STRING_32
 			-- Unescaped Eiffel String.
 			--| "%%T" -> "%T", "%%N" -> "%N", "%%%%" -> "%%"
 			--| but for printable char "%%A" -> "@", "%%(" -> "["
@@ -288,7 +288,7 @@ feature -- Unescape
 
 feature {NONE} -- Implementation
 
-	char32_to_string_32 (char: CHARACTER_32; a_result: STRING_32; for_string: BOOLEAN): STRING_32 is
+	char32_to_string_32 (char: CHARACTER_32; a_result: STRING_32; for_string: BOOLEAN): STRING_32
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			Result_different: Result /= char32_to_string_32 (char, Void, for_string)
 		end
 
-	char_to_string (char: CHARACTER; a_result: STRING; for_string: BOOLEAN): STRING is
+	char_to_string (char: CHARACTER; a_result: STRING; for_string: BOOLEAN): STRING
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			Result_different: Result /= char_to_string (char, Void, for_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

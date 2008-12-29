@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provide access to eiffel environment information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status
 
-	is_eiffel_layout_defined: BOOLEAN is
+	is_eiffel_layout_defined: BOOLEAN
 			-- Has the layout been defined?
 		do
 			Result := eiffel_layout_cell.item /= Void
@@ -18,7 +18,7 @@ feature -- Status
 
 feature -- Update
 
-	set_eiffel_layout (a_layout: like eiffel_layout) is
+	set_eiffel_layout (a_layout: like eiffel_layout)
 			-- Set `eiffel_layout' to `a_layout'.
 		require
 			a_layout_ok: a_layout /= Void
@@ -30,7 +30,7 @@ feature -- Update
 
 feature -- Access
 
-	eiffel_layout: EIFFEL_ENV is
+	eiffel_layout: EIFFEL_ENV
 			-- Layout of eiffel.
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
@@ -42,9 +42,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	eiffel_layout_cell: CELL [EIFFEL_ENV] is
+	eiffel_layout_cell: CELL [EIFFEL_ENV]
 			-- Cell to hold the layout.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

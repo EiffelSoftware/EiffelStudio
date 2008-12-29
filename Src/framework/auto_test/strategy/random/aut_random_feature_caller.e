@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_interpreter: like interpreter; a_queue: like queue; a_error_handler: like error_handler; a_feature_table: like feature_table) is
+	make (a_system: like system; an_interpreter: like interpreter; a_queue: like queue; a_error_handler: like error_handler; a_feature_table: like feature_table)
 			-- Create new feature caller.
 		require
 			a_system_not_void: a_system /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 			-- Is there a next step to execute?
 			-- True when either the feature has been successfully called `steps_completed'
 			-- or the invocation or a prepatorial step for the invocation messed up the
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Change
 
-	set_feature_and_type (a_feature: like feature_to_call; a_type: like type) is
+	set_feature_and_type (a_feature: like feature_to_call; a_type: like type)
 				-- Set `feature_to_call' to `a_feature' and
 				-- `type' to `a_type'.
 		require
@@ -113,7 +113,7 @@ feature -- Change
 
 feature -- Execution
 
-	start is
+	start
 		do
 			steps_completed := False
 			input_creator := Void
@@ -127,7 +127,7 @@ feature -- Execution
 			receiver_void: receiver = Void
 		end
 
-	step is
+	step
 		do
 			if type = Void then
 				-- 1st step in diversify mode
@@ -150,7 +150,7 @@ feature -- Execution
 			end
 		end
 
-	cancel is
+	cancel
 		do
 			steps_completed := True
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Steps
 
-	create_input_creator_diversify is
+	create_input_creator_diversify
 			-- Create `input_creator' for use in diversify mode.
 		do
 			target := interpreter.variable_table.random_variable
@@ -190,7 +190,7 @@ feature {NONE} -- Steps
 			feature_and_type_set: has_next_step = ((type /= Void) and (feature_to_call /= Void))
 		end
 
-	create_input_creator is
+	create_input_creator
 			-- Create `input_creator' for use in non-diversify mode.
 		require
 			type_not_void: type /= Void
@@ -202,7 +202,7 @@ feature {NONE} -- Steps
 			input_creator.start
 		end
 
-	invoke is
+	invoke
 			-- Invoke feature to call.
 		require
 			type_not_void: type /= Void
@@ -254,7 +254,7 @@ feature {NONE} -- Steps
 
 feature {NONE} -- Implementation
 
-	choose_feature is
+	choose_feature
 			-- Chose `feature_to_call' from `type'.
 		require
 			type_not_void: type /= Void
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	feature_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C]
 			-- Table used to store features in a class
 
-	update_feature_table (a_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C]; a_class: CLASS_C) is
+	update_feature_table (a_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C]; a_class: CLASS_C)
 			-- If feature information for `a_class' is not stored in `a_table',
 			-- store it in `a_table', otherwise do nothing.
 		require

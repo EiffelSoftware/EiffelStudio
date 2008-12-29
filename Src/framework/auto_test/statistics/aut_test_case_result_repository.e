@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Test case result repository"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new repository.
 		do
 			create class_equality_tester.make
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	classes: DS_LINEAR [CLASS_C] is
+	classes: DS_LINEAR [CLASS_C]
 			-- List of classes for which there are test results
 		local
 			list: DS_ARRAYED_LIST [CLASS_C]
@@ -50,7 +50,7 @@ feature -- Access
 			classes_doesnt_have_void: not Result.has (Void)
 		end
 
-	results_by_feature_and_class (a_feature: FEATURE_I; a_class: CLASS_C): AUT_TEST_CASE_RESULT_SET is
+	results_by_feature_and_class (a_feature: FEATURE_I; a_class: CLASS_C): AUT_TEST_CASE_RESULT_SET
 			-- List of test case results of `a_feature' of class `a_class'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -81,7 +81,7 @@ feature -- Access
 			results_not_void: Result /= Void
 		end
 
-	results_by_class (a_class: CLASS_C): AUT_TEST_CASE_RESULT_SET is
+	results_by_class (a_class: CLASS_C): AUT_TEST_CASE_RESULT_SET
 			-- List of test case results of any feature of class `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -96,7 +96,7 @@ feature -- Access
 			results_not_void: Result /= Void
 		end
 
-	results: AUT_TEST_CASE_RESULT_SET is
+	results: AUT_TEST_CASE_RESULT_SET
 			-- All results
 		local
 			cs: DS_HASH_TABLE_CURSOR [DS_LIST [AUT_TEST_CASE_RESULT], CLASS_C]
@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_witness (a_witness: AUT_WITNESS) is
+	add_witness (a_witness: AUT_WITNESS)
 			-- Add `a_witness' to `witnesses'.
 		require
 			a_witness_not_void: a_witness /= Void
@@ -148,7 +148,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	add_result (a_result: AUT_TEST_CASE_RESULT) is
+	add_result (a_result: AUT_TEST_CASE_RESULT)
 				-- Add `a_result' to the repository.
 		require
 			a_result_not_void: a_result /= Void

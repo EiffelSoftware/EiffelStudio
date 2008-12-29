@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an exception fault clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Status report
 
-	flags: INTEGER_16 is
+	flags: INTEGER_16
 			-- Flags of exception clause
 		do
 			Result := {MD_METHOD_CONSTANTS}.clause_fault
@@ -28,7 +28,7 @@ invariant
 
 	no_class_token_or_filter_offset: class_token_or_filter_offset = 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Interface for a keyboard implementation"
 	legal: "See notice at end of class."
@@ -14,21 +14,21 @@ inherit
 
 feature -- Pressing
 
-	press_key (a_key: EV_KEY) is
+	press_key (a_key: EV_KEY)
 			-- Press `a_key'.
 		require
 			a_key_valid: valid_key_code (a_key.code)
 		deferred
 		end
 
-	release_key (a_key: EV_KEY) is
+	release_key (a_key: EV_KEY)
 			-- Release `a_key'.
 		require
 			a_key_valid: valid_key_code (a_key.code)
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

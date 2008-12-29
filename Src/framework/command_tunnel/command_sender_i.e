@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command sender implemtation interface."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,20 +10,20 @@ deferred class
 
 feature -- Action
 
-	send_command (a_string, a_key: !STRING) is
+	send_command (a_string, a_key: !STRING)
 			-- Send `a_string' as command to receiver processes.
 			-- `a_key' to identify receiver.
 		deferred
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER) is
+	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		deferred
 		end
 
 feature -- Querry
 
-	last_command_handled: BOOLEAN is
+	last_command_handled: BOOLEAN
 			-- Was last `send_command' or `send_command_process' correctly handled?
 		deferred
 		end
@@ -33,7 +33,7 @@ feature -- Querry
 		deferred
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

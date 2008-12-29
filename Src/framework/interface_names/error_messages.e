@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Collection of user interface error messages.
 	]"
@@ -36,7 +36,7 @@ feature -- Prompts
 
 	e_save_session_data_failed: !STRING_32 do Result := locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

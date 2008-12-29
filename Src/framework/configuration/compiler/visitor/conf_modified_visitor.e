@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Get the classes that have been modified."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_state: like state) is
+	make (a_state: like state)
 			-- Create.
 		do
 			Precursor (a_state)
@@ -44,13 +44,13 @@ feature {NONE} -- Initialization
 
 feature -- Visit nodes
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Process `an_assembly'.
 		do
 --			Patrickr 25/04/2006: At the moment we don't check for changed assemblies as the compiler doesn't handle this anyway.
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Process `a_library'.
 		do
 			if not is_override_only and then not a_library.is_readonly and then not processed_libraries.has (a_library.library_target.system.uuid) then
@@ -60,7 +60,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Process `a_precompile'.
 		do
 			if not is_override_only and then not a_precompile.is_readonly then
@@ -68,7 +68,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Process `a_cluster'.
 		do
 			if not is_override_only and then not a_cluster.is_readonly then
@@ -77,7 +77,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Process `an_override'.
 		do
 			if not an_override.is_readonly then
@@ -98,7 +98,7 @@ feature -- Status
 
 feature -- Status update
 
-	enable_override_only is
+	enable_override_only
 			-- Only scan override clusters.
 		do
 			is_override_only := True
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Update
 
-	resest_modified_classes is
+	resest_modified_classes
 			-- Reset `modified_classes'.
 		do
 			create modified_classes.make (0)
@@ -126,7 +126,7 @@ feature -- Observer
 
 feature -- Events
 
-	on_process_group (a_group: CONF_GROUP) is
+	on_process_group (a_group: CONF_GROUP)
 			-- `A_group' is processed.
 		require
 			a_group_not_void: a_group /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	processed_assemblies: SEARCH_TABLE [STRING]
 			-- Assemblies that have been processed.
 
-	find_modified (a_group: CONF_GROUP) is
+	find_modified (a_group: CONF_GROUP)
 			-- Find classes that have been modified and add them to `modified_classes'.
 		require
 			a_group_not_void: a_group /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER) is
+	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER)
 			-- Handle class in `a_file' with `a_path' in `a_cluster'
 		do
 			is_force_rebuild := is_force_rebuild or else (valid_eiffel_extension (a_file) and then not a_cluster.classes_by_filename.has (a_path + "/" + a_file))
@@ -197,7 +197,7 @@ invariant
 	modifed_classes_not_void: modified_classes /= Void
 	process_group_observer_not_void: process_group_observer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

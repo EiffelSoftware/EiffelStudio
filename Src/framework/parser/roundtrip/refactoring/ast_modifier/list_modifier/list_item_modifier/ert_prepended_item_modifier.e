@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a prepended item in EIFFEL_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (ast: like attached_ast; a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_list: like match_list) is
+	make (ast: like attached_ast; a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_list: like match_list)
 			-- Initialize instance.
 		require
 			ast_not_void: ast /= Void
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can current modifier be applied?
 		do
 			Result := attached_ast.can_prepend_text (match_list)
@@ -38,7 +38,7 @@ feature -- Applicability
 
 feature -- Operation
 
-	apply is
+	apply
 			-- Apply current modifier.
 		local
 			l_text: STRING
@@ -54,7 +54,7 @@ feature -- Operation
 			applied := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

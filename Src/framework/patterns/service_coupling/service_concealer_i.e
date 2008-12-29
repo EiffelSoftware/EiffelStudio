@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Encapsulates a service for storage so its retrieval may be abstracted and specifically implemented.
 		
@@ -21,7 +21,7 @@ feature -- Access
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

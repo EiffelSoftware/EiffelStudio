@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notion of a routine body."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,38 +18,38 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 			-- Is the routine body a once one ?
 		do
 			-- Do nothing
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is the routine body a deferred one ?
 		do
 			-- Do nothing
 		end
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is the routine body an external one ?
 		do
 			-- Do nothing
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the routine body an external `built_in' one?
 		do
 		end
 
 feature -- Access
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Has current routine body instruction `i'?
 		do
 			-- Do nothing
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i'.
 		do
 			-- Do nothing
@@ -57,13 +57,13 @@ feature -- Access
 
 feature -- test for empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 			-- Is body empty?
 		do
 			Result := True  -- redefined in INTERNAL_AS
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

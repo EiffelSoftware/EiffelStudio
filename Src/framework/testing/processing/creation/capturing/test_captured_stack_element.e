@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing a call stack element, refering to the feature called in the specific
 		element and its attributes and objects.

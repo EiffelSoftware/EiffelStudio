@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Node for real constant. Version for Bench."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like constant_type; r: STRING) is
+	make (a_type: like constant_type; r: STRING)
 			-- Create a new REAL_AS node of type `a_type' with `r'
 			-- containing the textual representation
 			-- of the real value.
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_real_as (Current)
@@ -56,7 +56,7 @@ feature -- Roundtrip
 	sign_symbol_index: INTEGER
 			-- Index of symbol "+" or "-" associated with this structure
 
-	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "+" or "-" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -69,7 +69,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_sign_symbol (s_as: SYMBOL_AS) is
+	set_sign_symbol (s_as: SYMBOL_AS)
 			-- Set `sign_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -81,7 +81,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
@@ -98,7 +98,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Text
 
-	number_text (a_match_list: LEAF_AS_LIST): STRING is
+	number_text (a_match_list: LEAF_AS_LIST): STRING
 			-- Text of the number part (not including `constant_type' and `sign_symbol')
 		require
 			a_match_list_attached: a_match_list /= Void
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := value.is_equal (other.value) and then equal (constant_type, other.constant_type)
@@ -124,12 +124,12 @@ feature -- Comparison
 
 feature {AST_EIFFEL} -- Output
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			Result := value.twin
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Resizing : initialization
 
-	make (g: EV_GRID) is
+	make (g: EV_GRID)
 		do
 			grid := g
 			edge_size := 3
@@ -43,7 +43,7 @@ feature -- Properties
 
 feature -- Change
 
-	disable_column_resizing is
+	disable_column_resizing
 		do
 			resizing_column_enabled := False
 			if not resizing_column_enabled then
@@ -51,7 +51,7 @@ feature -- Change
 			end
 		end
 
-	enable_column_resizing is
+	enable_column_resizing
 		do
 			if not resizing_column_enabled then
 				set_grid_separator_resizer (True)
@@ -59,7 +59,7 @@ feature -- Change
 			resizing_column_enabled := True
 		end
 
-	disable_resize_on_column (a_column: INTEGER) is
+	disable_resize_on_column (a_column: INTEGER)
 			-- Disable resize for `a_column'.
 		do
 			disabled_resize_columns.force (a_column)
@@ -67,7 +67,7 @@ feature -- Change
 			disabled: disabled_resize_columns.has (a_column)
 		end
 
-	enable_resize_on_column (a_column: INTEGER) is
+	enable_resize_on_column (a_column: INTEGER)
 			-- Enable resize for `a_column'.
 		do
 			disabled_resize_columns.remove (a_column)
@@ -81,7 +81,7 @@ feature {NONE} -- Actions
 	press_resize_agent, release_resize_agent:   PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 	leave_resize_agent:   PROCEDURE [ANY, TUPLE]
 
-	set_grid_separator_resizer (a_enabling: BOOLEAN) is
+	set_grid_separator_resizer (a_enabling: BOOLEAN)
 		do
 			if a_enabling then
 				if release_resize_agent = Void then
@@ -118,13 +118,13 @@ feature {NONE} -- Actions
 			end
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Once access to EV_SCREEN object.
 		once
 			create Result
 		end
 
-	motion_resize (x_pos, y_pos: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER) is
+	motion_resize (x_pos, y_pos: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- Check if we reach a border and should enable column resizing.
 		local
 			start_x: INTEGER
@@ -191,7 +191,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	press_resize (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER) is
+	press_resize (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- If we are near a resizable border, enable column resizing moveing.
 		do
 			if is_near_border and a_button = 1 then
@@ -199,13 +199,13 @@ feature {NONE} -- Actions
 			end
 		end
 
-	release_resize (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER) is
+	release_resize (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- If we were in `is_resize_mode' we loose the mode.
 		do
 			end_resizing
 		end
 
-	leave_resize is
+	leave_resize
 			-- If we were in `is_resize_mode' we loose the mode.
 		do
 			end_resizing
@@ -213,7 +213,7 @@ feature {NONE} -- Actions
 
 	clicked_item: EV_GRID_ITEM
 
-	start_resizing (x_pos, y_pos: INTEGER_32) is
+	start_resizing (x_pos, y_pos: INTEGER_32)
 		local
 			vx,vy: INTEGER_32
 			l_header: EV_HEADER_ITEM
@@ -243,7 +243,7 @@ feature {NONE} -- Actions
 			header_resize_start_actions.call ([l_header])
 		end
 
-	end_resizing is
+	end_resizing
 		local
 			l_header: EV_HEADER_ITEM
 		do
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 	resize_index: INTEGER
 			-- Column to resize.
 
-	Stock_cursors: EV_STOCK_PIXMAPS is
+	Stock_cursors: EV_STOCK_PIXMAPS
 		once
 			create {EV_STOCK_PIXMAPS} Result
 		end
@@ -286,7 +286,7 @@ invariant
 	header_resize_start_actions_attached: header_resize_start_actions /= Void
 	header_resize_end_actions_attached: header_resize_end_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

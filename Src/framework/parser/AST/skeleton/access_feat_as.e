@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of an access to an Eiffel feature (note %
 		%that this access cannot be the first call of a nested %
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name; p: like internal_parameters) is
+	initialize (f: like feature_name; p: like internal_parameters)
 			-- Create a new FEATURE_ACCESS AST node.
 		require
 			f_not_void: f /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_access_feat_as (Current)
@@ -55,7 +55,7 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
 		local
 			l_internal_paran: like internal_parameters
@@ -69,7 +69,7 @@ feature -- Attributes
 			end
 		end
 
-	parameter_count: INTEGER is
+	parameter_count: INTEGER
 			-- Count of parameters
 		do
 			if parameters /= Void then
@@ -77,36 +77,36 @@ feature -- Attributes
 			end
 		end
 
-	access_name: STRING is
+	access_name: STRING
 		do
 			Result := feature_name.name
 		end
 
-	is_qualified: BOOLEAN is
+	is_qualified: BOOLEAN
 			-- Is current entity a call on an other object?
 		do
 			Result := True
 		end
 
-	is_local: BOOLEAN is
+	is_local: BOOLEAN
 			-- Is current entity a local?
 		do
 			Result := (flags & is_local_flag) = is_local_flag
 		end
 
-	is_argument: BOOLEAN is
+	is_argument: BOOLEAN
 			-- Is the current entity an argument?
 		do
 			Result := (flags & is_argument_flag) = is_argument_flag
 		end
 
-	is_object_test_local: BOOLEAN is
+	is_object_test_local: BOOLEAN
 			-- Is the current entity an object test local?
 		do
 			Result := (flags & is_object_test_local_flag) = is_object_test_local_flag
 		end
 
-	is_tuple_access: BOOLEAN is
+	is_tuple_access: BOOLEAN
 			-- Is the current entity an access to one of the TUPLE labels?
 		do
 			Result := (flags & is_tuple_access_flag) = is_tuple_access_flag
@@ -115,7 +115,7 @@ feature -- Attributes
 	class_id: INTEGER
 			-- The class id of the qualified call.
 
-	argument_position: INTEGER is
+	argument_position: INTEGER
 			-- If the current entity is an argument this gives the position in the argument list.
 		require
 			is_argument: is_argument
@@ -123,7 +123,7 @@ feature -- Attributes
 			Result := first
 		end
 
-	label_position: INTEGER is
+	label_position: INTEGER
 			-- If current entity is a tuple access, gives the position in the tuple actual generic argument list.
 		require
 			is_tuple_access: is_tuple_access
@@ -138,12 +138,12 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := feature_name.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if parameters /= Void then
@@ -162,7 +162,7 @@ feature -- Roundtrip/Token
 
 feature -- Delayed calls
 
-	is_delayed : BOOLEAN is
+	is_delayed : BOOLEAN
 			-- Is this access delayed?
 		do
 			-- Default: No
@@ -170,7 +170,7 @@ feature -- Delayed calls
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name) and
@@ -180,7 +180,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_feature_name (name: like feature_name) is
+	set_feature_name (name: like feature_name)
 		require
 			valid_arg: name /= Void
 		do
@@ -189,7 +189,7 @@ feature -- Setting
 			feature_name_set: feature_name = name
 		end
 
-	set_parameters (p: like internal_parameters) is
+	set_parameters (p: like internal_parameters)
 			-- Set `internal_parameters' with `p'.
 		do
 			internal_parameters := p
@@ -197,7 +197,7 @@ feature -- Setting
 			internal_parameters_set: internal_parameters = p
 		end
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		require
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
@@ -207,7 +207,7 @@ feature -- Setting
 			class_id_set: class_id = a_class_id
 		end
 
-	set_argument_position (an_argument_position: like argument_position) is
+	set_argument_position (an_argument_position: like argument_position)
 			-- Set `argument_position' to `an_argument_position'.
 		require
 			is_argument: is_argument
@@ -217,7 +217,7 @@ feature -- Setting
 			argument_position_set: argument_position = an_argument_position
 		end
 
-	set_label_position (a_pos: like label_position) is
+	set_label_position (a_pos: like label_position)
 			-- Set `label_position' to `a_pos'.
 		require
 			is_tuple_access: is_tuple_access
@@ -227,7 +227,7 @@ feature -- Setting
 			label_position_set: label_position = a_pos
 		end
 
-	enable_local is
+	enable_local
 			-- Set `is_local' to true.
 		do
 			flags := flags | is_local_flag
@@ -235,7 +235,7 @@ feature -- Setting
 			is_local_set: is_local
 		end
 
-	enable_object_test_local is
+	enable_object_test_local
 			-- Set `is_object_test_local' to true.
 		do
 			flags := flags | is_object_test_local_flag
@@ -243,7 +243,7 @@ feature -- Setting
 			is_object_test_local_set: is_object_test_local
 		end
 
-	enable_argument is
+	enable_argument
 			-- Set `is_argument' to true.
 		do
 			flags := flags | is_argument_flag
@@ -251,7 +251,7 @@ feature -- Setting
 			is_argument_set: is_argument
 		end
 
-	enable_tuple_access is
+	enable_tuple_access
 			-- Set `is_tuple_access' to True.
 		do
 			flags := flags | is_tuple_access_flag
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 	is_local_flag: NATURAL_8 = 0x01
 	is_argument_flag: NATURAL_8 = 0x02
 	is_tuple_access_flag: NATURAL_8 = 0x04
-	is_object_test_local_flag: NATURAL_8 is 0x08
+	is_object_test_local_flag: NATURAL_8 = 0x08
 			-- Various possible values for `flags'.
 
 invariant
@@ -279,7 +279,7 @@ invariant
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters /= Void implies parameter_count > 0) and (parameters = Void implies parameter_count = 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

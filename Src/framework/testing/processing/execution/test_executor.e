@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that compile and execute eiffel tests.
 
@@ -111,7 +111,7 @@ feature -- Status report
 			result_implies_launcher_ready: Result implies test_suite.eiffel_project_helper.can_compile
 		end
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 			-- <Precursor>
 		do
 			Result := assigner /= Void
@@ -295,7 +295,7 @@ feature {NONE} -- Basic functionality
 			l_project.system.system.remove_explicit_root (l_class, l_feature)
 		end
 
-	initialize_evaluators is
+	initialize_evaluators
 			-- Create new evaluators
 		require
 			running: is_running
@@ -336,7 +336,7 @@ feature {NONE} -- Basic functionality
 			result_cursor_attached: result_cursor /= Void
 		end
 
-	syncronize_evaluators is
+	syncronize_evaluators
 			-- Fetch results from all evaluators. Evaluators which have stopped are relaunched with a new
 			-- list of tests. If there are no more test left the evaluator is removed.
 		local
@@ -532,7 +532,7 @@ feature {NONE} -- Basic functionality
 
 feature {TEST_SUITE_S} -- Events
 
-	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I) is
+	on_test_removed (a_collection: !ACTIVE_COLLECTION_I [!TEST_I]; a_test: !TEST_I)
 			-- <Precursor>
 			--
 			-- Note: if `a_test' is part of active tests, we abort its execution
@@ -564,7 +564,7 @@ invariant
 	running_implies_log_file_attached: is_running implies log_file /= Void
 	running_implies_result_cursor_attached: is_running implies result_cursor /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

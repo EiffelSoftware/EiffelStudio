@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for a corrupt metadata cache."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create.
 		do
 			text := "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
@@ -27,7 +27,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

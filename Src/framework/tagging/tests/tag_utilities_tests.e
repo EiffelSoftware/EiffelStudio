@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Regression tests for {TAG_UTILITIES_TESTS}.
 	]"
@@ -31,7 +31,7 @@ feature -- Tests
 
 	test_is_valid_token
 			-- Test routines for `is_valid_token'
-		indexing
+		note
 			testing: "covers/{TAG_UTILITIES}.is_valid_token",
 			         "tests/eiffel/statics/tagable"
 		local
@@ -51,7 +51,7 @@ feature -- Tests
 
 	test_join_tags
 			-- Test routines for `join_tags'
-		indexing
+		note
 			testing: "covers/{TAG_UTILITIES}.is_valid_token",
 			         "tests/eiffel/statics/tagable"
 		local

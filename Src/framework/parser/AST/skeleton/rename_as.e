@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Abstract description of a renaming pair. Version for Bench."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like old_name; n: like new_name; k_as: KEYWORD_AS) is
+	initialize (o: like old_name; n: like new_name; k_as: KEYWORD_AS)
 			-- Create a new RENAME_PAIR AST node.
 		require
 			o_not_void: o /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_rename_as (Current)
@@ -72,19 +72,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := old_name.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := new_name.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (old_name, other.old_name) and
@@ -95,7 +95,7 @@ invariant
 	old_name_not_void: old_name /= Void
 	new_name_not_void: new_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

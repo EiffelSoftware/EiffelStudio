@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Abstract ancestor to all ill-formed responses received from the interpreter"
@@ -20,7 +20,7 @@ create
 
 feature -- Status report
 
-	is_bad: BOOLEAN is
+	is_bad: BOOLEAN
 			-- Is response not well formed syntacticly?
 		do
 			Result := True
@@ -28,7 +28,7 @@ feature -- Status report
 			definition: Result
 		end
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Is response an error message?
 		do
 			Result := False
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Process
 
-	process (a_visitor: AUT_RESPONSE_VISITOR) is
+	process (a_visitor: AUT_RESPONSE_VISITOR)
 			-- Process `Current' using `a_visitor'.
 		do
 			a_visitor.process_bad_response (Current)

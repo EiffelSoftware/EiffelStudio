@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an exception catch clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Restore default values.
 		do
 			class_token := 0
@@ -36,7 +36,7 @@ feature -- Reset
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is current a fully described exception clause?
 		do
 			Result := Precursor and then class_token /= 0
@@ -48,7 +48,7 @@ feature -- Status report
 			valid_state: state = Frozen_state implies Result
 		end
 
-	flags: INTEGER_16 is
+	flags: INTEGER_16
 			-- Flags of exception clause
 		do
 			Result := {MD_METHOD_CONSTANTS}.clause_exception
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Modification
 
-	set_class_token (token: like class_token) is
+	set_class_token (token: like class_token)
 			-- Set `class_token' to `token'.
 		require
 			valid_token:
@@ -78,7 +78,7 @@ feature -- Modification
 		
 feature -- Access
 
-	start_position: INTEGER is
+	start_position: INTEGER
 			-- Starting index of `try-catch' clause in associated MD_METHOD_BODY.
 		require
 			is_defined: is_defined
@@ -86,7 +86,7 @@ feature -- Access
 			Result := try_offset
 		end
 	
-	catch_position: INTEGER is
+	catch_position: INTEGER
 			-- Index of where `catch' starts.
 		require
 			is_defined: is_defined
@@ -94,7 +94,7 @@ feature -- Access
 			Result := handler_offset
 		end
 
-	type_token: INTEGER is
+	type_token: INTEGER
 			-- Token type on which catch clause will stop.
 			-- Usually token for System.Exception.
 		require
@@ -103,7 +103,7 @@ feature -- Access
 			Result := class_token
 		end
 		
-	end_position: INTEGER is
+	end_position: INTEGER
 			-- Ending index of `try-catch' clause in associated MD_METHOD_BODY.
 		require
 			is_defined: is_defined
@@ -113,7 +113,7 @@ feature -- Access
 		
 feature -- Settings
 
-	set_start_position (p: INTEGER) is
+	set_start_position (p: INTEGER)
 			-- Set `start_position' to `p'.
 		require
 			valid_p: p >= 0
@@ -126,7 +126,7 @@ feature -- Settings
 			state_set: state = Catch_state
 		end
 
-	set_catch_position (p: INTEGER) is
+	set_catch_position (p: INTEGER)
 			-- Set `catch_position' to `p'.
 		require
 			valid_p: p >= start_position
@@ -140,7 +140,7 @@ feature -- Settings
 			state_set: state = Type_state
 		end
 		
-	set_type_token (p: INTEGER) is
+	set_type_token (p: INTEGER)
 			-- Set `type_token' to `p'.
 		require
 			valid_p: p /= 0
@@ -153,7 +153,7 @@ feature -- Settings
 			state_set: state = End_state
 		end
 
-	set_end_position (p: INTEGER) is
+	set_end_position (p: INTEGER)
 			-- Set `end_position' to `p'.
 		require
 			valid_p: p >= catch_position
@@ -171,14 +171,14 @@ feature -- Implementation
 	state: INTEGER
 			-- Is current exception block ready for new settings?
 
-	start_state: INTEGER is 1
-	catch_state: INTEGER is 2
-	type_state: INTEGER is 3
-	end_state: INTEGER is 4
-	frozen_state: INTEGER is 5;
+	start_state: INTEGER = 1
+	catch_state: INTEGER = 2
+	type_state: INTEGER = 3
+	end_state: INTEGER = 4
+	frozen_state: INTEGER = 5;
 			-- Possible state of current object
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

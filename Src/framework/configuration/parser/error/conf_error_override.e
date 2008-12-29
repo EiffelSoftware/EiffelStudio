@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error if an override itself is overriden."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	text: STRING is
+	text: STRING
 			-- Error text.
 		do
 			if file /= Void then
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	set_group (a_group: STRING) is
+	set_group (a_group: STRING)
 			-- Set the undefined group to `a_group'.
 		do
 			group := a_group
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 	group: STRING;
 		-- Group that is not defined.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

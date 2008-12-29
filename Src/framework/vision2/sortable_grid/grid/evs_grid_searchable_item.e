@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a searchable and replacable grid item
 					Usage:
@@ -25,7 +25,7 @@ inherit
 
 feature -- Item position
 
-	column_index: INTEGER is
+	column_index: INTEGER
 			-- Column index of `grid_item'
 		do
 			Result := grid_item.column.index
@@ -33,7 +33,7 @@ feature -- Item position
 			result_positive: Result > 0
 		end
 
-	row_index: INTEGER is
+	row_index: INTEGER
 			-- Row index of `grid_item'.
 		do
 			Result := grid_item.row.index
@@ -43,7 +43,7 @@ feature -- Item position
 
 feature -- Setting
 
-	set_veto_replace_function (a_veto_function: like veto_replace_function) is
+	set_veto_replace_function (a_veto_function: like veto_replace_function)
 			-- Set `veto_replace_function' with `a_veto_function'.
 		do
 			veto_replace_function := a_veto_function
@@ -53,7 +53,7 @@ feature -- Setting
 
 feature -- Replacement
 
-	replace (original, new: like image) is
+	replace (original, new: like image)
 			-- Replace every occurrence of `original' with `new' in `image'.
 		require
 			original_exists: original /= Void
@@ -86,7 +86,7 @@ feature -- Replacement
 
 feature -- Status report
 
-	is_column_index_available: BOOLEAN is
+	is_column_index_available: BOOLEAN
 			-- Is `column_index' available?
 		do
 			Result := grid_item.is_parented
@@ -94,7 +94,7 @@ feature -- Status report
 			good_result: Result implies grid_item.is_parented
 		end
 
-	is_row_index_available: BOOLEAN is
+	is_row_index_available: BOOLEAN
 			-- Is `row_index' available?
 		do
 			Result := grid_item.is_parented
@@ -104,14 +104,14 @@ feature -- Status report
 
 feature -- Access
 
-	image: STRING_32 is
+	image: STRING_32
 			-- String representation of current used in search
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- EV_GRID item associated with current
 		deferred
 		ensure
@@ -124,7 +124,7 @@ feature -- Access
 			-- Function used to determine whether or not replacement of every occurrence of `original'
 			-- by `new' in `image' can be applied.
 
-	replace_succeeded_actions: ACTION_SEQUENCE [TUPLE] is
+	replace_succeeded_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when a `replace' succeeds
 		do
 			if replace_succeeded_actions_internal = Void then
@@ -135,7 +135,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	replace_failed_actions: ACTION_SEQUENCE [TUPLE] is
+	replace_failed_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when a `replace' fails
 		do
 			if replace_failed_actions_internal = Void then
@@ -157,7 +157,7 @@ feature{NONE} -- Implementation
 	replace_failed_actions_internal: like replace_failed_actions
 			-- Internal `replace_failed_actions'
 
-	internal_replace (original, new: like image) is
+	internal_replace (original, new: like image)
 			-- Replace every occurrence of `original' with `new' in `image'.
 		require
 			original_exists: original /= Void
@@ -171,7 +171,7 @@ invariant
 	grid_item_not_destroyed: not grid_item.is_destroyed
 	image_attached: image /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

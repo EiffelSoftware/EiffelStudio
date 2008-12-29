@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:	"Pattern match algorithm to match a pattern%
 			% containing wild cards.%
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (new_pattern, new_text: STRING) is
+	make (new_pattern, new_text: STRING)
 			-- Create a matcher to search pattern
 			-- `new_pattern' in text `new_text'.
 		do
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			Precursor {KMP_MATCHER} (new_pattern, new_text);
 		end
 
-	make_empty is
+	make_empty
 			-- Create a matcher to search for a pattern
 			-- in a text. Initialize it later.
 		do
@@ -57,13 +57,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pattern (new_pattern: STRING) is
+	set_pattern (new_pattern: STRING)
 			-- Set the `pattern' to `new_pattern'.
 		do
 			pattern := new_pattern;
 		end;
 
-	set_string_representation (new_str_rep: CHARACTER) is
+	set_string_representation (new_str_rep: CHARACTER)
 			-- Set `string_representation' to
 			-- `new_str_rep'.
 		require
@@ -75,7 +75,7 @@ feature -- Status setting
 			string_representation_is_new_str_rep: string_representation = new_str_rep
 		end;
 
-	set_character_representation (new_char_rep: CHARACTER) is
+	set_character_representation (new_char_rep: CHARACTER)
 			-- Set `character_representation' to
 			-- `new_char_rep'.
 		require
@@ -102,7 +102,7 @@ feature -- Status report
 			-- in `text'
 			--| Default: '*'
 
-	has_wild_cards: BOOLEAN is
+	has_wild_cards: BOOLEAN
 			-- Has Current either of `string_representation' or
 			-- `character_representation'?
 		require
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Search
 
-	pattern_matches: BOOLEAN is
+	pattern_matches: BOOLEAN
 			-- does `text' exactly match `pattern' ?
 		local
 			lsi, for_test: STRING;
@@ -151,7 +151,7 @@ feature -- Search
 			end
 		end
 
-	search_for_pattern: BOOLEAN is
+	search_for_pattern: BOOLEAN
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		local
@@ -255,7 +255,7 @@ feature -- Search
 			end
 		end
 
-	find_matching_indices is
+	find_matching_indices
 			-- All indices in `text' which matches the
 			-- very next occurrence of `pattern'.
 		local
@@ -371,7 +371,7 @@ feature -- Search
 
 feature {NONE} -- Implementation
 
-	init_list is
+	init_list
 			-- Initializes the list for the wild carded
 			-- pattern.
 		local
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	last_string_matches: BOOLEAN is
+	last_string_matches: BOOLEAN
 		local
 			i: INTEGER
 		do
@@ -452,7 +452,7 @@ invariant
 
 	different_character_and_string_representation: string_representation /= character_representation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {AUT_WITNESS_MINIMIZER}."
 	author: ""
 	date: "$Date$"
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			error_handler.report_benchmark_message ("slice successful: " + (sliced_witness.is_fail and then a_witness.is_same_bug (sliced_witness)).out)
 		end
 
-	ddmin_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR; a_step_name_generator: AUT_UNIQUE_NAME_GENERATOR) is
+	ddmin_witness (a_witness: AUT_WITNESS; a_name_generator: AUT_UNIQUE_NAME_GENERATOR; a_step_name_generator: AUT_UNIQUE_NAME_GENERATOR)
 			-- Use ddmin to minimize witness `a_witness' (using ddmin algorithm by Andreas Zeller).
 		require
 			a_witness_not_void: a_witness /= Void

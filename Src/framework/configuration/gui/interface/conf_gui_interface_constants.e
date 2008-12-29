@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ feature -- Update
 
 feature {NONE} -- Access
 
-	Layout_constants: EV_LAYOUT_CONSTANTS is
+	Layout_constants: EV_LAYOUT_CONSTANTS
 			-- Constants for vision2 layout
 		once
 			create Result
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 			Result_not_void: Result /= Void
 		end
 
-	Conf_pixmaps: CONF_PIXMAPS is
+	Conf_pixmaps: CONF_PIXMAPS
 			-- Pixmaps.
 		require
 			Pixmap_cell_filled: Pixmap_cell /= Void
@@ -64,13 +64,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Onces
 
-	Pixmap_cell: CELL [CONF_PIXMAPS] is
+	Pixmap_cell: CELL [CONF_PIXMAPS]
 			-- Cell to hold the pixmap.
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

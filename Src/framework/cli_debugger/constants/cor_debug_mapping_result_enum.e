@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			typedef enum CorDebugMappingResult
 			{
@@ -21,42 +21,42 @@ class
 
 feature -- enum CorDebugStepReason
 
-	frozen enum_cor_debug_mapping_result__MAPPING_PROLOG: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_PROLOG: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"MAPPING_PROLOG"
 		end
 
-	frozen enum_cor_debug_mapping_result__MAPPING_EPILOG: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_EPILOG: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"MAPPING_EPILOG"
 		end
 
-	frozen enum_cor_debug_mapping_result__MAPPING_NO_INFO: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_NO_INFO: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"MAPPING_NO_INFO"
 		end
 
-	frozen enum_cor_debug_mapping_result__MAPPING_UNMAPPED_ADDRESS: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_UNMAPPED_ADDRESS: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"MAPPING_UNMAPPED_ADDRESS"
 		end
 
-	frozen enum_cor_debug_mapping_result__MAPPING_EXACT: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_EXACT: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"MAPPING_EXACT"
 		end
 
-	frozen enum_cor_debug_mapping_result__MAPPING_APPROXIMATE: INTEGER is
+	frozen enum_cor_debug_mapping_result__MAPPING_APPROXIMATE: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
@@ -65,7 +65,7 @@ feature -- enum CorDebugStepReason
 
 feature -- To String
 
-	enum_cor_debug_mapping_result_to_string (e: INTEGER): STRING is
+	enum_cor_debug_mapping_result_to_string (e: INTEGER): STRING
 			--
 		do
 			if e = enum_cor_debug_mapping_result__MAPPING_PROLOG then
@@ -85,7 +85,7 @@ feature -- To String
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

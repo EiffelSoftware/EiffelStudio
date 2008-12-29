@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Load configuration from the old lace format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like factory; an_extension: like extension_name) is
+	make (a_factory: like factory; an_extension: like extension_name)
 			-- Create.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -77,7 +77,7 @@ feature -- Status
 
 feature -- Status update
 
-	disable_library_conversions is
+	disable_library_conversions
 			-- Disable conversions of cluster that correspond to a library into libraries.
 		do
 			is_library_conversions := False
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	retrieve_configuration (a_file: STRING) is
+	retrieve_configuration (a_file: STRING)
 			-- Retreive the configuration in `a_file' and make it available in `last_system'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation of data retrieval
 
 	current_overrides: SEARCH_TABLE [STRING]
 
-	process_assembly (an_assembly: ASSEMBLY_SD) is
+	process_assembly (an_assembly: ASSEMBLY_SD)
 			-- Process `an_assembly'.
 		require
 			current_target_not_void: current_target /= Void
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation of data retrieval
 			current_target.add_assembly (l_assembly)
 		end
 
-	process_cluster (a_cluster: CLUSTER_SD) is
+	process_cluster (a_cluster: CLUSTER_SD)
 			-- Process `a_cluster'.
 		require
 			ignored_clusters_not_void: ignored_clusters /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation of data retrieval
 			current_options_void: current_options = Void
 		end
 
-	add_visibility_rename (a_cluster: CONF_CLUSTER; a_class: STRING; a_visible_class: STRING; a_rename: TWO_NAME_SD) is
+	add_visibility_rename (a_cluster: CONF_CLUSTER; a_class: STRING; a_visible_class: STRING; a_rename: TWO_NAME_SD)
 			-- Add `a_rename' as a visibility rename to `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation of data retrieval
 			a_cluster.add_visible (a_class, a_rename.old_name.as_lower, a_visible_class, a_rename.new_name.as_lower)
 		end
 
-	process_cluster_properties (a_properties: CLUST_PROP_SD) is
+	process_cluster_properties (a_properties: CLUST_PROP_SD)
 			-- Process `a_properties'.
 		require
 			current_cluster_not_void: current_cluster /= Void
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation of data retrieval
 
 		end
 
-	process_defaults (a_defaults: LACE_LIST [D_OPTION_SD]) is
+	process_defaults (a_defaults: LACE_LIST [D_OPTION_SD])
 			-- Process `a_defaults'.
 		require
 			current_target_not_void: current_target /= Void
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation of data retrieval
 			end
 		end
 
-	process_root (a_root: ROOT_SD) is
+	process_root (a_root: ROOT_SD)
 			-- Process `a_root'.
 		require
 			current_target_not_void: current_target /= Void
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation of data retrieval
 			end
 		end
 
-	process_externals (a_externals: LACE_LIST [LANG_TRIB_SD]) is
+	process_externals (a_externals: LACE_LIST [LANG_TRIB_SD])
 			-- Process `a_externals'.
 		require
 			current_target_not_void: current_target /= Void
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation of data retrieval
 			end
 		end
 
-	convert_old_default_boolean is
+	convert_old_default_boolean
 			-- Convert yes/no values of defaults into True/False.
 		require
 			current_target /= Void
@@ -885,7 +885,7 @@ feature {NONE} -- Implementation
 	ignored_clusters: SEARCH_TABLE [STRING]
 			-- Clusters that have been ignored (and of which child clusters can be ignored as well)
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
 		require
 			an_error_not_void: an_error /= Void
@@ -894,7 +894,7 @@ feature {NONE} -- Implementation
 			last_error := an_error
 		end
 
-	mask_special_characters_config (a_string: STRING): STRING is
+	mask_special_characters_config (a_string: STRING): STRING
 			-- Return a string with the special characters in `a_string' masked,
 			-- so that it is a valid configuration identifier.
 		require
@@ -910,7 +910,7 @@ feature {NONE} -- Implementation
 			result_valid: is_valid_config_identifier (Result)
 		end
 
-	invalid_config_regexp: RX_PCRE_REGULAR_EXPRESSION is
+	invalid_config_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression that matches all invalid characters in a configuration identifier.
 		once
 			create Result.make
@@ -923,7 +923,7 @@ invariant
 	extension_name_not_void: extension_name /= Void
 	extension_name_not_empty: not extension_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

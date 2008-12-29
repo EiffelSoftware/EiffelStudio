@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that receive testing results through a socket. Since this is done in a seperate thread,
 		the receiver only has access to the evaluator status.
@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	receive (a_status: !TEST_EVALUATOR_STATUS) is
+	receive (a_status: !TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket.
 			--
 			-- Note: `receive' will open a listener socket on a arbitrary available port and simply try to
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	listen (a_socket: !NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS) is
+	listen (a_socket: !NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS)
 			-- Wait for incoming connection on socket and receive results.
 			--
 			-- `a_socket': Socket to which evaluator will connect to.
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS) is
+	receive_results (a_socket: NETWORK_STREAM_SOCKET; a_status: !TEST_EVALUATOR_STATUS)
 			-- Receive results from socket.
 			--
 			-- `a_socket': Socket through which evaluator sends results.
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

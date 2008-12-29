@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper of an EIFFEL_LIST object, used by roundtrip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Content
 
-	meaningful_content: ?G is
+	meaningful_content: ?G
 			-- Meaningful `content'.
 			-- If `content' is not void and content is not empty,
 			-- `meaningful_content' is attached to `content', otherwise Void.
@@ -31,7 +31,7 @@ feature -- Content
 
 feature -- Status reporting
 
-	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN is
+	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN
 			-- Is `a_meaningful_content' valid?
 		do
 			if content /= Void and then not content.is_empty then
@@ -41,7 +41,7 @@ feature -- Status reporting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

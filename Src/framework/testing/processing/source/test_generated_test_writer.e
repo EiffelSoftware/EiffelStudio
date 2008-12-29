@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Descendant of {AUT_TEST_CASE_PRINTER} that does not print any class header/footer.
 	]"

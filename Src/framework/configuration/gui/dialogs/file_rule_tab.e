@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a tab page for a file rule."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_rule: CONF_FILE_RULE) is
+	make (a_file_rule: CONF_FILE_RULE)
 			-- Create with `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -233,7 +233,7 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Actions
 
-	add_exclude is
+	add_exclude
 			-- Add a new exclude pattern.
 		local
 			l_pattern: STRING
@@ -245,7 +245,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	add_include is
+	add_include
 			-- Add a new include pattern.
 		local
 			l_pattern: STRING
@@ -257,7 +257,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	remove_exclude is
+	remove_exclude
 			-- Remove current selected exclude pattern.
 		do
 			if exclude_pattern.selected_item /= Void then
@@ -268,7 +268,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	remove_include is
+	remove_include
 			-- Remove current selected include pattern.
 		do
 			if include_pattern.selected_item /= Void then
@@ -279,13 +279,13 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_description is
+	update_description
 			-- Update description.
 		do
 			data.set_description (description.text.to_string_8)
 		end
 
-	edit_condition is
+	edit_condition
 			-- Edit conditions.
 		local
 			l_dial: CONDITION_DIALOG
@@ -307,7 +307,7 @@ invariant
 	data_set: data /= Void
 	gui_elements_created: is_initialized implies exclude_pattern /= Void and new_exclude /= Void and include_pattern /= Void and new_include /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

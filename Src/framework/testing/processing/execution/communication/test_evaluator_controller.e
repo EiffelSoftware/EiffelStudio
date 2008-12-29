@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that represent the state of a {TEST_ROOT_APPLICATION}, also called evaluator. An
 			evaluator can be launched for a given list of tests to execute. The controller will communicate
@@ -87,7 +87,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			running: is_running
 		end
 
-	frozen terminate is
+	frozen terminate
 			-- Terminate evaluator if running.
 		require
 			running: is_running
@@ -112,7 +112,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 
 feature {NONE} -- Query
 
-	arguments: !ARRAYED_LIST [!STRING] is
+	arguments: !ARRAYED_LIST [!STRING]
 			-- Arguments used to launch evaluator
 		local
 			l_port, l_root: !STRING
@@ -145,7 +145,7 @@ feature	{NONE} -- Implementation
 			l_socket.close
 		end
 
-	launch_evaluator (a_args: !LIST [!STRING]) is
+	launch_evaluator (a_args: !LIST [!STRING])
 			-- Launch evaluator executable
 			--
 			-- `a_args': Arguments for launching evaluator process
@@ -162,7 +162,7 @@ feature	{NONE} -- Implementation
 		deferred
 		end
 
-	terminate_evaluator is
+	terminate_evaluator
 			-- Terminate evaluator executable
 		require
 			running: is_running
@@ -171,7 +171,7 @@ feature	{NONE} -- Implementation
 			evaluator_not_running: not is_evaluator_running
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

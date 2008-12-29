@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Syntax error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; m: STRING) is
+	make (s, e: INTEGER; f: like file_name; m: STRING)
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			error_message_set: error_message = m
 		end
 
-	init (a_parser: EIFFEL_PARSER) is
+	init (a_parser: EIFFEL_PARSER)
 			-- Initialize `line' and `column' from `a_parser'.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -56,10 +56,10 @@ feature -- Properties
 	file_name: STRING
 			-- Path to file where syntax issue happened
 
-	code: STRING is "Syntax Error"
+	code: STRING = "Syntax Error"
 			-- Error code
 
-	syntax_message: STRING is
+	syntax_message: STRING
 			-- Specific syntax message.
 			-- (By default, it is empty)
 		do
@@ -70,7 +70,7 @@ feature -- Properties
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_syntax_error (Current)
 		end
@@ -79,7 +79,7 @@ invariant
 	attached_file_name: file_name /= Void
 	attached_error_message: error_message /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

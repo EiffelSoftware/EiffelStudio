@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple dialog that allows to edit a text."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor {PROPERTY_DIALOG}
@@ -37,7 +37,7 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Agents
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			value := text_editor.text

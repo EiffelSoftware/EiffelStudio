@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Iterator that iterates through a configuration, looking only at objects that are enabled for the current platform/build."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_state: like state) is
+	make (a_state: like state)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Visit nodes
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
 			l_pre: CONF_PRECOMPILE
@@ -65,7 +65,7 @@ feature -- Visit nodes
 invariant
 	state_not_void: state /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

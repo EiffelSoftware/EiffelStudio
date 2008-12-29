@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for character constant. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: CHARACTER_32; l, co, p, n: INTEGER) is
+	initialize (c: CHARACTER_32; l, co, p, n: INTEGER)
 			-- Create a new CHARACTER AST node.
 		require
 			l_non_negative: l >= 0
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_char_as (Current)
@@ -49,7 +49,7 @@ feature -- Properties
 	value: CHARACTER_32
 			-- Character value
 
-	type: TYPE_AS is
+	type: TYPE_AS
 			-- Associated type (if any)
 		do
 				-- Void here
@@ -57,7 +57,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := value = other.value
@@ -65,14 +65,14 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			Result := wchar_text (value)
 			Result.precede ('%'')
 			Result.extend ('%'')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

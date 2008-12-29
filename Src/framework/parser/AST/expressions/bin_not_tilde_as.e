@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of binary `/~' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bin_not_tilde_as (Current)
@@ -32,12 +32,12 @@ feature -- Visitor
 
 feature -- Properties
 
-	op_name: ID_AS is
+	op_name: ID_AS
 		once
 			create Result.initialize ("/~")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

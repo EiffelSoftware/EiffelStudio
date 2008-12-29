@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ deferred class AUT_STATISTICS_GENERATOR
 
 feature {NONE} -- Initialization
 
-	make (an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test) is
+	make (an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test)
 			-- Create new html generator.
 		require
 			an_output_dirname_not_void: an_output_dirname /= Void
@@ -48,7 +48,7 @@ feature -- Access
 	system: SYSTEM_I
 			-- System
 
-	absolute_index_filename: STRING is
+	absolute_index_filename: STRING
 			-- Absolute filename of main entry page
 		deferred
 		ensure
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Generation
 
-	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY) is
+	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate HTML pages describing the results from `a_repository'.
 		require
 			a_repository_not_void: a_repository /= Void
@@ -66,7 +66,7 @@ feature -- Generation
 
 feature {NONE} -- Test Scope
 
-	is_class_in_test_scope (a_class: CLASS_C): BOOLEAN is
+	is_class_in_test_scope (a_class: CLASS_C): BOOLEAN
 			-- Is class `a_class' in the test scope?
 		require
 			a_class_not_void: a_class /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Test Scope
 			Result := classes_under_test.has (a_class)
 		end
 
-	is_manual_test_class (a_class: CLASS_C): BOOLEAN is
+	is_manual_test_class (a_class: CLASS_C): BOOLEAN
 			-- Is class `a_class' a manual test class?
 		require
 			a_class_not_void: a_class /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects providing interface to launch and communicate with process. Separate threads are used
 		to terminate process after a given timeout.
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 invariant
 	timeout_not_negative: timeout >= 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

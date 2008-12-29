@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create CorDebug instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {ICOR_EXPORTER} -- Initialization
 		
-	new_cordebug_pointer_for (a_dbg_version: STRING): POINTER is
+	new_cordebug_pointer_for (a_dbg_version: STRING): POINTER
 			-- Create a new instance of ICorDebug for `a_dbg_version'.
 		local
 			l_hr: INTEGER
@@ -28,7 +28,7 @@ feature {ICOR_EXPORTER} -- Initialization
 			l_hr := c_get_cordebug (l_version.item, $Result)	
 		end
 
-	new_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK is
+	new_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK
 			-- Create a new instance of ICOR_DEBUG_MANAGED_CALLBACK.
 		local
 			p: POINTER
@@ -42,7 +42,7 @@ feature {ICOR_EXPORTER} -- Initialization
 			result_exist: Result /= Void
 		end
 
-	new_cordebug_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK is
+	new_cordebug_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK
 			-- Create a new instance of ICOR_DEBUG_MUNANAGED_CALLBACK.
 		local
 			p: POINTER
@@ -58,7 +58,7 @@ feature {ICOR_EXPORTER} -- Initialization
 
 feature {NONE} -- Externals
 
-	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: TYPED_POINTER [POINTER]): INTEGER is
+	c_get_cordebug (a_dbg_version: POINTER; a_cor_debug: TYPED_POINTER [POINTER]): INTEGER
 			-- New instance of ICorDebug
 		external
 			"C signature (LPWSTR, EIF_POINTER **): EIF_INTEGER use %"cli_debugger.h%""
@@ -66,7 +66,7 @@ feature {NONE} -- Externals
 			"get_cordebug"
 		end
 
-	cpp_new_cordebug_managed_callback (): POINTER is 
+	cpp_new_cordebug_managed_callback (): POINTER 
 			-- create an instance of DebuggerManagedCallback
 		external
 			"[
@@ -76,7 +76,7 @@ feature {NONE} -- Externals
 				]"
 		end
 
-	cpp_new_cordebug_unmanaged_callback (): POINTER is 
+	cpp_new_cordebug_unmanaged_callback (): POINTER 
 			-- create an instance of DebuggerUnmanagedCallback
 		external
 			"[
@@ -86,7 +86,7 @@ feature {NONE} -- Externals
 				]"
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

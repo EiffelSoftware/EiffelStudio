@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command sender implementation"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature -- Operation
 
-	send_command (a_string, a_key: !STRING) is
+	send_command (a_string, a_key: !STRING)
 			-- Send `a_string' as command to receiver processes.
 		do
 		end
 		
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER) is
+	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		do
 		end
@@ -36,7 +36,7 @@ feature -- Querry
 feature {NONE} -- Implementation
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

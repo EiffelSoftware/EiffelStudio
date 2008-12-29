@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Heirs are standrad value or a name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	make (v: like value)
 			-- Create a new OPT_VAL AST node.
 		require
 			v_not_void: v /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			is_name_option: is_name
 		end
 
-	make_yes is
+	make_yes
 			-- Create a `yes' option.
 		do
 			value := yes_sd
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			is_yes_option: is_yes
 		end
 
-	make_no is
+	make_no
 			-- Create a `no' option.
 		do
 			value := no_sd
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			is_no_option: is_no
 		end
 
-	make_all is
+	make_all
 			-- Create a `all' option.
 		do
 			value := all_sd
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			is_all_option: is_all
 		end
 
-	make_check is
+	make_check
 			-- Create a `check' option.
 		do
 			value := check_sd
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			is_check_option: is_check
 		end
 
-	make_require is
+	make_require
 			-- Create a `require' option.
 		do
 			value := require_sd
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			is_require_option: is_require
 		end
 
-	make_ensure is
+	make_ensure
 			-- Create a `ensure' option.
 		do
 			value := ensure_sd
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			is_ensure_option: is_ensure
 		end
 
-	make_loop is
+	make_loop
 			-- Create a `loop' option.
 		do
 			value := loop_sd
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			is_loop_option: is_loop
 		end
 
-	make_invariant is
+	make_invariant
 			-- Create a `invariant' option.
 		do
 			value := invariant_sd
@@ -111,55 +111,55 @@ feature -- Properties
 
 	value: ID_SD;
 
-	is_yes: BOOLEAN is
+	is_yes: BOOLEAN
 			-- Is the option value `yes' ?
 		do
 			Result := internal_flags & Yes_mask = Yes_mask
 		end;
 
-	is_no: BOOLEAN is
+	is_no: BOOLEAN
 			-- Is the option value `no' ?
 		do
 			Result := internal_flags & No_mask = No_mask
 		end;
 
-	is_all: BOOLEAN is
+	is_all: BOOLEAN
 			-- Is the option value `all' ?
 		do
 			Result := internal_flags & All_mask = All_mask
 		end;
 
-	is_require: BOOLEAN is
+	is_require: BOOLEAN
 			-- Is the option value `require' ?
 		do
 			Result := internal_flags & Require_mask = Require_mask
 		end;
 
-	is_ensure: BOOLEAN is
+	is_ensure: BOOLEAN
 			-- Is the option value `ensure' ?
 		do
 			Result := internal_flags & Ensure_mask = Ensure_mask
 		end;
 
-	is_invariant: BOOLEAN is
+	is_invariant: BOOLEAN
 			-- Is the option value `invariant' ?
 		do
 			Result := internal_flags & Invariant_mask = Invariant_mask
 		end;
 
-	is_loop: BOOLEAN is
+	is_loop: BOOLEAN
 			-- Is the option value `loop' ?
 		do
 			Result := internal_flags & Loop_mask = Loop_mask
 		end;
 
-	is_check: BOOLEAN is
+	is_check: BOOLEAN
 			-- Is the option value `check' ?
 		do
 			Result := internal_flags & Check_mask = Check_mask
 		end;
 
-	is_name: BOOLEAN is
+	is_name: BOOLEAN
 			-- is the option value a name value ?
 		do
 			Result := internal_flags & Name_mask = Name_mask
@@ -170,66 +170,66 @@ feature {NONE} -- Internal
 	internal_flags: INTEGER
 			-- Store status of Current.
 
-	yes_mask: INTEGER is 1
-	no_mask: INTEGER is 2
-	require_mask: INTEGER is 4
-	ensure_mask: INTEGER is 8
-	check_mask: INTEGER is 16
-	loop_mask: INTEGER is 32
-	invariant_mask: INTEGER is 64
-	name_mask: INTEGER is 128
-	all_mask: INTEGER is 256
+	yes_mask: INTEGER = 1
+	no_mask: INTEGER = 2
+	require_mask: INTEGER = 4
+	ensure_mask: INTEGER = 8
+	check_mask: INTEGER = 16
+	loop_mask: INTEGER = 32
+	invariant_mask: INTEGER = 64
+	name_mask: INTEGER = 128
+	all_mask: INTEGER = 256
 			-- Different mask.
 
-	yes_sd: ID_SD is
+	yes_sd: ID_SD
 			-- ID_SD instance for `yes' keyword.
 		once
 			create Result.initialize ("yes")
 		end
 
-	no_sd: ID_SD is
+	no_sd: ID_SD
 			-- ID_SD instance for `no' keyword.
 		once
 			create Result.initialize ("no")
 		end
 
-	all_sd: ID_SD is
+	all_sd: ID_SD
 			-- ID_SD instance for `all' keyword.
 		once
 			create Result.initialize ("all")
 		end
 
-	check_sd: ID_SD is
+	check_sd: ID_SD
 			-- ID_SD instance for `check' keyword.
 		once
 			create Result.initialize ("check")
 		end
 
-	require_sd: ID_SD is
+	require_sd: ID_SD
 			-- ID_SD instance for `require' keyword.
 		once
 			create Result.initialize ("require")
 		end
 
-	ensure_sd: ID_SD is
+	ensure_sd: ID_SD
 			-- ID_SD instance for `ensure' keyword.
 		once
 			create Result.initialize ("ensure")
 		end
 
-	loop_sd: ID_SD is
+	loop_sd: ID_SD
 			-- ID_SD instance for `loop' keyword.
 		once
 			create Result.initialize ("loop")
 		end
 
-	invariant_sd: ID_SD is
+	invariant_sd: ID_SD
 			-- ID_SD instance for `invariant' keyword.
 		once
 			create Result.initialize ("invariant")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for printing error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ deferred class
 
 feature -- Basic Operations
 
-	print_error (a_err: ERROR_ERROR_INFO) is
+	print_error (a_err: ERROR_ERROR_INFO)
 			-- Prints `a_err'
 		require
 			a_err_attached: a_err /= Void
 		deferred
 		end
 
-	print_warning (a_warn: ERROR_WARNING_INFO) is
+	print_warning (a_warn: ERROR_WARNING_INFO)
 			-- Prints `a_warn'.
 			-- By default `print_warning' calls `print_error' so unless redefined
 			-- `print_error' should handle both errors and warnings.
@@ -27,7 +27,7 @@ feature -- Basic Operations
 			print_error (a_warn)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

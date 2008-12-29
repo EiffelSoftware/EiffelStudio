@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command sender implementation"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Operation
 
-	send_command (a_string, a_key: !STRING) is
+	send_command (a_string, a_key: !STRING)
 			-- Send `a_string' as command to receiver processes.
 		local
 			l_string_to_send: STRING
@@ -42,7 +42,7 @@ feature -- Operation
 			end
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER) is
+	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		local
 			l_string_to_send: STRING
@@ -84,7 +84,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	enum_windows_proc (hwnd: POINTER): BOOLEAN is
+	enum_windows_proc (hwnd: POINTER): BOOLEAN
 			-- Process `hwnd' when enumerating top windows.
 			-- Return True to continue enumerating, otherwise to stop.
 		local
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enum_windows_proc_process (hwnd: POINTER): BOOLEAN is
+	enum_windows_proc_process (hwnd: POINTER): BOOLEAN
 			-- Process `hwnd' when enumerating top windows.
 			-- Return True to continue enumerating, otherwise to stop.
 		local
@@ -147,13 +147,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C functions
 
-	cwel_enum_windows_procedure (cur_obj: like Current; callback: POINTER) is
+	cwel_enum_windows_procedure (cur_obj: like Current; callback: POINTER)
 			-- SDK EnumWindows
 		external
 			"C signature (EIF_OBJECT, EIF_POINTER) use %"wel_enum_child_windows.h%""
 		end
 
-	cwin_get_window_text_length (hwnd: POINTER): INTEGER is
+	cwin_get_window_text_length (hwnd: POINTER): INTEGER
 			-- SDK GetWindowTextLength
 		external
 			"C [macro %"windows.h%"] (HWND): EIF_INTEGER"
@@ -161,7 +161,7 @@ feature {NONE} -- C functions
 			"GetWindowTextLength"
 		end
 
-	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER is
+	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER
 			-- SDK GetWindowText
 		external
 			"C [macro %"windows.h%"] (HWND, LPTSTR, int): EIF_INTEGER"
@@ -169,7 +169,7 @@ feature {NONE} -- C functions
 			"GetWindowText"
 		end
 
-	c_hwnd_broadcast: POINTER is
+	c_hwnd_broadcast: POINTER
 			-- HWND_BROADCAST
 		external
 			"C [macro <windows.h>]"
@@ -177,7 +177,7 @@ feature {NONE} -- C functions
 			"HWND_BROADCAST"
 		end
 
-	c_new_copydatastruct (a_cmd: POINTER; a_size: INTEGER): POINTER is
+	c_new_copydatastruct (a_cmd: POINTER; a_size: INTEGER): POINTER
 			-- New copydatastruct
 		external
 			"C inline"
@@ -197,7 +197,7 @@ feature {NONE} -- C functions
 			]"
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

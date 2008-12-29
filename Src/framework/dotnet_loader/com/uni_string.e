@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A low-level string class to solve some garbage %
 		%collector problems (object move). The end-user must not use %
 		%this class. Use class STRING instead."
@@ -18,7 +18,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING) is
+	make (a_string: STRING)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -27,7 +27,7 @@ feature --{NONE} -- Initialization
 			set_string (a_string)
 		end
 
-	make_empty (a_length: INTEGER) is
+	make_empty (a_length: INTEGER)
 			-- Make an empty C string of `a_length' characters.
 			-- C memory area is not initialized.
 		require
@@ -37,7 +37,7 @@ feature --{NONE} -- Initialization
 			count := 0
 		end
 	
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Make a copy of unicode string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -48,7 +48,7 @@ feature --{NONE} -- Initialization
 			make_by_pointer_and_count (a_ptr, lth)
 		end
 
-	make_by_pointer_and_count (a_ptr: POINTER; a_count: INTEGER) is
+	make_by_pointer_and_count (a_ptr: POINTER; a_count: INTEGER)
 			-- Make a copy of first `a_count' characters of
 			-- unicode string pointed by `a_ptr'.
 		require
@@ -62,13 +62,13 @@ feature --{NONE} -- Initialization
 	
 feature -- Access
 
-	string: STRING is
+	string: STRING
 			-- Eiffel string
 		do
 			Result := string_with_count (length)
 		end
 		
-	string_with_count (a_count: INTEGER): STRING is
+	string_with_count (a_count: INTEGER): STRING
 			-- Retrieve first `a_count' characters of Current to create a new Eiffel string
 		require
 			a_count_non_negative: a_count >= 0
@@ -84,7 +84,7 @@ feature -- Access
 			Result.from_c_substring (u_string.item, 1, a_count)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Get pointer to allocated area.
 		do
 			Result := managed_data.item
@@ -94,13 +94,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current empty?
 		do
 			Result := length = 0
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of character in Current.
 		do
 			Result := managed_data.count
@@ -108,7 +108,7 @@ feature -- Status report
 
 	count: INTEGER
 
-	length: INTEGER is
+	length: INTEGER
 			-- 
 		do
 			Result := cwel_string_length (item)
@@ -116,7 +116,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	set_string (a_string: STRING) is
+	set_string (a_string: STRING)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -154,28 +154,28 @@ feature {NONE} -- Implementation
 	managed_data: MANAGED_POINTER
 			-- Hold data of Current.
 
-	cwel_string_length (ptr: POINTER): INTEGER is
+	cwel_string_length (ptr: POINTER): INTEGER
 		external
 			"C macro signature (wchar_t *): EIF_INTEGER use <string.h>"
 		alias
 			"wcslen"
 		end	
 		
-	cwel_byte_size (ptr: POINTER): INTEGER is
+	cwel_byte_size (ptr: POINTER): INTEGER
 		external
 			"C macro signature (char *): EIF_INTEGER use <windows.h>"
 		alias
 			"sizeof"
 		end	
 
-	cwel_set_size_in_string (ptr: POINTER; n: INTEGER) is
+	cwel_set_size_in_string (ptr: POINTER; n: INTEGER)
 		external
 			"C [macro %"wel_string.h%"]"
 		end
 
 	cwel_multi_byte_to_wide_char (code_page, flags: INTEGER; source: POINTER;
 			source_length: INTEGER; dest: POINTER; dest_size: INTEGER): INTEGER
-		is
+		
 			-- Given a `source' of a specific `code_page' return associated
 			-- Unicode string in `dest'.
 		external
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 	cwel_wide_char_to_multi_byte (code_page, flags: INTEGER; source: POINTER;
 			source_length: INTEGER; dest: POINTER; dest_size: INTEGER;
 			default_char, used_default_char: POINTER): INTEGER
-		is
+		
 			-- Given a unicode `source' return associated string in `dest'
 			-- using specific `code_page'.
 		external
@@ -200,7 +200,7 @@ invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

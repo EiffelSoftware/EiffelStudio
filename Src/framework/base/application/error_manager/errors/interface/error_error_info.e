@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_with_context (a_cxt: like context) is
+	make_with_context (a_cxt: like context)
 			-- Initialize error with context `a_cxt'
 		require
 			a_cxt_attached: a_cxt /= Void
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	description: STRING is
+	description: STRING
 			-- Error description
 		do
 			if internal_description = Void then
@@ -40,7 +40,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		do
 			Result := generating_type
@@ -52,19 +52,19 @@ feature -- Access
 	context: TUPLE
 			-- Error context
 
-	has_context: BOOLEAN is
+	has_context: BOOLEAN
 			-- Does error have a context?
 		do
 			Result := context /= Void and then not context.is_empty
 		end
 
-	is_fatal: BOOLEAN is
+	is_fatal: BOOLEAN
 			-- Is error fatal
 		once
 			Result := True
 		end
 
-	error_level_tag: STRING is
+	error_level_tag: STRING
 			-- Error level description
 		do
 			if is_fatal then
@@ -79,7 +79,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	string_formatter: STRING_FORMATTER is
+	string_formatter: STRING_FORMATTER
 			-- Formatter used to expand `dollar_description'
 		once
 			create Result
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	internal_description: STRING
 			-- cached description
 
-	dollar_description: STRING is
+	dollar_description: STRING
 			-- Dollar encoded description. ${n} are replaced by array indicies.
 			-- See {STRING_FORMATTER}
 		deferred
@@ -106,7 +106,7 @@ invariant
 	not_code_is_empty: not code.is_empty
 	has_context_correct: has_context implies (context /= Void and then not context.is_empty)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

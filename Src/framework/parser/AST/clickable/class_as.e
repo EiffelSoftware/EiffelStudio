@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			s: like suppliers;
 			o: like obsolete_message;
 			ed: like end_keyword)
-		is
+		
 			-- Create a new CLASS AST node.
 		require
 			n_not_void: n /= Void
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_class_as (Current)
@@ -172,7 +172,7 @@ feature -- Roundtrip
 			end
 		end
 
-	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -185,7 +185,7 @@ feature -- Roundtrip
 			end
 		end
 
-	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -198,7 +198,7 @@ feature -- Roundtrip
 			end
 		end
 
-	deferred_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	deferred_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -211,7 +211,7 @@ feature -- Roundtrip
 			end
 		end
 
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -224,7 +224,7 @@ feature -- Roundtrip
 			end
 		end
 
-	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -237,7 +237,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_separate_keyword, a_external_keyword: KEYWORD_AS) is
+	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_separate_keyword, a_external_keyword: KEYWORD_AS)
 			-- Set header marks of a class.
 		do
 			if a_frozen_keyword /= Void then
@@ -263,7 +263,7 @@ feature -- Roundtrip
 			external_keyword_set: a_external_keyword /= Void implies external_keyword_index = a_external_keyword.index
 		end
 
-	set_class_keyword (k_as: KEYWORD_AS) is
+	set_class_keyword (k_as: KEYWORD_AS)
 			-- Set `class_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -273,7 +273,7 @@ feature -- Roundtrip
 			class_keyword_set: k_as /= Void implies class_keyword_index = k_as.index
 		end
 
-	set_alias_keyword (k_as: KEYWORD_AS) is
+	set_alias_keyword (k_as: KEYWORD_AS)
 			-- Set `alias_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -283,7 +283,7 @@ feature -- Roundtrip
 			alias_keyword_set: k_as /= Void implies alias_keyword_index = k_as.index
 		end
 
-	set_obsolete_keyword (k_as: KEYWORD_AS) is
+	set_obsolete_keyword (k_as: KEYWORD_AS)
 			-- Set `obsolete_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -293,7 +293,7 @@ feature -- Roundtrip
 			obsolete_keyword_set: k_as /= Void implies obsolete_keyword_index = k_as.index
 		end
 
-	first_header_mark (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	first_header_mark (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- First header mark keyword,
 			-- Void if no one appears.
 		require
@@ -350,7 +350,7 @@ feature -- Attributes
 			-- Obsolete message clause
 			-- (Void if was not present)
 
-	top_indexes: INDEXING_CLAUSE_AS is
+	top_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause at top of class.
 		do
 			if internal_top_indexes = Void or else internal_top_indexes.is_empty then
@@ -360,7 +360,7 @@ feature -- Attributes
 			end
 		end
 
-	bottom_indexes: INDEXING_CLAUSE_AS is
+	bottom_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause at bottom of class.
 		do
 			if internal_bottom_indexes = Void or else internal_bottom_indexes.is_empty then
@@ -391,7 +391,7 @@ feature -- Attributes
 			end
 		end
 
-	conforming_parents: PARENT_LIST_AS is
+	conforming_parents: PARENT_LIST_AS
 			-- Parents from conforming inheritance clause.
 		do
 			Result := internal_conforming_parents
@@ -401,7 +401,7 @@ feature -- Attributes
 			end
 		end
 
-	non_conforming_parents: PARENT_LIST_AS is
+	non_conforming_parents: PARENT_LIST_AS
 			-- Parents from non-conforming inheritance clause.
 		do
 			Result := internal_non_conforming_parents
@@ -411,7 +411,7 @@ feature -- Attributes
 			end
 		end
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS] is
+	generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generic parameter list
 		do
 			if internal_generics = Void or else internal_generics.is_empty then
@@ -459,7 +459,7 @@ feature -- Attributes
 	is_partial: BOOLEAN
 			-- Is class a partial? (that is the type definition is divided between multiple files)
 
-	click_list: CLICK_LIST is
+	click_list: CLICK_LIST
 		local
 			l_clicklist_visitor: AST_CLICKABLE_VISITOR
 		do
@@ -489,7 +489,7 @@ feature -- Attributes
 	generics_end_position: INTEGER
 			-- Position at end of formal generics.
 
-	invariant_insertion_position: INTEGER is
+	invariant_insertion_position: INTEGER
 			-- Position where new invariant can be inserted (at the end of an invariant
 			-- clause if any, otherwise before the indexing or end keyword).
 		do
@@ -510,12 +510,12 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_class: BOOLEAN is True
+	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		local
 			l_break: BREAK_AS
 		do
@@ -546,7 +546,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		local
 			l_break: BREAK_AS
 		do
@@ -568,7 +568,7 @@ feature -- Roundtrip/Token
 
 feature {EIFFEL_PARSER_SKELETON} -- Element change
 
-	set_text_positions (ge, ip, fp: INTEGER) is
+	set_text_positions (ge, ip, fp: INTEGER)
 			-- Set positions in class text.
 		require
 			ge_positive_or_not_present: ge >= 0
@@ -586,7 +586,7 @@ feature {EIFFEL_PARSER_SKELETON} -- Element change
 
 feature -- Access
 
-	feature_with_name (n: INTEGER): FEATURE_AS is
+	feature_with_name (n: INTEGER): FEATURE_AS
 			-- Feature AST with internal name `n'.
 		local
 			l_features: like features
@@ -607,7 +607,7 @@ feature -- Access
 			end
 		end
 
-	parent_with_name (n: STRING): PARENT_AS is
+	parent_with_name (n: STRING): PARENT_AS
 			-- Parent AST with class name `n'.
 		require
 			n_not_void: n /= Void
@@ -632,7 +632,7 @@ feature -- Access
 			end
 		end
 
-	clickable_item (a_clickable: CLICKABLE_AST): CLICK_AST is
+	clickable_item (a_clickable: CLICKABLE_AST): CLICK_AST
 			-- Corresponding click-item for `a_clickable'.
 			-- `Void' if not in `click_list'.
 		require
@@ -648,7 +648,7 @@ feature -- Access
 			correct_item: Result /= Void implies Result.node = a_clickable
 		end
 
-	click_ast: CLICK_AST is
+	click_ast: CLICK_AST
 			-- Position of class name.
 		do
 			Result := clickable_item (Current)
@@ -657,7 +657,7 @@ feature -- Access
 			correct_item: Result.node = Current
 		end
 
-	generics_as_string: STRING is
+	generics_as_string: STRING
 			-- Output `formal_decs' as string to `generics'.
 			-- `Void' if `generics' `Void'.
 		local
@@ -677,7 +677,7 @@ feature -- Access
 			end
 		end
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributse of current class if any.
 		do
 			if top_indexes /= Void then
@@ -685,7 +685,7 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
@@ -693,7 +693,7 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
@@ -701,7 +701,7 @@ feature -- Access
 			end
 		end
 
-	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
@@ -856,7 +856,7 @@ feature -- Query
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
@@ -875,7 +875,7 @@ feature -- Comparison
 
 feature {ABSTRACT_CLASS_C} -- Update
 
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
 			-- Assign values to Unique features defined in the current class
 		require
 			valid_args: counter /= Void and values /= Void
@@ -892,12 +892,12 @@ feature {ABSTRACT_CLASS_C} -- Update
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_top_indexes (i: like top_indexes) is
+	set_top_indexes (i: like top_indexes)
 		do
 			internal_top_indexes := i
 		end
 
-	set_date (a_date: like date) is
+	set_date (a_date: like date)
 			-- Set `date' with `a_date'.
 		require
 			a_date_valid: a_date >= -1
@@ -911,7 +911,7 @@ invariant
 	convertors_valid: convertors /= Void implies not convertors.is_empty
 	date_valid: date >= -1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

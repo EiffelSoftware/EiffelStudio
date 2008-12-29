@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A set based on ID_LIST, i.e. optimized for set containing most of the time one element."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Change
 
-	extend (a_id: like first) is
+	extend (a_id: like first)
 			-- Insert id `a_id' in set if not already present.
 		do
 			if not has (a_id) then
@@ -27,7 +27,7 @@ feature -- Change
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

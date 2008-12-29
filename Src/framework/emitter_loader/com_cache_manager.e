@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Eiffel interface class for EiffelSoftware.MetadataConsumer.exe or EiffelSoftware.MetadataConsumer.dll assemblies
 		Encapsulates the COM_CACHE_MANAGER class
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize current.
 		do
 			last_call_success := c_initialize (item)
@@ -33,7 +33,7 @@ feature -- Initialization
 			success: last_call_success = 0
 		end
 
-	initialize_with_path (a_path: UNI_STRING) is
+	initialize_with_path (a_path: UNI_STRING)
 			-- Initialize current with `a_path' as ISE_EIFFEL var.
 		require
 			a_path_not_void: a_path /= Void
@@ -52,7 +52,7 @@ feature -- Access
 	is_initialized: BOOLEAN
 			-- Has Current been correctly initiliazed?
 
-	is_successful: BOOLEAN is
+	is_successful: BOOLEAN
 			-- Was last operation successful?
 		require
 			initialized: is_initialized
@@ -65,7 +65,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	last_error_message: UNI_STRING is
+	last_error_message: UNI_STRING
 			-- Last error message of a failed operation
 		require
 			initialized: is_initialized
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: UNI_STRING; a_info_only: BOOLEAN) is
+	consume_assembly (a_name, a_version, a_culture, a_key: UNI_STRING; a_info_only: BOOLEAN)
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -117,7 +117,7 @@ feature -- Basic Oprtations
 			success: last_call_success = 0
 		end
 
-	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: UNI_STRING) is
+	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: UNI_STRING)
 			-- consume assembly found at 'apath' and all of its dependacies into EAC.
 			-- GAC dependacies will be put into the EAC
 		require
@@ -139,7 +139,7 @@ feature -- Basic Oprtations
 			success: last_call_success = 0
 		end
 
-	unload is
+	unload
 			-- unloads initialized app domain and cache releated objects to preserve resources
 		do
 			last_call_success := c_unload (item)
@@ -149,7 +149,7 @@ feature -- Basic Oprtations
 
 feature {NONE} -- Implementation
 
-	c_initialize (ap: POINTER): INTEGER is
+	c_initialize (ap: POINTER): INTEGER
 			-- initialize COM object
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			"initialize"
 		end
 
-	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER is
+	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			"initialize_with_path"
 		end
 
-	c_is_initalized (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_is_initalized (ap:POINTER; aret_val: POINTER): INTEGER
 			-- was the last operation successful?
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			"is_initialized"
 		end
 
-	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER
 			-- was the last operation successful?
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			"is_successful"
 		end
 
-	c_last_error_message (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_last_error_message (ap:POINTER; aret_val: POINTER): INTEGER
 			-- last error message of a failed operation
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			"last_error_message"
 		end
 
-	c_consume_assembly (ap, a_name, a_version, a_culture, a_key: POINTER; a_info_only: BOOLEAN): INTEGER is
+	c_consume_assembly (ap, a_name, a_version, a_culture, a_key: POINTER; a_info_only: BOOLEAN): INTEGER
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		external
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			"consume_assembly"
 		end
 
-	c_consume_assembly_from_path (ap, a_path: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER is
+	c_consume_assembly_from_path (ap, a_path: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER
 			-- Consume referenced assembly `a_path' an all of its dependacies into EAC
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, VARIANT_BOOL, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			"consume_assembly_from_path"
 		end
 
-	c_unload (ap: POINTER): INTEGER is
+	c_unload (ap: POINTER): INTEGER
 			-- -- retrieve the assembly information from a assembly
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			"unload"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

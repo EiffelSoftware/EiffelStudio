@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that scans a input buffer and generate `match_list' for roundtrip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Scann
 
-	scan_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	scan_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Scan `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -43,7 +43,7 @@ feature -- Scann
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end
 
-	scan_string (a_string: STRING) is
+	scan_string (a_string: STRING)
 			-- Scan `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -55,7 +55,7 @@ feature -- Scann
 			match_list_set: not has_syntax_error implies match_list /= Void
 		end
 
-	scan is
+	scan
 			-- Scan `input_buffer' until end of file is found
 			-- or an error occurs.
 		local
@@ -111,7 +111,7 @@ feature -- Status reporting
 
 feature
 
-	process_id_as is
+	process_id_as
 			-- Process current token which is an identifier
 		local
 			l_as: ID_AS
@@ -119,13 +119,13 @@ feature
 			l_as := ast_factory.new_filled_id_as (Current)
 		end
 
-	process_string_character_code (code: INTEGER) is
+	process_string_character_code (code: INTEGER)
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

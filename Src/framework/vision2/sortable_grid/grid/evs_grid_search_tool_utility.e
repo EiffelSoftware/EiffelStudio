@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that provides basic utilities for search in EVS_GRID_WRAPPER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Actions
 
-	keyword_not_found_actions: ACTION_SEQUENCE [TUPLE [STRING]] is
+	keyword_not_found_actions: ACTION_SEQUENCE [TUPLE [STRING]]
 			-- Actions to be performed when search for some keyword doesn't find any thing.
 		do
 			if keyword_not_found_actions_internal = Void then
@@ -24,7 +24,7 @@ feature -- Actions
 
 feature -- Message dialog
 
-	show_message_dialog (a_msg: STRING; a_window: EV_WINDOW) is
+	show_message_dialog (a_msg: STRING; a_window: EV_WINDOW)
 			-- Display a warning dialog showing message `a_msg' in `a_window'.
 		require
 			a_msg_attached: a_msg /= Void
@@ -41,7 +41,7 @@ feature{NONE} -- Implementation
 invariant
 	keyword_not_fount_actions_attached: keyword_not_found_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

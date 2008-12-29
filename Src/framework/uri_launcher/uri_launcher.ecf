@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="uri_launcher" uuid="735261AB-A4E8-480D-913F-8F5FB9ABC099" library_target="uri_launcher">
 	<target name="uri_launcher">
 		<description>Performs operations to launch URIs using a default application independent of OS.</description>
-		<option>
+		<option syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<library name="api_wrapper" location="$EIFFEL_SRC\framework\api_wrapper\api_wrapper.ecf">

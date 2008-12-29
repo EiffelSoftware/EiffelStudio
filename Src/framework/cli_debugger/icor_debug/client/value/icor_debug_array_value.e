@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ICorDebugArrayValue
 		]"
@@ -18,7 +18,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_element_type: INTEGER is
+	get_element_type: INTEGER
 			-- GetElementType returns the simple type of the elements
 			-- in the array
 		do
@@ -27,7 +27,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_rank: NATURAL_32 is
+	get_rank: NATURAL_32
 			-- GetRank returns the number of dimensions in the array.
 		do
 			last_call_success := cpp_get_rank (item, $Result)
@@ -35,13 +35,13 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_count_as_integer_32: INTEGER is
+	get_count_as_integer_32: INTEGER
 			-- Truncated from NATURAL_32
 		do
 			Result := get_count.as_integer_32
 		end
 
-	get_count: NATURAL_32 is
+	get_count: NATURAL_32
 			-- GetCount returns the number of elements in all dimensions of
      		-- the array.
 		do
@@ -50,7 +50,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_dimensions (a_indicies_count: INTEGER): ARRAY [NATURAL_32] is
+	get_dimensions (a_indicies_count: INTEGER): ARRAY [NATURAL_32]
 			-- GetDimensions returns the dimensions of the array.
 			-- FIXME jfiat [2008/11/07] : a_indicies_count could be NATURAL_32
 		require
@@ -77,7 +77,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	has_base_indicies: BOOLEAN is
+	has_base_indicies: BOOLEAN
 			-- HasBaseIndicies returns whether or not the array has base indicies.
      		-- If the answer is no, then all dimensions have a base index of 0.
 		local
@@ -89,7 +89,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_base_indicies (a_indicies_count: INTEGER): ARRAY [NATURAL_32] is
+	get_base_indicies (a_indicies_count: INTEGER): ARRAY [NATURAL_32]
 			-- GetBaseIndicies returns the base index of each dimension in
 	 		-- the array
 			-- FIXME jfiat [2008/11/07] : a_indicies_count could be NATURAL_32
@@ -117,7 +117,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_element (a_indexes: ARRAY [NATURAL_32]): ICOR_DEBUG_VALUE is
+	get_element (a_indexes: ARRAY [NATURAL_32]): ICOR_DEBUG_VALUE
 			-- GetElement returns a value representing the given element in the array.
 		local
 			l_p: POINTER
@@ -151,7 +151,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := get_element_at_position (a_pos.as_natural_32)
 		end
 
-	get_element_at_position (a_position: NATURAL_32): ICOR_DEBUG_VALUE is
+	get_element_at_position (a_position: NATURAL_32): ICOR_DEBUG_VALUE
 			-- GetElementAtPosition returns a value representing the given
 			-- element at the given position in the array. The position is
 			-- over all dimensions of the array.
@@ -168,7 +168,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_element_type (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_element_type (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(CorElementType*): EIF_INTEGER 
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			"GetElementType"
 		end
 
-	cpp_get_rank (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_rank (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32*): EIF_INTEGER 
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			"GetRank"
 		end
 
-	cpp_get_count (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_count (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32*): EIF_INTEGER 
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			"GetCount"
 		end
 
-	cpp_get_dimensions (obj: POINTER; a_cdim: NATURAL_32; a_p: POINTER): INTEGER is
+	cpp_get_dimensions (obj: POINTER; a_cdim: NATURAL_32; a_p: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32,ULONG32*): EIF_INTEGER 
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			"GetDimensions"
 		end
 
-	cpp_has_base_indicies (obj: POINTER; a_has_base_indicies: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_has_base_indicies (obj: POINTER; a_has_base_indicies: TYPED_POINTER [INTEGER]): INTEGER
 			-- Call `ICorDebugArrayValue->HasBaseIndicies'.
 		external
 			"[
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			"HasBaseIndicies"
 		end
 
-	cpp_get_base_indicies (obj: POINTER; a_cdim: NATURAL_32; a_p: POINTER): INTEGER is
+	cpp_get_base_indicies (obj: POINTER; a_cdim: NATURAL_32; a_p: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32,ULONG32*): EIF_INTEGER 
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			"GetBaseIndicies"
 		end
 
-	cpp_get_element (obj: POINTER; a_indexes_count: NATURAL_32; a_indexes: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_element (obj: POINTER; a_indexes_count: NATURAL_32; a_indexes: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32, ULONG32*, ICorDebugValue**): EIF_INTEGER 
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			"GetElement"
 		end
 
-	cpp_get_element_at_position (obj: POINTER; a_pos: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_element_at_position (obj: POINTER; a_pos: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32, ICorDebugValue**): EIF_INTEGER 
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			"GetElementAtPosition"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error during merging of partial classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: STRING) is
+	make (an_error: STRING)
 			-- Create.
 		do
 			text := "Error during merging of partial classes: "
@@ -30,7 +30,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

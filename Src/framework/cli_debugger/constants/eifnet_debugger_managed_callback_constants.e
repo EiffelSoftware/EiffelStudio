@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants to identify Managed Callback method"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,70 +11,70 @@ class
 
 feature {NONE} -- Constants
 
-	Cst_managed_cb_breakpoint: INTEGER is 1
+	Cst_managed_cb_breakpoint: INTEGER = 1
 
-	Cst_managed_cb_step_complete: INTEGER is 2
+	Cst_managed_cb_step_complete: INTEGER = 2
 
-	Cst_managed_cb_break: INTEGER is 3
+	Cst_managed_cb_break: INTEGER = 3
 
-	Cst_managed_cb_exception: INTEGER is 4
+	Cst_managed_cb_exception: INTEGER = 4
 
-	Cst_managed_cb_eval_complete: INTEGER is 5
+	Cst_managed_cb_eval_complete: INTEGER = 5
 
-	Cst_managed_cb_eval_exception: INTEGER is 6
+	Cst_managed_cb_eval_exception: INTEGER = 6
 
-	Cst_managed_cb_create_process: INTEGER is 7
+	Cst_managed_cb_create_process: INTEGER = 7
 
-	Cst_managed_cb_exit_process: INTEGER is 8
+	Cst_managed_cb_exit_process: INTEGER = 8
 
-	Cst_managed_cb_create_thread: INTEGER is 9
+	Cst_managed_cb_create_thread: INTEGER = 9
 
-	Cst_managed_cb_exit_thread: INTEGER is 10
+	Cst_managed_cb_exit_thread: INTEGER = 10
 
-	Cst_managed_cb_load_module: INTEGER is 11
+	Cst_managed_cb_load_module: INTEGER = 11
 
-	Cst_managed_cb_unload_module: INTEGER is 12
+	Cst_managed_cb_unload_module: INTEGER = 12
 
-	Cst_managed_cb_load_class: INTEGER is 13
+	Cst_managed_cb_load_class: INTEGER = 13
 
-	Cst_managed_cb_unload_class: INTEGER is 14
+	Cst_managed_cb_unload_class: INTEGER = 14
 
-	Cst_managed_cb_debugger_error: INTEGER is 15
+	Cst_managed_cb_debugger_error: INTEGER = 15
 
-	Cst_managed_cb_log_message: INTEGER is 16
+	Cst_managed_cb_log_message: INTEGER = 16
 
-	Cst_managed_cb_log_switch: INTEGER is 17
+	Cst_managed_cb_log_switch: INTEGER = 17
 
-	Cst_managed_cb_create_app_domain: INTEGER is 18
+	Cst_managed_cb_create_app_domain: INTEGER = 18
 
-	Cst_managed_cb_exit_app_domain: INTEGER is 19
+	Cst_managed_cb_exit_app_domain: INTEGER = 19
 
-	Cst_managed_cb_load_assembly: INTEGER is 20
+	Cst_managed_cb_load_assembly: INTEGER = 20
 
-	Cst_managed_cb_unload_assembly: INTEGER is 21
+	Cst_managed_cb_unload_assembly: INTEGER = 21
 
-	Cst_managed_cb_control_ctrap: INTEGER is 22
+	Cst_managed_cb_control_ctrap: INTEGER = 22
 
-	Cst_managed_cb_name_change: INTEGER is 23
+	Cst_managed_cb_name_change: INTEGER = 23
 
-	Cst_managed_cb_update_module_symbols: INTEGER is 24
+	Cst_managed_cb_update_module_symbols: INTEGER = 24
 
-	Cst_managed_cb_edit_and_continue_remap: INTEGER is 25
+	Cst_managed_cb_edit_and_continue_remap: INTEGER = 25
 
-	Cst_managed_cb_breakpoint_set_error: INTEGER is 26
+	Cst_managed_cb_breakpoint_set_error: INTEGER = 26
 
-	Cst_managed_cb2_function_remap_opportunity: INTEGER is 27
-	Cst_managed_cb2_create_connection: INTEGER is 28
-	Cst_managed_cb2_change_connection: INTEGER is 29
-	Cst_managed_cb2_destroy_connection: INTEGER is 30
-	Cst_managed_cb2_exception: INTEGER is 31
-	Cst_managed_cb2_exception_unwind: INTEGER is 32
-	Cst_managed_cb2_function_remap_complete: INTEGER is 33
-	Cst_managed_cb2_mdanotification: INTEGER is 34
+	Cst_managed_cb2_function_remap_opportunity: INTEGER = 27
+	Cst_managed_cb2_create_connection: INTEGER = 28
+	Cst_managed_cb2_change_connection: INTEGER = 29
+	Cst_managed_cb2_destroy_connection: INTEGER = 30
+	Cst_managed_cb2_exception: INTEGER = 31
+	Cst_managed_cb2_exception_unwind: INTEGER = 32
+	Cst_managed_cb2_function_remap_complete: INTEGER = 33
+	Cst_managed_cb2_mdanotification: INTEGER = 34
 
 feature -- Query
 
-	value_of_cst_managed_cb (cst: INTEGER): STRING is
+	value_of_cst_managed_cb (cst: INTEGER): STRING
 		do
 			inspect cst 
 				when Cst_managed_cb_breakpoint then
@@ -152,7 +152,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

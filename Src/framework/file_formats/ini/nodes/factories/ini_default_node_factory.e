@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Default factory implementation for `INI_AST_FACTORY'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,43 +13,43 @@ inherit
 
 feature {INI_PARSER}
 
-	new_id_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_ID_NODE is
+	new_id_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_ID_NODE
 			--
 		do
 			create Result.make (a_id, a_span)
 		end
 
-	new_value_node (a_value: STRING; a_span: INI_TEXT_SPAN): INI_VALUE_NODE is
+	new_value_node (a_value: STRING; a_span: INI_TEXT_SPAN): INI_VALUE_NODE
 			--
 		do
 			create Result.make (a_value, a_span)
 		end
 
-	new_symbol_node (a_symbol: STRING; a_span: INI_TEXT_SPAN): INI_SYMBOL_NODE is
+	new_symbol_node (a_symbol: STRING; a_span: INI_TEXT_SPAN): INI_SYMBOL_NODE
 			--
 		do
 			create Result.make (a_symbol, a_span)
 		end
 
-	new_section_node (a_open: INI_SYMBOL_NODE; a_label: INI_ID_NODE; a_close: INI_SYMBOL_NODE): INI_SECTION_NODE is
+	new_section_node (a_open: INI_SYMBOL_NODE; a_label: INI_ID_NODE; a_close: INI_SYMBOL_NODE): INI_SECTION_NODE
 			--
 		do
 			create Result.make (a_open, a_label, a_close)
 		end
 
-	new_property_node (a_id: INI_ID_NODE; a_assigner: INI_SYMBOL_NODE; a_value: INI_VALUE_NODE): INI_PROPERTY_NODE is
+	new_property_node (a_id: INI_ID_NODE; a_assigner: INI_SYMBOL_NODE; a_value: INI_VALUE_NODE): INI_PROPERTY_NODE
 			--
 		do
 			create Result.make (a_id, a_assigner, a_value)
 		end
 
-	new_literal_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_LITERAL_NODE is
+	new_literal_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_LITERAL_NODE
 			--
 		do
 			create Result.make (a_id, a_span)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

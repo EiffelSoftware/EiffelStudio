@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel creation expression call (using bang form) "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	make
 
 feature{NONE} -- Initialization
-	make (t: like type; c: like call; l_as, r_as: like lbang_symbol)is
+	make (t: like type; c: like call; l_as, r_as: like lbang_symbol)
 			-- new CREATE_CREATION_EXPR AST node.
 		do
 			initialize (t, c)
@@ -37,7 +37,7 @@ feature -- Roundtrip
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bang_creation_expr_as (Current)
@@ -45,7 +45,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := type.first_token (a_list)
@@ -54,7 +54,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if call /= Void then
 				Result := call.last_token (a_list)
@@ -68,7 +68,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

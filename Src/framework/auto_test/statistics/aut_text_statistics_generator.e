@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_prefix: STRING; an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test) is
+	make (a_prefix: STRING; an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test)
 			-- Create new html generator.
 		require
 			an_output_dirname_not_void: an_output_dirname /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	absolute_index_filename: STRING is
+	absolute_index_filename: STRING
 			-- Absolute filename of text file
 		do
 			Result := file_system.pathname (output_dirname, prefix_ + "statistics.txt")
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Text generation
 
-	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY) is
+	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate text file describing the results from `a_repository'.
 		local
 			output_file: KL_TEXT_OUTPUT_FILE
@@ -84,7 +84,7 @@ feature -- Text generation
 
 feature {NONE} -- Implementation
 
-	generate_summary (a_set: AUT_TEST_CASE_RESULT_SET; a_stream: KI_TEXT_OUTPUT_STREAM) is
+	generate_summary (a_set: AUT_TEST_CASE_RESULT_SET; a_stream: KI_TEXT_OUTPUT_STREAM)
 			-- Generate summary for set `a_set' into `a_stream'.
 		require
 			a_set_not_void: a_set /= Void

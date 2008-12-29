@@ -1,4 +1,4 @@
-indexing
+note
 	description:	"Pattern matcher through the Knuth Morris Pratt algorithm. See details at the end"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature -- Access
 
-	found_pattern_length: INTEGER is
+	found_pattern_length: INTEGER
 			-- length of the found pattern in text
 		do
 			Result := pattern.count
@@ -24,7 +24,7 @@ feature -- Access
 	matching_indices: ARRAYED_LIST [INTEGER]
 			-- indices of found pattern in text
 
-	lengths: ARRAYED_LIST [INTEGER] is
+	lengths: ARRAYED_LIST [INTEGER]
 			-- lengths of found patterns in text
 		local
 			i, fpl: INTEGER
@@ -50,20 +50,20 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_pattern (new_pattern: STRING) is
+	set_pattern (new_pattern: STRING)
 			-- Set `pattern' to new `pattern'.
 		do
 			pattern := new_pattern;
 			-- init_arrays -- to add case sensitivity
 		end;
 
-	enable_case_sensitive is
+	enable_case_sensitive
 			-- Set `is_not_case_sensitive' to False
 		do	
 			is_not_case_sensitive := False
 		end
 
-	disable_case_sensitive is
+	disable_case_sensitive
 			-- Set `is_not_case_sensitive' to True
 		do	
 			is_not_case_sensitive := True
@@ -71,7 +71,7 @@ feature -- Status setting
 
 feature -- Search
 
-	search_for_pattern: BOOLEAN is
+	search_for_pattern: BOOLEAN
 			-- Search in `text' to find very next
 			-- occurrence of `pattern'.
 		local
@@ -117,7 +117,7 @@ feature -- Search
 			end
 		end
 
-	find_matching_indices is
+	find_matching_indices
 			-- All indices in `text' which matches the
 			-- very next occurrence of `pattern'.
 		local
@@ -170,7 +170,7 @@ feature -- Search
 	
 feature {NONE} -- Initialization
 
-	init_arrays is
+	init_arrays
 			-- Initializes arrays for pattern.
 		local
 			table_area: SPECIAL [INTEGER]
@@ -209,7 +209,7 @@ feature {NONE} -- Attributes
 	table: ARRAY [INTEGER];
 		-- Pattern automaton
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

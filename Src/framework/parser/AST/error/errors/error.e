@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a compiler error (either syntax or semantics)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 	column: INTEGER
 			-- Column number involved in error
 
-	file_name: STRING is
+	file_name: STRING
 			-- Path to file involved in error.
 			-- Could be Void if not a file specific error.
 		require
@@ -29,7 +29,7 @@ feature -- Access
 	associated_class: ABSTRACT_CLASS_C
 			-- Associate class, if any
 
-	help_file_name: STRING is
+	help_file_name: STRING
 			-- Associated file name where error explanation is located.
 		do
 			Result := code
@@ -39,19 +39,19 @@ feature -- Access
 
 feature -- Properties
 
-	code: STRING is
+	code: STRING
 			-- Code error
 		deferred
 		ensure
 			code_not_void: Result /= Void
 		end
 
-	subcode: INTEGER is
+	subcode: INTEGER
 			-- Subcode of error. `0' if none.
 		do
 		end
 
-	Error_string: STRING is
+	Error_string: STRING
 		do
 			Result := "Error"
 		ensure
@@ -60,12 +60,12 @@ feature -- Properties
 
 feature -- Status report
 
-	has_associated_file: BOOLEAN is
+	has_associated_file: BOOLEAN
 			-- Is current relative to a file?
 		do
 		end
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := True
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_location (a_location: LOCATION_AS) is
+	set_location (a_location: LOCATION_AS)
 			-- Initialize `line' and `column' from `a_location'
 		require
 			a_location_not_void: a_location /= Void
@@ -85,7 +85,7 @@ feature -- Setting
 			column_set: column = a_location.column
 		end
 
-	set_position (l, c: INTEGER) is
+	set_position (l, c: INTEGER)
 			-- Set `line' and `column' with `l' and `c'.
 		require
 			l_non_negative: l >= 0
@@ -98,7 +98,7 @@ feature -- Setting
 			column_set: column = c
 		end
 
-	set_associated_class (a_class: like associated_class) is
+	set_associated_class (a_class: like associated_class)
 			-- Set `associated_class' with `a_class'
 		do
 			associated_class := a_class
@@ -111,7 +111,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 	previous_line, current_line, next_line: STRING
 			-- Surrounding lines where error occurs.
 
-	has_source_text: BOOLEAN is
+	has_source_text: BOOLEAN
 			-- Did we get the source text?
 		do
 			Result := current_line /= Void
@@ -147,7 +147,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 			end
 		end
 
-	initialize_output is
+	initialize_output
 			-- Set `previous_line', `current_line' and `next_line' with their proper values
 			-- taken from file `file_name'.
 		require
@@ -187,7 +187,7 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 			-- Process Current using `a_visitor'.
 		require
 			a_visitor_not_void: a_visitor /= Void
@@ -199,7 +199,7 @@ invariant
 	non_void_error_message: error_string /= Void
 	non_void_help_file_name: help_file_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

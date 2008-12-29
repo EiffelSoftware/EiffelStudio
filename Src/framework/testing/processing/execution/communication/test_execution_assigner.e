@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object assigning test indices to clients which then execute the corresponding test.
 		Since tests are executed in separate threads, mutexes are used to controll access.

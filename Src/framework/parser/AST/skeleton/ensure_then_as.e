@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a `ensure then' structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (a: like assertions; k_as, l_as: KEYWORD_AS) is
+	make (a: like assertions; k_as, l_as: KEYWORD_AS)
 			-- Create new REQUIRE AST node.
 		do
 			ensure_make (a, k_as)
@@ -52,7 +52,7 @@ feature -- Roundtrip
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_ensure_then_as (Current)
@@ -60,12 +60,12 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_then: BOOLEAN is True
+	is_then: BOOLEAN = True
 			-- Is the assertion list an "ensure then" part ?
 
 feature -- Roundtrip/Token
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if assertions /= Void then
@@ -84,7 +84,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

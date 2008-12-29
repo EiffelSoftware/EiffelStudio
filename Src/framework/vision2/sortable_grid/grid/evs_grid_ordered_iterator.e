@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an ordered (either by columns or by rows) EVS_GRID_WRAPPER iterator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (start_column, start_row: INTEGER; a_grid_wrapper: like grid_wrapper) is
+	make (start_column, start_row: INTEGER; a_grid_wrapper: like grid_wrapper)
 			-- Initialize start iteration point at position (`start_column', `start_row').
 			-- If position (`start_column', `start_row') is not valid in `grid_wrapper'.`grid',
 			-- Initialize start iteration point at `default_invalid_coordinate'.
@@ -36,7 +36,7 @@ feature{NONE} -- Initialization
 			end
 		end
 
-	make_with_first_item (a_grid_wrapper: like grid_wrapper) is
+	make_with_first_item (a_grid_wrapper: like grid_wrapper)
 			-- Initialize start iteration point at position (1, 1).
 		require
 			grid_wrapper_attached: a_grid_wrapper /= Void
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 			make (1, 1, a_grid_wrapper)
 		end
 
-	make_with_last_item (a_grid_wrapper: like grid_wrapper) is
+	make_with_last_item (a_grid_wrapper: like grid_wrapper)
 			-- Initialize start iteration point at the last item in `grid_wrapper'.`grid',
 			-- e.g. item at position (`grid'.`column_count', `grid'.`row_count').
 		require
@@ -57,7 +57,7 @@ feature{NONE} -- Initialization
 			end
 		end
 
-	make_with_first_selected_item (a_grid_wrapper: like grid_wrapper) is
+	make_with_first_selected_item (a_grid_wrapper: like grid_wrapper)
 			-- Initialize start iteration point at the first selected item in `grid_wrapper'.`grid'.
 			-- If no item is selected, initialize start iteration point at position (1, 1).
 		require
@@ -74,7 +74,7 @@ feature{NONE} -- Initialization
 			end
 		end
 
-	make_with_last_selected_item (a_grid_wrapper: like grid_wrapper) is
+	make_with_last_selected_item (a_grid_wrapper: like grid_wrapper)
 			-- Initialize start iteration point at the last selected item in `grid_wrapper'.`grid'.
 			-- If no item is selected, initialize start iteration point at position (1, 1).
 		require
@@ -93,13 +93,13 @@ feature{NONE} -- Initialization
 
 feature -- Iteration
 
-	start is
+	start
 			-- Move to first position if any.
 		do
 			force_go_to (1, 1)
 		end
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		local
@@ -109,13 +109,13 @@ feature -- Iteration
 			force_go_to (l_coordinate.x, l_coordinate.y)
 		end
 
-	finish is
+	finish
 			-- Move to last position.
 		do
 			force_go_to (grid_wrapper.grid_column_count, grid_wrapper.grid_row_count)
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		local
 			l_coordinate: EV_COORDINATE
@@ -124,7 +124,7 @@ feature -- Iteration
 			force_go_to (l_coordinate.x, l_coordinate.y)
 		end
 
-	go_to (x, y: INTEGER) is
+	go_to (x, y: INTEGER)
 			-- Move to position (x, y).
 		do
 			force_go_to (x, y)
@@ -132,25 +132,25 @@ feature -- Iteration
 
 feature -- Access
 
-	item: EVS_GRID_SEARCHABLE_ITEM is
+	item: EVS_GRID_SEARCHABLE_ITEM
 			-- Item at current position
 		do
 			Result ?= grid_wrapper.grid_item (x_internal, y_internal)
 		end
 
-	item_column_index: INTEGER is
+	item_column_index: INTEGER
 			-- Column index of `item'
 		do
 			Result := x_internal
 		end
 
-	item_row_index: INTEGER is
+	item_row_index: INTEGER
 			-- Row index of `item'
 		do
 			Result := y_internal
 		end
 
-	sortable_list (a_unsortable_list: LIST [EV_GRID_ITEM]): DS_LIST [EVS_GRID_COORDINATED] is
+	sortable_list (a_unsortable_list: LIST [EV_GRID_ITEM]): DS_LIST [EVS_GRID_COORDINATED]
 			-- A sortable list of EVS_GRID_COORDINATED objects which represents `a_unsortable'
 		require
 			a_unsortable_list_attached: a_unsortable_list /= Void
@@ -168,7 +168,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	comparator: EVS_GRID_ITEM_POSITION_COMPARATOR is
+	comparator: EVS_GRID_ITEM_POSITION_COMPARATOR
 			-- Comparator to decide position relationship between two grid items
 		deferred
 		ensure
@@ -177,7 +177,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	next_position: EV_COORDINATE is
+	next_position: EV_COORDINATE
 			-- Next position relative to current position.
 		require
 			grid_not_empty:  not grid_wrapper.is_grid_empty
@@ -187,7 +187,7 @@ feature{NONE} -- Implementation
 			good_result: Result.x >=0 and Result.y >=0
 		end
 
-	previous_position: EV_COORDINATE is
+	previous_position: EV_COORDINATE
 			-- Previous position relative to current position.
 		require
 			grid_not_empty:  not grid_wrapper.is_grid_empty
@@ -197,14 +197,14 @@ feature{NONE} -- Implementation
 			good_result: Result.x >=0 and Result.y >=0
 		end
 
-	default_invalid_coordinate: EV_COORDINATE is
+	default_invalid_coordinate: EV_COORDINATE
 			-- Default invalid coordinate
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	coordinated_item (a_grid_item: EV_GRID_ITEM): EVS_GRID_COORDINATED is
+	coordinated_item (a_grid_item: EV_GRID_ITEM): EVS_GRID_COORDINATED
 			-- EVS_GRID_COORDINATED representation of `a_grid_item'
 		require
 			a_grid_item_attached: a_grid_item /= Void
@@ -218,7 +218,7 @@ feature{NONE} -- Implementation
 invariant
 	comparator_attached: comparator /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

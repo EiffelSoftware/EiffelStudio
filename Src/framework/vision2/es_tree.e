@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a enhanced EV_TREE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Mark `Current' as initialized.
 			-- This must be called during the creation procedure
 			-- to satisfy the `is_initialized' invariant.
@@ -47,7 +47,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN)
 			-- Enable default tree navigation behavior.
 			-- `a_expand' indicates if expanding a node should be enabled.
 			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
@@ -82,7 +82,7 @@ feature -- Setting
 
 feature {NONE} -- Actions
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is presses in Current
 		local
 			l_ev_application: like ev_application
@@ -100,7 +100,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_expand_item (a_recursive: BOOLEAN) is
+	on_expand_item (a_recursive: BOOLEAN)
 			-- Action to be performed when expanding selected item.
 		do
 			if not a_recursive then
@@ -114,7 +114,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_collapse_item (a_recursive: BOOLEAN) is
+	on_collapse_item (a_recursive: BOOLEAN)
 			-- Action to be performed when collapsing selected item.
 		do
 			if not a_recursive then
@@ -130,7 +130,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Tree view behavior
 
-	expand_selected_item (a_recursive: BOOLEAN) is
+	expand_selected_item (a_recursive: BOOLEAN)
 			-- Expand `selected_item'.
 			-- If `a_recursive' is True, recursively expand the item.
 		local
@@ -142,7 +142,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	collapse_selected_item (a_recursive: BOOLEAN) is
+	collapse_selected_item (a_recursive: BOOLEAN)
 			-- Collapse `selected_item'.
 			-- If `a_recursive' is True, recursively collapse the item.
 		local
@@ -154,7 +154,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	expand_item (a_item: EV_TREE_NODE; a_recursive: BOOLEAN) is
+	expand_item (a_item: EV_TREE_NODE; a_recursive: BOOLEAN)
 			-- Expand `a_item'.
 			-- If `a_recursive' is True, recursively expand all subrows of `a_item'.
 		require
@@ -179,7 +179,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	collapse_item (a_item: EV_TREE_NODE; a_recursive: BOOLEAN) is
+	collapse_item (a_item: EV_TREE_NODE; a_recursive: BOOLEAN)
 			-- Collapse `a_item'.
 			-- If `a_recursive' is True, recursively collapse all subrows of `a_item'.
 		require
@@ -204,7 +204,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

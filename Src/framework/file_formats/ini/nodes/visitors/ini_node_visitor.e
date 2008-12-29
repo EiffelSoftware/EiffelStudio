@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor pattern interface for visiting parsed INI Abstract Syntax Trees (AST)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,49 +10,49 @@ deferred class
 
 feature -- Processing
 
-	process_document (a_document: INI_DOCUMENT_NODE) is
+	process_document (a_document: INI_DOCUMENT_NODE)
 			-- Process document node `a_document'.
 		require
 			a_document_attached: a_document /= Void
 		deferred
 		end
 
-	process_section (a_section: INI_SECTION_NODE) is
+	process_section (a_section: INI_SECTION_NODE)
 			-- Process document section node `a_section'.
 		require
 			a_section_attached: a_section /= Void
 		deferred
 		end
 
-	process_property (a_property: INI_PROPERTY_NODE) is
+	process_property (a_property: INI_PROPERTY_NODE)
 			-- Process property node `a_property'.
 		require
 			a_property_attached: a_property /= Void
 		deferred
 		end
 
-	process_literal (a_literal: INI_LITERAL_NODE) is
+	process_literal (a_literal: INI_LITERAL_NODE)
 			-- Process literal `a_literal'.
 		require
 			a_literal_attached: a_literal /= Void
 		deferred
 		end
 
-	process_id (a_id: INI_ID_NODE) is
+	process_id (a_id: INI_ID_NODE)
 			-- Process identifier `a_id'.
 		require
 			a_id_attached: a_id /= Void
 		deferred
 		end
 
-	process_symbol (a_symbol: INI_SYMBOL_NODE) is
+	process_symbol (a_symbol: INI_SYMBOL_NODE)
 			-- Process syntax symbol `a_symbol'.
 		require
 			a_symbol_attached: a_symbol /= Void
 		deferred
 		end
 
-	process_value (a_value: INI_VALUE_NODE) is
+	process_value (a_value: INI_VALUE_NODE)
 			-- Process value `a_value'.
 		require
 			a_value_attached: a_value /= Void
@@ -61,7 +61,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	process_list (a_list: LIST [INI_NODE]) is
+	process_list (a_list: LIST [INI_NODE])
 			-- Process a list of nodes.
 		require
 			a_list_attached: a_list /= Void
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			a_list_unmoved: a_list.cursor.is_equal (old a_list.cursor)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for invalid integers."
@@ -21,17 +21,17 @@ create
 
 feature -- Properties
 
-	code: STRING is "VIIN";
+	code: STRING = "VIIN";
 			-- Error code
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_viin (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

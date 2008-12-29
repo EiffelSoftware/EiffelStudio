@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation for a keyboard interface which sends event via Vision2's EV_SCREEN"
 	legal: "See notice at end of class."
@@ -14,13 +14,13 @@ inherit
 
 feature -- Pressing
 
-	press_key (a_key: EV_KEY) is
+	press_key (a_key: EV_KEY)
 			-- Press `a_key'.
 		do
 			screen.fake_key_press (a_key)
 		end
 
-	release_key (a_key: EV_KEY) is
+	release_key (a_key: EV_KEY)
 			-- Release `a_key'.
 		do
 			screen.fake_key_release (a_key)
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element update
 
-	remove_group is
+	remove_group
 			-- Remove `Current' and all children from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty and is not a cluster.
 		local
@@ -55,7 +55,7 @@ feature -- Element update
 			Precursor
 		end
 
-	set_children (a_children: ARRAYED_LIST [like group]) is
+	set_children (a_children: ARRAYED_LIST [like group])
 			-- Set child clusters.
 		local
 			l_cluster: CONF_CLUSTER
@@ -76,7 +76,7 @@ feature -- Element update
 			end
 		end
 
-	add_subcluster is
+	add_subcluster
 			-- Add a subcluster.
 		local
 			l_dial: like add_dialog_type
@@ -99,7 +99,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			Precursor
@@ -134,7 +134,7 @@ feature {NONE} -- Type anchors
 	add_dialog_type: CREATE_CLUSTER_DIALOG;
 			-- Type of the add dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

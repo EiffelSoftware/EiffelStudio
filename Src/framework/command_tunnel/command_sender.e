@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that sends command as a string to possible receivers."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Operation
 
-	send_command (a_string, a_key: !STRING) is
+	send_command (a_string, a_key: !STRING)
 			-- Send `a_string' as command to receiver processes with `a_key'.
 			-- `a_key' to identify receivers.
 			-- The `a_key' is recommended to be an UUID.
@@ -21,7 +21,7 @@ feature -- Operation
 			implementation.send_command (a_string, a_key)
 		end
 
-	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER) is
+	send_command_process (a_string, a_key: !STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
 		do
 			if implementation = Void then
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation
 		do
 			create {COMMAND_SENDER_IMP}implementation
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			implementation_not_void: implementation /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

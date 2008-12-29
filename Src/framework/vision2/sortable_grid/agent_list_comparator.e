@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that uses a list of agents to compare two items"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action_list: like action_list; a_sorting_order_list: like sorting_order_list; a_column_index_list: like column_index_list) is
+	make (a_action_list: like action_list; a_sorting_order_list: like sorting_order_list; a_column_index_list: like column_index_list)
 			-- Use `a_action_list' to compare two elements of type G.
 			-- The agent at lower index has higher priority.
 			-- `a_sorting_order_list' stores sorting orders for every agent in `a_action_list'.
@@ -51,7 +51,7 @@ feature -- Access
 
 	column_index_list: LIST [INTEGER]
 
-	new_agent_list_comparator (a_index_array: ARRAY [INTEGER]): like Current is
+	new_agent_list_comparator (a_index_array: ARRAY [INTEGER]): like Current
 			-- New agent list comparator which contains columns whose indexes are specified in `a_index_array'
 		require
 			a_index_array_attached: a_index_array /= Void
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN is
+	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			l_tuple1, l_tuple2: TUPLE [a: G; b: G; sorting_order: INTEGER]
@@ -154,7 +154,7 @@ invariant
 	not_column_index_list_is_empty: not column_index_list.is_empty
 	columns_match: sorting_order_list.count = action_list.count and then sorting_order_list.count = column_index_list.count
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

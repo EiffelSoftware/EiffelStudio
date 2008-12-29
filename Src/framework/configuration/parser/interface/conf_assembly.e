@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an included assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
+	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET)
 			-- Create.
 		require
 			a_name_not_void: a_name /= Void
@@ -55,13 +55,13 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	classes_set: BOOLEAN is
+	classes_set: BOOLEAN
 			-- Are the classes set?
 		do
 			Result := classes /= Void
 		end
 
-	is_assembly: BOOLEAN is
+	is_assembly: BOOLEAN
 			-- Is this an assembly?
 		once
 			Result := True
@@ -70,7 +70,7 @@ feature -- Status
 	is_non_local_assembly: BOOLEAN
 			-- Was this assembly only specified by gac information (i.e. no location was set)?
 
-	is_enabled (a_state: CONF_STATE): BOOLEAN is
+	is_enabled (a_state: CONF_STATE): BOOLEAN
 			-- Is `Current' enabled for `a_state'?
 		do
 			Result := a_state.is_dotnet and then Precursor (a_state)
@@ -78,7 +78,7 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	is_readonly: BOOLEAN is True
+	is_readonly: BOOLEAN = True
 			-- Assemblies are always read only.
 
 	location: CONF_FILE_LOCATION
@@ -103,20 +103,20 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 		do
 			Result := physical_assembly.accessible_groups
 		end
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- There are no mappings for assemblies
 			create Result.make (0)
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
@@ -139,7 +139,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_dep: CONF_GROUP
@@ -166,7 +166,7 @@ feature -- Access queries
 			Result_empty_or_one_element: Result.is_empty or Result.count = 1
 		end
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- Options of this assembly.
 		once
 				-- assemblies have no options
@@ -178,7 +178,7 @@ feature -- Access queries
 		do
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP is
+	sub_group_by_name (a_name: STRING): CONF_GROUP
 			-- Return assembly dependency with `a_name' if there is any.
 		local
 			l_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER_32]
@@ -202,7 +202,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_assembly_name (a_name: like assembly_name) is
+	set_assembly_name (a_name: like assembly_name)
 			-- Set `assembly_name' to `a_name'.
 		do
 			assembly_name := a_name
@@ -210,7 +210,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_name_set: assembly_name = a_name
 		end
 
-	set_assembly_version (a_version: like assembly_version) is
+	set_assembly_version (a_version: like assembly_version)
 			-- Set `assembly_version' to `a_version'.
 		do
 			assembly_version := a_version
@@ -218,7 +218,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_version_set: assembly_version = a_version
 		end
 
-	set_assembly_culture (a_culture: like assembly_culture) is
+	set_assembly_culture (a_culture: like assembly_culture)
 			-- Set `assembly_culture' to `a_culture'.
 		do
 			assembly_culture := a_culture
@@ -226,7 +226,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_culture_set: assembly_culture = a_culture
 		end
 
-	set_assembly_public_key (a_public_key: like assembly_public_key_token) is
+	set_assembly_public_key (a_public_key: like assembly_public_key_token)
 			-- Set `assembly_public_key_token' to `a_public_key'.
 		do
 			assembly_public_key_token := a_public_key
@@ -236,7 +236,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	set_physical_assembly (a_assembly: like physical_assembly) is
+	set_physical_assembly (a_assembly: like physical_assembly)
 			-- Set `physical_assembly' to `a_assembly'.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -250,7 +250,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := Precursor (other)
@@ -267,14 +267,14 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			Precursor (a_visitor)
 			a_visitor.process_assembly (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

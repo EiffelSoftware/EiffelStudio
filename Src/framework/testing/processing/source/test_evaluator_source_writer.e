@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that print evaluator root class for executing tests. All test classes in system shall be
 			created through this class.
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: ?DS_LINEAR [!TEST_I]) is
+	write_source (a_file: !KI_TEXT_OUTPUT_STREAM; a_list: ?DS_LINEAR [!TEST_I])
 			-- Write interpreter root class to file
 		require
 			a_file_open_write: a_file.is_open_write
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			stream.put_line ("")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

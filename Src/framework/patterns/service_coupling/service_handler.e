@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Handles services by providing a facade to adding services and a single point to remove all handled services.
 	]"
@@ -104,7 +104,7 @@ feature -- Removal
 invariant
 	handled_services_compares_objects: handled_services.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Region modifier for adding (prepending or appending) text to AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,31 +17,31 @@ inherit
 
 feature -- Vadility
 
-	can_prepend (other_region: like region): BOOLEAN is
+	can_prepend (other_region: like region): BOOLEAN
 			-- Can `other_region' be prepended by some text according to current modifier?
 		do
 			Result := True
 		end
 
-	can_append (other_region: like region): BOOLEAN is
+	can_append (other_region: like region): BOOLEAN
 			-- Can `other_region' be appended by some text according to current modifier?
 		do
 			Result := True
 		end
 
-	can_replace (other_region: like region): BOOLEAN is
+	can_replace (other_region: like region): BOOLEAN
 			-- Can `other_region' be replaced by some text according to current modifier?
 		do
 			Result := True
 		end
 
-	can_remove (other_region: like region): BOOLEAN is
+	can_remove (other_region: like region): BOOLEAN
 			-- Can `other_region' be removed according to current modifier?
 		do
 			Result := True
 		end
 
-	is_text_available (other_region: like region): BOOLEAN is
+	is_text_available (other_region: like region): BOOLEAN
 			-- Is text of `other_region' available according to current modifier?
 		do
 			Result := True
@@ -49,14 +49,14 @@ feature -- Vadility
 
 feature -- Status reporting
 
-	is_prepended_to (a_index: INTEGER): BOOLEAN is
+	is_prepended_to (a_index: INTEGER): BOOLEAN
 			-- Dose current modifier prepend to `a_index'?
 		require
 			a_index_not_negative: a_index > 0
 		deferred
 		end
 
-	is_appended_to (a_index: INTEGER): BOOLEAN is
+	is_appended_to (a_index: INTEGER): BOOLEAN
 			-- Dose current modifier append to `a_index'?
 		require
 			a_index_not_negative: a_index > 0
@@ -72,7 +72,7 @@ invariant
 
 	text_not_void: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

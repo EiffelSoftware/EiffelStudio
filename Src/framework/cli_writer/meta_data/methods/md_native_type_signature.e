@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A special signature containing only one native type descriptor. Used for marshalling."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset current for new signature definition
 		do
 			current_position := 0
@@ -26,14 +26,14 @@ feature -- Reset
 
 feature -- Setting
 
-	set_native_type (a_type: INTEGER_8) is
+	set_native_type (a_type: INTEGER_8)
 			-- Insert `a_type' into Current.
 		do
 			internal_put (a_type, current_position)
 			current_position := current_position + 1
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

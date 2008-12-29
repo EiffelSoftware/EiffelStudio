@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to generate byte node structure"
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Byte node generation
 
-	new_local_b (a_position: INTEGER): LOCAL_B is
+	new_local_b (a_position: INTEGER): LOCAL_B
 			-- New LOCAL_B instance for access to `a_position'-th local variable
 		require
 			a_position_positive: a_position > 0
@@ -32,7 +32,7 @@ feature -- Byte node generation
 			location_correct: Result.position = a_position
 		end
 
-	new_nested_b (a_target: ACCESS_B; a_message: CALL_B): NESTED_B is
+	new_nested_b (a_target: ACCESS_B; a_message: CALL_B): NESTED_B
 			-- New NESTED_B instance for `a_target' and `a_message'
 		require
 			a_target_attached: a_target /= Void
@@ -47,7 +47,7 @@ feature -- Byte node generation
 			result_attached: Result /= Void
 		end
 
-	new_reverse_b (a_target: ACCESS_B; a_source: EXPR_B): REVERSE_B is
+	new_reverse_b (a_target: ACCESS_B; a_source: EXPR_B): REVERSE_B
 			-- REVERSE_B instance from `a_target' and `a_source'
 		require
 			a_target_attached: a_target /= Void
@@ -62,7 +62,7 @@ feature -- Byte node generation
 			good_result: Result.source = a_source and then Result.target = a_target
 		end
 
-	new_assign_b (a_target: ACCESS_B; a_source: EXPR_B): ASSIGN_B is
+	new_assign_b (a_target: ACCESS_B; a_source: EXPR_B): ASSIGN_B
 			-- ASSIGN_B instance from `a_target' and `a_source'
 		require
 			a_target_attached: a_target /= Void
@@ -76,7 +76,7 @@ feature -- Byte node generation
 			good_result: Result.source = a_source and then Result.target = a_target
 		end
 
-	new_feature_b (a_feature: FEATURE_I; a_return_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): CALL_ACCESS_B is
+	new_feature_b (a_feature: FEATURE_I; a_return_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): CALL_ACCESS_B
 			-- New FEATURE_B instance for `a_feature' with arguments `a_arguments'
 			-- `a_return_type' is the return type of `a_feature'.
 		require
@@ -88,7 +88,7 @@ feature -- Byte node generation
 			result_attached: Result /= Void
 		end
 
-	new_access_b (a_feature: FEATURE_I; a_return_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): ACCESS_B is
+	new_access_b (a_feature: FEATURE_I; a_return_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): ACCESS_B
 			-- New FEATURE_B instance for `a_feature' with arguments `a_arguments'
 			-- `a_return_type' is the return type of `a_feature'.
 		require
@@ -103,7 +103,7 @@ feature -- Byte node generation
 			result_attached: Result /= Void
 		end
 
-	new_integer_constant_from_constant (a_constant: ITP_CONSTANT; a_type: TYPE_A): INTEGER_CONSTANT is
+	new_integer_constant_from_constant (a_constant: ITP_CONSTANT; a_type: TYPE_A): INTEGER_CONSTANT
 			-- New INTEGER_CONSTANT instance from `a_constant'
 			-- `a_type' is the type of integer: INTEGER_8, INTEGER_16, INTEGER_32, INTEGER_64, NATURAL_8, NATURAL_16, NATURAL_32, NATURAL_64.
 		require
@@ -123,7 +123,7 @@ feature -- Byte node generation
 			result_attached: Result /= Void
 		end
 
-	new_local_access_parameter_expressions (a_types: LIST [TYPE_A]; a_start_index: INTEGER): BYTE_LIST [PARAMETER_B] is
+	new_local_access_parameter_expressions (a_types: LIST [TYPE_A]; a_start_index: INTEGER): BYTE_LIST [PARAMETER_B]
 			-- List of parameters made of local accesses.
 		local
 			l_local: LOCAL_B
@@ -150,7 +150,7 @@ feature -- Byte node generation
 			end
 		end
 
-	new_creation_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): CREATION_EXPR_B is
+	new_creation_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_A; a_parameters: BYTE_LIST [PARAMETER_B]): CREATION_EXPR_B
 			-- New instance of `create {a_target_type}.a_feat (a_expr1, a_expr2, ...)'
 			-- `a_source_types' represents types of `a_exprs'.
 		require
@@ -170,7 +170,7 @@ feature -- Byte node generation
 			Result.set_creation_instruction (True)
 		end
 
-	new_instr_call_b (a_call: CALL_B): INSTR_CALL_B is
+	new_instr_call_b (a_call: CALL_B): INSTR_CALL_B
 			-- New instr_cal_b
 		require
 			a_call_attached: a_call /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To generate private key for .NET systems."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	generate_key (a_filename, a_runtime_version: STRING) is
+	generate_key (a_filename, a_runtime_version: STRING)
 			-- Generate a new key pair with 'a_filename' as filename for the specified
 			-- .NET version
 		require
@@ -61,13 +61,13 @@ feature -- Initialization
 
 feature -- Status report
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Was call to `generate_key' successful?
 		do
 			Result := status = No_error
 		end
 
-	error_message: STRING is
+	error_message: STRING
 			-- Associated error message if not successful.
 		do
 			inspect
@@ -92,17 +92,17 @@ feature {NONE} -- Access
 
 feature {NONE} -- Constants
 
-	No_error: INTEGER is 0
-	Could_not_generate_key: INTEGER is 1
-	Could_not_open_in_write_mode: INTEGER is 2
-	Could_not_write_to_file: INTEGER is 3
-	Could_not_close_file: INTEGER is 4
-	Could_not_free_data: INTEGER is 5
-	Could_not_load_mscorsn_dll: INTEGER is 6
-	Unknown_error: INTEGER is 7;
+	No_error: INTEGER = 0
+	Could_not_generate_key: INTEGER = 1
+	Could_not_open_in_write_mode: INTEGER = 2
+	Could_not_write_to_file: INTEGER = 3
+	Could_not_close_file: INTEGER = 4
+	Could_not_free_data: INTEGER = 5
+	Could_not_load_mscorsn_dll: INTEGER = 6
+	Unknown_error: INTEGER = 7;
 			-- Status after call to `generate_key'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

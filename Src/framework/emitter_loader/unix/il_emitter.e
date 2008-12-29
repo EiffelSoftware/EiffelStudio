@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that provides interface to Eiffel `emitter'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_path, a_runtime_version: STRING) is
+	make (a_path, a_runtime_version: STRING)
 			-- Create new instance of IL_EMITTER
 		require
 			a_path_not_void: a_path /= Void
@@ -28,12 +28,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 		do
 			Result := False
 		end
 
-	is_initialized: BOOLEAN is
+	is_initialized: BOOLEAN
 			-- Is consumer initialized for given path?
 		require
 			exists: exists
@@ -44,7 +44,7 @@ feature -- Status report
 		end
 
 
-	last_com_code: INTEGER is
+	last_com_code: INTEGER
 			-- Last value of the COM error if any.
 		require
 			exists: exists
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Retrieval
 
-	unload is
+	unload
 			-- unload all used resources
 		do
 			check
@@ -66,7 +66,7 @@ feature -- Retrieval
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING) is
+	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING)
 			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
 		require
 			exists: exists
@@ -78,7 +78,7 @@ feature -- XML generation
 			end
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN) is
+	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN)
 			-- consume an assembly into the EAC from assemblyy defined by
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -97,7 +97,7 @@ feature -- XML generation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

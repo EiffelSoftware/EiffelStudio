@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	is_il: BOOLEAN is
+	is_il: BOOLEAN
 			-- IsIL returns whether the code is IL (as opposed to native)
 		local
 			r: INTEGER
@@ -28,7 +28,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	get_function: ICOR_DEBUG_FUNCTION is
+	get_function: ICOR_DEBUG_FUNCTION
 		local
 			p: POINTER
 		do
@@ -40,7 +40,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_address: NATURAL_64 is
+	get_address: NATURAL_64
 			-- GetAddress returns the address of the code
 		do
 			last_call_success := cpp_get_address (item, $Result)
@@ -55,7 +55,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := get_size.as_integer_32
 		end		
 
-	get_size: NATURAL_32 is
+	get_size: NATURAL_32
 			-- GetSize returns the size in bytes of the code
 		do
 			last_call_success := cpp_get_size (item, $Result)
@@ -63,7 +63,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	create_breakpoint (a_offset: NATURAL_32): ICOR_DEBUG_FUNCTION_BREAKPOINT is
+	create_breakpoint (a_offset: NATURAL_32): ICOR_DEBUG_FUNCTION_BREAKPOINT
 		local
 			p: POINTER
 		do
@@ -75,7 +75,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	get_code (a_size: NATURAL_32): STRING is
+	get_code (a_size: NATURAL_32): STRING
 			-- Returns the code of the method suitable for disassembly.
 			-- Note that instruction boundaries aren't checked
 		local
@@ -114,7 +114,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_version_number: NATURAL_32 is
+	get_version_number: NATURAL_32
 			-- Returns version number of code
 		do
 			last_call_success := cpp_get_version_number (item, $Result)
@@ -124,7 +124,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_il (obj: POINTER; a_p_is_il: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_il (obj: POINTER; a_p_is_il: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(BOOL*): EIF_INTEGER 
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			"IsIL"
 		end
 
-	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(ICorDebugFunction**): EIF_INTEGER 
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end
 
-	cpp_get_address (obj: POINTER; a_p_start: TYPED_POINTER [NATURAL_64]): INTEGER is
+	cpp_get_address (obj: POINTER; a_p_start: TYPED_POINTER [NATURAL_64]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(CORDB_ADDRESS*): EIF_INTEGER 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			"GetAddress"
 		end
 
-	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_size (obj: POINTER; a_p_size: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32*): EIF_INTEGER 
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			"GetSize"
 		end
 		
-	cpp_create_breakpoint (obj: POINTER; a_offset: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_create_breakpoint (obj: POINTER; a_offset: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32, ICorDebugFunctionBreakpoint**): EIF_INTEGER 
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		end
 		
 	cpp_get_code (obj: POINTER; a_startoffset, a_endoffset: NATURAL_32; a_bufferalloc: NATURAL_32;
-					a_buffer: POINTER; a_buffersize: TYPED_POINTER [NATURAL_32]): INTEGER is
+					a_buffer: POINTER; a_buffersize: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32, ULONG32, ULONG32, BYTE*, ULONG32*): EIF_INTEGER 
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			"GetCode"
 		end		
 
-	cpp_get_version_number (obj: POINTER; a_p_vers_number: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_version_number (obj: POINTER; a_p_vers_number: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugCode signature(ULONG32*): EIF_INTEGER 
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			"GetVersionNumber"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

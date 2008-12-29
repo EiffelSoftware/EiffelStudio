@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List used in abstract syntax trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {CONSTRUCT_LIST}
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Creation of the list.
 		do
 				-- We always use 1 for lower so we can optimize array setup.
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create area.make (n)
 		end
 
-	make_filled (n: INTEGER) is
+	make_filled (n: INTEGER)
 			-- Creation of the list.
 		do
 				-- We always use 1 for lower so we can optimize array setup.
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Special insertion
 
-	reverse_extend (v: T) is
+	reverse_extend (v: T)
 			-- Add `v' to `Current'
 		require
 			extendible: extendible
@@ -56,7 +56,7 @@ feature -- Special insertion
 			count := l_count + 1
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

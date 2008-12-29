@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A row used in grid in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Status report
 
-	is_binded_to_grid: BOOLEAN is
+	is_binded_to_grid: BOOLEAN
 			-- is current row binded to grid?
 		do
 			Result := grid_row /= Void
@@ -22,7 +22,7 @@ feature -- Grid row
 	grid_row: EV_GRID_ROW
 			-- EV_GRID row associated with current
 
-	set_grid_row (a_row: like grid_row) is
+	set_grid_row (a_row: like grid_row)
 			-- Set `grid_row' with `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -34,7 +34,7 @@ feature -- Grid row
 			data_set: grid_row.data = Current
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a list which is surrounded by some kind of brackets (e.g. '(' and ')')."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature{NONE} -- Implementation
 
-	make (s_as: G; lp_as, rp_as: like lparan_symbol) is
+	make (s_as: G; lp_as, rp_as: like lparan_symbol)
 			-- Initialize Current with `G' and its brackets.
 		do
 			content := s_as
@@ -37,7 +37,7 @@ feature -- Access: roundtrip
 	lparan_symbol_index, rparan_symbol_index: INTEGER
 			-- Index of symbol "(" and ")" associated with this structure
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -50,7 +50,7 @@ feature -- Access: roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -65,7 +65,7 @@ feature -- Access: roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			if content = Void then
@@ -77,7 +77,7 @@ feature -- Comparison
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			if a_list = Void then
@@ -91,7 +91,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			if a_list = Void then
@@ -105,7 +105,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a deferred version of a included assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Access, in compiled only
 	dependencies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER];
 			-- Dependencies on other assemblies indexed by their assembly ID.
 
-	guid: STRING is
+	guid: STRING
 			-- A unique id.
 		deferred
 		ensure
@@ -31,7 +31,7 @@ feature -- Access, in compiled only
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			Precursor (a_visitor)
@@ -40,7 +40,7 @@ feature -- Visit
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	add_assembly (a_assembly: CONF_ASSEMBLY) is
+	add_assembly (a_assembly: CONF_ASSEMBLY)
 			-- Add `a_assembly' to the list of assemblies that represent this assembly.
 		require
 			a_assembly_not_void: a_assembly /= Void
@@ -50,7 +50,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			assembly_added: assemblies.has (a_assembly)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

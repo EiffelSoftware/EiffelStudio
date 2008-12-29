@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A parser callbacks implementation for processing XML documents using a state-machine.
 	]"
@@ -387,7 +387,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- <Precursor>
 		do
 			if not has_error then
@@ -757,7 +757,7 @@ feature {NONE} -- Attribute values
 invariant
 	xml_parser_callbacks_is_current: xml_parser.callbacks = Current
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

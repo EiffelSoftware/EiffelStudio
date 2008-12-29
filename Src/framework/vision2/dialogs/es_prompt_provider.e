@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Prompt dialog provider for showing various pre-configured prompts to the user.
 	]"
@@ -134,7 +134,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Display
 
-	safe_show_dialog (a_dialog: EV_DIALOG; a_window: EV_WINDOW) is
+	safe_show_dialog (a_dialog: EV_DIALOG; a_window: EV_WINDOW)
 			-- Displays a dialog prompt.
 			--
 			-- `a_dialog': Dialog prompt to show
@@ -150,7 +150,7 @@ feature {NONE} -- Display
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

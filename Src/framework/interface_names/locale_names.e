@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapping between locale ids and names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	languages: HASH_TABLE [STRING_32, STRING] is
+	languages: HASH_TABLE [STRING_32, STRING]
 		once
 			create Result.make (130)
 			Result.force (locale.translation ("Afrikaans"), "af")
@@ -139,7 +139,7 @@ feature -- Access
 			Result.force (locale.translation ("Zulu/isiZulu"), "zu")
 		end
 
-	locales: HASH_TABLE [STRING_32, STRING] is
+	locales: HASH_TABLE [STRING_32, STRING]
 		once
 			create Result.make (300)
 			Result.force (locale.translation ("Afrikaans (South Africa)"), "af_za")
@@ -352,7 +352,7 @@ feature -- Access
 			Result.force (locale.translation ("Zulu/isiZulu (South Africa)"), "zu_za")
 		end
 
-	locales_from_array (a_array_of_id: ARRAY [STRING]): like locales is
+	locales_from_array (a_array_of_id: ARRAY [STRING]): like locales
 			-- Locale pairs of names and locale ids.
 			-- Names have been translated according to current selected locale.
 		require
@@ -388,7 +388,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

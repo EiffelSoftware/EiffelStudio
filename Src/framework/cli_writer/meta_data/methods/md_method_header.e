@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a CLI header for a feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ deferred class
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of structure once emitted.
 		deferred
 		end
 		
 feature -- Saving
 
-	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos'.
 		require
 			m_not_void: m /= Void
@@ -26,7 +26,7 @@ feature -- Saving
 		deferred
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

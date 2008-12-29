@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of conditions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {CONF_CONDITION_LIST}
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create.
 		do
 			Precursor {ARRAYED_LIST} (n)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Text representation of the conditions.
 		local
 			l_cursor: ARRAYED_LIST_CURSOR
@@ -59,7 +59,7 @@ feature -- Output
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

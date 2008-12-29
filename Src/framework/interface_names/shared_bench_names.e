@@ -1,4 +1,4 @@
-indexing
+note
 	description: "interface names used in bench compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ inherit
 
 feature -- Names
 
-	names: INTERFACE_NAMES is
+	names: INTERFACE_NAMES
 			-- Names used in interface
 		once
 			create Result
 		end
 
-	metric_names: EB_METRIC_NAMES is
+	metric_names: EB_METRIC_NAMES
 			-- Names used in metric tools
 		once
 			create Result
@@ -50,7 +50,7 @@ feature -- Names
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

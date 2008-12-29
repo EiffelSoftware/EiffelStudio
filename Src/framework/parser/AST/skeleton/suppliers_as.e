@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Abstract description for the supplier type set of a %
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Insertion
 
-	insert_supplier_id (id: ID_AS) is
+	insert_supplier_id (id: ID_AS)
 			-- Insert a new supplier name in `supplier_ids', if
 			-- not already present.
 		require else
@@ -36,7 +36,7 @@ feature -- Insertion
 			l_suppliers.put (id)
 		end
 
-	insert_light_supplier_id (id: ID_AS) is
+	insert_light_supplier_id (id: ID_AS)
 			-- Insert a new supplier name in `light_supplier_ids', if
 			-- not already present.
 		require else
@@ -52,7 +52,7 @@ feature -- Insertion
 			l_suppliers.put (id)
 		end;
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge other in Current.
 		do
 			if other.light_supplier_ids /= Void then
@@ -69,7 +69,7 @@ feature -- Insertion
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

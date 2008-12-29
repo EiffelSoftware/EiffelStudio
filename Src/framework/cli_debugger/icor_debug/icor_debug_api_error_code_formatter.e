@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manage error code display (debugging purpose)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,52 +11,52 @@ class
 
 feature -- //**** Common Language Runtime Debugging Services errors
 
-	cordbg_e_static_var_not_available: INTEGER is 0x131A
+	cordbg_e_static_var_not_available: INTEGER = 0x131A
 			-- A static variable isn't available because
 			-- it hasn't been initialized yet.
 
-	cordbg_e_variable_is_actually_literal: INTEGER is 0x1334
+	cordbg_e_variable_is_actually_literal: INTEGER = 0x1334
 			-- The 'variable' doesn't exist because it is a
 			-- literal optimized away by the compiler - ask
 			-- Metadata for it's default value, instead.  
 
-	cordbg_e_field_not_available: INTEGER is 0x1306
+	cordbg_e_field_not_available: INTEGER = 0x1306
 			-- A field in a class is not available,
 			-- because the runtime optimized it away.
 			
-	cordbg_e_bad_reference_value: INTEGER is 0x1305
+	cordbg_e_bad_reference_value: INTEGER = 0x1305
 			-- A reference value was found to be bad during dereferencing
 			
-	cordbg_e_class_not_loaded: INTEGER is 0x1303
+	cordbg_e_class_not_loaded: INTEGER = 0x1303
 			-- A class is not loaded
 
-	cordbg_s_value_points_to_void: INTEGER is 0x1317
+	cordbg_s_value_points_to_void: INTEGER = 0x1317
 			-- The Debugging API doesn't support dereferencing pointers of type void
 
-	cor_e_invalidcast_e_nointerface: INTEGER is 0x4002
+	cor_e_invalidcast_e_nointerface: INTEGER = 0x4002
 			--	Indicates a bad cast condition
 
-	cordbg_s_func_eval_aborted: INTEGER is 0x1319 -- CORDBG_S_FUNC_EVAL_ABORTED
+	cordbg_s_func_eval_aborted: INTEGER = 0x1319 -- CORDBG_S_FUNC_EVAL_ABORTED
 	
-	cordbg_e_object_neutered: INTEGER is 0x134F -- CORDBG_E_OBJECT_NEUTERED
+	cordbg_e_object_neutered: INTEGER = 0x134F -- CORDBG_E_OBJECT_NEUTERED
 	
 feature -- Query
 
-	error_code_is_CORDBG_E_OBJECT_NEUTERED (c: INTEGER): BOOLEAN is
+	error_code_is_CORDBG_E_OBJECT_NEUTERED (c: INTEGER): BOOLEAN
 		do
 			Result := error_code_to_id (c) = cordbg_e_object_neutered
 		end
 
 feature -- Access
 
-	error_code_to_id (a_error_code: INTEGER): INTEGER is
+	error_code_to_id (a_error_code: INTEGER): INTEGER
 			-- Convert `last_call_success' to hex and keep the last word
 
 		do
 			Result := a_error_code & 0xFFFF
 		end
 
-	error_code_to_string (a_error_code: INTEGER): STRING is
+	error_code_to_string (a_error_code: INTEGER): STRING
 		local
 			l_error_id: INTEGER
 		do
@@ -69,7 +69,7 @@ feature -- Access
 			Result.prepend_string ("[ "+ a_error_code.out + " | " + l_error_id.out  + " ] ")
 		end
 
-	error_meaning: HASH_TABLE [STRING, INTEGER] is
+	error_meaning: HASH_TABLE [STRING, INTEGER]
 		once
 			create Result.make (10)
 			Result.put ("Succeed", 0x0000)
@@ -88,7 +88,7 @@ feature -- Access
 			Result.put ("[CORDBG_E_OBJECT_NEUTERED] Object has been neutered (it's in a zombie state).", cordbg_e_object_neutered)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Equality tester for class AUT_TEST_CASE_RESULT"
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: AUT_TEST_CASE_RESULT): BOOLEAN is
+	test (v, u: AUT_TEST_CASE_RESULT): BOOLEAN
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then

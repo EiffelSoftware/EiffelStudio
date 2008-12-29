@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of binary `implies' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING
 			-- Qualified name with the infix keyword.
 		once
 			Result := infix_feature_name_with_symbol (op_name.name)
@@ -32,13 +32,13 @@ feature -- Properties
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bin_implies_as (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

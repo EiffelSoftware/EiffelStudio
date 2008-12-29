@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation a method signature both for reference
 		and definition as we do not consumme varargs.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset current for new signature definition
 		do
 			current_position := 0
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_method_type (t: like method_type) is
+	set_method_type (t: like method_type)
 			-- Set type of method.
 			-- See MD_SIGNATURE_CONSTANTS for possible values.
 		require
@@ -69,7 +69,7 @@ feature -- Settings
 			method_type_set: method_type = t
 		end
 
-	set_parameter_count (n: like parameter_count) is
+	set_parameter_count (n: like parameter_count)
 			-- Set number of method parameters.
 			-- To be compressed.
 		require
@@ -83,7 +83,7 @@ feature -- Settings
 			parameter_count_set: parameter_count = n
 		end
 
-	set_return_type (element_type: INTEGER_8; token: INTEGER) is
+	set_return_type (element_type: INTEGER_8; token: INTEGER)
 			-- Set return type of method.
 		require
 			valid_state: state = Return_type_state
@@ -102,12 +102,12 @@ feature -- State
 	state: INTEGER
 			-- Current state of signature settings.
 
-	method_type_setting_state: INTEGER is 1
-	parameter_count_state: INTEGER is 2
-	return_type_state: INTEGER is 3
-	parameters_state: INTEGER is 4;
+	method_type_setting_state: INTEGER = 1
+	parameter_count_state: INTEGER = 2
+	return_type_state: INTEGER = 3
+	parameters_state: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

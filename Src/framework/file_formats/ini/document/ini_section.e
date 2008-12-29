@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a INI document section."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: like label; a_document: like document) is
+	make (a_label: like label; a_document: like document)
 			-- Initialize section with label `a_label'
 		require
 			a_label_attached: a_label /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: INI_DOCUMENT is
+	document: INI_DOCUMENT
 			-- Document section belongs to
 		do
 			Result := internal_document
@@ -49,7 +49,7 @@ feature -- Access
 	label: STRING assign set_label
 			-- Section label
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is section empty?
 		do
 			Result := properties.is_empty
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_label (a_label: like label) is
+	set_label (a_label: like label)
 			-- Set `label' with `a_label'
 		require
 			a_label_attached: a_label /= Void
@@ -70,7 +70,7 @@ feature -- Status Setting
 
 feature {NONE} -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		local
 			l_label: like label
@@ -94,7 +94,7 @@ invariant
 	not_label_is_empty: not label.is_empty
 	internal_document_attached: internal_document /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

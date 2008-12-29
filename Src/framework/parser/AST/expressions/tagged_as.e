@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of a tagged expression. %
 				  %Version for Bench."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like tag; e: like expr; s_as: like colon_symbol) is
+	initialize (t: like tag; e: like expr; s_as: like colon_symbol)
 			-- Create a new TAGGED AST node.
 		do
 			tag := t
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_tagged_as (Current)
@@ -57,7 +57,7 @@ feature -- Roundtrip
 			end
 		end
 
-	is_complete: BOOLEAN is
+	is_complete: BOOLEAN
 			-- Is this tagged structure complete?
 			-- e.g. in form of "tag:expr", "expr", but not "tag:".
 		do
@@ -74,7 +74,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if tag /= Void then
 				Result := tag.first_token (a_list)
@@ -83,7 +83,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if expr /= Void then
 				Result := expr.last_token (a_list)
@@ -96,14 +96,14 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (tag, other.tag) and then
 				equivalent (expr, other.expr)
 		end
 
-	is_equiv (other: like Current): BOOLEAN is
+	is_equiv (other: like Current): BOOLEAN
 			-- Is `other' tagged as equivalent to Current?
 		do
 			Result := equivalent (tag, other.tag) and then equivalent (expr, other.expr)
@@ -112,7 +112,7 @@ feature -- Comparison
 invariant
 	not_both_tag_and_expr_void: not (tag = Void and expr = Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

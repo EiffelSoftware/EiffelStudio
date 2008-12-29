@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a list of local decarations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (l_as: like locals; k_as: like local_keyword) is
+	make (l_as: like locals; k_as: like local_keyword)
 			-- Initialize instance.
 		require
 			l_as_not_void: l_as /= Void
@@ -38,13 +38,13 @@ feature -- Access
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
 			v.process_local_dec_list_as (Current)
 		end
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			if locals = Void then
@@ -56,7 +56,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			if a_list /= Void and local_keyword_index /= 0 then
@@ -66,7 +66,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			if locals /= Void then
@@ -82,7 +82,7 @@ feature -- Roundtrip
 	local_keyword_index: INTEGER
 			-- Index of keyword "local" associated with current AST node
 
-	local_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	local_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "local" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -95,7 +95,7 @@ feature -- Roundtrip
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

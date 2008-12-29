@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for Hash algorithms"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	sha1: INTEGER is 0x00008004;
+	sha1: INTEGER = 0x00008004;
 			-- SHA1 algorithm ID.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

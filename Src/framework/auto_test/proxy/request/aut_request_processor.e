@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Request processors"
@@ -15,7 +15,7 @@ inherit
 
 feature{AUT_REQUEST} -- Status report
 
-	is_request_valid (a_request: AUT_REQUEST): BOOLEAN is
+	is_request_valid (a_request: AUT_REQUEST): BOOLEAN
 			-- Is `a_request' valid?
 		require
 			a_request_attached: a_request /= Void
@@ -25,7 +25,7 @@ feature{AUT_REQUEST} -- Status report
 
 feature{AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void
@@ -33,7 +33,7 @@ feature{AUT_REQUEST} -- Processing
 		deferred
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void
@@ -41,7 +41,7 @@ feature{AUT_REQUEST} -- Processing
 		deferred
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void
@@ -49,7 +49,7 @@ feature{AUT_REQUEST} -- Processing
 		deferred
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void
@@ -57,7 +57,7 @@ feature{AUT_REQUEST} -- Processing
 		deferred
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void
@@ -65,7 +65,7 @@ feature{AUT_REQUEST} -- Processing
 		deferred
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 			-- Process `a_request'.
 		require
 			a_request_not_void: a_request /= Void

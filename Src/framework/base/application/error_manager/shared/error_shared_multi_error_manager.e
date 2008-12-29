@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to error manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Access
 
-	error_manager: MULTI_ERROR_MANAGER is
+	error_manager: MULTI_ERROR_MANAGER
 		once
 			create Result.make
 		ensure
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

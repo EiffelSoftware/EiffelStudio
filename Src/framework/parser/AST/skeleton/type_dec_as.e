@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of a type declaration. %
 		%Version for Bench."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; t: like type; c_as: SYMBOL_AS) is
+	initialize (i: like id_list; t: like type; c_as: SYMBOL_AS)
 			-- Create a new TYPE_DEC AST node.
 		require
 			i_not_void: i /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_type_dec_as (Current)
@@ -73,7 +73,7 @@ feature -- Access
 	type: TYPE_AS
 			-- Type
 
-	item_name (i: INTEGER): STRING is
+	item_name (i: INTEGER): STRING
 			-- Name of `id' at position `i'.
 		require
 			valid_index: id_list.valid_index (i)
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST nodE
 		local
 			l_list: CONSTRUCT_LIST [INTEGER]
@@ -102,7 +102,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			Result := type.last_token (a_list)
@@ -110,7 +110,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equal (id_list, other.id_list) and then
@@ -119,7 +119,7 @@ feature -- Comparison
 
 feature {TYPE_DEC_AS, AST_FORMAL_GENERICS_PASS2} -- Replication
 
-	set_type (t: like type) is
+	set_type (t: like type)
 		require
 			valid_t: t /= Void
 		do
@@ -128,7 +128,7 @@ feature {TYPE_DEC_AS, AST_FORMAL_GENERICS_PASS2} -- Replication
 
 feature {TYPE_DEC_AS} -- Replication
 
-	set_id_list (id: like id_list) is
+	set_id_list (id: like id_list)
 		require
 			valid_t: id /= Void
 		do
@@ -139,7 +139,7 @@ invariant
 	type_not_void: type /= Void
 	id_list_not_void: id_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

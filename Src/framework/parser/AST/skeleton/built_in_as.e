@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of an external built_in routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Process current element.
 		do
 			v.process_built_in_as (Current)
@@ -29,7 +29,7 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is True;
+	is_built_in: BOOLEAN = True;
 			-- Is the routine body an external `built_in' one?
 
 feature -- Access
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_body (b: like body) is
+	set_body (b: like body)
 			-- Set `body' with `b'.
 		do
 			body := b
@@ -49,7 +49,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := alias_name_id = other.alias_name_id and then
@@ -57,7 +57,7 @@ feature -- Comparison
 				equivalent (body, other.body)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

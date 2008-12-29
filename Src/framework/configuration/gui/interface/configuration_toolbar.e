@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar for configuration actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_ac: EV_ACCELERATOR
@@ -249,7 +249,7 @@ feature -- Buttons
 
 feature -- Update
 
-	reset_sensitive is
+	reset_sensitive
 			-- Reset sensitive status of items, disables all items that are not globally available.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -269,7 +269,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	press_button (a_button: SD_TOOL_BAR_BUTTON) is
+	press_button (a_button: SD_TOOL_BAR_BUTTON)
 			-- Press `a_button'.
 		do
 			if a_button.is_sensitive then
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	name_with_key (a_name: STRING_GENERAL; a_key: EV_ACCELERATOR): STRING_GENERAL is
+	name_with_key (a_name: STRING_GENERAL; a_key: EV_ACCELERATOR): STRING_GENERAL
 			-- Format text with `a_name' and `a_key'.
 		require
 			a_name_not_void: a_name /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is True;
+	is_in_default_state: BOOLEAN = True;
 
 invariant
 	accelerators_not_void: accelerators /= Void
@@ -315,7 +315,7 @@ invariant
 	remove_button: remove_button /= Void
 	edit_library: edit_library /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

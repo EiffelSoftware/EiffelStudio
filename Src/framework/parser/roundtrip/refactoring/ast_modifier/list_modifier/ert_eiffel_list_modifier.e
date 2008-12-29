@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[Object to modify an EIFFEL_LIST AST node]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_eif_list: like eiffel_list; a_match_list: like match_list) is
+	make (a_eif_list: like eiffel_list; a_match_list: like match_list)
 			-- Initialization instance.
 		require
 			a_eif_list_not_void: a_eif_list /= Void
@@ -37,7 +37,7 @@ feature{NONE} -- Implementation
 
 feature -- Modification apply
 
-	apply is
+	apply
 			-- Apply all registered modifications
 		local
 			i: INTEGER
@@ -74,7 +74,7 @@ feature -- Modification apply
 			applied := True
 		end
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can all registered modifications be applied?
 		do
 			Result := True
@@ -100,7 +100,7 @@ feature -- Modification apply
 
 feature -- Modifier register
 
-	insert_left (item_text: STRING; i: INTEGER) is
+	insert_left (item_text: STRING; i: INTEGER)
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
 		local
@@ -111,7 +111,7 @@ feature -- Modifier register
 			modifier_list.extend (l_modifier)
 		end
 
-	insert_right (item_text: STRING; i: INTEGER) is
+	insert_right (item_text: STRING; i: INTEGER)
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
 		local
@@ -128,7 +128,7 @@ feature -- Modifier register
 			modifier_list.extend (l_modifier)
 		end
 
-	replace (item_text: STRING; i: INTEGER) is
+	replace (item_text: STRING; i: INTEGER)
 			-- Register a replace operation on `i'-th item in `eiffel_list'.
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
@@ -139,7 +139,7 @@ feature -- Modifier register
 			l_modifier.set_text (item_text)
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Register a remove operation on `i'-th item in `eiffel_list'.	
 		require else
 			i_valid: i > 0 and i <= eiffel_list_count
@@ -150,19 +150,19 @@ feature -- Modifier register
 			l_modifier.set_text ("")
 		end
 
-	prepend (item_text: STRING) is
+	prepend (item_text: STRING)
 		do
 			insert_left (item_text, 1)
 		end
 
-	append (item_text: STRING) is
+	append (item_text: STRING)
 		do
 			insert_right (item_text, eiffel_list.count)
 		end
 
 feature -- Access
 
-	is_last_item (i: INTEGER): BOOLEAN is
+	is_last_item (i: INTEGER): BOOLEAN
 			-- Is  `i'-th item in `modifier_list' last item?
 		local
 			j: INTEGER
@@ -180,7 +180,7 @@ feature -- Access
 			end
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current empty?
 		do
 			Result := modifier_list.for_all (agent {ERT_LIST_ITEM_MODIFIER}.is_removed)
@@ -191,7 +191,7 @@ feature -- Eiffel list
 	eiffel_list: EIFFEL_LIST [AST_EIFFEL]
 			-- EIFFEL_LIST AST node to be modified
 
-	eiffel_list_count: INTEGER is
+	eiffel_list_count: INTEGER
 			-- Count of `eiffel_list'.
 		do
 			Result := eiffel_list.count
@@ -199,7 +199,7 @@ feature -- Eiffel list
 
 feature{NONE} -- Initialization
 
-	initialize_modifier_list is
+	initialize_modifier_list
 			-- Initialize.
 		local
 			i: INTEGER
@@ -232,7 +232,7 @@ feature{NONE} -- Initialization
 			end
 		end
 
-	compute_modification is
+	compute_modification
 			-- Compute modification.
 		local
 			i: INTEGER
@@ -280,7 +280,7 @@ invariant
 	leading_text_not_void: leading_text /= Void
 	separator_not_void: separator /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

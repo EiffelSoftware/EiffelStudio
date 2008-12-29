@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a general tooltip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature{NONE} -- Initialization
 	      a_widget_function: like widget_function;
 	      a_destroy_function: like owner_destroy_function;
 	      a_width_function: like required_width_function;
-	      a_height_function: like required_height_function) is
+	      a_height_function: like required_height_function)
 			-- Initialize agents used for current tooltip.
 			-- See `pointer_enter_actions', `pointer_leave_actions', `widget_function',
 			-- `owner_destroy_function', `required_width_function', `required_height_function'
@@ -59,7 +59,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	required_tooltip_width: INTEGER is
+	required_tooltip_width: INTEGER
 			-- Required width in pixel to display tooltip
 			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
 			-- tooltip is displayed.
@@ -71,7 +71,7 @@ feature -- Access
 			Result := l_func.last_result
 		end
 
-	required_tooltip_height: INTEGER is
+	required_tooltip_height: INTEGER
 			-- Required height in pixel to display tooltip
 			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
 			-- tooltip is displayed.
@@ -111,14 +111,14 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	has_tooltip_text: BOOLEAN is
+	has_tooltip_text: BOOLEAN
 			-- Does current tooltip has any text?
 		deferred
 		end
 
 feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
-	is_owner_destroyed: BOOLEAN is
+	is_owner_destroyed: BOOLEAN
 			-- If owner destroyed
 			-- Attach this to owner's `is_destroyed'.
 		local
@@ -129,7 +129,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 			Result := l_func.last_result
 		end
 
-	tooltip_widget: EV_WIDGET is
+	tooltip_widget: EV_WIDGET
 			-- Widget of tooltip
 		local
 			l_func: like widget_function
@@ -141,21 +141,21 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
 feature{NONE} -- Implementation
 
-	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer enter actions of owner of current tooltip
 			-- Attach this to owner's `pointer_enter_actions'.
 		do
 			Result := pointer_enter_actions
 		end
 
-	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer leave actions of owner of current tooltip
 			-- Attach this to owner's `pointer_leave_actions'.			
 		do
 			Result := pointer_leave_actions
 		end
 
-	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions of owner of current tooltip
 			-- Attach this to owner's `select_actions'.
 		do
@@ -170,7 +170,7 @@ invariant
 	required_width_function_attached: required_width_function /= Void
 	required_height_function_attached: required_height_function /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

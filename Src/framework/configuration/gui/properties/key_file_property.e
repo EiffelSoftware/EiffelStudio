@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property for msil key files, that allow to choose an existing file or if an non existing file is choosen it will be created."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Update
 
-	set_il_version (a_version: like il_version) is
+	set_il_version (a_version: like il_version)
 			-- Set `il_version' to `a_version'.
 		require
 			a_version_ok: a_version /= Void and then not a_version.is_empty
@@ -36,7 +36,7 @@ feature -- Update
 
 feature {NONE} -- Actions
 
-	dialog_ok (a_dial: EV_FILE_OPEN_DIALOG) is
+	dialog_ok (a_dial: EV_FILE_OPEN_DIALOG)
 			-- If dialog is closed with ok.
 		local
 			l_file: RAW_FILE
@@ -53,7 +53,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

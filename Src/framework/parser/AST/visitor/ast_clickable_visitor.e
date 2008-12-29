@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to compute CLICK_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Clickable
 
-	click_list (a_class: CLASS_AS): CLICK_LIST is
+	click_list (a_class: CLASS_AS): CLICK_LIST
 			-- Associated `click_list' of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 		local
 			l_fnames: EIFFEL_LIST [FEATURE_NAME]
 			l_click_ast: CLICK_AST
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 		end
 
-	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.bottom_indexes)
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -137,12 +137,12 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			process_class_type_as (l_as)
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
-	process_rename_as (l_as: RENAME_AS) is
+	process_rename_as (l_as: RENAME_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 		local
 			l_clients: EIFFEL_LIST [ID_AS]
 			l_click_ast: CLICK_AST
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
 		local
 			l_click_ast: CLICK_AST
 		do
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			l_as.conversion_types.process (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

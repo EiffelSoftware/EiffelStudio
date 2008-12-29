@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for unary expression, Bench version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr; o: like operator) is
+	initialize (e: like expr; o: like operator)
 			-- Create a new UNARY AST node.
 		require
 			e_not_void: e /= Void
@@ -45,7 +45,7 @@ feature -- Roundtrip
 	operator_index: INTEGER
 			-- Index of unary operation AST node.
 
-	operator (a_list: LEAF_AS_LIST): LEAF_AS is
+	operator (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Unary operation AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -68,7 +68,7 @@ feature -- Attributes
 
 feature -- Location
 
-	operator_location: LOCATION_AS is
+	operator_location: LOCATION_AS
 			-- Location of operator
 		local
 			l_location: LOCATION_AS
@@ -83,7 +83,7 @@ feature -- Location
 			operator_location_not_void: Result /= Void
 		end
 
-	operator_ast: ID_AS is
+	operator_ast: ID_AS
 			-- Approximation of current operator AST without a match_list.
 		local
 			l_location: LOCATION_AS
@@ -97,7 +97,7 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and operator_index /= 0 then
 				Result := operator (a_list)
@@ -106,31 +106,31 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := expr.last_token (a_list)
 		end
 
 feature -- Properties
 
-	prefix_feature_name: STRING is
+	prefix_feature_name: STRING
 			-- Internal name of the prefixed feature
 		do
 			Result := Prefix_str + operator_name + Quote_str
 		end
 
-	operator_name: STRING is
+	operator_name: STRING
 		deferred
 		end
 
-	is_minus: BOOLEAN is
+	is_minus: BOOLEAN
 			-- Is Current prefix "-"?
 		do
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expr, other.expr)
@@ -138,7 +138,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		do
 			class_id := a_class_id
@@ -146,7 +146,7 @@ feature -- Setting
 
 feature {UNARY_AS} -- Replication
 
-	set_expr (e: like expr) is
+	set_expr (e: like expr)
 			-- Set `expr' with `e'.
 		require
 			valid_arg: e /= Void
@@ -159,7 +159,7 @@ feature {UNARY_AS} -- Replication
 invariant
 	expr_not_void: expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Controller for evaluators running in separate process.
 	]"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_assigner: like assigner; a_executable: like executable) is
+	make (a_assigner: like assigner; a_executable: like executable)
 			-- Initizialize `Current'
 			--
 			-- `a_assigner': Assigner for retrieving test to be executed.
@@ -65,7 +65,7 @@ feature -- Status setting
 			end
 		end
 
-	launch_evaluator (a_args: !LIST [!STRING]) is
+	launch_evaluator (a_args: !LIST [!STRING])
 			-- <Precursor>
 		do
 			process := process_factory.process_launcher (executable, a_args, Void)
@@ -88,7 +88,7 @@ invariant
 	running_implies_process_attached: is_running implies
 		(process /= Void and then process.launched)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

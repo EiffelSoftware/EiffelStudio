@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all command-line argument builders."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	command_line_arguments: STRING is
+	command_line_arguments: STRING
 			-- Generates a command line based on set compiler-related properties
 		do
 			Result := internal_command_line
@@ -31,7 +31,7 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	generate_command_line_arguments: STRING is
+	generate_command_line_arguments: STRING
 			-- Request command-line arguments be generated
 		deferred
 		ensure
@@ -40,7 +40,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Status setting
 
-	invalidate_command_line is
+	invalidate_command_line
 			-- Invalidates any cached command line generated data so the next call
 			-- to `command_line_arguments' will re-evaluate current state for a new
 			-- command line string.
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			-- Cached version of `command_line'
 			-- Note: Do not use directly.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

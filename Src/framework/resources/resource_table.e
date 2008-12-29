@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Resource table hashed on resource name."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	get_integer (name: STRING; default_value: INTEGER): INTEGER is
+	get_integer (name: STRING; default_value: INTEGER): INTEGER
 			-- Value of the resource `name'; 
 			-- `default_value' if this value is not known
 		require
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end;
 
-	get_pos_integer (name: STRING; default_value: INTEGER): INTEGER is
+	get_pos_integer (name: STRING; default_value: INTEGER): INTEGER
 			-- Positive value of the resource `name'; 
 			-- `default_value' if this value is not known
 		require
@@ -64,7 +64,7 @@ feature -- Access
 			result_is_positive: Result >= 0
 		end;
 
-	get_boolean (name: STRING; default_value: BOOLEAN): BOOLEAN is
+	get_boolean (name: STRING; default_value: BOOLEAN): BOOLEAN
 			-- Value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end;
 
-	get_real (name: STRING; default_value: REAL): REAL is
+	get_real (name: STRING; default_value: REAL): REAL
 			-- Value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -106,7 +106,7 @@ feature -- Access
 			end
 		end;
 
-	get_string (name: STRING; default_value: STRING): STRING is
+	get_string (name: STRING; default_value: STRING): STRING
 			-- Value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end;
 
-	get_array (name: STRING; default_value: ARRAY [STRING]): ARRAY [STRING] is
+	get_array (name: STRING; default_value: ARRAY [STRING]): ARRAY [STRING]
 			-- Array value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end;
 
-	get_character (name: STRING; default_value: CHARACTER): CHARACTER is
+	get_character (name: STRING; default_value: CHARACTER): CHARACTER
 			-- Value of the resource `name';
 			-- `default_value' if this value is not known
 		require
@@ -200,7 +200,7 @@ feature -- Access
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

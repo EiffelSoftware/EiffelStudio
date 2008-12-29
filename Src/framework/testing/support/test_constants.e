@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object containing test related constants.
 	]"

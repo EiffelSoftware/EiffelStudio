@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all state scanner states."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	scan (a_line: STRING; a_index: INTEGER) is
+	scan (a_line: STRING; a_index: INTEGER)
 			-- Scans `a_line' for token information and set `token' with any located
 			-- token information. `next_state' will also be set to indicate what state
 			-- should be processed next.
@@ -40,7 +40,7 @@ feature -- Basic Operations
 			next_state_attached: next_state /= Void
 		end
 
-	reset is
+	reset
 			-- Resets state, clearing cached information.
 		do
 			token := Void
@@ -52,7 +52,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	non_whitespace_index (a_text: STRING): INTEGER is
+	non_whitespace_index (a_text: STRING): INTEGER
 			-- First index of a non-whitespace character in `a_text'.
 			-- Results of zero indicate line is blank.
 		require
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			result_valid: Result > 0 implies not a_text.item (Result).is_space
 		end
 
-	set_token_info (a_text: STRING; a_type: INI_SCANNER_TOKEN_TYPE; a_start_index: INTEGER) is
+	set_token_info (a_text: STRING; a_type: INI_SCANNER_TOKEN_TYPE; a_start_index: INTEGER)
 			-- Set `token'
 		do
 			create token.make (a_text, a_type, a_start_index)
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			token_span_start_index: token.start_index = a_start_index
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

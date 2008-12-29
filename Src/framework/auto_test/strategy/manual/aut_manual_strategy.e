@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_test_cases: like test_cases; a_system: like system;
-			an_interpreter: like interpreter; an_error_handler: like error_handler) is
+			an_interpreter: like interpreter; an_error_handler: like error_handler)
 			-- Create new strategy.
 		require
 			a_test_cases_not_void: a_test_cases /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 		do
 			Result := not test_case_cursor.off
 		end
@@ -68,13 +68,13 @@ feature -- Access
 
 feature -- Execution
 
-	start is
+	start
 		do
 			Precursor
 			test_case_cursor.start
 		end
 
-	step is
+	step
 		local
 			caller: AUT_MANUAL_TEST_CASE_CALLER
 		do

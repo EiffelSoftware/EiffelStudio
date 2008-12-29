@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for binary expression nodes, Bench version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (l: like left; r: like right; o: like operator) is
+	initialize (l: like left; r: like right; o: like operator)
 			-- Create a new BINARY AST node.
 		require
 			l_not_void: l /= Void
@@ -57,7 +57,7 @@ feature -- Roundtrip
 	operator_index: INTEGER
 			-- Index of binary operation AST node.
 
-	operator (a_list: LEAF_AS_LIST): LEAF_AS is
+	operator (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Binary operation AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -72,7 +72,7 @@ feature -- Roundtrip
 
 feature -- Location
 
-	operator_location: LOCATION_AS is
+	operator_location: LOCATION_AS
 			-- Location of operator
 		local
 			l_left, l_right: LOCATION_AS
@@ -92,7 +92,7 @@ feature -- Location
 			operator_location_not_void: Result /= Void
 		end
 
-	operator_ast: ID_AS is
+	operator_ast: ID_AS
 			-- Approximation of current operator AST without a match_list.
 		local
 			l_location: LOCATION_AS
@@ -106,32 +106,32 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := left.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := right.last_token (a_list)
 		end
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING
 			-- Internal name of the infix feature associated to the
 			-- binary expression
 		deferred
 		end
 
-	op_name: ID_AS is
+	op_name: ID_AS
 			-- Symbol representing the operator (without the infix).
 		deferred
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (left, other.left) and then
@@ -140,7 +140,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		require
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
@@ -148,7 +148,7 @@ feature -- Setting
 			class_id := a_class_id
 		end
 
-	set_left (a_left: like left) is
+	set_left (a_left: like left)
 			-- Set `left' with `a_left'
 		require
 			a_left_not_void: a_left /= Void
@@ -158,7 +158,7 @@ feature -- Setting
 			left_set: left = a_left
 		end
 
-	set_right (a_right: like right) is
+	set_right (a_right: like right)
 			-- Set `right' with `a_right'
 		require
 			a_right_not_void: a_right /= Void
@@ -180,7 +180,7 @@ invariant
 	left_not_void: left /= Void
 	right_not_void: right /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

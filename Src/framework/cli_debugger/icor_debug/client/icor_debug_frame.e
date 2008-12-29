@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {ICOR_EXPORTER} -- QueryInterface
 
-	query_interface_icor_debug_il_frame: ICOR_DEBUG_IL_FRAME is
+	query_interface_icor_debug_il_frame: ICOR_DEBUG_IL_FRAME
 		require
 			item /= Default_pointer
 		local
@@ -29,7 +29,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			end
 		end
 
-	query_interface_icor_debug_native_frame: ICOR_DEBUG_NATIVE_FRAME is
+	query_interface_icor_debug_native_frame: ICOR_DEBUG_NATIVE_FRAME
 		require
 			item /= Default_pointer
 		local
@@ -43,7 +43,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_chain: ICOR_DEBUG_CHAIN is
+	get_chain: ICOR_DEBUG_CHAIN
 		require
 			item /= Default_pointer
 		local
@@ -57,7 +57,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_code: ICOR_DEBUG_CODE is
+	get_code: ICOR_DEBUG_CODE
 		require
 			item /= Default_pointer
 		local
@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_function: ICOR_DEBUG_FUNCTION is
+	get_function: ICOR_DEBUG_FUNCTION
 		require
 			item /= Default_pointer
 		local
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_function_token: NATURAL_32 is
+	get_function_token: NATURAL_32
 		require
 			item /= Default_pointer
 		do
@@ -92,7 +92,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_caller: ICOR_DEBUG_FRAME is
+	get_caller: ICOR_DEBUG_FRAME
 		require
 			item /= Default_pointer
 		local
@@ -104,7 +104,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_callee: ICOR_DEBUG_FRAME is
+	get_callee: ICOR_DEBUG_FRAME
 		require
 			item /= Default_pointer
 		local
@@ -116,7 +116,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	create_stepper: ICOR_DEBUG_STEPPER is
+	create_stepper: ICOR_DEBUG_STEPPER
 		require
 			item /= Default_pointer
 		local
@@ -132,7 +132,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_chain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_chain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugChain**): EIF_INTEGER 
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			"GetChain"
 		end
 
-	cpp_get_code (obj: POINTER; a_p_code: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_code (obj: POINTER; a_p_code: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugCode**): EIF_INTEGER 
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			"GetCode"
 		end
 
-	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_function (obj: POINTER; a_p_function: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFunction**): EIF_INTEGER 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			"GetFunction"
 		end
 
-	cpp_get_function_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_function_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(mdMethodDef*): EIF_INTEGER 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			"GetFunctionToken"
 		end
 
-	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_caller (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			"GetCaller"
 		end
 
-	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_callee (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			"GetCallee"
 		end
 
-	cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugStepper**): EIF_INTEGER 
@@ -204,21 +204,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	cpp_query_interface_ICorDebugILFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugILFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugFrame *) $obj)->QueryInterface (IID_ICorDebugILFrame, (void **) $a_p)"
 		end
 		
-	cpp_query_interface_ICorDebugNativeFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_query_interface_ICorDebugNativeFrame (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugFrame *) $obj)->QueryInterface (IID_ICorDebugNativeFrame, (void **) $a_p)"
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents an editable grid label with ellipsis button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create ellipsis_actions
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does this property have the focus?
 		require
 			is_activated
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Update
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 		local
 			l_has_changed: BOOLEAN
 		do
@@ -80,7 +80,7 @@ feature -- Update
 			end
 		end
 
-	disable_text_editing is
+	disable_text_editing
 			-- Disable editing the text directly in the text field.
 		do
 			is_text_editing := False
@@ -88,7 +88,7 @@ feature -- Update
 			not_is_text_editing: not is_text_editing
 		end
 
-	enable_text_editing is
+	enable_text_editing
 			-- Enable editing the text directly in the text field.
 		do
 			is_text_editing := True
@@ -98,7 +98,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 			text_field.return_actions.extend (agent return_pressed)
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			text_field.key_press_actions.extend (agent handle_key)
 		end
 
-	focus_lost is
+	focus_lost
 			-- Check if no other element in the popup has the focus.
 		do
 			if
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	activate_action (a_popup_window: EV_POPUP_WINDOW) is
+	activate_action (a_popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			text_editing_implies_activation: is_text_editing implies is_activated and text_field /= Void and button /= Void
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to `activate'.
 		do
 			Precursor {EV_GRID_EDITABLE_ITEM}
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 
 	inside_outter_edition: BOOLEAN
 
-	enter_outter_edition is
+	enter_outter_edition
 			--
 		require
 			is_activated: is_activated
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	leave_outter_edition is
+	leave_outter_edition
 			--
 --		require
 --			is_activated: is_activated
@@ -246,7 +246,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	return_pressed is
+	return_pressed
 			-- On control+Enter call ellipsis actions, otherwise deactivate
 		do
 			if ev_application.ctrl_pressed then
@@ -256,13 +256,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_ellipsis_actions is
+	call_ellipsis_actions
 			-- Call ellipsis_actions
 		do
 			ellipsis_actions.call (Void)
 		end
 
-	ellipsis: EV_PIXMAP is
+	ellipsis: EV_PIXMAP
 			-- Icon for ellipsis
 		local
 			l_mask: EV_BITMAP
@@ -287,7 +287,7 @@ invariant
 
 	ellipsis_actions_not_void: ellipsis_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

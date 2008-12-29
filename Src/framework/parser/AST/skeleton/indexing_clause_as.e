@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an indexing clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create {INDEXING_CLAUSE_AS}
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate list with `n' items.
 			-- (`n' may be zero for empty list.)
 		do
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_indexing_clause_as (Current)
@@ -39,7 +39,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			if a_list = Void then
@@ -49,7 +49,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			if a_list = Void then
@@ -68,13 +68,13 @@ feature -- Roundtrip/Token
 
 feature -- Access
 
-	description: STRING is
+	description: STRING
 			-- Description.
 		do
 			Result := string_value (Description_header)
 		end
 
-	assembly_name: ARRAY [STRING] is
+	assembly_name: ARRAY [STRING]
 			-- Assembly name (for external classes only)
 			-- Name, Version, Culture and Public key in that order
 		local
@@ -101,14 +101,14 @@ feature -- Access
 			end
 		end
 
-	external_name: STRING is
+	external_name: STRING
 			-- Name of entity holding current indexing clause as seen from
 			-- external world.
 		do
 			Result := string_value (External_header)
 		end
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
 			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
@@ -124,7 +124,7 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
 			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
 			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
@@ -156,7 +156,7 @@ feature -- Access
 			end
 		end
 
-	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes for an assembly
 		local
 			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
@@ -172,13 +172,13 @@ feature -- Access
 			end
 		end
 
-	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes for a property
 		do
 			Result := internal_custom_attributes (Property_metadata_header)
 		end
 
-	property_name: STRING is
+	property_name: STRING
 			-- Expression representing custom attributes for a property
 		local
 			i: INDEX_AS
@@ -205,7 +205,7 @@ feature -- Access
 			end
 		end
 
-	dotnet_constructors: ARRAYED_LIST [STRING] is
+	dotnet_constructors: ARRAYED_LIST [STRING]
 			-- Dotnet constructors indexing clause value
 		local
 			l_index: INDEX_AS
@@ -239,7 +239,7 @@ feature -- Access
 			end
 		end
 
-	has_global_once: BOOLEAN is
+	has_global_once: BOOLEAN
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
 		local
@@ -270,7 +270,7 @@ feature -- Access
 			end
 		end
 
-	enum_type: STRING is
+	enum_type: STRING
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
 		local
@@ -300,62 +300,62 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	External_header: STRING is "external_name"
+	External_header: STRING = "external_name"
 			-- Index name which holds name as seen by other languages.
 
-	Metadata_header: STRING is "metadata"
+	Metadata_header: STRING = "metadata"
 			-- Index name which holds custom attributes applied to both implementation
 			-- and interface of current class.
 
-	Class_metadata_header: STRING is "class_metadata"
+	Class_metadata_header: STRING = "class_metadata"
 			-- Index name which holds custom attributes applied to associated class only.
 
-	Interface_metadata_header: STRING is "interface_metadata"
+	Interface_metadata_header: STRING = "interface_metadata"
 			-- Index name which holds custom attributes applied to associated interface only.
 
-	Assembly_metadata_header: STRING is "assembly_metadata"
+	Assembly_metadata_header: STRING = "assembly_metadata"
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
 
-	Property_metadata_header: STRING is "property_metadata"
+	Property_metadata_header: STRING = "property_metadata"
 			-- Index name which holds custom attributes applied to associated property.
 
-	Attribute_header: STRING is "attribute"
+	Attribute_header: STRING = "attribute"
 			-- Index name which holds custom attributes applied to both implementation
 			-- and interface of current class.
 
-	Class_attribute_header: STRING is "class_attribute"
+	Class_attribute_header: STRING = "class_attribute"
 			-- Index name which holds custom attributes applied to associated class only.
 
-	Interface_attribute_header: STRING is "interface_attribute"
+	Interface_attribute_header: STRING = "interface_attribute"
 			-- Index name which holds custom attributes applied to associated interface only.
 
-	Assembly_attribute_header: STRING is "assembly_attribute"
+	Assembly_attribute_header: STRING = "assembly_attribute"
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
 
-	Dotnet_constructors_header: STRING is "dotnet_constructors"
+	Dotnet_constructors_header: STRING = "dotnet_constructors"
 			-- Index name which holds list of creation routines to be used as type constructors.
 
-	Description_header: STRING is "description"
+	Description_header: STRING = "description"
 			-- Index name which holds class/feature desciption.
 
-	Assembly_header: STRING is "assembly"
+	Assembly_header: STRING = "assembly"
 			-- Index name which holds name of assembly.
 
-	Once_status_header: STRING is "once_status"
+	Once_status_header: STRING = "once_status"
 			-- Index name under which globalness of a once is specified.
 
-	Property_name_header: STRING is "property"
+	Property_name_header: STRING = "property"
 			-- Index name which holds name of an associated property.
 
-	Enum_type_header: STRING is "enum_type"
+	Enum_type_header: STRING = "enum_type"
 			-- Type of enum elements.
 
-	global_value: STRING is "global"
+	global_value: STRING = "global"
 			-- Value name of `Once_status_header'.
 
-	obsolete_tags: HASH_TABLE [STRING, STRING] is
+	obsolete_tags: HASH_TABLE [STRING, STRING]
 			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
 			-- should be used
 		do
@@ -370,7 +370,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	internal_custom_attributes (tag: STRING): EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+	internal_custom_attributes (tag: STRING): EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
 			i: INDEX_AS
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_index_as (tag: STRING): INDEX_AS is
+	find_index_as (tag: STRING): INDEX_AS
 			-- Find INDEX_AS object holding `tag'
 			-- Void if not found.
 		require
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			found_return_same_object: Result /= Void implies Result = find_index_as (tag)
 		end
 
-	string_value (tag: STRING): STRING is
+	string_value (tag: STRING): STRING
 			-- String associated with `tag'
 			-- Void if not a string or not tag `tag'
 		local
@@ -467,7 +467,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Index of keyword "end" associated with current AST node
 
-	indexing_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	indexing_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "indexing" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -480,7 +480,7 @@ feature -- Roundtrip
 			end
 		end
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "end" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -493,7 +493,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_indexing_keyword (a_keyword: KEYWORD_AS) is
+	set_indexing_keyword (a_keyword: KEYWORD_AS)
 			-- Set `indexing_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then
@@ -503,7 +503,7 @@ feature -- Roundtrip
 			indexing_keyword_set: a_keyword /= Void implies indexing_keyword_index = a_keyword.index
 		end
 
-	set_end_keyword (a_keyword: KEYWORD_AS) is
+	set_end_keyword (a_keyword: KEYWORD_AS)
 			-- Set `end_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then
@@ -513,7 +513,7 @@ feature -- Roundtrip
 			end_keyword_set: a_keyword /= Void implies end_keyword_index = a_keyword.index
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

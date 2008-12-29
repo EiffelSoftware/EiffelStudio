@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 	group: CONF_OVERRIDE
 		-- Group for which information are displayed.
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Element update
 
-	remove_group is
+	remove_group
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		do
@@ -58,7 +58,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_override_button.select_actions.wipe_out
@@ -75,7 +75,7 @@ feature {NONE} -- Type anchors
 	add_dialog_type: CREATE_OVERRIDE_DIALOG;
 			-- Type of the add dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

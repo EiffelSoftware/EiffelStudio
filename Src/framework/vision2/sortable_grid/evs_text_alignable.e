@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an alignment setting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Align setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		do
 			lock_update
@@ -27,7 +27,7 @@ feature -- Align setting
 			alignment_set: is_center_aligned
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		do
 			lock_update
@@ -40,7 +40,7 @@ feature -- Align setting
 			alignment_set: is_right_aligned
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		do
 			lock_update
@@ -53,7 +53,7 @@ feature -- Align setting
 			alignment_set: is_left_aligned
 		end
 
-	align_text_vertically_center is
+	align_text_vertically_center
 			-- Display `text' centered vertically.
 		do
 			lock_update
@@ -66,7 +66,7 @@ feature -- Align setting
 			alignment_set: is_vertically_center_aligned
 		end
 
-	align_text_top is
+	align_text_top
 			-- Display `text' top aligned.
 		do
 			lock_update
@@ -79,7 +79,7 @@ feature -- Align setting
 			alignment_set: is_top_aligned
 		end
 
-	align_text_bottom is
+	align_text_bottom
 			-- Display `text' bottom aligned.
 		do
 			lock_update
@@ -94,42 +94,42 @@ feature -- Align setting
 
 feature -- Status report
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Is `text' of `Current' left aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
 			Result := boolean_flags.bit_test (1) = True
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Is `text' of `Current' center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
 			Result := boolean_flags.bit_test (2) = True
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Is `text' of `Current' right aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
 			Result := boolean_flags.bit_test (3) = True
 		end
 
-	is_top_aligned: BOOLEAN is
+	is_top_aligned: BOOLEAN
 			-- Is `text' of `Current' top aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
 			Result := boolean_flags.bit_test (4) = True
 		end
 
-	is_vertically_center_aligned: BOOLEAN is
+	is_vertically_center_aligned: BOOLEAN
 			-- Is `text' of `Current' vertically center aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
 			Result := boolean_flags.bit_test (5) = True
 		end
 
-	is_bottom_aligned: BOOLEAN is
+	is_bottom_aligned: BOOLEAN
 			-- Is `text' of `Current' bottom aligned?
 			-- Ignored during re-draw if `layout_procedure' /= Void.
 		do
@@ -148,7 +148,7 @@ feature{NONE} -- Implementation
 			-- Bit 6 set to 1 if bottom aligned
 			-- Bit 7 set to 1 if `is_full_select_enabled'.
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An ast that has a position and associated api class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,24 +13,24 @@ inherit
 
 feature -- Properties
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN
 			-- Does the Current AST represent a class?
 		do
 		end
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN
 			-- Does the Current AST represent a feature?
 		do
 		end
 
-	is_precursor: BOOLEAN is
+	is_precursor: BOOLEAN
 			-- Does the Current AST represent a Precursor construct?
 		do
 		end
 
 feature -- Access
 
-	feature_name: ID_AS is
+	feature_name: ID_AS
 			-- Associated `feature_name' if Current represents a feature
 		require
 			is_feature: is_feature
@@ -39,7 +39,7 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 		end
 
-	class_name: ID_AS is
+	class_name: ID_AS
 			-- Associated `feature_name' if Current represents a feature
 		require
 			is_class: is_class
@@ -48,7 +48,7 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

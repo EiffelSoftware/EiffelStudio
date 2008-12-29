@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a creation constrain triple:
 						create Feature_list end
@@ -18,7 +18,7 @@ create
 	
 feature{NONE} -- Initialization
 
-	make (fl: like feature_list; c_as: like create_keyword; e_as: like end_keyword) is
+	make (fl: like feature_list; c_as: like create_keyword; e_as: like end_keyword)
 			-- Initialize instance.
 		do
 			feature_list := fl
@@ -40,7 +40,7 @@ feature -- Roundtrip
 
 	feature_list: EIFFEL_LIST [FEATURE_NAME];
 			-- Feature name list
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

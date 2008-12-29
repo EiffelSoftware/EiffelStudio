@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Leaf for Eiffel syntax node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,26 +18,26 @@ inherit
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Current
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Current
 		end
 
 feature -- Roundtrip
 
-	is_separator: BOOLEAN is
+	is_separator: BOOLEAN
 			-- Is current leaf AST node a separator (break or semicolon)?
 		do
 		end
 
 feature -- Roundtrip
 
-	literal_text (a_list: LEAF_AS_LIST): STRING is
+	literal_text (a_list: LEAF_AS_LIST): STRING
 			-- Literal text of current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -48,7 +48,7 @@ feature -- Roundtrip
 	index: INTEGER
 			-- Index in `match_list', a structure to store all tokens (including breaks and comments).
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Set `index' with `i'.
 		require
 			i_non_negative: i >= 0
@@ -58,7 +58,7 @@ feature -- Roundtrip
 			index_set: index = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

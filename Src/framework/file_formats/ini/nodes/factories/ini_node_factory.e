@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory interface for create INI abstract syntax nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {INI_PARSER}
 
-	new_id_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_ID_NODE is
+	new_id_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_ID_NODE
 			--
 		require
 			a_id_attached: a_id /= Void
@@ -21,7 +21,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-	new_value_node (a_value: STRING; a_span: INI_TEXT_SPAN): INI_VALUE_NODE is
+	new_value_node (a_value: STRING; a_span: INI_TEXT_SPAN): INI_VALUE_NODE
 			--
 		require
 			a_value_attached: a_value /= Void
@@ -32,7 +32,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-	new_symbol_node (a_symbol: STRING; a_span: INI_TEXT_SPAN): INI_SYMBOL_NODE is
+	new_symbol_node (a_symbol: STRING; a_span: INI_TEXT_SPAN): INI_SYMBOL_NODE
 			--
 		require
 			a_symbol_attached: a_symbol /= Void
@@ -43,7 +43,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-	new_section_node (a_open: INI_SYMBOL_NODE; a_label: INI_ID_NODE; a_close: INI_SYMBOL_NODE): INI_SECTION_NODE is
+	new_section_node (a_open: INI_SYMBOL_NODE; a_label: INI_ID_NODE; a_close: INI_SYMBOL_NODE): INI_SECTION_NODE
 			--
 		require
 			a_open_attached: a_open /= Void
@@ -54,7 +54,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-	new_property_node (a_id: INI_ID_NODE; a_assigner: INI_SYMBOL_NODE; a_value: INI_VALUE_NODE): INI_PROPERTY_NODE is
+	new_property_node (a_id: INI_ID_NODE; a_assigner: INI_SYMBOL_NODE; a_value: INI_VALUE_NODE): INI_PROPERTY_NODE
 			--
 		require
 			a_id_set: a_value = Void implies a_id /= Void
@@ -65,7 +65,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-	new_literal_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_LITERAL_NODE is
+	new_literal_node (a_id: STRING; a_span: INI_TEXT_SPAN): INI_LITERAL_NODE
 			--
 		require
 			a_id_attached: a_id /= Void
@@ -76,7 +76,7 @@ feature {INI_PARSER}
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

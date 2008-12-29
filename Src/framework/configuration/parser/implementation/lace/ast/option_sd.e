@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description for option supported by Eiffel compiler 4"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,64 +12,64 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
+	option_name: STRING
 			-- Name of the option
 		deferred
 		end;
 
-	is_debug: BOOLEAN is
+	is_debug: BOOLEAN
 			-- Is the option a debug one ?
 		do
 			-- Do nothing
 		end;
 
-	is_assertion: BOOLEAN is
+	is_assertion: BOOLEAN
 			-- Is the option a assertion one ?
 		do
 			-- Do nothing
 		end;
 
-	is_optimize: BOOLEAN is
+	is_optimize: BOOLEAN
 			-- Is the option an optimize one ?
 		do
 			-- Do nothing
 		end;
 
-	is_trace: BOOLEAN is
+	is_trace: BOOLEAN
 			-- Is the option a trace one ?
 		do
 			-- Do nothing
 		end;
 
-	is_free_option: BOOLEAN is
+	is_free_option: BOOLEAN
 		do
 			-- Do nothing
 		end;
 
 feature -- Free options properties
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 		do
 			Result := True;
 		end;
 
-	is_system_level: BOOLEAN is
+	is_system_level: BOOLEAN
 		do
 			-- Do nothing
 		end;
 
-	is_system_level_only: BOOLEAN is
+	is_system_level_only: BOOLEAN
 			-- Is Current option to be used
 		do
 			Result := is_system_level
 		end;
 
-	is_precompiled: BOOLEAN is
+	is_precompiled: BOOLEAN
 		do
 			-- Do nothing
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			interface ICorDebugEval : IUnknown
 				CallFunction
@@ -36,7 +36,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	call_function (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+	call_function (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
 			 -- CallFunction sets up a function call.  Note that the given function
 			 -- is called directly; there is no virtual dispatch.
 			 -- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
@@ -84,7 +84,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	is_active: BOOLEAN is
+	is_active: BOOLEAN
 			-- IsActive returns whether or not the Eval has an active computation.
 		local
 			l_result: INTEGER
@@ -95,7 +95,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	abort is
+	abort
 			-- Abort aborts the current computation.  Note that in the case of nested
 	 		-- Evals, this may fail unless it is the most recent Eval.
 
@@ -105,7 +105,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	get_result: ICOR_DEBUG_VALUE is
+	get_result: ICOR_DEBUG_VALUE
 			-- GetResult returns the result of the evaluation.  This is only
 			-- valid after the evaluation is completed.
 			--
@@ -122,7 +122,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	create_value (a_cor_element_type: INTEGER; a_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE is
+	create_value (a_cor_element_type: INTEGER; a_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE
 			-- CreateValue creates an ICorDebugValue of the given type for the
 			-- sole purpose of using it in a function evaluation. These can be
 			-- use to pass user constants as parameters. The value has a zero
@@ -153,7 +153,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	new_string (str: STRING_GENERAL) is
+	new_string (str: STRING_GENERAL)
 			-- NewString allocates a string object with the given contents.
 		local
 			l_ws: WEL_STRING
@@ -162,7 +162,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_new_string (item, l_ws.item)
 		end
 
-	new_object (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+	new_object (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
 			 -- NewObject allocates and calls the constructor for an object.
 		local
 			l_mp_args: MANAGED_POINTER
@@ -187,7 +187,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_new_object (item, a_func.item, a_args.count.to_natural_32, l_mp_args.item)
 		end
 
-	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS) is
+	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS)
      		-- NewObjectNoConstructor allocates a new object without
 	 		-- attempting to call any constructor on the object.
 		do
@@ -196,14 +196,14 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Enhanced Access
 
-	create_void_reference: ICOR_DEBUG_VALUE is
+	create_void_reference: ICOR_DEBUG_VALUE
 		do
 			Result := create_value (element_type_class, Void)
 		end
 
 feature {NONE} -- Implementation
 
-	cpp_call_function (obj: POINTER; a_p_function: POINTER; a_nb: NATURAL_32; a_pp_args: POINTER): INTEGER is
+	cpp_call_function (obj: POINTER; a_p_function: POINTER; a_nb: NATURAL_32; a_pp_args: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*, ULONG32, ICorDebugValue**): EIF_INTEGER
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"CallFunction"
 		end
 
-	cpp_is_active (obj: POINTER; a_pb_active: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_active (obj: POINTER; a_pb_active: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(BOOL*): EIF_INTEGER
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			"IsActive"
 		end
 
-	cpp_abort (obj: POINTER): INTEGER is
+	cpp_abort (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(): EIF_INTEGER
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			"Abort"
 		end
 
-	cpp_get_result (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_result (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugValue**): EIF_INTEGER
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			"GetResult"
 		end
 
-	cpp_create_value (obj: POINTER; a_cor_elt_type: INTEGER; a_class_p: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_create_value (obj: POINTER; a_cor_elt_type: INTEGER; a_class_p: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(CorElementType, ICorDebugClass*, ICorDebugValue**): EIF_INTEGER
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			"CreateValue"
 		end
 
-	cpp_new_string (obj: POINTER; a_p_string: POINTER): INTEGER is
+	cpp_new_string (obj: POINTER; a_p_string: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(LPCWSTR): EIF_INTEGER
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			"NewString"
 		end
 
-	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: NATURAL_32; a_p_args: POINTER): INTEGER is
+	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: NATURAL_32; a_p_args: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			"NewObject"
 		end
 
-	cpp_new_object_no_constructor (obj: POINTER; a_p_class: POINTER): INTEGER is
+	cpp_new_object_no_constructor (obj: POINTER; a_p_class: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugClass*): EIF_INTEGER
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			"NewObjectNoConstructor"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

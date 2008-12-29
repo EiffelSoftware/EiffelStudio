@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of an Eiffel list of assertions%
 				  %Version for Bench."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (a: like assertions) is
+	initialize (a: like assertions)
 			-- Create a new ASSERTION_LIST AST node.
 		do
 			full_assertion_list := a
@@ -38,7 +38,7 @@ feature -- Roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (assertions, other.assertions)
@@ -46,7 +46,7 @@ feature -- Comparison
 
 feature -- Access
 
-	has_assertion (a: TAGGED_AS): BOOLEAN is
+	has_assertion (a: TAGGED_AS): BOOLEAN
 			-- Does current list have assertion `a'?
 		local
 			cur: INTEGER
@@ -67,13 +67,13 @@ feature -- Access
 
 feature {ASSERT_LIST_AS} -- Replication
 
-	set_assertions (l: like assertions) is
+	set_assertions (l: like assertions)
 		do
 			full_assertion_list := l
 			assertions := filter_tagged_list (full_assertion_list)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

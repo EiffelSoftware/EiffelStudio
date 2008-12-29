@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"AST representation of an access in an invariant beginning a %
 		%call expression or instruction or an access after a creation for %
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (f: like feature_name; p: like internal_parameters; s_as: like dot_symbol) is
+	make (f: like feature_name; p: like internal_parameters; s_as: like dot_symbol)
 			-- Create a new FEATURE_ACCESS AST node.
 		do
 			initialize (f, p)
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Attributes
 
-	is_qualified: BOOLEAN is
+	is_qualified: BOOLEAN
 			-- Is current entity a call on an other object?
 		do
 			Result := False
@@ -43,7 +43,7 @@ feature -- Attributes
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_access_inv_as (Current)
@@ -67,7 +67,7 @@ feature -- Roundtrip
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

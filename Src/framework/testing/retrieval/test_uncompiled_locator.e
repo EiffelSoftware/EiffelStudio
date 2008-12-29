@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that implement {TEST_CLASS_LOCATOR_I} by traversing the parent clause and
 		analysing the inheritance structure of a potential test class.
@@ -93,7 +93,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic functionality
 
-	locate_classes is
+	locate_classes
 			-- <Precursor>
 		do
 			cached_common_ancestor := common_ancestor
@@ -106,7 +106,7 @@ feature {NONE} -- Basic functionality
 
 feature {NONE} -- Implementation: uncompiled test retrieval
 
-	report_potential_test_class (a_class: !EIFFEL_CLASS_I) is
+	report_potential_test_class (a_class: !EIFFEL_CLASS_I)
 			-- Report class as potential test class if it inherits from {TEST_SET}
 			--
 			-- `a_class': Class to be reported.
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			end
 		end
 
-	is_descendant (a_class: !EIFFEL_CLASS_I; a_cache: BOOLEAN): BOOLEAN is
+	is_descendant (a_class: !EIFFEL_CLASS_I; a_cache: BOOLEAN): BOOLEAN
 			-- Is class descendant of {TEST_SET}?
 			--
 			-- `a_class': Class for which it should be determined whether it is a descendant of {TEST_SET}.
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 				(Result = (not traversed_helpers.has (a_class) or a_class = project.eiffel_project.system.any_class))
 		end
 
-	parents_of_class (a_class: !EIFFEL_CLASS_I): !DS_LINEAR [!EIFFEL_CLASS_I] is
+	parents_of_class (a_class: !EIFFEL_CLASS_I): !DS_LINEAR [!EIFFEL_CLASS_I]
 			-- List of direct ancestors of `a_class'
 			--
 			-- `a_class': Class for which we want to retreive ancestors
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			factory_reset: inheritance_ast_factory.is_reset
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- <Precursor>
 		require else
 			locating: is_locating
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			end
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>
 			--
 			-- Note: if library is not read only, we will look for tests.
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

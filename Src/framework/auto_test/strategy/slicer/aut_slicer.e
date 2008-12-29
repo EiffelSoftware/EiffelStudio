@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make  is
+	make
 			-- Create new slicer.
 		do
 		end
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Slicing
 
-	extract_backward_slice (a_request_list: AUT_REQUEST_LIST) is
+	extract_backward_slice (a_request_list: AUT_REQUEST_LIST)
 			-- Extract backward slice from `a_witness' that includes the last request from `a_witness'.
 		require
 			a_request_not_void: a_request_list /= Void

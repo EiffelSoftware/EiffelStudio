@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that for appending items to an empty EIFFEL_LIST.
 					Only `append_last_item' is effective because originally, current is an empty list.
@@ -19,7 +19,7 @@ create
 	make
 
 feature
-	make (a_attached_ast: AST_EIFFEL; a_prepend: BOOLEAN; a_list: like match_list) is
+	make (a_attached_ast: AST_EIFFEL; a_prepend: BOOLEAN; a_list: like match_list)
 			-- Initialize instance.
 			-- `a_attached_ast' is the AST node to whose text current is to be prepended (if `a_prepend' is Ture) or
 			-- to be appended (if `a_prepend' is False).
@@ -44,7 +44,7 @@ feature
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can current modifier be applied?
 		do
 			Result := True
@@ -63,7 +63,7 @@ feature -- Applicability
 			end
 		end
 
-	apply is
+	apply
 			-- Apply current modifier.
 		local
 			l_modifier_list: like prepend_modifier_list
@@ -82,7 +82,7 @@ feature -- Applicability
 
 feature
 
-	insert_left (item_text: STRING; i: INTEGER) is
+	insert_left (item_text: STRING; i: INTEGER)
 		require else
 			i_is_zero: i = 0
 		do
@@ -94,7 +94,7 @@ feature
 			counter := counter + 1
 		end
 
-	insert_right (item_text: STRING; i: INTEGER) is
+	insert_right (item_text: STRING; i: INTEGER)
 		require else
 			i_is_zero: i = 0
 		do
@@ -106,7 +106,7 @@ feature
 			counter := counter + 1
 		end
 
-	replace (item_text: STRING; i: INTEGER) is
+	replace (item_text: STRING; i: INTEGER)
 			-- Not applicable.			
 		do
 			check
@@ -114,7 +114,7 @@ feature
 			end
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Not applicable.
 		do
 			check
@@ -122,19 +122,19 @@ feature
 			end
 		end
 
-	prepend (item_text: STRING) is
+	prepend (item_text: STRING)
 		do
 			insert_left (item_text, 0)
 		end
 
-	append (item_text: STRING) is
+	append (item_text: STRING)
 		do
 			insert_right (item_text, 0)
 		end
 
 feature -- Status reporting
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current empty?
 		do
 			Result := prepend_modifier_list.is_empty and append_modifier_list.is_empty
@@ -142,7 +142,7 @@ feature -- Status reporting
 
 feature{NONE} -- Implementation
 
-	concatenate_modifier_list (dest, sour: like prepend_modifier_list) is
+	concatenate_modifier_list (dest, sour: like prepend_modifier_list)
 			-- Concatenate `sour' to `dest'.
 		do
 			from
@@ -155,7 +155,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	merge_modifier_list: like prepend_modifier_list is
+	merge_modifier_list: like prepend_modifier_list
 			-- Merge `prepend_modifier_list' and `append_modifier_list'.
 		do
 			create Result.make
@@ -168,7 +168,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	compute_modification (a_modifier_list: like prepend_modifier_list) is
+	compute_modification (a_modifier_list: like prepend_modifier_list)
 			-- Computer separators.
 		require
 			a_modifier_list_not_void: a_modifier_list /= Void
@@ -253,7 +253,7 @@ invariant
 	leading_text_not_void: leading_text /= Void
 	separator_not_void: separator /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables) is
+	make (a_variables: like variables)
 			-- Create new strategy.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -43,17 +43,17 @@ feature -- Access
 
 feature {AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			variables.wipe_out
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
 			variables.remove (a_request.target)
 			if a_request.argument_list /= Void then
@@ -61,7 +61,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		do
 			if a_request.is_feature_query then
 				variables.remove (a_request.receiver)
@@ -72,7 +72,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
 			variable: ITP_VARIABLE
 		do
@@ -83,12 +83,12 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	process_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Add variables in `an_argument_list' to `variables'.
 		require
 			an_argument_list_not_void: an_argument_list /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a custom attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like creation_expr; t: like tuple; k_as: KEYWORD_AS) is
+	initialize (c: like creation_expr; t: like tuple; k_as: KEYWORD_AS)
 			-- Create a new UNIQUE AST node.
 		require
 			c_not_void: c /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_custom_attribute_as (Current)
@@ -47,7 +47,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "end" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -70,12 +70,12 @@ feature -- Access
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := creation_expr.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
@@ -88,7 +88,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := creation_expr.is_equivalent (other.creation_expr)
@@ -96,12 +96,12 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is ""
+	string_value: STRING = ""
 
 invariant
 	creation_expr_not_void: creation_expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

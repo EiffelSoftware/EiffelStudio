@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of ASSEMBLYMETADATA C structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create MD_ASSEMBLY_INFO.
 		do
 			managed_pointer_make (structure_size)
@@ -27,25 +27,25 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_major_version (m: NATURAL_16) is
+	set_major_version (m: NATURAL_16)
 			-- Set `major_version' to `m'.
 		do
 			c_set_major_version (item, m)
 		end
 
-	set_minor_version (m: NATURAL_16) is
+	set_minor_version (m: NATURAL_16)
 			-- Set `minor_version' to `m'.
 		do
 			c_set_minor_version (item, m)
 		end
 
-	set_build_number (m: NATURAL_16) is
+	set_build_number (m: NATURAL_16)
 			-- Set `build_number' to `m'.
 		do
 			c_set_build_number (item, m)
 		end
 
-	set_revision_number (m: NATURAL_16) is
+	set_revision_number (m: NATURAL_16)
 			-- Set `revision_number' to `m'.
 		do
 			c_set_revision_number (item, m)
@@ -53,7 +53,7 @@ feature -- Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of ASSEMBLYMETADATA structure.
 		external
 			"C++ macro use <cor.h>"
@@ -63,43 +63,43 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_set_major_version (an_item: POINTER; i: NATURAL_16) is
+	c_set_major_version (an_item: POINTER; i: NATURAL_16)
 			-- Set `usMajorVersion' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usMajorVersion type USHORT use <cor.h>"
 		end
 
-	c_set_minor_version (an_item: POINTER; i: NATURAL_16) is
+	c_set_minor_version (an_item: POINTER; i: NATURAL_16)
 			-- Set `usMinorVersion' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usMinorVersion type USHORT use <cor.h>"
 		end
 
-	c_set_build_number (an_item: POINTER; i: NATURAL_16) is
+	c_set_build_number (an_item: POINTER; i: NATURAL_16)
 			-- Set `usBuildNumber' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usBuildNumber type USHORT use <cor.h>"
 		end
 
-	c_set_revision_number (an_item: POINTER; i: NATURAL_16) is
+	c_set_revision_number (an_item: POINTER; i: NATURAL_16)
 			-- Set `usRevisionNumber' to `i'.
 		external
 			"C++ struct ASSEMBLYMETADATA access usRevisionNumber type USHORT use <cor.h>"
 		end
 
-	c_set_locale (an_item: POINTER; locale: POINTER) is
+	c_set_locale (an_item: POINTER; locale: POINTER)
 			-- Set `szLocale' to `locale'.
 		external
 			"C++ struct ASSEMBLYMETADATA access szLocale type LPWSTR use <cor.h>"
 		end
 
-	c_set_locale_count (an_item: POINTER; nb: INTEGER) is
+	c_set_locale_count (an_item: POINTER; nb: INTEGER)
 			-- Set `cbLocale' to `nb'.
 		external
 			"C++ struct ASSEMBLYMETADATA access cbLocale type ULONG use <cor.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

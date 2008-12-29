@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provides tags ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER) is
+	make (nb: INTEGER)
 			-- Instanciate Current
 		do
 			create immediate_tags.make_equal (nb)
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tags: DS_ARRAYED_LIST [STRING_32] is
+	tags: DS_ARRAYED_LIST [STRING_32]
 			-- List of Tags.
 			-- note: this means Immediate tags + tags from attached `providers'.
 		local
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Status
 
-	is_valid_tag (t: STRING_32): BOOLEAN is
+	is_valid_tag (t: STRING_32): BOOLEAN
 			-- Is `t' a valid tag value ?
 		local
 			s: like formatted_tag
@@ -88,19 +88,19 @@ feature -- Status
 
 feature -- Change
 
-	wipe_out is
+	wipe_out
 			-- Wipe out tags
 		do
 			tags.wipe_out
 		end
 
-	sort is
+	sort
 			-- Sort tags
 		do
 			tags.sort (tags_sorter)
 		end
 
-	add_tags (a: ARRAY [STRING_32]) is
+	add_tags (a: ARRAY [STRING_32])
 			-- Add array of tags `a' to `tags'
 		local
 			i: INTEGER
@@ -117,7 +117,7 @@ feature -- Change
 			end
 		end
 
-	add_tag (a_tag: STRING_32) is
+	add_tag (a_tag: STRING_32)
 			-- Add `a_tag' to `tags' is not already inserted
 		require
 			is_valid_tag: is_valid_tag (a_tag)
@@ -127,7 +127,7 @@ feature -- Change
 			end
 		end
 
-	remove_tag (a_tag: STRING_32) is
+	remove_tag (a_tag: STRING_32)
 			-- Remove `a_tag' from `tags'
 		require
 			is_valid_tag: is_valid_tag (a_tag)
@@ -139,7 +139,7 @@ feature -- Change
 
 feature -- Change providers
 
-	add_provider (a_p: TAGS_PROVIDER; a_id: STRING_32) is
+	add_provider (a_p: TAGS_PROVIDER; a_id: STRING_32)
 			-- Add `a_p' to `providers' identified by `a_id'
 		require
 			a_p_not_void: a_p /= Void
@@ -151,7 +151,7 @@ feature -- Change providers
 			providers.put_last (a_p, a_id)
 		end
 
-	remove_provider (a_id: STRING_32) is
+	remove_provider (a_id: STRING_32)
 			-- Remove  provider identified by `a_id' from `providers'
 		require
 			a_id_not_void: a_id /= Void
@@ -167,13 +167,13 @@ feature -- Change providers
 
 feature {NONE} -- Implementation
 
-	tags_sorter: DS_SORTER [STRING_32] is
+	tags_sorter: DS_SORTER [STRING_32]
 			-- Sorter of tags.
 		once
 			create {DS_QUICK_SORTER [STRING_32]} Result.make (create {KL_COMPARABLE_COMPARATOR [STRING_32]}.make)
 		end
 
-	formatted_tag (t: STRING_32): STRING_32 is
+	formatted_tag (t: STRING_32): STRING_32
 			-- Formatted tag
 		do
 			if t /= Void then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

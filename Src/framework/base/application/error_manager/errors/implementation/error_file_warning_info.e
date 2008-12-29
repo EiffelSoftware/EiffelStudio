@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A file-based warning to report and warning at a specific line number."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ invariant
 	not_file_name_is_empty: not file_name.is_empty
 	line_number_positive: line_number >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

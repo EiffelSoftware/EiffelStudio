@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An error manager to handle multiple typed errors and warnings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Create a new error manager
 		do
 			create internal_errors.make
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	errors: DYNAMIC_LIST [ERROR_ERROR_INFO] is
+	errors: DYNAMIC_LIST [ERROR_ERROR_INFO]
 			-- List of errors
 		do
 			Result := internal_errors
@@ -42,7 +42,7 @@ feature -- Access
 			result_not_void: result /= Void
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Have no errors been raised, indicating a successful result
 		do
 			Result := errors.is_empty
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Query
 
-	pop_error: ERROR_ERROR_INFO is
+	pop_error: ERROR_ERROR_INFO
 			-- Retrieves last error and clears `last_error'
 		do
 			Result := last_error
@@ -65,7 +65,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	add_error (a_err: ERROR_ERROR_INFO; a_raise: BOOLEAN) is
+	add_error (a_err: ERROR_ERROR_INFO; a_raise: BOOLEAN)
 			-- Sets last error and will raise an exception if `a_raise' is `True'
 		do
 			internal_add_error (a_err)
@@ -78,7 +78,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	trace_errors (a_printer: ERROR_PRINTER) is
+	trace_errors (a_printer: ERROR_PRINTER)
 			-- Traces error and outputs it to `a_printer'
 			-- Default implementation pop `last_error' so state will become successful
 			-- after calling.
@@ -93,7 +93,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	internal_add_error (a_err: ERROR_ERROR_INFO) is
+	internal_add_error (a_err: ERROR_ERROR_INFO)
 			-- Add `a_err' to list of errors.
 		require
 			a_err_attached: a_err /= Void
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_errors_attached: internal_errors /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

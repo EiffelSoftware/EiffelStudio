@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		List of possible errors when using Unmanaged Metadata API. List
 		of errors can be found in <CorError.h>.
@@ -13,10 +13,10 @@ class
 
 feature -- Access
 
-	meta_s_duplicate: INTEGER is 0x131197;
+	meta_s_duplicate: INTEGER = 0x131197;
 			-- Trying to define twice same member.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel creation expression call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (t: like type; c: like call) is
+	initialize (t: like type; c: like call)
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_creation_expr_as (Current)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (call, other.call) and then
@@ -59,7 +59,7 @@ invariant
 		-- A creation expression contains its type
 	type_exists: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

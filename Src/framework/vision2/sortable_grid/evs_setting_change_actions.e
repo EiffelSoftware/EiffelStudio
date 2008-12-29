@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an action sequence which get invoked when some setting changes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Lock/Unlock
 
-	lock_update is
+	lock_update
 			-- Increase `lock_count' of `setting_change_actions' by 1.
 			-- Only when this `lock_count' is 0, `try_call_setting_change_actions' will succeed.
 		do
@@ -20,7 +20,7 @@ feature -- Lock/Unlock
 			lock_count_increased: lock_count = old lock_count + 1
 		end
 
-	unlock_update is
+	unlock_update
 			-- Decrease `lock_count' of `setting_change_actions' by 1.
 			-- Only when this `lock_count' is 0, `try_call_setting_change_actions' will succeed.
 		require
@@ -33,7 +33,7 @@ feature -- Lock/Unlock
 
 feature -- Safe invocation
 
-	try_call_setting_change_actions is
+	try_call_setting_change_actions
 			-- Try to call actions in `setting_change_actions'.
 			-- Only when this `lock_count' is 0, `try_call_setting_change_actions' will succeed.
 		do
@@ -42,7 +42,7 @@ feature -- Safe invocation
 			end
 		end
 
-	force_call_setting_change_actions is
+	force_call_setting_change_actions
 			-- Force to call actions in `setting_change_actions'.
 		do
 			setting_change_actions.call (Void)
@@ -50,7 +50,7 @@ feature -- Safe invocation
 
 feature -- Access
 
-	lock_count: INTEGER is
+	lock_count: INTEGER
 			-- Lock count of `setting_change_actions'
 		do
 			Result := update_lock_internal
@@ -58,7 +58,7 @@ feature -- Access
 			good_result: Result = update_lock_internal
 		end
 
-	setting_change_actions: ACTION_SEQUENCE [TUPLE] is
+	setting_change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when setting of current tooltips changes,
 			-- Usually attach redraw features in this to perform a tooltip redraw after setting
 		do
@@ -82,7 +82,7 @@ invariant
 	update_lock_internal_non_negative: update_lock_internal >= 0
 	setting_change_actions_attached: setting_change_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

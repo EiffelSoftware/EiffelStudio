@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Validity error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; error_mssage: STRING) is
+	make (s, e: INTEGER; f: like file_name; error_mssage: STRING)
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
@@ -31,7 +31,7 @@ feature -- Properties
 	file_name: STRING
 			-- Path to file where syntax issue happened
 
-	syntax_message: STRING is
+	syntax_message: STRING
 			-- Specific syntax message.
 			-- (By default, it is empty)
 		do
@@ -40,7 +40,7 @@ feature -- Properties
 			non_void_result: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

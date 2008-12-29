@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an exception filter clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Restore default values.
 		do
 			filter_offset := -1
@@ -34,7 +34,7 @@ feature -- Reset
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is current a fully described exception clause?
 		do
 			Result := Precursor and then filter_offset >= 0 and then filter_offset <= handler_offset
@@ -42,7 +42,7 @@ feature -- Status report
 			valid_filter_offset: Result implies (filter_offset >= 0 and then filter_offset <= handler_offset)
 		end
 
-	flags: INTEGER_16 is
+	flags: INTEGER_16
 			-- Flags of exception clause
 		do
 			Result := {MD_METHOD_CONSTANTS}.clause_filter
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Modification
 
-	set_filter_offset (offset: like filter_offset) is
+	set_filter_offset (offset: like filter_offset)
 			-- Set `filter_offset' to `offset'.
 		require
 			valid_filter_offset: offset >= 0
@@ -67,7 +67,7 @@ feature -- Modification
 			filter_offset_set: filter_offset = offset
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

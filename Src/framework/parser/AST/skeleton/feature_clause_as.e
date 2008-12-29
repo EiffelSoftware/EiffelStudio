@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a feature clause structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients; f: like features; l: like feature_keyword; ep: INTEGER) is
+	initialize (c: like clients; f: like features; l: like feature_keyword; ep: INTEGER)
 			-- Create a new FEATURE_CLAUSE AST node.
 		require
 			f_not_void: f /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_feature_clause_as (Current)
@@ -60,13 +60,13 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			Result := feature_keyword.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			if a_list /= Void then
@@ -85,7 +85,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Comments
 
-	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
+	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS
 			-- First line of comments on `Current'
 		require
 			a_list_not_void: a_list /= Void
@@ -114,7 +114,7 @@ feature -- Roundtrip/Comments
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (clients, other.clients) and
@@ -123,7 +123,7 @@ feature -- Comparison
 
 feature -- Access
 
-	feature_with_name (n: INTEGER): FEATURE_AS is
+	feature_with_name (n: INTEGER): FEATURE_AS
 			-- Feature ast with internal name `n'
 		local
 			l_area: SPECIAL [FEATURE_AS]
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	has_feature (f: FEATURE_AS): BOOLEAN is
+	has_feature (f: FEATURE_AS): BOOLEAN
 			-- Does `f' appear in current feature clause?
 			--| Based on `object_comparison' of EIFFEL_LIST,
 			--| which is a reference comparison.
@@ -164,7 +164,7 @@ feature -- Access
 			features.go_i_th (saved)
 		end
 
-	has_feature_name (n: FEATURE_NAME): BOOLEAN is
+	has_feature_name (n: FEATURE_NAME): BOOLEAN
 			-- Does `n' appear in current feature clause?
 		local
 			saved: INTEGER
@@ -181,7 +181,7 @@ feature -- Access
 			features.go_i_th (saved)
 		end
 
-	has_same_clients (other: like Current): BOOLEAN is
+	has_same_clients (other: like Current): BOOLEAN
 			-- Does this feature clause have the same clients
 			-- as `other' feature clause?
 		do
@@ -198,7 +198,7 @@ feature -- Access
 			end
 		end
 
-	has_equiv_declaration (other: like Current): BOOLEAN is
+	has_equiv_declaration (other: like Current): BOOLEAN
 			-- Has this feature clause a declaration equivalent to `other'
 			-- feature clause? i.e. `feature {CLIENTS}'
 			--| NB: The comments are NOT considered for the moment, since
@@ -213,7 +213,7 @@ feature -- Access
 			end
 		end
 
-	is_equiv (other: like Current): BOOLEAN is
+	is_equiv (other: like Current): BOOLEAN
 			-- Is `other' feature clause equivalent to Current?
 		require
 			valid_other: other /= Void
@@ -225,7 +225,7 @@ feature -- Access
 
 feature -- Update
 
-	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
+	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING])
 			-- Assign values to Unique features defined in the current class
 		do
 			from
@@ -240,13 +240,13 @@ feature -- Update
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_features (f: like features) is
+	set_features (f: like features)
 			-- Set `features' to `f'
 		do
 			features := f
 		end
 
-	set_clients (c: like clients) is
+	set_clients (c: like clients)
 			-- Set `clients' to `c'
 		do
 			clients := c
@@ -256,7 +256,7 @@ invariant
 	features_not_void: features /= Void
 	feature_location_not_void: feature_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

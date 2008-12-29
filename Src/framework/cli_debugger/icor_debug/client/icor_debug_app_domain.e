@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_process: ICOR_DEBUG_PROCESS is
+	get_process: ICOR_DEBUG_PROCESS
 			-- Reference to the ICorDebugProcess
 		local
 			p: POINTER
@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_assemblies: ICOR_DEBUG_ASSEMBLY_ENUM is
+	enumerate_assemblies: ICOR_DEBUG_ASSEMBLY_ENUM
 		local
 			p: POINTER
 		do
@@ -42,7 +42,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_breakpoints: ICOR_DEBUG_BREAKPOINT_ENUM is
+	enumerate_breakpoints: ICOR_DEBUG_BREAKPOINT_ENUM
 		local
 			p: POINTER
 		do
@@ -54,7 +54,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_steppers: ICOR_DEBUG_STEPPER_ENUM is
+	enumerate_steppers: ICOR_DEBUG_STEPPER_ENUM
 		local
 			p: POINTER
 		do
@@ -66,7 +66,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	is_attached: BOOLEAN is
+	is_attached: BOOLEAN
 			-- IsAttached returns whether or not the debugger is attached to the
 			-- app domain
 		local
@@ -78,7 +78,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_name: STRING is
+	get_name: STRING
 			-- GetName returns the name of the app domain
 		local
 			p_cchname: NATURAL_32
@@ -94,7 +94,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_success = 0
 		end
 
-	attach is
+	attach
 			-- Attach() should be called to attach to the app domain to
 			-- receive all app domain related events
 		do
@@ -103,7 +103,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_id: NATURAL_32 is
+	get_id: NATURAL_32
 			-- Get the ID of this app domain
 		do
 			last_call_success := cpp_get_id (item, $Result)
@@ -113,7 +113,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugProcess**): EIF_INTEGER 
@@ -123,7 +123,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetProcess"
 		end
 
-	frozen cpp_attach (obj: POINTER): INTEGER is
+	frozen cpp_attach (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(): EIF_INTEGER 
@@ -133,7 +133,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"Attach"
 		end
 
-	frozen cpp_is_attached (obj: POINTER; a_pb_attached: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_is_attached (obj: POINTER; a_pb_attached: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(BOOL*): EIF_INTEGER
@@ -145,7 +145,7 @@ feature {ICOR_EXPORTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugAssemblyEnum **): EIF_INTEGER 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			"EnumerateAssemblies"
 		end
 
-	frozen cpp_enumerate_breakpoints (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_enumerate_breakpoints (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugBreakpointEnum **): EIF_INTEGER 
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			"EnumerateBreakpoints"
 		end
 
-	frozen cpp_enumerate_steppers (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_enumerate_steppers (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugStepperEnum **): EIF_INTEGER 
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			"EnumerateSteppers"
 		end
 
-	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER is
+	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			"GetName"
 		end
 
-	frozen cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [NATURAL_32]): INTEGER is
+	frozen cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32*): EIF_INTEGER 
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			"GetID"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

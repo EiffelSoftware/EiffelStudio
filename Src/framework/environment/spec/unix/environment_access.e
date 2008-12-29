@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access environment variables which takes default values in the registry into account."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	get_from_application (a_var, a_app: STRING): STRING is
+	get_from_application (a_var, a_app: STRING): STRING
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
@@ -21,7 +21,7 @@ feature -- Access
 			Result := get (a_var)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

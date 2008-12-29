@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_task: like task; a_type: like type; a_target: like target; a_window: like configuration_window) is
+	make (a_task: like task; a_type: like type; a_target: like target; a_window: like configuration_window)
 			-- Create.
 		require
 			a_task_not_void: a_task /= Void
@@ -58,13 +58,13 @@ feature -- Access
 	type: STRING_32
 			-- Type of the task.
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Name of the section.
 		do
 			Result := task.command
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_task_icon
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Element update
 
-	ask_remove_task is
+	ask_remove_task
 			-- Ask for confirmation and remove `Current'.
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
@@ -81,7 +81,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	remove_task is
+	remove_task
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		local
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -127,14 +127,14 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_properties_target_tasks (target, task, type))
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.remove_button.select_actions.wipe_out
@@ -147,7 +147,7 @@ invariant
 	target_not_void: target /= Void
 	type_ok: type.is_equal (conf_interface_names.task_pre) or type.is_equal (conf_interface_names.task_post)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

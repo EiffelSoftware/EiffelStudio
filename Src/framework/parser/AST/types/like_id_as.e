@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description for `like id' type. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like anchor; l_as: like like_keyword) is
+	initialize (a: like anchor; l_as: like like_keyword)
 			-- Create a new LIKE_ID AST node.
 		require
 			a_not_void: a /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_like_id_as (Current)
@@ -66,7 +66,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -78,7 +78,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -88,7 +88,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (anchor, other.anchor) and then
@@ -98,7 +98,7 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dump string
 		do
 			create Result.make (7 + anchor.name.count)
@@ -113,12 +113,12 @@ feature -- Output
 
 feature {LIKE_ID_AS} -- Replication
 
-	set_anchor (a: like anchor) is
+	set_anchor (a: like anchor)
 		do
 			anchor := a
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

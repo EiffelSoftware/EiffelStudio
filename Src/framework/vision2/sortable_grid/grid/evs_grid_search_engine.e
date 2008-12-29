@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a search engine used in EVS_GRID_WRAPPER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Search
 
-	search (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]; a_start_from_current: BOOLEAN) is
+	search (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]; a_start_from_current: BOOLEAN)
 			-- Search in `a_grid_wrapper' for `a_keyword' and
 			-- make sure result available in `last_result'.
 			-- If `a_start_from_current' is True, search will start from current selected item, if any,
@@ -25,7 +25,7 @@ feature -- Search
 
 feature -- Result
 
-	last_result: EVS_GRID_SEARCH_RESULT is
+	last_result: EVS_GRID_SEARCH_RESULT
 			-- Last result from `search'
 		do
 			if last_result_internal = Void then
@@ -38,7 +38,7 @@ feature -- Result
 
 feature -- Setting
 
-	enable_case_sensitive_match is
+	enable_case_sensitive_match
 			-- Enable case sensitive match.
 		do
 			is_case_sensitive_match := True
@@ -46,7 +46,7 @@ feature -- Setting
 			case_sensitive_enabled: is_case_sensitive_match
 		end
 
-	disable_case_sensitive_match is
+	disable_case_sensitive_match
 			-- Disable case sensitive match.
 		do
 			is_case_sensitive_match := False
@@ -54,7 +54,7 @@ feature -- Setting
 			case_sensitive_disabled: not is_case_sensitive_match
 		end
 
-	enable_regular_expression_match is
+	enable_regular_expression_match
 			-- Enable regular expression match.
 		do
 			is_regular_expression_match := True
@@ -62,7 +62,7 @@ feature -- Setting
 			regular_expr_enabled: is_regular_expression_match
 		end
 
-	disable_regular_expression_match is
+	disable_regular_expression_match
 			-- Disable regular expression match.
 		do
 			is_regular_expression_match := False
@@ -70,7 +70,7 @@ feature -- Setting
 			regular_expr_disabled: not is_regular_expression_match
 		end
 
-	enable_wholeword_match is
+	enable_wholeword_match
 			-- Enable wholeword match.
 		do
 			is_wholeword_match := True
@@ -78,7 +78,7 @@ feature -- Setting
 			wholeword_match_enabled: is_wholeword_match
 		end
 
-	disable_wholeword_match is
+	disable_wholeword_match
 			-- Disable wholeword match.
 		do
 			is_wholeword_match := False
@@ -86,7 +86,7 @@ feature -- Setting
 			wholeword_match_disabled: not is_wholeword_match
 		end
 
-	enable_wholecell_match is
+	enable_wholecell_match
 			-- Enable wholecell match.
 		do
 			is_wholecell_match := True
@@ -94,7 +94,7 @@ feature -- Setting
 			wholecell_match_enabled: is_wholecell_match
 		end
 
-	disable_wholecell_match is
+	disable_wholecell_match
 			-- Disable wholecell match.
 		do
 			is_wholecell_match := False
@@ -102,7 +102,7 @@ feature -- Setting
 			wholecell_match_disabled: not is_wholecell_match
 		end
 
-	enable_only_search_in_selected_item is
+	enable_only_search_in_selected_item
 			-- Enable only search in selected items.
 		do
 			only_search_in_selected_item := True
@@ -110,7 +110,7 @@ feature -- Setting
 			only_search_in_selected_items_enabled: only_search_in_selected_item
 		end
 
-	disable_only_search_in_selected_item is
+	disable_only_search_in_selected_item
 			-- Disable only search in selected items.
 		do
 			only_search_in_selected_item := False
@@ -118,7 +118,7 @@ feature -- Setting
 			only_search_in_selected_items_disabled: not only_search_in_selected_item
 		end
 
-	set_keyword (a_keyword: STRING) is
+	set_keyword (a_keyword: STRING)
 			-- Set `keyword' with `a_keyword'.
 		require
 			a_keyword_attached: a_keyword /= Void
@@ -164,7 +164,7 @@ feature{NONE} -- Implementation
 invariant
 	last_result_attached: last_result /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

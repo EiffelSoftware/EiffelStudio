@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			"Abstract description of a elsif clause of a condition %
 			%instruction. Version for Bench."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr; c: like compound; l_as, t_as: like elseif_keyword) is
+	initialize (e: like expr; c: like compound; l_as, t_as: like elseif_keyword)
 			-- Create a new ELSIF AST node.
 		require
 			e_not_void: e /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_elseif_as (Current)
@@ -53,7 +53,7 @@ feature -- Roundtrip
 	elseif_keyword_index, then_keyword_index: INTEGER
 			-- Index of keyword "elseif" and "then" assoicated with this structure
 
-	elseif_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	elseif_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "elseif" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -66,7 +66,7 @@ feature -- Roundtrip
 			end
 		end
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "then" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -89,7 +89,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and elseif_keyword_index /= 0 then
 				Result := elseif_keyword (a_list)
@@ -98,7 +98,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
@@ -111,7 +111,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expr, other.expr) and
@@ -120,14 +120,14 @@ feature -- Comparison
 
 feature {ELSIF_AS} -- Replication
 
-	set_expr (e: like expr) is
+	set_expr (e: like expr)
 		require
 			valid_arg: e /= Void
 		do
 			expr := e
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 		do
 			compound := c
 		end
@@ -135,7 +135,7 @@ feature {ELSIF_AS} -- Replication
 invariant
 	expr_not_void: expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

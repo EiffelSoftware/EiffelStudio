@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class to write documents to a file or a text buffer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Basic Operations
 
-	write_to_file (a_document: INI_DOCUMENT; a_file: PLAIN_TEXT_FILE) is
+	write_to_file (a_document: INI_DOCUMENT; a_file: PLAIN_TEXT_FILE)
 			-- Writes INI document `a_document' to `a_file'.
 		require
 			a_document_attached: a_document /= Void
@@ -33,7 +33,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	write_literals (a_literals: LIST [INI_LITERAL]; a_file: PLAIN_TEXT_FILE) is
+	write_literals (a_literals: LIST [INI_LITERAL]; a_file: PLAIN_TEXT_FILE)
 			-- Writes INI literals `a' to `a_file'.
 		require
 			a_literals_attached: a_literals /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Basic Operations
 			a_literals_unmoved: a_literals.cursor.is_equal (old a_literals.cursor)
 		end
 
-	write_properties (a_properties: LIST [INI_PROPERTY]; a_file: PLAIN_TEXT_FILE) is
+	write_properties (a_properties: LIST [INI_PROPERTY]; a_file: PLAIN_TEXT_FILE)
 			-- Writes INI properties `a_properties' to `a_file'.
 		require
 			a_properties_attached: a_properties /= Void
@@ -93,7 +93,7 @@ feature {NONE} -- Basic Operations
 			a_properties_unmoved: a_properties.cursor.is_equal (old a_properties.cursor)
 		end
 
-	write_sections (a_sections: LIST [INI_SECTION]; a_file: PLAIN_TEXT_FILE) is
+	write_sections (a_sections: LIST [INI_SECTION]; a_file: PLAIN_TEXT_FILE)
 			-- Writes INI properties `a_properties' to `a_file'.
 		require
 			a_sections_attached: a_sections /= Void
@@ -126,7 +126,7 @@ feature {NONE} -- Basic Operations
 			a_sections_unmoved: a_sections.cursor.is_equal (old a_sections.cursor)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

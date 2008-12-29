@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for ID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: STRING) is
+	initialize (s: STRING)
 			-- Create a new ID AST node made up
 			-- of characters contained in `s'.
 		require
@@ -43,7 +43,7 @@ feature -- Status
 
 feature {LACE_AST_FACTORY, LACE_PARSER_ROUTINES} -- Access
 
-	set_is_string is
+	set_is_string
 			-- Set `is_string' to `True'.
 		require
 			not_is_string: not is_string
@@ -53,7 +53,7 @@ feature {LACE_AST_FACTORY, LACE_PARSER_ROUTINES} -- Access
 			is_string_set: is_string
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

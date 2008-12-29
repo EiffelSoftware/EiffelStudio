@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a non-deferred routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c: like compound; l_as: KEYWORD_AS) is
+	make (c: like compound; l_as: KEYWORD_AS)
 			-- Create new DO AST node.
 		do
 			initialize (c)
@@ -31,7 +31,7 @@ feature{NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_do_as (Current)
@@ -57,7 +57,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if compound /= Void then
@@ -68,7 +68,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if compound /= Void then
 				Result := compound.last_token (a_list)
@@ -80,7 +80,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

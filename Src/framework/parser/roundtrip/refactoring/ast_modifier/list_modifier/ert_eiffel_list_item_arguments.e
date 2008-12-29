@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIFFEL_LIST modification arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ feature -- Access
 			-- Separator used to separate items.
 			-- Empty if no separator is needed.
 
-	has_separator: BOOLEAN is
+	has_separator: BOOLEAN
 			-- Do we deal with separators?
 		do
 			Result := separator /= Void and then not separator.is_empty
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_separator (a_separator: STRING) is
+	set_separator (a_separator: STRING)
 			-- Set `separator' with `a_separator'.
 			-- If `a_separator' is Void or empty, separators will not be processed.
 		do
@@ -43,7 +43,7 @@ feature -- Setting
 						   (a_separator /= Void implies separator.is_equal (a_separator))
 		end
 
-	set_leading_text (a_text: STRING) is
+	set_leading_text (a_text: STRING)
 			-- Set `leading_text' with `a_text'.
 		do
 			if a_text = Void then
@@ -55,7 +55,7 @@ feature -- Setting
 			leading_text_set: (a_text = Void implies leading_text.is_empty) and (a_text /= Void implies leading_text.is_equal (a_text))
 		end
 
-	set_trailing_text (a_text: STRING) is
+	set_trailing_text (a_text: STRING)
 			-- Set `trailing_text' with `a_text'.
 		do
 			if a_text = Void then
@@ -67,7 +67,7 @@ feature -- Setting
 			trailing_text_set: (a_text = Void implies trailing_text.is_empty) and (a_text /= Void implies trailing_text.is_equal (a_text))
 		end
 
-	set_arguments (a_separator, a_leading_text, a_trailing_text: STRING) is
+	set_arguments (a_separator, a_leading_text, a_trailing_text: STRING)
 			-- Setup arguments.
 		do
 			set_separator (a_separator)
@@ -75,7 +75,7 @@ feature -- Setting
 			set_trailing_text (a_trailing_text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

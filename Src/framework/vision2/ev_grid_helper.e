@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature -- Properties
 
-	pixmap_enabled: BOOLEAN is True
+	pixmap_enabled: BOOLEAN = True
 			-- Is pixmap enabled ?
 
 feature -- Access
 
-	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL) is
+	grid_cell_set_text (a_cell: EV_GRID_LABEL_ITEM; v: STRING_GENERAL)
 			-- Set text and tooltip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING_GENERAL) is
+	grid_cell_set_tooltip (a_cell: EV_GRID_ITEM; v: STRING_GENERAL)
 			-- Set tool tip to `a_cell'
 		require
 			cell_not_void: a_cell /= Void
@@ -45,7 +45,7 @@ feature -- Access
 			a_cell.set_tooltip (v)
 		end
 
-	grid_cell_set_pixmap (a_cell: EV_GRID_ITEM; v: EV_PIXMAP) is
+	grid_cell_set_pixmap (a_cell: EV_GRID_ITEM; v: EV_PIXMAP)
 			-- Set pixmap to `a_cell'
 			-- if possible, i.e on EV_GRID_LABEL_ITEM
 		require
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	grid_row_fill_empty_cells (a_row: EV_GRID_ROW) is
+	grid_row_fill_empty_cells (a_row: EV_GRID_ROW)
 			-- Fills a grid row with items if no items exist at any cell location
 		require
 			a_row_attached: a_row /= Void
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	grid_move_to_end_of_grid (a_row: EV_GRID_ROW) is
+	grid_move_to_end_of_grid (a_row: EV_GRID_ROW)
 			-- Move `a_row' to the end of the grid
 		require
 			a_row /= Void
@@ -94,7 +94,7 @@ feature -- Access
 			a_row.parent.move_rows (a_row.index, a_row.parent.row_count + 1, 1 + a_row.subrow_count_recursive)
 		end
 
-	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
+	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER
 			-- move top row from `grid' at `row_index' by `offset' top row
 		require
 			grid_not_void: grid /= Void
@@ -113,7 +113,7 @@ feature -- Access
 			Result := to_index
 		end
 
-	grid_next_top_row (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
+	grid_next_top_row (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER
 			-- Row index of the i_th `offset' top row from `row_index' row.
 		require
 			non_parented_row: grid.row (row_index).parent_row = Void
@@ -160,7 +160,7 @@ feature -- Access
 			result_in_range: Result > 0 implies Result <= grid.row_count
 		end
 
-	grid_ith_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW is
+	grid_ith_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW
 			-- I_th's top row of `a_grid'.
 		local
 			r: INTEGER
@@ -177,7 +177,7 @@ feature -- Access
 			end
 		end
 
-	grid_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW is
+	grid_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW
 			-- Return the `a_index' i_th top row of `a_grid'.
 		require
 			a_grid /= Void
@@ -204,7 +204,7 @@ feature -- Access
 			Result /= Void implies Result.parent_row = Void
 		end
 
-	grid_selected_top_rows (a_grid: EV_GRID): ARRAYED_LIST [EV_GRID_ROW] is
+	grid_selected_top_rows (a_grid: EV_GRID): ARRAYED_LIST [EV_GRID_ROW]
 			-- Return the selected_rows filtered to keep only top rows
 		require
 			a_grid /= Void
@@ -228,7 +228,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	grid_front_new_row (a_grid: EV_GRID): EV_GRID_ROW is
+	grid_front_new_row (a_grid: EV_GRID): EV_GRID_ROW
 			-- New row inserted in the front of `a_grid'
 		require
 			a_grid /= Void
@@ -237,7 +237,7 @@ feature -- Access
 			Result := a_grid.row (1)
 		end
 
-	grid_extended_new_row (a_grid: EV_GRID): EV_GRID_ROW is
+	grid_extended_new_row (a_grid: EV_GRID): EV_GRID_ROW
 			-- New row inserted in the end of `a_grid'	
 		require
 			a_grid /= Void
@@ -249,7 +249,7 @@ feature -- Access
 			Result := a_grid.row (r)
 		end
 
-	grid_extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW is
+	grid_extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW
 			-- New subrow inserted in `a_row'
 		require
 			a_row /= Void
@@ -263,7 +263,7 @@ feature -- Access
 			Result := g.row (r)
 		end
 
-	grid_remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
+	grid_remove_and_clear_subrows_from (a_row: EV_GRID_ROW)
 			-- Remove all subrows of `a_row' and clear the subrows
 			-- as much as possible
 			-- but do not clear `a_row'
@@ -283,7 +283,7 @@ feature -- Access
 			a_row.subrow_count_recursive = 0
 		end
 
-	grid_remove_and_clear_subrows_from_until (a_row: EV_GRID_ROW; a_until_row: EV_GRID_ROW) is
+	grid_remove_and_clear_subrows_from_until (a_row: EV_GRID_ROW; a_until_row: EV_GRID_ROW)
 			-- Remove all subrows of `a_row' and clear the subrows
 			-- as much as possible
 			-- but do not clear `a_row'
@@ -303,7 +303,7 @@ feature -- Access
 			a_row.subrow (1) = a_until_row
 		end
 
-	grid_remove_and_clear_all_rows (g: EV_GRID) is
+	grid_remove_and_clear_all_rows (g: EV_GRID)
 			-- Remove and clear all rows from `g'
 		require
 			g /= Void
@@ -316,14 +316,14 @@ feature -- Access
 			g.selected_rows.count = 0
 		end
 
-	grid_clear_row (row: EV_GRID_ROW) is
+	grid_clear_row (row: EV_GRID_ROW)
 			-- Clear `row'
 		do
 			row.set_data (Void)
 			row.clear
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

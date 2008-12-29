@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Styles needed to draw tooltip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create implementation
@@ -22,7 +22,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	tooltip_background_color: EV_COLOR is
+	tooltip_background_color: EV_COLOR
 			-- Background color for tooltips		
 		do
 			Result := implementation.tooltip_background_color
@@ -38,7 +38,7 @@ feature{NONE} -- Implementation
 invariant
 	implementation_attached: implementation /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

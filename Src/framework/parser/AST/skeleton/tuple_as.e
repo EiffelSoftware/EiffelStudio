@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of manifest tuple."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions; l_as, r_as: like lbracket_symbol) is
+	initialize (exp: like expressions; l_as, r_as: like lbracket_symbol)
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
@@ -43,7 +43,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and lbracket_symbol_index /= 0 then
 				Result := lbracket_symbol (a_list)
@@ -52,7 +52,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rbracket_symbol_index /= 0 then
 				Result := rbracket_symbol (a_list)
@@ -63,7 +63,7 @@ feature -- Roundtrip/Token
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_tuple_as (Current)
@@ -74,7 +74,7 @@ feature -- Roundtrip
 	lbracket_symbol_index, rbracket_symbol_index: INTEGER
 			-- Index of symbol "<<" and ">>" associated with this structure
 
-	lbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "[" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -87,7 +87,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "]" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -102,7 +102,7 @@ feature -- Roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expressions, other.expressions)
@@ -110,12 +110,12 @@ feature -- Comparison
 
 feature {AST_EIFFEL} -- Output
 
-	string_value: STRING is ""
+	string_value: STRING = ""
 
 invariant
 	expressions_not_void: expressions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

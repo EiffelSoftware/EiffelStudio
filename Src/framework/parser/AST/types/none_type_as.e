@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for NONE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize (c: like class_name_literal) is
+	initialize (c: like class_name_literal)
 		require
 			c_not_void: c /= Void
 		do
@@ -29,7 +29,7 @@ feature {NONE} -- Initialize
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_none_type_as (Current)
@@ -42,7 +42,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -50,7 +50,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -60,20 +60,20 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (o: like Current): BOOLEAN is
+	is_equivalent (o: like Current): BOOLEAN
 		do
 			Result := True
 		end
 
 feature -- Output
 
-	dump: STRING is "NONE"
+	dump: STRING = "NONE"
 			-- Dumped trace
 
 invariant
 	class_name_literal_not_void: class_name_literal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

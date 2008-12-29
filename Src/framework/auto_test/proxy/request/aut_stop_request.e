@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Instruction that requests the shutdown of the interprter"
@@ -20,7 +20,7 @@ create
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		do
 			a_processor.process_stop_request (Current)

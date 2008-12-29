@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a comment line"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature{NONE} -- Implementation
 
-	make_from_string (a_content: STRING) is
+	make_from_string (a_content: STRING)
 		require
 			a_content_not_void: a_content /= Void
 		do
 			create content.make_from_string (a_content)
 		end
 
-	make_with_data (a_content: STRING; l, c, p: INTEGER; own_line: BOOLEAN; is_imp: BOOLEAN; b_id: INTEGER; b_offset: INTEGER) is
+	make_with_data (a_content: STRING; l, c, p: INTEGER; own_line: BOOLEAN; is_imp: BOOLEAN; b_id: INTEGER; b_offset: INTEGER)
 			-- Initialize instance.
 		require
 			a_content_not_void: a_content /= Void
@@ -58,13 +58,13 @@ feature{NONE} -- Implementation
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is comment made of the same character sequence as `other'?
 		do
 			Result := content.is_equal (other.content)
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is comment lexicographically lower than `other'?
 		do
 			Result := content < other.content
@@ -72,7 +72,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_arguments (l, c, p: INTEGER; own_line: BOOLEAN; is_imp: BOOLEAN; b_id: INTEGER; b_offset: INTEGER) is
+	set_arguments (l, c, p: INTEGER; own_line: BOOLEAN; is_imp: BOOLEAN; b_id: INTEGER; b_offset: INTEGER)
 			-- Setup arguments of an Eiffel comment line.
 		require
 			l_positive: l > 0
@@ -120,7 +120,7 @@ feature
 	is_implementation: BOOLEAN
 			-- Is current an implementation comment (e.g. starts with --|)?
 
-	is_exclusion: BOOLEAN is
+	is_exclusion: BOOLEAN
 			-- Is current an exclusion comment (e.g. starts from first column of a line)?
 		do
 			Result := column = 1 and not is_implementation
@@ -137,7 +137,7 @@ feature
 invariant
 	content_not_void: content /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

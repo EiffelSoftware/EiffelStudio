@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A C/C++ interop structure corresponding to ASSEMBYMETADATA in cor.h
 	]"
@@ -21,7 +21,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make  is
+	make
 			-- Initializes a default instance
 		local
 			l_item: like item
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Clean up
 
-	dispose is
+	dispose
 			-- Cleans up allocated resources
 		local
 			l_item: like item
@@ -49,31 +49,31 @@ feature -- Clean up
 
 feature -- Access
 
-	major_version: NATURAL_16 is
+	major_version: NATURAL_16
 			-- The major version number of the referenced assembly
 		do
 			Result := get_major_version (item)
 		end
 
-	minor_version: NATURAL_16 is
+	minor_version: NATURAL_16
 			-- The minor version number of the referenced assembly
 		do
 			Result := get_minor_version (item)
 		end
 
-	build_number: NATURAL_16 is
+	build_number: NATURAL_16
 			-- The build number of the referenced assembly
 		do
 			Result := get_build_number (item)
 		end
 
-	revision_number: NATURAL_16 is
+	revision_number: NATURAL_16
 			-- The revision number of the referenced assembly
 		do
 			Result := get_revision_number (item)
 		end
 
-	locales: LIST [STRING_8] is
+	locales: LIST [STRING_8]
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
 		local
 			l_p: POINTER
@@ -90,7 +90,7 @@ feature -- Access
 
 feature {ASSEMBLY_PROPERTIES_READER} -- Conversion
 
-	to_pointer: POINTER is
+	to_pointer: POINTER
 		do
 			Result := item
 		ensure
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Memory management
 
-	alloc (a_item: TYPED_POINTER [POINTER]): BOOLEAN is
+	alloc (a_item: TYPED_POINTER [POINTER]): BOOLEAN
 			--
 		external
 			"C++ inline use %"strongname.h%""
@@ -126,7 +126,7 @@ feature {NONE} -- Memory management
 			]"
 		end
 
-	dealloc (a_item: TYPED_POINTER [POINTER]) is
+	dealloc (a_item: TYPED_POINTER [POINTER])
 			--
 		external
 			"C++ inline use %"strongname.h%""
@@ -145,7 +145,7 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Extenral access
 
-	get_major_version (a_item: POINTER): like major_version is
+	get_major_version (a_item: POINTER): like major_version
 			-- Retrieves major version number for `a_item'
 		require
 			not_a_item_is_null: a_item /= default_pointer
@@ -155,7 +155,7 @@ feature {NONE} -- Extenral access
 			"return ((ASSEMBLYMETADATA*)$a_item)->usMajorVersion"
 		end
 
-	get_minor_version (a_item: POINTER): like minor_version is
+	get_minor_version (a_item: POINTER): like minor_version
 			-- Retrieves minor version number for `a_item'
 		require
 			not_a_item_is_null: a_item /= default_pointer
@@ -165,7 +165,7 @@ feature {NONE} -- Extenral access
 			"return ((ASSEMBLYMETADATA*)$a_item)->usMinorVersion"
 		end
 
-	get_build_number (a_item: POINTER): like build_number is
+	get_build_number (a_item: POINTER): like build_number
 			-- Retrieves build number for `a_item'
 		require
 			not_a_item_is_null: a_item /= default_pointer
@@ -175,7 +175,7 @@ feature {NONE} -- Extenral access
 			"return ((ASSEMBLYMETADATA*)$a_item)->usBuildNumber"
 		end
 
-	get_revision_number (a_item: POINTER): like revision_number is
+	get_revision_number (a_item: POINTER): like revision_number
 			-- Retrieves revision number for `a_item'
 		require
 			not_a_item_is_null: a_item /= default_pointer
@@ -185,7 +185,7 @@ feature {NONE} -- Extenral access
 			"return ((ASSEMBLYMETADATA*)$a_item)->usRevisionNumber"
 		end
 
-	get_locale (a_item: POINTER): POINTER is
+	get_locale (a_item: POINTER): POINTER
 			-- Retrieves revision number for `a_item'
 		require
 			not_a_item_is_null: a_item /= default_pointer
@@ -202,7 +202,7 @@ feature {NONE} -- Extenral access
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

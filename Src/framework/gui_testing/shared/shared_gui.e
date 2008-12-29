@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Shared access to GUI object"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	gui: GUI is
+	gui: GUI
 			-- GUI interface
 		once
 			create Result.make
@@ -19,7 +19,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a simplified ast factory which records the names of ancestors when parsing
 		a class. Once it has traversed the inheritance section parsing is aborted.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create internal_ancestors.make_default
@@ -65,7 +65,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	reset is
+	reset
 			-- Remove items in `ancestors'
 		do
 			ancestors.wipe_out
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature -- Query
 
-	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): KEYWORD_AS is
+	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): KEYWORD_AS
 			-- <Precursor>
 		do
 			if a_code = {EIFFEL_TOKENS}.te_inherit then
@@ -98,7 +98,7 @@ feature -- Query
 			end
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- <Precursor>
 		local
 			l_type: !STRING

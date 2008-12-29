@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a root class specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (rn: like root_name; cm: like cluster_mark;
-		cp: like creation_procedure_name) is
+		cp: like creation_procedure_name)
 			-- Create a new ROOT AST node.
 		require
 			rn_not_void: rn /= Void
@@ -50,7 +50,7 @@ feature -- Properties
 	creation_procedure_name: ID_SD;
 			-- Creation procedure
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

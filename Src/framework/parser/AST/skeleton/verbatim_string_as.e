@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for verbatim strings. "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p, n: INTEGER) is
+	initialize (s, marker: STRING; indentable: BOOLEAN; l, c, p, n: INTEGER)
 			-- Create a new Verbatim string AST node.
 		require
 			s_not_void: s /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_verbatim_string_as (Current)
@@ -64,7 +64,7 @@ feature -- Properties
 invariant
 	verbatim_marker_not_void: verbatim_marker /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

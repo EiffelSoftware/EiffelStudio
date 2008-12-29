@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Instruction that requests the creation of an object"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; a_receiver: like target; a_type: like target_type; a_procedure: like creation_procedure; an_argument_list: like argument_list) is
+	make (a_system: like system; a_receiver: like target; a_type: like target_type; a_procedure: like creation_procedure; an_argument_list: like argument_list)
 			-- Create new request to create an object.
 		require
 			a_system_not_void: a_system /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_setup_ready: BOOLEAN is
+	is_setup_ready: BOOLEAN
 			-- Is setup of current request ready?
 		do
 			Result := target_type.has_associated_class
@@ -63,7 +63,7 @@ feature -- Status report
 			good_result: Result = target_type.has_associated_class
 		end
 
-	is_default_create_used: BOOLEAN is
+	is_default_create_used: BOOLEAN
 			-- Is the default creation procedure used to create the object?
 		do
 			Result := creation_procedure.feature_name.is_equal ("default_create")
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		do
 			a_processor.process_create_object_request (Current)

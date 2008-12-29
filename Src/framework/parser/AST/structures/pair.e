@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain 2 objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_first: G; a_second: H) is
+	make (a_first: G; a_second: H)
 			-- New pair made of `a_first' and `a_second'.
 		do
 			first := a_first
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_first (v: G) is
+	set_first (v: G)
 			-- Set `first' with `v'.
 		do
 			first := v
@@ -42,7 +42,7 @@ feature -- Settings
 			first_set: first = v
 		end
 
-	set_second (v: H) is
+	set_second (v: H)
 			-- Set `second' with `v'.
 		do
 			second := v
@@ -50,7 +50,7 @@ feature -- Settings
 			second_set: second = v
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents an INI document property.
 
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_value: like value; a_container: like container) is
+	make (a_name: like name; a_value: like value; a_container: like container)
 			-- Initialize property with name `a_name' and associated value `a_value'.
 		require
 			a_name_attached: a_name /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			not_is_default_property: not is_default_property
 		end
 
-	make_default (a_value: like value; a_container: like container) is
+	make_default (a_value: like value; a_container: like container)
 			-- Initialize property with no name with a value `a_value'.
 		require
 			a_value_attached: a_value /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: INI_DOCUMENT is
+	document: INI_DOCUMENT
 			-- Document property is contained within
 		do
 			Result := container.document
@@ -82,13 +82,13 @@ feature -- Access
 	value: STRING assign set_value
 			-- Property string value
 
-	is_default_property: BOOLEAN is
+	is_default_property: BOOLEAN
 			-- Is property an unnamed default property?
 		do
 			Result := name = Void
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does propery have an empty value?
 		do
 			Result := value.is_empty
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Indiciates if property has an associated value
 		do
 			Result := not value.is_empty
@@ -104,7 +104,7 @@ feature -- Status Report
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'
 		require
 			non_a_name_is_empty: a_name /= Void implies not a_name.is_empty
@@ -114,7 +114,7 @@ feature -- Element Change
 			name_set: name = a_name
 		end
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' with `a_value'
 		require
 			a_value_attached: a_value /= Void
@@ -126,7 +126,7 @@ feature -- Element Change
 
 feature {NONE} -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		local
 			l_value: like value
@@ -152,7 +152,7 @@ invariant
 	container_attached: container /= Void
 	is_default_property_correct: (name /= Void implies not is_default_property) or (name = Void implies is_default_property)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a typed char ast node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER) is
+	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER)
 			-- Create a new CHARACTER AST node.
 		require
 			l_non_negative: l >= 0
@@ -45,7 +45,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
@@ -60,7 +60,7 @@ feature -- Roundtrip/Token
 
 feature -- Roundtrip/Text
 
-	character_text (a_match_list: LEAF_AS_LIST): STRING is
+	character_text (a_match_list: LEAF_AS_LIST): STRING
 			-- Text of the number part (not including `constant_type')
 		require
 			a_match_list_attached: a_match_list /= Void
@@ -70,13 +70,13 @@ feature -- Roundtrip/Text
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Process this node.
 		do
 			v.process_typed_char_as (Current)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of a PE file header through C structure IMAGE_FILE_HEADER
 		for CLI.
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item' and initialize default values for CLI.
 		do
 			managed_pointer_make (structure_size)
@@ -36,25 +36,25 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_number_of_sections (i: INTEGER) is
+	set_number_of_sections (i: INTEGER)
 			-- Set `number_of_sections
 		do
 			c_set_number_of_sections (item, i.to_integer_16)
 		end
 
-	set_time_date_stamp (t: INTEGER) is
+	set_time_date_stamp (t: INTEGER)
 			-- Set `time_date_stamp' to `t'.
 		do
 			c_set_time_date_stamp (item, t)
 		end
 
-	set_size_of_optional_header_size (s: INTEGER_16) is
+	set_size_of_optional_header_size (s: INTEGER_16)
 			-- Set `size_of_optional_header_size' to `s'.
 		do
 			c_set_size_of_optional_header (item, s)
 		end
 
-	set_characteristics (c: INTEGER_16) is
+	set_characteristics (c: INTEGER_16)
 			-- Set `characteristics' to `c'.
 			-- Loof in `CLI_PE_FILE_CONSTANTS' for possible constants.
 		do
@@ -63,7 +63,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of IMAGE_FILE_HEADER structure.
 		external
 			"C macro use <windows.h>"
@@ -71,49 +71,49 @@ feature {NONE} -- Implementation
 			"sizeof(IMAGE_FILE_HEADER)"
 		end
 
-	c_set_machine (an_item: POINTER; i: INTEGER_16) is
+	c_set_machine (an_item: POINTER; i: INTEGER_16)
 			-- Set `Machine' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access Machine type WORD use <windows.h>"
 		end
 
-	c_set_number_of_sections (an_item: POINTER; i: INTEGER_16) is
+	c_set_number_of_sections (an_item: POINTER; i: INTEGER_16)
 			-- Set `NumberOfSections' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access NumberOfSections type WORD use <windows.h>"
 		end
 
-	c_set_time_date_stamp (an_item: POINTER; i: INTEGER) is
+	c_set_time_date_stamp (an_item: POINTER; i: INTEGER)
 			-- Set `TimeDateStamp' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access TimeDateStamp type DWORD use <windows.h>"
 		end
 
-	c_set_pointer_to_symbol_table (an_item: POINTER; i: INTEGER) is
+	c_set_pointer_to_symbol_table (an_item: POINTER; i: INTEGER)
 			-- Set `PointerToSymbolTable' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access PointerToSymbolTable type DWORD use <windows.h>"
 		end
 
-	c_set_number_of_symbols (an_item: POINTER; i: INTEGER) is
+	c_set_number_of_symbols (an_item: POINTER; i: INTEGER)
 			-- Set `NumberOfSymbols' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access NumberOfSymbols type DWORD use <windows.h>"
 		end
 
-	c_set_size_of_optional_header (an_item: POINTER; i: INTEGER_16) is
+	c_set_size_of_optional_header (an_item: POINTER; i: INTEGER_16)
 			-- Set `SizeOfOptionalHeader' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access SizeOfOptionalHeader type WORD use <windows.h>"
 		end
 
-	c_set_characteristics (an_item: POINTER; i: INTEGER_16) is
+	c_set_characteristics (an_item: POINTER; i: INTEGER_16)
 			-- Set `Characteristics' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access Characteristics type WORD use <windows.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

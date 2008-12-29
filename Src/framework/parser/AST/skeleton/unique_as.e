@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a unique value. Version for Bench."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_unique_as (Current)
@@ -35,7 +35,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
@@ -43,14 +43,14 @@ feature -- Comparison
 
 feature -- Properties
 
-	is_unique: BOOLEAN is True
+	is_unique: BOOLEAN = True
 			-- Is the terminal a unique constant ?
 
 feature -- Output
 
-	string_value: STRING is "";
+	string_value: STRING = "";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

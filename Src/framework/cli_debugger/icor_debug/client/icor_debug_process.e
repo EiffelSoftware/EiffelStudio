@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_id: INTEGER is
+	get_id: INTEGER
 			-- Win32 Process ID of the process
 		do
 			last_call_success := cpp_get_id (item, $Result)
@@ -28,7 +28,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_handle: POINTER is
+	get_handle: POINTER
 			-- GetHandle returns a handle to the process
 		do
 			last_call_success := cpp_get_handle (item, $Result)
@@ -36,7 +36,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_thread (a_thread_id: INTEGER): ICOR_DEBUG_THREAD is
+	get_thread (a_thread_id: INTEGER): ICOR_DEBUG_THREAD
 			-- Debuggee Thread for `a_thread_id'
 		local
 			p: POINTER			
@@ -49,7 +49,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end		
 
-	enumerate_app_domains: ICOR_DEBUG_APP_DOMAIN_ENUM is
+	enumerate_app_domains: ICOR_DEBUG_APP_DOMAIN_ENUM
 		local
 			p: POINTER
 		do
@@ -61,7 +61,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_helper_thread_id: INTEGER is
+	get_helper_thread_id: INTEGER
 			-- Win32 Thread ID of the HelperThread
 		do
 			last_call_success := cpp_get_helper_thread_id (item, $Result)
@@ -71,7 +71,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Get Handle
 
-	frozen cpp_get_handle (obj: POINTER; a_p_handle: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_handle (obj: POINTER; a_p_handle: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugProcess signature(HPROCESS *): EIF_INTEGER
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Get Handle
 	
 feature {NONE} -- Implementation
 
-	cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			"GetID"
 		end
 		
-	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD, ICorDebugThread**): EIF_INTEGER 
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			"GetThread"
 		end		
 
-	cpp_enumerate_app_domains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_enumerate_app_domains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugProcess signature(ICorDebugAppDomainEnum **): EIF_INTEGER 
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			"EnumerateAppDomains"
 		end
 
-	cpp_get_helper_thread_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_helper_thread_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			"GetHelperThreadID"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

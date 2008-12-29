@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a renaming clause in Ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (cn: like cluster_name; r: like renamings) is
+	initialize (cn: like cluster_name; r: like renamings)
 			-- Create a new CLUST_REN AST node.
 		require
 			cn_not_void: cn /= Void
@@ -34,7 +34,7 @@ feature -- Properties
 	renamings: LACE_LIST [TWO_NAME_SD];
 			-- Renaming list
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

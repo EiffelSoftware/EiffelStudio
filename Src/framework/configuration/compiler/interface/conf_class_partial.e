@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Classes that where built from partial classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location; a_factory: like factory) is
+	make_from_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location; a_factory: like factory)
 			-- Create.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -63,10 +63,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_read_only: BOOLEAN is True
+	is_read_only: BOOLEAN = True
 			-- Is the class read only?
 
-	full_file_name: STRING is
+	full_file_name: STRING
 			-- The full file name of the class (including path).
 		do
 			Result := base_location.build_path (path, file_name)
@@ -80,7 +80,7 @@ feature -- Access
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	set_base_location (a_location: like base_location) is
+	set_base_location (a_location: like base_location)
 			-- Set `base_location' to `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -90,7 +90,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			base_location_set: base_location = a_location
 		end
 
-	rebuild_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location) is
+	rebuild_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location)
 			-- Rebuild.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
@@ -124,7 +124,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			end
 		end
 
-	check_changed is
+	check_changed
 			-- Check if any of the partial classes that build this class have changed.
 		local
 			l_date: INTEGER
@@ -148,7 +148,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 
 feature {NONE} -- Implementation
 
-	build_partial is
+	build_partial
 			-- Build the class from the partial class files.
 		require
 			base_location_not_void: base_location /= Void
@@ -202,13 +202,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Shared instances
 
-	epc_merger: EPC_MERGER is
+	epc_merger: EPC_MERGER
 			-- Shared instance of EPC_MERGER.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

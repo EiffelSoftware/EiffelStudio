@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base for dialogs to edit properties."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			vb: EV_VERTICAL_BOX
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Update
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set value to change.
 		local
 			l_changed: BOOLEAN
@@ -124,7 +124,7 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Agents
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		require
 			is_initialized: is_initialized
@@ -133,7 +133,7 @@ feature {NONE} -- Agents
 			hide
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel was pressed.
 		require
 			is_initialized: is_initialized
@@ -144,8 +144,8 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Layout constants
 
-	dialog_width: INTEGER is 400
-	dialog_height: INTEGER is 400
+	dialog_width: INTEGER = 400
+	dialog_height: INTEGER = 400
 
 invariant
 	elements: is_initialized implies ok_button /= Void and cancel_button /= Void

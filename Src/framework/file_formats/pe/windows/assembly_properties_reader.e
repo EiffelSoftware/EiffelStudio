@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to read assemblies and extract basic metadata information.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_runtime_version: STRING) is
+	make (a_runtime_version: STRING)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Initialize
 
 feature -- Clean up
 
-	dispose is
+	dispose
 			-- Cleans up any allocated resources
 		local
 			l_dis: like dispenser
@@ -81,7 +81,7 @@ feature -- Clean up
 
 feature -- Basic operations
 
-	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES is
+	retrieve_assembly_properties (a_file_name: STRING): ASSEMBLY_PROPERTIES
 			-- Retrieves assembly properties for `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -156,13 +156,13 @@ feature -- Basic operations
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Indicates if reader was successfully initialized and is read for use.
 		do
 			Result := dispenser /= default_pointer
 		end
 
-	fusion_exists: BOOLEAN is
+	fusion_exists: BOOLEAN
 			-- Indicates if fusion was successfully initialized and is read for use.
 		do
 			Result := assembly_cache /= default_pointer
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature {NONE} -- Caching
 
-	add_runtime_path (a_path: STRING) is
+	add_runtime_path (a_path: STRING)
 			-- Add's `a_path' to PATH environment variable, if it has not already been added
 		require
 			a_path_attached: a_path /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Caching
 			has_path: added_paths.has (a_path)
 		end
 
-	added_paths: ARRAYED_LIST [STRING] is
+	added_paths: ARRAYED_LIST [STRING]
 			-- List of paths added to PATH environment variable
 		once
 			create Result.make (1)
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_initialize_dispenser (a_dispenser: TYPED_POINTER [POINTER]): INTEGER is
+	c_initialize_dispenser (a_dispenser: TYPED_POINTER [POINTER]): INTEGER
 			-- Initializes metadata dispenser
 		external
 			"C++ inline use <cor.h>"
@@ -253,7 +253,7 @@ feature {NONE} -- Externals
 			succeeded: Result = 0
 		end
 
-	c_uninitialize (a_dispenser: TYPED_POINTER [POINTER]; a_cache: TYPED_POINTER [POINTER]) is
+	c_uninitialize (a_dispenser: TYPED_POINTER [POINTER]; a_cache: TYPED_POINTER [POINTER])
 			-- Uninitializes unmanaged COM resources
 		external
 			"C++ inline use <windows.h>"
@@ -274,7 +274,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_open_scope (a_dispenser: POINTER; a_fn: POINTER; a_flags: NATURAL; a_scope: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_open_scope (a_dispenser: POINTER; a_fn: POINTER; a_flags: NATURAL; a_scope: TYPED_POINTER [POINTER]): INTEGER
 			-- Opens an assembly scope
 		require
 			not_a_dispenser_is_null: a_dispenser /= default_pointer
@@ -306,7 +306,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_close_scope (a_scope: TYPED_POINTER [POINTER]) is
+	cpp_close_scope (a_scope: TYPED_POINTER [POINTER])
 			-- Closes an opened scope.
 		require
 			not_a_scope_is_null: a_scope /= default_pointer
@@ -322,7 +322,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_assembly_props (a_scope: POINTER; a_hash: TYPED_POINTER [NATURAL_64]; a_name: POINTER; a_name_len: TYPED_POINTER [NATURAL_32]; a_flags: TYPED_POINTER [NATURAL_32]; a_md: POINTER): INTEGER is
+	cpp_assembly_props (a_scope: POINTER; a_hash: TYPED_POINTER [NATURAL_64]; a_name: POINTER; a_name_len: TYPED_POINTER [NATURAL_32]; a_flags: TYPED_POINTER [NATURAL_32]; a_md: POINTER): INTEGER
 			-- Retrieves a number of assembly properties
 		require
 			not_a_scope_is_null: a_scope /= default_pointer
@@ -347,7 +347,7 @@ feature {NONE} -- Externals
 		end
 
 	strong_name_token_from_assembly (a_container_name: POINTER; a_key_blob: TYPED_POINTER [POINTER];
-			a_key_blob_size: TYPED_POINTER [NATURAL_64]): BOOLEAN is
+			a_key_blob_size: TYPED_POINTER [NATURAL_64]): BOOLEAN
 			-- Retrieve the public portion of a key pair.
 		require
 			strong_name_retriveable: strong_name_retriveable
@@ -357,7 +357,7 @@ feature {NONE} -- Externals
 			"StrongNameTokenFromAssembly"
 		end
 
-	strong_name_free_buffer (a_key_blob: POINTER) is
+	strong_name_free_buffer (a_key_blob: POINTER)
 			-- Retrieve the public portion of a key pair.
 		require
 			strong_name_retriveable: strong_name_retriveable
@@ -367,7 +367,7 @@ feature {NONE} -- Externals
 			"StrongNameFreeBuffer"
 		end
 
-	c_set_environment_variable (a_name, a_value: POINTER): BOOLEAN is
+	c_set_environment_variable (a_name, a_value: POINTER): BOOLEAN
 			-- The SetEnvironmentVariable function sets the contents of the specified environment variable for the current process.
 		external
 			"C (LPCTSTR, LPCTSTR): BOOL | <windows.h>"
@@ -375,7 +375,7 @@ feature {NONE} -- Externals
 			"SetEnvironmentVariable"
 		end
 
-	c_create_cache (a_cache: TYPED_POINTER [POINTER]; a_reserved: INTEGER): INTEGER is
+	c_create_cache (a_cache: TYPED_POINTER [POINTER]; a_reserved: INTEGER): INTEGER
 			-- Retrieve the public portion of a key pair.
 		external
 			"dllwin fusion.dll signature (IAssemblyCache**, DWORD): HRESULT use <fusion.h>"
@@ -383,7 +383,7 @@ feature {NONE} -- Externals
 			"CreateAssemblyCache"
 		end
 
-	c_is_in_cache (a_cache: POINTER; a_name: POINTER): BOOLEAN is
+	c_is_in_cache (a_cache: POINTER; a_name: POINTER): BOOLEAN
 			-- Determines if assembly is in the instatiate cache
 		require
 			not_a_cache_is_null: a_cache /= default_pointer
@@ -411,7 +411,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_class: ICOR_DEBUG_CLASS is
+	get_class: ICOR_DEBUG_CLASS
 			-- GetClass returns the runtime class of the object in the value. 
 		local
 			p: POINTER
@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_field_value (a_class: ICOR_DEBUG_CLASS; a_mdfield_def: NATURAL_32): ICOR_DEBUG_VALUE is
+	get_field_value (a_class: ICOR_DEBUG_CLASS; a_mdfield_def: NATURAL_32): ICOR_DEBUG_VALUE
 			-- GetFieldValue returns a value for the given field in the given
 			-- class. The class must be on the class hierarchy of the object's
 			-- class, and the field must be a field of that class.
@@ -44,7 +44,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	is_value_class: BOOLEAN is
+	is_value_class: BOOLEAN
 		local
 			r: INTEGER
 		do
@@ -54,7 +54,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_managed_copy: POINTER is
+	get_managed_copy: POINTER
 			-- GetManagedCopy will return an IUnknown that is a managed copy
 			-- of a value class object. This can be used with Common Language Runtime Interop to
 			-- get info about the object, like calling System.Object::ToString
@@ -66,7 +66,7 @@ feature {ICOR_EXPORTER} -- Access
 --			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	set_from_managed_copy (p: POINTER) is
+	set_from_managed_copy (p: POINTER)
 			-- SetFromManagedCopy will update a object's contents given a
 			-- managed copy of the object. This can be used after using
 			-- GetManagedCopy to update an object with a changed version.
@@ -79,7 +79,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_class (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_class (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass**): EIF_INTEGER 
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			"GetClass"
 		end
 
-	cpp_get_field_value (obj: POINTER; a_class: POINTER; a_mdfield_def: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_field_value (obj: POINTER; a_class: POINTER; a_mdfield_def: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass*,mdFieldDef, ICorDebugValue**): EIF_INTEGER 
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			"GetFieldValue"
 		end
 		
-	cpp_is_value_class (obj: POINTER; a_is_value_class: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_value_class (obj: POINTER; a_is_value_class: TYPED_POINTER [INTEGER]): INTEGER
 			-- Call `ICorDebugObjectValue->IsValueClass'.
 		external
 			"[
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			"IsValueClass"
 		end
 
-	cpp_get_managed_copy (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_managed_copy (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugObjectValue signature(IUnknown**): EIF_INTEGER 
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			"GetManagedCopy"
 		end
 
-	cpp_set_from_managed_copy (obj: POINTER; a_p: POINTER): INTEGER is
+	cpp_set_from_managed_copy (obj: POINTER; a_p: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugObjectValue signature(IUnknown*): EIF_INTEGER 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			"SetFromManagedCopy"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

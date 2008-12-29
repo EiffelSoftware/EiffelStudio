@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An exception to represent an unavailable dynamic API function or variable.
 	]"
@@ -58,7 +58,7 @@ invariant
 	message_attached: message /= Void
 	not_message_is_empty: not message.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

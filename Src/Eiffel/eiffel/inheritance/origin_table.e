@@ -65,14 +65,14 @@ feature
 			-- Insert information `info' in the table.
 		require
 			good_argument: info /= Void
-			good_context: not (info.a_feature = Void or else info.a_feature.rout_id_set = Void)
+			good_context: not (info.internal_a_feature = Void or else info.internal_a_feature.rout_id_set = Void)
 		local
 			rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 			rout_id: INTEGER
 		do
 			from
-				rout_id_set := info.a_feature.rout_id_set
+				rout_id_set := info.internal_a_feature.rout_id_set
 				nb := rout_id_set.count
 				i := 1
 			until
@@ -89,6 +89,86 @@ feature
 				i := i + 1
 			end
 		end
+
+	check_feature_types (a_feature_table: FEATURE_TABLE)
+			-- Check types of features of `a_feature_table'.
+		require
+			a_feature_table_valid: a_feature_table /= Void and then a_feature_table.is_computed
+		local
+			l_selection_list: SELECTION_LIST
+			l_feature_tbl_id: INTEGER
+			l_associated_class_non_deferred: BOOLEAN
+			vcch1: VCCH1
+		do
+				-- We only need to check types that have been directly instantiated for `a_feature_table'.
+			from
+				start
+				l_feature_tbl_id := a_feature_table.feat_tbl_id
+				l_associated_class_non_deferred := not a_feature_table.associated_class.is_deferred
+			until
+				after
+			loop
+				l_selection_list := item_for_iteration
+				from
+					l_selection_list.start
+				until
+					l_selection_list.after
+				loop
+					if l_selection_list.item.a_feature_instantiated_for_feature_table then
+							-- If feature was instantiated directly for `a_feature_table' then we check the types.
+						if
+							l_selection_list.item.internal_a_feature.written_in = l_feature_tbl_id and then
+							l_selection_list.item.internal_a_feature.arguments /= Void
+						then
+								-- If feature was written directly for currently processed class then we check the arguments.
+							l_selection_list.item.a_feature.check_argument_names (a_feature_table)
+						end
+						l_selection_list.item.a_feature.check_types (a_feature_table)
+					end
+					if l_associated_class_non_deferred and then l_selection_list.item.internal_a_feature.is_deferred then
+						-- We have a deferred feature in a non-deferred class, so we raise a VCCH error
+						create vcch1
+						vcch1.set_class (a_feature_table.associated_class)
+						vcch1.set_a_feature (l_selection_list.item.a_feature)
+						error_handler.insert_error (vcch1)
+					end
+					l_selection_list.forth
+				end
+				forth
+			end
+		end
+
+	update_instantiator2 (a_feature_table: FEATURE_TABLE)
+			-- Update instantiator with features of `a_feature_table'.
+		require
+			a_feature_table_valid: a_feature_table /= Void and then a_feature_table.is_computed
+		local
+			l_selection_list: SELECTION_LIST
+			l_feature_tbl_id: INTEGER
+			l_associated_class: CLASS_C
+		do
+			from
+				start
+				l_feature_tbl_id := a_feature_table.feat_tbl_id
+				l_associated_class := a_feature_table.associated_class
+			until
+				after
+			loop
+				l_selection_list := item_for_iteration
+				from
+					l_selection_list.start
+				until
+					l_selection_list.after
+				loop
+					if l_selection_list.item.a_feature_instantiated_for_feature_table then
+						l_selection_list.item.a_feature.update_instantiator2 (l_associated_class)
+					end
+					l_selection_list.forth
+				end
+				forth
+			end
+		end
+
 
 	compute_feature_table (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
 			-- Origin table for instance of FEATURE_TABLE resulting
@@ -119,7 +199,7 @@ feature
 
 						-- Check if replication was processed.
 						-- All non replicated features get removed during selection processing.
-					if content [l_iteration_position].count > 0 then
+					if content [l_iteration_position].has_replicated_features then
 						if l_replicated_feature_set = Void then
 							create l_replicated_feature_set.make
 						end
@@ -157,7 +237,7 @@ feature
 						l_feature_replication_generator.process_replicated_feature (
 								l_selection_list.item.a_feature,
 								l_selection_list.item.parent,
-								l_selection_list.item = l_selection_list.first_element.item and then not l_selection_list.item.a_feature.from_non_conforming_parent,
+								l_selection_list.item = l_selection_list.first_element.item and then not l_selection_list.item.internal_a_feature.from_non_conforming_parent,
 									-- Item is selected if first in the selection list and from a conforming parent.
 								l_current_class,
 								old_t,

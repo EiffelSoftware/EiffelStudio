@@ -18,7 +18,7 @@ feature -- Basic operation
 
 	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION]) is
 			-- Process 'adaptions' to update the assert_id_set for
-			-- redefined features. 
+			-- redefined features.
 		local
 			redef_assert_feats: LINKED_LIST [FEATURE_I]
 			list: LINKED_LIST [INHERIT_INFO]
@@ -38,7 +38,7 @@ feature -- Basic operation
 				until
 					list.after
 				loop
-					redef_assert_feats.extend (list.item.a_feature)
+					redef_assert_feats.extend (list.item.internal_a_feature)
 					redef_assert_feats.forth
 					list.forth
 				end
@@ -49,7 +49,7 @@ feature -- Basic operation
 				until
 					list.after
 				loop
-					redef_assert_feats.extend (list.item.a_feature)
+					redef_assert_feats.extend (list.item.internal_a_feature)
 					redef_assert_feats.forth
 					list.forth
 				end
@@ -85,13 +85,13 @@ feature {NONE} -- Implementation
 					-- to avoid have two times the same assert_id_set in case of a
 					-- repeated inheritance.
 				create processed_features.make (5)
-					
+
 					-- By default, we suppose that the feature defines preconditions.
 				has_precondition := True
 
 					-- We will loop twice on the list of features.
 					-- First we will add the inherited assertions of each feature.
-					-- Then we will add the inner assertions of each feature 
+					-- Then we will add the inner assertions of each feature
 					--
 					-- First loop: Add the inherited assertions
 				from
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					end
 
 						-- A feature has a precondition clause if it defines
-						-- a precondition and has no parent, or if one of its 
+						-- a precondition and has no parent, or if one of its
 						-- ancestors defines a precondition.
 					has_precondition := has_precondition and (
 						(feat.has_precondition and feat_assert_id_set = Void)
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 				from
 					i := 1
 				until
-					i > assert_set.count 
+					i > assert_set.count
 				loop
 					assert_set.item (i).trace
 					i := i + 1

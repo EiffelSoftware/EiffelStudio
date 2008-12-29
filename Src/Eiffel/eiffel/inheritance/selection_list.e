@@ -39,13 +39,6 @@ inherit
 create
 	make
 
-create {SELECTION_LIST}
-	make_sublist
-
-feature -- Access
-
-	selected_rout_id_set: ROUT_ID_SET
-
 feature -- Selection
 
 	process_selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
@@ -58,19 +51,19 @@ feature -- Selection
 			l_replicated_features_present: BOOLEAN
 			l_has_old_feature_replication: BOOLEAN
 			l_from_non_conforming_parent: BOOLEAN
+			l_selected_rout_id_set: ROUT_ID_SET
 		do
 			l_has_old_feature_replication := System.has_old_feature_replication
 			l_from_non_conforming_parent := first.parent /= Void and then first.parent.is_non_conforming
 			l_replicated_features_present := count > 1 or else l_from_non_conforming_parent
 
 			if l_replicated_features_present then
-					-- There is more than one inheritance info object in `Current'
-					-- so therefore we process a feature replication.
 				process_replication (old_t, new_t)
-			elseif l_from_non_conforming_parent then
-					-- If the feature is solely coming from a non-conforming class
-					-- then it must be replicated in the current class
-				process_replication (old_t, new_t)
+				if l_from_non_conforming_parent or else not l_has_old_feature_replication then
+						-- We only want replication processing enabled for legacy replication
+						-- for non-conforming features.
+					set_has_replicated_features
+				end
 			end
 
 				-- Set the selected feature to the first element in the selection list.
@@ -97,7 +90,7 @@ feature -- Selection
 					from
 							-- Set `selected_rout_id' for comparison in `unselect'
 							-- No twin is needed as there are no side effects.
-						selected_rout_id_set := l_selected_feature.rout_id_set
+						l_selected_rout_id_set := l_selected_feature.rout_id_set
 
 							-- Move to the second item in the list as the first is 'selected'.
 						start
@@ -105,10 +98,9 @@ feature -- Selection
 					until
 						after
 					loop
-						unselect (item, new_t, old_t)
+						unselect (item, new_t, old_t, l_selected_rout_id_set)
 						forth
 					end;
-					selected_rout_id_set := Void
 
 						--| Merge routine ids from unselected features
 debug ("REPLICATION", "ACTUAL_REPLICATION")
@@ -117,6 +109,17 @@ debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.put_string (l_selected_feature.generator);
 	io.error.put_new_line;
 end;
+				end
+			else
+					-- Remove all discarded features, ie: those after 'first'.
+					-- We do this so that post-processing of `Current' doesn't go over redundant types.
+				from
+					start
+					forth
+				until
+					after
+				loop
+					remove
 				end
 			end
 
@@ -136,15 +139,6 @@ end;
 				l_selected_feature.set_is_selected (True)
 				new_t.replace (l_selected_feature, l_selected_feature.feature_name_id)
 			end
-
-			if not l_replicated_features_present then
-					-- We want to leave the list of replicated features in the list so that we can
-					-- use this for inheritance branch determination.
-				wipe_out
-			elseif l_has_old_feature_replication and not l_from_non_conforming_parent then
-					-- Remove all conforming features from being replicated in legacy replication mode.
-				wipe_out
-			end
 		end;
 
 	Routine_id_counter: ROUTINE_COUNTER is
@@ -160,14 +154,14 @@ end;
 		local
 			vmrc2: VMRC2;
 			l_non_conforming_count: INTEGER
-			l_implicit_selection: FEATURE_I
+			l_implicit_selection: INHERIT_INFO
 		do
 			from
 				start
 			until
 				after
 			loop
-				if parents.is_explicitly_selecting (item.a_feature.feature_name_id) then
+				if parents.is_explicitly_selecting (item.internal_a_feature.feature_name_id) then
 					if Result = Void then
 						Result := item.a_feature
 						if active /= first_element then
@@ -193,7 +187,7 @@ end;
 						forth
 					else
 							-- This routine will be selected should every other routine come from a non-conforming branch.
-						l_implicit_selection := item.a_feature
+						l_implicit_selection := item
 						if Result = Void and then active /= first_element then
 								-- Add selected feature to the front of the selection list.
 							put_front (item)
@@ -208,7 +202,7 @@ end;
 			if Result = Void and then l_non_conforming_count >= (count - 1) then
 					-- We have an implicit selection
 				if l_implicit_selection /= Void then
-					Result := l_implicit_selection
+					Result := l_implicit_selection.a_feature
 				else
 					Result := first.a_feature
 				end
@@ -230,13 +224,13 @@ end;
 			if count > 1 then
 				from
 					l_active := first_element
-					l_code_id := l_active.item.a_feature.code_id
+					l_code_id := l_active.item.internal_a_feature.code_id
 						-- Go to the second item so we don't compare the code id with itself.
 					l_active := l_active.right
 				until
 					l_active = Void or else not Result
 				loop
-					Result := l_code_id = l_active.item.a_feature.code_id
+					Result := l_code_id = l_active.item.internal_a_feature.code_id
 					l_active := l_active.right
 				end
 			end
@@ -247,7 +241,7 @@ end;
 		require
 			not is_empty;
 			one_body_only;
-			has_generics: first.a_feature.written_class.generics /= Void;
+			has_generics: first.internal_a_feature.written_class.generics /= Void;
 		local
 			instantiator, written_actual_type, l_comparison_type: TYPE_A;
 			written_class: CLASS_C;
@@ -259,7 +253,7 @@ end;
 				from
 						-- Set up the first parent type as the one to compare all other parent types
 					l_active := first_element
-					written_class := l_active.item.a_feature.written_class;
+					written_class := l_active.item.internal_a_feature.written_class;
 					written_id := written_class.class_id;
 					written_actual_type := written_class.actual_type;
 					if l_active.item.parent /= Void then
@@ -290,7 +284,7 @@ end;
 
 		end;
 
-	unselect (a_info: INHERIT_INFO; new_t, old_t: FEATURE_TABLE) is
+	unselect (a_info: INHERIT_INFO; new_t, old_t: FEATURE_TABLE; a_selected_rout_id_set: ROUT_ID_SET) is
 			-- Process first unselected feature
 		require
 			good_arguments: a_info /= Void and new_t /= Void and old_t /= Void
@@ -343,7 +337,7 @@ end;
 				i > nb
 			loop
 				rid := r_id_set.item (i);
-				if not selected_rout_id_set.has (rid) then
+				if not a_selected_rout_id_set.has (rid) then
 					rout_id_set.extend (rid);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.put_string ("%T");
@@ -414,6 +408,25 @@ feature -- Conceptual Replication
 				forth
 			end
 		end
+
+	set_has_replicated_features
+			-- Set `has_replicated_features' to True.
+		do
+			status_flags := status_flags.set_bit_with_mask (True, has_replicated_features_mask)
+		end
+
+	has_replicated_features: BOOLEAN
+			-- Does `Current' contain directly replicated features?
+		do
+			Result := status_flags & has_replicated_features_mask = has_replicated_features_mask
+		end
+
+feature {NONE} -- Implementation
+
+	status_flags: NATURAL_8
+		-- Status flags for `Current'.
+
+	has_replicated_features_mask: NATURAL_8 = 0x1
 
 feature -- Trace
 

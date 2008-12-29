@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search report tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	build_interface is
+	build_interface
 			-- Create and return a box containing result grid.
 		local
 			frm: EV_FRAME
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			report_box.extend (report)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Redefine
 		do
 			create content.make_with_widget (report_box, title)
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Build mini tool bar.
 		local
 			l_cmd: ES_SHOW_TOOL_COMMAND
@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Command
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
@@ -151,7 +151,7 @@ feature -- Command
 
 feature -- Element Change
 
-	set_summary (a_string: STRING_GENERAL) is
+	set_summary (a_string: STRING_GENERAL)
 			-- Set summary label text.
 		require
 			a_string_not_void: a_string /= Void
@@ -159,7 +159,7 @@ feature -- Element Change
 			summary_label.set_text (a_string)
 		end
 
-	set_new_search_button_visible (a_visible: BOOLEAN) is
+	set_new_search_button_visible (a_visible: BOOLEAN)
 			-- Change new search button status.
 		do
 			if a_visible then
@@ -194,14 +194,14 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL, EB_SEARCH_REPORT_GRID} -- Widgets
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recyclable
 		do
 			search_report_grid.wipe_out
 			Precursor {EB_TOOL}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

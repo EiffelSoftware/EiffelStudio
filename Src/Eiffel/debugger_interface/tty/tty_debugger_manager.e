@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared object that manages all debugging actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create current
 		do
 			Precursor
@@ -42,58 +42,58 @@ feature {NONE} -- Initialization
 
 feature -- Output helpers
 
-	debugger_output_message (msg: STRING_GENERAL) is
+	debugger_output_message (msg: STRING_GENERAL)
 		do
 			tty_output.add_string (msg)
 			tty_output.add_new_line
 		end
 
-	display_application_status is
+	display_application_status
 		do
 			text_formatter_visitor.append_status (application_status, tty_output)
 		end
 
-	display_system_info	is
+	display_system_info
 		do
 			append_system_info (tty_output)
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
 		do
 			text_formatter_visitor.append_debugger_information (Current, param, tty_output)
 		end
 
 feature -- output
 
-	display_callstack is
+	display_callstack
 		require
 			application_is_executing
 		do
 			text_formatter_visitor.append_stack (application_status.current_call_stack, tty_output)
 		end
 
-	display_exception is
+	display_exception
 		require
 			application_is_executing
 		do
 			text_formatter_visitor.append_exception (application_status, tty_output)
 		end
 
-	display_locals is
+	display_locals
 		require
 			application_is_executing
 		do
 			text_formatter_visitor.append_locals (application_status.current_call_stack_element, tty_output)
 		end
 
-	display_arguments is
+	display_arguments
 		require
 			application_is_executing
 		do
 			text_formatter_visitor.append_arguments (application_status.current_call_stack_element, tty_output)
 		end
 
-	display_breakpoints (on_select_proc: PROCEDURE [ANY, TUPLE [BREAKPOINT]]; a_proc_message: STRING) is
+	display_breakpoints (on_select_proc: PROCEDURE [ANY, TUPLE [BREAKPOINT]]; a_proc_message: STRING)
 			-- Display on breakpoints
 		local
 			bl: BREAK_LIST
@@ -156,13 +156,13 @@ feature -- output
 
 feature -- Access
 
-	on_application_launched is
+	on_application_launched
 		do
 			Precursor
 			enter_events_handling
 		end
 
-	on_application_just_stopped is
+	on_application_just_stopped
 		do
 			Precursor
 			debugger_message (debugger_names.t_paused)
@@ -171,7 +171,7 @@ feature -- Access
 			raise_dbg_running_menu (False)
 		end
 
-	on_debugging_terminated (was_executing: BOOLEAN) is
+	on_debugging_terminated (was_executing: BOOLEAN)
 			--
 		do
 			leave_events_handling
@@ -182,7 +182,7 @@ feature -- Interaction
 
 	inside_debugger_menu: BOOLEAN
 
-	dbg_running_menu: EWB_TTY_MENU is
+	dbg_running_menu: EWB_TTY_MENU
 		local
 			ag_is_stopped: FUNCTION [ANY, TUPLE, BOOLEAN]
 			ag_is_executing: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -236,7 +236,7 @@ feature -- Interaction
 			end
 		end
 
-	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU) is
+	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU)
 		do
 			if safe_application_is_stopped then
 				controller.debug_operate (a_exec_mode)
@@ -244,23 +244,23 @@ feature -- Interaction
 			end
 		end
 
-	raise_dbg_running_menu (sm: BOOLEAN) is
+	raise_dbg_running_menu (sm: BOOLEAN)
 		do
 			io.put_new_line
 			dbg_running_menu.execute (sm)
 		end
 
-	raise_debugger_menu_display is
+	raise_debugger_menu_display
 		do
 			dbg_display_menu.execute (True)
 		end
 
-	raise_debugger_menu_breakpoints	is
+	raise_debugger_menu_breakpoints
 		do
 			dbg_breakpoints_menu.execute (True)
 		end
 
-	dbg_display_menu: EWB_TTY_MENU is
+	dbg_display_menu: EWB_TTY_MENU
 		do
 			create Result.make (debugger_names.t_debugger_menu_display)
 			Result.add_entry ("L", debugger_names.e_locales, agent display_locals)
@@ -309,7 +309,7 @@ feature -- Interaction
 			Result.add_quit_entry ("..", debugger_names.e_back_to_parent_menu)
 		end
 
-	dbg_breakpoints_menu: EWB_TTY_MENU is
+	dbg_breakpoints_menu: EWB_TTY_MENU
 		do
 			create Result.make (debugger_names.t_debugger_menu_breakpoints)
 
@@ -328,7 +328,7 @@ feature {NONE} -- Menu caching
 
 feature -- Breakpoints management
 
-	add_breakpoint is
+	add_breakpoint
 		local
 			s: STRING
 			i: INTEGER
@@ -445,7 +445,7 @@ feature -- Breakpoints management
 			end
 		end
 
-	modify_breakpoint (bp: BREAKPOINT) is
+	modify_breakpoint (bp: BREAKPOINT)
 		local
 			m: EWB_TTY_MENU
 			s: STRING_32
@@ -493,7 +493,7 @@ feature -- Breakpoints management
 			m.execute (True)
 		end
 
-	edit_breakpoint_condition (bp: BREAKPOINT) is
+	edit_breakpoint_condition (bp: BREAKPOINT)
 		local
 			s: STRING
 			exp: DBG_EXPRESSION
@@ -542,7 +542,7 @@ feature -- Breakpoints management
 			end
 		end
 
-	edit_breakpoint_when_hits (bp: BREAKPOINT) is
+	edit_breakpoint_when_hits (bp: BREAKPOINT)
 		local
 			s: STRING
 			d: STRING
@@ -589,14 +589,14 @@ feature -- Breakpoints management
 
 feature -- Events
 
-	enter_events_handling is
+	enter_events_handling
 		require
 			events_handler /= Void
 		do
 			events_handler.start_events_handling
 		end
 
-	leave_events_handling is
+	leave_events_handling
 		do
 			events_handler.stop_events_handling
 		end
@@ -613,7 +613,7 @@ feature -- Output visitor
 
 feature {NONE} -- Implementation
 
-	truncated_text (s: STRING; a_size: INTEGER): STRING is
+	truncated_text (s: STRING; a_size: INTEGER): STRING
 		require
 			a_size > 3
 		do
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjusted_answer: STRING is
+	adjusted_answer: STRING
 			-- Return input answer.
 		do
 			io.read_line
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 			Result.right_adjust
 		end
 
-	confirmation_answer (m: STRING_GENERAL; lst: ARRAY [STRING]; a_default: STRING; a_caseless: BOOLEAN): STRING is
+	confirmation_answer (m: STRING_GENERAL; lst: ARRAY [STRING]; a_default: STRING; a_caseless: BOOLEAN): STRING
 			-- Confirmation answer
 		require
 			a_default_in_lst: (a_default /= Void and lst /= Void)
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

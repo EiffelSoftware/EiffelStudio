@@ -1,4 +1,4 @@
-indexing
+note
     description: "[
         An EiffelStudio dockable tool window base implementation for EiffelStudio tools.
         
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization: User interface
             not_is_initialized: not is_initialized
         end
 
-    build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+    build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
             -- Build's docking tool content
         do
             Precursor {EB_TOOL}(a_docking_manager)
@@ -843,7 +843,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_show is
+	on_show
 			-- Performs actions when the user widget is displayed.
 		require
 			is_interface_usable: is_interface_usable
@@ -1083,7 +1083,7 @@ feature {NONE} -- Internal implementation cache
 invariant
     not_is_initialized: is_initializing implies not is_initialized
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

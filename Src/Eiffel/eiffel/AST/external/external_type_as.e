@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
-	initialize (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER; is_byref: BOOLEAN) is
+	initialize (id: ID_AS; is_struct: BOOLEAN; nb_pointer: INTEGER; is_byref: BOOLEAN)
 			-- Create EXTERNAL_TYPE_AS node
 		require
 			id_not_void: id /= Void
@@ -67,21 +67,21 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	struct_text: STRING is "struct "
+	struct_text: STRING = "struct "
 			-- Representation of the `stuct' string.
 
-	struct_text_length: INTEGER is 7
+	struct_text_length: INTEGER = 7
 			-- Length of `struct_text'.
 
-	star_text: CHARACTER is '*'
+	star_text: CHARACTER = '*'
 			-- Representation of the `*' character.
 
-	byref_text: CHARACTER is '&'
+	byref_text: CHARACTER = '&'
 			-- Representation of the `&' character.
 
 feature {NONE} -- Not exported because should never be used.
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to `Current'?
 			-- Not valid in current context
 		do
@@ -90,7 +90,7 @@ feature {NONE} -- Not exported because should never be used.
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

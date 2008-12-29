@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"User preferences used in the interface."
 	legal: "See notice at end of class."
@@ -17,13 +17,13 @@ inherit
 
 feature -- Access
 
-	preferences: EB_PREFERENCES is
+	preferences: EB_PREFERENCES
 			-- All preferences for `ec'.
 		do
 			Result ?= preferences_cell.item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

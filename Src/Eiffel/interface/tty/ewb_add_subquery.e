@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EWB_ADD_SUBQUERY
@@ -11,7 +11,7 @@ inherit
 
 feature {NONE} -- Execute
 
-	loop_action is
+	loop_action
 		local
 			command_arguments: EWB_ARGUMENTS
 			query_parser: QUERY_PARSER
@@ -39,7 +39,7 @@ feature {NONE} -- Execute
 			execute
 		end
 
-	execute is
+	execute
 		local
 			sq_op: SUBQUERY_OPERATOR
 		do
@@ -73,24 +73,24 @@ feature {NONE} -- Execute
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		once
 			Result := add_subquery_cmd_name;
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		once
 			Result := add_subquery_help;
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		once
 			Result := add_subquery_abb;
 		end;
 
 feature {NONE} -- Implementation
 
-	query_string (command_arguments: EWB_ARGUMENTS): STRING is
+	query_string (command_arguments: EWB_ARGUMENTS): STRING
 		local
 			i : INTEGER
 		do
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extra_help is
+	extra_help
 			-- Prints some extra help on this command.
 		do
 			localized_print (ewb_names.a_subquery_has_the_following_form)
@@ -116,7 +116,7 @@ feature {NONE} -- Attributes
 
 	subquery: SUBQUERY;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for special external routines handling"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,23 +10,23 @@ class
 
 feature -- String constants
 
-	macro_string: STRING is "macro"
+	macro_string: STRING = "macro"
 
-	struct_string: STRING is "struct"
+	struct_string: STRING = "struct"
 
-	dll32_string: STRING is "dll32"
+	dll32_string: STRING = "dll32"
 
-	dllwin32_string: STRING is "dllwin32"
+	dllwin32_string: STRING = "dllwin32"
 
 feature -- Integer constants
 
-	macro_type: INTEGER is 1
+	macro_type: INTEGER = 1
 
-	dll32_type: INTEGER is 3
+	dll32_type: INTEGER = 3
 
-	dllwin32_type: INTEGER is 4;
+	dllwin32_type: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree item associated to a favorite item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_item: EB_FAVORITES_ITEM) is
+	make (an_item: EB_FAVORITES_ITEM)
 			-- Create a tree item from `an_item', a favorite item.
 		require
 			an_item_non_void: an_item /= Void
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			set_configurable_target_menu_handler (agent context_menu_handler)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		do
 			if context_menu_factory /= Void then
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	remove_feature (a_favorite_stone: EB_FAVORITES_FEATURE_STONE) is
+	remove_feature (a_favorite_stone: EB_FAVORITES_FEATURE_STONE)
 			-- Remove a feature from the tree, but not `Current'
 		local
 			old_feat: EB_FAVORITES_FEATURE
@@ -111,7 +111,7 @@ feature -- Status setting
 			old_feat.parent.prune (old_feat)
 		end
 
-	remove_class (a_favorite_stone: EB_FAVORITES_CLASS_STONE) is
+	remove_class (a_favorite_stone: EB_FAVORITES_CLASS_STONE)
 			-- Remove a class from the tree, but not `Current'
 		local
 			old_class: EB_FAVORITES_CLASS
@@ -121,14 +121,14 @@ feature -- Status setting
 			old_class.parent.prune (old_class)
 		end
 
-	remove_folder (a_folder: EB_FAVORITES_FOLDER) is
+	remove_folder (a_folder: EB_FAVORITES_FOLDER)
 			-- Remove `a_folder' from the tree
 		do
 			a_folder.parent.start
 			a_folder.parent.prune (a_folder)
 		end
 
-	drop_folder_after (a_folder: EB_FAVORITES_FOLDER) is
+	drop_folder_after (a_folder: EB_FAVORITES_FOLDER)
 			-- Put `an_item' to the right of `data' in `data's parent
 		local
 			l_fav: EB_FAVORITES_ITEM
@@ -143,19 +143,19 @@ feature -- Status setting
 			end
 		end
 
-	drop_class_stone_after (a_stone: CLASSI_STONE) is
+	drop_class_stone_after (a_stone: CLASSI_STONE)
 			-- Put `a_stone' to the right of `data' in `data's parent.
 		do
 			data.parent.add_stone_after (a_stone, data)
 		end
 
-	drop_feature_stone_after (a_stone: FEATURE_STONE) is
+	drop_feature_stone_after (a_stone: FEATURE_STONE)
 			-- Put `a_stone' to the right of `data' in `data's parent.
 		do
 			data.parent.add_stone_after (a_stone, data)
 		end
 
-	refresh is
+	refresh
 			-- After a recompilation, get the right icon,
 			-- delete `Current' if the class was removed,...
 		local
@@ -194,7 +194,7 @@ feature -- Status setting
 			end
 		end
 
-	expand_recursively is
+	expand_recursively
 			-- Expand all children of `Current'.
 		local
 			child: EB_FAVORITES_TREE_ITEM
@@ -222,7 +222,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	droppable (a_pebble: ANY): BOOLEAN is
+	droppable (a_pebble: ANY): BOOLEAN
 			-- Can user drop `a_pebble' on `Current'?
 		local
 			a_folder: EB_FAVORITES_FOLDER
@@ -258,7 +258,7 @@ invariant
 
 	data_not_void: data /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

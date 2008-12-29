@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class stone containing the favorite item it stems from"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_favorite (an_item: EB_FAVORITES_CLASS) is
+	make_from_favorite (an_item: EB_FAVORITES_CLASS)
 			-- Create a class stone and save the attached favorite item
 		require
 			class_exists_in_universe: an_item.associated_stone /= Void
@@ -31,7 +31,7 @@ feature -- Access
 
 	origin: EB_FAVORITES_CLASS;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

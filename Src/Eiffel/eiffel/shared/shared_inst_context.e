@@ -1,18 +1,18 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_INST_CONTEXT
 	
 feature {NONE}
 
-	Inst_context: INST_CONTEXT is
+	Inst_context: INST_CONTEXT
 			-- Context of construction of actual types, instances of
 			-- CL_TYPE_A
 		once
 			create Result;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

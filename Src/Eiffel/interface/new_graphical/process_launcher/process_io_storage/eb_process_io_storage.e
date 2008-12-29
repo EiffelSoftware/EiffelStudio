@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores all output and error from another process."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	make
 
 feature{NONE}  -- Initialization
-	make is
+	make
 			-- Initialize.
 		do
 			create data_list.make
@@ -27,7 +27,7 @@ feature{NONE}  -- Initialization
 
 feature	-- Basic operations
 
-	extend_block (i: EB_PROCESS_IO_DATA_BLOCK) is
+	extend_block (i: EB_PROCESS_IO_DATA_BLOCK)
 			-- Extend `i' into current storage.
 		require
 			i_not_null: i /= Void
@@ -56,7 +56,7 @@ feature	-- Basic operations
 			mutex.unlock
 		end
 
-	first_block (block_to_be_removed: BOOLEAN): EB_PROCESS_IO_DATA_BLOCK is
+	first_block (block_to_be_removed: BOOLEAN): EB_PROCESS_IO_DATA_BLOCK
 			-- First block in current storage.
 			-- If `block_to_be_removed' is True, returned block will be removed from current storage.
 		local
@@ -78,7 +78,7 @@ feature	-- Basic operations
 			mutex.unlock
 		end
 
-	all_blocks (block_to_be_removed: BOOLEAN) : EB_PROCESS_IO_DATA_BLOCK is
+	all_blocks (block_to_be_removed: BOOLEAN) : EB_PROCESS_IO_DATA_BLOCK
 			-- All blocks from current storage.
 			-- If `block_to_be_removed' is True, returned blocks will be removed from current storage.
 		local
@@ -129,7 +129,7 @@ feature	-- Basic operations
 			mutex.unlock
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out current storage.
 		do
 			mutex.lock
@@ -140,7 +140,7 @@ feature	-- Basic operations
 
 feature -- Status setting
 
-	reset_output_byte_count is
+	reset_output_byte_count
 			-- Set output byte count to zero.
 		do
 			mutex.lock
@@ -150,7 +150,7 @@ feature -- Status setting
 			output_byte_count_set_to_zero: output_byte_count = 0
 		end
 
-	reset_error_byte_count is
+	reset_error_byte_count
 			-- Set error byte count to zero
 		do
 			mutex.lock
@@ -160,7 +160,7 @@ feature -- Status setting
 			error_byte_count_set_to_zero: error_byte_count = 0
 		end
 
-	set_capacity (cap: INTEGER) is
+	set_capacity (cap: INTEGER)
 			-- Set `capacity' with `cap'.
 		require
 			cap_positive: cap > 0
@@ -188,7 +188,7 @@ feature -- Status reporting
 	count: INTEGER
 			-- Number in bytes of data in current storage.
 
-	has_new_block: BOOLEAN is
+	has_new_block: BOOLEAN
 			-- Is there any data block in current storage?
 		do
 			mutex.lock
@@ -204,7 +204,7 @@ feature{NONE} -- Implementation
 	mutex: MUTEX
 			-- Internal mutex
 
-	initial_capacity: INTEGER is 1048576
+	initial_capacity: INTEGER = 1048576
 			-- Initial capacity
 
 invariant
@@ -212,7 +212,7 @@ invariant
 	mutex_not_null: mutex /= Void
 	count_not_larger_than_capacity: count <= capacity
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

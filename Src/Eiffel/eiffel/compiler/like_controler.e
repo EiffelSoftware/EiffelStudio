@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controler of like types: the goal is to detect cycles in anchored types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialize	
 
-	make is
+	make
 			-- Initialization
 		do
 			create routine_ids.make (10)
@@ -38,13 +38,13 @@ feature -- Status report
 	is_on: BOOLEAN
 			-- Status of the controller
 
-	has_argument (a_position: INTEGER): BOOLEAN is
+	has_argument (a_position: INTEGER): BOOLEAN
 			-- Does current have an anchor on `a_position'?
 		do
 			Result := arguments.has (a_position)
 		end
 
-	has_routine_id (a_routine_id: INTEGER): BOOLEAN is
+	has_routine_id (a_routine_id: INTEGER): BOOLEAN
 			-- Does current have an anchor on `a_routine_id'?
 		do
 			Result := routine_ids.has (a_routine_id)
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Settings
 
-	turn_on is
+	turn_on
 			-- Active the controler.
 		do
 			is_on := True
@@ -60,7 +60,7 @@ feature -- Settings
 			active: is_on
 		end
 
-	turn_off is
+	turn_off
 			-- Desactive the controller.
 		do
 			routine_ids.wipe_out
@@ -70,7 +70,7 @@ feature -- Settings
 			not_active: not is_on
 		end
 
-	raise_error is
+	raise_error
 		do
 			Rescue_status.set_is_like_exception (True)
 			raise ("Like cycle")
@@ -78,7 +78,7 @@ feature -- Settings
 
 feature -- Element change
 
-	put_routine_id (a_routine_id: INTEGER) is
+	put_routine_id (a_routine_id: INTEGER)
 			-- Insert an anchor based on `a_routine_id'.
 		do
 			routine_ids.extend (a_routine_id)
@@ -86,7 +86,7 @@ feature -- Element change
 			has_routine_id: has_routine_id (a_routine_id)
 		end
 
-	put_argument (a_position: INTEGER) is
+	put_argument (a_position: INTEGER)
 			-- Insert an anchor based on `a_position'.
 		do
 			arguments.extend (a_position)
@@ -96,13 +96,13 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_routine_id is
+	remove_routine_id
 			-- Remove last recorded routine id.
 		do
 			routine_ids.remove
 		end
 
-	remove_argument is
+	remove_argument
 			-- Remove last recorded argument.
 		do
 			arguments.remove
@@ -120,7 +120,7 @@ invariant
 	arguments_not_void: arguments /= Void
 	routine_ids_not_void: routine_ids /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display homonyms of `current_feature'."
@@ -26,15 +26,15 @@ create
 
 feature -- Status report
 
-	has_valid_feature: BOOLEAN is True
+	has_valid_feature: BOOLEAN = True
 			-- Always a valid feature
 
-	is_branch_displayed: BOOLEAN is False;
+	is_branch_displayed: BOOLEAN = False;
 			-- Is branch information displayed?
 
 feature{NONE} -- Implemetation
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
 			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (current_feature.name, False, {QL_NAME_CRITERION}.identity_matching_strategy)
@@ -42,13 +42,13 @@ feature{NONE} -- Implemetation
 			result_attached: Result /= Void
 		end
 
-	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN
 			-- Compare name of `feature_a' and `feature_b'.
 		do
 			Result := feature_a.class_c.topological_id < feature_b.class_c.topological_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

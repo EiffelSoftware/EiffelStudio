@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degrees during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -15,21 +15,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new degree.
 		do
 		end
 
 feature -- Access
 
-	Degree_number: INTEGER is
+	Degree_number: INTEGER
 			-- Degree number
 		deferred
 		end
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no class to be processed?
 		do
 			Result := count = 0
@@ -47,14 +47,14 @@ feature -- Measurement
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process all classes.
 		deferred
 		end
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		require
 			a_class_not_void: a_class /= Void
@@ -63,7 +63,7 @@ feature -- Element change
 			count_non_negative: count >= 0
 		end
 
-	insert_new_class (a_class: CLASS_C) is
+	insert_new_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 			-- Mark it as new compilation.
 		require
@@ -76,7 +76,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -85,7 +85,7 @@ feature -- Removal
 			count_non_negative: count >= 0
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		deferred
 		ensure
@@ -96,7 +96,7 @@ invariant
 
 	count_positive: count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

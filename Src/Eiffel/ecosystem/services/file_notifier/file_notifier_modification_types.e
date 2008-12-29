@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The file notifier service's {FILE_NOTIFIER_S} modification type flags, indicating the detected type of modifications
 		of a monitored file record.
@@ -32,7 +32,7 @@ feature -- Access
 			-- File was recreated after being deleted.
 			-- Flag logically OR-ed with `file_changed'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

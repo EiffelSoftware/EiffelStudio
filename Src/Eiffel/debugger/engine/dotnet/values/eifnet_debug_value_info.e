@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object used to get information on ICOR_DEBUG_VALUE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (a_referenced_value: ICOR_DEBUG_VALUE) is
+	make (a_referenced_value: ICOR_DEBUG_VALUE)
 			-- Initialize `Current' with the referenced value
 			-- this referenced is the value we got directly from the dotnet debugger
 			-- with no processing on it.
@@ -61,7 +61,7 @@ feature {NONE} -- Initialisation
 			init
 		end
 
-	make_from_prepared_value (a_referenced_value: ICOR_DEBUG_VALUE; a_prepared_value: ICOR_DEBUG_VALUE) is
+	make_from_prepared_value (a_referenced_value: ICOR_DEBUG_VALUE; a_prepared_value: ICOR_DEBUG_VALUE)
 			-- Initialize `Current' from a prepared value
 			-- a prepared value is an dereferenced, and unboxed dotnet value
 		require
@@ -74,7 +74,7 @@ feature {NONE} -- Initialisation
 
 feature -- Dispose
 
-	clean is
+	clean
 			-- Clean Current value
 			-- and make Current ready to be disposed
 			-- This object should not be used anymore.
@@ -103,7 +103,7 @@ feature -- Dispose
 
 feature {NONE} -- Internal Initialisation
 
-	init is
+	init
 			-- Set the main information
 		local
 			l_type: INTEGER
@@ -187,7 +187,7 @@ feature -- Access
 
 feature -- Queries
 
-	value_to_truncated_string (a_size: INTEGER): STRING_32 is
+	value_to_truncated_string (a_size: INTEGER): STRING_32
 			-- Truncated string output for the Current value
 		do
 			if is_string_type then
@@ -234,7 +234,7 @@ feature -- Nature Reference
 
 feature -- Queries
 
-	value_icd_class: ICOR_DEBUG_CLASS is
+	value_icd_class: ICOR_DEBUG_CLASS
 			-- ICOR_DEBUG_CLASS related to this Current value
 		require
 			has_object_interface: has_object_interface
@@ -252,7 +252,7 @@ feature -- Queries
 			end
 		end
 
-	value_class_type: CLASS_TYPE is
+	value_class_type: CLASS_TYPE
 			-- CLASS_TYPE related to this Current value
 		require
 			has_object_interface: has_object_interface
@@ -275,7 +275,7 @@ feature -- Queries
 				--| NOTA: Result can be void
 		end
 
-	value_class_i: CLASS_I is
+	value_class_i: CLASS_I
 			-- CLASS_I related to this Current value
 		require
 			has_object_interface: has_object_interface
@@ -300,7 +300,7 @@ feature -- Queries
 			--| Note: Result can be Void for certain external dotnet class type.
 		end
 
-	value_class_c: CLASS_C is
+	value_class_c: CLASS_C
 			-- CLASS_C related to this Current value
 		require
 			has_object_interface: has_object_interface
@@ -328,7 +328,7 @@ feature -- Queries
 			result_not_void: Result /= Void
 		end
 
-	only_file_name_without_extension (f: STRING): STRING is
+	only_file_name_without_extension (f: STRING): STRING
 			-- Return only the filename part of the absolute filename `f'
 			-- Not very nice, but how could we do otherwise ?
 		local
@@ -347,7 +347,7 @@ feature -- Queries
 
 feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
-	value_class_token: NATURAL_32 is
+	value_class_token: NATURAL_32
 			-- Dotnet class token for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -360,7 +360,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-	value_class_name: STRING is
+	value_class_name: STRING
 			-- class name for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -377,7 +377,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-	value_module_file_name: STRING is
+	value_module_file_name: STRING
 			-- module filename for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -385,7 +385,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			Result := value_icd_module.name
 		end
 
-	value_icd_module: ICOR_DEBUG_MODULE is
+	value_icd_module: ICOR_DEBUG_MODULE
 			-- ICorDebugModule for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -402,7 +402,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-	value_icd_function (f_name: STRING): ICOR_DEBUG_FUNCTION is
+	value_icd_function (f_name: STRING): ICOR_DEBUG_FUNCTION
 			-- ICorDebugFunction for this ICorDebugObjectValue value
 			-- with external feature name `f_name'.
 		require
@@ -423,7 +423,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 
 feature {NONE} -- Interface Access : Impl
 
-	icd_strong_prepared_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	icd_strong_prepared_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 		require
 			a_icd /= Void
 		local
@@ -450,7 +450,7 @@ feature {NONE} -- Interface Access : Impl
 			end
 		end
 
-	new_interface_debug_object_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_OBJECT_VALUE is
+	new_interface_debug_object_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_OBJECT_VALUE
 		require
 			a_icd /= Void
 		local
@@ -470,7 +470,7 @@ feature {NONE} -- Interface Access : Impl
 
 feature -- IUnknown Interfaces
 
-	new_interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
+	new_interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
 			-- ICorDebugObjectValue interface
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
@@ -478,7 +478,7 @@ feature -- IUnknown Interfaces
 			Result := new_interface_debug_object_value_from (icd_prepared_value)
 		end
 
-	interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
+	interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE
 			-- ICorDebugArrayValue interface
 		require
 			is_array_type
@@ -495,7 +495,7 @@ feature -- IUnknown Interfaces
 			end
 		end
 
-	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE is
+	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE
 			-- ICorDebugStringValue interface
 		require
 			is_string_type
@@ -542,7 +542,7 @@ invariant
 
 	icd_referenced_and_prepared_value_not_void : icd_referenced_value = Void implies icd_prepared_value = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

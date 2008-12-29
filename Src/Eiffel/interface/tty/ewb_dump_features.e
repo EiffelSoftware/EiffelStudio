@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dumps features of a class that can be refernced by agents to stdout."
@@ -31,7 +31,7 @@ create
 
 feature
 
-	make (a_type_name: STRING) is
+	make (a_type_name: STRING)
 			-- Initialize class_name from `a_type_name'.
 		local
 			i: INTEGER
@@ -46,14 +46,14 @@ feature
 			end
 		end
 
-	make_verbose (s: STRING) is
+	make_verbose (s: STRING)
 			-- Make with `operand_dump' set True.
 		do
 			make (s)
 			operand_dump := True
 		end
 
-	enable_operand_dump is
+	enable_operand_dump
 			-- Set `operand_dump' True.
 		do
 			operand_dump := True
@@ -66,11 +66,11 @@ feature {NONE} -- Properties
 	operand_dump: BOOLEAN
 			-- Is operand information dumped?
 
-	extra_dump: BOOLEAN is True
+	extra_dump: BOOLEAN = True
 			-- Is extra information dumped?
 			-- Const values etc...
 
-	process_compiled_class (e_class: CLASS_C) is
+	process_compiled_class (e_class: CLASS_C)
 			-- Process compiled class `e_class'.
 		local
 			gs: EIFFEL_LIST [FORMAL_DEC_AS]
@@ -161,13 +161,13 @@ feature {NONE} -- Properties
 			end
 		end
 
-	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+	want_compiled_class (class_i: CLASS_I): BOOLEAN
 			-- We want the class to be compiled.
 		do
 			Result := True
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Strong signing for IL code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,17 +13,17 @@ create
 
 feature
 
-	make is
+	make
 			-- Create instance of MD_STRONG_NAME.
 		do
 		end
 
 feature -- Access
 
-	exists: BOOLEAN is False;
+	exists: BOOLEAN = False;
 		-- On Unix platform, no strong signing ability.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

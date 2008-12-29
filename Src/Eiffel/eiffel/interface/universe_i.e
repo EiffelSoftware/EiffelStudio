@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of the Eiffel universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,14 +33,14 @@ create {COMPILER_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 		end
 
 feature -- Properties
 
-	target_name: STRING is
+	target_name: STRING
 			-- Name of the universe target.
 		require
 			target_not_void: target /= Void
@@ -59,7 +59,7 @@ feature -- Properties
 	conf_system: CONF_SYSTEM
 			-- Complete configuration system.
 
-	conf_state: CONF_STATE is
+	conf_state: CONF_STATE
 			-- Current state, needed for conditioning.
 		require
 			target_not_void: target /= Void
@@ -67,7 +67,7 @@ feature -- Properties
 			Result := conf_state_from_target (target)
 		end
 
-	conf_state_from_target (a_target: CONF_TARGET): CONF_STATE is
+	conf_state_from_target (a_target: CONF_TARGET): CONF_STATE
 			-- Current state, according to `a_target', needed for conditioning.
 		require
 			a_target_not_void: a_target /= Void
@@ -90,7 +90,7 @@ feature -- Properties
 			create Result.make (platform, build, system.has_multithreaded, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
 		end
 
-	platform: INTEGER is
+	platform: INTEGER
 			-- Universe type of platform.
 		local
 			l_pf: PLATFORM
@@ -109,7 +109,7 @@ feature -- Properties
 			end
 		end
 
-	build: INTEGER is
+	build: INTEGER
 			-- Universe type of build.
 		do
 			if compilation_modes.is_finalizing then
@@ -119,13 +119,13 @@ feature -- Properties
 			end
 		end
 
-	groups: ARRAYED_LIST [CONF_GROUP] is
+	groups: ARRAYED_LIST [CONF_GROUP]
 			-- Groups of the universe (not including groups of libraries/precompiles).
 		do
 			Result := target.groups.linear_representation
 		end
 
-	all_classes: DS_HASH_SET [CLASS_I] is
+	all_classes: DS_HASH_SET [CLASS_I]
 			-- All classes in the system, including uncompiled classes.
 		local
 			l_vis: CONF_ALL_CLASSES_VISITOR
@@ -293,7 +293,7 @@ feature -- Properties
 
 feature -- Access
 
-	classes_with_name (a_class_name: STRING): LIST [CLASS_I] is
+	classes_with_name (a_class_name: STRING): LIST [CLASS_I]
 			-- Classes with a local name of `class_name' found in the Universe.
 			-- That means renamings on the cluster of the class itself are taken into
 			-- account, but not renamings because of the use as a library.
@@ -324,7 +324,7 @@ feature -- Access
 			classes_with_name_not_void: Result /= Void
 		end
 
-	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
+	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I]
 			-- Compiled classes with name `class_name' found in the Universe
 		require
 			class_name_not_void: class_name /= Void and then not class_name.is_empty
@@ -344,7 +344,7 @@ feature -- Access
 			end
 		end
 
-	class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I is
+	class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster'
 		require
 			good_argument: a_class_name /= Void
@@ -372,7 +372,7 @@ feature -- Access
 			end
 		end
 
-	safe_class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I is
+	safe_class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster' which doesn't generate {VSCN} errors.
 		require
 			good_argument: a_class_name /= Void
@@ -392,7 +392,7 @@ feature -- Access
 			end
 		end
 
-	cluster_of_name (cluster_name: STRING): CLUSTER_I is
+	cluster_of_name (cluster_name: STRING): CLUSTER_I
 			-- Cluster whose name is `cluster_name' (Void if none)
 		require
 			good_argument: cluster_name /= Void
@@ -400,7 +400,7 @@ feature -- Access
 			Result ?= group_of_name (cluster_name)
 		end
 
-	group_of_name (group_name: STRING): CONF_GROUP is
+	group_of_name (group_name: STRING): CONF_GROUP
 			-- Group whose name is `group_name' (Void if none)
 		require
 			good_argument: group_name /= Void
@@ -419,7 +419,7 @@ feature -- Access
 			end
 		end
 
-	group_of_name_recursive (a_group_name: STRING): ARRAYED_SET [CONF_GROUP] is
+	group_of_name_recursive (a_group_name: STRING): ARRAYED_SET [CONF_GROUP]
 			-- Group whose name is `a_group_name'.
 			-- This feature will find all groups in the system recursively.
 		require
@@ -452,7 +452,7 @@ feature -- Access
 			cleared: group_visited = Void
 		end
 
-	cluster_of_location (a_directory: STRING): LIST [CONF_CLUSTER] is
+	cluster_of_location (a_directory: STRING): LIST [CONF_CLUSTER]
 			-- Find cluster for `a_directory'.
 		require
 			a_directory_valid: a_directory /= Void and then not a_directory.is_empty
@@ -468,7 +468,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	class_from_assembly (an_assembly, a_dotnet_name: STRING): EXTERNAL_CLASS_I is
+	class_from_assembly (an_assembly, a_dotnet_name: STRING): EXTERNAL_CLASS_I
 			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with
 			-- `an_assembly' as name, look only in first found item.
@@ -510,7 +510,7 @@ feature -- Access
 			end
 		end
 
-	library_of_uuid (a_uuid: !UUID; a_recursive: BOOLEAN): !LIST [!CONF_LIBRARY] is
+	library_of_uuid (a_uuid: !UUID; a_recursive: BOOLEAN): !LIST [!CONF_LIBRARY]
 			-- Return list of libraries identified by UUID
 			--
 			-- Note: Since it is possible that multiple libraries share the same UUID, a list of
@@ -557,7 +557,7 @@ feature -- Access
 
 feature -- Update
 
-	set_new_target (a_target: like new_target) is
+	set_new_target (a_target: like new_target)
 			-- Set `new_target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -569,7 +569,7 @@ feature -- Update
 			conf_system_set: conf_system = a_target.system
 		end
 
-	set_old_target (a_target: like target) is
+	set_old_target (a_target: like target)
 			-- Set `target' to `a_target' and reset `new_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -583,7 +583,7 @@ feature -- Update
 			conf_system_void: conf_system = Void
 		end
 
-	new_target_to_target is
+	new_target_to_target
 			-- Move `new_target' to `target'.
 		require
 			new_target_not_void: new_target /= Void
@@ -595,7 +595,7 @@ feature -- Update
 			new_target_void: new_target = Void
 		end
 
-	reset_internals is
+	reset_internals
 			-- Should be called when a new compilation starts.
 		do
 			buffered_classes.wipe_out
@@ -603,13 +603,13 @@ feature -- Update
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	buffered_classes: HASH_TABLE [CLASS_I, STRING] is
+	buffered_classes: HASH_TABLE [CLASS_I, STRING]
 			-- Hash table that contains recent results of calls to `classes_with_name'.
 		once
 			create Result.make (200)
 		end
 
-	check_universe is
+	check_universe
 			-- Check universe
 		require
 			system_exists: system /= Void
@@ -718,7 +718,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			Error_handler.checksum
 		end
 
-	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]; a_except: SEARCH_TABLE [STRING]) is
+	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]; a_except: SEARCH_TABLE [STRING])
 			-- Universe checking, check all class names in `a_set' to ensure that only
 			-- one instance with specified name is found in universe. If it is unique,
 			-- then for each unique instance calls associated action.
@@ -791,7 +791,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 feature {COMPILER_EXPORTER} -- Precompilation
 
-	mark_precompiled is
+	mark_precompiled
 			-- Mark all the clusters of the universe as being precompiled.
 		local
 			precomp_ids: ARRAY [INTEGER]
@@ -805,7 +805,7 @@ feature {COMPILER_EXPORTER} -- Precompilation
 
 feature {NONE} -- Implementation
 
-	group_of_name_recursive_imp (a_group_name: STRING; a_group_to_search: CONF_GROUP; a_result: ARRAYED_SET [CONF_GROUP])is
+	group_of_name_recursive_imp (a_group_name: STRING; a_group_to_search: CONF_GROUP; a_result: ARRAYED_SET [CONF_GROUP])
 			-- Group whose name is `a_group_name'
 		require
 			not_void: a_group_name /= Void
@@ -849,7 +849,7 @@ invariant
 	new_target_in_conf_system: (conf_system /= Void and new_target /= Void) implies new_target.system = conf_system
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

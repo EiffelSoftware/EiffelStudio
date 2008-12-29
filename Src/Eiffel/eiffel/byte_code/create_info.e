@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Informations on creation type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,12 +26,12 @@ inherit
 
 feature -- C code generation
 
-	analyze is
+	analyze
 			-- Analyze creation type: look for Dtype(Current) usage.
 		deferred
 		end
 
-	generate is
+	generate
 			-- Generate creation type
 		require
 			context_valid: context.context_class_type.type /= Void
@@ -44,7 +44,7 @@ feature -- C code generation
 			buffer.put_character (')')
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id.
 		require
 			buffer_not_void: buffer /= Void
@@ -54,17 +54,17 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate byte code for creation type evaluation
 		deferred
 		end
 
-	generate_il_type is
+	generate_il_type
 			-- Generate byte code to load creation type.
 		deferred
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_A is
+	created_in (other: CLASS_TYPE): TYPE_A
 			-- Resulting type of Current as if it was used to create object in `other'
 		require
 			other_not_void: other /= Void
@@ -75,7 +75,7 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for creation type evaluation
 		require
 			ba_not_void: ba /= Void
@@ -85,13 +85,13 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	is_explicit: BOOLEAN is
+	is_explicit: BOOLEAN
 			-- Is type fixed at compile time?
 		do
 			Result := False
 		end
 
-	generate_start (buffer: GENERATION_BUFFER) is
+	generate_start (buffer: GENERATION_BUFFER)
 			-- Generate new block if necessary.
 		require
 			buffer_not_void: buffer /= Void
@@ -101,7 +101,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_end (buffer: GENERATION_BUFFER) is
+	generate_end (buffer: GENERATION_BUFFER)
 			-- Close new block if necessary.
 		require
 			buffer_not_void: buffer /= Void
@@ -111,7 +111,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_gen_type_conversion (a_level: NATURAL) is
+	generate_gen_type_conversion (a_level: NATURAL)
 			-- Generate the conversion of a type array into an id.
 		local
 			gen_type : GEN_TYPE_A
@@ -123,7 +123,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
 		require
@@ -133,7 +133,7 @@ feature -- Generic conformance
 			-- Do nothing
 		end
 
-	make_type_byte_code (ba: BYTE_ARRAY) is
+	make_type_byte_code (ba: BYTE_ARRAY)
 			-- Additional info for creation of generic
 			-- types with anchored parameters.
 		require
@@ -142,7 +142,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid_array (buffer: GENERATION_BUFFER;
-						final_mode: BOOLEAN; idx_cnt: COUNTER) is
+						final_mode: BOOLEAN; idx_cnt: COUNTER)
 			-- Generate mode dependent sequence of type id's
 			-- separated by commas. 'idx_cnt' holds the
 			-- index in the array for this entry.
@@ -153,7 +153,7 @@ feature -- Generic conformance
 		do
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 			-- Generate mode dependent initialization of
 			-- cid array. 'idx_cnt' holds the index in the
 			-- array for this entry.
@@ -163,12 +163,12 @@ feature -- Generic conformance
 		do
 		end
 
-	type_to_create: CL_TYPE_A is
+	type_to_create: CL_TYPE_A
 			-- Type of this info.
 		deferred
 		end
 
-	is_generic: BOOLEAN is
+	is_generic: BOOLEAN
 			-- Is generated type generic?
 		local
 			gen_type: GEN_TYPE_A
@@ -177,7 +177,7 @@ feature -- Generic conformance
 			Result := (gen_type /= Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Main description of a byte code tree node. All the classes which %
 				  %describe the byte code inherit from us."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Visitor feature.
 		require
 			v_not_void: v /= Void
@@ -39,7 +39,7 @@ feature -- Visitor
 
 feature -- Eiffel source line information
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Position where construct is located in Eiffel source.
 		do
 				-- Unknown by default.
@@ -48,7 +48,7 @@ feature -- Eiffel source line information
 			Result_positive: Result > 0
 		end
 
-	set_line_number (lnr: INTEGER) is
+	set_line_number (lnr: INTEGER)
 			-- Set `line_number' to `lnr'.
 		require
 			lnr_positive: lnr > 0
@@ -56,7 +56,7 @@ feature -- Eiffel source line information
 			-- Nothing by default
 		end
 
-	generate_line_info is
+	generate_line_info
 			-- Generate source line information.
 		local
 			l_buffer: like buffer
@@ -71,7 +71,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	get_current_frozen_debugger_hook: INTEGER is
+	get_current_frozen_debugger_hook: INTEGER
 			-- Get the current hook number for the C debugger
 		require
 			workbench_mode: not context.final_mode or else system.exception_stack_managed
@@ -79,7 +79,7 @@ feature -- Eiffel source line information
 			Result := context.get_breakpoint_slot
 		end
 
-	set_current_frozen_debugger_hook (a_hook_number: INTEGER) is
+	set_current_frozen_debugger_hook (a_hook_number: INTEGER)
 			-- Set the current hook number for the C debugger
 			-- to `a_hook_number'
 		require
@@ -88,7 +88,7 @@ feature -- Eiffel source line information
 			context.set_breakpoint_slot (a_hook_number)
 		end
 
-	generate_frozen_debugger_recording_assignment (a_target: ACCESS_B) is
+	generate_frozen_debugger_recording_assignment (a_target: ACCESS_B)
 			-- Generate an assignment hook for exec replay
 		require
 			workbench_mode: context.workbench_mode
@@ -195,7 +195,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_frozen_debugger_hook is
+	generate_frozen_debugger_hook
 			-- Generate the hook for the C debugger for the
 			-- line number `lnr' (line number means breakpoint slot)
 		local
@@ -219,7 +219,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_frozen_end_debugger_hook is
+	generate_frozen_end_debugger_hook
 			-- Generate the hook for the C debugger corresponding
 			-- to the end of the feature.
 		local
@@ -241,7 +241,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_frozen_debugger_hook_nested is
+	generate_frozen_debugger_hook_nested
 			-- Generate the hook for the C debugger for the
 			-- line number `lnr' (line number means breakpoint slot)
 		local
@@ -292,7 +292,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
+	generate_melted_end_debugger_hook (ba: BYTE_ARRAY)
 			-- Record the breakable point corresponding to the end of the feature.
 		local
 			lnr: INTEGER
@@ -315,13 +315,13 @@ feature {NONE} -- Implementation
 
 feature -- Operations
 
-	null_byte_node: BYTE_LIST [BYTE_NODE] is
+	null_byte_node: BYTE_LIST [BYTE_NODE]
 			-- Null instructions
 		once
 			create Result.make (0)
 		end
 
-	buffer: GENERATION_BUFFER is
+	buffer: GENERATION_BUFFER
 			-- Generated file
 		do
 			Result := context.buffer
@@ -329,7 +329,7 @@ feature -- Operations
 			Result_not_void: Result /= Void
 		end
 
-	real_type (typ: TYPE_A): TYPE_A is
+	real_type (typ: TYPE_A): TYPE_A
 			-- Real type
 		require
 			typ_not_void: typ /= Void
@@ -339,12 +339,12 @@ feature -- Operations
 			Result_not_void: Result /= Void
 		end
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarges the tree for suitable decoration
 		do
 		end
 
-	enlarged: like Current is
+	enlarged: like Current
 			-- Enlarge current node for C code generation
 		do
 			Result := Current
@@ -352,34 +352,34 @@ feature -- Operations
 			Result_not_void: Result /= Void
 		end
 
-	need_enlarging: BOOLEAN is
+	need_enlarging: BOOLEAN
 			-- Does current node need to be enlarged ?
 		do
 		end
 
-	analyze is
+	analyze
 			-- First pass to build a proper context
 		do
 		end
 
-	generate is
+	generate
 			-- Generate C code in `buffer'
 		do
 		end
 
-	find_assign_result is
+	find_assign_result
 			-- Find assignments in Result at the very last
 			-- instruction in a function.
 		do
 		end
 
-	mark_last_instruction is
+	mark_last_instruction
 			-- Mark a last instruction if it needs special
 			-- considerations (as formatting is concerned).
 		do
 		end
 
-	last_all_in_result: BOOLEAN is
+	last_all_in_result: BOOLEAN
 			-- Are all the exit points in a function occupied
 			-- by an assignment in Result ?
 		do
@@ -387,15 +387,15 @@ feature -- Operations
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 		end
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 			-- i > 0:	Does this byte node assign something to the attribute
 			--			of `feature_id' `i'?
 			-- i = 0:	Does this byte node assign something to `Result'
@@ -403,7 +403,7 @@ feature -- Array optimization
 		do
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 			-- Modify the byte code if the loop optimization is safe
 		do
 			Result := Current
@@ -413,14 +413,14 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 0
 		ensure
 			Result_greater_or_equal_to_one: Result >= 0
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 			-- Modified byte code: all the accesses to locals, Result,
 			-- arguments, Current are modified to use local variables of
 			-- the client
@@ -430,7 +430,7 @@ feature -- Inlining
 			Result_not_void: Result /= Void
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 			-- Perform inlining in the current byte node
 		do
 			Result := Current
@@ -438,7 +438,7 @@ feature -- Inlining
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Formats feature text."
@@ -15,12 +15,12 @@ inherit
 
 feature -- Properties
 
-	is_flat: BOOLEAN is True;
+	is_flat: BOOLEAN = True;
 			-- Is the format doing a flat?
 
 feature -- Execution
 
-	format (a_feature: E_FEATURE; display_breakpoint: BOOLEAN; a_formatter: TEXT_FORMATTER) is
+	format (a_feature: E_FEATURE; display_breakpoint: BOOLEAN; a_formatter: TEXT_FORMATTER)
 			-- Format text for eiffel `a_feature' and take
 			-- into consideration renaming.
 		require
@@ -36,7 +36,7 @@ feature -- Execution
 			end
 		end
 
-	format_short (a_feature: E_FEATURE; display_breakpoint: BOOLEAN; a_formatter: TEXT_FORMATTER) is
+	format_short (a_feature: E_FEATURE; display_breakpoint: BOOLEAN; a_formatter: TEXT_FORMATTER)
 			-- Format text for eiffel `a_feature' and take
 			-- into consideration renaming.
 			--| Display short format (contracts only), used by ENViSioN!
@@ -53,7 +53,7 @@ feature -- Execution
 			end
 		end
 
-	simple_format_debuggable (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER) is
+	simple_format_debuggable (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER)
 			-- Do a simple format for eiffel `a_feature'
 			-- which doesn't only formats the text and doesn't
 			-- take into consideration renaming.
@@ -69,7 +69,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	new_format_context (display_breakpoint: BOOLEAN; a_feature: E_FEATURE): FEAT_TEXT_FORMATTER_DECORATOR is
+	new_format_context (display_breakpoint: BOOLEAN; a_feature: E_FEATURE): FEAT_TEXT_FORMATTER_DECORATOR
 			-- Context used by both `format' and `short_format'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_format (a_context: FEAT_TEXT_FORMATTER_DECORATOR; a_feature: E_FEATURE) is
+	internal_format (a_context: FEAT_TEXT_FORMATTER_DECORATOR; a_feature: E_FEATURE)
 			-- Format implementation
 		require
 			a_context_not_void: a_context /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			error := a_context.execution_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

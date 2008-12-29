@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create new instance of FEATURE_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature -- Factory
 
-	new_feature (a_node: FEATURE_AS; a_name_id: INTEGER; a_class: CLASS_C): FEATURE_I is
+	new_feature (a_node: FEATURE_AS; a_name_id: INTEGER; a_class: CLASS_C): FEATURE_I
 			-- Create associated FEATURE_I instance of `a_node'.
 		require
 			a_node_not_void: a_node /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			last_feature := l_result
 		end
 
-	query_type (a_type: TYPE_AS): TYPE_A is
+	query_type (a_type: TYPE_AS): TYPE_A
 		require
 			a_type_not_void: a_type /= Void
 		do
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			query_type_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

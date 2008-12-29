@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Representation of metric basic objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_unit: like unit; a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO) is
+	make (a_unit: like unit; a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO)
 			-- Initialize `unit' with `a_unit' and use `a_basic_scope_info' for
 			-- domain of any scope in metric calculation.
 		require
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 			unit_set: unit = a_unit
 		end
 
-	make_with_basic_scopes (a_unit: like unit; a_basic_scope_info_table: like basic_scope_table) is
+	make_with_basic_scopes (a_unit: like unit; a_basic_scope_info_table: like basic_scope_table)
 			-- Initialize `unit' with `a_unit' and setup `basic_scope_table' with `a_basic_scope_info_table'.
 		require
 			a_unit_attached: a_unit /= Void
@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 
 feature -- Value
 
-	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric
 		local
 			l_calculator: QL_DOMAIN_GENERATOR
@@ -108,7 +108,7 @@ feature -- Value
 			result_correct: Result.first.value = internal_value
 		end
 
-	criteria: LIST [QL_CRITERION] is
+	criteria: LIST [QL_CRITERION]
 			-- List of criteria set to current metric
 		local
 			l_basic_scope_table: like basic_scope_table
@@ -141,7 +141,7 @@ feature{QL_METRIC_BASIC_SCOPE_INFO} -- Metric calculation
 	internal_value: DOUBLE
 			-- Internal value
 
-	increase_value_by (a_value: DOUBLE) is
+	increase_value_by (a_value: DOUBLE)
 			-- Increate `value' by `a_value'.
 		do
 			internal_value := internal_value + a_value
@@ -151,7 +151,7 @@ feature{QL_METRIC_BASIC_SCOPE_INFO} -- Metric calculation
 
 feature -- Setting
 
-	set_criterion (a_criterion: QL_CRITERION) is
+	set_criterion (a_criterion: QL_CRITERION)
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
@@ -179,7 +179,7 @@ feature -- Setting
 			end
 		end
 
-	remove_criteria is
+	remove_criteria
 			-- Remove all criteria.
 		local
 			l_basic_scope_table: like basic_scope_table
@@ -202,7 +202,7 @@ feature -- Setting
 			end
 		end
 
-	set_value_initialize_function (a_function: like value_initialize_function) is
+	set_value_initialize_function (a_function: like value_initialize_function)
 			-- Set `value_initialize_function' with `a_function'.
 			-- If `a_function' is Void, `value_initialize_function' will be removed,
 			-- and `value' will be set to 0.0 before metric calculation
@@ -212,7 +212,7 @@ feature -- Setting
 			value_initialize_function_set: value_initialize_function = a_function
 		end
 
-	set_post_calculation_function (a_function: like post_calculation_function) is
+	set_post_calculation_function (a_function: like post_calculation_function)
 			-- Set `post_calculation_function' with `a_function'.
 			-- If `a_function' is Void, `post_calculation_function' will be removed,
 			-- and `value' will be set to 0.0 before metric calculation
@@ -222,7 +222,7 @@ feature -- Setting
 			post_calculation_function_set: post_calculation_function = a_function
 		end
 
-	set_basic_scope_info (a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO; a_scope: QL_SCOPE) is
+	set_basic_scope_info (a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO; a_scope: QL_SCOPE)
 			-- Set `a_basic_scope_info' into `basic_scope_table' with key `a_scope'.
 			-- This means if we apply current metric to a domain whose scope is `a_scope',
 			-- domain generator in `a_basic_scope_info' will be used to calculate the metric.
@@ -238,7 +238,7 @@ feature -- Setting
 			a_basic_scope_info_set: basic_scope_table.item (a_scope) = a_basic_scope_info
 		end
 
-	set_basic_scope_info_for_all (a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO) is
+	set_basic_scope_info_for_all (a_basic_scope_info: QL_METRIC_BASIC_SCOPE_INFO)
 			-- Set `a_basic_scope_info' into `basic_scope_table' with all available keys.
 			-- This means if we apply current metric to a domain, no matter what scope
 			-- that domain has, the domain generator in `a_basic_scope_info' will be used
@@ -275,7 +275,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	basic_scope_table: HASH_TABLE [QL_METRIC_BASIC_SCOPE_INFO, QL_SCOPE] is
+	basic_scope_table: HASH_TABLE [QL_METRIC_BASIC_SCOPE_INFO, QL_SCOPE]
 			-- Table of domain generators per scope
 		local
 			l_scope_list: like scopes
@@ -294,7 +294,7 @@ feature{NONE} -- Implementation
 invariant
 	generator_table_attached: basic_scope_table /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

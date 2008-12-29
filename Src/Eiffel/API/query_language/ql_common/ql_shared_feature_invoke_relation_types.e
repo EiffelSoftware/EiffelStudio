@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature caller types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Status_report
 
-	is_caller_type_valid (a_caller_type: NATURAL_16): BOOLEAN is
+	is_caller_type_valid (a_caller_type: NATURAL_16): BOOLEAN
 			-- Is `a_caller_type' a valid caller type?
 		do
 			Result := a_caller_type = normal_caller_type or
@@ -19,7 +19,7 @@ feature -- Status_report
 					  a_caller_type = creator_caller_type
 		end
 
-	is_callee_type_valid (a_callee_type: NATURAL_16): BOOLEAN is
+	is_callee_type_valid (a_callee_type: NATURAL_16): BOOLEAN
 			-- Is `a_callee_type' a valid callee type?
 		do
 			Result := a_callee_type = normal_callee_type or
@@ -29,25 +29,25 @@ feature -- Status_report
 
 feature -- Access
 
-	normal_caller_type, normal_callee_type: NATURAL_16 is
+	normal_caller_type, normal_callee_type: NATURAL_16
 			-- Normal caller type
 		do
 			Result := 0
 		end
 
-	assigner_caller_type, assigner_callee_type: NATURAL_16 is
+	assigner_caller_type, assigner_callee_type: NATURAL_16
 			-- Assigner caller type
 		do
 			Result := {DEPEND_UNIT}.is_in_assignment_flag
 		end
 
-	creator_caller_type, creator_callee_type: NATURAL_16 is
+	creator_caller_type, creator_callee_type: NATURAL_16
 		 	-- Creator caller
 		do
 			Result := {DEPEND_UNIT}.is_in_creation_flag
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

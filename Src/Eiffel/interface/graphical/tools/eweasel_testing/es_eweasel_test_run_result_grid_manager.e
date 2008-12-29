@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Manager of test result grid in {ES_EWEASEL_TESTING_RESULT_TOOL_PANEL}
 					
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: ES_GRID) is
+	make (a_grid: ES_GRID)
 			-- Creation method
 		require
 			not_void: a_grid /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	build_columns is
+	build_columns
 			-- Init columns of `grid'.
 		local
 			l_grid: !ES_GRID
@@ -78,7 +78,7 @@ feature -- Command
 			added: grid.column_count = 4
 		end
 
-	append_result_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW) is
+	append_result_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW)
 			-- Append grid items whose information query from `a_item' to `a_row'
 		require
 			not_void: a_row /= Void
@@ -144,7 +144,7 @@ feature -- Command
 			unit_test_manager.see_testing_failure_trace_command.enable_sensitive
 		end
 
-	reset is
+	reset
 			-- Clear all results
 		local
 			l_row_count: INTEGER
@@ -155,7 +155,7 @@ feature -- Command
 			end
 		end
 
-	save_test_run_data_to_session is
+	save_test_run_data_to_session
 			-- Save test case data to session data
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
@@ -173,7 +173,7 @@ feature -- Command
 			end
 		end
 
-	restore_test_run_data is
+	restore_test_run_data
 			-- Restore session data from session service
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
@@ -186,7 +186,7 @@ feature -- Command
 			end
 		end
 
-	show_all_failure_traces (a_reverse: BOOLEAN) is
+	show_all_failure_traces (a_reverse: BOOLEAN)
 			-- Show failure details of current grid selected rows.
 		local
 			l_count, l_index: INTEGER
@@ -216,7 +216,7 @@ feature -- Command
 
 feature -- Query
 
-	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN] is
+	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns in `grid'
 		local
 			l_index, l_count: INTEGER
@@ -235,7 +235,7 @@ feature -- Query
 			end
 		end
 
-	session_data: !ES_EWEASEL_TEST_RUN_SESSION_DATA is
+	session_data: !ES_EWEASEL_TEST_RUN_SESSION_DATA
 			-- Session data
 		do
 			if not {l_test: !ES_EWEASEL_TEST_RUN_SESSION_DATA} internal_session_data then
@@ -246,7 +246,7 @@ feature -- Query
 
 feature {NONE} -- Implementation commands
 
-	update_current_session_data is
+	update_current_session_data
 			-- Update Current session data with current data in the grid
 		local
 			l_list: like all_test_runs_from_grid
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	add_column_source (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW): !EV_GRID_ITEM is
+	add_column_source (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_row: EV_GRID_ROW): !EV_GRID_ITEM
 			-- Add item to column `source'
 		require
 			not_void: a_row /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	show_failure_trace_of (a_row: !EV_GRID_ROW) is
+	show_failure_trace_of (a_row: !EV_GRID_ROW)
 			-- Show failure details of `a_row'
 			-- This feature will add subrow into `a_row'
 		local
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	add_sub_row_items (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_parent_row: !EV_GRID_ROW) is
+	add_sub_row_items (a_item: !ES_EWEASEL_TEST_RESULT_ITEM; a_parent_row: !EV_GRID_ROW)
 			-- Add detail information rows to `a_row'
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	set_forground_color_of_item (a_eweasel_result: !ES_EWEASEL_TEST_RESULT_ITEM; a_grid_item: !EV_GRID_ITEM) is
+	set_forground_color_of_item (a_eweasel_result: !ES_EWEASEL_TEST_RESULT_ITEM; a_grid_item: !EV_GRID_ITEM)
 			-- Set forground color of `a_grid_item' base on `a_eweasel_result'.
 		local
 			l_colors: ES_SHARED_FONTS_AND_COLORS
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation commands
 
 		end
 
-	on_tag_item_deactive is
+	on_tag_item_deactive
 			-- Handle a editable item deactive action
 		local
 			l_row: EV_GRID_ROW
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation commands
 
 feature {NONE} -- Implementation queries
 
-	all_columns_titles: ARRAYED_LIST [STRING_GENERAL] is
+	all_columns_titles: ARRAYED_LIST [STRING_GENERAL]
 			-- All columns titles in `grid'
 		once
 			create Result.make (4)
@@ -392,13 +392,13 @@ feature {NONE} -- Implementation queries
 	grid: !ES_GRID
 			-- Grid managed.
 
-	testing_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL is
+	testing_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 			-- Testing result tool panel
 		do
 			Result := unit_test_manager.testing_result_tool
 		end
 
-	lines_of (a_string: STRING): LIST [STRING_8] is
+	lines_of (a_string: STRING): LIST [STRING_8]
 			-- Split `a_string' to list of lines separated by '%R'
 		do
 			if a_string /= Void then
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	result_item_of (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_RESULT_ITEM is
+	result_item_of (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_RESULT_ITEM
 			-- eweasel result item data in `a_row'
 		do
 			if {l_event_data: EVENT_LIST_TESTING_RESULT_ITEM} a_row.data then
@@ -445,19 +445,19 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	time_string: !STRING_GENERAL is
+	time_string: !STRING_GENERAL
 			-- Default time string used in grid items
 		do
 			create {STRING} Result.make_from_string ("")
 		end
 
-	tag_string: !STRING_GENERAL is
+	tag_string: !STRING_GENERAL
 			-- Default tag string used in grid items
 		do
 			create {STRING} Result.make_from_string ("")
 		end
 
-	session_data_id: STRING is "com.eiffel.testing.test_run_data_id"
+	session_data_id: STRING = "com.eiffel.testing.test_run_data_id"
 			-- Session data used for session service
 
 	unit_test_manager: !ES_EWEASEL_EXECUTION_MANAGER
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation queries
 			-- Instance holder of `session_data'
 			-- Note: used by `session_data' ONLY!
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

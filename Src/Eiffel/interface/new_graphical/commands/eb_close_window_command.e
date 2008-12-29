@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to close a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			-- No values to initialize.
@@ -24,14 +24,14 @@ feature {NONE} -- Initialization
 
 feature -- Command execution
 
-	execute is
+	execute
 			-- Execute Current
 		do
 				-- Destroy the window.
 			target.window.destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

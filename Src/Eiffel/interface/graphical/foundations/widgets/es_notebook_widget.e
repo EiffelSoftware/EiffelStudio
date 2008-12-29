@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A specialized widget for notebook container. Notebook widgets support tool bars.
 		]"
@@ -236,7 +236,7 @@ feature {NONE} -- Internal implementation cache
             -- Cached version of `right_tool_bar_widget'
 
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

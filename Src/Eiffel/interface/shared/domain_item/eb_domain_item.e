@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_id: STRING) is
+	make (a_id: STRING)
 			-- Initialize `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -57,52 +57,52 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	is_target_item: BOOLEAN is
+	is_target_item: BOOLEAN
 			-- Is current an application target item?
 		do
 		end
 
-	is_group_item: BOOLEAN is
+	is_group_item: BOOLEAN
 			-- Is current a group item?
 		do
 		end
 
-	is_folder_item: BOOLEAN is
+	is_folder_item: BOOLEAN
 			-- Is current a folder item?
 		do
 		end
 
-	is_class_item: BOOLEAN is
+	is_class_item: BOOLEAN
 			-- Is current a class item?
 		do
 		end
 
-	is_feature_item: BOOLEAN is
+	is_feature_item: BOOLEAN
 			-- Is current a feature item?
 		do
 		end
 
-	is_delayed_item: BOOLEAN is
+	is_delayed_item: BOOLEAN
 			-- Is current a delayed item?
 		do
 		end
 
-	is_input_domain_item: BOOLEAN is
+	is_input_domain_item: BOOLEAN
 			-- Is current an input domain item?
 		do
 		end
 
-	is_real_delayed_item: BOOLEAN is
+	is_real_delayed_item: BOOLEAN
 			-- Is current a real delayed item?
 		do
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does current represent a valid domain item?
 		do
 		end
 
-	is_up_to_date: BOOLEAN is
+	is_up_to_date: BOOLEAN
 			-- Is current domain item up-to-date?
 			-- An item can become old when new Eiffel compilation occurs.
 		do
@@ -110,7 +110,7 @@ feature -- Status report
 					  (workbench.compilation_counter = last_compilation_count)
 		end
 
-	is_sorting_order_index_valid (a_index: INTEGER): BOOLEAN is
+	is_sorting_order_index_valid (a_index: INTEGER): BOOLEAN
 			-- Is `a_index' a valid sorting order index?
 		do
 			Result := a_index = wrapper_index or else
@@ -126,7 +126,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -153,7 +153,7 @@ feature -- Access
 	id: STRING
 			-- Id of current domain item		
 
-	text_of_id: STRING is
+	text_of_id: STRING
 			-- Text of id if it is a id item, otherwise, an empty string
 		do
 			Result := id
@@ -161,7 +161,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 			-- `a_scope' is only used to generate delayed domain.
 		require
@@ -172,7 +172,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	domain_without_scope: QL_DOMAIN is
+	domain_without_scope: QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			if is_valid then
@@ -189,14 +189,14 @@ feature -- Access
 					((not is_delayed_item) implies Result /= Void))
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		require
 			valid: is_valid
 		deferred
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		deferred
 		ensure
@@ -206,7 +206,7 @@ feature -- Access
 	library_target_uuid: STRING
 			-- UUID of the library target if Current item is a group and represents a library
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 			-- For group item, return it self,
 			-- for folder item, return the group in which the folder is located,
@@ -216,18 +216,18 @@ feature -- Access
 		deferred
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := id.hash_code
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		deferred
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		deferred
 		ensure
@@ -236,20 +236,20 @@ feature -- Access
 
 feature -- Sorting order index
 
-	wrapper_index: INTEGER is 0
-	target_index: INTEGER is 1
-	cluster_index: INTEGER is 2
-	library_index: INTEGER is 3
-	assembly_index: INTEGER is 4
-	folder_index: INTEGER is 5
-	class_index: INTEGER is 6
-	feature_index: INTEGER is 7
-	delayed_index: INTEGER is 8
+	wrapper_index: INTEGER = 0
+	target_index: INTEGER = 1
+	cluster_index: INTEGER = 2
+	library_index: INTEGER = 3
+	assembly_index: INTEGER = 4
+	folder_index: INTEGER = 5
+	class_index: INTEGER = 6
+	feature_index: INTEGER = 7
+	delayed_index: INTEGER = 8
 			-- Sorting order index
 
 feature -- Setting
 
-	set_library_target_uuid (a_uuid: STRING) is
+	set_library_target_uuid (a_uuid: STRING)
 			-- Set `library_target_uuid' with `a_uuid'.
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -260,7 +260,7 @@ feature -- Setting
 			library_target_uuid_set: library_target_uuid /= Void and then library_target_uuid.is_equal (a_uuid)
 		end
 
-	set_id (a_id: like id) is
+	set_id (a_id: like id)
 			-- Set `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -274,7 +274,7 @@ feature -- Setting
 
 feature -- UUID
 
-	uuid: UUID is
+	uuid: UUID
 			-- UUID
 		do
 			create Result
@@ -287,7 +287,7 @@ feature{NONE} -- Implementation
 	last_compilation_count: INTEGER
 			-- Compilation count when current itme is updated the last time
 
-	update_last_compilation_count is
+	update_last_compilation_count
 			-- Set `last_compilation_count' with `a_count'.
 		do
 			last_compilation_count := workbench.compilation_counter
@@ -296,7 +296,7 @@ feature{NONE} -- Implementation
 			last_compilation_count_set: last_compilation_count = workbench.compilation_counter
 		end
 
-	update is
+	update
 			-- Update status of current item.			
 		deferred
 		ensure
@@ -313,7 +313,7 @@ invariant
 	id_attached: id /= Void
 	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

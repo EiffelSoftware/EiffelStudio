@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is view for a CLUSTER_GRAPH"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ create {EIFFEL_CLUSTER_DIAGRAM}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_CLUSTER_DIAGRAM.
 		do
 			Precursor {EIFFEL_WORLD}
@@ -68,13 +68,13 @@ feature -- Access
 
 feature -- Store/Retrive
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "EIFFEL_CLUSTER_DIAGRAM"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.add_attribute ("NAME", xml_namespace, current_view)
@@ -84,7 +84,7 @@ feature -- Store/Retrive
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			l_cluster_id: STRING
@@ -102,7 +102,7 @@ feature -- Store/Retrive
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_WORLD}
@@ -114,7 +114,7 @@ feature -- Element change
 
 feature -- Status
 
-	classes_in_same_scope (a_source, a_target: ES_CLASS): BOOLEAN is
+	classes_in_same_scope (a_source, a_target: ES_CLASS): BOOLEAN
 			-- Are `a_source' and `a_target' in the same scope.
 		require
 			a_source_not_void: a_source /= Void
@@ -130,7 +130,7 @@ feature -- Status
 
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
 
-	change_view (view_name: STRING; file_name: STRING) is
+	change_view (view_name: STRING; file_name: STRING)
 			-- Change view to `view_name' load from `file_name' without saving `Current'.
 		local
 			f: RAW_FILE
@@ -147,7 +147,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
 
 feature {NONE} -- Implementation
 
-	on_group_drop (a_stone: CLUSTER_STONE) is
+	on_group_drop (a_stone: CLUSTER_STONE)
 			-- Add to diagram.
 		local
 			l_cluster: CONF_CLUSTER
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cluster_drop (a_cluster: CONF_CLUSTER) is
+	on_cluster_drop (a_cluster: CONF_CLUSTER)
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			context_editor.projector.full_project
 		end
 
-	on_library_drop (a_lib: CONF_LIBRARY) is
+	on_library_drop (a_lib: CONF_LIBRARY)
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 			parent: ES_CLUSTER
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			context_editor.projector.full_project
 		end
 
-	on_class_drop (a_stone: CLASSI_STONE) is
+	on_class_drop (a_stone: CLASSI_STONE)
 			-- `a_stone' was dropped on `Current'
 		local
 			l_class_fig_stone: CLASSI_FIGURE_STONE
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_class_added (a_class: CLASS_I) is
+	on_class_added (a_class: CLASS_I)
 			-- `a_class' was added to the system.
 		do
 			if not is_dropped_on_diagram then
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cluster_added (a_cluster: CLUSTER_I) is
+	on_cluster_added (a_cluster: CLUSTER_I)
 			-- `a_cluster' was added to the system.
 		local
 			parent, es_cluster: ES_CLUSTER
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 			update
 		end
 
-	on_new_class_drop (a_stone: CREATE_CLASS_STONE) is
+	on_new_class_drop (a_stone: CREATE_CLASS_STONE)
 			-- `a_stone' was dropped on `Current'
 			-- Display create class dialog and add to diagram.
 		local
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cluster manger observer
 
-	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; old_path: STRING) is
+	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; old_path: STRING)
 			-- `a_class' has been moved away from `old_cluster'.
 			-- `old_path' is old relative path in `old_group'
 		local
@@ -538,7 +538,7 @@ feature {NONE} -- Cluster manger observer
 			end
 		end
 
-	on_cluster_changed (a_cluster: CLUSTER_I) is
+	on_cluster_changed (a_cluster: CLUSTER_I)
 			-- `a_cluster' was renamed.
 		local
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
@@ -556,7 +556,7 @@ feature {NONE} -- Cluster manger observer
 
 feature {NONE} -- Implementation
 
-	window_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR is
+	window_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			-- Status bar of window
 		do
 			Result := context_editor.develop_window.status_bar
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	add_to_diagram (a_class: CLASS_I) is
+	add_to_diagram (a_class: CLASS_I)
 			-- Add `a_class' to diagram
 		local
 			parent: ES_CLUSTER
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	move_class (a_fig: EIFFEL_CLASS_FIGURE; drop_x, drop_y: INTEGER) is
+	move_class (a_fig: EIFFEL_CLASS_FIGURE; drop_x, drop_y: INTEGER)
 			--
 		local
 			dropped_on_cluster: EIFFEL_CLUSTER_FIGURE
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]] is
+	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
 			l_linkables: LIST [EG_LINKABLE]
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	links_to_remove_in_classes (a_classes: like classes_to_remove_in_cluster): LIST [ES_ITEM] is
+	links_to_remove_in_classes (a_classes: like classes_to_remove_in_cluster): LIST [ES_ITEM]
 			-- All links to remove in `a_cluster'
 		require
 			a_classes_not_void: a_classes /= Void
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 	is_dropped_on_diagram: BOOLEAN
 			-- Is a class added to a cluster dropped on diagram by user?
 
-	include_new_dropped_class (a_create_class_dialog: EB_CREATE_CLASS_DIALOG; a_x, a_y: INTEGER) is
+	include_new_dropped_class (a_create_class_dialog: EB_CREATE_CLASS_DIALOG; a_x, a_y: INTEGER)
 			-- Add `a_class' to the diagram if not already present.
 		require
 			a_create_class_dialog: a_create_class_dialog /= Void
@@ -857,7 +857,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	top_cluster_at (a_group: EV_MODEL_GROUP; ax, ay: INTEGER): EIFFEL_CLUSTER_FIGURE is
+	top_cluster_at (a_group: EV_MODEL_GROUP; ax, ay: INTEGER): EIFFEL_CLUSTER_FIGURE
 			-- Top cluster at `ax', `ay'. Void if none.
 		local
 			l_item: EIFFEL_CLUSTER_FIGURE
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parents_of_group (a_cluster: CONF_GROUP): ARRAYED_LIST [ES_CLUSTER] is
+	parents_of_group (a_cluster: CONF_GROUP): ARRAYED_LIST [ES_CLUSTER]
 			-- Parents of `a_cluster', clusters and libs included
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	library_usage_parents (a_target: CONF_TARGET): ARRAYED_LIST [ES_CLUSTER] is
+	library_usage_parents (a_target: CONF_TARGET): ARRAYED_LIST [ES_CLUSTER]
 			-- Return groups because of library usage of `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -949,7 +949,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	add_classes_of_cluster (a_cluster: ES_CLUSTER; a_new_cluster: BOOLEAN; with_status_bar: BOOLEAN) is
+	add_classes_of_cluster (a_cluster: ES_CLUSTER; a_new_cluster: BOOLEAN; with_status_bar: BOOLEAN)
 			-- Add classes of `a_cluster'
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -1029,7 +1029,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	veto_function (a_any: ANY): BOOLEAN is
+	veto_function (a_any: ANY): BOOLEAN
 			-- Veto function.
 			-- CREATE_CLASS_STONE, CLASSI_STONE, CLUSTER_STONE none assemble accepted.
 		local
@@ -1078,7 +1078,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_and_add_on_top (a_group: CONF_GROUP; with_status_bar: BOOLEAN) is
+	check_and_add_on_top (a_group: CONF_GROUP; with_status_bar: BOOLEAN)
 			-- Check if `a_cluster' exist on top.
 			-- Add it if no.
 		require
@@ -1155,7 +1155,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	any_clusters_needed (a_clusters: ARRAYED_LIST [ES_CLUSTER]): BOOLEAN is
+	any_clusters_needed (a_clusters: ARRAYED_LIST [ES_CLUSTER]): BOOLEAN
 			-- Any class needed in `a_clusters'?
 		require
 			a_clusters_not_void: a_clusters /= Void
@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

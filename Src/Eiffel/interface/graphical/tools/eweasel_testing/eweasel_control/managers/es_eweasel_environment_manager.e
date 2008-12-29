@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Environment values used by Eiffel Studio testing tool
 						FIXIT: This class need an UI to config it
@@ -24,7 +24,7 @@ create
 
 feature -- Query
 
-	path: !DIRECTORY_NAME is
+	path: !DIRECTORY_NAME
 			-- eweasel root path.
 		do
 			Result := eiffel_layout.shared_path.twin
@@ -34,13 +34,13 @@ feature -- Query
 	test_case_directory: STRING
 			-- Directory where new eweasel test case exists and new test case will be created.
 
-	tcf_file_name: STRING is "tcf"
+	tcf_file_name: STRING = "tcf"
 			-- Testing control file name
 
 	test_case_root_eiffel_class_name: STRING
 			-- Test case root Eiffel class name
 
-	eweasel_command: STRING is
+	eweasel_command: STRING
 			-- Full eweasel command
 		local
 			l_path: like path
@@ -60,7 +60,7 @@ feature -- Query
 			Result := l_path + Operating_environment.directory_separator.out + l_exe_name
 		end
 
-	target_directory: DIRECTORY_NAME is
+	target_directory: DIRECTORY_NAME
 			-- target directory under EIFGENs
 			-- Note: Result is long path name
 		local
@@ -85,7 +85,7 @@ feature -- Command
 			set: test_case_root_eiffel_class_name = a_name
 		end
 
-	set_test_case_directory (a_path: like test_case_directory) is
+	set_test_case_directory (a_path: like test_case_directory)
 			-- Set `test_case_directory' with `a_path'
 		require
 			not_void: a_path /= Void
@@ -97,7 +97,7 @@ feature -- Command
 			set: test_case_directory = a_path
 		end
 
-	set_test_case_name (a_name: STRING) is
+	set_test_case_name (a_name: STRING)
 			-- Set `test_case_name' with `a_name'
 			-- This feature is used by {ES_EWEASEL_EXECUTION_MANAGER}.create_unit_test_case
 		require
@@ -110,13 +110,13 @@ feature -- Command
 
 feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by eweasel command line
 
-	eweasel: !STRING is
+	eweasel: !STRING
 			-- eweasel path
 		do
 			Result := path.twin
 		end
 
-	include: !STRING is
+	include: !STRING
 			-- eweasel include folder
 		local
 			l_path: like path
@@ -126,7 +126,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			create Result.make_from_string (l_path)
 		end
 
-	init: !STRING is
+	init: !STRING
 			-- eweasel init folder
 		local
 			l_path: like path
@@ -138,7 +138,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			create Result.make_from_string (l_path)
 		end
 
-	eweasel_platform: !STRING is
+	eweasel_platform: !STRING
 			-- eweasel platform
 		local
 			l_platform: PLATFORM
@@ -154,16 +154,16 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			end
 		end
 
-	eweasel_platform_value: STRING is "1"
+	eweasel_platform_value: STRING = "1"
 			-- eweasel platform value
 
-	platform_type: !STRING is
+	platform_type: !STRING
 			-- Platform type
 		do
 			Result := eweasel_platform
 		end
 
-	ise_eiffel: STRING_GENERAL is
+	ise_eiffel: STRING_GENERAL
 			-- $ISE_EIFFEL environment variable
 		local
 			l_tmp: DIRECTORY_NAME
@@ -185,7 +185,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			not_void: Result /= Void
 		end
 
-	ise_platform: STRING is
+	ise_platform: STRING
 			-- $ISE_PLATFORM environment variable
 		local
 			l_layout: EIFFEL_LAYOUT
@@ -196,7 +196,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			not_void: Result /= Void
 		end
 
-	output: !STRING_GENERAL  is
+	output: !STRING_GENERAL
 			-- eweasel temporary output directory
 		local
 			l_dir_name: DIRECTORY_NAME
@@ -229,7 +229,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			exists: (create {RAW_FILE}.make (Result.as_string_8)).exists
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

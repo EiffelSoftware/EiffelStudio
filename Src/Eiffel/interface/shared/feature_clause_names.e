@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic feature clause comments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,29 +10,29 @@ class
 
 feature -- Constants
 
-	fc_Initialization: STRING is "Initialization"
-	fc_Access: STRING is "Access"
-	fc_Measurement: STRING is "Measurement"
-	fc_Comparison: STRING is "Comparison"
-	fc_Status_report: STRING is "Status report"
-	fc_Status_setting: STRING is "Status setting"
-	fc_Cursor_movement: STRING is "Cursor movement"
-	fc_Element_change: STRING is "Element change"
-	fc_Removal: STRING is "Removal"
-	fc_Resizing: STRING is "Resizing"
-	fc_Transformation: STRING is "Transformation"
-	fc_Conversion: STRING is "Conversion"
-	fc_Duplication: STRING is "Duplication"
-	fc_Miscellaneous: STRING is "Miscellaneous"
-	fc_Basic_operations: STRING is "Basic operations"
-	fc_Obsolete: STRING is "Obsolete"
-	fc_Inapplicable: STRING is "Inapplicable"
-	fc_Implementation: STRING is "Implementation"
-	fc_Other: STRING is "*"
+	fc_Initialization: STRING = "Initialization"
+	fc_Access: STRING = "Access"
+	fc_Measurement: STRING = "Measurement"
+	fc_Comparison: STRING = "Comparison"
+	fc_Status_report: STRING = "Status report"
+	fc_Status_setting: STRING = "Status setting"
+	fc_Cursor_movement: STRING = "Cursor movement"
+	fc_Element_change: STRING = "Element change"
+	fc_Removal: STRING = "Removal"
+	fc_Resizing: STRING = "Resizing"
+	fc_Transformation: STRING = "Transformation"
+	fc_Conversion: STRING = "Conversion"
+	fc_Duplication: STRING = "Duplication"
+	fc_Miscellaneous: STRING = "Miscellaneous"
+	fc_Basic_operations: STRING = "Basic operations"
+	fc_Obsolete: STRING = "Obsolete"
+	fc_Inapplicable: STRING = "Inapplicable"
+	fc_Implementation: STRING = "Implementation"
+	fc_Other: STRING = "*"
 
 feature -- Access
 
-	Default_feature_clause_order: ARRAY [STRING] is
+	Default_feature_clause_order: ARRAY [STRING]
 			-- ISE feature clause order.
 		once
 			Result := <<
@@ -46,7 +46,7 @@ feature -- Access
 			>>
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Service interface for managing, creating and executing tests.
 		
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	executor (a_type: !TYPE [TEST_EXECUTOR_I]): !TEST_EXECUTOR_I is
+	executor (a_type: !TYPE [TEST_EXECUTOR_I]): !TEST_EXECUTOR_I
 			-- Test executor registered under `a_type'.
 			--
 			-- `a_type': Type under which executor is registered.
@@ -48,7 +48,7 @@ feature -- Access
 			result_from_registrar: Result = processor_registrar.processor (a_type, Current)
 		end
 
-	factory (a_type: !TYPE [TEST_CREATOR_I]): !TEST_CREATOR_I is
+	factory (a_type: !TYPE [TEST_CREATOR_I]): !TEST_CREATOR_I
 			-- Test factory registered under `a_type'.
 			--
 			-- `a_type': Type under which factory is registered.
@@ -136,7 +136,7 @@ feature {TEST_PROCESSOR_I} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: !TEST_I; a_executor: !TEST_EXECUTOR_I) is
+	set_test_queued (a_test: !TEST_I; a_executor: !TEST_EXECUTOR_I)
 			-- Set status of test to queued and notify observers.
 			--
 			-- `a_test': Test being queued.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that let user select settings for force directed graphs in diagram tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_physics: like physics; a_tool: like tool) is
+	make (a_physics: like physics; a_tool: like tool)
 			-- Make a EB_FORCE_SETTINGS_DIALOG to set properties of `a_physics' used in `a_tool.
 		require
 			a_physics_exits: a_physics /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			set: physics = a_physics
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
@@ -210,7 +210,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := True
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 	stiffness_slider, attraction_slider, repulsion_slider, inheritance_slider, client_slider: EV_HORIZONTAL_RANGE
 	stiffness_label, attraction_label, repulsion_label, inheritance_label, client_label: EV_LABEL
 
-	user_initialization is
+	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		do
 			stiffness_slider.set_value (physics.stiffness)
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 		end
 
-	on_stiffness_change (a_value: INTEGER) is
+	on_stiffness_change (a_value: INTEGER)
 			-- Stiffnes slider was moved.
 		do
 			physics.set_stiffness (a_value)
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			tool.restart_force_directed
 		end
 
-	on_attraction_change (a_value: INTEGER) is
+	on_attraction_change (a_value: INTEGER)
 			-- `attraction_slider' was moved.
 		do
 			physics.set_center_attraction (a_value)
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			tool.restart_force_directed
 		end
 
-	on_repulsion_change (a_value: INTEGER) is
+	on_repulsion_change (a_value: INTEGER)
 			-- `repulsion_slider' was moved.
 		do
 			physics.set_electrical_repulsion (a_value)
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			tool.restart_force_directed
 		end
 
-	on_inheritance_change (a_value: INTEGER) is
+	on_inheritance_change (a_value: INTEGER)
 			-- `inheritance_slider' was moved.
 		do
 			physics.set_inheritance_stiffness (a_value)
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			tool.restart_force_directed
 		end
 
-	on_client_change (a_value: INTEGER) is
+	on_client_change (a_value: INTEGER)
 			-- `client_slider' was moved.
 		do
 			physics.set_client_supplier_stiffness (a_value)
@@ -287,45 +287,45 @@ feature {NONE} -- Implementation
 			tool.restart_force_directed
 		end
 
-	update_stiffnes_label (a_value: INTEGER) is
+	update_stiffnes_label (a_value: INTEGER)
 			-- Set text of stiffness label.
 		do
 			stiffness_label.set_text (interface_names.l_stiffness_value (a_value.out))
 		end
 
-	update_attraction_label (a_value: INTEGER) is
+	update_attraction_label (a_value: INTEGER)
 			-- Set text of `attraction_label'.
 		do
 			attraction_label.set_text (interface_names.l_center_attraction_value (a_value.out))
 		end
 
-	update_repulsion_label (a_value: INTEGER) is
+	update_repulsion_label (a_value: INTEGER)
 			-- Set text of `repulsion_label'.
 		do
 			repulsion_label.set_text (interface_names.l_repulsion_value (a_value.out))
 		end
 
-	update_inheritance_label (a_value: INTEGER) is
+	update_inheritance_label (a_value: INTEGER)
 			-- Set text of `inheritance_label'.
 		do
 			inheritance_label.set_text (interface_names.l_inheritance_stiffness_value (a_value.out))
 		end
 
-	update_client_label (a_value: INTEGER) is
+	update_client_label (a_value: INTEGER)
 			-- Set text of `client_label'.
 		do
 			client_label.set_text (interface_names.l_Clients_stiffness_value (a_value.out))
 		end
 
-	minimum_width_for_labels: INTEGER is
+	minimum_width_for_labels: INTEGER
 		once
 			Result := (create {EV_FONT}).string_width (interface_names.l_inheritance_stiffness_100) + 30
 		end
 
-	minimum_width_for_sliders: INTEGER is 150;
+	minimum_width_for_sliders: INTEGER = 150;
 			-- Default width for sliders.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

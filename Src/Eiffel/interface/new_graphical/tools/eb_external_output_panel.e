@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object used to display external command output and error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,18 +13,18 @@ inherit
 	EV_TEXT
 
 feature
-	clear is
+	clear
 			-- Clear `text'
 		do
 			set_text ("")
 		end
 		
-	text_fully_loaded: BOOLEAN is
+	text_fully_loaded: BOOLEAN
 			-- Has `text' been fully loaded?
 		do
 			Result := True
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

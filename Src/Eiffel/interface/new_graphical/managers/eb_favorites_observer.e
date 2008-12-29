@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for EB_FAVORITES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Updates
 
-	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been added
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -23,7 +23,7 @@ feature -- Updates
 		do
 		end
 
-	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been removed. 
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -31,24 +31,24 @@ feature -- Updates
 		do
 		end
 
-	on_update is
+	on_update
 			-- Completely recompute the observer state.
 		do
 		end
 
 feature -- Status stetting
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make `Current' insensitive.
 		deferred
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make `Current' sensitive.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

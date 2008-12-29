@@ -1,4 +1,4 @@
-indexing
+note
 	description: "the constant pool is an integral part of a jvm class. it is the symbolic link table, the virtual machine needs to %
 	%run and link classes. ie. instead of writing the name and signature of features every time they are accessed directly into %
    %the code attribute, only an index is written. these index %
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialisation
 			
-	make is
+	make
 		do
 			create list.make
 						--	 make_size (Int_16_size)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialisation
 
 feature -- Access
 
-	close is
+	close
 		do
 			count_bc.append_uint_16_from_int (list.count + 1)
 			from
@@ -63,7 +63,7 @@ feature -- Access
 			-- this maps a (class_type_id, feature_type_id) to constant
 			-- pool index
 			
-	put_class_by_type_id (a_type_id: INTEGER) is
+	put_class_by_type_id (a_type_id: INTEGER)
 			-- put information for a class into the constant pool (by 
 			-- type id)
 		require
@@ -75,7 +75,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
 		end
 			
-	put_class_by_object (a_class: JVM_CLASS) is
+	put_class_by_object (a_class: JVM_CLASS)
 			-- puts a class (CPE_CLASS) and it's name (CPE_UTF8) into
 			-- the pool. Updates the `type_id_to_cpe' mapping.
 		require
@@ -88,7 +88,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
 		end
 			
-	put_class (class_: STRING) is
+	put_class (class_: STRING)
 			-- puts a class (CPE_CLASS) and it's name (CPE_UTF8) into
 			-- the pool. Updates the `type_id_to_cpe' mapping.
 		require
@@ -104,7 +104,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_CLASS")
 		end
 			
-	put_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER) is
+	put_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER)
 			-- put information about a feature into the constant pool
 		require
 			open: is_open
@@ -146,7 +146,7 @@ feature -- Access
 							
 		end
 
-	put_feature_by_object (f: JVM_WRITTEN_FEATURE) is
+	put_feature_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a feature into the constant pool
 		require
 			f_not_void: f /= Void
@@ -172,7 +172,7 @@ feature -- Access
 			end
 		end
 			
-	put_method_ref_by_object (f: JVM_WRITTEN_FEATURE) is
+	put_method_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a method into the constant pool
 		require
 			f_not_void: f /= Void
@@ -193,7 +193,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_METHOD_REF")
 		end
 			
-	put_interface_method_ref_by_object (f: JVM_WRITTEN_FEATURE) is
+	put_interface_method_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a interface method into the constant pool
 		require
 			f_not_void: f /= Void
@@ -215,7 +215,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_INTERFACE_METHOD_REF")
 		end
 			
-	put_method_ref (method_name, method_signature, written_class: STRING) is
+	put_method_ref (method_name, method_signature, written_class: STRING)
 			-- puts a MethodRef entry into the Constant Pool.
 			-- `method_name' is the name of the method the constant
 			-- refers to
@@ -243,7 +243,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_METHOD_REF")
 		end
 			
-	put_field_ref (name, type, class_: STRING) is
+	put_field_ref (name, type, class_: STRING)
 			-- put information about a field into the constant pool
 		require
 			name_not_void: name /= Void
@@ -265,7 +265,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FIELD_REF")
 		end
 			
-	put_field_ref_by_object (f: JVM_WRITTEN_FEATURE) is
+	put_field_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a field into the constant pool
 		require
 			f_not_void: f /= Void
@@ -278,7 +278,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FIELD_REF")
 		end
 						
-	put_name_and_type_from_object (f: JVM_WRITTEN_FEATURE) is
+	put_name_and_type_from_object (f: JVM_WRITTEN_FEATURE)
 			-- put name and type entry of a feature into the constant pool
 		require
 			f_not_void: f /= Void
@@ -290,7 +290,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_NAME_AND_TYPE")
 		end
 			
-	put_name_and_type (name, type: STRING) is
+	put_name_and_type (name, type: STRING)
 			-- put name and type entry of a feature into the constant pool
 		require
 			name_not_void: name /= Void
@@ -310,7 +310,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_NAME_AND_TYPE")
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 			-- append constant pool to file
 		do
 			count_bc.emit (file)
@@ -331,7 +331,7 @@ feature -- Access
 			end
 		end
 			
-	put_double_constant (d: DOUBLE) is
+	put_double_constant (d: DOUBLE)
 			-- put a double constant into pool
 		local
 			cpe: CPE_DOUBLE
@@ -356,7 +356,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_DOUBLE")
 		end
 			
-	put_float_constant (f: REAL) is
+	put_float_constant (f: REAL)
 			--	put fload constant into pool
 		local
 			cpe: CPE_FLOAT
@@ -367,7 +367,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_FLOAT")
 		end
 			
-	put_int_32_constant (i: INTEGER) is
+	put_int_32_constant (i: INTEGER)
 			--	put int 32 (java type int) constant into pool
 		local
 			cpe: CPE_INTEGER
@@ -378,7 +378,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_INTEGER")
 		end
 			
-	put_int_64_constant_from_int (i: INTEGER) is
+	put_int_64_constant_from_int (i: INTEGER)
 			--	put int 64 (java type long) constant into pool
 		local
 			cpe: CPE_LONG
@@ -403,7 +403,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_LONG")
 		end
 			
-	put_utf8_constant (s: STRING) is
+	put_utf8_constant (s: STRING)
 			--	put utf8 constant into pool
 			-- note that this cannot directly be used for 
 			-- java.lang.String manifests. they require a 
@@ -417,7 +417,7 @@ feature -- Access
 			last_cpe: list.i_th (last_cpe_index).generating_type.is_equal ("CPE_UTF8")
 		end
 			
-	put_string_constant (s: STRING) is
+	put_string_constant (s: STRING)
 			-- put string (java type java.lang.String) constant into pool
 		local
 			cpe: CPE_STRING
@@ -437,7 +437,7 @@ feature {ANY}
 			-- the same data was already present, `last_cpe_index' is 
 			-- still set to the index of the already present entry.
 	
-	put_element (el: CONSTANT_POOL_ELEMENT) is
+	put_element (el: CONSTANT_POOL_ELEMENT)
 			-- puts an element into the list.
 			-- the index of the element can be retrieved from `last_cpe_index'.
 			-- elements will only be put into the list if they are not
@@ -495,7 +495,7 @@ invariant
 	feature_type_id_to_cpe_not_void: feature_type_id_to_cpe /= Void
 	count_bc_not_void: count_bc /= Void
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

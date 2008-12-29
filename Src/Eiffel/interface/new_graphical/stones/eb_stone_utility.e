@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone utilities"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	name_of_stone (a_stone: STONE): STRING_32 is
+	name_of_stone (a_stone: STONE): STRING_32
 			-- Name of `a_stone'
 		require
 			a_stone_attached: a_stone /= Void
@@ -61,7 +61,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	stone_from_ql_item (a_item: QL_ITEM): STONE is
+	stone_from_ql_item (a_item: QL_ITEM): STONE
 			-- Stone from `a_item'
 		require
 			a_item_attached: a_item /= Void

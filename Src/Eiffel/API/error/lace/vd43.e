@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Warning for incompletely C compiled precompiled system."
@@ -23,7 +23,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("File: ");
 			a_text_formatter.add (path);
@@ -32,7 +32,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor {LACE_WARNING} (a_text_formatter)
@@ -44,13 +44,13 @@ feature {NONE} -- Output
 
 feature {REMOTE_PROJECT_DIRECTORY} -- Setting
 
-	set_path (s: STRING) is
+	set_path (s: STRING)
 			-- Assign `s' to `path'
 		do
 			path := s
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

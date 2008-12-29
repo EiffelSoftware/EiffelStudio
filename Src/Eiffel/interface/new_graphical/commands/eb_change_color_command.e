@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to change color of something."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform on every class on the diagram.
 		local
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
@@ -59,7 +59,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE)
 			-- Colorize all classes in `a_stone'.
 		local
 			cf: BON_CLASS_FIGURE
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 				agent change_color_all (class_list, old_color_table))
 		end
 
-	execute_with_stone (a_stone: CLASSI_FIGURE_STONE) is
+	execute_with_stone (a_stone: CLASSI_FIGURE_STONE)
 			-- Create a development window and process `a_stone'.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_with_list (a_list: CLASS_FIGURE_LIST_STONE) is
+	execute_with_list (a_list: CLASS_FIGURE_LIST_STONE)
 			-- Colorize all classes in `a_list'.
 		local
 			cf: BON_CLASS_FIGURE
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				agent change_color_all (class_list, old_color_table))
 		end
 
-	change_font (cf: BON_CLASS_FIGURE; a_color: EV_COLOR) is
+	change_font (cf: BON_CLASS_FIGURE; a_color: EV_COLOR)
 			-- Change color of class figure names in order to
 			-- keep them readable.	
 		local
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_color (a_class: BON_CLASS_FIGURE; new_color: EV_COLOR) is
+	change_color (a_class: BON_CLASS_FIGURE; new_color: EV_COLOR)
 			-- Change color of `a_class' to `new_color'.
 		do
 			change_font (a_class, new_color)
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			tool.projector.project
 		end
 
-	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING]) is
+	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING])
 			-- Change color of `classes' according to `color_table'.
 		require
 			classes_exist: classes /= Void
@@ -229,29 +229,29 @@ feature {NONE} -- Implementation
 			tool.projector.project
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_choose_color_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_choose_color_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_change_color
 		end
 
-	name: STRING is "Color"
+	name: STRING = "Color"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := interface_names.m_change_color
@@ -260,13 +260,13 @@ feature {NONE} -- Implementation
 	change_color_dialog: EV_COLOR_DIALOG
 			-- Dialog that allows to choose a color.
 
-	default_colors: EV_STOCK_COLORS is
+	default_colors: EV_STOCK_COLORS
 			-- Eiffel Vision colors.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

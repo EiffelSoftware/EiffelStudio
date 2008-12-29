@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a table of attribute offsets for the final Eiffel executable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Status report
 
-	is_attribute_table: BOOLEAN is
+	is_attribute_table: BOOLEAN
 			-- Is the current table an attribute table ?
 		do
 			Result := True
@@ -37,14 +37,14 @@ feature -- Status report
 
 feature
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
 			-- New entry corresponding to `f' in class of class ID `c'
 		do
 			Result := f.new_attr_entry
 			Result.set_class_id (c)
 		end
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
@@ -88,7 +88,7 @@ feature
 			end
 		end;
 
-	generate (writer: TABLE_GENERATOR) is
+	generate (writer: TABLE_GENERATOR)
 			-- Generation of the attribute table in buffer "eattr*.x".
 		require
 			writer_attached: writer /= Void
@@ -185,7 +185,7 @@ feature
 
 feature {POLY_TABLE} -- Special data
 
-	tmp_poly_table: ARRAY [ATTR_ENTRY] is
+	tmp_poly_table: ARRAY [ATTR_ENTRY]
 			-- Contain a copy of Current during a merge
 		once
 			create Result.make (1, Block_size)
@@ -193,7 +193,7 @@ feature {POLY_TABLE} -- Special data
 
 feature {NONE} -- Implementation
 
-	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_offset: STRING; a_lower, a_upper: INTEGER) is
+	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_offset: STRING; a_lower, a_upper: INTEGER)
 			-- Generate code to initialize current array with `a_routine_name'. Generate a
 			-- loop if `a_lower' is different from `a_upper'.
 		require
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	write is
+	write
 			-- Generate table using writer.
 		do
 			generate (Attr_generator)
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			generate_type_table (Attr_generator)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

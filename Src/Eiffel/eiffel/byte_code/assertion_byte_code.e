@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for (inheritable) assertions: pre- and postconditions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature {AST_CONTEXT} -- Modification
 			object_test_locals_set: object_test_locals = l
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

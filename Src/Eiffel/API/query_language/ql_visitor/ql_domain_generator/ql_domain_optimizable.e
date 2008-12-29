@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Optimization options for query domain generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	is_optimization_enabled: BOOLEAN is
+	is_optimization_enabled: BOOLEAN
 			-- Is optimization enabled?
 			-- Default value: True
 		do
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Element change
 
-	enable_optimization is
+	enable_optimization
 			-- Enable optimization.
 		do
 			optimization_option_cell.put (True)
@@ -28,7 +28,7 @@ feature -- Element change
 			optimization_enabled: is_optimization_enabled
 		end
 
-	disable_optimization is
+	disable_optimization
 			-- Disable optimization.
 		do
 			optimization_option_cell.put (False)
@@ -38,7 +38,7 @@ feature -- Element change
 
 feature{NONE} -- Implementation
 
-	optimization_option_cell: CELL [BOOLEAN] is
+	optimization_option_cell: CELL [BOOLEAN]
 			-- Cell containing optimization option switch
 		once
 			create Result.put (True)
@@ -46,7 +46,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

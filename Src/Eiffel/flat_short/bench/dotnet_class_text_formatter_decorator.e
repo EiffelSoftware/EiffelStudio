@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatting decorator for dotnet class ast (flat short format)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_consumed_type: CONSUMED_TYPE; a_classi: CLASS_I; a_flag: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
+	make (a_consumed_type: CONSUMED_TYPE; a_classi: CLASS_I; a_flag: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
 			-- Initialize Current.  'a_flag' determines short or flat short.
 		require
 			consume_type_not_void: a_consumed_type /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Format consumed type.
 		local
 			prev_class: CLASS_C
@@ -71,7 +71,7 @@ feature -- Execution
 
 feature -- Element change
 
-	format_feature (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR; a_dn_entity: CONSUMED_ENTITY) is
+	format_feature (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR; a_dn_entity: CONSUMED_ENTITY)
 			-- Format feature found in 'dn_entity'
 		require
 			a_entity_not_void: a_dn_entity /= Void
@@ -102,7 +102,7 @@ feature -- Element change
 			end
 		end
 
-	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
+	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING]
 				-- Strip 'a_summary' of all unwanted whites space
 			require
 				a_summary_not_void: a_summary /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Implmentation
 	ast: DOTNET_CLASS_AS
 		-- .NET ast.
 
-	Maximum_line_count: INTEGER is 70
+	Maximum_line_count: INTEGER = 70
 		-- Numbers of characters after which we will go to a new line once the
 		-- next white space is found.
 
@@ -151,7 +151,7 @@ invariant
 	class_c_set: current_class = Void or else current_class = class_i.compiled_class
 	ast_not_void: ast /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display hierarchical structure of the system."
@@ -21,7 +21,7 @@ create
 
 feature -- Execution
 
-	work is
+	work
 			-- Show groups in universe
 		do
 			processed_libraries.wipe_out
@@ -31,12 +31,12 @@ feature -- Execution
 
 feature -- Status report
 
-	is_class_displayed: BOOLEAN is
+	is_class_displayed: BOOLEAN
 			-- Is classes displayed?
 		do
 		end
 
-	is_folder_hierarchy_displayed: BOOLEAN is
+	is_folder_hierarchy_displayed: BOOLEAN
 			-- Is folder hierarchy displayed?
 			-- e.g., should we display folders in a cluster?
 		do
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	display_target (a_target: QL_TARGET; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN) is
+	display_target (a_target: QL_TARGET; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
 			-- Display `a_target' in `text_formatter' starting with `a_tab_count' tabs.
 			-- If `a_is_class_displayed' is True, display classes in `a_group'.
 		require
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_group_information (a_group: CONF_GROUP) is
+	append_group_information (a_group: CONF_GROUP)
 			-- Append information of `a_group' (such as cluster, override, library, assembly, is_precompiled) into `text_formatter'.
 		require
 			a_group_attached: a_group /= Void
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			text_formatter.add_new_line
 		end
 
-	display_group (a_group: QL_GROUP; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN) is
+	display_group (a_group: QL_GROUP; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
 			-- Display `a_group' in `text_formatter' starting with `a_tab_count' tabs.
 			-- If `a_is_class_displayed' is True, display classes in `a_group'.
 		require
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_cluster_hierarchy (a_group: CONF_GROUP; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN) is
+	display_cluster_hierarchy (a_group: CONF_GROUP; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
 			-- Display classes in `a_group' staring with `a_tab_count' tabs.
 		require
 			a_group_attached: a_group /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_folder (a_path: STRING; a_directory: STRING; a_class_table: like class_table; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN) is
+	display_folder (a_path: STRING; a_directory: STRING; a_class_table: like class_table; a_tab_count: INTEGER; a_is_class_displayed: BOOLEAN)
 			-- Dispaly information of a folder whose location is `a_directory' starting with `a_tab_count' tabs.
 			-- `a_path' is used to find classes in `a_class_table'.
 			-- If `a_is_class_displayed' is True, display classes in that folder.
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): HASH_TABLE [DS_LIST [CONF_CLASS], STRING] is
+	class_table (a_classes: HASH_TABLE [CONF_CLASS, STRING]): HASH_TABLE [DS_LIST [CONF_CLASS], STRING]
 			-- Table of classes.
 			-- Key is `path', value are list of classes with the same `path'.
 		require
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	path_tester (a_item, b_item: CONF_CLASS): BOOLEAN is
+	path_tester (a_item, b_item: CONF_CLASS): BOOLEAN
 			-- Compare name of `a_item' and `b_item'.
 			-- If `a_item' is less than `b_item' literally, return True.
 		require
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			Result := a_item.path < b_item.path
 		end
 
-	display_classes_in_assembly (a_group: CONF_GROUP; a_tab_count: INTEGER) is
+	display_classes_in_assembly (a_group: CONF_GROUP; a_tab_count: INTEGER)
 			-- Display `a_classes' `a_group' into `text_formatter' starting with `a_tab_count' tabs.
 		require
 			a_group_attached: a_group /= Void
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_class (a_class: CONF_CLASS; a_tab_count: INTEGER) is
+	display_class (a_class: CONF_CLASS; a_tab_count: INTEGER)
 			-- Display `a_class' in `text_formatter' starting with `a_tab_count' tabs.
 		require
 			a_class_attached: a_class /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 
 feature{NONE} -- Sorting
 
-	name_tester (a_item, b_item: QL_ITEM): BOOLEAN is
+	name_tester (a_item, b_item: QL_ITEM): BOOLEAN
 			-- Compare name of `a_item' and `b_item'.
 			-- If `a_item' is less than `b_item' literally, return True.
 		require
@@ -407,7 +407,7 @@ feature{NONE} -- Sorting
 			Result := a_item.name < b_item.name
 		end
 
-	class_name_tester (a_class, b_class: CONF_CLASS): BOOLEAN is
+	class_name_tester (a_class, b_class: CONF_CLASS): BOOLEAN
 			-- Compare name of `a_class' and `b_class'.
 			-- If `b_class' is less than `b_clas', return True.
 		require
@@ -417,7 +417,7 @@ feature{NONE} -- Sorting
 			Result := a_class.name < b_class.name
 		end
 
-	group_tester (a_group, b_group: QL_GROUP): BOOLEAN is
+	group_tester (a_group, b_group: QL_GROUP): BOOLEAN
 			-- Compare name of `a_group' and `b_group'.
 			-- If `a_group' is less than `b_group', return True.
 		require
@@ -436,7 +436,7 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	group_index (a_group: CONF_GROUP): INTEGER is
+	group_index (a_group: CONF_GROUP): INTEGER
 			-- Index of `a_group' used to sort groups
 		require
 			a_group_attached: a_group /= Void
@@ -456,7 +456,7 @@ feature{NONE} -- Sorting
 
 feature{NONE} -- Implementation
 
-	processed_libraries: ARRAYED_LIST [UUID] is
+	processed_libraries: ARRAYED_LIST [UUID]
 			-- List of processed libraries
 		do
 			if processed_libraries_internal = Void then
@@ -471,7 +471,7 @@ feature{NONE} -- Implementation
 	processed_libraries_internal: like processed_libraries
 			-- Implementation of `processed_libraries'
 
-	processed_assemblies: ARRAYED_LIST [STRING] is
+	processed_assemblies: ARRAYED_LIST [STRING]
 			-- List of processed assemblies
 		do
 			if processed_assemblies_internal = Void then
@@ -485,7 +485,7 @@ feature{NONE} -- Implementation
 	processed_assemblies_internal: like processed_assemblies
 			-- Implementation of `processed_assemblies'
 
-	directory_separator: CHARACTER is
+	directory_separator: CHARACTER
 			-- Directory separator
 		local
 			l_op: OPERATING_ENVIRONMENT
@@ -494,7 +494,7 @@ feature{NONE} -- Implementation
 			Result := l_op.directory_separator
 		end
 
-	sorted_classes (a_table: HASH_TABLE [CONF_CLASS, STRING]): DS_LIST [CONF_CLASS] is
+	sorted_classes (a_table: HASH_TABLE [CONF_CLASS, STRING]): DS_LIST [CONF_CLASS]
 			-- Classes from `a_class_table' that are sorted using `class_name_tester'
 		require
 			a_table_attached: a_table /= Void
@@ -518,7 +518,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

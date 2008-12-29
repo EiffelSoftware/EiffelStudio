@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Evalauator of local type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Acess
 	local_name: INTEGER
 			-- Local name involved in an error
 
-	new_error: VTAT1L is
+	new_error: VTAT1L
 			-- New error message
 		do
 			create Result
@@ -29,7 +29,7 @@ feature -- Acess
 
 feature -- Settings
 
-	set_local_name (s: INTEGER) is
+	set_local_name (s: INTEGER)
 			-- Assign `s' to `local_name'.
 		do
 			local_name := s
@@ -37,13 +37,13 @@ feature -- Settings
 
 feature -- Element change
 
-	update (error_msg: VTAT1L) is
+	update (error_msg: VTAT1L)
 			-- Update error message
 		do
 			error_msg.set_local_name (Names_heap.item (local_name))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

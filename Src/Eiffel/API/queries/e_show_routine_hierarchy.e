@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display feature hierarchy"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Execution
 
-	work is
+	work
 			-- Perform current command.
 		local
 			l_domain: QL_FEATURE_DOMAIN
@@ -82,13 +82,13 @@ feature -- Execution
 
 feature -- Status report
 
-	is_written_class_displayed: BOOLEAN is
+	is_written_class_displayed: BOOLEAN
 			-- Is current a command to display feature implementors?
 		do
 			Result := True
 		end
 
-	is_branch_displayed: BOOLEAN is
+	is_branch_displayed: BOOLEAN
 			-- Is branch information displayed?
 		do
 			Result := True
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature{NONE} -- Implemenation
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
@@ -106,7 +106,7 @@ feature{NONE} -- Implemenation
 			result_attached: Result /= Void
 		end
 
-	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN
 			-- Compare name of `feature_a' and `feature_b'.
 		require
 			feature_a_attached: feature_a /= Void
@@ -128,7 +128,7 @@ feature{NONE} -- Implemenation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

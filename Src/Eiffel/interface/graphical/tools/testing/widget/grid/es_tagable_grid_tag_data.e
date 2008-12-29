@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a tree node of {TAG_BASED_TREE} associated with a grid row for
 		{ES_TAGABLE_TREE_GRID}.

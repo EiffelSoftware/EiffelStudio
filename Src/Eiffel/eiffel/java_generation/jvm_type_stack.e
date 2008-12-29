@@ -1,4 +1,4 @@
-indexing
+note
 	description: "reflects a jvm stack, but not the values are stored, %
 	%but their types - JVM_CONSTANTS.*_type). Since the stack of the %
    %jvm is not typed, we need to take care of certain things. ie. %
@@ -35,7 +35,7 @@ create
 
 feature
 			
-	extend (v: like item) is
+	extend (v: like item)
 			-- add item to stack
 		do
 			check
@@ -49,12 +49,12 @@ feature
 			end
 		end
 			
-	force, put (v: like item) is
+	force, put (v: like item)
 		do
 			extend (v)
 		end
 			
-	remove is
+	remove
 		do
 			jvm_count := jvm_count - jvm_type_to_stack_size (item)
 			Precursor
@@ -71,7 +71,7 @@ feature
 			-- the stack. So this value should reflect the number of
 			-- items on the stack of the runtime during execution of the
 			-- java program.
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

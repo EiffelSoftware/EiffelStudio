@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dummy debug value, named but no more information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, APPL
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING) is
+	make_with_name (a_name: STRING)
 			-- Create current
 		do
 			name := a_name
@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		do
 			Result := Void -- None
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_procedure_return_value (Current)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
 			if {add: like address} address then
@@ -51,7 +51,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			Result := "Procedure returning"
@@ -59,10 +59,10 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	expandable: BOOLEAN is False
+	expandable: BOOLEAN = False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -73,7 +73,7 @@ feature -- Output
 
 	display_kind: like kind
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		once
@@ -82,12 +82,12 @@ feature -- Output
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := procedure_return_debug_value_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in a menu and in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			menu_items: like managed_menu_items
@@ -63,7 +63,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			menu_items: like managed_menu_items
@@ -100,7 +100,7 @@ feature -- Status setting
 			end
 		end
 
-	update (a_window: EV_WINDOW) is
+	update (a_window: EV_WINDOW)
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		do
 			Precursor {EB_MENUABLE_COMMAND} (a_window)
@@ -109,7 +109,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM)
 			-- Create a new menu entry for this command.
 		do
 			Precursor {EB_MENUABLE_COMMAND} (a_menu_item)
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

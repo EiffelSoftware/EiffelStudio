@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged byte code for reverse assignment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (other: REVERSE_B) is
+	make (other: REVERSE_B)
 			-- Create new  instance from `other'.
 		do
 			Precursor {ASSIGN_BL} (other)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	analyze is
+	analyze
 			-- Analyze reverse assignment
 		local
 			source_type: TYPE_A
@@ -106,7 +106,7 @@ feature
 			end
 		end
 
-	source_print_register is
+	source_print_register
 			-- Print register holding the source
 		do
 			if not (register_propagated and source.is_simple_expr)
@@ -118,13 +118,13 @@ feature
 			end;
 		end;
 
-	generate_last_assignment (how: INTEGER) is
+	generate_last_assignment (how: INTEGER)
 			-- Generate last assignment in Result
 		do
 			generate_regular_assignment (how);
 		end;
 
-	generate_regular_assignment (how: INTEGER) is
+	generate_regular_assignment (how: INTEGER)
 			-- Generate assignment
 		local
 			buf: GENERATION_BUFFER
@@ -278,7 +278,7 @@ feature
 			info.generate_end (buf)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

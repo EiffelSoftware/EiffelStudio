@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Makefile generator for final mode C compilation
@@ -14,7 +14,7 @@ create
 
 feature
 
-	generate_compilation_rule is
+	generate_compilation_rule
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.put_string ("%
@@ -39,7 +39,7 @@ feature
 				%%T$(X2C) $< $*.cpp%N%N")
 		end;
 
-	add_specific_objects is
+	add_specific_objects
 			-- Add objects specific to final C code
 			-- generation
 		local
@@ -68,7 +68,7 @@ feature
 			end;
 		end;
 
-	add_cecil_objects is
+	add_cecil_objects
 		local
 			cecil_basket: LINKED_LIST [STRING]
 		do
@@ -169,7 +169,7 @@ feature
 			end
 		end;
 
-	add_eiffel_objects is
+	add_eiffel_objects
 			-- Add class C code objects.
 		local
 			a_class: CLASS_C;
@@ -215,7 +215,7 @@ feature
 			end
 		end;
 
-	run_time: STRING is
+	run_time: STRING
 			-- Run time with which the application must be linked
 		do
 				-- We use " in case the path as spaces in it.
@@ -250,7 +250,7 @@ feature
 			Result.append (boehm_library)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

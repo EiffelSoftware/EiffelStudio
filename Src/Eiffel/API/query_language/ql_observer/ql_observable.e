@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observable objects used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_changed is
+	set_changed
 			-- Set `changed' to True.
 		do
 			changed := True
@@ -24,7 +24,7 @@ feature -- Setting
 			changed_set: changed
 		end
 
-	clear_changed is
+	clear_changed
 			-- Set `changed' to False.
 		do
 			changed := False
@@ -32,7 +32,7 @@ feature -- Setting
 			changed_cleared: not changed
 		end
 
-	block is
+	block
 			-- Block `notify' (i.e., `notify' will not notify registered observers.)
 		do
 			block_count := block_count + 1
@@ -40,7 +40,7 @@ feature -- Setting
 			block_count_increased: block_count = old block_count + 1
 		end
 
-	resume is
+	resume
 			-- Resume `notify'.
 		do
 			if block_count > 0 then
@@ -52,7 +52,7 @@ feature -- Setting
 
 feature -- Notification
 
-	notify (a_data: like observed_data_type) is
+	notify (a_data: like observed_data_type)
 			-- Notify all registered obervers if `changed' is True.
 		local
 			l_observers: like registered_observers
@@ -76,7 +76,7 @@ feature -- Notification
 
 feature -- Observer registration
 
-	add_observer (a_observer: like observer_type) is
+	add_observer (a_observer: like observer_type)
 			-- Register `a_observer' into `registered_observers'.
 		require
 			a_observer_attached: a_observer /= Void
@@ -86,7 +86,7 @@ feature -- Observer registration
 			observer_registered: registered_observers.has (a_observer)
 		end
 
-	remove_observer (a_observer: like observer_type) is
+	remove_observer (a_observer: like observer_type)
 			-- Remove `a_observer' from `registered_observers'.
 		require
 			a_observer_attached: a_observer /= Void
@@ -99,7 +99,7 @@ feature -- Observer registration
 			observer_removed: not registered_observers.has (a_observer)
 		end
 
-	clear_observers is
+	clear_observers
 			-- Remove all registered observers
 		do
 			registered_observers.wipe_out
@@ -109,7 +109,7 @@ feature -- Observer registration
 
 feature -- Access
 
-	observers: like registered_observers is
+	observers: like registered_observers
 			-- List of registered observers
 		do
 			Result := registered_observers.twin
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Status report
 
-	observer_count: INTEGER is
+	observer_count: INTEGER
 			-- Number of registered observers
 		do
 			Result := registered_observers.count
@@ -127,7 +127,7 @@ feature -- Status report
 			good_result: Result = registered_observers.count
 		end
 
-	has_observer (a_observer: like observer_type): BOOLEAN is
+	has_observer (a_observer: like observer_type): BOOLEAN
 			-- Does `registered_observers' contain `a_observer'?
 		require
 			a_observer_attached: a_observer /= Void
@@ -137,7 +137,7 @@ feature -- Status report
 			good_result: Result implies registered_observers.has (a_observer)
 		end
 
-	is_blocked: BOOLEAN is
+	is_blocked: BOOLEAN
 			-- Is `notify' blocked?
 		do
 			Result := block_count > 0
@@ -145,7 +145,7 @@ feature -- Status report
 
 feature{NONE} -- Observers
 
-	registered_observers: LINKED_LIST [like observer_type] is
+	registered_observers: LINKED_LIST [like observer_type]
 			-- List of registered observers
 		do
 			if internal_observers = Void then
@@ -176,7 +176,7 @@ invariant
 	observers_attached: registered_observers /= Void
 	block_count_non_negative: block_count >= 0
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Customized tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_develop_window: like develop_window; a_title: like title; a_id: like id; a_pixmap_location: like pixmap_location; a_handlers: like stone_handlers) is
+	make (a_develop_window: like develop_window; a_title: like title; a_id: like id; a_pixmap_location: like pixmap_location; a_handlers: like stone_handlers)
 			-- Initialize.
 		require
 			a_develop_window_attached: a_develop_window /= Void
@@ -47,7 +47,7 @@ feature -- Access
 	id: STRING
 			-- ID of current tool
 
-	title_for_pre: STRING is
+	title_for_pre: STRING
 			-- Title of the tool
 		do
 			Result := id
@@ -55,7 +55,7 @@ feature -- Access
 			good_result: Result = id
 		end
 
-	title: STRING_GENERAL is
+	title: STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
 		do
 			Result := title_internal
@@ -63,7 +63,7 @@ feature -- Access
 			good_result: Result = title_internal
 		end
 
-	predefined_formatters: like formatters is
+	predefined_formatters: like formatters
 			-- Predefined formatters
 			-- An empty list will be returned as customized tool doesn't have and predefined formatters.
 		do
@@ -72,13 +72,13 @@ feature -- Access
 			good_result: Result.is_empty
 		end
 
-	no_target_message: STRING_GENERAL is
+	no_target_message: STRING_GENERAL
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := interface_names.l_no_info_of_element
 		end
 
-	stone: STONE is
+	stone: STONE
 			-- Stone representing Current
 		do
 			Result := last_stone
@@ -87,7 +87,7 @@ feature -- Access
 	pixmap_location: STRING
 			-- Location of icon file for Currnet tool
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
 		do
 			if (not is_pixmap_loaded) or else pixmap_internal = Void  then
@@ -96,7 +96,7 @@ feature -- Access
 			Result := pixmap_internal
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer as it appears in toolbars and menu, there is no pixmap by default.
 		do
 			if (not is_pixmap_loaded) or else pixmap_internal = Void  then
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_customized_tool: BOOLEAN is
+	is_customized_tool: BOOLEAN
 			-- Is Current tool a customized tool?
 		do
 			Result := True
@@ -121,13 +121,13 @@ feature -- Status report
 
 feature -- Setting
 
-	pop_default_formatter is
+	pop_default_formatter
 			-- Popup default formatter specified by `default_formatter'.
 		do
 
 		end
 
-	suitable_tool_for_stone (a_stone: like stone): STRING is
+	suitable_tool_for_stone (a_stone: like stone): STRING
 			-- ID of tool which is suitable for `a_stone' defined by handlers of Current tool
 			-- Void if no suitable stone is found.
 		local
@@ -155,7 +155,7 @@ feature -- Setting
 			end
 		end
 
-	drop_stone (st: like stone) is
+	drop_stone (st: like stone)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
 			l_tool_id: STRING
@@ -180,7 +180,7 @@ feature -- Setting
 			end
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Send a stone to class formatters.
 		local
 			l_stone: like stone
@@ -197,7 +197,7 @@ feature -- Setting
 			end
 		end
 
-	set_id (a_id: like id) is
+	set_id (a_id: like id)
 			-- Set `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -207,7 +207,7 @@ feature -- Setting
 			id_set: id /= Void and then id.is_equal (a_id)
 		end
 
-	set_pixmap_location (a_location: like pixmap_location) is
+	set_pixmap_location (a_location: like pixmap_location)
 			-- Set `pixmap_location' with `a_location'.
 		require
 			a_location_attached: a_location /= Void
@@ -218,7 +218,7 @@ feature -- Setting
 			pixmap_location_set: pixmap_location /= Void and then pixmap_location.is_equal (a_location)
 		end
 
-	set_title (a_title: like title) is
+	set_title (a_title: like title)
 			-- Set `title' with `a_title'.
 		require
 			a_title_valid: a_title /= Void
@@ -232,7 +232,7 @@ feature -- Setting
 			title_internal_set: (a_title.is_empty implies title_internal = default_title) and then (not a_title.is_empty implies title_internal = a_title)
 		end
 
-	set_is_pixmap_loaded (b: BOOLEAN) is
+	set_is_pixmap_loaded (b: BOOLEAN)
 			-- Set `is_pixmap_loaded' with `b'.
 		do
 			is_pixmap_loaded := b
@@ -240,7 +240,7 @@ feature -- Setting
 			is_pixmap_loaded_set: is_pixmap_loaded = b
 		end
 
-	set_stone_handlers (a_handlers: like stone_handlers) is
+	set_stone_handlers (a_handlers: like stone_handlers)
 			-- Set `stone_handlers' with `a_handlers'.
 		require
 			a_handlers_attached: a_handlers /= Void
@@ -253,7 +253,7 @@ feature{NONE} -- Implementation/Data
 	title_internal: like title
 			-- Implementation of `title'
 
-	default_title: STRING is "Unnamed tool"
+	default_title: STRING = "Unnamed tool"
 			-- Default tool title
 
 	pixmap_internal: like pixmap
@@ -264,7 +264,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation
 
-	load_pixmap is
+	load_pixmap
 			-- Load pixmap.
 		local
 			l_pixmap_loader: EB_PIXMAP_LOAD_HELPER
@@ -283,7 +283,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Stone handler matching
 
-	stone_names: EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS is
+	stone_names: EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
 			-- Name for stone
 		do
 			if stone_names_internal = Void then
@@ -294,7 +294,7 @@ feature{NONE} -- Stone handler matching
 			result_attached: Result /= Void
 		end
 
-	stone_testers: LINKED_LIST [TUPLE [a_stone_name: STRING; a_tester: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]]] is
+	stone_testers: LINKED_LIST [TUPLE [a_stone_name: STRING; a_tester: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]]]
 			-- List of stone testers.
 			-- `a_stone_name' is the name of the stone,
 			-- `a_tester' is a predicate with a stone as argument and evaluates to True if the stone is of certain type.
@@ -323,7 +323,7 @@ feature{NONE} -- Stone handler matching
 
 feature{NONE} -- Stone testers
 
-	is_feature_stone (a_stone: STONE): BOOLEAN is
+	is_feature_stone (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' a feature stone?
 		local
 			l_stone: FEATURE_STONE
@@ -332,7 +332,7 @@ feature{NONE} -- Stone testers
 			Result := l_stone /= Void
 		end
 
-	is_uncompiled_class_stone (a_stone: STONE): BOOLEAN is
+	is_uncompiled_class_stone (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' a uncompiled class stone?
 		local
 			l_stone: CLASSI_STONE
@@ -341,7 +341,7 @@ feature{NONE} -- Stone testers
 			Result := l_stone /= Void
 		end
 
-	is_compiled_class_stone (a_stone: STONE): BOOLEAN is
+	is_compiled_class_stone (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' a compiled class stone?
 		local
 			l_stone: CLASSC_STONE
@@ -350,7 +350,7 @@ feature{NONE} -- Stone testers
 			Result := l_stone /= Void
 		end
 
-	is_group_stone (a_stone: STONE): BOOLEAN is
+	is_group_stone (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' a group stone?
 		local
 			l_stone: CLUSTER_STONE
@@ -359,7 +359,7 @@ feature{NONE} -- Stone testers
 			Result := l_stone /= Void
 		end
 
-	is_target_stone (a_stone: STONE): BOOLEAN is
+	is_target_stone (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' a target stone?
 		local
 			l_stone: TARGET_STONE
@@ -371,7 +371,7 @@ feature{NONE} -- Stone testers
 invariant
 	id_attached: id /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

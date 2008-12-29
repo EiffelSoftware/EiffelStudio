@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when there is a positive value in an inspect instruction %
@@ -19,14 +19,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 5
+	subcode: INTEGER = 5
 
 	positive_value: ATOMIC_AS
 			-- Non-unique positive value in multi-branch instruction interval
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Non-Unique value: ")
 			a_text_formatter.add (positive_value.string_value)
@@ -35,12 +35,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_positive_value (i: like positive_value) is
+	set_positive_value (i: like positive_value)
 		do
 			positive_value := i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

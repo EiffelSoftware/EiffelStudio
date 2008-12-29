@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information shared for formatting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,31 +9,31 @@ class SHARED_FORMAT_INFO
 
 feature -- Properties
 
-	is_short: BOOLEAN is
+	is_short: BOOLEAN
 			-- Is Current doing a flat-short? (False implies flat)
 		do
 			Result := is_short_bool.item
 		end
 
-	in_bench_mode: BOOLEAN is
+	in_bench_mode: BOOLEAN
 			-- Are all instruction calls clickable?
 		do
 			Result := in_bench_mode_bool.item
 		end
 
-	in_assertion: BOOLEAN is
+	in_assertion: BOOLEAN
 			-- Are we in an assertion?
 		do
 			Result := in_assertion_bool.item
 		end
 
-	order_same_as_text: BOOLEAN is
+	order_same_as_text: BOOLEAN
 			-- Keep the same order as in text?
 		do
 			Result := order_same_as_text_bool.item
 		end
 
-	is_with_breakable: BOOLEAN is
+	is_with_breakable: BOOLEAN
 			-- Do we show breakable position in class format?
 		do
 			Result := is_with_breakable_bool.item
@@ -41,7 +41,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_in_bench_mode is
+	set_in_bench_mode
 			-- Set in_bench_mode to True
 		do
 			in_bench_mode_bool.put (True)
@@ -49,7 +49,7 @@ feature -- Setting
 			in_bench_mode: in_bench_mode
 		end
 
-	set_is_short is
+	set_is_short
 			-- Set is_short to True.
 		do
 			is_short_bool.put (True)
@@ -57,7 +57,7 @@ feature -- Setting
 			is_short: is_short
 		end
 
-	set_order_same_as_text is
+	set_order_same_as_text
 			-- Set order_same_as_text to True.
 		do
 			order_same_as_text_bool.put (True)
@@ -65,7 +65,7 @@ feature -- Setting
 			order_same_as_text: order_same_as_text
 		end
 
-	set_in_assertion is
+	set_in_assertion
 			-- Set in_assertion to True.
 		do
 			in_assertion_bool.put (True)
@@ -73,7 +73,7 @@ feature -- Setting
 			in_assertion: in_assertion
 		end
 
-	set_not_in_assertion is
+	set_not_in_assertion
 			-- Set in_assertion to False
 		do
 			in_assertion_bool.put (False)
@@ -81,7 +81,7 @@ feature -- Setting
 			not_in_assertion: not in_assertion
 		end
 
-	set_is_with_breakable is
+	set_is_with_breakable
 			-- Set is_with_breakable to True
 		do
 			is_with_breakable_bool.put (True)
@@ -89,7 +89,7 @@ feature -- Setting
 			is_with_breakable: is_with_breakable
 		end
 
-	set_is_without_breakable is
+	set_is_without_breakable
 			-- Set is_with_breakable to False
 		do
 			is_with_breakable_bool.put (False)
@@ -97,7 +97,7 @@ feature -- Setting
 			is_without_breakable: not is_with_breakable
 		end
 
-	reset_format_booleans is
+	reset_format_booleans
 			-- Reset all booleans to false.
 		do
 			is_short_bool.put (False)
@@ -113,7 +113,7 @@ feature -- Setting
 
 feature {NONE}
 
-	is_short_bool: CELL [BOOLEAN] is
+	is_short_bool: CELL [BOOLEAN]
 			-- Cell to store `is_short' flag
 		once
 			create Result.put (False)
@@ -121,7 +121,7 @@ feature {NONE}
 			is_short_bool_not_void: Result /= Void
 		end
 
-	in_bench_mode_bool: CELL [BOOLEAN] is
+	in_bench_mode_bool: CELL [BOOLEAN]
 			-- Cell to store `in_bench_mode' flag
 		once
 			create Result.put (False)
@@ -129,7 +129,7 @@ feature {NONE}
 			in_bench_mode_bool_not_void: Result /= Void
 		end
 
-	in_assertion_bool: CELL [BOOLEAN] is
+	in_assertion_bool: CELL [BOOLEAN]
 			-- Cell to store `in_assertion' flag
 		once
 			create Result.put (False)
@@ -137,7 +137,7 @@ feature {NONE}
 			in_assertion_bool_not_void: Result /= Void
 		end
 
-	order_same_as_text_bool: CELL [BOOLEAN] is
+	order_same_as_text_bool: CELL [BOOLEAN]
 			-- Cell to store `order_same_as_text' flag
 		once
 			create Result.put (False)
@@ -145,7 +145,7 @@ feature {NONE}
 			order_same_as_text_bool_not_void: Result /= Void
 		end
 
-	is_with_breakable_bool: CELL [BOOLEAN] is
+	is_with_breakable_bool: CELL [BOOLEAN]
 			-- Cell to store `is_with_breakable' flag
 		once
 			create Result.put (False)
@@ -153,7 +153,7 @@ feature {NONE}
 			is_with_breakable_bool_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

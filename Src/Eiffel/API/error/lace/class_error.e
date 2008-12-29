@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for a class in a cluster."
@@ -20,14 +20,14 @@ feature -- Properties
 
 feature -- Output
 
-	put_class_name (a_text_formatter: TEXT_FORMATTER) is
+	put_class_name (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Class name: ");
 			a_text_formatter.add (class_name);
 			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			put_cluster_name (a_text_formatter);
 			put_class_name (a_text_formatter);
@@ -35,13 +35,13 @@ feature -- Output
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting
 
-	set_class_name (s: STRING) is
+	set_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

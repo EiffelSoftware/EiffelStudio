@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Replacing directly functions in a editor if a class is loaded. Or functions the file.
 				]"
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_multi_search_tool: ES_MULTI_SEARCH_TOOL_PANEL) is
+	make (a_multi_search_tool: ES_MULTI_SEARCH_TOOL_PANEL)
 			-- Initializewith an EB_EDITOR
 		require
 			a_multi_search_tool_not_void: a_multi_search_tool /= Void
@@ -56,13 +56,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_editor_set : BOOLEAN is
+	is_editor_set : BOOLEAN
 			-- Is editor set?
 		do
 			Result := (editor /= Void)
 		end
 
-	is_editor_editable: BOOLEAN is
+	is_editor_editable: BOOLEAN
 			-- Is editor editable?
 		do
 			if editor /= Void then
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_editor (a_editor: like editor) is
+	set_editor (a_editor: like editor)
 			-- Set `editor'
 		require
 			a_editor_not_void: a_editor /= Void
@@ -84,7 +84,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	replace is
+	replace
 			-- Launch replacement one time, replace current item.
 		require else
 			replace_items_set: is_replace_items_set
@@ -153,7 +153,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	item_replaced is
+	item_replaced
 			-- One item replaced when replacing all.
 		do
 			if smart_text /= Void then
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	all_item_replaced is
+	all_item_replaced
 			-- Replace all is done.
 		do
 			if smart_text /= Void then
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	one_cluster_item_replaced (a_item: MSR_TEXT_ITEM) is
+	one_cluster_item_replaced (a_item: MSR_TEXT_ITEM)
 			-- When replacing all, all items of a cluster are replaced.
 			-- Typically all texts in one file are replaced.
 			-- a_item is one of these items.
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN is
+	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN
 			-- When replacing all, should a_item replaced as in cluster mode?
 		local
 			class_i: CLASS_I
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_class_i_editing (a_class : CLASS_I): BOOLEAN is
+	is_class_i_editing (a_class : CLASS_I): BOOLEAN
 			-- If class_i is being editing in the editor.
 		require
 			a_class_not_void: a_class /= Void
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_writable (a_item: MSR_ITEM): BOOLEAN is
+	item_writable (a_item: MSR_ITEM): BOOLEAN
 			-- Is text representation of `a_item' writable?
 		local
 			l_class: CLASS_I
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	editor : EB_EDITOR
 			-- Current editor
 
-	smart_text: SMART_TEXT is
+	smart_text: SMART_TEXT
 			-- Smart text in editor.
 		do
 			if editor /= Void then
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL;
 			-- Search tool
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

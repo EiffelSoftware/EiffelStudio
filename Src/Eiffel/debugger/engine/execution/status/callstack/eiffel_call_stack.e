@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel call stack for the stopped application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,16 +9,16 @@ deferred class EIFFEL_CALL_STACK
 
 feature -- Properties
 
-	thread_id: POINTER is
+	thread_id: POINTER
 			-- Thread ID related to `Current' call stack
 		deferred
 		end
 
-	stack_depth: INTEGER is
+	stack_depth: INTEGER
 		deferred
 		end
 
-	error_occurred: BOOLEAN is
+	error_occurred: BOOLEAN
 			-- Did an error occurred when retrieving the eiffel stack?
 		deferred
 		end
@@ -28,31 +28,31 @@ feature -- Properties
 
 feature -- fake TWO_WAY_LIST Interface
 
-	count: INTEGER is
+	count: INTEGER
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Call Stack empty ?
 		deferred
 		end
 
 feature -- Access
 
-	item: CALL_STACK_ELEMENT is
+	item: CALL_STACK_ELEMENT
 		deferred
 		end
 
-	i_th alias "[]" (i: INTEGER): like item is
+	i_th alias "[]" (i: INTEGER): like item
 		deferred
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within allowable bounds?
 		deferred
 		end
 
-	eiffel_call_stack_element (dep: INTEGER): EIFFEL_CALL_STACK_ELEMENT is
+	eiffel_call_stack_element (dep: INTEGER): EIFFEL_CALL_STACK_ELEMENT
 			-- Call stack element of depth `dep'
 		do
 			from
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Queries
 
-	to_string: STRING is
+	to_string: STRING
 		local
 			i: like item
 		do
@@ -90,13 +90,13 @@ feature -- Queries
 
 feature -- Change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		deferred
 		end
 
-	reset_call_stack_depth (dep: INTEGER) is
+	reset_call_stack_depth (dep: INTEGER)
 			-- Reset call stack element of callstack depth `dep'
 		do
 			if {c: like eiffel_call_stack_element} eiffel_call_stack_element (dep) then
@@ -104,7 +104,7 @@ feature -- Change
 			end
 		end
 
-	reset_call_stack_level (lev: INTEGER) is
+	reset_call_stack_level (lev: INTEGER)
 			-- Reset call stack element of callstack level `lev'
 		do
 			if valid_index (lev) then
@@ -116,21 +116,21 @@ feature -- Change
 
 feature -- Cursor movement
 
-	start is
+	start
 		deferred
 		end
 
-	forth is
+	forth
 		deferred
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 		deferred
 		end
 
 feature {APPLICATION_STATUS} -- Change
 
-	reload (n: INTEGER) is
+	reload (n: INTEGER)
 			-- Reload call stack up to level `n'
 		require
 			all_level_or_positive: n = -1 or n > 0
@@ -143,7 +143,7 @@ invariant
 
 	empty_if_error: error_occurred implies is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Name constants used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,396 +11,396 @@ class
 
 feature -- Scope item
 
-	ql_target: STRING is "target"
-	ql_group: STRING is "group"
-	ql_class: STRING is "class"
-	ql_feature: STRING is "feature"
-	ql_invariant: STRING is "invariant"
-	ql_quantity: STRING is "quantity"
-	ql_line: STRING is "line"
-	ql_local: STRING is "local"
-	ql_assertion: STRING is "assertion"
-	ql_argument: STRING is "argument"
-	ql_generic: STRING is "generic"
+	ql_target: STRING = "target"
+	ql_group: STRING = "group"
+	ql_class: STRING = "class"
+	ql_feature: STRING = "feature"
+	ql_invariant: STRING = "invariant"
+	ql_quantity: STRING = "quantity"
+	ql_line: STRING = "line"
+	ql_local: STRING = "local"
+	ql_assertion: STRING = "assertion"
+	ql_argument: STRING = "argument"
+	ql_generic: STRING = "generic"
 
 feature -- Units
 
-	ql_target_unit: STRING is "target"
-	ql_group_unit: STRING is "group"
-	ql_class_unit: STRING is "class"
-	ql_feature_unit: STRING is "feature"
-	ql_compilation_unit: STRING is "compilation"
-	ql_local_unit: STRING is "local"
-	ql_argument_unit: STRING is "argument"
-	ql_ratio_unit: STRING is "ratio"
-	ql_line_unit: STRING is "line"
-	ql_assertion_unit: STRING is "assertion"
-	ql_no_unit: STRING is "no unit"
-	ql_generic_unit: STRING is "generic"
+	ql_target_unit: STRING = "target"
+	ql_group_unit: STRING = "group"
+	ql_class_unit: STRING = "class"
+	ql_feature_unit: STRING = "feature"
+	ql_compilation_unit: STRING = "compilation"
+	ql_local_unit: STRING = "local"
+	ql_argument_unit: STRING = "argument"
+	ql_ratio_unit: STRING = "ratio"
+	ql_line_unit: STRING = "line"
+	ql_assertion_unit: STRING = "assertion"
+	ql_no_unit: STRING = "no unit"
+	ql_generic_unit: STRING = "generic"
 
 feature -- Titles
 
-	ql_name: STRING is "name"
-	ql_path: STRING is "path"
+	ql_name: STRING = "name"
+	ql_path: STRING = "path"
 
 feature -- Criterion names
 
-	ql_cri_true: STRING is "true"
-	ql_cri_false: STRING is "false"
-	ql_cri_and: STRING is "and"
-	ql_cri_or: STRING is "or"
-	ql_cri_not: STRING is "not"
-	ql_cri_eq: STRING is "eq"
-	ql_cri_ne: STRING is "ne"
-	ql_cri_num: STRING is "num"
-	ql_cri_is_compiled: STRING is "is_compiled"
-	ql_cri_name_is: STRING is "name_is"
+	ql_cri_true: STRING = "true"
+	ql_cri_false: STRING = "false"
+	ql_cri_and: STRING = "and"
+	ql_cri_or: STRING = "or"
+	ql_cri_not: STRING = "not"
+	ql_cri_eq: STRING = "eq"
+	ql_cri_ne: STRING = "ne"
+	ql_cri_num: STRING = "num"
+	ql_cri_is_compiled: STRING = "is_compiled"
+	ql_cri_name_is: STRING = "name_is"
 
-	ql_cri_is_assembly: STRING is "is_assembly"
-	ql_cri_is_library: STRING is "is_library"
-	ql_cri_is_cluster: STRING is "is_cluster"
-	ql_cri_is_override: STRING is "is_override"
-	ql_cri_is_valid: STRING is "is_valid"
-	ql_cri_is_used_in_library: STRING is "is_used_in_library"
-	ql_cri_is_class_set: STRING is "is_class_set"
+	ql_cri_is_assembly: STRING = "is_assembly"
+	ql_cri_is_library: STRING = "is_library"
+	ql_cri_is_cluster: STRING = "is_cluster"
+	ql_cri_is_override: STRING = "is_override"
+	ql_cri_is_valid: STRING = "is_valid"
+	ql_cri_is_used_in_library: STRING = "is_used_in_library"
+	ql_cri_is_class_set: STRING = "is_class_set"
 
-	ql_cri_has_invariant: STRING is "has_immediate_invariant"
-	ql_cri_ancestor_is: STRING is "ancestor_is"
-	ql_cri_proper_ancestor_is: STRING is "proper_ancestor_is"
-	ql_cri_parent_is: STRING is "parent_is"
-	ql_cri_indirect_parent_is: STRING is "indirect_parent_is"
-	ql_cri_descendant_is: STRING is "descendant_is"
-	ql_cri_proper_descendant_is: STRING is "proper_descendant_is"
-	ql_cri_heir_is: STRING is "heir_is"
-	ql_cri_indirect_heir_is: STRING is "indirect_heir_is"
-	ql_cri_client_is: STRING is "client_is"
-	ql_cri_supplier_is: STRING is "supplier_is"
-	ql_cri_is_deferred: STRING is "is_deferred"
-	ql_cri_is_expanded: STRING is "is_expanded"
-	ql_cri_is_external: STRING is "is_external"
-	ql_cri_is_frozen: STRING is "is_frozen"
-	ql_cri_is_generic: STRING is "is_generic"
-	ql_cri_is_obsolete: STRING is "is_obsolete"
-	ql_cri_is_precompiled: STRING is "is_precompiled"
-	ql_cri_has_top_indexing: STRING is "has_top_indexing"
-	ql_cri_has_bottom_indexing: STRING is "has_bottom_indexing"
-	ql_cri_has_indexing: STRING is "has_indexing"
-	ql_cri_is_enum: STRING is "is_enum"
-	ql_cri_is_effective: STRING is "is_effective"
-	ql_cri_path_in: STRING is "path_in"
-	ql_cri_path_is: STRING is "path_is"
-	ql_cri_text_contain: STRING is "text_is"
-	ql_cri_top_indexing_has_tag: STRING is "top_indexing_has_tag"
-	ql_cri_bottom_indexing_has_tag: STRING is "bottom_indexing_has_tag"
-	ql_cri_indexing_has_tag: STRING is "indexing_has_tag"
-	ql_cri_top_indexing_contain: STRING is "top_indexing_contain"
-	ql_cri_bottom_indexing_contain: STRING is "bottom_indexing_contain"
-	ql_cri_indexing_contain: STRING is "indexing_contain"
-	ql_cri_is_always_compiled: STRING is "is_always_compiled"
-	ql_cri_is_partial: STRING is "is_partial"
-	ql_cri_is_read_only: STRING is "is_read_only"
-	ql_cri_is_overridden: STRING is "is_overridden"
-	ql_cri_is_overrider: STRING is "is_overrider"
-	ql_cri_is_visible: STRING is "is_visible"
-	ql_cri_is_from_any: STRING is "is_from_any"
+	ql_cri_has_invariant: STRING = "has_immediate_invariant"
+	ql_cri_ancestor_is: STRING = "ancestor_is"
+	ql_cri_proper_ancestor_is: STRING = "proper_ancestor_is"
+	ql_cri_parent_is: STRING = "parent_is"
+	ql_cri_indirect_parent_is: STRING = "indirect_parent_is"
+	ql_cri_descendant_is: STRING = "descendant_is"
+	ql_cri_proper_descendant_is: STRING = "proper_descendant_is"
+	ql_cri_heir_is: STRING = "heir_is"
+	ql_cri_indirect_heir_is: STRING = "indirect_heir_is"
+	ql_cri_client_is: STRING = "client_is"
+	ql_cri_supplier_is: STRING = "supplier_is"
+	ql_cri_is_deferred: STRING = "is_deferred"
+	ql_cri_is_expanded: STRING = "is_expanded"
+	ql_cri_is_external: STRING = "is_external"
+	ql_cri_is_frozen: STRING = "is_frozen"
+	ql_cri_is_generic: STRING = "is_generic"
+	ql_cri_is_obsolete: STRING = "is_obsolete"
+	ql_cri_is_precompiled: STRING = "is_precompiled"
+	ql_cri_has_top_indexing: STRING = "has_top_indexing"
+	ql_cri_has_bottom_indexing: STRING = "has_bottom_indexing"
+	ql_cri_has_indexing: STRING = "has_indexing"
+	ql_cri_is_enum: STRING = "is_enum"
+	ql_cri_is_effective: STRING = "is_effective"
+	ql_cri_path_in: STRING = "path_in"
+	ql_cri_path_is: STRING = "path_is"
+	ql_cri_text_contain: STRING = "text_is"
+	ql_cri_top_indexing_has_tag: STRING = "top_indexing_has_tag"
+	ql_cri_bottom_indexing_has_tag: STRING = "bottom_indexing_has_tag"
+	ql_cri_indexing_has_tag: STRING = "indexing_has_tag"
+	ql_cri_top_indexing_contain: STRING = "top_indexing_contain"
+	ql_cri_bottom_indexing_contain: STRING = "bottom_indexing_contain"
+	ql_cri_indexing_contain: STRING = "indexing_contain"
+	ql_cri_is_always_compiled: STRING = "is_always_compiled"
+	ql_cri_is_partial: STRING = "is_partial"
+	ql_cri_is_read_only: STRING = "is_read_only"
+	ql_cri_is_overridden: STRING = "is_overridden"
+	ql_cri_is_overrider: STRING = "is_overrider"
+	ql_cri_is_visible: STRING = "is_visible"
+	ql_cri_is_from_any: STRING = "is_from_any"
 
-	ql_cri_has_argument: STRING is "has_argument"
-	ql_cri_has_assertion: STRING is "has_assertion"
-	ql_cri_has_assigner: STRING is "has_assigner"
-	ql_cri_has_comment: STRING is "has_comment"
-	ql_cri_has_local: STRING is "has_local"
-	ql_cri_has_postcondition: STRING is "has_postcondition"
-	ql_cri_has_precondition: STRING is "has_precondition"
-	ql_cri_has_rescue: STRING is "has_rescue"
-	ql_cri_is_attribute: STRING is "is_attribute"
-	ql_cri_is_caller: STRING is "is_caller_of"
-	ql_cri_is_constant: STRING is "is_constant"
-	ql_cri_is_function: STRING is "is_function"
-	ql_cri_is_immediate: STRING is "is_immediate"
-	ql_cri_is_implementor: STRING is "is_implementor_of"
-	ql_cri_is_infix: STRING is "is_infix"
-	ql_cri_is_once: STRING is "is_once"
-	ql_cri_is_origin: STRING is "is_origin"
-	ql_cri_is_prefix: STRING is "is_prefix"
-	ql_cri_is_procedure: STRING is "is_procedure"
-	ql_cri_is_unique: STRING is "is_unique"
-	ql_cri_is_feature: STRING is "is_feature"
-	ql_cri_is_invariant: STRING is "is_invariant"
-	ql_cri_is_creator: STRING is "is_creator"
-	ql_cri_is_exported: STRING is "is_exported"
-	ql_cri_is_hidden: STRING is "is_hidden"
-	ql_cri_implementors_of: STRING is "is_implementors_of"
-	ql_cri_is_exported_to: STRING is "is_exported_to"
-	ql_cri_callee_is: STRING is "callee_is"
-	ql_cri_caller_is: STRING is "caller_is"
-	ql_cri_assignee_is: STRING is "assignee_is"
-	ql_cri_assigner_is: STRING is "assigner_is"
-	ql_cri_createe_is: STRING is "createe_is"
-	ql_cri_creator_is: STRING is "creator_is"
-	ql_cri_is_invariant_feature: STRING is "is_invariant_feature"
-	ql_cri_is_query: STRING is "is_query"
-	ql_cri_is_command: STRING is "is_command"
-	ql_cri_return_type_is: STRING is "return_type_is"
+	ql_cri_has_argument: STRING = "has_argument"
+	ql_cri_has_assertion: STRING = "has_assertion"
+	ql_cri_has_assigner: STRING = "has_assigner"
+	ql_cri_has_comment: STRING = "has_comment"
+	ql_cri_has_local: STRING = "has_local"
+	ql_cri_has_postcondition: STRING = "has_postcondition"
+	ql_cri_has_precondition: STRING = "has_precondition"
+	ql_cri_has_rescue: STRING = "has_rescue"
+	ql_cri_is_attribute: STRING = "is_attribute"
+	ql_cri_is_caller: STRING = "is_caller_of"
+	ql_cri_is_constant: STRING = "is_constant"
+	ql_cri_is_function: STRING = "is_function"
+	ql_cri_is_immediate: STRING = "is_immediate"
+	ql_cri_is_implementor: STRING = "is_implementor_of"
+	ql_cri_is_infix: STRING = "is_infix"
+	ql_cri_is_once: STRING = "is_once"
+	ql_cri_is_origin: STRING = "is_origin"
+	ql_cri_is_prefix: STRING = "is_prefix"
+	ql_cri_is_procedure: STRING = "is_procedure"
+	ql_cri_is_unique: STRING = "is_unique"
+	ql_cri_is_feature: STRING = "is_feature"
+	ql_cri_is_invariant: STRING = "is_invariant"
+	ql_cri_is_creator: STRING = "is_creator"
+	ql_cri_is_exported: STRING = "is_exported"
+	ql_cri_is_hidden: STRING = "is_hidden"
+	ql_cri_implementors_of: STRING = "is_implementors_of"
+	ql_cri_is_exported_to: STRING = "is_exported_to"
+	ql_cri_callee_is: STRING = "callee_is"
+	ql_cri_caller_is: STRING = "caller_is"
+	ql_cri_assignee_is: STRING = "assignee_is"
+	ql_cri_assigner_is: STRING = "assigner_is"
+	ql_cri_createe_is: STRING = "createe_is"
+	ql_cri_creator_is: STRING = "creator_is"
+	ql_cri_is_invariant_feature: STRING = "is_invariant_feature"
+	ql_cri_is_query: STRING = "is_query"
+	ql_cri_is_command: STRING = "is_command"
+	ql_cri_return_type_is: STRING = "return_type_is"
 
-	ql_cri_has_constraint: STRING is "has_constraint"
-	ql_cri_has_creation_constraint: STRING is "has_creation_constraint"
-	ql_cri_is_reference: STRING is "is_reference"
+	ql_cri_has_constraint: STRING = "has_constraint"
+	ql_cri_has_creation_constraint: STRING = "has_creation_constraint"
+	ql_cri_is_reference: STRING = "is_reference"
 
-	ql_cri_is_used: STRING is "is_used"
+	ql_cri_is_used: STRING = "is_used"
 
-	ql_cri_has_expression: STRING is "has_expression"
-	ql_cri_has_tag: STRING is "has_tag"
-	ql_cri_is_require: STRING is "is_require"
-	ql_cri_is_require_else: STRING is "is_require_else"
-	ql_cri_is_ensure: STRING is "is_ensure"
-	ql_cri_is_ensure_then: STRING is "is_ensure_then"
-	ql_cri_is_precondition: STRING is "is_precondition"
-	ql_cri_is_postcondition: STRING is "is_postcondition"
+	ql_cri_has_expression: STRING = "has_expression"
+	ql_cri_has_tag: STRING = "has_tag"
+	ql_cri_is_require: STRING = "is_require"
+	ql_cri_is_require_else: STRING = "is_require_else"
+	ql_cri_is_ensure: STRING = "is_ensure"
+	ql_cri_is_ensure_then: STRING = "is_ensure_then"
+	ql_cri_is_precondition: STRING = "is_precondition"
+	ql_cri_is_postcondition: STRING = "is_postcondition"
 
-	ql_cri_is_blank: STRING is "is_blank"
-	ql_cri_is_comment: STRING is "is_comment"
-	ql_cri_contain_ast: STRING is "contain_ast"
+	ql_cri_is_blank: STRING = "is_blank"
+	ql_cri_is_comment: STRING = "is_comment"
+	ql_cri_contain_ast: STRING = "contain_ast"
 
-	ql_cri_value_of_metric_is: STRING is "value_of_metric_is"
-	ql_cri_is_implementation_comment: STRING is "is_implementation_comment"
+	ql_cri_value_of_metric_is: STRING = "value_of_metric_is"
+	ql_cri_is_implementation_comment: STRING = "is_implementation_comment"
 
-	ql_cri_is_satisfied_by: STRING is "is_satisfied_by"
+	ql_cri_is_satisfied_by: STRING = "is_satisfied_by"
 
 feature -- Metric names
 
-	ql_metric_target: STRING is "Number of targets"
-	ql_metric_group: STRING is "Number of groups"
-	ql_metric_class: STRING is "Number of classes"
-	ql_metric_feature: STRING is "Number of features"
-	ql_metric_local: STRING is "Number of locals"
-	ql_metric_argument: STRING is "Number of arguments"
-	ql_metric_line: STRING is "Number of lines"
-	ql_metric_compilation: STRING is "Number of compilation"
-	ql_metric_assertion: STRING is "Number of assertions"
-	ql_metric_sum: STRING is "Sum"
-	ql_metric_average: STRING is "Average"
-	ql_metric_count: STRING is "Number of items"
-	ql_metric_generic: STRING is "Number of generics"
+	ql_metric_target: STRING = "Number of targets"
+	ql_metric_group: STRING = "Number of groups"
+	ql_metric_class: STRING = "Number of classes"
+	ql_metric_feature: STRING = "Number of features"
+	ql_metric_local: STRING = "Number of locals"
+	ql_metric_argument: STRING = "Number of arguments"
+	ql_metric_line: STRING = "Number of lines"
+	ql_metric_compilation: STRING = "Number of compilation"
+	ql_metric_assertion: STRING = "Number of assertions"
+	ql_metric_sum: STRING = "Sum"
+	ql_metric_average: STRING = "Average"
+	ql_metric_count: STRING = "Number of items"
+	ql_metric_generic: STRING = "Number of generics"
 
 feature -- Assertion type names
 
-	ql_require_assertion: STRING is "require"
-	ql_require_else_assertion: STRING is "require else"
-	ql_ensure_assertion: STRING is "ensure"
-	ql_ensure_then_assertion: STRING is "ensure then"
-	ql_invariant_assertion: STRING is "invariant"
+	ql_require_assertion: STRING = "require"
+	ql_require_else_assertion: STRING = "require else"
+	ql_ensure_assertion: STRING = "ensure"
+	ql_ensure_then_assertion: STRING = "ensure then"
+	ql_invariant_assertion: STRING = "invariant"
 
 feature -- Path marker
 
-	ql_target_path_opener: STRING is ""
-	ql_target_path_closer: STRING is ""
+	ql_target_path_opener: STRING = ""
+	ql_target_path_closer: STRING = ""
 
-	ql_group_path_opener: STRING is ""
-	ql_group_path_closer: STRING is ""
+	ql_group_path_opener: STRING = ""
+	ql_group_path_closer: STRING = ""
 
-	ql_class_path_opener: STRING is "{"
-	ql_class_path_closer: STRING is "}"
+	ql_class_path_opener: STRING = "{"
+	ql_class_path_closer: STRING = "}"
 
-	ql_feature_path_opener: STRING is ""
-	ql_feature_path_closer: STRING is ""
+	ql_feature_path_opener: STRING = ""
+	ql_feature_path_closer: STRING = ""
 
-	ql_generic_path_opener: STRING is "["
-	ql_generic_path_closer: STRING is "]"
+	ql_generic_path_opener: STRING = "["
+	ql_generic_path_closer: STRING = "]"
 
-	ql_argument_path_opener: STRING is "argument "
-	ql_argument_path_closer: STRING is ""
+	ql_argument_path_opener: STRING = "argument "
+	ql_argument_path_closer: STRING = ""
 
-	ql_local_path_opener: STRING is "local "
-	ql_local_path_closer: STRING is ""
+	ql_local_path_opener: STRING = "local "
+	ql_local_path_closer: STRING = ""
 
-	ql_assertion_path_opener: STRING is "assertion "
-	ql_assertion_path_closer: STRING is ""
+	ql_assertion_path_opener: STRING = "assertion "
+	ql_assertion_path_closer: STRING = ""
 
-	ql_line_path_opener: STRING is "line "
-	ql_line_path_closer: STRING is ""
+	ql_line_path_opener: STRING = "line "
+	ql_line_path_closer: STRING = ""
 
-	ql_quantity_path_opener: STRING is "quantity "
-	ql_quantity_path_closer: STRING is ""
+	ql_quantity_path_opener: STRING = "quantity "
+	ql_quantity_path_closer: STRING = ""
 
 feature -- Feature caller types
 
-	ql_normal_feature_caller: STRING is "normal caller"
-	ql_assigner_feature_caller: STRING is "assign caller"
-	ql_creator_feature_caller: STRING is "creator caller"
-	ql_normal_feature_callee: STRING is "normal callee"
-	ql_assigner_feature_callee: STRING is "assign callee"
-	ql_creator_feature_callee: STRING is "creator callee"
+	ql_normal_feature_caller: STRING = "normal caller"
+	ql_assigner_feature_caller: STRING = "assign caller"
+	ql_creator_feature_caller: STRING = "creator caller"
+	ql_normal_feature_callee: STRING = "normal callee"
+	ql_assigner_feature_callee: STRING = "assign callee"
+	ql_creator_feature_callee: STRING = "creator callee"
 
 feature -- Class relationship
 
-	ql_class_ancestor_relation: STRING is "ancestor"
-	ql_class_proper_ancestor_relation: STRING is "proper ancestor"
-	ql_class_descendant_relation: STRING is "descendant"
-	ql_class_proper_descendant_relation: STRING is "proper descendant"
-	ql_class_parent_relation: STRING is "parent"
-	ql_class_indirect_parent_relation: STRING is "indirect parent"
-	ql_class_heir_relation: STRING is "heir"
-	ql_class_indirect_heir_relation: STRING is "indirect heir"
-	ql_class_client_relation: STRING is "client"
-	ql_class_indirect_client_relation: STRING is "indirect client"
-	ql_class_supplier_relation: STRING is "supplier"
-	ql_class_indirect_supplier_relation: STRING is "indirect supplier";
+	ql_class_ancestor_relation: STRING = "ancestor"
+	ql_class_proper_ancestor_relation: STRING = "proper ancestor"
+	ql_class_descendant_relation: STRING = "descendant"
+	ql_class_proper_descendant_relation: STRING = "proper descendant"
+	ql_class_parent_relation: STRING = "parent"
+	ql_class_indirect_parent_relation: STRING = "indirect parent"
+	ql_class_heir_relation: STRING = "heir"
+	ql_class_indirect_heir_relation: STRING = "indirect heir"
+	ql_class_client_relation: STRING = "client"
+	ql_class_indirect_client_relation: STRING = "indirect client"
+	ql_class_supplier_relation: STRING = "supplier"
+	ql_class_indirect_supplier_relation: STRING = "indirect supplier";
 
 feature -- AST node index
 
-	none_id: INTEGER is 0
-	typed_char: INTEGER is 1
-	agent_routine_creation: INTEGER is 2
-	tilda_routine_creation: INTEGER is 3
-	inline_agent_creation: INTEGER is 4
-	create_creation: INTEGER is 5
-	bang_creation: INTEGER is 6
-	create_creation_expr: INTEGER is 7
-	bang_creation_expr: INTEGER is 8
-	keyword: INTEGER is 9
-	symbol: INTEGER is 10
-	custom_attribute: INTEGER is 11
-	id: INTEGER is 12
-	integer: INTEGER is 13
-	static_access: INTEGER is 14
-	feature_clause: INTEGER is 15
-	unique_as: INTEGER is 16
-	tuple: INTEGER is 17
-	real: INTEGER is 18
-	bool: INTEGER is 19
-	bit_const: INTEGER is 20
-	array: INTEGER is 21
-	char: INTEGER is 22
-	string: INTEGER is 23
-	verbatim_string: INTEGER is 24
-	body: INTEGER is 25
-	result_as: INTEGER is 26
-	current_as: INTEGER is 27
-	access_feat: INTEGER is 28
-	access_inv: INTEGER is 29
-	access_id: INTEGER is 30
-	access_assert: INTEGER is 31
-	precursor_as: INTEGER is 32
-	nested_expr: INTEGER is 33
-	nested: INTEGER is 34
-	creation_expr: INTEGER is 35
-	type_expr: INTEGER is 36
-	routine: INTEGER is 37
-	constant: INTEGER is 38
-	eiffel_list: INTEGER is 39
-	indexing_clause: INTEGER is 40
-	operand: INTEGER is 41
-	tagged: INTEGER is 42
-	variant_as: INTEGER is 43
-	un_strip: INTEGER is 44
-	paran: INTEGER is 45
-	expr_call: INTEGER is 46
-	expr_address: INTEGER is 47
-	address_result: INTEGER is 48
-	address_current: INTEGER is 49
-	address: INTEGER is 50
-	routine_creation: INTEGER is 51
-	unary: INTEGER is 52
-	un_free: INTEGER is 53
-	un_minus: INTEGER is 54
-	un_not: INTEGER is 55
-	un_old: INTEGER is 56
-	un_plus: INTEGER is 57
-	binary: INTEGER is 58
-	bin_and_then: INTEGER is 59
-	bin_free: INTEGER is 60
-	bin_implies: INTEGER is 61
-	bin_or: INTEGER is 62
-	bin_or_else: INTEGER is 63
-	bin_xor: INTEGER is 64
-	bin_ge: INTEGER is 65
-	bin_gt: INTEGER is 66
-	bin_le: INTEGER is 67
-	bin_lt: INTEGER is 68
-	bin_div: INTEGER is 69
-	bin_minus: INTEGER is 70
-	bin_mod: INTEGER is 71
-	bin_plus: INTEGER is 72
-	bin_power: INTEGER is 73
-	bin_slash: INTEGER is 74
-	bin_star: INTEGER is 75
-	bin_and: INTEGER is 76
-	bin_eq: INTEGER is 77
-	bin_ne: INTEGER is 78
-	bracket: INTEGER is 79
-	external_lang: INTEGER is 80
-	feature_as: INTEGER is 81
-	infix_prefix: INTEGER is 82
-	feat_name_id: INTEGER is 83
-	feature_name_alias: INTEGER is 84
-	feature_list: INTEGER is 85
-	all_as: INTEGER is 86
-	assign_as: INTEGER is 87
-	assigner_call: INTEGER is 88
-	reverse: INTEGER is 89
-	check_as: INTEGER is 90
-	creation_as: INTEGER is 91
-	debug_as: INTEGER is 92
-	if_as: INTEGER is 93
-	inspect_as: INTEGER is 94
-	instr_call: INTEGER is 95
-	loop_as: INTEGER is 96
-	retry_as: INTEGER is 97
-	external_as: INTEGER is 98
-	deferred_as: INTEGER is 99
-	do_as: INTEGER is 100
-	once_as: INTEGER is 101
-	type_dec: INTEGER is 102
-	class_as: INTEGER is 103
-	parent: INTEGER is 104
-	like_id: INTEGER is 105
-	like_cur: INTEGER is 106
-	formal: INTEGER is 107
-	formal_dec: INTEGER is 108
-	class_type: INTEGER is 109
-	named_tuple_type: INTEGER is 110
-	none_type: INTEGER is 111
-	bits: INTEGER is 112
-	bits_symbol: INTEGER is 113
-	rename_as: INTEGER is 114
-	invariant_as: INTEGER is 115
-	interval: INTEGER is 116
-	index: INTEGER is 117
-	export_item: INTEGER is 118
-	elseif_as: INTEGER is 119
-	create_as: INTEGER is 120
-	client: INTEGER is 121
-	case: INTEGER is 122
-	ensure_as: INTEGER is 123
-	ensure_then: INTEGER is 124
-	require_as: INTEGER is 125
-	require_else: INTEGER is 126
-	convert_feat: INTEGER is 127
-	void_as: INTEGER is 128
-	type_list: INTEGER is 129
-	type_dec_list: INTEGER is 130
-	convert_feat_list: INTEGER is 131
-	class_list: INTEGER is 132
-	parent_list: INTEGER is 133
-	local_dec_list: INTEGER is 134
-	formal_argu_dec_list: INTEGER is 135
-	debug_key_list: INTEGER is 136
-	delayed_actual_list: INTEGER is 137
-	parameter_list: INTEGER is 138
-	rename_clause: INTEGER is 139
-	export_clause: INTEGER is 140
-	undefine_clause: INTEGER is 141
-	redefine_clause: INTEGER is 142
-	select_clause: INTEGER is 143
-	formal_generic_list: INTEGER is 144
-	constraining_type:  INTEGER is 145
-	object_test: INTEGER is 146
-	bin_tilde: INTEGER is 147
-	bin_not_tilde: INTEGER is 148
+	none_id: INTEGER = 0
+	typed_char: INTEGER = 1
+	agent_routine_creation: INTEGER = 2
+	tilda_routine_creation: INTEGER = 3
+	inline_agent_creation: INTEGER = 4
+	create_creation: INTEGER = 5
+	bang_creation: INTEGER = 6
+	create_creation_expr: INTEGER = 7
+	bang_creation_expr: INTEGER = 8
+	keyword: INTEGER = 9
+	symbol: INTEGER = 10
+	custom_attribute: INTEGER = 11
+	id: INTEGER = 12
+	integer: INTEGER = 13
+	static_access: INTEGER = 14
+	feature_clause: INTEGER = 15
+	unique_as: INTEGER = 16
+	tuple: INTEGER = 17
+	real: INTEGER = 18
+	bool: INTEGER = 19
+	bit_const: INTEGER = 20
+	array: INTEGER = 21
+	char: INTEGER = 22
+	string: INTEGER = 23
+	verbatim_string: INTEGER = 24
+	body: INTEGER = 25
+	result_as: INTEGER = 26
+	current_as: INTEGER = 27
+	access_feat: INTEGER = 28
+	access_inv: INTEGER = 29
+	access_id: INTEGER = 30
+	access_assert: INTEGER = 31
+	precursor_as: INTEGER = 32
+	nested_expr: INTEGER = 33
+	nested: INTEGER = 34
+	creation_expr: INTEGER = 35
+	type_expr: INTEGER = 36
+	routine: INTEGER = 37
+	constant: INTEGER = 38
+	eiffel_list: INTEGER = 39
+	indexing_clause: INTEGER = 40
+	operand: INTEGER = 41
+	tagged: INTEGER = 42
+	variant_as: INTEGER = 43
+	un_strip: INTEGER = 44
+	paran: INTEGER = 45
+	expr_call: INTEGER = 46
+	expr_address: INTEGER = 47
+	address_result: INTEGER = 48
+	address_current: INTEGER = 49
+	address: INTEGER = 50
+	routine_creation: INTEGER = 51
+	unary: INTEGER = 52
+	un_free: INTEGER = 53
+	un_minus: INTEGER = 54
+	un_not: INTEGER = 55
+	un_old: INTEGER = 56
+	un_plus: INTEGER = 57
+	binary: INTEGER = 58
+	bin_and_then: INTEGER = 59
+	bin_free: INTEGER = 60
+	bin_implies: INTEGER = 61
+	bin_or: INTEGER = 62
+	bin_or_else: INTEGER = 63
+	bin_xor: INTEGER = 64
+	bin_ge: INTEGER = 65
+	bin_gt: INTEGER = 66
+	bin_le: INTEGER = 67
+	bin_lt: INTEGER = 68
+	bin_div: INTEGER = 69
+	bin_minus: INTEGER = 70
+	bin_mod: INTEGER = 71
+	bin_plus: INTEGER = 72
+	bin_power: INTEGER = 73
+	bin_slash: INTEGER = 74
+	bin_star: INTEGER = 75
+	bin_and: INTEGER = 76
+	bin_eq: INTEGER = 77
+	bin_ne: INTEGER = 78
+	bracket: INTEGER = 79
+	external_lang: INTEGER = 80
+	feature_as: INTEGER = 81
+	infix_prefix: INTEGER = 82
+	feat_name_id: INTEGER = 83
+	feature_name_alias: INTEGER = 84
+	feature_list: INTEGER = 85
+	all_as: INTEGER = 86
+	assign_as: INTEGER = 87
+	assigner_call: INTEGER = 88
+	reverse: INTEGER = 89
+	check_as: INTEGER = 90
+	creation_as: INTEGER = 91
+	debug_as: INTEGER = 92
+	if_as: INTEGER = 93
+	inspect_as: INTEGER = 94
+	instr_call: INTEGER = 95
+	loop_as: INTEGER = 96
+	retry_as: INTEGER = 97
+	external_as: INTEGER = 98
+	deferred_as: INTEGER = 99
+	do_as: INTEGER = 100
+	once_as: INTEGER = 101
+	type_dec: INTEGER = 102
+	class_as: INTEGER = 103
+	parent: INTEGER = 104
+	like_id: INTEGER = 105
+	like_cur: INTEGER = 106
+	formal: INTEGER = 107
+	formal_dec: INTEGER = 108
+	class_type: INTEGER = 109
+	named_tuple_type: INTEGER = 110
+	none_type: INTEGER = 111
+	bits: INTEGER = 112
+	bits_symbol: INTEGER = 113
+	rename_as: INTEGER = 114
+	invariant_as: INTEGER = 115
+	interval: INTEGER = 116
+	index: INTEGER = 117
+	export_item: INTEGER = 118
+	elseif_as: INTEGER = 119
+	create_as: INTEGER = 120
+	client: INTEGER = 121
+	case: INTEGER = 122
+	ensure_as: INTEGER = 123
+	ensure_then: INTEGER = 124
+	require_as: INTEGER = 125
+	require_else: INTEGER = 126
+	convert_feat: INTEGER = 127
+	void_as: INTEGER = 128
+	type_list: INTEGER = 129
+	type_dec_list: INTEGER = 130
+	convert_feat_list: INTEGER = 131
+	class_list: INTEGER = 132
+	parent_list: INTEGER = 133
+	local_dec_list: INTEGER = 134
+	formal_argu_dec_list: INTEGER = 135
+	debug_key_list: INTEGER = 136
+	delayed_actual_list: INTEGER = 137
+	parameter_list: INTEGER = 138
+	rename_clause: INTEGER = 139
+	export_clause: INTEGER = 140
+	undefine_clause: INTEGER = 141
+	redefine_clause: INTEGER = 142
+	select_clause: INTEGER = 143
+	formal_generic_list: INTEGER = 144
+	constraining_type:  INTEGER = 145
+	object_test: INTEGER = 146
+	bin_tilde: INTEGER = 147
+	bin_not_tilde: INTEGER = 148
 
 feature -- AST node match
 
-	ast_index_table: HASH_TABLE [ARRAY [INTEGER], STRING] is
+	ast_index_table: HASH_TABLE [ARRAY [INTEGER], STRING]
 			-- Table for AST node indexing
 			-- Key is name of an AST node type, value is index of that AST node type.
 		once
@@ -568,9 +568,9 @@ feature -- AST node match
 
 feature -- Access
 
-	ql_no_tag: STRING is "no tag";
+	ql_no_tag: STRING = "no tag";
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

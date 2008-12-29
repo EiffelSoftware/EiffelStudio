@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool to search and replace a string in groups, classes or editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,7 +74,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
 			-- Initialization
 		do
 			Precursor (a_manager, a_tool)
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			add_observer (Current)
 		end
 
-	build_actions is
+	build_actions
 			-- Build actions
 		do
 			search_button.select_actions.extend (agent new_search)
@@ -170,14 +170,14 @@ feature {NONE} -- Initialization
 			create first_result_reached_actions
 		end
 
-	build_report_box: EV_VERTICAL_BOX is
+	build_report_box: EV_VERTICAL_BOX
 			-- Build a report.
 		do
 		end
 
 feature -- Docking management
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -188,10 +188,10 @@ feature -- Docking management
 
 feature -- Access
 
-	surrounding_text_number: INTEGER is 	20
+	surrounding_text_number: INTEGER = 	20
 			-- Maximal number of characters on one side of found text in the report.
 
-	resized_columns_list: ARRAY [BOOLEAN] is
+	resized_columns_list: ARRAY [BOOLEAN]
 			-- List of boolean s for each column indicating if it has been user resizedat all.
 		once
 			Result := <<False, False, False, False>>
@@ -200,7 +200,7 @@ feature -- Access
 	multi_search_performer: MSR
 			-- Tool that actually performs the search
 
-	editor: EB_EDITOR is
+	editor: EB_EDITOR
 			-- current_editor
 			-- Result is not only class text editors used by end user, but also maybe is the EB_SMART_EDITOR in Feature Relation Tool or Class Tool...
 		do
@@ -223,7 +223,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Access
 
 feature -- Status report
 
-	item_selected (a_editor: EB_EDITOR): BOOLEAN is
+	item_selected (a_editor: EB_EDITOR): BOOLEAN
 			-- If item in report is selected in a_editor.
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -250,7 +250,7 @@ feature -- Status report
 	last_replaced_class: INTEGER
 			-- Numbers of classes replaced last time.
 
-	reverse : BOOLEAN is
+	reverse : BOOLEAN
 			-- Search upwards?
 		do
 			if temp_reverse then
@@ -262,7 +262,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_current_searched (word: STRING_32) is
+	set_current_searched (word: STRING_32)
 			-- Assign `word' to `currently_searched'
 		do
 			currently_searched := word
@@ -278,25 +278,25 @@ feature -- Status setting
 			end
 		end
 
-	force_new_search is
+	force_new_search
 			-- Force new search.
 		do
 			new_search_set := True
 		end
 
-	enable_incremental_search is
+	enable_incremental_search
 			-- Enable incremental search.
 		do
 			incremental_search_button.enable_select
 		end
 
-	disable_incremental_search is
+	disable_incremental_search
 			-- Disable increamental search
 		do
 			incremental_search_button.disable_select
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the pattern field
 		do
 			if notebook.selected_item_index /= 1 then
@@ -305,7 +305,7 @@ feature -- Status setting
 			set_focus_if_possible (keyword_field)
 		end
 
-	show_and_set_focus_replace is
+	show_and_set_focus_replace
 			-- Give the focus to replace field.
 		do
 			show
@@ -315,7 +315,7 @@ feature -- Status setting
 			set_focus_if_possible (replace_combo_box)
 		end
 
-	search_current_editor_only is
+	search_current_editor_only
 			-- Ensure that only current editor is searched.
 		do
 			current_editor_button.select_actions.block
@@ -326,7 +326,7 @@ feature -- Status setting
 
 feature -- Action
 
-	go_to_next_found is
+	go_to_next_found
 			-- Highlight next found item if possible, possibly go back.
 			-- If search is not launched, launch it.
 		do
@@ -340,7 +340,7 @@ feature -- Action
 			end
 		end
 
-	go_to_previous_found is
+	go_to_previous_found
 			-- Highlight previous found item if possible.
 			-- If search is not launched, launch it.
 		do
@@ -349,7 +349,7 @@ feature -- Action
 			temp_reverse := False
 		end
 
-	replace_current is
+	replace_current
 			-- Replace current match.
 		local
 			l_item: MSR_TEXT_ITEM
@@ -416,7 +416,7 @@ feature -- Action
 			end
 		end
 
-	confirm_and_replace_all is
+	confirm_and_replace_all
 			-- Ask for confirmation, then replace all.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
@@ -441,7 +441,7 @@ feature -- Action
 			end
 		end
 
-	prepare_search is
+	prepare_search
 			-- Show the search tool and set focus to the search text field and fill the search field with selection.
 		local
 			l_clickable_editor: EB_CLICKABLE_EDITOR
@@ -454,7 +454,7 @@ feature -- Action
 			end
 		end
 
-	rebuild_scope_list is
+	rebuild_scope_list
 			-- Rebuild scope list, validate existing items in it.
 		local
 			l_item: EV_LIST_ITEM
@@ -504,7 +504,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 	check_class_succeed: BOOLEAN assign set_check_class_succeed
 			-- `check_class_file' makes file changed if needed?
 
-	set_check_class_succeed (a_succeed: BOOLEAN) is
+	set_check_class_succeed (a_succeed: BOOLEAN)
 			-- Set check class succeed with `a_succeed'.
 		do
 			check_class_succeed := a_succeed
@@ -512,7 +512,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 			check_class_succeed_set: check_class_succeed = a_succeed
 		end
 
-	is_item_source_changed (a_item: MSR_ITEM): BOOLEAN is
+	is_item_source_changed (a_item: MSR_ITEM): BOOLEAN
 			-- Source in a_item changed?
 		require
 			a_item_attached: a_item /= Void
@@ -538,13 +538,13 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 	changed_by_replace: BOOLEAN
 			-- Changed by replace?
 
-	set_changed_by_replace (a_changed: BOOLEAN) is
+	set_changed_by_replace (a_changed: BOOLEAN)
 			-- Set `changed_by_replace'
 		do
 			changed_by_replace:= a_changed
 		end
 
-	force_not_changed is
+	force_not_changed
 			-- Set `new_search' and `is_text_changed_in_editor' to False.
 		do
 			new_search_set := False
@@ -553,7 +553,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CUSTOM_WIDGETTED_EDITOR, EB_SEARCH_
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
@@ -575,7 +575,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 			content.focus_in_actions.extend (agent show)
 		end
 
-	prepare_interface is
+	prepare_interface
 			-- Initialize options' status.
 		local
 			l_pre : EB_SEARCH_TOOL_DATA
@@ -633,7 +633,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 
 feature {NONE} -- Shortcut button actions
 
-	new_search is
+	new_search
 			-- New search
 		do
 			force_new_search
@@ -641,7 +641,7 @@ feature {NONE} -- Shortcut button actions
 			new_search_or_go_next
 		end
 
-	expand_all is
+	expand_all
 			-- Expand all
 		local
 			i: INTEGER
@@ -660,7 +660,7 @@ feature {NONE} -- Shortcut button actions
 			end
 		end
 
-	collapse_all is
+	collapse_all
 			-- Collapse all
 		local
 			i: INTEGER
@@ -679,7 +679,7 @@ feature {NONE} -- Shortcut button actions
 
 feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 
-	new_search_or_go_next is
+	new_search_or_go_next
 			-- If new search is not necessary, go to next found.
 		do
 			check_class_succeed := True
@@ -694,7 +694,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			last_was_not_incremental_search: not last_was_incremental_search
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- Text observer, runs when text is fully loaded.
 		do
 			Precursor {TEXT_OBSERVER}
@@ -707,7 +707,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	key_pressed (k: EV_KEY; search_only: BOOLEAN) is
+	key_pressed (k: EV_KEY; search_only: BOOLEAN)
 			-- Key `k' was pressed in the interface.
 			-- If k is Enter then launch the search, if it is Esc then hide the search interface.
 		local
@@ -778,7 +778,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	toggle_scope_detail (a_button: EV_RADIO_BUTTON) is
+	toggle_scope_detail (a_button: EV_RADIO_BUTTON)
 			-- Show and hide the scope detail according to the scope box's selection.
 		local
 			l_str: STRING_GENERAL
@@ -806,7 +806,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	add_scope is
+	add_scope
 			-- Add a new scope from a choose dialog to the list.
 		do
 			if choose_dialog = Void or else choose_dialog.is_destroyed then
@@ -823,14 +823,14 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			set_focus_if_possible (choose_dialog.classes_tree)
 		end
 
-	on_drop_custom_button (a_any: ANY) is
+	on_drop_custom_button (a_any: ANY)
 			-- Invoke hen dropping on the scope check button.
 		do
 			custom_button.enable_select
 			on_drop_add (a_any)
 		end
 
-	on_drop_add (a_any: ANY) is
+	on_drop_add (a_any: ANY)
 			-- Invoke when dropping a pebble to add an item to the scope.
 		require
 			a_any_not_void: a_any /= Void
@@ -878,7 +878,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_classi_stone: CLASSI_STONE
@@ -897,7 +897,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	on_drop_remove (a_any: ANY) is
+	on_drop_remove (a_any: ANY)
 			-- Invoke when dropping a pebble on remove button.
 		require
 			a_any_not_void: a_any /= Void
@@ -925,13 +925,13 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	remove_all is
+	remove_all
 			-- Remove all from scope
 		do
 			scope_list.wipe_out
 		end
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Notify observers that some text has been modified.
 			-- If `directly_edited', the user has modified the text in the editor,
 			-- not via another tool or wizard.
@@ -950,14 +950,14 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			set_changed_by_replace (False)
 		end
 
-	on_text_reset is
+	on_text_reset
 			-- Obsever reset action.
 		do
 			is_text_changed_in_editor := False
 			is_text_new_loaded := True
 		end
 
-	enable_disable_search_button is
+	enable_disable_search_button
 			-- Disable the search buton if the search field is empty, incremental search if it is possible.
 		local
 			l_editor: like old_editor
@@ -989,7 +989,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	retrieve_cursor is
+	retrieve_cursor
 			-- Retrieve cursor position.
 		do
 			if is_editor_ready and then editor.text_displayed.cursor /= Void then
@@ -1000,7 +1000,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	on_drop_notebook (a_stone: STONE) is
+	on_drop_notebook (a_stone: STONE)
 			-- When dropping on tabs of notebook.
 		local
 			l_filed_stone: FILED_STONE
@@ -1019,7 +1019,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	notebook_veto_pebble (a_stone: ANY) : BOOLEAN is
+	notebook_veto_pebble (a_stone: ANY) : BOOLEAN
 			-- Notebook veto pebble
 		local
 			l_classi_stone: CLASSI_STONE
@@ -1040,7 +1040,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	on_notebook_selected is
+	on_notebook_selected
 			-- On notebook selected.
 		do
 			if notebook.pointed_tab_index = 1 then
@@ -1050,7 +1050,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	focusing_keyword_field is
+	focusing_keyword_field
 			-- Focusing keyword field.
 			-- We record cursor position in the editor for incremental search.
 		do
@@ -1059,14 +1059,14 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			end
 		end
 
-	trigger_keyword_field_color (a_keyword_field: EV_COMBO_BOX) is
+	trigger_keyword_field_color (a_keyword_field: EV_COMBO_BOX)
 			-- Trigger keyword field color after incremental search.
 			-- Highlight background if no result.
 		do
 			extend_and_run_loaded_action (agent trigger_keyword_field_color_perform (a_keyword_field))
 		end
 
-	trigger_keyword_field_color_perform (a_keyword_field: EV_COMBO_BOX) is
+	trigger_keyword_field_color_perform (a_keyword_field: EV_COMBO_BOX)
 			-- Trigger keyword field color after incremental search.
 			-- Highlight background if no result.
 		do
@@ -1081,7 +1081,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 
 feature {EB_DEVELOPMENT_WINDOW} -- Notification
 
-	class_changed (a_class: CLASS_I) is
+	class_changed (a_class: CLASS_I)
 			-- Remenber `a_class' as a user changed class since last search.
 		do
 			if a_class /= Void and then not changed_classes.has (a_class) then
@@ -1091,7 +1091,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Notification
 
 feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 
-	dispatch_search is
+	dispatch_search
 			-- Dispatch search.
 		do
 			if shown then
@@ -1114,7 +1114,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			end
 		end
 
-	incremental_search (a_word: STRING_32; a_start_pos: INTEGER; a_whole_word: BOOLEAN) is
+	incremental_search (a_word: STRING_32; a_start_pos: INTEGER; a_whole_word: BOOLEAN)
 			-- Incremental search in the editor displayed text
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
@@ -1178,7 +1178,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 	incremental_search_start_pos: INTEGER
 			-- Incremental search start from.
 
-	set_incremental_search_start_pos (a_start: INTEGER) is
+	set_incremental_search_start_pos (a_start: INTEGER)
 			-- Set `incremental_search_start_pos' with `a_start'.
 		require
 			a_start_larger_than_zero: a_start > 0
@@ -1186,7 +1186,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			incremental_search_start_pos := a_start
 		end
 
-	search is
+	search
 			-- Search in editor.
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
@@ -1236,7 +1236,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
-	default_search is
+	default_search
 			-- Search with default options.
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
@@ -1287,7 +1287,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
-	search_whole_project is
+	search_whole_project
 			-- Search the whole project.
 		local
 			l_project_strategy: MSR_SEARCH_WHOLE_PROJECT_STRATEGY
@@ -1313,7 +1313,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
-	search_in_scope is
+	search_in_scope
 			-- Search in scope.
 		local
 			l_scope_strategy: MSR_SEARCH_IN_SCOPE_STRATEGY
@@ -1339,7 +1339,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
-	after_search is
+	after_search
 			-- When a search done, go here. Incremental search excluded.
 		do
 			if multi_search_performer.is_search_launched then
@@ -1364,13 +1364,13 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search report
 	changed_classes: ARRAYED_LIST [CLASS_I]
 			-- Keep a record of modified class by editor.
 
-	select_current_row is
+	select_current_row
 			-- Select current row in the report.
 		do
 			search_report_grid.select_current_row
 		end
 
-	has_result: BOOLEAN is
+	has_result: BOOLEAN
 			-- Search has result?
 		do
 			Result := not multi_search_performer.is_empty
@@ -1378,7 +1378,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search report
 
 feature {NONE} -- Option observer
 
-	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN) is
+	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN)
 			-- Case sensitivity option changed
 		do
 			if case_sensitive_button.is_selected /= a_case_sensitive then
@@ -1393,7 +1393,7 @@ feature {NONE} -- Option observer
 			end
 		end
 
-	on_match_regex_changed (a_match_regex: BOOLEAN) is
+	on_match_regex_changed (a_match_regex: BOOLEAN)
 			-- Match regex option changed
 		do
 			if use_regular_expression_button.is_selected /= a_match_regex then
@@ -1408,7 +1408,7 @@ feature {NONE} -- Option observer
 			end
 		end
 
-	on_whole_word_changed (a_whole_word: BOOLEAN) is
+	on_whole_word_changed (a_whole_word: BOOLEAN)
 			-- Whole word option changed
 		do
 			if whole_word_button.is_selected /= a_whole_word then
@@ -1423,7 +1423,7 @@ feature {NONE} -- Option observer
 			end
 		end
 
-	on_backwards_changed (a_bachwards: BOOLEAN) is
+	on_backwards_changed (a_bachwards: BOOLEAN)
 			-- Backwards option changed
 		do
 			if search_backward_button.is_selected /= a_bachwards then
@@ -1437,7 +1437,7 @@ feature {NONE} -- Option observer
 			end
 		end
 
-	check_button_changed (a_button: EV_CHECK_BUTTON) is
+	check_button_changed (a_button: EV_CHECK_BUTTON)
 			-- Option check button changed.
 		do
 			if a_button = case_sensitive_button then
@@ -1453,7 +1453,7 @@ feature {NONE} -- Option observer
 
 feature {NONE} -- Replacement Implementation
 
-	replace_current_perform is
+	replace_current_perform
 			-- Do actual `replace_current'.
 		local
 			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
@@ -1467,7 +1467,7 @@ feature {NONE} -- Replacement Implementation
 			force_not_changed
 		end
 
-	replace_all is
+	replace_all
 			-- Replace all matches in specified scale.
 		local
 			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
@@ -1500,7 +1500,7 @@ feature {NONE} -- Replacement Implementation
 
 		end
 
-	put_replace_report (a_did_nothing: BOOLEAN) is
+	put_replace_report (a_did_nothing: BOOLEAN)
 			-- Put replace report.
 		require
 			valid_replace_report: not a_did_nothing implies multi_search_performer.replace_report /= Void
@@ -1517,29 +1517,29 @@ feature {NONE} -- Replacement Implementation
 
 feature {NONE} -- Shortcuts
 
-	search_next_selection_shortcut: SHORTCUT_PREFERENCE is
+	search_next_selection_shortcut: SHORTCUT_PREFERENCE
 		once
 			Result := preferences.editor_data.shortcuts.item ("search_selection_forward")
 		end
 
-	search_previous_selection_shortcut: SHORTCUT_PREFERENCE is
+	search_previous_selection_shortcut: SHORTCUT_PREFERENCE
 		once
 			Result := preferences.editor_data.shortcuts.item ("search_selection_backward")
 		end
 
-	search_forward_shortcut: SHORTCUT_PREFERENCE is
+	search_forward_shortcut: SHORTCUT_PREFERENCE
 		once
 			Result := preferences.editor_data.shortcuts.item ("search_forward")
 		end
 
-	search_backward_shortcut: SHORTCUT_PREFERENCE is
+	search_backward_shortcut: SHORTCUT_PREFERENCE
 		once
 			Result := preferences.editor_data.shortcuts.item ("search_backward")
 		end
 
 feature -- Custom search scope
 
-	add_class_item (a_class: CLASS_I) is
+	add_class_item (a_class: CLASS_I)
 			-- Add a class item to the tree.
 		require
 			a_class_not_void: a_class /= Void
@@ -1562,7 +1562,7 @@ feature -- Custom search scope
 			end
 		end
 
-	remove_class_item (a_class: CLASS_I) is
+	remove_class_item (a_class: CLASS_I)
 			-- Remove a class item from the list.
 		require
 			a_class_not_void: a_class /= Void
@@ -1574,7 +1574,7 @@ feature -- Custom search scope
 			force_new_search
 		end
 
-	add_cluster_item (a_group: CONF_GROUP) is
+	add_cluster_item (a_group: CONF_GROUP)
 			-- Add a group item to the list.
 		require
 			a_group_not_void: a_group /= Void
@@ -1599,7 +1599,7 @@ feature -- Custom search scope
 			end
 		end
 
-	remove_cluster_item (a_group: CONF_GROUP) is
+	remove_cluster_item (a_group: CONF_GROUP)
 			-- Remove a class item from the list.
 		require
 			a_group_not_void: a_group /= Void
@@ -1611,7 +1611,7 @@ feature -- Custom search scope
 			force_new_search
 		end
 
-	add_folder_item (a_folder: EB_FOLDER) is
+	add_folder_item (a_folder: EB_FOLDER)
 			-- Add a folder item to the list.
 		require
 			a_folder_not_void: a_folder /= Void
@@ -1634,7 +1634,7 @@ feature -- Custom search scope
 			end
 		end
 
-	remove_folder_item (a_folder: EB_FOLDER) is
+	remove_folder_item (a_folder: EB_FOLDER)
 			-- Remove a folder item from the list.
 		require
 			a_folder_not_void: a_folder /= Void
@@ -1646,7 +1646,7 @@ feature -- Custom search scope
 			force_new_search
 		end
 
-	scope_pebble_function (a_data: ANY) : STONE is
+	scope_pebble_function (a_data: ANY) : STONE
 			-- Scope pebble function
 		local
 			l_class_i: CLASS_I
@@ -1667,7 +1667,7 @@ feature -- Custom search scope
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			bottom_reached_actions.wipe_out
@@ -1679,7 +1679,7 @@ feature {NONE} -- Recycle
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Query
 
-	is_editor_ready: BOOLEAN is
+	is_editor_ready: BOOLEAN
 			-- Is editor ready to be searched?
 		do
 			Result := editor /= Void and then
@@ -1698,7 +1698,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 	go_to_next_need_select_and_show :BOOLEAN
 			-- Flag for need select and show for next select.
 
-	search_is_possible: BOOLEAN is
+	search_is_possible: BOOLEAN
 			-- Is it possible to look for the current content of the "search for:" field?
 		local
 			for_test: STRING_32
@@ -1710,13 +1710,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 	temp_reverse: BOOLEAN
 			-- Go upwards or forwards to next match in report?
 
-	is_main_editor: BOOLEAN is
+	is_main_editor: BOOLEAN
 			-- Is `editor' main editor?
 		do
 			Result := (editor = develop_window.editors_manager.current_editor)
 		end
 
-	is_class_i_editing (a_class : CLASS_I): BOOLEAN is
+	is_class_i_editing (a_class : CLASS_I): BOOLEAN
 			-- If class_i is being edited in the editor.
 		require
 			a_class_not_void: a_class /= Void
@@ -1742,9 +1742,9 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 
 feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
-	search_history_size: INTEGER is 10
+	search_history_size: INTEGER = 10
 
-	go_to_next_found_perform (b: BOOLEAN) is
+	go_to_next_found_perform (b: BOOLEAN)
 			-- Do actual `go_to_next_found'.
 		local
 			l_class_i: CLASS_I
@@ -1796,7 +1796,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	go_to_next_found_select_and_show is
+	go_to_next_found_select_and_show
 			-- Go to next found.
 		do
 			if go_to_next_need_select_and_show then
@@ -1805,7 +1805,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	check_class_file is
+	check_class_file
 			-- Check if class of current selected item is loaded. If not, load it.
 			-- After check run `a_pro'.
 		local
@@ -1847,7 +1847,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	update_combo_box (word: STRING_32) is
+	update_combo_box (word: STRING_32)
 			-- Add word to combo box list
 		local
 			l: LIST [STRING_32]
@@ -1868,7 +1868,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	extend_and_run_loaded_action (a_pro: PROCEDURE [ANY, TUPLE]) is
+	extend_and_run_loaded_action (a_pro: PROCEDURE [ANY, TUPLE])
 			-- Insert `a_pro' to loaded_actions and run all actions in it.
 		local
 			l_pro: PROCEDURE [ANY, TUPLE]
@@ -1900,7 +1900,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE]) is
+	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE])
 			-- Check class before insert `a_pro' to loaded_actions and run all actions in it.
 		do
 			extend_and_run_loaded_action (agent check_class_file)
@@ -1910,7 +1910,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions that are invoked sequently when text is fully loaded
 
-	stone_from_class_i (a_class_i: CLASS_I): STONE is
+	stone_from_class_i (a_class_i: CLASS_I): STONE
 			-- Make a stone from a_class_i.
 			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
 		require
@@ -1928,13 +1928,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		end
 
 
-	clusters_in_the_project: EB_CLUSTERS is
+	clusters_in_the_project: EB_CLUSTERS
 			-- Clusters in the project
 		do
 			Result:= develop_window.cluster_manager.manager
 		end
 
-	remove_scope is
+	remove_scope
 			-- Remove a scope from the list
 		local
 			test: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -1953,13 +1953,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	switch_mode is
+	switch_mode
 			-- Switch from the normal mode to the replace mode
 			-- or the opposite
 		do
 		end
 
-	select_and_show is
+	select_and_show
 			-- Select and show in the editor
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
@@ -1967,7 +1967,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	select_and_show_perform is
+	select_and_show_perform
 			-- Do actual `select_and_show'.
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
@@ -1975,7 +1975,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	select_in_current_editor is
+	select_in_current_editor
 			-- Select in the editor
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
@@ -1983,7 +1983,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	select_in_current_editor_perform is
+	select_in_current_editor_perform
 			-- Do actual `select_in_current_editor'.
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -2023,7 +2023,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	new_search_set: BOOLEAN assign set_new_search_set
 			-- Will a new search be launched? (Incremental search excluded)
 
-	set_new_search_set (a_new: BOOLEAN) is
+	set_new_search_set (a_new: BOOLEAN)
 			-- Set `new_search_set'.
 		do
 			new_search_set := a_new
@@ -2037,14 +2037,14 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	old_editor: EB_EDITOR
 			-- In which last search did.
 
-	set_old_editor (a_editor: like old_editor) is
+	set_old_editor (a_editor: like old_editor)
 			-- Set `old_editor' with `a_editor'.
 		do
 			old_editor := a_editor
 		end
 
 
-	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING_32) is
+	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING_32)
 			-- Add word to combo box list.
 		local
 			l: LIST [STRING_32]
@@ -2066,7 +2066,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 		end
 
 
-	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is
+	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE)
 			-- Display signature name of `a_stone' in `textable'.
 		require
 			textable_not_void: textable /= Void
@@ -2091,7 +2091,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)
 		end
 
-	block_actions is
+	block_actions
 			-- Block actions.
 		do
 			keyword_field.change_actions.block
@@ -2114,7 +2114,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			replace_all_click_button.key_press_actions.block
 		end
 
-	resume_actions is
+	resume_actions
 			-- Resume actions.
 		do
 			keyword_field.change_actions.resume
@@ -2140,13 +2140,13 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	blocking_actions_times: INTEGER;
 			-- Blocking actions?
 
-	no_result_bgcolor: EV_COLOR is
+	no_result_bgcolor: EV_COLOR
 			-- Background color when no result for incremental search.
 		do
 			Result := preferences.search_tool_data.none_result_keyword_field_background_color
 		end
 
-	normal_bgcolor: EV_COLOR is
+	normal_bgcolor: EV_COLOR
 			-- Normal background color.
 		local
 			l_comb: EV_COMBO_BOX
@@ -2155,7 +2155,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			Result := l_comb.background_color
 		end
 
-	set_report_cursor_recorded (a_recorded: BOOLEAN) is
+	set_report_cursor_recorded (a_recorded: BOOLEAN)
 			-- Set `report_cursor_recorded' with `a_recorded'
 		do
 			report_cursor_recorded := a_recorded
@@ -2167,7 +2167,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	saved_cursor: INTEGER
 			-- Saved cursor in report
 
-	save_current_cursor is
+	save_current_cursor
 			-- Save current cursor position in report
 		do
 			saved_cursor := multi_search_performer.index
@@ -2176,7 +2176,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

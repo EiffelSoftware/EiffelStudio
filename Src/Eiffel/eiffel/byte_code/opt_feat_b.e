@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged access to an Eiffel special feature:
@@ -15,25 +15,25 @@ inherit
 
 feature 
 
-	enlarged: OPT_FEAT_BL is
+	enlarged: OPT_FEAT_BL
 		do
 			create Result
 			Result.fill_from (Current)
 		end
 
-	set_special_feature_type is
+	set_special_feature_type
 		do
 			if parameters.count = 1 then
 				is_item := True
 			end;
 		end
 
-	set_array_target (t: like array_desc) is
+	set_array_target (t: like array_desc)
 		do
 			array_desc := t
 		end
 
-	set_access_area (b: BOOLEAN) is
+	set_access_area (b: BOOLEAN)
 		do
 			access_area := b;
 		end;
@@ -51,13 +51,13 @@ feature {OPT_FEAT_B} -- Implementation
 
 feature -- Inlining
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			parameters := parameters.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

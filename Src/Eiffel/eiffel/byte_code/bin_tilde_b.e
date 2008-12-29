@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for ~ equality operator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_tilde_b (Current)
@@ -32,25 +32,25 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is True
+	is_built_in: BOOLEAN = True
 			-- Is the current binary operator a built-in one ?
 
-	is_commutative: BOOLEAN is True
+	is_commutative: BOOLEAN = True
 			-- Operation is commutative.
 
-	is_type_fixed: BOOLEAN is True
+	is_type_fixed: BOOLEAN = True
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 
 feature -- Access
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type is boolean
 		do
 			Result := Boolean_type
 		end
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 			-- Does the expression allocates memory ?
 		local
 			left_type: TYPE_A
@@ -63,7 +63,7 @@ feature -- Access
 				(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
 		end
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- <Precursor>
 		do
 			create {BIN_TILDE_BL} Result.make (left.enlarged, right.enlarged)
@@ -71,19 +71,19 @@ feature -- Access
 
 feature -- Array optimization
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := right.is_unsafe or else left.is_unsafe
 		end
 
-	optimized_byte_node: EXPR_B is
+	optimized_byte_node: EXPR_B
 		do
 			Result := Current
 			left := left.optimized_byte_node
 			right := right.optimized_byte_node
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := left.calls_special_features (array_desc)
 				or else right.calls_special_features (array_desc)
@@ -91,21 +91,21 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			left := left.pre_inlined_code
 			right := right.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			left := left.inlined_byte_code
 			right := right.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

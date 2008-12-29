@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a dialog used in metric grid domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create ok_actions
@@ -38,7 +38,7 @@ feature -- Access
 	domain_selector: EB_METRIC_DOMAIN_SELECTOR
 			-- Domain selector
 
-	domain: EB_METRIC_DOMAIN is
+	domain: EB_METRIC_DOMAIN
 			-- Domain from `domain_selector'
 		do
 			Result := domain_selector.domain
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_domain (a_domain: EB_METRIC_DOMAIN) is
+	set_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Set domain in `domain_selector' with `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -56,7 +56,7 @@ feature -- Setting
 			domain_selector.set_domain (a_domain)
 		end
 
-	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Set context menu factory.
 		do
 			domain_selector.set_context_menu_factory (a_factory)
@@ -64,7 +64,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		deferred
 		end
@@ -74,7 +74,7 @@ invariant
 	cancel_actions_attached: cancel_actions /= Void
 	domain_selector_attached: domain_selector /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

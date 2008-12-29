@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged access to a C external"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,22 +41,22 @@ feature
 	basic_register: REGISTRABLE;
 			-- Register used to store the metamorphosed simple type
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Assign `p' to `parent'
 		do
 			parent := p;
 		end;
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
 			register := r;
 		end;
 
-	current_needed_for_access: BOOLEAN is False;
+	current_needed_for_access: BOOLEAN = False;
 			-- Current is not needed to call an external
 
-	free_register is
+	free_register
 			-- Free registers
 		do
 			Precursor {EXTERNAL_B};
@@ -65,14 +65,14 @@ feature
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Build a proper context for code generation.
 		do
 			analyze_on (Current_register);
 			get_register;
 		end;
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze call on an entity held in `reg'.
 		local
 			tmp_register: REGISTER;
@@ -106,7 +106,7 @@ feature
 			end
 		end;
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
@@ -140,19 +140,19 @@ feature
 			end;
 		end;
 
-	generate_access is
+	generate_access
 			-- Generate the external C call
 		do
 			do_generate (Current_register);
 		end;
 
-	generate_on (reg: REGISTRABLE) is
+	generate_on (reg: REGISTRABLE)
 			-- Generate call of feature on `reg'
 		do
 			do_generate (reg);
 		end;
 
-	is_polymorphic: BOOLEAN is
+	is_polymorphic: BOOLEAN
 			-- Is access polymorphic ?
 		local
 			class_type: CL_TYPE_A
@@ -165,13 +165,13 @@ feature
 			end
 		end
 
-	has_one_signature: BOOLEAN is
+	has_one_signature: BOOLEAN
 			-- <Precursor>
 		do
 			Result := Eiffel_table.poly_table (routine_id).has_one_signature
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate external call in a `typ' context
 		local
 			table_name: STRING;
@@ -314,14 +314,14 @@ feature
 			end
 		end
 
-	inline_needed (typ: CL_TYPE_A): BOOLEAN is
+	inline_needed (typ: CL_TYPE_A): BOOLEAN
 		do
 			Result := context.final_mode and
 				not is_encapsulation_required and (is_static_call or
 				Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True) < 0)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
 		local
 			cpp_ext: CPP_EXTENSION_I
@@ -386,7 +386,7 @@ feature
 			end
 		end
 
-	generate_parameters_part (gen_reg: REGISTRABLE) is
+	generate_parameters_part (gen_reg: REGISTRABLE)
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -400,7 +400,7 @@ feature
 			buf.put_character (')')
 		end
 
-	generate_parameters_list is
+	generate_parameters_list
 			-- Generate the parameters list for C function call
 		local
 			buf: GENERATION_BUFFER
@@ -425,7 +425,7 @@ feature
 			end
 		end
 
-	fill_from (e: EXTERNAL_B) is
+	fill_from (e: EXTERNAL_B)
 			-- Fill current from `e'
 		local
 			expr_b: PARAMETER_B;
@@ -467,10 +467,10 @@ feature
 			encapsulated := l_encapsulated
 		end;
 
-	has_call: BOOLEAN is True;
+	has_call: BOOLEAN = True;
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN is True;
+	allocates_memory: BOOLEAN = True;
 
 feature {NONE} -- Status report
 
@@ -495,7 +495,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

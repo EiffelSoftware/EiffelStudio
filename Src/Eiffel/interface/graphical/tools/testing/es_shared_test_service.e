@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Shared access to testing facilities.
 	]"

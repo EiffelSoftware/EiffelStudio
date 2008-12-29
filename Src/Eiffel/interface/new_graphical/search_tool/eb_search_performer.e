@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that search through the editor content for a given pattern"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create search_results.make (0)
 			create current_pattern.make (0)
@@ -39,7 +39,7 @@ feature -- Access
 	editor: EB_EDITOR
 			-- Editor in which the search is performed.
 
-	text: EDITABLE_TEXT is
+	text: EDITABLE_TEXT
 			-- Text displayed in `editor'.
 		do
 			Result := editor.text_displayed
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_editor (an_editor: EB_EDITOR) is
+	set_editor (an_editor: EB_EDITOR)
 			-- set `editor' to `an_editor'.
 		require
 			editor_is_not_void: an_editor /= Void
@@ -88,40 +88,40 @@ feature -- status report
 
 feature -- status setting
 
-	go_reverse is
+	go_reverse
 			-- next search, search backward
 		do
 			reverse := True
 		end
 
-	set_case_sensitive (cs: BOOLEAN) is
+	set_case_sensitive (cs: BOOLEAN)
 			-- set whether the search is case_sensitive or not
 		do
 			search_again := search_again or (cs /= is_case_sensitive)
 			is_case_sensitive := cs
 		end
 
-	set_search_whole_word (sww: BOOLEAN) is
+	set_search_whole_word (sww: BOOLEAN)
 			-- set whether the search pattern can be part of a word or not
 		do
 			search_again := search_again or (sww /= search_whole_word)
 			search_whole_word := sww
 		end
 
-	set_replace_all (ra: BOOLEAN) is
+	set_replace_all (ra: BOOLEAN)
 			-- set whether all the occurrences of the searched word must be replaced
 		do
 			search_again := search_again or (ra /= replace_all)
 			replace_all := ra
 		end
 
-	force_search is
+	force_search
 			-- force new search
 		do
 			search_again := true
 		end
 
-	set_use_wildcards (uw: BOOLEAN) is
+	set_use_wildcards (uw: BOOLEAN)
 			-- set whether pattern contains wildcards
 		do
 			search_again := search_again or (uw /= use_wildcards)
@@ -130,7 +130,7 @@ feature -- status setting
 
 feature -- Basic operations
 
-	search (searched_string: STRING) is
+	search (searched_string: STRING)
 			-- search `a_word' in the current class
 		require
 			searched_string_not_void: searched_string /= Void
@@ -158,7 +158,7 @@ feature -- Basic operations
 			save_cursor_position
 		end
 
-	replace (searched_string: STRING; replacing_string: STRING) is
+	replace (searched_string: STRING; replacing_string: STRING)
 			-- replace found word with the content of `the_replace_field'
 		require
 			searched_string_not_void: searched_string /= Void
@@ -174,7 +174,7 @@ feature -- Basic operations
 
 feature {NONE} -- Replacement
 
-	replace_current (searched_string: STRING; replacing_string: STRING) is
+	replace_current (searched_string: STRING; replacing_string: STRING)
 			-- replace found word with the content of `the_replace_field'
 		local
 			current_result:  SEARCH_POSITION
@@ -213,7 +213,7 @@ feature {NONE} -- Replacement
 			save_cursor_position
 		end
 
-	replace_all_occurrences (searched_string: STRING; replacing_string: STRING) is
+	replace_all_occurrences (searched_string: STRING; replacing_string: STRING)
 			-- replace found word with the content of `the_replace_field'
 		local
 			current_result:  SEARCH_POSITION
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation : Private status
 
 feature {NONE} -- Search implementation
 
-	internal_search (searched_string: STRING) is
+	internal_search (searched_string: STRING)
 			-- search `a_word' in the current class
 		require
 			editor_is_not_void: editor /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Search implementation
 
 feature {NONE} -- Implementation
 
-	go_to_next_result (cur_pos:INTEGER) is
+	go_to_next_result (cur_pos:INTEGER)
 			-- set `current_position' so that current search result is the first after
 			-- position `cur_pos' in text
 		do
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	go_to_previous_result (cur_pos:INTEGER) is
+	go_to_previous_result (cur_pos:INTEGER)
 			-- set `current_position' so that current search result is the first after
 			-- position `cur_pos' in text
 		do
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_search (kmp_matcher: KMP_MATCHER) is
+	process_search (kmp_matcher: KMP_MATCHER)
 		local
 			indices, lengths: ARRAYED_LIST [INTEGER]
 			sp: SEARCH_POSITION
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_and_show (show: BOOLEAN) is
+	select_and_show (show: BOOLEAN)
 			-- select the `current_position'-th occurrence of the searched word in the editor
 			-- if `show' is true, center the display on the selection.
 		local
@@ -390,12 +390,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_separator (c: CHARACTER): BOOLEAN is
+	is_separator (c: CHARACTER): BOOLEAN
 		do
 			Result := not (c.is_alpha or else c = '_')
 		end
 
-	same_separators (w, p: STRING): BOOLEAN is
+	same_separators (w, p: STRING): BOOLEAN
 		local
 			i: INTEGER
 		do
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_cursor_position is
+	save_cursor_position
 			-- Save current cursor position.
 		local
 			cur: TEXT_CURSOR
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			y_pos_when_moved := cur.y_in_lines
 		end
 
-	different_position_as_when_last_saved: BOOLEAN is
+	different_position_as_when_last_saved: BOOLEAN
 			-- Is the cursor at the same position as when its
 			-- position was saved for the last time?
 		local
@@ -444,12 +444,12 @@ feature {NONE} -- Implementation
 
 feature {UNDO_REDO_STACK} -- Observer pattern
 
-	on_changed is
+	on_changed
 		do
 			search_again := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

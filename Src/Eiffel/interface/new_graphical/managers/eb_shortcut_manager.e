@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shortcut manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create post_updating_actions.make (1)
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	update_commands is
+	update_commands
 			-- Update all commands.
 		do
 			window_manager.refresh_commands
@@ -34,7 +34,7 @@ feature -- Access
 											end)
 		end
 
-	update_external_commands is
+	update_external_commands
 			-- Update external commands.
 		do
 			window_manager.refresh_external_commands
@@ -44,7 +44,7 @@ feature -- Access
 											end)
 		end
 
-	propagate_accelerators (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	propagate_accelerators (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Progagate accelerators to undocked windows.
 			-- This should be called after updating all commands.
 			-- If there is no post actions (important part of refreshing accelerators in a window),
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	clear_actions (a_develop_window: EB_VISION_WINDOW) is
+	clear_actions (a_develop_window: EB_VISION_WINDOW)
 			-- Clear actions related with `a_develop_window'.
 			-- `a_develop_window' is value from EB_DEBELOPMENT_WINDOW.window.
 		require
@@ -82,7 +82,7 @@ feature -- Access
 
 feature {EB_COMMAND} -- Access
 
-	post_updating_actions_of (a_win: EB_VISION_WINDOW): EV_NOTIFY_ACTION_SEQUENCE is
+	post_updating_actions_of (a_win: EB_VISION_WINDOW): EV_NOTIFY_ACTION_SEQUENCE
 			-- `a_win' is from EB_DEVELOPMENT_WINDOW.window
 			-- Actions related with `a_win'.
 		require
@@ -114,7 +114,7 @@ feature {EB_COMMAND} -- Access
 invariant
 	post_updating_actions_not_void: post_updating_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory used for managing label symbols into generated IL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create IL_LABEL_FACTORY
 		do
 		end
 
 feature -- Label creation
 
-	new_label: IL_LABEL is
+	new_label: IL_LABEL
 			-- Create new instance of IL_LABEL object.
 		do
 			Result := il_generator.create_label
@@ -32,7 +32,7 @@ feature -- Label creation
 
 feature -- Retry label
 
-	create_retry_label is
+	create_retry_label
 			-- Initialize `retry_label' object.
 		do
 			retry_label := new_label
@@ -41,7 +41,7 @@ feature -- Retry label
 	retry_label: IL_LABEL;
 			-- Label used for `retry' statement.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Temporary server of polymorphic unit tables indexed by routine id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature
 
-	cache: CACHE [POLY_TABLE [ENTRY]] is
+	cache: CACHE [POLY_TABLE [ENTRY]]
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -23,10 +23,10 @@ feature
 
 feature -- Server parameters
 
-	Chunk: INTEGER is 3000;
+	Chunk: INTEGER = 3000;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

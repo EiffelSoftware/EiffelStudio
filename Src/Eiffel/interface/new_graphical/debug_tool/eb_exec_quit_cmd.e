@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to stop the execution of the debugged application."
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	execute is
+	execute
 			-- Pause the execution.
 		do
 			if debugger_manager.application_is_executing then
@@ -55,40 +55,40 @@ feature {NONE} -- Attributes
 	debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_kill
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_kill
 		end
 
-	name: STRING is "Exec_quit"
+	name: STRING = "Exec_quit"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Debug_kill
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			Result := pixmaps.icon_pixmaps.debug_stop_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_stop_icon_buffer
@@ -96,7 +96,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	ask_and_kill is
+	ask_and_kill
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	kill is
+	kill
 			-- Effectively kill the application.
 		require
 			valid_application: debugger_manager.application_is_executing
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

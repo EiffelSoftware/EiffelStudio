@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -14,13 +14,13 @@ inherit
 
 feature -- Properties
 
-	is_none: BOOLEAN is
+	is_none: BOOLEAN
 			-- Is the current object an instance of EXPORT_NONE_I ?
 		do
 			Result := True;
 		end;
 
-	same_as (other: EXPORT_I): BOOLEAN is
+	same_as (other: EXPORT_I): BOOLEAN
 			-- Is `other' the same as Current ?
 		do
 			Result := other.is_none
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_less alias "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN
 			-- is Current less restrictive than other
 		do
 			-- never true
@@ -36,39 +36,39 @@ feature -- Comparison
 
 feature {COMPILER_EXPORTER}
 
-	is_subset (other: EXPORT_I): BOOLEAN is
+	is_subset (other: EXPORT_I): BOOLEAN
 			-- Is Current clients a subset or equal with
 			-- `other' clients?
 		do
 			Result := True;
 		end;
 
-	equiv (other: EXPORT_I): BOOLEAN is
+	equiv (other: EXPORT_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
 			-- [Semantic: old_status.equiv (new_status)]
 		do
 			Result := True;
 		end;
 
-	valid_for (client: CLASS_C): BOOLEAN is
+	valid_for (client: CLASS_C): BOOLEAN
 			-- Is the export valid for class `client' ?
 		do
 			-- Do nothing
 		end;
 
-	concatenation (other: EXPORT_I): EXPORT_I is
+	concatenation (other: EXPORT_I): EXPORT_I
 			-- Concatenation of Current and `other'
 		do
 			Result := other;
 		end;
 
-	trace is
+	trace
 			-- Debug purpose
 		do
 			io.error.put_string ("NONE");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

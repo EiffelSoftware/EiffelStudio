@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Error for features that do not fit the known feature categories."
 	legal: "See notice at end of class."
@@ -58,7 +58,7 @@ feature {NONE} -- Creation
 
 feature -- Properties
 
-	subcode: INTEGER is 1
+	subcode: INTEGER = 1
 			-- <Precursor>
 
 feature -- Status report
@@ -84,7 +84,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

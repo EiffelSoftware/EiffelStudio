@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Associate each BINARY_AS and UNARY_AS descendants with their corresponding %
 		%BINARY_B and UNARY_B instances."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Byte node
 
-	binary_node (a_node: BINARY_AS): BINARY_B is
+	binary_node (a_node: BINARY_AS): BINARY_B
 			-- Associated byte node for `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -34,7 +34,7 @@ feature -- Byte node
 			binary_node_not_void: Result /= Void
 		end
 
-	unary_node (a_node: UNARY_AS): UNARY_B is
+	unary_node (a_node: UNARY_AS): UNARY_B
 			-- Associated byte node for `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -52,142 +52,142 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	process_un_free_as (l_as: UN_FREE_AS) is
+	process_un_free_as (l_as: UN_FREE_AS)
 		do
 			create {UN_FREE_B} last_unary_node
 		end
 
-	process_un_minus_as (l_as: UN_MINUS_AS) is
+	process_un_minus_as (l_as: UN_MINUS_AS)
 		do
 			create {UN_MINUS_B} last_unary_node
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS) is
+	process_un_not_as (l_as: UN_NOT_AS)
 		do
 			create {UN_NOT_B} last_unary_node
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 		do
 			create {UN_OLD_B} last_unary_node
 		end
 
-	process_un_plus_as (l_as: UN_PLUS_AS) is
+	process_un_plus_as (l_as: UN_PLUS_AS)
 		do
 			create {UN_PLUS_B} last_unary_node
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
+	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
 			create {B_AND_THEN_B} last_binary_node
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS) is
+	process_bin_free_as (l_as: BIN_FREE_AS)
 		do
 			create {BIN_FREE_B} last_binary_node
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
+	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
 		do
 			create {B_IMPLIES_B} last_binary_node
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS) is
+	process_bin_or_as (l_as: BIN_OR_AS)
 		do
 			create {BIN_OR_B} last_binary_node
 		end
 
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
+	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
 			create {B_OR_ELSE_B} last_binary_node
 		end
 
-	process_bin_xor_as (l_as: BIN_XOR_AS) is
+	process_bin_xor_as (l_as: BIN_XOR_AS)
 		do
 			create {BIN_XOR_B} last_binary_node
 		end
 
-	process_bin_ge_as (l_as: BIN_GE_AS) is
+	process_bin_ge_as (l_as: BIN_GE_AS)
 		do
 			create {BIN_GE_B} last_binary_node
 		end
 
-	process_bin_gt_as (l_as: BIN_GT_AS) is
+	process_bin_gt_as (l_as: BIN_GT_AS)
 		do
 			create {BIN_GT_B} last_binary_node
 		end
 
-	process_bin_le_as (l_as: BIN_LE_AS) is
+	process_bin_le_as (l_as: BIN_LE_AS)
 		do
 			create {BIN_LE_B} last_binary_node
 		end
 
-	process_bin_lt_as (l_as: BIN_LT_AS) is
+	process_bin_lt_as (l_as: BIN_LT_AS)
 		do
 			create {BIN_LT_B} last_binary_node
 		end
 
-	process_bin_div_as (l_as: BIN_DIV_AS) is
+	process_bin_div_as (l_as: BIN_DIV_AS)
 		do
 			create {BIN_DIV_B} last_binary_node
 		end
 
-	process_bin_minus_as (l_as: BIN_MINUS_AS) is
+	process_bin_minus_as (l_as: BIN_MINUS_AS)
 		do
 			create {BIN_MINUS_B} last_binary_node
 		end
 
-	process_bin_mod_as (l_as: BIN_MOD_AS) is
+	process_bin_mod_as (l_as: BIN_MOD_AS)
 		do
 			create {BIN_MOD_B} last_binary_node
 		end
 
-	process_bin_plus_as (l_as: BIN_PLUS_AS) is
+	process_bin_plus_as (l_as: BIN_PLUS_AS)
 		do
 			create {BIN_PLUS_B} last_binary_node
 		end
 
-	process_bin_power_as (l_as: BIN_POWER_AS) is
+	process_bin_power_as (l_as: BIN_POWER_AS)
 		do
 			create {BIN_POWER_B} last_binary_node
 		end
 
-	process_bin_slash_as (l_as: BIN_SLASH_AS) is
+	process_bin_slash_as (l_as: BIN_SLASH_AS)
 		do
 			create {BIN_SLASH_B} last_binary_node
 		end
 
-	process_bin_star_as (l_as: BIN_STAR_AS) is
+	process_bin_star_as (l_as: BIN_STAR_AS)
 		do
 			create {BIN_STAR_B} last_binary_node
 		end
 
-	process_bin_and_as (l_as: BIN_AND_AS) is
+	process_bin_and_as (l_as: BIN_AND_AS)
 		do
 			create {BIN_AND_B} last_binary_node
 		end
 
-	process_bin_eq_as (l_as: BIN_EQ_AS) is
+	process_bin_eq_as (l_as: BIN_EQ_AS)
 		do
 			create {BIN_EQ_B} last_binary_node
 		end
 
-	process_bin_ne_as (l_as: BIN_NE_AS) is
+	process_bin_ne_as (l_as: BIN_NE_AS)
 		do
 			create {BIN_NE_B} last_binary_node
 		end
 
-	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+	process_bin_tilde_as (l_as: BIN_TILDE_AS)
 		do
 			create {BIN_TILDE_B} last_binary_node
 		end
 
-	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS)
 		do
 			create {BIN_NOT_TILDE_B} last_binary_node
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Make project modifications."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Highlevel element change
 
-	change_root_class (a_class: STRING) is
+	change_root_class (a_class: STRING)
 			-- Change root class from current target to `a_class'.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
@@ -42,7 +42,7 @@ feature -- Highlevel element change
 			rebuild_text
 		end
 
-	change_root_feature (a_feature: STRING) is
+	change_root_feature (a_feature: STRING)
 			-- Change root feature from current target to `a_featre'.
 		require
 			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
@@ -60,7 +60,7 @@ feature -- Highlevel element change
 
 feature -- Element change
 
-	load_text is
+	load_text
 			-- Load the text.
 		local
 			l_print: CONF_PRINT_VISITOR
@@ -77,7 +77,7 @@ feature -- Element change
 			text := l_print.text
 		end
 
-	save_text is
+	save_text
 			-- Save the text.
 		do
 				-- |FIXME: We should pass a proper encoding for XML file.
@@ -87,7 +87,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	rebuild_text is
+	rebuild_text
 			-- Rebuild text from configuration information
 		require
 			text_managed: text_managed
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			set_changed_text (l_print.text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

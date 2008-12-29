@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Error for features that conflict for some reason
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; f1, f2: FEATURE_I) is
+	make (c: CLASS_C; f1, f2: FEATURE_I)
 		require
 			c_not_void: c /= Void
 			f1_not_void: f1 /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := Precursor and then
@@ -68,7 +68,7 @@ feature {NONE} -- Implmentation
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -84,7 +84,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

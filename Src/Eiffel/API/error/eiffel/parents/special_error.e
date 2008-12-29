@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for special classes."
@@ -27,7 +27,7 @@ create {CLASS_C}
 
 feature {NONE} -- Initialization
 
-	make (case: STRING; c: CLASS_C) is
+	make (case: STRING; c: CLASS_C)
 		require
 			valid_c: c /= Void
 		do
@@ -40,12 +40,12 @@ feature -- Properties
 	error_case: STRING;
 			-- Case of error
 
-	code: STRING is "Library_error";
+	code: STRING = "Library_error";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -53,7 +53,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

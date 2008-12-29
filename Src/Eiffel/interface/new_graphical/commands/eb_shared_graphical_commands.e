@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Shared Commands for all $EiffelGraphicalCompiler$ windows and tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,146 +10,146 @@ class
 
 feature -- Commands
 
-	Wizard_precompile_cmd: EB_WIZARD_PRECOMPILE_COMMAND is
+	Wizard_precompile_cmd: EB_WIZARD_PRECOMPILE_COMMAND
 			-- Command to launch the "Precompilations Wizard".
 		once
 			create Result
 			Result.enable_sensitive
 		end
 
-	New_development_window_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND is
+	New_development_window_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND
 			-- Command to create a new development window.
 		once
 			create Result.make_with_style (0)
 			Result.enable_sensitive
 		end
 
-	New_editor_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND is
+	New_editor_cmd: EB_NEW_DEVELOPMENT_WINDOW_COMMAND
 			-- Command used to create a new window where the editor is maximized.
 		once
 			create Result.make_with_style (1)
 			Result.enable_sensitive
 		end
 
-	Exit_application_cmd: EB_EXIT_APPLICATION_COMMAND is
+	Exit_application_cmd: EB_EXIT_APPLICATION_COMMAND
 			-- Command to end the current application.
 		once
 			create Result
 			Result.enable_sensitive
 		end
 
-	Run_project_cmd: EB_EXEC_DEBUG_CMD is
+	Run_project_cmd: EB_EXEC_DEBUG_CMD
 			-- Command to run a system.
 		once
 			create Result.make ((create {EB_SHARED_DEBUGGER_MANAGER}).eb_debugger_manager)
 			Result.disable_sensitive
 		end
 
-	Run_workbench_cmd: EB_EXEC_WORKBENCH_CMD is
+	Run_workbench_cmd: EB_EXEC_WORKBENCH_CMD
 			-- Command to run the workbench project.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Run_finalized_cmd: EB_EXEC_FINALIZED_CMD is
+	Run_finalized_cmd: EB_EXEC_FINALIZED_CMD
 			-- Command to run the finalized project.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Override_scan_cmd: EB_OVERRIDE_SCAN_COMMAND is
+	Override_scan_cmd: EB_OVERRIDE_SCAN_COMMAND
 			-- Command to check override clusters for changes and recompile.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Discover_melt_cmd: EB_DISCOVER_AND_MELT_COMMAND is
+	Discover_melt_cmd: EB_DISCOVER_AND_MELT_COMMAND
 			-- Command to find unreferenced externally added classes and recompile.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Melt_project_cmd: EB_MELT_PROJECT_COMMAND is
+	Melt_project_cmd: EB_MELT_PROJECT_COMMAND
 			-- Command to melt a system.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Freeze_project_cmd: EB_FREEZE_PROJECT_COMMAND is
+	Freeze_project_cmd: EB_FREEZE_PROJECT_COMMAND
 			-- Command to freeze a system.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Precompilation_cmd: EB_PRECOMPILE_PROJECT_COMMAND is
+	Precompilation_cmd: EB_PRECOMPILE_PROJECT_COMMAND
 			-- Command to precompile a system.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Finalize_project_cmd: EB_FINALIZE_PROJECT_COMMAND is
+	Finalize_project_cmd: EB_FINALIZE_PROJECT_COMMAND
 			-- Command to finalize a system.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Project_cancel_cmd: EB_PROJECT_CANCEL_COMMAND is
+	Project_cancel_cmd: EB_PROJECT_CANCEL_COMMAND
 			-- Command to cancel any ongoing project computation such as compilation and diagram rebuilding.
 		once
 			create Result
 			Result.disable_sensitive
 		end
 
-	Document_cmd: EB_DOCUMENTATION_WIZARD_COMMAND is
+	Document_cmd: EB_DOCUMENTATION_WIZARD_COMMAND
 			-- Command to generate the HTML documentation
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Export_cmd: EXPORT_CMD is
+	Export_cmd: EXPORT_CMD
 			-- Command to export XMI.
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	System_cmd: EB_SYSTEM_CMD is
+	System_cmd: EB_SYSTEM_CMD
 			-- Project setting command
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND is
+	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
 			-- Command to Display the User Preferences Editor.
 		once
 			create Result.make
 			Result.enable_sensitive
 		end
 
-	Terminate_c_compilation_cmd: EB_TERMINATE_C_COMPILATION_CMD is
+	Terminate_c_compilation_cmd: EB_TERMINATE_C_COMPILATION_CMD
 			--
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
 
-	Estudio_debug_cmd: ESTUDIO_DEBUG_CMD is
+	Estudio_debug_cmd: ESTUDIO_DEBUG_CMD
 			-- Show/Hide EiffelStudio self debug menu.
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

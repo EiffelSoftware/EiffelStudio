@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Manager for all c compilation output tools. Can be instanciated on the fly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature -- Basic Operations
 
-	force_display is
+	force_display
 			-- Make the output tools visible (to ensure the user sees what we print).
 		do
 			from
@@ -52,7 +52,7 @@ feature -- Basic Operations
 			end
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Make all output tools scroll to the bottom.
 		do
 			from
@@ -65,7 +65,7 @@ feature -- Basic Operations
 			end
 		end
 
-	clear is
+	clear
 			-- Clear the window.
 		do
 			from
@@ -78,7 +78,7 @@ feature -- Basic Operations
 			end
 		end
 
-	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
+	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK)
 			-- Print `text' in all output tools.
 		local
 			eo: ES_C_OUTPUT_TOOL_PANEL
@@ -97,7 +97,7 @@ feature -- Basic Operations
 			scroll_to_end
 		end
 
-	notify_c_compilation_output_finished is
+	notify_c_compilation_output_finished
 			-- Notify all output tools that all output from c compilation has been finished.
 		local
 			eo: ES_C_OUTPUT_TOOL_PANEL
@@ -117,37 +117,37 @@ feature -- Basic Operations
 
 feature -- Basic Operations / Information message
 
-	display_system_info is
+	display_system_info
 		do
 		end
 
-	display_welcome_info is
+	display_welcome_info
 		do
 		end
 
-	display_application_status is
+	display_application_status
 		do
 		end
 
 feature -- Basic Operations / Compiler messages
 
-	trace_warnings (handler: ERROR_HANDLER) is
+	trace_warnings (handler: ERROR_HANDLER)
 		do
 		end
 
-	trace_errors (handler: ERROR_HANDLER) is
+	trace_errors (handler: ERROR_HANDLER)
 		do
 		end
 
 feature -- Element change
 
-	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
+	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL)
 			-- Add this output tool to the list of managed output tools.
 		do
 			managed_output_tools.extend (an_output_tool)
 		end
 
-	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
+	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL)
 			-- Remove this output tool from the list of managed output tools.
 		do
 			managed_output_tools.start
@@ -156,41 +156,41 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	display_error_error (st: TEXT_FORMATTER) is
+	display_error_error (st: TEXT_FORMATTER)
 		do
 		end
 
-	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR]) is
+	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR])
 		do
 		end
 
-	display_separation_line (st: TEXT_FORMATTER) is
+	display_separation_line (st: TEXT_FORMATTER)
 		do
 		end
 
-	display_additional_info (st: TEXT_FORMATTER) is
+	display_additional_info (st: TEXT_FORMATTER)
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	welcome_info: TEXT_FORMATTER is
+	welcome_info: TEXT_FORMATTER
 		do
 		end
 
-	structured_system_info: TEXT_FORMATTER is
+	structured_system_info: TEXT_FORMATTER
 		do
 		end
 
 feature  -- Implementation / Private attributes
 
-	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
+	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL]
 			-- Managed output tools
 		once
 			create Result.make (10)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

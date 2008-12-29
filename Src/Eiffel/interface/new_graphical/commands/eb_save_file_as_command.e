@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to save a file under a different name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,13 +55,13 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the command. Prompt the user for the new filenane and save it.
 		do
 			execute_with_dialog (Void)
 		end
 
-	execute_with_filename (new_filename: STRING) is
+	execute_with_filename (new_filename: STRING)
 			-- Save a file with a chosen name.
 		require
 			valid_filename: new_filename /= Void and then not new_filename.is_empty
@@ -73,7 +73,7 @@ feature -- Execution
 
 feature -- Status setting
 
-	on_text_reset is
+	on_text_reset
 			-- Disable `Current'.
 		do
 			if not is_recycled then
@@ -85,7 +85,7 @@ feature -- Status setting
 			end
 		end
 
-	on_text_back_to_its_last_saved_state is
+	on_text_back_to_its_last_saved_state
 			-- Disable `Current'.
 		do
 			if not is_recycled then
@@ -97,13 +97,13 @@ feature -- Status setting
 			end
 		end
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Enable `Current'.
 		do
 			-- Do nothing
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- Enable `Current'.
 		do
 			enable_sensitive
@@ -111,7 +111,7 @@ feature -- Status setting
 
 feature {EB_FILE_OPENER} -- Callbacks
 
-	save_file (new_file: RAW_FILE) is
+	save_file (new_file: RAW_FILE)
 		local
 			to_write: STRING_32
 			to_write_stream: STRING
@@ -137,7 +137,7 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
-	execute_with_dialog (argument: EB_FILE_SAVE_DIALOG) is
+	execute_with_dialog (argument: EB_FILE_SAVE_DIALOG)
 			-- Save a file with the chosen name.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -158,7 +158,7 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Export_to
@@ -166,21 +166,21 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	save_it (fn: STRING) is
+	save_it (fn: STRING)
 			-- Save a file with a chosen name.
 		obsolete "use `save_as' instead"
 		do
 			save_as (fn)
 		end
 
-	save_as (new_filename: STRING) is
+	save_as (new_filename: STRING)
 			-- Save a file with a chosen name.
 		obsolete "use `execute_with_filename' instead"
 		do
 			execute_with_filename (new_filename)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To compile non-compiled resources and add them in a specific IL module."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_module: like module; a_resources: like resources) is
+	make (a_module: like module; a_resources: like resources)
 			-- Initialize current instance with `a_module' where `a_resources' will
 			-- be generated into.
 		require
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate `resources' in `module'. Compile `resources' items if necessary.
 		local
 			l_name: STRING
@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	generate_resource (a_resource, a_target: STRING) is
+	generate_resource (a_resource, a_target: STRING)
 			-- Generate a compiled resource in `a_target' using `a_resource' as resource file.
 		require
 			a_resource_not_void: a_resource /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resource_name (a_resource: STRING; remove_extension: BOOLEAN): STRING is
+	resource_name (a_resource: STRING; remove_extension: BOOLEAN): STRING
 			-- Extract name of `a_resource' file without its extension if `remove_extension'.
 		require
 			a_resource_not_void: a_resource /= Void
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			resource_name_not_void: Result /= Void
 		end
 
-	new_compiled_resource_file_name (a_resource: STRING): FILE_NAME is
+	new_compiled_resource_file_name (a_resource: STRING): FILE_NAME
 			-- Using `a_resource' generates a PATH in which output of compiling resource file
 			-- `a_resource' will be generated.
 		require
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			new_compiled_resource_file_name_not_void: Result /= Void
 		end
 
-	define_resource (a_module: IL_MODULE; a_file, a_name: STRING) is
+	define_resource (a_module: IL_MODULE; a_file, a_name: STRING)
 			-- Add resource file `a_file' with name `a_name' to `a_module'.
 		require
 			a_module_not_void: a_module /= Void
@@ -254,10 +254,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: constants
 
-	resources_extension: STRING is "resources"
+	resources_extension: STRING = "resources"
 			-- Compiled resources extension.
 
-	is_file_readable (a_filename: STRING): BOOLEAN is
+	is_file_readable (a_filename: STRING): BOOLEAN
 			-- Is file `a_filename' readable?
 		require
 			a_filename_not_void: a_filename /= Void
@@ -274,7 +274,7 @@ invariant
 	module_not_void: module /= Void
 	resources_not_void: resources /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

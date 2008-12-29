@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte node for unary operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Initialization
 
-	init (a: like access) is
+	init (a: like access)
 			-- Initializes access
 		do
 			set_access (a)
@@ -40,7 +40,7 @@ feature -- Access
 	access: ACCESS_B
 			-- Access when expression is not a simple type
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Type of the prefixed feature
 		do
 			Result := context.real_type (access.type)
@@ -48,13 +48,13 @@ feature -- Access
 
 feature -- Settings
 
-	set_expr (e: like expr) is
+	set_expr (e: like expr)
 			-- Assign `e' to `expr'.
 		do
 			expr := e
 		end
 
-	set_access (a: like access) is
+	set_access (a: like access)
 			-- Set `access' to `a'
 		do
 			access := a
@@ -62,13 +62,13 @@ feature -- Settings
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the unary operation a built-in one ?
 		do
 			-- Do nothing
 		end
 
-	is_simple_expr: BOOLEAN is
+	is_simple_expr: BOOLEAN
 			-- Is the current expression a simple one ?
 			-- Definition: an expression <E> is simple if the assignment
 			-- target := <E> is generated as such in C when "target" is a
@@ -77,24 +77,24 @@ feature -- Status report
 			Result := expr.is_simple_expr
 		end
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the expression using a GCable variable ?
 		do
 			Result := expr.has_gcable_variable
 		end
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Is the expression using a call ?
 		do
 			Result := expr.has_call
 		end
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 		do
 			Result := expr.allocates_memory
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' used in the expression ?
 		do
 			Result := expr.used (r)
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature -- Code generation
 
-	nested_b: NESTED_B is
+	nested_b: NESTED_B
 			-- Change this node into a nested call
 		local
 			a_access_expr: ACCESS_EXPR_B
@@ -116,7 +116,7 @@ feature -- Code generation
 			Result.set_message (access)
 		end
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- Enlarge the expression
 		do
 			if not is_built_in then
@@ -135,7 +135,7 @@ feature -- Code generation
 
 feature -- C code generation
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
 			if r = No_register or not used (r) then
@@ -145,13 +145,13 @@ feature -- C code generation
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free register used by expression
 		do
 			expr.free_register
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			context.init_propagation
@@ -159,19 +159,19 @@ feature -- C code generation
 			expr.analyze
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		do
 			expr.generate
 		end
 
-	print_register is
+	print_register
 			-- Print expression value
 		do
 			type.c_type.generate_cast (buffer)
@@ -179,7 +179,7 @@ feature -- C code generation
 			expr.print_register
 		end
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate operator in C
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -195,20 +195,20 @@ feature -- C code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := expr.calls_special_features (array_desc) or else
 				access.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 				-- Use the nested form of the byte code (the type resolution
 				-- does not work otherwise)
 			Result := nested_b.is_unsafe
 		end
 
-	optimized_byte_node: EXPR_B is
+	optimized_byte_node: EXPR_B
 		do
 			if is_built_in then
 				Result := Current
@@ -221,12 +221,12 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := expr.size + 1
 		end
 
-	pre_inlined_code: EXPR_B is
+	pre_inlined_code: EXPR_B
 		do
 			if not is_built_in then
 				Result := nested_b.pre_inlined_code
@@ -236,7 +236,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: EXPR_B is
+	inlined_byte_code: EXPR_B
 		do
 			if not is_built_in then
 				Result := nested_b.inlined_byte_code
@@ -246,7 +246,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

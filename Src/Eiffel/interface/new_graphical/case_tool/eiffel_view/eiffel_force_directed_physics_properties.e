@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that defines stiffnesses for inheritance and client links."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_inheritance_stiffness (a_stiffness: like inheritance_stiffness) is
+	set_inheritance_stiffness (a_stiffness: like inheritance_stiffness)
 			-- Set `inheritance_stiffness' to `a_stiffness'.
 		require
 			positive: a_stiffness > 0
@@ -27,7 +27,7 @@ feature -- Element change
 			set: inheritance_stiffness = a_stiffness
 		end
 		
-	set_client_stiffness (a_stiffness: like client_stiffness) is
+	set_client_stiffness (a_stiffness: like client_stiffness)
 			-- Set `client_stiffness' to `a_stiffness'.
 		require
 			positive: a_stiffness > 0
@@ -39,7 +39,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	link_stiffness (a_link: EG_LINK_FIGURE): DOUBLE is
+	link_stiffness (a_link: EG_LINK_FIGURE): DOUBLE
 			-- Striffness of `a_link'.
 		local
 			i_link: EIFFEL_INHERITANCE_FIGURE
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

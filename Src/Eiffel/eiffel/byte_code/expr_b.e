@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An Eiffel expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,25 +24,25 @@ inherit
 
 feature -- Access
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type
 		deferred
 		end
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 			-- C type of the expression
 		do
 			Result := real_type (type).c_type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local or forthcomming dot calls ?
 		deferred
 		end
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluate current expression, if possible.
 		once
 			create {NO_VALUE_I} Result
@@ -52,7 +52,7 @@ feature -- Evaluation
 
 feature -- Il code generation
 
-	is_fast_as_local: BOOLEAN is
+	is_fast_as_local: BOOLEAN
 			-- Is expression calculation as fast as loading a local?
 			-- In other words: does it make sense to store a result of the expression
 			-- in a temporary local variable for multiple uses or is it equivalent
@@ -64,7 +64,7 @@ feature -- Il code generation
 
 feature -- Status report
 
-	is_constant_expression: BOOLEAN is
+	is_constant_expression: BOOLEAN
 			-- Does current represent a node which is constant?
 			-- Case of manifest constants, and tuples/arrays with
 			-- constant expressions.
@@ -72,14 +72,14 @@ feature -- Status report
 			-- Default: False
 		end
 
-	is_type_fixed: BOOLEAN is
+	is_type_fixed: BOOLEAN
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 		do
 			Result := is_constant_expression
 		end
 
-	is_dynamic_clone_required (source_type: TYPE_A): BOOLEAN is
+	is_dynamic_clone_required (source_type: TYPE_A): BOOLEAN
 			-- Does expression need to be cloned at run-time depending on
 			-- the dynamic type of its value of static type `source_type'.
 		require
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- C generation
 
-	get_register is
+	get_register
 			-- Get a temporary register to hold result of expr. If a register
 			-- has already been propagated, then `register' is not void and
 			-- nothing has to be done.
@@ -130,7 +130,7 @@ feature -- C generation
 			register_exists: register = Void implies type.is_void
 		end
 
-	free_register is
+	free_register
 			-- Free register used by expr, if necessary
 		do
 			if register /= Void then
@@ -138,13 +138,13 @@ feature -- C generation
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print register.
 		do
 			register.print_register
 		end
 
-	is_simple_expr: BOOLEAN is
+	is_simple_expr: BOOLEAN
 			-- Is the current expression a simple one ?
 			-- Definition: an expression <E> is simple if the assignment
 			-- target := <E> is generated as such in C when "target" is a
@@ -154,7 +154,7 @@ feature -- C generation
 		do
 		end
 
-	is_hector: BOOLEAN is
+	is_hector: BOOLEAN
 			-- Is the current expression an hector one ?
 			-- Definition: an expression <E> is hector if it is a parameter
 			-- of an external function call, <E> is of the form $<A> and <A>
@@ -162,7 +162,7 @@ feature -- C generation
 		do
 		end
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Does the expression have a GCable variable ?
 			-- Definition: a GCable variable is a variable which is placed
 			-- under the control of the garbage collector, directly or
@@ -170,17 +170,17 @@ feature -- C generation
 		do
 		end
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Does the expression have a call ?
 		do
 		end
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 			-- Does the expression allocate memory?
 		do
 		end
 
-	allocates_memory_for_type (target_type: TYPE_A): BOOLEAN is
+	allocates_memory_for_type (target_type: TYPE_A): BOOLEAN
 			-- Is memory allocated when expression is attached to a target of `target_type'?
 		require
 			target_type_not_void: target_type /= Void
@@ -196,12 +196,12 @@ feature -- C generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the effect of analyze.
 		do
 		end
 
-	stored_register: REGISTRABLE is
+	stored_register: REGISTRABLE
 			-- The register in which the expression is stored
 		do
 			Result := register
@@ -210,21 +210,21 @@ feature -- C generation
 			end
 		end
 
-	need_enlarging: BOOLEAN is true
+	need_enlarging: BOOLEAN = true
 			-- All the expressions need enlarging
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- Redefined for type check
 		do
 			Result := Current
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- Do nothing
 		do
 		end
 
-	is_register_required (target_type: TYPE_A): BOOLEAN is
+	is_register_required (target_type: TYPE_A): BOOLEAN
 			-- Is register required if expression is about
 			-- to be assigned or compared to the type `target_type'?
 		local
@@ -236,7 +236,7 @@ feature -- C generation
 				(target_type.is_true_expanded or (source_type.is_reference and is_dynamic_clone_required (source_type)))
 		end
 
-	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A) is
+	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A)
 			-- Generate expression which is about
 			-- to be assigned or compared to the type `target_type'.
 		require
@@ -296,7 +296,7 @@ feature -- C generation
 			end
 		end
 
-	generate_dynamic_clone (source_register: REGISTRABLE; source_type: TYPE_A) is
+	generate_dynamic_clone (source_register: REGISTRABLE; source_type: TYPE_A)
 			-- Generate expression that clones `source_register' depending on
 			-- dynamic type of object of static type `source_type'.
 		require
@@ -318,7 +318,7 @@ feature -- C generation
 
 feature -- Array optimization
 
-	optimized_byte_node: EXPR_B is
+	optimized_byte_node: EXPR_B
 			-- Redefined for type check
 		do
 			Result := Current
@@ -326,19 +326,19 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	pre_inlined_code: EXPR_B is
+	pre_inlined_code: EXPR_B
 			-- Redefined for type check
 		do
 			Result := Current
 		end
 
-	inlined_byte_code: EXPR_B is
+	inlined_byte_code: EXPR_B
 			-- Redefined for type check
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

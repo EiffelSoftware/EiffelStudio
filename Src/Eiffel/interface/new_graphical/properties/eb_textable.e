@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstraction for an editable tool or window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	build_interface is
+	build_interface
 			-- Build system widget.
 		do
 			build_text_area
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current
 		do
 			Result := text_area.widget
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Status report
 
-	changed: BOOLEAN is
+	changed: BOOLEAN
 			-- As the text changed since last save?
 			-- False by default.
 		do
@@ -38,21 +38,21 @@ feature -- Status report
 
 feature -- Basic operations
 
-	save_text is
+	save_text
 			-- Save current text.
 		require
 			text_has_changed: changed
 		deferred
 		end
 
-	save_as_text is
+	save_as_text
 			-- Save current text as...
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	build_text_area is
+	build_text_area
 			-- Create the text component where the information will be displayed.
 		local
 			an_editor: EB_CLICKABLE_EDITOR
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			text_area := an_editor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

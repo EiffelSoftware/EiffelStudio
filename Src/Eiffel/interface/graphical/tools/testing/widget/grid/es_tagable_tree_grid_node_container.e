@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that support insertion and removal of grid rows in a {ES_TAGABLE_TREE_GRID}, based on the changes
 		of an underlaying {TAG_BASED_TREE}.
@@ -173,7 +173,7 @@ feature {NONE} -- Element change
 			cached_children.force (l_new, a_token)
 		end
 
-	add_item (a_item: !G) is
+	add_item (a_item: !G)
 			-- <Precursor>
 		local
 			i: INTEGER

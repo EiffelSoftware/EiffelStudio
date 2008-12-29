@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialogs that allow to define a new expression in the debugger sense"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,13 +52,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_new_expression is
+	make_new_expression
 		do
 			make
 			set_expression_mode
 		end
 
-	make_with_expression_text (t: STRING_32) is
+	make_with_expression_text (t: STRING_32)
 			-- Initialize `Current' and set the expression string to `t'.
 		require
 			valid_string: t /= Void and not t.is_empty
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			set_expression_mode
 		end
 
-	make_with_class (cl: CLASS_C) is
+	make_with_class (cl: CLASS_C)
 			-- Initialize `Current' and force the creation of a class-related expression.
 		require
 			valid_class: cl /= Void and cl.is_valid
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			disable_all
 		end
 
-	make_with_object (oa: DBG_ADDRESS) is
+	make_with_object (oa: DBG_ADDRESS)
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			disable_all_but_object_radios
 		end
 
-	make_as_named_object (oa: DBG_ADDRESS; on: STRING_32) is
+	make_as_named_object (oa: DBG_ADDRESS; on: STRING_32)
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 			disable_all_but_object_radios
 		end
 
-	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: STRING) is
+	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: STRING)
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			expression_field.set_text (a_exp)
 		end
 
-	make_with_named_object (oa: DBG_ADDRESS; on: STRING_32; ac: CLASS_C) is
+	make_with_named_object (oa: DBG_ADDRESS; on: STRING_32; ac: CLASS_C)
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object.
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			disable_all_but_object_radios
 		end
 
-	make_for_context is
+	make_for_context
 			-- Initialize `Current' and force the creation of a context-related expression.
 		do
 			make
@@ -153,7 +153,7 @@ feature {NONE} -- Initialization
 			disable_all
 		end
 
-	make_with_expression (expr: DBG_EXPRESSION) is
+	make_with_expression (expr: DBG_EXPRESSION)
 			-- Initialize `Current' based on `expr'.
 		require
 			valid_expression: expr /= Void
@@ -190,7 +190,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Graphical initialization and changes
 
-	make is
+	make
 			-- Initialize `Current'.
 		local
 			cnt: EV_VERTICAL_BOX
@@ -355,7 +355,7 @@ feature {NONE} -- Graphical initialization and changes
 			focused_widget := expression_field
 		end
 
-	set_expression_mode is
+	set_expression_mode
 		do
 			if
 				expression_or_name_cell /= Void
@@ -365,7 +365,7 @@ feature {NONE} -- Graphical initialization and changes
 			end
 		end
 
-	set_object_name_mode is
+	set_object_name_mode
 		do
 			if
 				expression_or_name_cell /= Void
@@ -377,13 +377,13 @@ feature {NONE} -- Graphical initialization and changes
 
 feature -- Change
 
-	set_edit_expression_title is
+	set_edit_expression_title
 			-- Set Edit expression title
 		do
 			dialog.set_title (Interface_names.t_Edit_expression)
 		end
 
-	set_new_expression_mode is
+	set_new_expression_mode
 			-- Set New expression title
 		do
 			dialog.set_title (Interface_names.t_New_expression)
@@ -404,7 +404,7 @@ feature -- Property
 
 feature -- Status report
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current's implementation destroyed?
 		do
 			Result := dialog.is_destroyed
@@ -415,7 +415,7 @@ feature -- Status report
 
 feature -- Change
 
-	set_class_text (cl: CLASS_C) is
+	set_class_text (cl: CLASS_C)
 		require
 			class_not_void: cl /= Void
 		do
@@ -424,7 +424,7 @@ feature -- Change
 
 feature -- Status setting
 
-	set_callback (cb: PROCEDURE [ANY, TUPLE]) is
+	set_callback (cb: PROCEDURE [ANY, TUPLE])
 			-- Define the callback that should be called after the dialog is closed.
 		require
 			valid_callback: cb /= Void
@@ -434,7 +434,7 @@ feature -- Status setting
 			callback_set: callback = cb
 		end
 
-	show_modal_to_window (w: EV_WINDOW) is
+	show_modal_to_window (w: EV_WINDOW)
 			-- Display `Current' modally to window `w'.
 		require
 			not_destroyed: not is_destroyed
@@ -443,7 +443,7 @@ feature -- Status setting
 			dialog.show_modal_to_window (w)
 		end
 
-	show_relative_to_window (w: EV_WINDOW) is
+	show_relative_to_window (w: EV_WINDOW)
 			-- Display `Current' modally to window `w'.
 		require
 			not_destroyed: not is_destroyed
@@ -452,7 +452,7 @@ feature -- Status setting
 			dialog.show_relative_to_window (w)
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current's implementation.
 		do
 			dialog.destroy
@@ -460,7 +460,7 @@ feature -- Status setting
 
 feature {NONE} -- Event handling
 
-	event_class_radio_selected is
+	event_class_radio_selected
 			-- User selected to create an expression based on a class.
 		do
 			set_expression_mode
@@ -469,7 +469,7 @@ feature {NONE} -- Event handling
 			address_field.disable_sensitive
 		end
 
-	event_on_object_radio_selected is
+	event_on_object_radio_selected
 			-- User selected to create an expression based on a class.
 		do
 			set_expression_mode
@@ -482,7 +482,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	event_as_object_radio_selected is
+	event_as_object_radio_selected
 			-- User selected to create an expression based on a class.
 		do
 			set_object_name_mode
@@ -495,7 +495,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	event_context_radio_selected is
+	event_context_radio_selected
 			-- User selected to create an expression based on a class.
 		do
 			set_expression_mode
@@ -504,7 +504,7 @@ feature {NONE} -- Event handling
 			set_focus (expression_field)
 		end
 
-	on_object_name_changed is
+	on_object_name_changed
 			-- User changed the object name.
 		do
 			if object_name_field.text.is_empty then
@@ -514,7 +514,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_expression_changed is
+	on_expression_changed
 			-- User changed the expression.
 		do
 			if expression_field.text.is_empty then
@@ -524,7 +524,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_expression_focus is
+	on_expression_focus
 			-- Expression text field gets focus.
 		local
 			l_class_name: STRING
@@ -554,7 +554,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_ok_pressed is
+	on_ok_pressed
 			-- User pressed the "OK" button.
 		local
 			o: DEBUGGED_OBJECT
@@ -693,7 +693,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_shown is
+	on_shown
 			-- The dialog has just been displayed.
 		do
 			set_focus (focused_widget)
@@ -705,7 +705,7 @@ feature {NONE} -- Code completion.
 
 	class_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 
-	setup_completion_possibilities_providers is
+	setup_completion_possibilities_providers
 			-- Setup code completion possiblilities providers.
 		require
 			expression_field_attached: expression_field /= Void
@@ -785,7 +785,7 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	set_focus (w: EV_WIDGET) is
+	set_focus (w: EV_WIDGET)
 		require
 			w /= Void
 		do
@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 	modified_expression: DBG_EXPRESSION
 			-- Expression that is being edited, if any.
 
-	disable_all is
+	disable_all
 			-- Disable the sensitivity of all context widgets
 		do
 			disable_all_but_object_radios
@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 			as_object_radio.disable_sensitive
 		end
 
-	disable_all_but_object_radios is
+	disable_all_but_object_radios
 			-- Disable the sensitivity of all context widgets
 			-- but as_object and on_object radio
 		do
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 invariant
 	dialog_not_void: dialog /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

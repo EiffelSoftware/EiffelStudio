@@ -1,4 +1,4 @@
-indexing
+note
 	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {DEBUGGER_MANAGER}
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	load_system_dependent_debug_info is
+	load_system_dependent_debug_info
 		do
 			Precursor
 			if
@@ -38,7 +38,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

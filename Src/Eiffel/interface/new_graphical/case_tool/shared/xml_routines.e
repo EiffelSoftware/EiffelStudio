@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Common routines for XML extraction, saving and deserialization
 		]"
@@ -28,7 +28,7 @@ create {SHARED_XML_ROUTINES}
 
 feature {NONE} -- Initialization
 
-	make (a_relative_window: like relative_window) is
+	make (a_relative_window: like relative_window)
 			-- Initialization
 		require
 			non_void_relative_window: a_relative_window /= Void
@@ -50,7 +50,7 @@ feature {SHARED_XML_ROUTINES} -- Status report
 
 feature {SHARED_XML_ROUTINES} -- Status setting
 
-	reset_valid_tags is
+	reset_valid_tags
 			-- Reset `valid_tags'.
 		do
 			valid_tags := 0
@@ -58,7 +58,7 @@ feature {SHARED_XML_ROUTINES} -- Status setting
 			valid_tags_is_nul: valid_tags = 0
 		end
 
-	valid_tags_read is
+	valid_tags_read
 			-- A valid tag was just read.
 		do
 			valid_tags := valid_tags + 1
@@ -68,7 +68,7 @@ feature {SHARED_XML_ROUTINES} -- Status setting
 
 feature {SHARED_XML_ROUTINES} -- Processing
 
-	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER is
+	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -88,7 +88,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			end
 		end
 
-	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN is
+	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -108,7 +108,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			end
 		end
 
-	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE is
+	xml_double (elem: XM_ELEMENT; a_name: STRING): DOUBLE
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -128,7 +128,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			end
 		end
 
-	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING is
+	xml_string (elem: XM_ELEMENT; a_name: STRING): STRING
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -142,7 +142,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			end
 		end
 
-	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR is
+	xml_color (elem: XM_ELEMENT; a_name: STRING): EV_COLOR
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
 			e: XM_ELEMENT
@@ -181,7 +181,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			retry
 		end
 
-	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT is
+	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT
 			-- Find in sub-elemement of `e' an element with tag `n'.
 		require
 			e_not_void: e /= Void
@@ -189,13 +189,13 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			Result := e.element_by_name (n)
 		end
 
-	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA is
+	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA
 			-- New node with `s' as content.
 		do
 			create Result.make (a_parent, s)
 		end
 
-	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT is
+	xml_node (a_parent: XM_ELEMENT; tag_name, content: STRING): XM_ELEMENT
 			-- New node with `s' as content and named `tag_name'.
 		local
 			l_namespace: XM_NAMESPACE
@@ -207,7 +207,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 
 feature -- Saving
 
-	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT) is
+	save_xml_document (a_file_name: STRING; a_doc: XM_DOCUMENT)
 			-- Save `a_doc' in `ptf'
 		require
 			file_not_void: a_file_name /= Void
@@ -239,7 +239,7 @@ feature -- Saving
 
 feature -- Deserialization
 
-	deserialize_document (a_file_path: STRING): XM_DOCUMENT is
+	deserialize_document (a_file_path: STRING): XM_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- serialized in `a_file_path'.
 			-- If deserialization fails, return Void.
@@ -273,7 +273,7 @@ feature -- Deserialization
 
 feature {SHARED_XML_ROUTINES} -- Walk around
 
-	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING; a_parent: XM_ELEMENT) is
+	add_attribute (a_name: STRING; a_ns: XM_NAMESPACE; a_value: STRING; a_parent: XM_ELEMENT)
 			-- add attribute to `a_parent'.
 			-- | The feature `add_attribute' of XM_ELEMENT is not exported to ANY
 			-- | in gobo 3.1, so we have to use this walk around.
@@ -293,7 +293,7 @@ feature {SHARED_XML_ROUTINES} -- Walk around
 
 feature {SHARED_XML_ROUTINES} -- Error management
 
-	display_warning_message (a_warning_msg: STRING_GENERAL) is
+	display_warning_message (a_warning_msg: STRING_GENERAL)
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
@@ -301,7 +301,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_warning_msg, Void, Void)
 		end
 
-	display_error_message (an_error_msg: STRING_GENERAL) is
+	display_error_message (an_error_msg: STRING_GENERAL)
 			-- Display `an_error_msg' in an error popup window.
 		require
 			valid_error_message: an_error_msg /= Void and then not an_error_msg.is_empty
@@ -309,7 +309,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (an_error_msg, Void, Void)
 		end
 
-	display_warning_message_relative (a_warning_msg: STRING_GENERAL; a_parent_window: EV_WINDOW) is
+	display_warning_message_relative (a_warning_msg: STRING_GENERAL; a_parent_window: EV_WINDOW)
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
@@ -318,7 +318,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_warning_msg, a_parent_window, Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

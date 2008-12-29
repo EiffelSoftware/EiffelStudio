@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about an inherited feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: like a_feature) is
+	make (f: like a_feature)
 			-- Make inheritance information object for feature `f'.
 		require
 			f_not_void: f /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			internal_a_feature_set: internal_a_feature = f
 		end
 
-	make_with_feature_and_parent (f: like a_feature; p: like parent; a_parent_type: like parent_type) is
+	make_with_feature_and_parent (f: like a_feature; p: like parent; a_parent_type: like parent_type)
 			-- Make inheritance information object for feature `f' in parent `p'.
 		require
 			f_not_void: f /= Void
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_renaming_processed is
+	set_renaming_processed
 			-- Set `renaming_processed' to True.			
 		do
 			status_flags := status_flags.set_bit_with_mask (True, renaming_processed_mask)
@@ -96,7 +96,7 @@ feature -- Settings
 			renaming_processed: renaming_processed
 		end
 
-	set_a_feature_needs_instantiation (b: BOOLEAN) is
+	set_a_feature_needs_instantiation (b: BOOLEAN)
 			-- Set `a_feature_needs_instantiating' to `b'.			
 		do
 			status_flags := status_flags.set_bit_with_mask (b, a_feature_needs_instantiation_mask)
@@ -104,7 +104,7 @@ feature -- Settings
 			a_feature_needs_instantiating: a_feature_needs_instantiation = b
 		end
 
-	set_a_feature_instantiated_for_feature_table is
+	set_a_feature_instantiated_for_feature_table
 			-- Set `a_feature_instantiated_for_feature_table' to True.			
 		do
 			status_flags := status_flags.set_bit_with_mask (True, a_feature_instantiated_for_feature_table_mask)
@@ -112,7 +112,7 @@ feature -- Settings
 			a_feature_instantiated_for_feature_table: a_feature_instantiated_for_feature_table
 		end
 
-	set_a_feature (f: like a_feature) is
+	set_a_feature (f: like a_feature)
 			-- Assign `f' to `a_feature'.
 		require
 			f_not_void: f /= Void
@@ -122,7 +122,7 @@ feature -- Settings
 			internal_a_feature_set: internal_a_feature = f
 		end
 
-	instantiate_a_feature is
+	instantiate_a_feature
 			-- Instantiate `a_feature' for `parent_type'.
 		require
 			a_feature_needs_instantiation: a_feature_needs_instantiation
@@ -140,7 +140,7 @@ feature -- Settings
 			set_a_feature_needs_instantiation (False)
 		end
 
-	set_parent (p: like parent) is
+	set_parent (p: like parent)
 			-- Assign `p' to `parent'.
 		require
 			p_not_void: p /= Void
@@ -152,7 +152,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_less alias "<" (other: INHERIT_INFO): BOOLEAN is
+	is_less alias "<" (other: INHERIT_INFO): BOOLEAN
 			-- Is `other' greater than Current ?
 		do
 			Result := internal_a_feature.body_index < other.internal_a_feature.body_index
@@ -160,7 +160,7 @@ feature -- Comparison
 
 feature -- Status
 
-	inherited_assertion: BOOLEAN is
+	inherited_assertion: BOOLEAN
 			-- (For merging)
 		local
 			i: INTEGER
@@ -179,7 +179,7 @@ feature -- Status
 			end
 		end
 
-	has_property_getter: BOOLEAN is
+	has_property_getter: BOOLEAN
 			-- Has an associated feature a property getter?
 		require
 			a_feature_attached: internal_a_feature /= Void
@@ -189,7 +189,7 @@ feature -- Status
 			definition: Result = internal_a_feature.has_property_getter
 		end
 
-	has_property_setter: BOOLEAN is
+	has_property_setter: BOOLEAN
 			-- Has an associated feature a property setter?
 		require
 			a_feature_attached: internal_a_feature /= Void
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			if
 				internal_a_feature/= Void and then
@@ -223,7 +223,7 @@ feature -- Debug
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

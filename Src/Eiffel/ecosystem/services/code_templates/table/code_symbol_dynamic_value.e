@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dynmaic code value for values that change according to other values or are the result of some other
 		calculation.
@@ -97,7 +97,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

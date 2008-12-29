@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Flat view of class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions)
 			-- Initialize.
 		do
 			create filter.make (agent is_selected)
@@ -40,7 +40,7 @@ feature{NONE} -- Initialization
 
 feature -- Actions
 
-	on_row_expanded (a_row: EV_GRID_ROW) is
+	on_row_expanded (a_row: EV_GRID_ROW)
 			-- Action performed when `a_row' is expanded
 		local
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
@@ -70,7 +70,7 @@ feature -- Actions
 			end
 		end
 
-	on_row_collapsed (a_row: EV_GRID_ROW) is
+	on_row_collapsed (a_row: EV_GRID_ROW)
 			-- Action performed when `a_row' is collapsed
 		local
 			l_row: EB_CLASS_BROWSER_FLAT_ROW
@@ -98,7 +98,7 @@ feature -- Actions
 			end
 		end
 
-	on_show_feature_from_any_changed is
+	on_show_feature_from_any_changed
 			-- Action to be performed when selection status of `show_feature_from_any_button' changes
 		do
 			if not is_displaying_class_any then
@@ -107,7 +107,7 @@ feature -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when some key is pressed in `grid'
 		require
 			a_key_attached: a_key /= Void
@@ -124,7 +124,7 @@ feature -- Actions
 			end
 		end
 
-	on_key_pressed_in_feature_name_list (a_key: EV_KEY) is
+	on_key_pressed_in_feature_name_list (a_key: EV_KEY)
 			-- Action to be performed when key pressed in `feature_name_list'.
 		local
 			l_str: STRING_32
@@ -158,7 +158,7 @@ feature -- Actions
 			end
 		end
 
-	on_focus_in_feature_name_list is
+	on_focus_in_feature_name_list
 			-- Action to be performed when `feature_name_list' gets focus
 		do
 			if not feature_name_list.text.is_empty then
@@ -166,25 +166,25 @@ feature -- Actions
 			end
 		end
 
-	on_expand_all_level is
+	on_expand_all_level
 			-- Action to be performed to recursively expand all selected rows.
 		do
 			do_all_in_items (grid.selected_items, agent expand_item)
 		end
 
-	on_collapse_all_level is
+	on_collapse_all_level
 			-- Action to be performed to recursively collapse all selected rows.
 		do
 			do_all_in_items (grid.selected_items, agent collapse_item)
 		end
 
-	on_expand_one_level is
+	on_expand_one_level
 			-- Action to be performed to expand all selected rows.
 		do
 			do_all_in_items (grid.selected_items, agent expand_item)
 		end
 
-	on_collapse_one_level is
+	on_collapse_one_level
 			-- Action to be performed to collapse all selected rows.
 		do
 			do_all_in_items (grid.selected_items, agent collapse_item)
@@ -192,13 +192,13 @@ feature -- Actions
 
 feature{NONE} -- Sorting
 
-	class_column: INTEGER is 1
+	class_column: INTEGER = 1
 			-- Column index for class
 
-	feature_column: INTEGER is 2
+	feature_column: INTEGER = 2
 			-- Column index for feature
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_FLAT_ROW]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_FLAT_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -212,7 +212,7 @@ feature{NONE} -- Sorting
 			bind_grid
 		end
 
-	feature_name_tester (row_a, row_b: EB_CLASS_BROWSER_FLAT_ROW; a_order: INTEGER): BOOLEAN is
+	feature_name_tester (row_a, row_b: EB_CLASS_BROWSER_FLAT_ROW; a_order: INTEGER): BOOLEAN
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -225,7 +225,7 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_FLAT_ROW; a_order: INTEGER): BOOLEAN is
+	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_FLAT_ROW; a_order: INTEGER): BOOLEAN
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -253,7 +253,7 @@ feature{NONE} -- Sorting
 
 feature -- Status report
 
-	should_tooltip_be_displayed: BOOLEAN is
+	should_tooltip_be_displayed: BOOLEAN
 			-- Should tooltip display be vetoed?
 		do
 			Result := show_tooltip_button.is_selected
@@ -261,7 +261,7 @@ feature -- Status report
 			good_result: Result = show_tooltip_button.is_selected
 		end
 
-	is_displaying_class_any: BOOLEAN is
+	is_displaying_class_any: BOOLEAN
 			-- Is class any been displayed currently?
 		do
 			Result := starting_element /= Void and then starting_element.is_compiled and then starting_element.class_c.class_id = system.any_id
@@ -269,7 +269,7 @@ feature -- Status report
 
 feature -- Access
 
-	show_feature_from_any_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	show_feature_from_any_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
 			if show_feature_from_any_button_internal = Void then
@@ -283,7 +283,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED] is
+	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED]
 			-- Selected items in `grid'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.			
 		local
@@ -311,7 +311,7 @@ feature -- Access
 			end
 		end
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
 			l_label: EV_LABEL
@@ -344,7 +344,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	feature_name_list: EV_COMBO_BOX is
+	feature_name_list: EV_COMBO_BOX
 			-- List to contain feature name filter
 		do
 			if feature_name_list_internal = Void then
@@ -371,14 +371,14 @@ feature -- Access
 
 feature{NONE} -- Update
 
-	update_view is
+	update_view
 			-- Update current view according to change in `model'.
 		do
 			cancel_delayed_update_matches
 			Precursor
 		end
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		do
 			if is_displaying_class_any then
@@ -405,7 +405,7 @@ feature{NONE} -- Update
 			try_auto_resize_grid (<<[150, 300, 1]>>, False)
 		end
 
-	bind_grid is
+	bind_grid
 			-- Bind `features' in `grid'.
 		local
 			l_color: EV_COLOR
@@ -450,7 +450,7 @@ feature{NONE} -- Update
 			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
 		end
 
-	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
@@ -484,7 +484,7 @@ feature{NONE} -- Update
 
 feature{NONE} -- Initialization
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		do
 			create grid
@@ -505,7 +505,7 @@ feature{NONE} -- Initialization
 			enable_grid_item_pnd_support
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build facilities to support sort and search
 		local
 			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_CLASS_BROWSER_FLAT_ROW]
@@ -538,7 +538,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation			
 
-	fill_rows is
+	fill_rows
 			-- Fill `rows' using information from `data'.
 		local
 			l_feature_list: LIST [QL_FEATURE]
@@ -585,7 +585,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	build_row_relation is
+	build_row_relation
 			-- Build relation between rows
 		require
 			data_attached: rows /= Void
@@ -621,7 +621,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	expand_all_rows is
+	expand_all_rows
 			-- Set `is_expanded' flag of every row to True.
 		local
 			l_rows: like rows
@@ -637,7 +637,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	expand_item (a_item: EV_GRID_ITEM) is
+	expand_item (a_item: EV_GRID_ITEM)
 			-- Expand `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -655,7 +655,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	recycle_agents is
+	recycle_agents
 			-- Recycle agents
 		do
 			if show_feature_from_any_button_internal /= Void then
@@ -664,7 +664,7 @@ feature{NONE} -- Implementation
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 		end
 
-	collapse_item (a_item: EV_GRID_ITEM) is
+	collapse_item (a_item: EV_GRID_ITEM)
 			-- Expand `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -690,7 +690,7 @@ feature{NONE} -- Implementation
 	update_matches_timeout: EV_TIMEOUT
 			-- Internally used timer
 
-	request_update_matches is
+	request_update_matches
 			-- Start `update_matches_timeout' and if no text change in `feature_name_list' in certain
 			-- amount of time, update view.
 		do
@@ -711,24 +711,24 @@ feature{NONE} -- Implementation
 	delayed_timeout_internal: like delayed_timeout
 			-- Implementation of `delayed_timeout'
 
-	cancel_delayed_update_matches is
+	cancel_delayed_update_matches
 		do
 			delayed_timeout.cancel_request
 		end
 
-	delayed_update_matches is
+	delayed_update_matches
 		do
 			cancel_delayed_update_matches
 			is_up_to_date := False
 			update_view
 		end
 
-	wait_to_update_view_time: INTEGER is 500
+	wait_to_update_view_time: INTEGER = 500
 			-- Time interval (in milliseconds) to wait before we update view
 
 feature{NONE} -- Implementation/Stone
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		do
@@ -743,7 +743,7 @@ feature{NONE} -- Filter
 	wild_matcher: KMP_WILD
 			-- Wildcard matcher
 
-	is_selected (a_feature: QL_FEATURE; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [QL_FEATURE]; a_viewer: like Current): BOOLEAN is
+	is_selected (a_feature: QL_FEATURE; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [QL_FEATURE]; a_viewer: like Current): BOOLEAN
 			-- Will `a_feature' be filtered out?
 		local
 			l_wild_matcher: like wild_matcher
@@ -759,7 +759,7 @@ invariant
 	filter_attached: filter /= Void
 	wild_matcher_attached: wild_matcher /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

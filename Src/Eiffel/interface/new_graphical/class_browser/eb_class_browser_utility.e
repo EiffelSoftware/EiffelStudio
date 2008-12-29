@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Utilities for class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Shortcut
 
-	accelerator_from_shortcut (a_shortcut: SHORTCUT_PREFERENCE): EV_ACCELERATOR is
+	accelerator_from_shortcut (a_shortcut: SHORTCUT_PREFERENCE): EV_ACCELERATOR
 			-- Accelerator from `a_shortcut'
 		require
 			a_shortcut_attached: a_shortcut /= Void
@@ -28,7 +28,7 @@ feature -- Shortcut
 			result_attached: Result /= Void
 		end
 
-	accelerator_from_preference (a_preference_name: STRING): EV_ACCELERATOR is
+	accelerator_from_preference (a_preference_name: STRING): EV_ACCELERATOR
 			-- Accelerator from preference named `a_preference_name'
 		require
 			a_preference_name_attached: a_preference_name /= Void
@@ -44,7 +44,7 @@ feature -- Shortcut
 			good_result: preferences.editor_data.shortcuts.item (a_preference_name) /= Void implies equal (Result, accelerator_from_shortcut (preferences.editor_data.shortcuts.item (a_preference_name)))
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

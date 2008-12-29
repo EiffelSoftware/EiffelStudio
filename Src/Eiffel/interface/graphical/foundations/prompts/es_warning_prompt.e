@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A simple warning dialog prompt.
 	]"
@@ -101,7 +101,7 @@ feature {NONE} -- Status report
 	is_standard_prompt_with_cancel: BOOLEAN
 			-- Indicates if a cancel button should be present
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

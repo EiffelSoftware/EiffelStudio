@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Encoder of C generate names
@@ -10,7 +10,7 @@ inherit
 
 feature -- Name generation
 
-	feature_name (type_id: INTEGER; body_index: INTEGER): STRING is
+	feature_name (type_id: INTEGER; body_index: INTEGER): STRING
 			-- Name of an Eiffel feature belonging to type of id
 			-- `type_id' and of body index
 		require
@@ -24,7 +24,7 @@ feature -- Name generation
 			Result.append_integer (body_index)
 		end
 
-	attribute_table_name (rout_id: INTEGER): STRING is
+	attribute_table_name (rout_id: INTEGER): STRING
 			-- Name of a table of attribute offsets for the final Eiffel executable.
 		do
 			Result := Attribute_table_buffer
@@ -35,7 +35,7 @@ feature -- Name generation
 			result_attached: Result /= Void
 		end
 
-	routine_table_name (rout_id: INTEGER): STRING is
+	routine_table_name (rout_id: INTEGER): STRING
 			-- Name of a routine table for the final Eiffel executable.
 		do
 			Result := Routine_table_buffer
@@ -46,7 +46,7 @@ feature -- Name generation
 			result_attached: Result /= Void
 		end
 
-	type_table_name (rout_id: INTEGER): STRING is
+	type_table_name (rout_id: INTEGER): STRING
 			-- Name of a type table associated to an attribute offset or
 			-- routine table. Useful for creation generation.
 		do
@@ -56,7 +56,7 @@ feature -- Name generation
 			Result.append_integer (rout_id)
 		end
 
-	address_table_name (feature_id: INTEGER; static_type_id: INTEGER): STRING is
+	address_table_name (feature_id: INTEGER; static_type_id: INTEGER): STRING
 			-- Name of a table of function pointers used by the $ operator
 			-- Note that we use `static_type_id' because of incrementality between
 			-- workbench and finalized mode.
@@ -69,7 +69,7 @@ feature -- Name generation
 			Result.append_integer (feature_id)
 		end
 
-	generate_type_id_name (type_id: INTEGER): STRING is
+	generate_type_id_name (type_id: INTEGER): STRING
 			-- Textual representation of static type id
 			-- used in generated C code
 		do
@@ -78,7 +78,7 @@ feature -- Name generation
 			generated_id_not_void: Result /= Void
 		end
 
-	init_name (type_id: INTEGER): STRING is
+	init_name (type_id: INTEGER): STRING
 			-- Name of the descriptors Init function associated
 			-- with current type
 		do
@@ -87,7 +87,7 @@ feature -- Name generation
 			Result.append (type_id.out)
 		end
 
-	module_init_name (type_id: INTEGER): STRING is
+	module_init_name (type_id: INTEGER): STRING
 			-- Name of the init procedure of the C module
 			-- associated with current type
 		do
@@ -98,7 +98,7 @@ feature -- Name generation
 
 feature {NONE}
 
-	address_table_buffer: STRING is
+	address_table_buffer: STRING
 			-- String buffer for address table generation
 		once
 			create Result.make (1 + 2 * {INTEGER_32}.max_value.out.count)
@@ -106,7 +106,7 @@ feature {NONE}
 			address_table_buffer_not_void: Result /= Void
 		end
 
-	feature_buffer: STRING is
+	feature_buffer: STRING
 			-- String buffer for feature generation.
 		once
 			create Result.make (1 + 2 * {INTEGER_32}.max_value.out.count)
@@ -114,7 +114,7 @@ feature {NONE}
 			feature_buffer_not_void: Result /= Void
 		end
 
-	Attribute_table_buffer: STRING is
+	Attribute_table_buffer: STRING
 			-- String buffer for feature generation.
 		once
 			create Result.make (1 + {INTEGER_32}.max_value.out.count)
@@ -122,7 +122,7 @@ feature {NONE}
 			attribute_table_buffer_not_void: Result /= Void
 		end
 
-	Routine_table_buffer: STRING is
+	Routine_table_buffer: STRING
 			-- String buffer for feature generation.
 		once
 			create Result.make (1 + {INTEGER_32}.max_value.out.count)
@@ -130,7 +130,7 @@ feature {NONE}
 			routine_table_buffer_not_void: Result /= Void
 		end
 
-	Type_table_buffer: STRING is
+	Type_table_buffer: STRING
 			-- String buffer for feature generation.
 		once
 			create Result.make (1 + {INTEGER_32}.max_value.out.count)
@@ -138,7 +138,7 @@ feature {NONE}
 			type_table_buffer_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

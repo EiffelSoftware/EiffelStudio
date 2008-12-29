@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelStudio preference window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -91,7 +91,7 @@ create
 
 feature -- Access
 
-	make (a_preferences: like view_preferences) is
+	make (a_preferences: like view_preferences)
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
@@ -105,7 +105,7 @@ feature -- Access
 	scrolling_behavior: ES_GRID_SCROLLING_BEHAVIOR
 	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
 
-	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
+	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM
 			--
 		local
 			l_bp: BOOLEAN_PREFERENCE
@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end
 
-	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
+	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM
 			--
 		local
 			l_id_font: IDENTIFIED_FONT_PREFERENCE
@@ -182,31 +182,31 @@ feature -- Access
 			end
 		end
 
-	preferences_title: STRING_GENERAL is				do Result := names.t_preference_window				end
+	preferences_title: STRING_GENERAL				do Result := names.t_preference_window				end
 
 feature {NONE} -- Names
 
-	l_name: STRING_GENERAL is							do Result := names.l_name								end
-	l_literal_value: STRING_GENERAL is					do Result := names.l_Literal_value					end
-	l_status: STRING_GENERAL is							do Result := names.l_status							end
-	l_type: STRING_GENERAL is							do Result := names.l_type								end
-	l_request_restart: STRING_GENERAL is				do Result := names.l_request_restart					end
-	p_default_value: STRING_GENERAL is					do Result := names.l_default							end
-	user_value: STRING_GENERAL is						do Result := names.l_user_set							end
-	auto_value: STRING_GENERAL is						do Result := names.l_auto								end
-	no_description_text: STRING_GENERAL is				do Result := names.l_no_description_text				end
-	restore_preference_string: STRING_GENERAL is		do Result := names.l_restore_preference_string		end
-	shortcut_modification_denied: STRING_GENERAL is		do Result := names.l_shortcut_modification_denied 	end
-	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := names.l_preferences_delayed_resources	end
+	l_name: STRING_GENERAL							do Result := names.l_name								end
+	l_literal_value: STRING_GENERAL					do Result := names.l_Literal_value					end
+	l_status: STRING_GENERAL							do Result := names.l_status							end
+	l_type: STRING_GENERAL							do Result := names.l_type								end
+	l_request_restart: STRING_GENERAL				do Result := names.l_request_restart					end
+	p_default_value: STRING_GENERAL					do Result := names.l_default							end
+	user_value: STRING_GENERAL						do Result := names.l_user_set							end
+	auto_value: STRING_GENERAL						do Result := names.l_auto								end
+	no_description_text: STRING_GENERAL				do Result := names.l_no_description_text				end
+	restore_preference_string: STRING_GENERAL		do Result := names.l_restore_preference_string		end
+	shortcut_modification_denied: STRING_GENERAL		do Result := names.l_shortcut_modification_denied 	end
+	w_Preferences_delayed_resources: STRING_GENERAL	do Result := names.l_preferences_delayed_resources	end
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 
-	l_tree_view: STRING_GENERAL is						do Result := names.l_Tree_view						end
-	f_switch_to_tree_view: STRING_GENERAL is 			do Result := names.f_switch_to_tree_view				end
-	l_flat_view: STRING_GENERAL is						do Result := names.l_Flat_view 						end
-	f_switch_to_flat_view: STRING_GENERAL is 			do Result := names.f_switch_to_flat_view				end
-	l_updating_the_view: STRING_GENERAL is 				do Result := names.l_update_the_view					end
-	l_filter: STRING_GENERAL is							do Result := names.l_filter 							end
+	l_tree_view: STRING_GENERAL						do Result := names.l_Tree_view						end
+	f_switch_to_tree_view: STRING_GENERAL 			do Result := names.f_switch_to_tree_view				end
+	l_flat_view: STRING_GENERAL						do Result := names.l_Flat_view 						end
+	f_switch_to_flat_view: STRING_GENERAL 			do Result := names.f_switch_to_flat_view				end
+	l_updating_the_view: STRING_GENERAL 				do Result := names.l_update_the_view					end
+	l_filter: STRING_GENERAL							do Result := names.l_filter 							end
 	l_tree_or_flat_view: STRING_GENERAL					do Result := names.l_tree_or_flat_view 				end
 	l_restore_defaults: STRING_GENERAL 					do Result := names.l_restore_defaults 				end
 	l_restore_default: STRING_GENERAL					do Result := names.l_restore_default 					end
@@ -217,19 +217,19 @@ feature {NONE} -- Names
 	l_building_flat_view: STRING_GENERAL				do Result := names.l_building_flat_view 				end
 	l_building_tree_view: STRING_GENERAL				do Result := names.l_building_tree_view 				end
 
-	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL is
+	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_GENERAL
 		do
 			Result := names.l_matches_of_total_preferences (a_count, a_total_count)
 		end
 
-	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL is
+	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL
 		do
 			Result := names.l_count_preferences (a_count)
 		end
 
 feature {NONE} -- Events
 
-	on_restore is
+	on_restore
 			-- Restore all preferences to their default values.
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (restore_preference_string, parent_window, agent view_preferences.restore_defaults, Void)
@@ -240,13 +240,13 @@ feature {NONE} -- Implementation
 	grid: ES_GRID
 			-- Grid
 
-	build_filter_icons is
+	build_filter_icons
 		do
 			icon_up := icon_pixmaps.sort_acending_icon
 			icon_down := icon_pixmaps.sort_descending_icon
 		end
 
-	build_full_name_to_display (a_pref: STRING): STRING_32 is
+	build_full_name_to_display (a_pref: STRING): STRING_32
 			-- Build a translated full name of a preference.
 		local
 			l_str_32: STRING_32
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			Result := l_str_32
 		end
 
-	update_grid_columns is
+	update_grid_columns
 			-- Update the grid columns widths and borders depending on current display type
 		local
 			l_preference: PREFERENCE
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32 is
+	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32
 		local
 			l_sp: STRING_PREFERENCE
 			l_short_name: STRING_GENERAL
@@ -325,13 +325,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
+	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
 			-- Try to translate `a_string'.
 		do
 			Result := names.find_translation (a_string)
 		end
 
-	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
+	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE)
 			-- Shortcut modification denied.
 		do
 			prompts.show_error_prompt (shortcut_modification_denied, Void, Void)
@@ -339,13 +339,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Widget initialization
 
-	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET is
+	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET
 		do
 			Result := Precursor (a_pref)
 			Result.set_displayed_booleans (names.l_true, names.l_false)
 		end
 
-	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET is
+	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET
 		local
 			l_array: ARRAY [STRING]
 			l_displayed_names: HASH_TABLE [STRING_GENERAL, STRING]
@@ -364,7 +364,7 @@ feature {NONE} -- Widget initialization
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

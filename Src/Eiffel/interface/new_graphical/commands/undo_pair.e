@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A reversable operation."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (an_undo_procedure, a_redo_procedure: PROCEDURE [ANY, TUPLE]) is
+	make (an_undo_procedure, a_redo_procedure: PROCEDURE [ANY, TUPLE])
 			-- Create with `an_undo_procedure' and `a_redo_procedure'.
 		require
 			an_undo_procedure /= Void
@@ -45,7 +45,7 @@ feature -- Access
 	name: STRING_GENERAL
 			-- Name.
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Assign `a_name' to `name'.
 		require
 			a_name /= Void
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Basic operation.
 
-	undo is
+	undo
 			-- Reverse operation.
 		require
 			undo_count = redo_count
@@ -68,7 +68,7 @@ feature -- Basic operation.
 			undo_count = old undo_count + 1
 		end
 
-	redo is
+	redo
 			-- Reperform operation.
 		require
 			undo_count = redo_count + 1
@@ -81,7 +81,7 @@ feature -- Basic operation.
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -91,7 +91,7 @@ feature -- Comparison
 				redo_procedure.is_equal (other.redo_procedure)
 		end
 
-	is_inverse (other: like Current): BOOLEAN is
+	is_inverse (other: like Current): BOOLEAN
 			-- Is `other' the inverse operation?
 		do
 			Result :=
@@ -115,7 +115,7 @@ invariant
 	redo_count >= 0
 	conservation_of_dos: (undo_count - redo_count).abs <= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Constants for EiffelStudio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ class
 
 feature {EB_TOOL} -- Resources
 
-	Pixmaps: EB_SHARED_PIXMAPS is
+	Pixmaps: EB_SHARED_PIXMAPS
 		once
 			create Result
 		end
 
-	Cursors: EB_SHARED_CURSORS is
+	Cursors: EB_SHARED_CURSORS
 		once
 			create Result
 		end
 
-	Interface_names: INTERFACE_NAMES is
+	Interface_names: INTERFACE_NAMES
 			-- All names used in the interface
 		once
 			Result := (create {SHARED_BENCH_NAMES}).names
@@ -32,19 +32,19 @@ feature {EB_TOOL} -- Resources
 			Result := (create {SHARED_BENCH_NAMES}).messages
 		end
 
-	Warning_messages: WARNING_MESSAGES is
+	Warning_messages: WARNING_MESSAGES
 			-- All warnings used in the interface
 		once
 			Result := (create {SHARED_BENCH_NAMES}).warnings
 		end
 
-	Layout_constants: EV_LAYOUT_CONSTANTS is
+	Layout_constants: EV_LAYOUT_CONSTANTS
 			-- Constants for vision2 layout
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

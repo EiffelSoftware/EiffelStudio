@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for typed pointer type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_typed (a_type: TYPE_A) is
+	make_typed (a_type: TYPE_A)
 			-- Set `pointed_type' with `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_typed_pointer_a (Current)
@@ -67,16 +67,16 @@ feature -- Visitor
 
 feature -- Property
 
-	is_typed_pointer: BOOLEAN is True
+	is_typed_pointer: BOOLEAN = True
 			-- Is current type a typed pointer type?
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class POINTER
 		once
 			Result := System.typed_pointer_class.compiled_class
 		end
 
-	pointed_type: TYPE_A is
+	pointed_type: TYPE_A
 			-- Type pointed by current if any.
 		do
 			Result := generics.item (1)
@@ -84,7 +84,7 @@ feature -- Property
 
 feature -- IL code generation
 
-	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Name of current class
 		local
 			t: TYPE_A
@@ -98,7 +98,7 @@ feature -- IL code generation
 			end
 		end
 
-	generic_il_type_name (a_context_type: TYPE_A): STRING is
+	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Name of current class
 		do
 			Result := generics.item (1).generic_il_type_name (a_context_type).twin
@@ -107,7 +107,7 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER} -- Access
 
-	reference_type: GEN_TYPE_A is
+	reference_type: GEN_TYPE_A
 			-- Reference counterpart of an expanded type
 		do
 			create Result.make (class_id, duplicate.generics)
@@ -117,13 +117,13 @@ feature {COMPILER_EXPORTER} -- Access
 			Result.set_reference_mark
 		end
 
-	c_type: TYPED_POINTER_I is
+	c_type: TYPED_POINTER_I
 			-- Pointer C type
 		do
 			create Result.make (pointed_type.c_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

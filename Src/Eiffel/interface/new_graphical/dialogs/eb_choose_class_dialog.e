@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to class in the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 		ensure then
 		end
 
-	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX) is
+	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX)
 			-- Create the controls and setup the layout
 		local
 			controls_box: EV_VERTICAL_BOX
@@ -122,7 +122,7 @@ feature -- Access
 			-- Has the user selected a class (True) or pushed
 			-- the cancel button (False)?
 
-	class_name: STRING is
+	class_name: STRING
 			-- class selected by the user, if any.
 		require
 			selected: selected
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Vision2 events
 
-	on_ok is
+	on_ok
 			-- Terminate the dialog.
 		local
 			loclist: LIST [CLASS_I]
@@ -161,7 +161,7 @@ feature {NONE} -- Vision2 events
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Terminate the dialog and clear the selection.
 		do
 			selected := False
@@ -175,13 +175,13 @@ feature {NONE} -- Vision2 events
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER ) is
+							y_abs: INTEGER )
 			-- Call on_ok through an agent compatible with double click actions.
 		do
 			on_ok
 		end
 
-	on_class_name_entry_changed is
+	on_class_name_entry_changed
 			-- Handler for class name entry just changed
 		local
 			l_button: EV_BUTTON
@@ -205,7 +205,7 @@ feature {NONE} -- Controls
 	classes_tree: EB_CLASSES_TREE;
 			-- Tree where the user can choose its class.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

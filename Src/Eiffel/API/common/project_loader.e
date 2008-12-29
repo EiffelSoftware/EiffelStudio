@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Handler loading of projects. It also takes care of converting old Project format (.ace and .epr) to new format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,7 @@ inherit
 
 feature -- Loading
 
-	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN) is
+	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
 			l_ext: STRING
@@ -222,7 +222,7 @@ feature -- Loading
 			end
 		end
 
-	convert_project (a_file_name: STRING) is
+	convert_project (a_file_name: STRING)
 			-- Try to convert `a_filename' from 5.6 format to current without compilation.
 			-- Converted file is stored in `converted_file_name'.
 		require
@@ -254,7 +254,7 @@ feature -- Loading
 			end
 		end
 
-	open_single_file_compilation_project (a_class_filename: STRING; a_libraries: LIST [STRING]; a_project_path: STRING; from_scratch: BOOLEAN) is
+	open_single_file_compilation_project (a_class_filename: STRING; a_libraries: LIST [STRING]; a_project_path: STRING; from_scratch: BOOLEAN)
 			-- Open project for a single file compilation.
 			--
 			-- `a_class_filename': Filename of Eiffel class which acts as root
@@ -345,7 +345,7 @@ feature -- Access
 	is_recompile_from_scrach: BOOLEAN
 			-- Is a recompilation from scratch requested?
 
-	is_project_location_requested: BOOLEAN is
+	is_project_location_requested: BOOLEAN
 			-- If `True', ask user for a project location, otherwise simply create
 			-- project where configuration file is located.
 		do
@@ -368,7 +368,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_is_compilation_requested (v: like is_compilation_requested) is
+	set_is_compilation_requested (v: like is_compilation_requested)
 			-- Set `is_compilation_requested' with `v'.
 		do
 			is_compilation_requested := v
@@ -376,7 +376,7 @@ feature -- Settings
 			is_compilation_requested_set: is_compilation_requested = v
 		end
 
-	enable_project_creation_or_opening_not_requested is
+	enable_project_creation_or_opening_not_requested
 			-- Ensure `is_project_creation_or_opening_not_requested'. This is of course
 			-- only possible if a compilation was not requested.
 		require
@@ -387,7 +387,7 @@ feature -- Settings
 			is_project_creation_or_opening_not_requested_set: is_project_creation_or_opening_not_requested
 		end
 
-	set_ignore_user_configuration_file (v: like ignore_user_configuration_file) is
+	set_ignore_user_configuration_file (v: like ignore_user_configuration_file)
 			-- Set `ignore_user_configuration_file' with `v'.
 		do
 			ignore_user_configuration_file := v
@@ -395,7 +395,7 @@ feature -- Settings
 			ignore_user_configuration_file_set: ignore_user_configuration_file = v
 		end
 
-	set_has_library_conversion (v: like has_library_conversion) is
+	set_has_library_conversion (v: like has_library_conversion)
 			-- Set `has_library_conversion' with `v'.
 		do
 			has_library_conversion := v
@@ -405,7 +405,7 @@ feature -- Settings
 
 feature {NONE} -- Settings
 
-	set_should_override_project (v: like should_override_project) is
+	set_should_override_project (v: like should_override_project)
 			-- Set `should_override_project' with `v'.
 		do
 			should_override_project := v
@@ -413,7 +413,7 @@ feature {NONE} -- Settings
 			should_override_project_set: should_override_project = v
 		end
 
-	set_has_error is
+	set_has_error
 			-- Set `has_error' to True.
 		do
 			has_error := True
@@ -421,7 +421,7 @@ feature {NONE} -- Settings
 			has_error_set: has_error
 		end
 
-	reset is
+	reset
 			-- Reset variabes.
 		do
 			has_error := False
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation: access
 
 feature -- Status report
 
-	is_file_readable (a_file_name: STRING): BOOLEAN is
+	is_file_readable (a_file_name: STRING): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -465,7 +465,7 @@ feature -- Status report
 			Result := l_file.exists and then l_file.is_readable
 		end
 
-	is_file_writable (a_file_name: STRING): BOOLEAN is
+	is_file_writable (a_file_name: STRING): BOOLEAN
 			-- Does file of path `a_file_name' exist and can be written/created?
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -477,7 +477,7 @@ feature -- Status report
 			Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 		end
 
-	is_directory_readable (a_dir_name: STRING): BOOLEAN is
+	is_directory_readable (a_dir_name: STRING): BOOLEAN
 			-- Does directory of path `a_dir_name' exist and is readable?
 		require
 			a_dir_name_not_void: a_dir_name /= Void
@@ -500,7 +500,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_config_file_name_valid: BOOLEAN is
+	is_config_file_name_valid: BOOLEAN
 			-- Is `config_file_name' valid? That is to say exist, and is readable?
 		do
 			Result := config_file_name /= Void and then not config_file_name.is_empty and then
@@ -509,7 +509,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Settings
 
-	convert_epr (a_file_name: STRING) is
+	convert_epr (a_file_name: STRING)
 			-- Convert `a_file_name' which is supposely in the `epr' format to the
 			-- new configuration format.
 		require
@@ -529,7 +529,7 @@ feature {NONE} -- Settings
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	convert_ace (a_file_name: STRING) is
+	convert_ace (a_file_name: STRING)
 			-- Convert `a_file_name' which is supposely in the `ace' format to the
 			-- new configuration format.
 		require
@@ -561,7 +561,7 @@ feature {NONE} -- Settings
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: STRING) is
+	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: STRING)
 			-- Store updated configuration into `file_name'.
 		require
 			a_conf_system_not_void: a_conf_system /= Void
@@ -589,7 +589,7 @@ feature {NONE} -- Settings
 			config_file_name_valid: not has_error implies is_config_file_name_valid
 		end
 
-	retrieve_or_create_project (a_project_path: STRING) is
+	retrieve_or_create_project (a_project_path: STRING)
 			-- Retrieve or create project.
 		local
 			msg: STRING_32
@@ -652,7 +652,7 @@ feature {NONE} -- Settings
 			end
 		end
 
-	check_used_environemnt is
+	check_used_environemnt
 			-- Check if the current environment values still have the same values as the ones stored in the project settings.
 		local
 			l_envs: HASH_TABLE [STRING, STRING]
@@ -700,7 +700,7 @@ feature {NONE} -- Settings
 			end
 		end
 
-	create_project (a_project_path: STRING; a_should_prompt_for_project_location: BOOLEAN) is
+	create_project (a_project_path: STRING; a_should_prompt_for_project_location: BOOLEAN)
 			-- Try to create a project and ask for project's location if `a_should_prompt_for_project_location'.
 		require
 			a_project_path_not_void: a_project_path /= Void
@@ -738,12 +738,12 @@ feature {NONE} -- Settings
 			retry
 		end
 
-	post_create_project is
+	post_create_project
 			-- Action to be done just after creating a project.
 		do
 		end
 
-	compile_project is
+	compile_project
 			-- Compile newly created project.
 		require
 			not_has_error: not has_error
@@ -752,7 +752,7 @@ feature {NONE} -- Settings
 		deferred
 		end
 
-	compile_precompile (a_precompile: CONF_PRECOMPILE) is
+	compile_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Generate the precompile `a_precompile'.
 		require
 			a_precompile_not_void: a_precompile /= Void
@@ -795,14 +795,14 @@ feature {NONE} -- Settings
 			launch_precompile_process (l_args)
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING]) is
+	launch_precompile_process (a_arguments: LIST [STRING])
 			-- Launch precompile process `a_command'.
 		require
 			a_arguments_ok: a_arguments /= Void
 		deferred
 		end
 
-	find_target_name (a_proposed_target: STRING; a_targets: HASH_TABLE [CONF_TARGET, STRING]) is
+	find_target_name (a_proposed_target: STRING; a_targets: HASH_TABLE [CONF_TARGET, STRING])
 			-- Given `a_proposed_target', try to find it in `a_targets'. If not found or if `a_proposed_target'
 			-- is not valid, ask the user to choose a target among `a_targets'.
 		require
@@ -841,7 +841,7 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING) is
+	report_non_readable_configuration_file (a_file_name: STRING)
 			-- Report an error when `a_file_name' cannot be read.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -851,7 +851,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING) is
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		require
@@ -862,7 +862,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -874,7 +874,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -886,7 +886,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING) is
+	report_cannot_save_converted_file (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		require
@@ -897,7 +897,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_convert_project (a_file_name: STRING) is
+	report_cannot_convert_project (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -907,7 +907,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_create_project (a_dir_name: STRING) is
+	report_cannot_create_project (a_dir_name: STRING)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		require
 			a_dir_name_not_void: a_dir_name /= Void
@@ -917,7 +917,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING_GENERAL) is
+	report_cannot_open_project (a_msg: STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		require
@@ -925,7 +925,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL) is
+	report_incompatible_project (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		require
@@ -933,7 +933,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL) is
+	report_project_corrupted (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		require
@@ -941,14 +941,14 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		require
 			a_msg_not_void: a_msg /= Void
 		deferred
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL) is
+	report_project_incomplete (a_msg: STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		require
@@ -956,7 +956,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_loaded_successfully is
+	report_project_loaded_successfully
 			-- Report that project was loaded successfully.
 		require
 			is_config_file_name_valid: is_config_file_name_valid
@@ -965,14 +965,14 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_precompilation_error is
+	report_precompilation_error
 			-- Report that the precompilation of a precompile did not work.
 		deferred
 		end
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -985,7 +985,7 @@ feature {NONE} -- User interaction
 		deferred
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		require
@@ -995,7 +995,7 @@ feature {NONE} -- User interaction
 			target_name_set: not has_error implies target_name /= Void
 		end
 
-	ask_for_new_project_location (a_project_path: STRING) is
+	ask_for_new_project_location (a_project_path: STRING)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		require
@@ -1005,12 +1005,12 @@ feature {NONE} -- User interaction
 			project_location_set: not has_error implies project_location /= Void
 		end
 
-	ask_compile_precompile is
+	ask_compile_precompile
 			-- Should a needed precompile be automatically built?
 		deferred
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
 			-- Should new environment values be accepted?
 		require
 			a_key_ok: a_key /= Void and then not a_key.is_empty and then not a_key.has ('%U')
@@ -1028,7 +1028,7 @@ feature {NONE} -- Deletion
 
 feature {NONE} -- Constants
 
-	warning_messages: WARNING_MESSAGES is
+	warning_messages: WARNING_MESSAGES
 			-- All warnings used in the interface
 		once
 			create Result
@@ -1036,7 +1036,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	retrieved_ace_from_epr (a_file_name: STRING): STRING is
+	retrieved_ace_from_epr (a_file_name: STRING): STRING
 			-- Parse the project header file to get the following information:
 			-- version_number_tag
 			-- precompilation_id
@@ -1089,7 +1089,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [STRING]) is
+	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [STRING])
 			-- Add a target to `a_system' consisting of given parameters.
 			--
 			-- `a_system': The configuration system which the target will be added to
@@ -1154,7 +1154,7 @@ feature {NONE} -- Implementation
 			target_exists: a_system.targets.has (a_target_name)
 		end
 
-	add_library_to_target (a_library: STRING; a_target: CONF_TARGET) is
+	add_library_to_target (a_library: STRING; a_target: CONF_TARGET)
 			-- Add library `a_library' to `a_target'.
 			--
 			-- `a_library': Either the name of a library or the location of an ecf file
@@ -1194,7 +1194,7 @@ feature {NONE} -- Implementation
 			a_target.add_library (l_library)
 		end
 
-	is_gui_library (a_library: STRING): BOOLEAN is
+	is_gui_library (a_library: STRING): BOOLEAN
 			-- Is `a_library' a GUI library?
 			-- At the moment this only checks if 'Vision2' or 'WEL' is present.
 		require
@@ -1203,7 +1203,7 @@ feature {NONE} -- Implementation
 			Result := a_library.is_equal ("vision2") or a_library.is_equal ("wel")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

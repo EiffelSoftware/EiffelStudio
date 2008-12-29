@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Stone for a feature that has a error"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_line: INTEGER) is
+	make (a_feature: E_FEATURE; a_line: INTEGER)
 			-- Initialize stone with `a_feature' and error position `a_pos.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	line_number: INTEGER;
 			-- Line number of error 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

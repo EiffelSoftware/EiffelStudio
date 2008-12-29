@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS tag item for the tree"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING_GENERAL) is
+	make (a_name: STRING_GENERAL)
 			-- Create a tree item representing class `a_class' with `a_name' in its context.
 		require
 			a_name_ok: a_name /= Void
@@ -37,12 +37,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	stone: STONE is
+	stone: STONE
 			-- No stones for tags.
 		do
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

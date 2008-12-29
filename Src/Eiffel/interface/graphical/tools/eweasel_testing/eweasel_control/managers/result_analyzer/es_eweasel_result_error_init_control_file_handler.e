@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Handler for eweasel initial control file error
 																						]"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Redefine
 
-	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM is
+	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
 			if not a_lines.is_empty and then a_lines.first.substring_index (signature_string, 1) = 1 then
@@ -33,10 +33,10 @@ feature -- Redefine
 
 feature {NONE} -- Implementation
 
-	signature_string: STRING is "Error in initial control file";
+	signature_string: STRING = "Error in initial control file";
 			-- Signature string for the error will be handled.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

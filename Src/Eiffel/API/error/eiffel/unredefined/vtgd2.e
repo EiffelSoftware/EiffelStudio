@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for the formal generic part of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 2
+	subcode: INTEGER_32 = 2
 
 	type: TYPE_A
 		-- Type which should have been conform to `constraints'.
@@ -72,7 +72,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			set: feature_name = a_feature_name
 		end
 
-	proper_feature_name: STRING is
+	proper_feature_name: STRING
 			-- Proper feature name, be it from feature, feature_name or just invariant.
 		do
 			if e_feature /= Void then
@@ -84,7 +84,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Editor pick n drop.
 		Uses a tool to make feature text clickable.
@@ -56,7 +56,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialize the editor.
 		local
 			l_dev_win: EB_DEVELOPMENT_WINDOW
@@ -88,13 +88,13 @@ feature {NONE}-- Initialization
 		end
 
 feature -- Access
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of displayed text.
 		do
 			Result := text_displayed.text_length
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current cursor position.
 		do
 			if text_displayed.is_empty then
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Content Change
 
-	handle_before_processing (append: BOOLEAN) is
+	handle_before_processing (append: BOOLEAN)
 			-- Reinitialize editor if not `append' so that new content be received
 			-- If `append' we only reset related flags.
 			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
@@ -128,7 +128,7 @@ feature -- Content Change
 			text_displayed.start_processing (append)
 		end
 
-	handle_after_processing is
+	handle_after_processing
 			-- Setup editor after processing.
 			-- Editor interface is reinitialized, text observer methods are called.
 			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
@@ -151,7 +151,7 @@ feature -- Content Change
 
 feature -- Status report
 
-	has_margin: BOOLEAN is
+	has_margin: BOOLEAN
 			-- Should margin be displayed?
 		do
 			Result := (line_numbers_enabled and line_numbers_visible) or not hidden_breakpoints
@@ -159,7 +159,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_has_breakable_slots is
+	enable_has_breakable_slots
 			-- Set `has_breakable_slots' to `True' and update display.
 		do
 			margin.show_breakpoints
@@ -167,7 +167,7 @@ feature -- Status setting
 			margin.refresh_now
 		end
 
-	disable_has_breakable_slots is
+	disable_has_breakable_slots
 			-- Set `has_breakable_slots' to `False' and update display.
 		do
 			margin.hide_breakpoints
@@ -180,7 +180,7 @@ feature -- Status setting
 
 feature -- Possibly delayed operations
 
-	display_line_when_ready (l_num: INTEGER; a_col: INTEGER; highlight: BOOLEAN) is
+	display_line_when_ready (l_num: INTEGER; a_col: INTEGER; highlight: BOOLEAN)
 			-- same as select_region but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded			
@@ -202,7 +202,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	display_line_at_top_when_ready (l_num: INTEGER; a_col: INTEGER) is
+	display_line_at_top_when_ready (l_num: INTEGER; a_col: INTEGER)
 			-- same as select_region but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded
@@ -221,7 +221,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	highlight_when_ready (a, b: INTEGER) is
+	highlight_when_ready (a, b: INTEGER)
 			-- same as select_lines but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded	
@@ -242,7 +242,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	scroll_to_when_ready (pos: INTEGER) is
+	scroll_to_when_ready (pos: INTEGER)
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded
 		local
@@ -266,7 +266,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	select_region_when_ready (a_start_pos, a_end_pos: INTEGER) is
+	select_region_when_ready (a_start_pos, a_end_pos: INTEGER)
 			-- Select region between `a_start_pos' and `a_end_pos' when text is fully loaded.
 		do
 			if text_is_fully_loaded then
@@ -277,7 +277,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	scroll_to_start_of_line_when_ready_if_top (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN; a_top: BOOLEAN) is
+	scroll_to_start_of_line_when_ready_if_top (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN; a_top: BOOLEAN)
 			-- Scroll to `a_line_number'-th line.
 			-- If `a_selected' is True, select that line.
 			-- If `a_top' then display `a_line_number' at top.
@@ -308,14 +308,14 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN) is
+	scroll_to_start_of_line_when_ready (a_line_number: INTEGER; a_column_number: INTEGER; a_selected: BOOLEAN)
 			-- Scroll to `a_line_number'-th line.
 			-- If `a_selected' is True, select that line.
 		do
 			scroll_to_start_of_line_when_ready_if_top (a_line_number, a_column_number, a_selected, False)
 		end
 
-	scroll_to_end_when_ready is
+	scroll_to_end_when_ready
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded			
 		do
@@ -335,7 +335,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	display_breakpoint_number_when_ready (bpn: INTEGER; feat_id: INTEGER) is
+	display_breakpoint_number_when_ready (bpn: INTEGER; feat_id: INTEGER)
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded			
 		do
@@ -348,31 +348,31 @@ feature -- Possibly delayed operations
 
 feature -- Compatibility
 
-	set_position (a_position: INTEGER) is
+	set_position (a_position: INTEGER)
 			-- Set cursor position to `a_position'.
 		do
 			text_displayed.set_position (a_position)
 		end
 
-	put_string (s: STRING_GENERAL) is
+	put_string (s: STRING_GENERAL)
 			-- Put string `s' at current position.
 		do
 			text_displayed.add_string (s)
 		end
 
-	put_char (c: CHARACTER_32) is
+	put_char (c: CHARACTER_32)
 			-- Put a character `c' at current position.
 		do
 			text_displayed.add_char (c)
 		end
 
-	put_new_line is
+	put_new_line
 			-- Put a new line at current position.
 		do
 			text_displayed.add_new_line
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy current selection to clipboard.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
@@ -383,25 +383,25 @@ feature -- Compatibility
 
 feature {EB_FEATURE_INFO_FORMATTER} -- Feature click tool
 
-	enable_feature_click is
+	enable_feature_click
 			-- enable feature click tool		
 		do
 			text_displayed.enable_feature_click
 		end
 
-	disable_feature_click is
+	disable_feature_click
 			-- disable feature click tool					
 		do
 			text_displayed.disable_feature_click
 		end
 
-	set_feature_for_click (feat: E_FEATURE) is
+	set_feature_for_click (feat: E_FEATURE)
 			-- initialize feature click tool with feature `feat'
 		do
 			text_displayed.set_feature_for_click (feat)
 		end
 
-	feature_click_enabled: BOOLEAN is
+	feature_click_enabled: BOOLEAN
 			-- do we use feature click tool?
 		do
 			Result := text_displayed.feature_click_enabled
@@ -409,7 +409,7 @@ feature {EB_FEATURE_INFO_FORMATTER} -- Feature click tool
 
 feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 
-	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Process single click on mouse buttons.
 		do
 			if not is_recycled then
@@ -417,7 +417,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			end
 		end
 
-	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
+	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER)
 			-- Process click on the text. `x_pos' and `y_pos' are coordinates relative to the upper left
 			-- left corner of the text, i.e. margin width and offset have already been added/substracted to them.
 			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
@@ -465,7 +465,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			end
 		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
 			l_shortcuts: like matching_customizable_commands
@@ -489,7 +489,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			end
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
 		local
 			l_shortcuts: like matching_customizable_commands
@@ -506,7 +506,7 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 
 feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
-	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE is
+	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE
 			-- Stone on (`x_pos', `y_pos').
 		local
 			cur			: like cursor_type
@@ -603,7 +603,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 feature {NONE} -- Text Loading
 
-	reset is
+	reset
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
 				-- First abort our previous actions.
@@ -614,7 +614,7 @@ feature {NONE} -- Text Loading
 			after_reading_text_actions.wipe_out
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Finish editor setup as the entire text has been loaded.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
@@ -648,7 +648,7 @@ feature {NONE} -- Text Loading
 
 feature -- Update
 
-	on_text_saved is
+	on_text_saved
 			-- Update the editor as the text has been saved.
 		local
 			fn: STRING
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 	hidden_breakpoints: BOOLEAN
 			-- Are brekpoints hidden ?
 
-	matching_customizable_commands (key_code: INTEGER; ctrl, alt, shift: BOOLEAN): ACTION_SEQUENCE [TUPLE] is
+	matching_customizable_commands (key_code: INTEGER; ctrl, alt, shift: BOOLEAN): ACTION_SEQUENCE [TUPLE]
 			-- List of shortcuts agents in `customizable_commands' that correspond to the shortcut
 			-- defined by key of code `key_code' and Ctrl if `ctrl', Shift if `shift' and Alt if `alt'.
 		local
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			matching_customizable_commands_not_void: Result /= Void
 		end
 
-	display_breakpoint_number (bp_number: INTEGER; a_feat_id: INTEGER) is
+	display_breakpoint_number (bp_number: INTEGER; a_feat_id: INTEGER)
 			-- Show `bp_number'-th breakpoint of feature represented by `a_feat_id'
 		require
 			bp_number_is_valid: bp_number > 0
@@ -754,7 +754,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gain_focus is
+	gain_focus
 			-- Update the editor as it has just gained the focus.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
@@ -765,13 +765,13 @@ feature {NONE} -- Implementation
 
 	in_feature_click: BOOLEAN
 
-	resume_cursor_for_drop (a: ANY) is
+	resume_cursor_for_drop (a: ANY)
 			-- Resumes cursor on drop from pick and drop
 		do
 			resume_cursor_blinking
 		end
 
-	text_from_formatted_text: STRING_32 is
+	text_from_formatted_text: STRING_32
 			-- Temperary implementation
 		do
 			Result := wide_text
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Destroy `Current'
 		do
 			if dev_window /= Void and then dev_window.ui.current_editor = Current then
@@ -797,7 +797,7 @@ feature {NONE} -- Memory management
 			text_observer_manager.cursor_observer_list.wipe_out
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			after_reading_text_actions := Void
@@ -809,17 +809,17 @@ feature {NONE} -- Implementation
 	editor_set : BOOLEAN
 			-- Has editor been setup?
 
-	line_type: EIFFEL_EDITOR_LINE is
+	line_type: EIFFEL_EDITOR_LINE
 			-- Type of line.
 		do
 		end
 
-	cursor_type: EIFFEL_EDITOR_CURSOR is
+	cursor_type: EIFFEL_EDITOR_CURSOR
 			-- Type of cursor.
 		do
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines for use by classes that need to display debugger related objects in TEXT_FORMATTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ create
 
 feature -- Make
 
-	make is
+	make
 		do
 		end
 
 feature -- Generic
 
-	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		do
 			inspect v.debug_value_type_id
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.abstract_special_value_id then
@@ -51,7 +51,7 @@ feature -- Generic
 			end
 		end
 
-	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER)
 		do
 			inspect v.debug_value_type_id
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.abstract_reference_value_id then
@@ -83,7 +83,7 @@ feature -- Generic
 
 feature -- Application status
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; a_params: DEBUGGER_EXECUTION_PARAMETERS; tf: TEXT_FORMATTER) is
+	append_debugger_information (dbg: DEBUGGER_MANAGER; a_params: DEBUGGER_EXECUTION_PARAMETERS; tf: TEXT_FORMATTER)
 			-- Append debugger information
 		local
 			params: DEBUGGER_EXECUTION_PARAMETERS
@@ -140,7 +140,7 @@ feature -- Application status
 			tf.add_new_line
 		end
 
-	append_object (dobj: DEBUGGED_OBJECT; a_name: STRING; st: TEXT_FORMATTER) is
+	append_object (dobj: DEBUGGED_OBJECT; a_name: STRING; st: TEXT_FORMATTER)
 			-- Display `dobj'
 		local
 			l_attr: DS_LIST [ABSTRACT_DEBUG_VALUE]
@@ -186,7 +186,7 @@ feature -- Application status
 			st.add_new_line
 		end
 
-	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display the status of the running application.
 		local
 			c, oc: CLASS_C
@@ -268,7 +268,7 @@ feature -- Application status
 			end
 		end
 
-	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display exception in `st'.		
 		do
 			st.add_indent
@@ -279,7 +279,7 @@ feature -- Application status
 
 feature -- Call stack
 
-	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER) is
+	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER)
 			-- Display callstack in `st'.
 		local
 			stack_num, i: INTEGER
@@ -328,7 +328,7 @@ feature -- Call stack
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": end displaying call stack %N"); end
 		end
 
-	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		local
@@ -355,7 +355,7 @@ feature -- Call stack
 			end
 		end
 
-	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		local
@@ -409,7 +409,7 @@ feature -- Call stack
 			end
 		end
 
-	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display information about associated routine.
 		local
 			ecse: EIFFEL_CALL_STACK_ELEMENT
@@ -493,7 +493,7 @@ feature -- Call stack
 
 feature {NONE} -- append_to implementation
 
-	abstract_debug_value_append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	abstract_debug_value_append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		require
 			valid_st: st /= Void;
 			valid_indent: indent >= 0;
@@ -510,7 +510,7 @@ feature {NONE} -- append_to implementation
 			st.add_new_line
 		end
 
-	abstract_special_value_append_to (v: ABSTRACT_SPECIAL_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	abstract_special_value_append_to (v: ABSTRACT_SPECIAL_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		local
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
@@ -592,7 +592,7 @@ feature {NONE} -- append_to implementation
 			st.add_new_line
 		end
 
-	expanded_value_append_to (v: EXPANDED_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	expanded_value_append_to (v: EXPANDED_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		local
 			ec: CLASS_C;
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
@@ -627,11 +627,11 @@ feature {NONE} -- append_to implementation
 
 feature {NONE} -- append_type_and_value implementation
 
-	abstract_debug_value_append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	abstract_debug_value_append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER)
 		do
 		end
 
-	abstract_reference_append_type_and_value (v: ABSTRACT_REFERENCE_VALUE; st: TEXT_FORMATTER) is
+	abstract_reference_append_type_and_value (v: ABSTRACT_REFERENCE_VALUE; st: TEXT_FORMATTER)
 		local
 			ec: CLASS_C
 			s: STRING_32
@@ -663,7 +663,7 @@ feature {NONE} -- append_type_and_value implementation
 			end
 		end
 
-	expanded_value_append_type_and_value (v: EXPANDED_VALUE; st: TEXT_FORMATTER) is
+	expanded_value_append_type_and_value (v: EXPANDED_VALUE; st: TEXT_FORMATTER)
 		local
 			ec: CLASS_C;
 		do
@@ -673,7 +673,7 @@ feature {NONE} -- append_type_and_value implementation
 			end
 		end
 
-	abstract_special_value_append_type_and_value (v: ABSTRACT_SPECIAL_VALUE; st: TEXT_FORMATTER) is
+	abstract_special_value_append_type_and_value (v: ABSTRACT_SPECIAL_VALUE; st: TEXT_FORMATTER)
 		local
 			ec: CLASS_C
 		do
@@ -697,7 +697,7 @@ feature {NONE} -- append_type_and_value implementation
 			end
 		end
 
-	character_value_append_type_and_value (v: CHARACTER_VALUE; st: TEXT_FORMATTER) is
+	character_value_append_type_and_value (v: CHARACTER_VALUE; st: TEXT_FORMATTER)
 		do
 			v.dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
@@ -706,7 +706,7 @@ feature {NONE} -- append_type_and_value implementation
 			st.add_char ('%'')
 		end
 
-	character_32_value_append_type_and_value (v: CHARACTER_32_VALUE; st: TEXT_FORMATTER) is
+	character_32_value_append_type_and_value (v: CHARACTER_32_VALUE; st: TEXT_FORMATTER)
 		do
 			v.dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
@@ -715,7 +715,7 @@ feature {NONE} -- append_type_and_value implementation
 			st.add_char ('%'')
 		end
 
-	bits_value_append_type_and_value (v: BITS_VALUE; st: TEXT_FORMATTER) is
+	bits_value_append_type_and_value (v: BITS_VALUE; st: TEXT_FORMATTER)
 		local
 			val: STRING
 		do
@@ -727,7 +727,7 @@ feature {NONE} -- append_type_and_value implementation
 			st.add (val)
 		end
 
-	dummy_message_debug_value_append_type_and_value (v: DUMMY_MESSAGE_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	dummy_message_debug_value_append_type_and_value (v: DUMMY_MESSAGE_DEBUG_VALUE; st: TEXT_FORMATTER)
 		local
 			s: STRING_GENERAL
 		do
@@ -737,103 +737,103 @@ feature {NONE} -- append_type_and_value implementation
 			end
 		end
 
-	debug_basic_value_append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	debug_basic_value_append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER)
 		do
 			v.dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
 			st.add_string (v.output_value)
 		end
 
-	exception_debug_value_append_type_and_value (v: EXCEPTION_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	exception_debug_value_append_type_and_value (v: EXCEPTION_DEBUG_VALUE; st: TEXT_FORMATTER)
 		do
 			st.add_string (v.short_description)
 		end
 
-	eifnet_debug_unknown_type_value_append_type_and_value (v: EIFNET_DEBUG_UNKNOWN_TYPE_VALUE; st: TEXT_FORMATTER) is
+	eifnet_debug_unknown_type_value_append_type_and_value (v: EIFNET_DEBUG_UNKNOWN_TYPE_VALUE; st: TEXT_FORMATTER)
 		do
 			st.add_string ("ERROR: Unknown type")
 			st.add_string (Equal_sign_str);
 			st.add_string (v.address.as_string)
 		end
 
-	eifnet_debug_native_array_value_append_type_and_value (v: EIFNET_DEBUG_NATIVE_ARRAY_VALUE; st: TEXT_FORMATTER) is
+	eifnet_debug_native_array_value_append_type_and_value (v: EIFNET_DEBUG_NATIVE_ARRAY_VALUE; st: TEXT_FORMATTER)
 		do
 			st.add_string (v.type_and_value)
 		end
 
 feature {NONE} -- Conversion
 
-	abstract_reference_value (v: ABSTRACT_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE is
+	abstract_reference_value (v: ABSTRACT_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE
 		do
 			Result ?= v
 		end
-	expanded_value (v: ABSTRACT_DEBUG_VALUE): EXPANDED_VALUE is
+	expanded_value (v: ABSTRACT_DEBUG_VALUE): EXPANDED_VALUE
 		do
 			Result ?= v
 		end
-	abstract_special_value (v: ABSTRACT_DEBUG_VALUE): ABSTRACT_SPECIAL_VALUE is
+	abstract_special_value (v: ABSTRACT_DEBUG_VALUE): ABSTRACT_SPECIAL_VALUE
 		do
 			Result ?= v
 		end
-	character_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_VALUE is
+	character_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_VALUE
 		do
 			Result ?= v
 		end
-	character_32_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_32_VALUE is
+	character_32_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_32_VALUE
 		do
 			Result ?= v
 		end
-	bits_value (v: ABSTRACT_DEBUG_VALUE): BITS_VALUE is
+	bits_value (v: ABSTRACT_DEBUG_VALUE): BITS_VALUE
 		do
 			Result ?= v
 		end
-	dummy_message_debug_value (v: ABSTRACT_DEBUG_VALUE): DUMMY_MESSAGE_DEBUG_VALUE is
+	dummy_message_debug_value (v: ABSTRACT_DEBUG_VALUE): DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			Result ?= v
 		end
-	exception_debug_value (v: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
+	exception_debug_value (v: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE
 		do
 			Result ?= v
 		end
-	eifnet_debug_unknown_type_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_UNKNOWN_TYPE_VALUE is
+	eifnet_debug_unknown_type_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_UNKNOWN_TYPE_VALUE
 		do
 			Result ?= v
 		end
-	eifnet_debug_native_array_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_NATIVE_ARRAY_VALUE is
+	eifnet_debug_native_array_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			Result ?= v
 		end
 
 feature {NONE} -- Implementation
 
-	Any_class: CLASS_C is
+	Any_class: CLASS_C
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end
 
 feature {NONE} -- Constants		
 
-	NONE_representation: STRING is "NONE = Void"
+	NONE_representation: STRING = "NONE = Void"
 
-	Space_str: STRING is " "
+	Space_str: STRING = " "
 
-	Left_address_delim: STRING is " <"
+	Left_address_delim: STRING = " <"
 
-	Right_address_delim: STRING is ">"
+	Right_address_delim: STRING = ">"
 
-	Colon_space_str: STRING is ": "
+	Colon_space_str: STRING = ": "
 
-	Left_bracket: STRING is " ["
+	Left_bracket: STRING = " ["
 
-	Right_bracket: STRING is "]"
+	Right_bracket: STRING = "]"
 
-	Equal_sign_str: STRING is " = "
+	Equal_sign_str: STRING = " = "
 
-	Is_unknown: STRING is " = Unknown"
+	Is_unknown: STRING = " = Unknown"
 
-	Bit_label: STRING is "BIT ";
+	Bit_label: STRING = "BIT ";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

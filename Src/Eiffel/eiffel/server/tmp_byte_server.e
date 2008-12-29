@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for byte code on temporary file, indexed by body index.%
 				%This server is used during the compilation. The goal is to%
 				%merge the file Tmp_byte_file and Byte_file if the compilation%
@@ -18,16 +18,16 @@ create
 
 feature
 
-	cache: CACHE [BYTE_CODE] is
+	cache: CACHE [BYTE_CODE]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER = 500;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used to store EB_TOOLBARABLE's in an EV_ITEM_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (v: EB_TOOLBARABLE) is
+	make (v: EB_TOOLBARABLE)
 		require
 			v_non_void: v /= Void
 		local
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Interactivity
 
-	add_to_parent_list (an_item: EB_CUSTOMIZABLE_LIST_ITEM) is
+	add_to_parent_list (an_item: EB_CUSTOMIZABLE_LIST_ITEM)
 			-- Add `an_item' to `parent'
 			-- `from_pool' and `to_pool' determine the behavior of separators
 		local
@@ -80,7 +80,7 @@ feature -- Access
 	data: EB_TOOLBARABLE
 			-- the corresponding button
 
-	custom_parent: EB_CUSTOM_TOOLBAR_LIST is
+	custom_parent: EB_CUSTOM_TOOLBAR_LIST
 			-- Convert `parent' into a EB_CUSTOM_TOOLBAR_LIST
 		do
 			Result ?= parent
@@ -91,7 +91,7 @@ feature -- Status report
 	is_separator: BOOLEAN;
 			-- Is button a separator?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

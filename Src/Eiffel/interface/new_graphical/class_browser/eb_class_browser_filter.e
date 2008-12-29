@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Filter used in class browser related classes to provide the selective display ability"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status report
 
-	is_selected (a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]): BOOLEAN is
+	is_selected (a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]): BOOLEAN
 			-- Can `a_data' come through Current filter?
 			-- True means that `a_data' can be displayed in `a_viewer', False means it should be appressed.
 			-- `a_viewer' is the view to from which Current filter is used.
@@ -21,7 +21,7 @@ feature -- Status report
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

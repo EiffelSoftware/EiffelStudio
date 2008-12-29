@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XMI Translation (for UML Tools)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initializes XMI Export Module.
 		do
 			create xmi_clusters.make
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_universe (a_universe: DOCUMENTATION_UNIVERSE) is
+	set_universe (a_universe: DOCUMENTATION_UNIVERSE)
 			-- Change `doc_universe' to `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Actions
 
-	generate (deg: DEGREE_OUTPUT) is
+	generate (deg: DEGREE_OUTPUT)
 			-- Exports XMI, according to the user selection.
 		local
 			current_compiled_class: CLASS_C
@@ -186,7 +186,7 @@ feature -- Actions
 
 feature -- Settings
 
-	set_directory (p: DIRECTORY) is
+	set_directory (p: DIRECTORY)
 			-- Assign `p' to `root_directory'.
 			-- This is the location where the documentation will be generated.
 		require
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 	last_class_y: INTEGER
 			-- Y-coordinate of the last instance of XMI_CLASS_PRESENTATION created.			
 
-	xmi_class_by_class_c (a_class_c: CLASS_C): XMI_CLASS is
+	xmi_class_by_class_c (a_class_c: CLASS_C): XMI_CLASS
 			-- Search XMI representation of `a_class_c'.
 		require
 				compiled_class_not_void: a_class_c /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			xmi_classes.go_to (xmi_class_cursor)
 		end
 
-	xmi_diagram_by_group (a_group: CONF_GROUP): XMI_DIAGRAM is
+	xmi_diagram_by_group (a_group: CONF_GROUP): XMI_DIAGRAM
 			-- Search Rose diagram linked to `a_group'.
 		require
 			cluster_not_void: a_group /= Void
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	is_in_selection (c: CLASS_C): BOOLEAN is
+	is_in_selection (c: CLASS_C): BOOLEAN
 			-- Is `c' in the clusters selected by the user?
 		local
 			l_class: CONF_CLASS
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			Result := doc_universe.classes.has (l_class)
 		end
 
-	add_type (t: XMI_TYPE) is
+	add_type (t: XMI_TYPE)
 			-- Add `t' to `xmi_types' if not already present.
 		require
 			type_not_void: t /= Void
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			type_present: xmi_types.has (t)
 		end
 
-	add_generalizations (c: CLASS_C) is
+	add_generalizations (c: CLASS_C)
 			-- Add all inheritance relations where `c' is involved.
 		require
 			arg_not_void: c /= Void
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_features is
+	add_features
 			-- Fill field `features' in items of `xmi_classes'.
 		local
 			current_xmi_class: XMI_CLASS
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_function (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_function (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
 		require
 			a_feature_not_void: a_feature /= void
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_function_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_function_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- create, if necessary, a new type.
 		require
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_operation)
 		end
 
-	add_function_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+	add_function_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- assign `a_xmi_type' to its type.
 		require
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_operation)
 		end
 
-	add_function_type_formal (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_function_type_formal (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- create, if necessary, a new formal type.
 		require
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_operation)
 		end
 
-	add_procedure (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_procedure (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
 		require
 			a_feature_not_void: a_feature /= void
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_operation)
 		end
 
-	add_arguments (a_feature: E_FEATURE; a_xmi_operation: XMI_OPERATION) is
+	add_arguments (a_feature: E_FEATURE; a_xmi_operation: XMI_OPERATION)
 			-- Add to `a_xmi_operation' the representation of `a_feature' arguments.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			added_right_number: a_xmi_operation.arguments.count = a_feature.arguments.count
 		end
 
-	add_attribute_or_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_attribute_or_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'
 			-- once we have determined whether the type of 'a_feature' should be represented
 			-- as an association or as an attribute in the XMI.
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_association_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_association_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'.
 			-- Create, if necessary, a new type.
 		require
@@ -694,7 +694,7 @@ feature {NONE} -- Implementation
 			xmi_associations.extend (new_xmi_association)
 		end
 
-	add_association_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+	add_association_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'.
 			-- Assign `a_xmi_type' to its type.
 		require
@@ -720,7 +720,7 @@ feature {NONE} -- Implementation
 			xmi_associations.extend (new_xmi_association)
 		end
 
-	add_generics_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_generics_association (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
 			-- contains generics.
 		require
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_generics_association_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+	add_generics_association_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
 			-- contains generics.
 		require
@@ -782,7 +782,7 @@ feature {NONE} -- Implementation
 			xmi_associations.extend (new_xmi_association)
 		end
 
-	add_generics_association_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_generics_association_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class' where 'a_feature' is
 			-- contains generics.
 		require
@@ -831,7 +831,7 @@ feature {NONE} -- Implementation
 			xmi_associations.extend (new_xmi_association)
 		end
 
-	add_attribute (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_attribute (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_attribute_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_attribute_type_unknown (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- create, if necessary, a new type.
 		require
@@ -891,7 +891,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_attribute)
 		end
 
-	add_attribute_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS) is
+	add_attribute_type_known (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS; a_xmi_type: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- assign `a_xmi_type' to its type.
 		require
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_attribute)
 		end
 
-	add_attribute_type_formal (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS) is
+	add_attribute_type_formal (a_feature: E_FEATURE; a_xmi_class: XMI_CLASS)
 			-- Add XMI representation of `e_feature' in `a_xmi_class'
 			-- create, if necessary, a new formal type.
 		require
@@ -953,7 +953,7 @@ feature {NONE} -- Implementation
 			a_xmi_class.add_feature (new_xmi_attribute)
 		end
 
-	generate_from_lists is
+	generate_from_lists
 			-- Write XMI description to `target_file_name'.
 		local
 			fi: PLAIN_TEXT_FILE
@@ -1019,7 +1019,7 @@ feature {NONE} -- Implementation
 			fi.close
 		end
 
-	set_target_file_name is
+	set_target_file_name
 			-- Finalize file name using `root_directory'.
 		do
 			create target_file_name.make_from_string (root_directory.name)
@@ -1027,7 +1027,7 @@ feature {NONE} -- Implementation
 			target_file_name.add_extension ("xml")
 		end
 
-	feature_name (f: E_FEATURE): STRING is
+	feature_name (f: E_FEATURE): STRING
 			-- Formatted name of `f'.
 		require
 			valid_feature: f /= Void
@@ -1042,7 +1042,7 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all (">", "&gt;")
 		end
 
-	is_parent_of (a_parent_name, a_child_name: STRING): BOOLEAN is
+	is_parent_of (a_parent_name, a_child_name: STRING): BOOLEAN
 			-- Is class with name 'a_parent_name' an actual parent class with name 'a_child_name'?
 		require
 			a_parent_not_void: a_parent_name /= Void
@@ -1060,7 +1060,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	full_class_name_from_generic_class (a_feature: E_FEATURE): STRING is
+	full_class_name_from_generic_class (a_feature: E_FEATURE): STRING
 			-- Get the full string representation 'a_feature' including actual generic types.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1096,13 +1096,13 @@ feature {NONE} -- Implementation
 			Result := full_type_name
 		end
 
-	ordered_type: STRING is "CHAIN [ANY]"
+	ordered_type: STRING = "CHAIN [ANY]"
 			-- Name of topmost ordered type
 
-	multiple_type: STRING is "CONTAINER [ANY]";
+	multiple_type: STRING = "CONTAINER [ANY]";
 			-- Name of topmost multiple type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

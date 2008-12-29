@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command linked with a menu and a radio tool bar button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Set both `button' and `menu_entry'
 			-- to be selected.
 		do
@@ -55,7 +55,7 @@ feature -- Status setting
 
 feature -- Interface
 
-	command_name: STRING_GENERAL is
+	command_name: STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case).
 		deferred
 		ensure
@@ -68,7 +68,7 @@ feature -- Interface
 		deferred
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- String representation in the associated menu.
 		deferred
 		ensure
@@ -77,7 +77,7 @@ feature -- Interface
 
 feature -- Status setting
 
-	set_combo_box (a_combo: EV_COMBO_BOX) is
+	set_combo_box (a_combo: EV_COMBO_BOX)
 			-- Set `combo' to `a_combo'.
 		do
 			combo := a_combo
@@ -91,7 +91,7 @@ feature -- Access
 	combo: EV_COMBO_BOX
 			-- Combo box giving a choice between several radio commands.
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is current command selected?
 		do
 			if sd_button /= Void then
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Implementation
 
-	valid_string (str: STRING_GENERAL): BOOLEAN is
+	valid_string (str: STRING_GENERAL): BOOLEAN
 			-- Is `str' neither Void nor empty
 			-- It used to be nor filled with blanks with STRING_8
 			--| Cannot be in a non exported part because post conditions use it.
@@ -115,14 +115,14 @@ feature -- Implementation
 			Result := str /= Void and then not str.is_empty
 		end
 
-	is_lower_case (str: STRING_GENERAL): BOOLEAN is
+	is_lower_case (str: STRING_GENERAL): BOOLEAN
 			-- Is `str' lower case?
 			--| Cannot be in a non exported part because post conditions use it.
 		do
 			Result := interface_names.is_string_general_lower (str)
 		end
 
-	is_button_sensitive: BOOLEAN is
+	is_button_sensitive: BOOLEAN
 			-- Is button appear sensitive?
 		do
 			check
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 	safety_flag: BOOLEAN;
 			-- Are we modifying the select status? (to prevent stack overflows)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

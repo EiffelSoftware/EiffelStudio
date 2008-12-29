@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for UNDO_REDO_STACK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ deferred class
 
 feature -- Updates
 
-	on_changed is
+	on_changed
 			-- Undo/redo stack has just changed.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

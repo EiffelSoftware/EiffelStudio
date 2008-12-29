@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Automatically generated class for EiffelStudio 16 x16  tool icons.
 	]"
@@ -104,7 +104,7 @@ feature {NONE} -- Basic operations
 			a_table.force_last ([{NATURAL_8}3, {NATURAL_8}1], general_bug_name)
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

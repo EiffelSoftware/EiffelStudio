@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A class that contains a stone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,14 +13,14 @@ inherit
 
 feature -- Access
 
-	stone: STONE is
+	stone: STONE
 			-- Stone representing Current
 		deferred
 		end
 	
 feature -- Element change
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Make `s' the new value of stone.
 			-- Changes display as a consequence, to preserve the fact
 			-- that the tool displays the content of the stone
@@ -32,12 +32,12 @@ feature -- Element change
 
 feature {NONE} -- implementation
 
-	refresh is
+	refresh
 			-- Synchronize Current with `stone'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

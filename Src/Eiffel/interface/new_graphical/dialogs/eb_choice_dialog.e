@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make_default (a_parent_window: EV_WINDOW; ctf: like callback) is
+	make_default (a_parent_window: EV_WINDOW; ctf: like callback)
 			-- Make a choice window, and set a callback procedure.
 		local
 			vb: EV_VERTICAL_BOX
@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature
 
-	set_list (name_list: LIST [STRING]; pixmap_list: LIST [EV_PIXMAP]) is
+	set_list (name_list: LIST [STRING]; pixmap_list: LIST [EV_PIXMAP])
 			-- Fill the choice window with `name_list' using `pixmap_list' if applicable.
 		require
 			valid_args: name_list /= Void
@@ -101,7 +101,7 @@ feature
 			end
 		end
 
-	select_item (i: INTEGER) is
+	select_item (i: INTEGER)
 			-- Select item at the `i'-th position.
 		do
 			if i <= list.row_count and then i > 0 then
@@ -109,7 +109,7 @@ feature
 			end
 		end
 
-	on_shown is
+	on_shown
 			-- The dialog is being displayed.
 			-- Give the focus to the list.
 		do
@@ -146,7 +146,7 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	destroy_dialog is
+	destroy_dialog
 			-- Destroy in a safe manner current dialog.
 		require
 			list_not_void: list /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	key_actions (k: EV_KEY) is
+	key_actions (k: EV_KEY)
 			-- Call `execute' if k = Enter, `destroy_dialog' if k = Esc.
 		do
 			if k.code = {EV_KEY_CONSTANTS}.Key_enter then
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	one_lost_focus is
+	one_lost_focus
 			-- One the widgets in `Current' lost the focus.
 			-- If no widget has the focus, destroy `Current'.
 		do
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_select (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_select (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- The user clicked on a list item.
 		do
 			if a_button = 1 and then list.selected_items /= Void then
@@ -199,10 +199,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	List_minimum_width: INTEGER is 70
-	List_maximum_width: INTEGER is 400
-	List_minimum_height: INTEGER is 50
-	List_maximum_height: INTEGER is 400;
+	List_minimum_width: INTEGER = 70
+	List_maximum_width: INTEGER = 400
+	List_minimum_height: INTEGER = 50
+	List_maximum_height: INTEGER = 400;
 		-- Bounds for the displayed list.
 
 feature {NONE} -- Implementation
@@ -214,7 +214,7 @@ invariant
 
 	destroy_actions_not_void: destroy_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

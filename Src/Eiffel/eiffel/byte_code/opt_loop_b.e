@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Optimized byte code for loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ inherit
 
 feature -- Access
 
-	enlarged: OPT_LOOP_BL is
+	enlarged: OPT_LOOP_BL
 		do
 			create Result
 			Result.fill_from (Current)
 		end
 
-	add_array_to_generate (arr_desc: INTEGER) is
+	add_array_to_generate (arr_desc: INTEGER)
 		do
 			if array_desc = Void then
 				create array_desc.make
@@ -32,7 +32,7 @@ feature -- Access
 
 	array_desc: TWO_WAY_SORTED_SET [INTEGER]
 
-	add_offset_to_generate (arr_desc: INTEGER) is
+	add_offset_to_generate (arr_desc: INTEGER)
 		do	
 			if generated_offsets = Void then
 				create generated_offsets.make
@@ -42,7 +42,7 @@ feature -- Access
 
 	generated_offsets: TWO_WAY_SORTED_SET [INTEGER]
 
-	add_offset_already_generated (arr_desc: INTEGER) is
+	add_offset_already_generated (arr_desc: INTEGER)
 		do
 			if already_generated_offsets = Void then
 				create already_generated_offsets.make
@@ -54,20 +54,20 @@ feature -- Access
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 				-- Inlining will not be done if the feature
 				-- optimizes array access
 			Result := 101	-- Maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 			-- This should NEVER be called!!!
 			-- (size is bigger than maximum)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

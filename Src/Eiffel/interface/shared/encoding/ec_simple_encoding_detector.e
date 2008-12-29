@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Simple Encoding Detector that always returns ISO-8859-1 encoding.
 					Before we really have proper means to decide source code encoding,
@@ -28,14 +28,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	detect (a_string: STRING_GENERAL) is
+	detect (a_string: STRING_GENERAL)
 			-- Detect `detected_encoding' of `a_string'.
 		do
 			detected_encoding := default_encoding
 			last_detection_successful := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

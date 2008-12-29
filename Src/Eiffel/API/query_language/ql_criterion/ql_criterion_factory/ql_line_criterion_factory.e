@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria with line scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create agent_table.make (10)
@@ -62,7 +62,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_SIMPLE_LINE_CRITERION is
+	new_false_criterion: QL_SIMPLE_LINE_CRITERION
 			-- New criterion that always returns False
 		do
 			create Result.make (agent false_agent, False)
@@ -70,7 +70,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_blank_criterion: QL_LINE_IS_BLANK_CRI is
+	new_is_blank_criterion: QL_LINE_IS_BLANK_CRI
 			-- New {QL_LINE_IS_BLANK_CRI} criterion.
 		do
 			create Result
@@ -78,7 +78,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_comment_criterion: QL_LINE_IS_COMMENT_CRI is
+	new_is_comment_criterion: QL_LINE_IS_COMMENT_CRI
 			-- New {QL_LINE_IS_COMMENT_CRI} criterion.
 		do
 			create Result
@@ -86,7 +86,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_SIMPLE_LINE_CRITERION is
+	new_is_compiled_criterion: QL_SIMPLE_LINE_CRITERION
 			-- New criterion to test if a line is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
@@ -94,7 +94,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_SIMPLE_LINE_CRITERION is
+	new_true_criterion: QL_SIMPLE_LINE_CRITERION
 			-- New criterion that always returns True (tautology criterion)
 		do
 			create Result.make (agent true_agent, False)
@@ -102,7 +102,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_LINE_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_LINE_NAME_IS_CRI
 			-- New {QL_LINE_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -112,7 +112,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_LINE_TEXT_CONTAIN_CRI is
+	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_LINE_TEXT_CONTAIN_CRI
 			-- New {QL_LINE_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void
@@ -122,7 +122,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
@@ -130,7 +130,7 @@ feature{NONE} -- New criterion
 			create Result.make (agent value_criterion_evalaute_agent ({QL_LINE}?, a_evaluate_value_func), False)
 		end
 
-	new_is_implementation_comment_criterion: QL_LINE_IS_COMMENT_CRI is
+	new_is_implementation_comment_criterion: QL_LINE_IS_COMMENT_CRI
 			-- New implementation comment criterion
 		do
 			create Result
@@ -141,20 +141,20 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false: INTEGER is 1
-	c_is_blank: INTEGER is 2
-	c_is_comment: INTEGER is 3
-	c_is_compiled: INTEGER is 4
-	c_true: INTEGER is 5
-	c_name_is: INTEGER is 6
-	c_text_contain: INTEGER is 7
-	c_value_of_metric_is: INTEGER is 8
-	c_is_implementation_comment: INTEGER is 9
-	c_is_satisfied_by: INTEGER is 10
+	c_false: INTEGER = 1
+	c_is_blank: INTEGER = 2
+	c_is_comment: INTEGER = 3
+	c_is_compiled: INTEGER = 4
+	c_true: INTEGER = 5
+	c_name_is: INTEGER = 6
+	c_text_contain: INTEGER = 7
+	c_value_of_metric_is: INTEGER = 8
+	c_is_implementation_comment: INTEGER = 9
+	c_is_satisfied_by: INTEGER = 10
 
 feature{NONE} -- Implementation
 
-	false_agent (a_item: QL_LINE): BOOLEAN is
+	false_agent (a_item: QL_LINE): BOOLEAN
 			-- Agent that always returns False.
 			-- Require compiled: False
 		require
@@ -163,7 +163,7 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	true_agent (a_item: QL_LINE): BOOLEAN is
+	true_agent (a_item: QL_LINE): BOOLEAN
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
 		require
@@ -173,7 +173,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_compiled_agent (a_item: QL_LINE): BOOLEAN is
+	is_compiled_agent (a_item: QL_LINE): BOOLEAN
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
 		require
@@ -183,7 +183,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_compiled
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

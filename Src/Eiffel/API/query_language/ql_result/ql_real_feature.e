@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a real feature (compared to feature item that represents a class invariant) 
 					item used in Eiffel query language
@@ -38,7 +38,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like e_feature) is
+	make (a_feature: like e_feature)
 			-- Initialize `class_item' with `a_class'.
 		require
 			a_feature_attached: a_feature /= Void
@@ -48,7 +48,7 @@ feature{NONE} -- Initialization
 			e_feature_set: e_feature = a_feature
 		end
 
-	make_with_parent (a_feature: like e_feature; a_parent: like parent) is
+	make_with_parent (a_feature: like e_feature; a_parent: like parent)
 			-- Initialize `class_item' with `a_class' and `parent' with `a_parent'
 		require
 			a_feature_attached: a_feature /= Void
@@ -63,7 +63,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			Result := e_feature.name
@@ -71,7 +71,7 @@ feature -- Access
 			good_result: Result /= Void and then Result.is_equal (e_feature.name)
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		local
 			l_comments: EIFFEL_COMMENTS
@@ -95,13 +95,13 @@ feature -- Access
 	e_feature: E_FEATURE
 			-- Feature associated with Current
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- CLASS_I object associated with current item
 		do
 			Result := class_c.lace_class
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- Associated class with current feature
 		do
 			Result := e_feature.associated_class
@@ -109,7 +109,7 @@ feature -- Access
 			good_result: Result = e_feature.associated_class
 		end
 
-	ast: FEATURE_AS is
+	ast: FEATURE_AS
 			-- AST node associated with current feature
 		do
 			Result := e_feature.ast
@@ -117,7 +117,7 @@ feature -- Access
 			good_result: Result = e_feature.ast
 		end
 
-	written_class: like class_c is
+	written_class: like class_c
 			-- CLASS_C in which current is written
 		do
 			Result := e_feature.written_class
@@ -125,7 +125,7 @@ feature -- Access
 			good_result: Result = e_feature.written_class
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := feature_path_marker
@@ -133,7 +133,7 @@ feature -- Access
 			good_result: Result = feature_path_marker
 		end
 
-	return_type: QL_CLASS is
+	return_type: QL_CLASS
 			-- Return type of current feature.
 		do
 			if e_feature.type /= Void then
@@ -145,13 +145,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_real_feature: BOOLEAN is True
+	is_real_feature: BOOLEAN = True
 			-- Is current a real feature?
 
-	is_invariant_feature: BOOLEAN is False
+	is_invariant_feature: BOOLEAN = False
 			-- Is current an class invariant?
 
-	is_immediate: BOOLEAN is
+	is_immediate: BOOLEAN
 			-- Is current invariant immediate?
 		do
 			Result := e_feature.written_class.class_id = e_feature.associated_class.class_id
@@ -161,7 +161,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_real_feature (Current)
@@ -170,7 +170,7 @@ feature -- Visit
 invariant
 	e_feature_attached: e_feature /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

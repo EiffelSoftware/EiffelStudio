@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builder which build toolbars for EB_DEVELOPMENT_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Building commands
 
-	build_toolbars_area	 is
+	build_toolbars_area
 			-- Build all the tool bars in Eiffel Studio.
 		local
 			l_toolbars_area: EV_VERTICAL_BOX
@@ -52,7 +52,7 @@ feature -- Building commands
 			end
 		end
 
-	build_general_toolbar is
+	build_general_toolbar
 			-- Set up the general toolbar (New, Save, Search, Shell, Undo, Redo, ...)
 		local
 			l_content: SD_TOOL_BAR_CONTENT
@@ -93,7 +93,7 @@ feature -- Building commands
 			develop_window.commands.editor_commands.extend (develop_window.commands.shell_cmd)
 		end
 
-	build_address_toolbar is
+	build_address_toolbar
 			-- Set up the address toolbar (Back, Forward, Current, Class name, feature name, ...)
 		local
 			l_show_address_toolbar_command: EB_SHOW_TOOLBAR_COMMAND
@@ -144,7 +144,7 @@ feature -- Building commands
 --			end
 		end
 
-	build_project_toolbar is
+	build_project_toolbar
 			-- Build toolbar corresponding to the project options bar
 		local
 			l_sd_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
@@ -172,7 +172,7 @@ feature -- Building commands
 			l_content.show_request_actions.extend (agent l_show_project_toolbar_command.execute)
 		end
 
-	build_refactoring_toolbar is
+	build_refactoring_toolbar
 			-- Build refactoring toolbar.
 		local
 			l_content: SD_TOOL_BAR_CONTENT
@@ -211,7 +211,7 @@ feature -- Building commands
 			l_content.show_request_actions.extend (agent l_show_tool_bar_command.execute)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

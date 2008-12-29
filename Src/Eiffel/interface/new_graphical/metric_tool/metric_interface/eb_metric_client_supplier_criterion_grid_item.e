@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric client/supplier criterion"
 	author: ""
 	date: "$Date$"
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			old_make (create {EB_METRIC_DOMAIN}.make)
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Load `a_criterion' into Current.
 		local
 			l_domain: EB_METRIC_DOMAIN
@@ -55,7 +55,7 @@ feature -- Setting
 
 		end
 
-	store_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Store Current in `a_criterion'.
 		local
 			l_value: like value
@@ -71,7 +71,7 @@ feature -- Setting
 			a_criterion.set_only_syntactically_referencedd_class_retrieved (l_value.a_only_syntactical_reference)
 		end
 
-	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+	change_value_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
 		do
 			Result := change_actions
@@ -82,7 +82,7 @@ feature{NONE} -- Implementation
 	is_for_supplier: BOOLEAN
 			-- Is Current criterion for suppiers?
 
-	dialog_getter: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [a_indirect: BOOLEAN; a_normal_reference: BOOLEAN;  a_only_syntactical_reference: BOOLEAN]] is
+	dialog_getter: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [a_indirect: BOOLEAN; a_normal_reference: BOOLEAN;  a_only_syntactical_reference: BOOLEAN]]
 			-- Dialog used for domain setup
 		do
 			if is_for_supplier then

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Error due to duplicated IL property names."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create {COMPILER_EXPORTER}
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; f1, f2: FEATURE_I; p: STRING) is
+	make (c: CLASS_C; f1, f2: FEATURE_I; p: STRING)
 			-- Create an error object for the given class `c', features `f1' and `f2', and property `p'.
 		require
 			c_attached: c /= Void
@@ -36,12 +36,12 @@ feature {NONE} -- Creation
 
 feature -- Properties
 
-	code: STRING is "VIPM"
+	code: STRING = "VIPM"
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Output the error message.
 		do
 			a_text_formatter.add ("Other feature: ")
@@ -66,7 +66,7 @@ invariant
 	other_feature_attached: other_feature /= Void
 	property_name_attached: property_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

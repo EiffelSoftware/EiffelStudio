@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for invalid type of a unique constant."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VQUI";
+	code: STRING = "VQUI";
 			-- Error code
 
 	type: TYPE_A;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Type: ");
 			type.append_to (a_text_formatter);
@@ -34,12 +34,12 @@ feature -- Output
 			
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 		do
 			type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

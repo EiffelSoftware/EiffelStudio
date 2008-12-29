@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to display information concerning a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Properties
 	associated_class: CLASS_C
 			-- Class about which information is displayed.
 
-	element_name: STRING is
+	element_name: STRING
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 		do
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_dotnet_mode (a_flag: BOOLEAN) is
+	set_dotnet_mode (a_flag: BOOLEAN)
 			-- Set whether formatting in .NET mode to 'a_flag'
 		do
 			is_dotnet_mode := a_flag
@@ -57,7 +57,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_classi_stone: CLASSI_STONE
@@ -68,14 +68,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	temp_header: STRING_GENERAL is
+	temp_header: STRING_GENERAL
 			-- Temporary header displayed during the format processing.
 		do
 			check associated_class /= Void end
 			Result := interface_names.l_working_formatter (command_name, associated_class.name, True)
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_class /= Void then
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

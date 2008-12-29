@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone representing a dynamic_lib."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,32 +15,32 @@ inherit
 
 feature -- Access
 
-	file_name: FILE_NAME is
+	file_name: FILE_NAME
 			-- Name of the DEF file
 		do
 			create Result.make_from_string (Eiffel_dynamic_lib.file_name)
 		end
  
-	stone_signature: STRING is
+	stone_signature: STRING
 		do
 			Result := ""
 		end
 
-	history_name: STRING is
+	history_name: STRING
 		do
 			Result := "Dynamic library"
 		end
 
-	header: STRING is "Dynamic Lib"
+	header: STRING = "Dynamic Lib"
  
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Cluster
 		end
  
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
@@ -49,13 +49,13 @@ feature -- Access
  
 feature -- Setting
 
-	set_file_name (new_filename: FILE_NAME) is
+	set_file_name (new_filename: FILE_NAME)
 			-- Assign `s' to `file_name' of lace.
 		do
 			Eiffel_dynamic_lib.set_file_name (new_filename)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

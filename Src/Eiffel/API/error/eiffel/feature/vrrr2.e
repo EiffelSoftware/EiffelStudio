@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		""
@@ -18,16 +18,16 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VRRR";
+	code: STRING = "VRRR";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 	is_deferred: BOOLEAN;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Kind of routine: ");
 			if is_deferred then
@@ -40,12 +40,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_is_deferred (b: BOOLEAN) is
+	set_is_deferred (b: BOOLEAN)
 		do
 			is_deferred := b;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

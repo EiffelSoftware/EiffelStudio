@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a line used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_line_number: INTEGER; a_parent: like parent) is
+	make (a_line_number: INTEGER; a_parent: like parent)
 			-- Initialize `line_number' with `a_line_number' and `parent' with `a_parent'.
 		require
 			a_parent_attached: a_parent /= Void
@@ -41,7 +41,7 @@ feature{NONE} -- Initialization
 			parent_set: parent = a_parent
 		end
 
-	make_with_text (a_line_number: INTEGER; a_text: STRING; a_parent: like parent) is
+	make_with_text (a_line_number: INTEGER; a_text: STRING; a_parent: like parent)
 			-- Initialize `line_number' with `a_line_number' `text' with `a_text' and `parent' with `a_parent'.
 		require
 			a_line_number_positive: a_line_number > 0
@@ -61,7 +61,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			Result := line_number.out
@@ -69,7 +69,7 @@ feature -- Access
 			good_result: Result.is_equal (line_number.out)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if internal_hash_code = 0 then
@@ -80,7 +80,7 @@ feature -- Access
 			good_result: Result = internal_hash_code
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := ""
@@ -88,7 +88,7 @@ feature -- Access
 			no_description_attached_to_a_line: Result.is_equal ("")
 		end
 
-	wrapped_domain: QL_LINE_DOMAIN is
+	wrapped_domain: QL_LINE_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
@@ -100,7 +100,7 @@ feature -- Access
 			-- If `parent' is a class, current represents the `line_number'-th line in that file,
 			-- if `parent' is a feature, current represents the `line_number'-th line in that feature,
 
-	text: STRING is
+	text: STRING
 			-- Text of the line represented by current
 		do
 			if internal_text = Void then
@@ -112,13 +112,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := line_scope
 		end
 
-	line_length: INTEGER is
+	line_length: INTEGER
 			-- Length in bytes of current line
 		do
 			Result := text.count
@@ -126,7 +126,7 @@ feature -- Access
 			good_result: Result = text.count
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := line_path_marker
@@ -134,7 +134,7 @@ feature -- Access
 			good_result: Result = line_path_marker
 		end
 
-	line_in_file: INTEGER is
+	line_in_file: INTEGER
 			-- Line number of current item in file
 		do
 			if code_structure.is_compiled then
@@ -144,7 +144,7 @@ feature -- Access
 			end
 		end
 
-	code_structure: QL_CODE_STRUCTURE_ITEM is
+	code_structure: QL_CODE_STRUCTURE_ITEM
 			-- Class associated with Current line
 		do
 			if code_structure_internal = Void then
@@ -155,7 +155,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		local
@@ -170,7 +170,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Is Current item compiled?
 		do
 			Result := True
@@ -178,7 +178,7 @@ feature -- Status report
 			good_result: Result
 		end
 
-	is_blank: BOOLEAN is
+	is_blank: BOOLEAN
 			-- Is current a blank line?
 		do
 			if not is_blank_calculated then
@@ -189,7 +189,7 @@ feature -- Status report
 			good_result: Result = is_blank_internal
 		end
 
-	is_comment: BOOLEAN is
+	is_comment: BOOLEAN
 			-- Is current a comment line?
 		do
 			if not is_comment_calculated then
@@ -200,7 +200,7 @@ feature -- Status report
 			good_result: Result = is_comment_internal
 		end
 
-	is_line_number_valid (a_line_number: INTEGER; a_parent: like parent): BOOLEAN is
+	is_line_number_valid (a_line_number: INTEGER; a_parent: like parent): BOOLEAN
 			-- Is `a_line_number' valid according to `a_parent'?
 			-- e.g., `a_line_number' is neigher too small or too large.
 		require
@@ -228,7 +228,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_line (Current)
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation
 	internal_text: STRING
 		-- Implementation of `text'
 
-	retrieve_text is
+	retrieve_text
 			-- Retrieve `text' from `ast' using `line_number'
 		require
 			valid_line_number: is_line_number_valid (line_number, parent)
@@ -276,7 +276,7 @@ feature{NONE} -- Implementation
 			internal_text_attached: internal_text /= Void
 		end
 
-	calculate_is_blank is
+	calculate_is_blank
 			-- Calculate value of `is_blank'
 		local
 			l_text: STRING
@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 			is_blank_calculated: is_blank_calculated
 		end
 
-	calculate_is_comment is
+	calculate_is_comment
 			-- Calculate value of `is_comment'
 		local
 			l_text: STRING
@@ -336,7 +336,7 @@ feature{NONE} -- Implementation
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -355,7 +355,7 @@ invariant
 	parent_attached: parent /= Void
 	parent_valid: parent.is_valid_domain_item and then parent.is_code_structure
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

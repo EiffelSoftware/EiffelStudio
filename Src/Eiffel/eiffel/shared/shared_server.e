@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Shared access to servers
@@ -12,72 +12,72 @@ inherit
 
 feature {NONE}
 
-	Body_server: BODY_SERVER is
+	Body_server: BODY_SERVER
 			-- Server for instances of CONTENT_AS
 		once
 			Result := System.body_server
 		end
 
-	Ast_server: AST_SERVER is
+	Ast_server: AST_SERVER
 			-- Server for abstract syntax trees
 		once
 			Result := System.ast_server
 		end
 
-	Byte_server: BYTE_SERVER is
+	Byte_server: BYTE_SERVER
 			-- Server for byte code trees
 		once
 			Result := System.byte_server
 		end
 
-	Class_info_server: CLASS_INFO_SERVER is
+	Class_info_server: CLASS_INFO_SERVER
 			-- Server for parent lists
 		once
 			Result := System.class_info_server
 		end
 
-	Inv_ast_server: INV_AST_SERVER is
+	Inv_ast_server: INV_AST_SERVER
 			-- Server for invariant clause
 		once
 			Result := System.inv_ast_server
 		end
 
-	Inv_byte_server: INV_BYTE_SERVER is
+	Inv_byte_server: INV_BYTE_SERVER
 			-- Server for invariant byte code
 		once
 			Result := System.inv_byte_server
 		end
 
-	Depend_server: DEPEND_SERVER is
+	Depend_server: DEPEND_SERVER
 			-- Server for dependances for incremental type check
 		once
 			Result := System.depend_server
 		end
 
-	M_feat_tbl_server: M_FEAT_TBL_SERVER is
+	M_feat_tbl_server: M_FEAT_TBL_SERVER
 			-- Server for byte code descirption of melted feature tables
 		once
 			Result := System.m_feat_tbl_server
 		end
 
-	M_feature_server: M_FEATURE_SERVER is
+	M_feature_server: M_FEATURE_SERVER
 			-- Server of melted feature byte code
 		once
 			Result := System.m_feature_server
 		end
 
-	M_desc_server: M_DESC_SERVER is
+	M_desc_server: M_DESC_SERVER
 		once
 			Result := System.m_desc_server
 		end
 
-	Match_list_server: MATCH_LIST_SERVER is
+	Match_list_server: MATCH_LIST_SERVER
 			-- Server for the match list
 		once
 			Result := System.Match_list_server
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

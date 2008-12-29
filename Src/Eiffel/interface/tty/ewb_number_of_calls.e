@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Disables or Enables output of number of calls in %
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make_loop is
+	make_loop
 		do
 			show_enabled := true;
 			output_names.force ("calls", output_names.count + 1);
@@ -31,29 +31,29 @@ feature -- Creation
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING_32 is
+	real_help_message: STRING_32
 		once
 			Result := number_of_calls_help;
 		end;
 
-	tabs: STRING is
+	tabs: STRING
 		once
 			Result := "%T%T%T";
 		end;
 
-	column_name: STRING is
+	column_name: STRING
 		once
 			Result := "calls";
 		end;
 
 feature -- Output string
 
-	abbrev_cmd_name: STRING is
+	abbrev_cmd_name: STRING
 		once
 			Result := "#Call";
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

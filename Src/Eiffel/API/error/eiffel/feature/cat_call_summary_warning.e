@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Give a summary of all catcall warnings."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ create
 
 feature
 
-	make (a_summary: like summary) is
+	make (a_summary: like summary)
 			-- Intialize Current with `a_summary'.
 		require
 			a_summary_not_void: a_summary /= Void
@@ -31,7 +31,7 @@ feature -- Access
 
 	code: STRING = "Catcall Summary Report"
 
-	file_name: STRING is
+	file_name: STRING
 		do
 			-- Not applicable
 		end
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Formatting
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add (summary)
 		end

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class LINE [T -> ANY] 
@@ -22,18 +22,18 @@ feature
 	cursor: INTEGER;
 			-- Cursor in the line
 
-	make is
+	make
 		do
 			basic_make (1, Chunk);
 		end;
 
 feature {NONE}
 
-	Chunk: INTEGER is 50;
+	Chunk: INTEGER = 50;
 
 feature 
 
-	insert (a: T) is
+	insert (a: T)
 			-- Insert `a' in the line.
 		do
 			cursor := cursor + 1;
@@ -45,7 +45,7 @@ feature
 			item = a;
 		end;
 
-	change_item (t: T) is
+	change_item (t: T)
 			-- Remove one item
 		require
 			cursor > 0;
@@ -54,7 +54,7 @@ feature
 			put (t, cursor);
 		end;
 
-	remove is
+	remove
 			-- Remove current item
 		require
 			valid_cursor: cursor >0
@@ -66,24 +66,24 @@ feature
 			cursor := cursor - 1
 		end
 		
-	start is
+	start
 			-- Start the iteration
 		do
 			cursor := 1;
 		end;
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is the cursor after ?
 		do
 			Result := cursor > count;
 		end;
 
-	offright: BOOLEAN is obsolete "Use `after'"
+	offright: BOOLEAN obsolete "Use `after'"
 		do
 			Result := after
 		end;
 
-	forth is
+	forth
 			-- Iteration
 		require
 			not after
@@ -91,7 +91,7 @@ feature
 			cursor := cursor + 1;
 		end;
 
-	item: T is
+	item: T
 			-- Item at cursor position
 		require
 			not after
@@ -99,19 +99,19 @@ feature
 			Result := array_item (cursor);
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Clear the structure
 		do
 			cursor := 0;
 			clear_all;
 		end;
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 		do
 			cursor := i
 		end;
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

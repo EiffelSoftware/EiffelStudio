@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to evaluate class hierarchy/relationship"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			check
@@ -50,7 +50,7 @@ feature -- Evaluate
 
 feature{NONE} -- Implementation
 
-	find_result is
+	find_result
 			-- Find proper classes according to `criterion_domain'
 		local
 			l_class_tbl: HASH_TABLE [QL_CLASS, INTEGER]
@@ -70,7 +70,7 @@ feature{NONE} -- Implementation
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-	reset is
+	reset
 			-- Reset internal structure
 		do
 			if candidate_class_list = Void then
@@ -90,7 +90,7 @@ feature{NONE} -- Implementation
 			processed_classes_is_empty: processed_classes.is_empty
 		end
 
-	compiled_classes_from_domain (a_domain: QL_DOMAIN): HASH_TABLE [QL_CLASS, INTEGER] is
+	compiled_classes_from_domain (a_domain: QL_DOMAIN): HASH_TABLE [QL_CLASS, INTEGER]
 			-- Table of compiled class from `a_domain'
 			-- Key is `class_id' from {CLASS_C}, value is {QL_CLASS} object representing that class
 		require
@@ -125,7 +125,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	is_satisfied_by_internal (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by_internal (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -137,7 +137,7 @@ feature{NONE} -- Implementation
 			good_result: Result implies candidate_class_list.has (a_item.class_c.class_id)
 		end
 
-	query_class_item (a_class: CONF_CLASS): QL_CLASS is
+	query_class_item (a_class: CONF_CLASS): QL_CLASS
 			-- Query class representation of `a_class'.
 			-- Take care of both visible and invisible situation.
 		require
@@ -162,14 +162,14 @@ feature{NONE} -- Implemenation/Data
 			-- Flag structure to indicate whether or not a class has been processed
 			-- Item of this set is `class_id' of a compiled class
 
-	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]] is
+	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
 			-- Finder used to find result for current criterion
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

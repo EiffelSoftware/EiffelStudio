@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Error for assigner call which source type is not compatible with target type."
 	legal: "See notice at end of class."
@@ -23,12 +23,12 @@ feature -- Properties
 	source_type: TYPE_A
 			-- Source type of the assignment (right part)
 
-	subcode: INTEGER is 1
+	subcode: INTEGER = 1
 			-- Error subcode
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := Precursor and then
@@ -37,7 +37,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -51,19 +51,19 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_target_type (t: TYPE_A) is
+	set_target_type (t: TYPE_A)
 			-- Assign `t' to `target_type'.
 		do
 			target_type := t
 		end
 
-	set_source_type (s: TYPE_A) is
+	set_source_type (s: TYPE_A)
 			-- Assign `s' to `source_type'.
 		do
 			source_type := s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

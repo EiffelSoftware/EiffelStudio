@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Initialize and check validity of convert clauses in instances of CLASS_C."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature -- Initialization/Checking
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
 			a_convertors: EIFFEL_LIST [CONVERT_FEAT_AS])
-		is
+		
 			-- Initialize `convert_to' and `convert_from' of `a_class' using `a_convertors'.
 			-- Performs also basic checking on `a_convertors'.
 			-- Update `Error_handler' if any error is found.
@@ -205,7 +205,7 @@ feature -- Initialization/Checking
 				(a_class.convert_to /= Void or a_class.convert_from /= Void)
 		end
 
-	system_validity_checking (an_array: ARRAY [CLASS_C]) is
+	system_validity_checking (an_array: ARRAY [CLASS_C])
 			-- Check convertibility validity on all system. That is to say, check
 			-- that there is only one way to convert from a type to another type.
 			-- Note: Check is done on base class. Is this sufficient?
@@ -269,7 +269,7 @@ feature -- Initialization/Checking
 			end
 		end
 
-	check_conversion (a_context_class: CLASS_C; a_source_type, a_target_type: TYPE_A) is
+	check_conversion (a_context_class: CLASS_C; a_source_type, a_target_type: TYPE_A)
 			-- In context of `a_context_class' check if `a_source_type' converts to `a_target_type'.
 			-- If so set `last_conversion_check_successful' to True and set `last_conversion_info'
 			-- with proper conversion information.
@@ -381,7 +381,7 @@ feature -- Initialization/Checking
 			last_conversion_check_successful := l_success
 		end
 
-	check_formal_conversion (a_context_class: CLASS_C; a_formal: FORMAL_A; a_target_type: TYPE_A) is
+	check_formal_conversion (a_context_class: CLASS_C; a_formal: FORMAL_A; a_target_type: TYPE_A)
 			-- In context of `a_context_class' check if `a_formal' converts to `a_target_type'.
 			-- If so set `last_conversion_check_successful' to True and set `last_conversion_info'
 			-- with proper conversion information.
@@ -438,7 +438,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation: initialization
 
-	new_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A] is
+	new_convert_table: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Create new instance used to initialize `convert_to' or `convert_from' of CLASS_C
 			-- where equality on keys is done using `same_as' from NAMED_TYPE_A.
 		do
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation: initialization
 
 feature {NONE} -- Implementation: checking
 
-	check_class_validity (a_class: CLASS_C) is
+	check_class_validity (a_class: CLASS_C)
 			-- Check that `a_class' can have a convert clause.
 		require
 			a_class_not_void: a_class /= Void
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation: checking
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
 			a_convert_feat: CONVERT_FEAT_AS)
-		is
+		
 			-- Check validity of feature represented by `a_convert_feat' in `a_feat_tbl'.
 			-- Update `Error_handler' if any error is found.
 		require
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation: checking
 			a_feat_tbl: FEATURE_TABLE;
 			a_convert_feat: CONVERT_FEAT_AS;
 			a_type: NAMED_TYPE_A)
-		is
+		
 			-- Check validity of `a_type' used to convert to or from using `a_convert_feat' routine
 			-- so that it matches routine specified in `a_convert_feat', and that `a_type' does not
 			-- conform to `a_class'.
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation: checking
 
 feature {NONE} -- Implementation: status report
 
-	is_conversion_ambiguous (a, b: CLASS_C): BOOLEAN is
+	is_conversion_ambiguous (a, b: CLASS_C): BOOLEAN
 			-- Does `a' convert to `b'?
 		require
 			a_not_void: a /= Void
@@ -638,7 +638,7 @@ feature {NONE} -- Implementation: status report
 			end
 		end
 
-	valid_signature (a_feat: FEATURE_I): BOOLEAN is
+	valid_signature (a_feat: FEATURE_I): BOOLEAN
 			-- Is `a_feat' valid for a conversion routine.
 		require
 			a_feat_not_void: a_feat /= Void
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation: access
 	has_error: BOOLEAN
 			-- Did we find an error in last checking.
 
-	test (u, v: NAMED_TYPE_A): BOOLEAN is
+	test (u, v: NAMED_TYPE_A): BOOLEAN
 			-- Compare two instances `u' and `v' of NAMED_TYPE_A using `same_as'.
 		do
 			if v = Void then
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation: access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

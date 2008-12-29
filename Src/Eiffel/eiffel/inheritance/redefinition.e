@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Redefinition of inherited features contained in `old_features' into%N%
 		%a new feature."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 	
 feature 
 
-	check_adaptation (feat_tbl: FEATURE_TABLE) is
+	check_adaptation (feat_tbl: FEATURE_TABLE)
 			-- Check signature conformance beetween the precursors contained
 			-- in `old_features' and the feature `new_feature'.
 			-- Take care also of the attribute `redefinitions' of
@@ -66,7 +66,7 @@ feature
 			end
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

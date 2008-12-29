@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -6,7 +6,7 @@ class ASYNC_SHELL
 
 feature
 
-	send is
+	send
 			-- Send request to execute shell command
 			-- given by `command_name' in background.
 		require
@@ -28,7 +28,7 @@ feature
 			-- Command to be executed
 			-- by background shell
 
-	set_command_name (s: STRING) is
+	set_command_name (s: STRING)
 			-- Assign `s' to `command_name'.
 		require
 			Valid_command: not (s = Void)
@@ -38,7 +38,7 @@ feature
 			command_name = s
 		end;
 
-	pass_address is
+	pass_address
 			-- Send the addresse of `send' and `set_command_name' to
 			-- C so that C can send a request
 		once
@@ -47,17 +47,17 @@ feature
 
 feature {NONE} -- External
 
-	async_shell (cmd: POINTER): INTEGER is
+	async_shell (cmd: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	async_shell_pass_address (send_address, set_address: POINTER) is
+	async_shell_pass_address (send_address, set_address: POINTER)
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract Item for EB_FAVORITES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			if is_feature then
@@ -42,29 +42,29 @@ feature -- Access
 	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for the item.
 
-	associated_stone: STONE is
+	associated_stone: STONE
 			-- FEATURE_STONE associated with favorite class, Void if none.
 		deferred
 		end
 
 feature -- Status
 
-	is_folder: BOOLEAN is
+	is_folder: BOOLEAN
 			-- Is the current item a folder?
 		deferred
 		end
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN
 			-- Is the current item a class?
 		deferred
 		end
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN
 			-- Is the current item a feature?
 		deferred
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Compare the names
 		do
 			Result := (other /= Void) and then
@@ -73,13 +73,13 @@ feature -- Status
 
 feature -- Element change
 
-	set_parent (a_parent: EB_FAVORITES_ITEM_LIST) is
+	set_parent (a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
 		end
 
-	refresh is
+	refresh
 			-- Refresh current item.
 		deferred
 		ensure
@@ -88,7 +88,7 @@ feature -- Element change
 
 feature -- Interactivity
 
-	add_item_to_parent (new_item: EB_FAVORITES_ITEM) is
+	add_item_to_parent (new_item: EB_FAVORITES_ITEM)
 			-- Insert `new_item' in the parent list just after `Current'
 		do
 			parent.start
@@ -96,22 +96,22 @@ feature -- Interactivity
 			parent.put_right (new_item)
 		end
 
-	mouse_cursor: EV_POINTER_STYLE is
+	mouse_cursor: EV_POINTER_STYLE
 		deferred
 		end
 
-	Xmouse_cursor: EV_POINTER_STYLE is
+	Xmouse_cursor: EV_POINTER_STYLE
 		deferred
 		end
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation for Current.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapping of real Eiffel types to underlying machine type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,26 +15,26 @@ inherit
 
 feature -- Access
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal type value for generation
 		do
 			Result := {SHARED_C_LEVEL}.c_void
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.element_type_void
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.sk_void
 		end
 
-	c_string: STRING is "void"
+	c_string: STRING = "void"
 			-- String generated for the type.
 
-	typed_field: STRING is
+	typed_field: STRING
 			-- Value field of a C structure corresponding to this type
 		do
 				-- Dummy value to fullfil inherited contract to cause
@@ -45,7 +45,7 @@ feature -- Access
 			False
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.void_code
@@ -53,18 +53,18 @@ feature -- Access
 
 feature -- Status Report
 
-	is_void: BOOLEAN is True
+	is_void: BOOLEAN = True
 			-- Type is a void one
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_void_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

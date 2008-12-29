@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for EB_WINDOW_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,28 +11,28 @@ deferred class
 
 feature -- Updates
 
-	on_class_added (a_class: CLASS_I) is
+	on_class_added (a_class: CLASS_I)
 			-- `a_class' has been added.
 		require
 			a_class_not_void: a_class /= Void
 		do
 		end
 
-	on_class_changed (a_class: CLASS_I) is
+	on_class_changed (a_class: CLASS_I)
 			-- `a_class' has changed. Should not happen.
 		require
 			a_class_not_void: a_class /= Void
 		do
 		end
 
-	on_class_removed (a_class: CLASS_I) is
+	on_class_removed (a_class: CLASS_I)
 			-- `a_class' has been removed.
 		require
 			a_class_not_void: a_class /= Void
 		do
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
 			-- `a_class' has been moved away from `old_group'.
 			-- `old_path' is old relative path in `old_group'
 		require
@@ -42,21 +42,21 @@ feature -- Updates
 		do
 		end
 
-	on_cluster_added (a_cluster: CLUSTER_I) is
+	on_cluster_added (a_cluster: CLUSTER_I)
 			-- `a_cluster' has been added.
 		require
 			valid_cluster: a_cluster /= Void
 		do
 		end
 
-	on_cluster_changed (a_cluster: CLUSTER_I) is
+	on_cluster_changed (a_cluster: CLUSTER_I)
 			-- `a_cluster' was renamed.
 		require
 			valid_cluster: a_cluster /= Void
 		do
 		end
 
-	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
+	on_cluster_removed (a_cluster: EB_SORTED_CLUSTER; a_path: STRING)
 			-- `a_cluster' has been removed.
 		require
 			valid_cluster: a_cluster /= Void
@@ -65,35 +65,35 @@ feature -- Updates
 		do
 		end
 
-	on_cluster_moved (moved_cluster: EB_SORTED_CLUSTER; old_parent: CLUSTER_I) is
+	on_cluster_moved (moved_cluster: EB_SORTED_CLUSTER; old_parent: CLUSTER_I)
 			-- `a_cluster' has been removed.
 		require
 			valid_cluster: moved_cluster /= Void
 		do
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- A new project has been loaded.
 		do
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Current project has been closed.
 		do
 		end
 
-	refresh is
+	refresh
 			-- Refresh the display.
 		do
 		end
 
-	manager: EB_CLUSTERS is
+	manager: EB_CLUSTERS
 			-- manager `Current' is associated to.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

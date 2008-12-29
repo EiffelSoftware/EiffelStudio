@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_character_8 (v: CHARACTER_8) is
+	make_character_8 (v: CHARACTER_8)
 			-- Create current with value `v'.
 		do
 			character_value := v
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			is_character_8: is_character_8
 		end
 
-	make_character_32 (v: CHARACTER_32) is
+	make_character_32 (v: CHARACTER_32)
 			-- Create current with value `v'.
 		do
 			character_value := v
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := character_value = other.character_value and then
@@ -58,10 +58,10 @@ feature
 	character_value: CHARACTER_32
 			-- Character constant value
 
-	is_character: BOOLEAN is True
+	is_character: BOOLEAN = True
 			-- Is the current constant a character one?
 
-	is_character_8: BOOLEAN is
+	is_character_8: BOOLEAN
 			-- Is it CHARACTER_8 constant?
 		do
 			Result := not is_character_32
@@ -70,7 +70,7 @@ feature
 	is_character_32: BOOLEAN
 			-- Is it CHARACTER_32 constant?
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		local
 			c: CHARACTER_A
@@ -84,7 +84,7 @@ feature
 			end
 		end
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		do
 			if is_character_32 then
@@ -97,7 +97,7 @@ feature
 			end
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for character constant value.
 		do
 			if is_character_8 then
@@ -107,7 +107,7 @@ feature
 			end
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a character constant value.
 		do
 			if is_character_8 then
@@ -119,26 +119,26 @@ feature
 			end
 		end
 
-	dump: STRING is
+	dump: STRING
 		do
 			Result := character_value.out
 		end
 
-	append_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_signature (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add_char ('%'')
 			a_text_formatter.add_string (wchar_text (character_value))
 			a_text_formatter.add_char ('%'')
 		end
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			Result := wchar_text (character_value)
 		end
 
 feature -- Multi-branch instruction processing
 
-	inspect_value (value_type: TYPE_A): CHAR_VAL_B is
+	inspect_value (value_type: TYPE_A): CHAR_VAL_B
 			-- Inspect value of the given `value_type'
 		do
 			create Result.make (character_value)
@@ -147,7 +147,7 @@ feature -- Multi-branch instruction processing
 invariant
 	consistent_type: is_character_8 xor is_character_32
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

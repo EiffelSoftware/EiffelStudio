@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Third state of the profiler wizard (Choose input file)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		local
 			profiler_type_box: EV_HORIZONTAL_BOX
@@ -77,7 +77,7 @@ feature -- Basic Operation
 			runtime_information_record_textfield.set_text (information.runtime_information_record)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		do
 			if is_supplied_runtime_information_record_valid then
 				proceed_with_new_state(create {EB_PROFILER_WIZARD_FOURTH_STATE}.make (wizard_information))
@@ -86,7 +86,7 @@ feature -- Basic Operation
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			record_filename: FILE_NAME
@@ -103,14 +103,14 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (Interface_names.wt_Execution_Profile_Generation)
 			subtitle.set_text (Interface_names.ws_Execution_Profile_Generation)
 			message.set_text (Interface_names.wb_Execution_Profile_Generation)
 		end
 
-	fill_profiler_list is
+	fill_profiler_list
 			-- Fill in `profiler_list' with all available profiler configuration files.
 			-- Fill `profiler_list' with profilers
 			-- for which configuration files could be found
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	select_profiler (a_profiler: STRING) is
+	select_profiler (a_profiler: STRING)
 			-- Select `a_profiler' in the list `profiler_list'.
 		require
 			profiler_list_not_void: profiler_list /= Void
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_supplied_runtime_information_record_valid: BOOLEAN is
+	is_supplied_runtime_information_record_valid: BOOLEAN
 			-- Is the supplied Runtime information record a valid file?
 		local
 			rtir_file: RAW_FILE
@@ -205,7 +205,7 @@ feature {NONE} -- Vision2 controls
 	profiler_list: EV_COMBO_BOX;
 			-- Type of the profiler used to generate the record.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

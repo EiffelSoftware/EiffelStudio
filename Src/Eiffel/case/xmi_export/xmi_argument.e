@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on an argument of a feature in the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the argument.
 		local
 			xmi_class: XMI_CLASS
@@ -55,7 +55,7 @@ feature -- Actions
 				%                    </Foundation.Core.Parameter>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

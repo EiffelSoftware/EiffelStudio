@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toggle line numbers in editors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- New command
 		do
 			Precursor {EB_EDITOR_COMMAND}
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Execution
 
-	initialize is
+	initialize
 			-- Initialize
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -48,7 +48,7 @@ feature -- Execution
 			enable_sensitive
 		end
 
-	execute_toggle is
+	execute_toggle
 			-- Execute the command.
 		do
 			if is_sensitive then
@@ -56,7 +56,7 @@ feature -- Execution
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

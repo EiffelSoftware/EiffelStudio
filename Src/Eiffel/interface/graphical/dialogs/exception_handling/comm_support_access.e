@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Communication base for accessing the Eiffel support system using cURL.
 	]"
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	init_easy_curl is
+	init_easy_curl
 			-- Initialization of easy curl
 		require
 			not_initialized: curl_hnd = default_pointer
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Clean up
 
-	dispose is
+	dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 		do
@@ -93,7 +93,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen curl: CURL_EASY_EXTERNALS is
+	frozen curl: CURL_EASY_EXTERNALS
 			-- Access to easy cURL external API.
 		once
 			create Result
@@ -133,7 +133,7 @@ feature -- Query
 
 feature -- HTML query
 
-	find_view_state (a_source: STRING_GENERAL): STRING_GENERAL is
+	find_view_state (a_source: STRING_GENERAL): STRING_GENERAL
 			-- Find __VIEWSTATE value in `a_source'.
 		require
 			a_source_attached: a_source /= Void
@@ -149,7 +149,7 @@ feature -- HTML query
 			Result := find_expression ("<a\shref=%"(.*?)%">here", a_source).as_string_8
 		end
 
-	find_event_validation (a_source: STRING_GENERAL): STRING_GENERAL is
+	find_event_validation (a_source: STRING_GENERAL): STRING_GENERAL
 			-- Find EVENT_VALIDATION value in `a_source'.
 		require
 			a_source_attached: a_source /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- HTML query
 
 feature {NONE} -- Basic operations
 
-	perform is
+	perform
 			-- Perform a cURL action.
 		require
 			is_support_accessible: is_support_accessible
@@ -222,7 +222,7 @@ feature {NONE} -- Constants
 	support_url_root: STRING = "http://www2.eiffel.com"
 			-- Support site unsecure base URL
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

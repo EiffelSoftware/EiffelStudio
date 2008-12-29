@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object being debugged."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {DEBUGGED_OBJECT_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
+	make (addr: like object_address; sp_lower, sp_upper: INTEGER)
 			-- Make debugged object with hector address `addr'
 			-- with upper and lower bounds `sp_lower' and `sp_upper'.
 			-- (At this stage we do not know if addr is a special object
@@ -80,7 +80,7 @@ feature -- Access
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
-	reset is
+	reset
 			-- Reset internal data
 		do
 			internal_attributes := Void
@@ -89,14 +89,14 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 			end
 		end
 
-	refresh (sp_lower, sp_upper: INTEGER) is
+	refresh (sp_lower, sp_upper: INTEGER)
 		do
 			reset
 		end
 
 feature -- Properties
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Attributes of object being inspected (sorted by name)
 		local
 			l_val: ABSTRACT_DEBUG_VALUE
@@ -117,12 +117,12 @@ feature {NONE} -- Implementation
 
 	internal_attributes: like attributes
 
-	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 		do
 			Result := Debug_value_keeper.item (a_address)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool where output and error of external commands are displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW; a_desc: like tool_descriptor) is
+	make (a_tool: EB_DEVELOPMENT_WINDOW; a_desc: like tool_descriptor)
 			-- Create a new external output tool.
 		do
 			develop_window := a_tool
@@ -65,14 +65,14 @@ feature{NONE} -- Initialization
 			c_compilation_output_manager.extend (Current)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content.
 		do
 			Precursor {ES_OUTPUT_TOOL_PANEL}(a_docking_manager)
 			content.drop_actions.extend (agent set_stone)
 		end
 
-	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
+	initialization (a_tool: EB_DEVELOPMENT_WINDOW)
 			-- Initialize interface.
 		local
 			l_ev_tool_bar_separator_1: SD_TOOL_BAR_SEPARATOR
@@ -184,13 +184,13 @@ feature{NONE} -- Initialization
 			l_locale_lbl.set_text (interface_names.l_locale)
 		end
 
-	pixmap_failure: EV_PIXMAP is
+	pixmap_failure: EV_PIXMAP
 			-- Pixmap shown when c compilation failed.
 		do
 			Result := stock_pixmaps.tool_c_output_failed_icon
 		end
 
-	pixmap_success: EV_PIXMAP is
+	pixmap_success: EV_PIXMAP
 			-- Pixmap shown when c compilation successed.
 		do
 			Result := stock_pixmaps.tool_c_output_successful_icon
@@ -198,7 +198,7 @@ feature{NONE} -- Initialization
 
 feature -- Command
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -208,7 +208,7 @@ feature -- Command
 			a_docking_manager.contents.extend (content)
 		end
 
-	set_stone (a_stone: ANY) is
+	set_stone (a_stone: ANY)
 			-- Set `a_stone' into Current.
 		do
 			on_open_c_file (a_stone, True)
@@ -216,7 +216,7 @@ feature -- Command
 
 feature -- Basic operation
 
-	clear is
+	clear
 			-- Clear window
 		do
 			output_text.set_text ("")
@@ -224,23 +224,23 @@ feature -- Basic operation
 			message_label.set_text ("")
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll the console to the bottom.
 		do
 			output_text.scroll_to_end
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the editor.
 		do
 		end
 
-	quick_refresh_editor is
+	quick_refresh_editor
 			-- Refresh the editor.
 		do
 		end
 
-	quick_refresh_margin is
+	quick_refresh_margin
 			-- Refresh the editor's margin.
 		do
 		end
@@ -260,7 +260,7 @@ feature -- Basic operation
 --			end
 --		end
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {ES_OUTPUT_TOOL_PANEL}
@@ -271,13 +271,13 @@ feature -- Basic operation
 
 feature -- Action
 
-	on_c_compilation_output_finished is
+	on_c_compilation_output_finished
 			-- Action to be performed when all output from c compilation has been finished
 		do
 			on_text_change
 		end
 
-	on_save_output_to_file is
+	on_save_output_to_file
 			-- Called when user press Save output button.
 		local
 			save_tool: EB_SAVE_STRING_TOOL
@@ -289,7 +289,7 @@ feature -- Action
 			end
 		end
 
-	on_clear_output_window is
+	on_clear_output_window
 			-- Clear output window.
 		do
 			if process_manager.is_c_compilation_running then
@@ -299,19 +299,19 @@ feature -- Action
 			end
 		end
 
-	on_go_to_w_code is
+	on_go_to_w_code
 			-- Go to W_code directory of current Eiffel system.		
 		do
 			go_to_dir (file_location (True))
 		end
 
-	on_go_to_f_code is
+	on_go_to_f_code
 			-- Go to F_code directory of current Eiffel system.
 		do
 			go_to_dir (file_location (False))
 		end
 
-	on_open_selected_text_in_external_editor is
+	on_open_selected_text_in_external_editor
 			-- Open selected text from `output_text' as file name in external editor.
 		local
 			req: COMMAND_EXECUTOR
@@ -325,7 +325,7 @@ feature -- Action
 			end
 		end
 
-	on_text_change is
+	on_text_change
 			-- Action performed when text changes in `output_text'
 		local
 			l_save_and_clear_need_sensitive: BOOLEAN
@@ -359,7 +359,7 @@ feature -- Action
 			end
 		end
 
-	on_open_w_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_open_w_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Action to be performed when open W_code in file browser
 		do
 			if button = {EV_POINTER_CONSTANTS}.right then
@@ -367,7 +367,7 @@ feature -- Action
 			end
 		end
 
-	on_open_f_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_open_f_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Action to be performed when open F_code in file browser
 		do
 			if button = {EV_POINTER_CONSTANTS}.right then
@@ -375,7 +375,7 @@ feature -- Action
 			end
 		end
 
-	on_go_to_project_dir is
+	on_go_to_project_dir
 			-- Go to project directory of current Eiffel system.
 		do
 			if workbench.system_defined then
@@ -385,7 +385,7 @@ feature -- Action
 			end
 		end
 
-	on_open_project_dir_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_open_project_dir_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Action to be performed when open project in file browser
 		do
 			if button = {EV_POINTER_CONSTANTS}.right then
@@ -393,7 +393,7 @@ feature -- Action
 			end
 		end
 
-	on_pebble_drop (a_pebble: ANY) is
+	on_pebble_drop (a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped on `w_code_btn', `f_code_btn' or `project_dir_btn'.
 		local
 			l_class_stone: CLASSI_STONE
@@ -419,7 +419,7 @@ feature -- Action
 			end
 		end
 
-	on_open_c_file (a_pebble: ANY; a_workbench: BOOLEAN) is
+	on_open_c_file (a_pebble: ANY; a_workbench: BOOLEAN)
 			-- Action to be performed to open generated c file for stone `a_pebble'.
 			-- `a_workbench' is True means workbench mode, otherwise finalized mode.
 		local
@@ -453,25 +453,25 @@ feature -- Action
 
 feature -- Status reporting
 
-	owner_development_window: EB_DEVELOPMENT_WINDOW is
+	owner_development_window: EB_DEVELOPMENT_WINDOW
 			-- Development window which `Current' is belonged to
 		do
 			Result := develop_window
 		end
 
-	is_general: BOOLEAN is false
+	is_general: BOOLEAN = false
 			-- Is general output tool?	
 
 feature -- C output pixmap management
 
-	start_c_output_pixmap_timer is
+	start_c_output_pixmap_timer
 			-- Start timer to draw pixmap animation on c output panel
 		do
 			c_output_timer_counter := 1
 			c_output_pixmap_timer.set_interval (300)
 		end
 
-	stop_c_output_pixmap_timer is
+	stop_c_output_pixmap_timer
 			-- Stop timer to draw pixmap animation on c output panel
 		do
 			c_output_pixmap_timer.set_interval (0)
@@ -487,7 +487,7 @@ feature -- C output pixmap management
 	c_output_timer_counter: INTEGER
 			-- Counter to indicate which pixmap should be displayed
 
-	c_output_pixmap_timer: EV_TIMEOUT is
+	c_output_pixmap_timer: EV_TIMEOUT
 			-- Timer to draw c output pixmap
 		once
 			Create Result
@@ -495,7 +495,7 @@ feature -- C output pixmap management
 			Result.actions.extend (agent on_draw_c_output_pixmap)
 		end
 
-	on_draw_c_output_pixmap is
+	on_draw_c_output_pixmap
 			-- Draw pixmap animation for C output.
 		local
 			l_anim: !ARRAY [!EV_PIXMAP]
@@ -509,7 +509,7 @@ feature -- C output pixmap management
 			end
 		end
 
-	draw_pixmap_on_tab (a_pixmap: EV_PIXMAP) is
+	draw_pixmap_on_tab (a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' on `a_tab'.
 			-- If `a_pixmap' is Void, clear any existing pixmap on `a_tab'.
 		do
@@ -520,7 +520,7 @@ feature -- C output pixmap management
 
 feature{NONE}	-- Implementation
 
-	go_to_dir (a_dir: STRING) is
+	go_to_dir (a_dir: STRING)
 			-- Open a console and go to directory `a_dir'.
 		local
 			prc_launcher: EB_PROCESS_LAUNCHER
@@ -533,7 +533,7 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	open_dir_in_file_browser (a_dir: STRING) is
+	open_dir_in_file_browser (a_dir: STRING)
 			-- Open `a_dir' in file browser.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -549,13 +549,13 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	show_no_system_defined_dlg is
+	show_no_system_defined_dlg
 			-- Show a dialog warning no eiffel system defined.
 		do
 			show_error_dialog (warning_messages.w_no_system_defined, develop_window.window)
 		end
 
-	show_error_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW) is
+	show_error_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW)
 			-- Show a error dialog containing message `msg' in `a_window'.
 		require
 			msg_not_void: msg /= Void
@@ -568,7 +568,7 @@ feature{NONE}	-- Implementation
 			l_error.show (a_window)
 		end
 
-	has_selected_file: BOOLEAN is
+	has_selected_file: BOOLEAN
 			-- Does selected text (if any) in `output_text' represent a correct file name?
 		local
 			l_file: RAW_FILE
@@ -613,7 +613,7 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	file_in_path (start_path: STRING; keyword: STRING): STRING is
+	file_in_path (start_path: STRING; keyword: STRING): STRING
 			-- Find file whose path contains `keyword' starting from `start_path'.
 			-- If found, return final path of the file, otherwise, return Void.
 		require
@@ -673,7 +673,7 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	display_status_message (a_msg: STRING_GENERAL) is
+	display_status_message (a_msg: STRING_GENERAL)
 			-- Display message `a_msg' in `message_label'.
 		require
 			a_msg_attached: a_msg /= Void
@@ -684,7 +684,7 @@ feature{NONE}	-- Implementation
 			message_set: message_label.text.is_equal (a_msg)
 		end
 
-	open_c_file_in_editor (a_file_name: STRING; a_line_number: INTEGER) is
+	open_c_file_in_editor (a_file_name: STRING; a_line_number: INTEGER)
 			-- Open `a_file_name' in external editor and scroll to line `a_line_number'.
 		local
 			req: COMMAND_EXECUTOR
@@ -718,7 +718,7 @@ feature{NONE} -- Implementation
 	open_editor_btn: SD_TOOL_BAR_BUTTON
 			-- Button to open selected text in `console' in an external editor
 
-	directory_separator: CHARACTER is
+	directory_separator: CHARACTER
 			-- Directory separator
 		local
 			l_op: OPERATING_ENVIRONMENT
@@ -727,7 +727,7 @@ feature{NONE} -- Implementation
 			Result := l_op.directory_separator
 		end
 
-	path_end_with_dir_separator (path: STRING): BOOLEAN is
+	path_end_with_dir_separator (path: STRING): BOOLEAN
 			-- Does `path' end with dir separator of current running system?
 		require
 			path_not_void: path /= Void
@@ -739,7 +739,7 @@ feature{NONE} -- Implementation
 			Result_set: Result implies (not path.is_empty and then (path.item (path.count) = path.operating_environment.directory_separator))
 		end
 
-	path_start_with_dir_separator (path: STRING): BOOLEAN is
+	path_start_with_dir_separator (path: STRING): BOOLEAN
 			-- Does `path' start with dir separator of current running system?
 		require
 			path_not_void: path /= Void
@@ -757,7 +757,7 @@ feature{NONE} -- Implementation
 	message_label: EV_LABEL;
 			-- Status message label
 
-	file_location (a_bench: BOOLEAN): STRING is
+	file_location (a_bench: BOOLEAN): STRING
 			-- Workbench location of Current project if `a_bench' is True,
 			-- otherwise finalized location.
 			-- Void if no project has been initialized.
@@ -771,7 +771,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	c_file_dialog: EB_C_FUNCTION_LIST_DIALOG is
+	c_file_dialog: EB_C_FUNCTION_LIST_DIALOG
 			-- Dialog to choose among different class versions
 		do
 			if c_file_dialog_internal = Void then
@@ -786,7 +786,7 @@ feature{NONE} -- Implementation
 	c_file_dialog_internal: like c_file_dialog
 			-- Implementation of `c_file_dialog'
 
-	concatenated_tooltip (a_first, a_second: STRING_GENERAL): STRING_GENERAL is
+	concatenated_tooltip (a_first, a_second: STRING_GENERAL): STRING_GENERAL
 			-- Tooltip which is `a_first' concatenated with `a_second' with a new-line character in between
 		require
 			a_first_attached: a_first /= Void
@@ -801,14 +801,14 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called before destroying this objects
 		do
 			c_compilation_output_manager.prune (Current)
 			Precursor {ES_OUTPUT_TOOL_PANEL}
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

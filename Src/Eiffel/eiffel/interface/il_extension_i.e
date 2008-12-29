@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of an IL extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	is_il: BOOLEAN is True
+	is_il: BOOLEAN = True
 			-- Current external is an IL external.
 
 	type: INTEGER
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_type (v: INTEGER) is
+	set_type (v: INTEGER)
 			-- Assign `v' to `type'.
 		require
 			valid_type: valid_type (v)
@@ -52,7 +52,7 @@ feature -- Settings
 			type_set: type = v
 		end
 
-	set_base_class (name: STRING) is
+	set_base_class (name: STRING)
 			-- Assign `name' to `base_class'.
 		require
 			name_not_void: name /= Void
@@ -64,14 +64,14 @@ feature -- Settings
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 		do
 			Result := Precursor {EXTERNAL_EXT_I} (other) and then (type = other.type and equal (base_class, other.base_class))
 		end
 
 feature -- Generation access
 
-	token: INTEGER is
+	token: INTEGER
 		do
 			Result := il_generator.external_token (base_class, names_heap.item (alias_name_id),
 				type, argument_types, return_type)
@@ -79,7 +79,7 @@ feature -- Generation access
 
 feature -- Call generation
 
-	generate_call (is_polymorphic: BOOLEAN) is
+	generate_call (is_polymorphic: BOOLEAN)
 			-- Generate external feature call on Current.
 		require
 			valid_call: alias_name_id > 0 or else
@@ -92,7 +92,7 @@ feature -- Call generation
 				type, argument_types, return_type, is_polymorphic)
 		end
 
-	generate_external_creation_call (a_actual_type: CL_TYPE_A) is
+	generate_external_creation_call (a_actual_type: CL_TYPE_A)
 			-- Generate external creation call for `a_actual_type', where constructor comes
 			-- from `Current'.
 		require
@@ -107,7 +107,7 @@ feature -- Call generation
 				type, argument_types, return_type)
 		end
 
-	generate_creation_call is
+	generate_creation_call
 			-- Generate external feature call on constructor `n' using information
 			-- of Current wihtout creating an object.
 		require
@@ -118,13 +118,13 @@ feature -- Call generation
 				creator_call_type, argument_types, return_type, False)
 		end
 
-	generate_body (il_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (il_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate C code.
 		do
 			-- Do nothing here since IL code does not generate into C code.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

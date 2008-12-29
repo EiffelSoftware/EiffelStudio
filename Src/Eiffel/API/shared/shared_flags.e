@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collection of statuses for various processing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Setting
 
-	set_gui (b: BOOLEAN) is
+	set_gui (b: BOOLEAN)
 			-- Set `gui_cell' with `b'.
 		do
 			gui_cell.put (b)
@@ -18,7 +18,7 @@ feature -- Setting
 			gui_cell_set: gui_cell.item = b
 		end
 
-	set_is_last_c_compilation_freezing (b: BOOLEAN) is
+	set_is_last_c_compilation_freezing (b: BOOLEAN)
 			-- Set `is_last_c_compilation_freezing' with `b'.
 		do
 			compilation_cell.put (b)
@@ -26,7 +26,7 @@ feature -- Setting
 			compilation_cell_set: compilation_cell.item = b
 		end
 
-	set_is_exit_requested (b: BOOLEAN) is
+	set_is_exit_requested (b: BOOLEAN)
 			-- Set `is_exit_requested' with `b'.
 		do
 			exit_request_cell.put (b)
@@ -36,7 +36,7 @@ feature -- Setting
 
 feature -- Status reporting
 
-	is_gui: BOOLEAN is
+	is_gui: BOOLEAN
 			-- Is ec running on GUI mode?
 		do
 			Result := gui_cell.item
@@ -44,7 +44,7 @@ feature -- Status reporting
 			good_result: Result = gui_cell.item
 		end
 
-	is_last_c_compilation_freezing: BOOLEAN is
+	is_last_c_compilation_freezing: BOOLEAN
 			-- Is last c compilation a freezing?
 		do
 			Result := compilation_cell.item
@@ -52,7 +52,7 @@ feature -- Status reporting
 			good_result: Result = compilation_cell.item
 		end
 
-	is_last_c_compilation_finalizing: BOOLEAN is
+	is_last_c_compilation_finalizing: BOOLEAN
 			-- Is last c compilation a finalizing?
 		do
 			Result := not compilation_cell.item
@@ -60,7 +60,7 @@ feature -- Status reporting
 			good_result: Result = not compilation_cell.item
 		end
 
-	is_exit_requested: BOOLEAN is
+	is_exit_requested: BOOLEAN
 			-- Is exit requested?
 		do
 			Result := exit_request_cell.item
@@ -70,25 +70,25 @@ feature -- Status reporting
 
 feature{NONE} -- Implementation
 
-	gui_cell: CELL [BOOLEAN] is
+	gui_cell: CELL [BOOLEAN]
 			-- GUI mode cell
 		once
 			create Result.put (False)
 		end
 
-	compilation_cell: CELL [BOOLEAN] is
+	compilation_cell: CELL [BOOLEAN]
 			-- Compilation flag
 		once
 			create Result.put (True)
 		end
 
-	exit_request_cell: CELL[BOOLEAN] is
+	exit_request_cell: CELL[BOOLEAN]
 			-- Exit request cell
 		once
 			create Result.put (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

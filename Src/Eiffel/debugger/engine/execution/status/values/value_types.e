@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Types shared by all debug values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature -- Shared constants
 
-	Immediate_value: INTEGER is 1
-	Void_value: INTEGER is 2
-	Reference_value: INTEGER is 3
-	Expanded_value: INTEGER is 4
-	Special_value: INTEGER is 5
-	External_reference_value: INTEGER is 6 -- used for dotnet
-	Static_external_reference_value: INTEGER is 7 -- Used for static external reference value
-	Static_reference_value: INTEGER is 8 -- Used for static external reference value (known in ec)
-	Exception_message_value: INTEGER is 9 -- used to display exception on value retrieving
-	Procedure_return_message_value: INTEGER is 10; -- used to display error on value retrieving
-	Error_message_value: INTEGER is 11; -- used to display error on value retrieving
+	Immediate_value: INTEGER = 1
+	Void_value: INTEGER = 2
+	Reference_value: INTEGER = 3
+	Expanded_value: INTEGER = 4
+	Special_value: INTEGER = 5
+	External_reference_value: INTEGER = 6 -- used for dotnet
+	Static_external_reference_value: INTEGER = 7 -- Used for static external reference value
+	Static_reference_value: INTEGER = 8 -- Used for static external reference value (known in ec)
+	Exception_message_value: INTEGER = 9 -- used to display exception on value retrieving
+	Procedure_return_message_value: INTEGER = 10; -- used to display error on value retrieving
+	Error_message_value: INTEGER = 11; -- used to display error on value retrieving
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

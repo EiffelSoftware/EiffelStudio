@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a group item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_group: like group) is
+	make (a_group: like group)
 			-- Initialize `group' with `a_group'.
 		require
 			a_group_attached: a_group /= Void
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 			group_set: group = a_group
 		end
 
-	make_with_parent (a_group: like group; a_parent: like parent) is
+	make_with_parent (a_group: like group; a_parent: like parent)
 			-- Initialize `group' with `a_group' and `parent' with `a_parent'.
 		require
 			a_group_attached: a_group /= Void
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -63,7 +63,7 @@ feature -- Setting
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			if name_internal = Void then
@@ -76,7 +76,7 @@ feature -- Access
 	group: CONF_GROUP
 			-- Group
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := group.description
@@ -88,7 +88,7 @@ feature -- Access
 						 (group.description /= Void implies Result.is_equal (group.description))
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of current
 		do
 			if internal_hash_code = 0 then
@@ -99,7 +99,7 @@ feature -- Access
 			good_result: Result = internal_hash_code and internal_hash_code = group.hash_code
 		end
 
-	title: STRING is
+	title: STRING
 			-- Title of current information
 		once
 			Result := query_language_names.ql_group
@@ -107,14 +107,14 @@ feature -- Access
 			good_result: Result.is_equal (query_language_names.ql_group)
 		end
 
-	wrapped_domain: QL_GROUP_DOMAIN is
+	wrapped_domain: QL_GROUP_DOMAIN
 			-- A group domain which has current as the only item
 		do
 			create Result.make
 			Result.content.extend (Current)
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := group_path_marker
@@ -122,7 +122,7 @@ feature -- Access
 			good_result: Result = group_path_marker
 		end
 
-	library_target: QL_TARGET is
+	library_target: QL_TARGET
 			-- Library target object if current group is a library
 		require
 			group_is_library: group.is_library
@@ -141,7 +141,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	groups_in_target: QL_GROUP_DOMAIN is
+	groups_in_target: QL_GROUP_DOMAIN
 			-- Groups in `library_target'
 		require
 			group_is_library: group.is_library
@@ -155,7 +155,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
@@ -164,10 +164,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is True
+	is_compiled: BOOLEAN = True
 			-- Is current item compiled?
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := group_scope
@@ -175,25 +175,25 @@ feature -- Status report
 			good_result: Result = group_scope
 		end
 
-	is_library: BOOLEAN is
+	is_library: BOOLEAN
 			-- Is `group' a library?
 		do
 			Result := group.is_library
 		end
 
-	is_assembly: BOOLEAN is
+	is_assembly: BOOLEAN
 			-- Is `group' an assembly?
 		do
 			Result := group.is_assembly
 		end
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Is `group' a cluster?
 		do
 			Result := group.is_cluster
 		end
 
-	is_physical_assembly: BOOLEAN is
+	is_physical_assembly: BOOLEAN
 			-- Is `group' a physical assembly?
 		do
 			Result := group.is_physical_assembly
@@ -201,7 +201,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_group (Current)
@@ -209,7 +209,7 @@ feature -- Visit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -227,7 +227,7 @@ invariant
 	group_attached: group /= Void
 	parent_valid: parent /= Void implies ((parent.is_group or parent.is_target) and (parent.is_valid_domain_item))
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

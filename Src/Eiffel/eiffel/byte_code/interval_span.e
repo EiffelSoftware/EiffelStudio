@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A span that is either a single interval or a group of intervals in inspect instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,36 +10,36 @@ deferred class
 
 feature -- Access
 
-	lower: INTERVAL_VAL_B is
+	lower: INTERVAL_VAL_B
 			-- Lower bound of a span
 		deferred
 		end
 
-	upper: like lower is
+	upper: like lower
 			-- Upper bound of a span
 		deferred
 		end
 
-	is_lower_included: BOOLEAN is
+	is_lower_included: BOOLEAN
 			-- Is `lower' included in a span?
 		deferred
 		end
 
-	is_upper_included: BOOLEAN is
+	is_upper_included: BOOLEAN
 			-- Is `upper' included in a span?
 		deferred
 		end
 
 feature -- Measurement
 
-	count: DOUBLE is
+	count: DOUBLE
 			-- Number of intervals and gaps in current span
 		deferred
 		end
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B)
 			-- Generate code for span in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -62,7 +62,7 @@ invariant
 	upper_not_void: upper /= Void
 	lower_before_upper: lower <= upper
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

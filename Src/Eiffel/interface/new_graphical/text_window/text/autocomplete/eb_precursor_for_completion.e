@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a precursor item in completion list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_from: like class_from; a_type: like type; a_arguments: like arguments) is
+	make (a_class_from: like class_from; a_type: like type; a_arguments: like arguments)
 			-- Initialization
 		do
 			make_old (precursor_string)
@@ -51,19 +51,19 @@ feature -- Access
 
 feature -- Status report
 
-	has_class_from: BOOLEAN is
+	has_class_from: BOOLEAN
 			-- Has `type'?
 		do
 			Result := class_from /= Void
 		end
 
-	has_type: BOOLEAN is
+	has_type: BOOLEAN
 			-- Has `has_type'?
 		do
 			Result := type /= Void
 		end
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Has `arguments'?
 		do
 			Result := arguments /= Void
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Query
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Grid item
 		local
 			l_items: ARRAYED_LIST [EDITOR_TOKEN]
@@ -106,7 +106,7 @@ feature -- Query
 
 feature -- Element change
 
-	set_class_from (a_class_from: like class_from) is
+	set_class_from (a_class_from: like class_from)
 			-- Set `class_from' with `a_class_from'.
 		require
 			a_class_from_not_void: a_class_from /= Void
@@ -117,7 +117,7 @@ feature -- Element change
 			class_from_set: has_class_from
 		end
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `type' with `a_type'.
 		require
 			a_type_from_not_void: a_type /= Void
@@ -128,7 +128,7 @@ feature -- Element change
 			has_type: has_type
 		end
 
-	set_arguments (a_arguments: like arguments) is
+	set_arguments (a_arguments: like arguments)
 			-- Set `arguments' with `a_arguments'.
 		require
 			a_arguments_from_not_void: a_arguments /= Void
@@ -141,7 +141,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	calculate_insert_name is
+	calculate_insert_name
 			-- Calculate insert name
 		local
 			l_string: STRING_32
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			insert_name := l_string
 		end
 
-	image_of_list (a_list: LIST [EDITOR_TOKEN]): STRING_32 is
+	image_of_list (a_list: LIST [EDITOR_TOKEN]): STRING_32
 			-- Image of token list
 		require
 			a_list_not_void: a_list /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 
 	precursor_string: STRING = "Precursor";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

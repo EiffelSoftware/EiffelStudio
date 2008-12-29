@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an .NET feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 			
-	make (a_consumed: CONSUMED_ENTITY) is
+	make (a_consumed: CONSUMED_ENTITY)
 			-- Create instance of DOTNET_FEATURE_AS with `a_consumed'.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	format (fctxt: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR) is
+	format (fctxt: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR)
 			-- Format current using `fctxt'.
 		require
 			fctxt_not_void: fctxt /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Access
 invariant
 	has_dotnet_entity: consumed_entity /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object which is responsable for printing c compiler or external command output and error when idle."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 		do
 			is_printing_freezing := False
 			is_printing_finalizing := False
@@ -30,10 +30,10 @@ feature{NONE} -- Initialization
 
 feature -- Printing Timer
 
-	initial_time_interval: INTEGER is 100
+	initial_time_interval: INTEGER = 100
 			-- Initial timer interval for printing check
 
-	remove_printer (ptr: INTEGER) is
+	remove_printer (ptr: INTEGER)
 			-- Remove printer numbered `ptr' from `printer_list'.
 		do
 			if printer_timer.actions.has (printer_list.i_th (ptr)) then
@@ -44,7 +44,7 @@ feature -- Printing Timer
 			end
 		end
 
-	add_printer (ptr: INTEGER) is
+	add_printer (ptr: INTEGER)
 			-- Add a printer numbered `ptr' to `printer list'.
 		require
 			printer_number_valid: ptr = external_printer or ptr = freezing_printer or ptr = finalizing_printer
@@ -57,16 +57,16 @@ feature -- Printing Timer
 			end
 		end
 
-	external_printer: INTEGER is 1
+	external_printer: INTEGER = 1
 			-- Printer to display external command output
 
-	freezing_printer: INTEGER is 2
+	freezing_printer: INTEGER = 2
 			-- Printer to display freezing output
 
-	finalizing_printer: INTEGER is 3
+	finalizing_printer: INTEGER = 3
 			-- Printer to display finalizing output
 
-	printer_list: ARRAYED_LIST [ PROCEDURE [ANY, TUPLE]] is
+	printer_list: ARRAYED_LIST [ PROCEDURE [ANY, TUPLE]]
 			-- List of printers
 		once
 			create Result.make (3)
@@ -77,7 +77,7 @@ feature -- Printing Timer
 
 feature -- Printing
 
-	print_freezing is
+	print_freezing
 			-- Print freezing output.
 		local
 			gm: EB_C_COMPILATION_OUTPUT_MANAGER
@@ -102,7 +102,7 @@ feature -- Printing
 			end
 		end
 
-	print_finalizing is
+	print_finalizing
 			-- Print finaizing output.
 		local
 			gm: EB_C_COMPILATION_OUTPUT_MANAGER
@@ -127,7 +127,7 @@ feature -- Printing
 			end
 		end
 
-	print_external is
+	print_external
 			-- Print output and error if any, of external command which is running.
 		local
 			b: EB_PROCESS_IO_DATA_BLOCK
@@ -152,13 +152,13 @@ feature{NONE} -- Implementation
 
 feature{NONE}
 
-	printer_timer: EV_TIMEOUT is
+	printer_timer: EV_TIMEOUT
 			-- Timer to call an agent to print output and error from another process		
 		once
 			create Result.make_with_interval (0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

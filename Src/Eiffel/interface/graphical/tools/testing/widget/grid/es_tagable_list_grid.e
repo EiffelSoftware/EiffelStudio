@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Grid displaying a list of tagable items. The items are retreived from an ACTIVE_COLLECTION_I. The
 		items in the grid are kept synchronized with the collection.
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	connect (a_collection: like collection) is
+	connect (a_collection: like collection)
 			-- List all items of collection in grid.
 			--
 			-- `a_collection': Collection containing items which are listed in grid.
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			create l_new.make (l_row, a_item)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

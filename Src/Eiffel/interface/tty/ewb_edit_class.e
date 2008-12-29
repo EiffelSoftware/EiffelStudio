@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Edit class text."
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	associated_cmd: E_CLASS_CMD is
+	associated_cmd: E_CLASS_CMD
 			-- Associated class command to be executed
 			-- after successfully retrieving the compiled
 			-- class
@@ -33,13 +33,13 @@ feature {NONE} -- Execution
 			end
 		end;
 
-	process_uncompiled_class (class_i: CLASS_I) is
+	process_uncompiled_class (class_i: CLASS_I)
 			-- Edit class `class_i'.
 		do
 			edit (class_i.file_name);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

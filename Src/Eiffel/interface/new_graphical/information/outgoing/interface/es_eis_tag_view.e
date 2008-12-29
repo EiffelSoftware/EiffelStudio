@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: !STRING_32; a_eis_grid: !ES_EIS_ENTRY_GRID) is
+	make (a_tag: !STRING_32; a_eis_grid: !ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	new_extractor: !ES_EIS_EXTRACTOR is
+	new_extractor: !ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_TAG_EXTRACTOR}Result.make (tag)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

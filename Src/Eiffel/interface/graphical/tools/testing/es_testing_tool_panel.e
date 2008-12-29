@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Graphical panel for EiffelStudio's testing tool.
 	]"
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization: widgets
 
-	build_tool_interface (a_widget: like create_widget) is
+	build_tool_interface (a_widget: like create_widget)
 			-- <Precursor>
 		do
 			build_view_bar (a_widget)
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization: widgets
 			a_widget.extend (split_area)
 		end
 
-	build_view_bar (a_widget: like create_widget) is
+	build_view_bar (a_widget: like create_widget)
 			-- Build tool bar containing view and filter box
 		local
 			l_tool_bar: SD_TOOL_BAR
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization: widgets
 			a_widget.disable_item_expand (l_hbox)
 		end
 
-	build_tree_view is
+	build_tree_view
 			-- Create `tree_view' and add it to `split_area'.
 		do
 			create tree_view.make (develop_window)
@@ -301,7 +301,7 @@ feature {NONE} -- Access: menus
 
 feature {NONE} -- Status setting: view
 
-	on_return_view is
+	on_return_view
 			-- Called when the user enters a new view definition
 		local
 			l_orig_tag: STRING
@@ -340,7 +340,7 @@ feature {NONE} -- Status setting: view
 			end
 		end
 
-	on_select_view is
+	on_select_view
 			-- Called when a view new view is selected
 		do
 			if {l_tag: STRING} view_box.selected_item.data then
@@ -362,7 +362,7 @@ feature {NONE} -- Status setting: view
 			execute_with_busy_cursor (agent update_view)
 		end
 
-	update_view_box is
+	update_view_box
 			-- Update proposal list for `view_box'
 		local
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
@@ -393,7 +393,7 @@ feature {NONE} -- Status setting: view
 			end
 		end
 
-	update_view is
+	update_view
 			-- Refresh `tree_view' according to current view definition.
 		local
 			l_tag: STRING
@@ -601,7 +601,7 @@ feature {NONE} -- Events: wizard
 
 feature {NONE} -- Events: test execution
 
-	on_run_current (a_type: !TYPE [TEST_EXECUTOR_I]) is
+	on_run_current (a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Called when user presses `run_button' or `debug_button' directly.
 		do
 			if not tree_view.selected_items.is_empty then
@@ -611,13 +611,13 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_all (a_type: !TYPE [TEST_EXECUTOR_I]) is
+	on_run_all (a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run all" item of `run_button'.
 		do
 			launch_executor (Void, a_type)
 		end
 
-	on_run_failing (a_type: !TYPE [TEST_EXECUTOR_I]) is
+	on_run_failing (a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Called when user selectes "run failing" item of `run_button'.
 		local
 			l_item: !TEST_I
@@ -644,7 +644,7 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_filtered (a_type: !TYPE [TEST_EXECUTOR_I]) is
+	on_run_filtered (a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run filteres" item of `run_button'.
 		do
 			if filter.has_expression then
@@ -654,7 +654,7 @@ feature {NONE} -- Events: test execution
 			end
 		end
 
-	on_run_selected (a_type: !TYPE [TEST_EXECUTOR_I]) is
+	on_run_selected (a_type: !TYPE [TEST_EXECUTOR_I])
 			-- Called when user selects "run selected" item of `run_button'.
 		do
 			launch_executor (tree_view.selected_items, a_type)
@@ -1069,7 +1069,7 @@ invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
 	details_tab_valid: notebook.has (outcome_tab.widget)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

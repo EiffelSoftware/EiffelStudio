@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a command with a toggle button for diagram tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Make `Current' selected.
 		local
 			l_string: STRING_GENERAL
@@ -32,7 +32,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Make `Current' deselected.
 		local
 			l_string: STRING_GENERAL
@@ -55,27 +55,27 @@ feature -- Status setting
 
 feature -- Access
 
-	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 		deferred
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 		deferred
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := tooltip
 		end
 
-	shortcut_string: STRING_GENERAL is
+	shortcut_string: STRING_GENERAL
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unique instance of ERROR_TRACER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,14 +10,14 @@ class
 
 feature -- Access
 
-	tracer: ERROR_TRACER is
+	tracer: ERROR_TRACER
 		once
 			create Result
 		ensure
 			tracer_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

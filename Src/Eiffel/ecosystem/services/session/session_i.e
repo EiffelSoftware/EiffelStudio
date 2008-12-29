@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An abstract interface for a collection of managed session data, bound to a IDE/project context.
 	]"
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	window_id_positive: is_per_window implies window_id > 0
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

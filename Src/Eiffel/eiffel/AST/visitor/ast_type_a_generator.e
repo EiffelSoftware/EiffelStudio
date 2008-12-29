@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Perform resolution of TYPE_AS into TYPE_A without validity checking."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ inherit
 
 feature -- Status report
 
-	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A is
+	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
 			-- Given a TYPE_AS node, try to find its equivalent CL_TYPE_A node.
 		require
 			a_type_not_void: a_type /= Void
@@ -54,7 +54,7 @@ feature -- Status report
 			last_type := Void
 		end
 
-	evaluate_type (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A is
+	evaluate_type (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
 			-- Given a TYPE_AS node, find its equivalent TYPE_A node.
 		require
 			a_type_not_void: a_type /= Void
@@ -71,7 +71,7 @@ feature -- Status report
 			evaluate_type_not_void: Result /= Void
 		end
 
-	evaluate_class_type (a_class_type: CLASS_TYPE_AS; a_context_class: CLASS_C): CL_TYPE_A is
+	evaluate_class_type (a_class_type: CLASS_TYPE_AS; a_context_class: CLASS_C): CL_TYPE_A
 			-- Given a CLASS_TYPE_AS node, find its equivalent CL_TYPE_A node.
 		require
 			a_class_type_not_void: a_class_type /= Void
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Visitor implementation
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 		local
 			t: UNEVALUATED_LIKE_TYPE
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Visitor implementation
 			last_type := t
 		end
 
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
+	process_like_cur_as (l_as: LIKE_CUR_AS)
 		local
 			l_cur: LIKE_CURRENT
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Visitor implementation
 			last_type := l_cur
 		end
 
-	process_formal_as (l_as: FORMAL_AS) is
+	process_formal_as (l_as: FORMAL_AS)
 		local
 			t: FORMAL_A
 		do
@@ -142,7 +142,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
@@ -213,12 +213,12 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			process_class_type_as (l_as)
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 		local
 			l_class_i: CLASS_I
 			l_class_c: CLASS_C
@@ -281,27 +281,27 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
+	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			l_as.type.process (Current)
 		end
 
-	process_none_type_as (l_as: NONE_TYPE_AS) is
+	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
 			last_type := none_type
 		end
 
-	process_bits_as (l_as: BITS_AS) is
+	process_bits_as (l_as: BITS_AS)
 		do
 			create {BITS_A} last_type.make (l_as.bits_value.integer_32_value)
 		end
 
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol.name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when undefinition of an attribute, a once, a constant %
@@ -25,17 +25,17 @@ feature -- Properties
 	parent: CLASS_C;
 			-- Parent from which `undefined_feature' is inherited
 
-	code: STRING is "VDUS";
+	code: STRING = "VDUS";
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 2;
 		end;
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -60,7 +60,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_a_feature (f: FEATURE_I) is
+	set_a_feature (f: FEATURE_I)
 			-- Assign `f' to `a_feature'.
 		require
 			valid_f: f /= Void
@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTER}
 			undefined_feature := f.api_feature (f.written_in);
 		end;
 
-	set_parent (c: CLASS_C) is
+	set_parent (c: CLASS_C)
 			-- Assign `c' to `parent'.
 		require
 			valid_c: c /= Void
@@ -76,7 +76,7 @@ feature {COMPILER_EXPORTER}
 			parent := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

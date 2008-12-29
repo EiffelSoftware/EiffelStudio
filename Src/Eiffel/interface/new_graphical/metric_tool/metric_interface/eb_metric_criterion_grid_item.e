@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric critrion"
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- Grid item for Current property
 		deferred
 		ensure
@@ -18,21 +18,21 @@ feature -- Access
 
 feature -- Setting
 
-	load_criterion (a_criterion: G) is
+	load_criterion (a_criterion: G)
 			-- Load `a_criterion' into Current.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	store_criterion (a_criterion: G) is
+	store_criterion (a_criterion: G)
 			-- Store Current in `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+	change_value_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
 		deferred
 		end

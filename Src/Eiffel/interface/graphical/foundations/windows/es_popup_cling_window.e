@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A specialized pop up window that does not immediate hide when requested, instead it delays it for a set interval
 		
@@ -123,7 +123,7 @@ invariant
 	not_is_hide_requested: not is_shown implies not is_hide_requested
 	hide_delay_timer_attached: is_hide_requested implies hide_delay_timer /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

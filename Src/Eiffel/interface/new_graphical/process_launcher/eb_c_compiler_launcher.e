@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C compiler launcher used in EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature{NONE}	-- Initialization
 
-	make is
+	make
 			-- Set up c compiler launch parameters.
 			-- `l_storage' is storage for output and error from c compilation.
 			-- `gen_path' is directory on which c compiler will be launched.
@@ -61,14 +61,14 @@ feature {NONE} -- Access
 
 feature -- Setting
 
-	set_c_compilation_type is
+	set_c_compilation_type
 			-- Set c compilation type, either freezing or finalizing.
 		deferred
 		end
 
 feature -- Path
 
-	generation_path: STRING is
+	generation_path: STRING
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		deferred
@@ -76,7 +76,7 @@ feature -- Path
 
 feature{NONE} -- Agents
 
-	output_dispatch_handler (s: STRING) is
+	output_dispatch_handler (s: STRING)
 			-- Agent called to store output `s' from c compiler
 		local
 			sblock: EB_PROCESS_IO_STRING_BLOCK
@@ -85,7 +85,7 @@ feature{NONE} -- Agents
 			data_storage.extend_block (sblock)
 		end
 
-	error_dispatch_handler (s: STRING) is
+	error_dispatch_handler (s: STRING)
 			-- Agent called to store error `s' from c compiler	
 		local
 			sblock: EB_PROCESS_IO_STRING_BLOCK
@@ -96,7 +96,7 @@ feature{NONE} -- Agents
 
 feature -- Status report
 
-	is_last_c_compilation_successful: BOOLEAN is
+	is_last_c_compilation_successful: BOOLEAN
 			-- Is last c compilation successful?
 		do
 			Result := c_compilation_successful_cell.item
@@ -104,14 +104,14 @@ feature -- Status report
 
 feature{NONE}  -- Actions
 
-	state_message_timer: EV_TIMEOUT is
+	state_message_timer: EV_TIMEOUT
 			-- Timer used to display c compilation status.
 		once
 			create Result.default_create
 			Result.actions.extend (agent window_manager.display_c_compilation_progress (Interface_names.e_C_compilation_running))
 		end
 
-	synchronize_on_c_compilation_start is
+	synchronize_on_c_compilation_start
 			-- Synchronize before launch c compiler.
 		do
 			data_storage.reset_output_byte_count
@@ -129,7 +129,7 @@ feature{NONE}  -- Actions
 			display_message_on_main_output (c_compilation_launched_msg, True)
 		end
 
-	synchronize_on_c_compilation_exit is
+	synchronize_on_c_compilation_exit
 			-- Synchronize when c compiler exits.
 		do
 			set_c_compilation_type
@@ -142,19 +142,19 @@ feature{NONE}  -- Actions
 			end
 		end
 
-	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Start pixmap animation on `a_dev_window'.
 		do
 			a_dev_window.tools.c_output_tool.start_c_output_pixmap_timer
 		end
 
-	stop_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	stop_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Stop pixmap animation on `a_dev_window'.
 		do
 			a_dev_window.tools.c_output_tool.stop_c_output_pixmap_timer
 		end
 
-	on_start is
+	on_start
 			-- Handler called before c compiler starts
 		local
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
@@ -167,7 +167,7 @@ feature{NONE}  -- Actions
 			start_actions.call (Void)
 		end
 
-	on_exit is
+	on_exit
 			-- Handler called when c compiler exits
 		local
 			l_error: C_COMPILER_ERROR
@@ -199,13 +199,13 @@ feature{NONE}  -- Actions
 			finished_actions.call (Void)
 		end
 
-	on_launch_successed is
+	on_launch_successed
 			-- Handler called when c compiler launch successed
 		do
 			launched_actions.call (Void)
 		end
 
-	on_launch_failed is
+	on_launch_failed
 			-- Handler called when c compiler launch failed
 		local
 			l_error: C_COMPILER_ERROR
@@ -224,7 +224,7 @@ feature{NONE}  -- Actions
 			finished_actions.call (Void)
 		end
 
-	on_terminate is
+	on_terminate
 			-- Handler called when c compiler has been terminated
 		do
 			c_compilation_successful_cell.put (True)
@@ -239,32 +239,32 @@ feature{NONE}  -- Actions
 
 feature{NONE} -- Implementation
 
-	c_compilation_launched_msg: STRING is
+	c_compilation_launched_msg: STRING
 			-- Message to indicate c compilation launched successfully
 		deferred
 		end
 
-	c_compilation_launch_failed_msg: STRING is
+	c_compilation_launch_failed_msg: STRING
 			-- Message to indicate c compilation launch failed
 		deferred
 		end
 
-	c_compilation_succeeded_msg: STRING is
+	c_compilation_succeeded_msg: STRING
 			-- Message to indicate c compilation exited successfully
 		deferred
 		end
 
-	c_compilation_failed_msg: STRING is
+	c_compilation_failed_msg: STRING
 			-- Message to indicate c compilation failed
 		deferred
 		end
 
-	c_compilation_terminated_msg: STRING is
+	c_compilation_terminated_msg: STRING
 			-- Message to indicate c compilation has been terminated
 		deferred
 		end
 
-	display_message_on_main_output (a_msg: STRING; a_suffix: BOOLEAN) is
+	display_message_on_main_output (a_msg: STRING; a_suffix: BOOLEAN)
 			-- Display `a_msg' on main output panel.
 			-- If `a_suffix' is True, add ".%N" to end of `a_msg'.
 		require
@@ -281,7 +281,7 @@ feature{NONE} -- Implementation
 			output_manager.end_processing
 		end
 
-	open_console is
+	open_console
 			-- Open a command line console if c-compilation failed.
 		require
 			generation_path_not_void: generation_path /= Void
@@ -289,18 +289,18 @@ feature{NONE} -- Implementation
 			open_console_in_dir (generation_path)
 		end
 
-	do_not_open_console is
+	do_not_open_console
 			-- Empty agent.
 		do
 		end
 
-	c_compilation_successful_cell: CELL [BOOLEAN] is
+	c_compilation_successful_cell: CELL [BOOLEAN]
 			-- Cell to hold c compilation successful flag
 		once
 			create Result.put (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_LOCAL_B
@@ -17,56 +17,56 @@ feature
 
 feature -- Status report
 
-	is_local: BOOLEAN is False
+	is_local: BOOLEAN = False
 			-- Not really a local.
 
 feature
 
-	fill_from (l: LOCAL_B) is
+	fill_from (l: LOCAL_B)
 		do
 			parent := l.parent
 			position := l.position
 			type := l.type
 		end
 
-	enlarged: INLINED_LOCAL_B is
+	enlarged: INLINED_LOCAL_B
 		do
 			Result := Current
 		end
 
 feature -- Register and code generation
 
-	Current_register: INLINED_CURRENT_B is
+	Current_register: INLINED_CURRENT_B
 		once
 			create Result
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end
 
-	analyze is
+	analyze
 			-- Do nothing
 		do
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-	print_register is
+	print_register
 		do
 			System.remover.inliner.inlined_feature.local_regs.item (position).print_register
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the same as us ?
 		do
 			if {l_local: like Current} r then
@@ -74,7 +74,7 @@ feature -- Register and code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"[
@@ -25,7 +25,7 @@ create {COMPILER_EXPORTER}
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; f: STRING; t: TYPE_A) is
+	make (c: CLASS_C; f: STRING; t: TYPE_A)
 			-- Create an error object for feature `f'
 			-- of type `t' in class `c'.
 		require
@@ -40,10 +40,10 @@ feature {NONE} -- Creation
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 			-- Error subcode
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

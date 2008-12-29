@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Visitor to print query language items into editor tokens					
 					Every time before generating text, call `wipe_out_text' to clean `text', and then generated.
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current.
 		do
 			set_is_class_name_displayed (True)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_text_empty: BOOLEAN is
+	is_text_empty: BOOLEAN
 			-- Is `text' empty (i.e., no editor token in it)?
 		require
 			output_attached: output /= Void
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Output generation
 
-	wipe_out_output is
+	wipe_out_output
 			-- Wipe out `output'.
 		require
 			output_attached: output /= Void
@@ -68,7 +68,7 @@ feature -- Output generation
 			output_wiped_output: output.is_output_empty
 		end
 
-	generate_output (a_item: QL_ITEM) is
+	generate_output (a_item: QL_ITEM)
 			-- Generate output for `a_item', store it in `output'.
 		require
 			a_item_attached: a_item /= Void
@@ -79,7 +79,7 @@ feature -- Output generation
 
 feature -- Setting
 
-	set_is_folder_displayed (b: BOOLEAN) is
+	set_is_folder_displayed (b: BOOLEAN)
 			-- Set `is_folder_displayed' with `b'.
 		do
 			is_folder_displayed := b
@@ -87,7 +87,7 @@ feature -- Setting
 			is_folder_displayed_set: is_folder_displayed = b
 		end
 
-	set_is_class_name_displayed (b: BOOLEAN) is
+	set_is_class_name_displayed (b: BOOLEAN)
 			-- Set `is_class_name_displayed' with `b'.
 		do
 			is_class_name_displayed := b
@@ -95,7 +95,7 @@ feature -- Setting
 			should_class_be_processed_set: is_class_name_displayed = b
 		end
 
-	set_output (a_output: like output) is
+	set_output (a_output: like output)
 			-- Set `output' with `a_output'.
 		require
 			a_output_attached: a_output /= Void
@@ -107,13 +107,13 @@ feature -- Setting
 
 feature -- Process
 
-	process_domain (a_item: QL_DOMAIN) is
+	process_domain (a_item: QL_DOMAIN)
 			-- Process `a_item'.
 		do
 			-- Do nothing.
 		end
 
-	process_item_internal (a_item: QL_ITEM) is
+	process_item_internal (a_item: QL_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -128,19 +128,19 @@ feature -- Process
 		end
 
 
-	process_target (a_item: QL_TARGET) is
+	process_target (a_item: QL_TARGET)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_group (a_item: QL_GROUP) is
+	process_group (a_item: QL_GROUP)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_class (a_item: QL_CLASS) is
+	process_class (a_item: QL_CLASS)
 			-- Process `a_item'.
 		local
 			l_folder: STRING
@@ -198,61 +198,61 @@ feature -- Process
 			end
 		end
 
-	process_feature (a_item: QL_FEATURE) is
+	process_feature (a_item: QL_FEATURE)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_real_feature (a_item: QL_REAL_FEATURE) is
+	process_real_feature (a_item: QL_REAL_FEATURE)
 			-- Process `a_item'.
 		do
 			process_feature (a_item)
 		end
 
-	process_invariant (a_item: QL_INVARIANT) is
+	process_invariant (a_item: QL_INVARIANT)
 			-- Process `a_item'.
 		do
 			process_feature (a_item)
 		end
 
-	process_quantity (a_item: QL_QUANTITY) is
+	process_quantity (a_item: QL_QUANTITY)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_line (a_item: QL_LINE) is
+	process_line (a_item: QL_LINE)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_generic (a_item: QL_GENERIC) is
+	process_generic (a_item: QL_GENERIC)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_local (a_item: QL_LOCAL) is
+	process_local (a_item: QL_LOCAL)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_argument (a_item: QL_ARGUMENT) is
+	process_argument (a_item: QL_ARGUMENT)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_assertion (a_item: QL_ASSERTION) is
+	process_assertion (a_item: QL_ASSERTION)
 			-- Process `a_item'.
 		do
 			process_item_internal (a_item)
 		end
 
-	process_path (a_item: QL_ITEM; a_self_included: BOOLEAN; a_parent_included: BOOLEAN; a_indirect_parent_included: BOOLEAN; a_target_included: BOOLEAN) is
+	process_path (a_item: QL_ITEM; a_self_included: BOOLEAN; a_parent_included: BOOLEAN; a_indirect_parent_included: BOOLEAN; a_target_included: BOOLEAN)
 			-- Process `a_item' and write path of `a_item' into `text_internal' in form of "grand_parent.parent.item"
 			-- If `a_self_included' is True, including `a_item' itself.
 			-- If `a_parent_included' is True, including direct parent of `a_item'.
@@ -323,7 +323,7 @@ feature -- Process
 			set_is_class_name_displayed (l_old_is_class_name_displayed)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

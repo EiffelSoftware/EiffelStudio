@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degree 2 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -20,12 +20,12 @@ create
 
 feature -- Access
 
-	Degree_number: INTEGER is 2
+	Degree_number: INTEGER = 2
 			-- Degree number
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process Degree 2.
 			-- Melt features (write feature byte code on disk).
 		local
@@ -83,7 +83,7 @@ feature -- Processing
 			l_degree_output.put_end_degree
 		end
 
-	initialize_non_generic_types is
+	initialize_non_generic_types
 			-- Initialize types of non-generic classes.
 		local
 			i, nb: INTEGER
@@ -106,7 +106,7 @@ feature -- Processing
 			end
 		end
 
-	process_skeleton is
+	process_skeleton
 			-- Type skeleton processing: If skeleton of a class type changed,
 			-- it must be re-processed and marked `is_changed'.
 		local
@@ -153,7 +153,7 @@ feature -- Processing
 			end
 		end
 
-	check_expanded (has_expanded: BOOLEAN) is
+	check_expanded (has_expanded: BOOLEAN)
 			-- Check expanded client relation.
 		local
 			i, nb: INTEGER
@@ -197,7 +197,7 @@ feature -- Processing
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		do
 			if not a_class.is_true_external and not a_class.degree_2_needed then
@@ -208,7 +208,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		do
 			if a_class.degree_2_needed then
@@ -217,7 +217,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
@@ -241,7 +241,7 @@ feature -- Removal
 			count := 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

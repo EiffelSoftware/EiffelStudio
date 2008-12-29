@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Makefile generator for workbench mode C compilation
@@ -17,7 +17,7 @@ create
 
 feature
 
-	generate_compilation_rule is
+	generate_compilation_rule
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.put_string ("%
@@ -28,14 +28,14 @@ feature
 				%%T$(CPP) $(CPPFLAGS) -c $<%N%N");
 		end;
 
-	generate_specific_defines is
+	generate_specific_defines
 			-- Generate specific "-D" flags.
 			-- In this case "-DWORKBENCH"
 		do
 			Make_file.put_string ("-DWORKBENCH ");
 		end;
 
-	add_specific_objects is
+	add_specific_objects
 			-- Add workbench mode specific files to the object list
 		do
 			add_in_primary_system_basket (Eoption);
@@ -44,7 +44,7 @@ feature
 			add_in_primary_system_basket (Ecall);
 		end;
 
-	add_cecil_objects is
+	add_cecil_objects
 		local
 			cecil_basket: LINKED_LIST [STRING]
 		do
@@ -157,7 +157,7 @@ feature
 			end
 		end;
 
-	add_eiffel_objects is
+	add_eiffel_objects
 			-- Add Eiffel objects to the basket, i.e. C code for
 			-- each class as well as feature tables and descriptor
 			-- tables.
@@ -225,7 +225,7 @@ feature
 			end
 		end;
 
-	run_time: STRING is
+	run_time: STRING
 			-- Run time with which the application must be linked
 		do
 				-- We use " in case the path as spaces in it.
@@ -261,7 +261,7 @@ feature
 			Result.append (boehm_library)
 		end;
 
-	generate_precompile_objects is
+	generate_precompile_objects
 		local
 			precomp: like Precompilation_directories
 			dir: REMOTE_PROJECT_DIRECTORY
@@ -295,7 +295,7 @@ feature
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a quick search tool binded to an {EVS_SEARCHABLE_COMPONENT} object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialization
 		require
 			a_dev_window_attached: a_dev_window /= Void
@@ -62,7 +62,7 @@ feature{NONE} -- Initialization
 			delayed_timer_attached: delayed_timer /= Void
 		end
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 		do
 			Precursor
@@ -76,7 +76,7 @@ feature{NONE} -- Initialization
 
 feature -- Registration/Implementation
 
-	internal_attach is
+	internal_attach
 			-- Attach current to `a_component'.
 		do
 			put_tool
@@ -89,7 +89,7 @@ feature -- Registration/Implementation
 			hide
 		end
 
-	internal_detach is
+	internal_detach
 			-- Detach current to `a_componet'.
 		do
 			remove_tool
@@ -99,13 +99,13 @@ feature -- Registration/Implementation
 
 feature -- Display
 
-	set_focus_on_keyword_field is
+	set_focus_on_keyword_field
 			-- Set focus on `keyword_field'.
 		do
 			keyword_field.set_focus
 		end
 
-	show_tool is
+	show_tool
 			-- Display current search tool.
 		do
 			show_tool_actions.call (Void)
@@ -113,14 +113,14 @@ feature -- Display
 			set_focus_on_keyword_field
 		end
 
-	hide_tool is
+	hide_tool
 			-- Hide current search tool.
 		do
 			hide_tool_actions.call (Void)
 			hide
 		end
 
-	ensure_tool_on_top is
+	ensure_tool_on_top
 			-- Ensure current quick search bar be displayed on top of grid.
 		do
 			is_tool_on_top := True
@@ -129,7 +129,7 @@ feature -- Display
 			tool_on_top: is_tool_on_top
 		end
 
-	ensure_tool_on_bottom is
+	ensure_tool_on_bottom
 			-- Ensure current quick search bar be displayed on bottom of grid.
 		do
 			is_tool_on_top:= False
@@ -140,7 +140,7 @@ feature -- Display
 
 feature -- Setting
 
-	set_activate_accelerator (a_accelerator: like activate_accelerator) is
+	set_activate_accelerator (a_accelerator: like activate_accelerator)
 			-- Set `activate_accelerator' with `a_accelerator'.
 		do
 			activate_accelerator := a_accelerator
@@ -148,7 +148,7 @@ feature -- Setting
 			activate_accelerator_set: activate_accelerator = a_accelerator
 		end
 
-	set_deactivate_accelerator (a_accelerator: like deactivate_accelerator) is
+	set_deactivate_accelerator (a_accelerator: like deactivate_accelerator)
 			-- Set `active_accelerator' with `a_accelerator'.
 		do
 			deactivate_accelerator := a_accelerator
@@ -156,7 +156,7 @@ feature -- Setting
 			deactivate_accelerator_set: deactivate_accelerator = a_accelerator
 		end
 
-	set_search_previous_accelerator (a_accelerator: like search_previous_accelerator) is
+	set_search_previous_accelerator (a_accelerator: like search_previous_accelerator)
 			-- Set `search_previous_accelerator' with `a_accelerator'.
 		do
 			search_previous_accelerator := a_accelerator
@@ -164,7 +164,7 @@ feature -- Setting
 			search_previous_accelerator_set: search_previous_accelerator = a_accelerator
 		end
 
-	set_search_next_accelerator (a_accelerator: like search_next_accelerator) is
+	set_search_next_accelerator (a_accelerator: like search_next_accelerator)
 			-- Set `search_next_accelerator' with `a_accelerator'.
 		do
 			search_next_accelerator := a_accelerator
@@ -172,7 +172,7 @@ feature -- Setting
 			search_next_accelerator_set: search_next_accelerator = a_accelerator
 		end
 
-	set_store_keyword_accelerator (a_accelerator: like store_keyword_accelerator) is
+	set_store_keyword_accelerator (a_accelerator: like store_keyword_accelerator)
 			-- Set `store_keyword_accelerator' with `a_accelerator'.
 		do
 			store_keyword_accelerator := a_accelerator
@@ -180,7 +180,7 @@ feature -- Setting
 			store_keyword_accelerator_set: store_keyword_accelerator = a_accelerator
 		end
 
-	set_keyword (a_keyword: like keyword) is
+	set_keyword (a_keyword: like keyword)
 			-- Set `keyword' with `a_keyword'.
 		require
 			a_keyword_attached: a_keyword /= Void
@@ -193,7 +193,7 @@ feature -- Setting
 
 feature -- Access
 
-	keyword: STRING_32 is
+	keyword: STRING_32
 			-- Current keyword
 		do
 			Result := keyword_field.text
@@ -201,7 +201,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	show_tool_actions: ACTION_SEQUENCE [TUPLE] is
+	show_tool_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Current search tool is displayed
 		do
 			if show_tool_actions_internal = Void then
@@ -212,7 +212,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	hide_tool_actions: ACTION_SEQUENCE [TUPLE] is
+	hide_tool_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Current search tool is hidden
 		do
 			if hide_tool_actions_internal = Void then
@@ -225,7 +225,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_tool_displayed: BOOLEAN is
+	is_tool_displayed: BOOLEAN
 			-- Is current search tool displayed?
 		do
 			Result := is_displayed
@@ -234,7 +234,7 @@ feature -- Status report
 	is_tool_on_top: BOOLEAN
 			-- Is current quick search bar on top of grid?
 
-	is_tool_on_bottom: BOOLEAN is
+	is_tool_on_bottom: BOOLEAN
 			-- Is current quick search bar on bottom of grid?
 		do
 			Result := not is_tool_on_top
@@ -263,7 +263,7 @@ feature -- Accelerator
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			Precursor {QUICK_SEARCH_BAR}
@@ -272,7 +272,7 @@ feature {NONE} -- Recyclable
 
 feature{NONE} -- Actions
 
-	on_key_pressed_agent: PROCEDURE [ANY, TUPLE [EV_KEY]] is
+	on_key_pressed_agent: PROCEDURE [ANY, TUPLE [EV_KEY]]
 			-- Agent wrapper of `on_key_pressed'
 		do
 			if on_key_pressed_agent_internal = Void then
@@ -286,7 +286,7 @@ feature{NONE} -- Actions
 	on_key_pressed_agent_internal: like on_key_pressed_agent
 			-- Internal `on_key_pressed_agent'
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action performed when key pressed in `searchable_component'.`grid'
 		require
 			attached: is_tool_attached
@@ -355,7 +355,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_key_pressed_on_search_tool (a_key: EV_KEY) is
+	on_key_pressed_on_search_tool (a_key: EV_KEY)
 			-- On key pressed on any widget of search bar.
 		local
 			l_acc: EV_ACCELERATOR
@@ -385,13 +385,13 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_keyword_field_text_change is
+	on_keyword_field_text_change
 			-- Action to be performed when text in keyword field changes
 		do
 			delayed_timer.request_call
 		end
 
-	enter_accelerator: EV_ACCELERATOR is
+	enter_accelerator: EV_ACCELERATOR
 			-- Enter accelerator key
 		once
 			create Result.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_enter), False, False, False)
@@ -399,7 +399,7 @@ feature{NONE} -- Actions
 			result_attached: Result /= Void
 		end
 
-	escape_accelerator: EV_ACCELERATOR is
+	escape_accelerator: EV_ACCELERATOR
 			-- Escape accelerator key
 		once
 			create Result.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
@@ -407,7 +407,7 @@ feature{NONE} -- Actions
 			result_attached: Result /= Void
 		end
 
-	Ctrl_f_accelerator: EV_ACCELERATOR is
+	Ctrl_f_accelerator: EV_ACCELERATOR
 			-- Ctrl + F accelerator key
 		once
 			create Result.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f5), True, False, False)
@@ -417,7 +417,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation/Search
 
-	search_previous (a_start_from_current: BOOLEAN) is
+	search_previous (a_start_from_current: BOOLEAN)
 			-- Search previous according to current first selected item in `searchable_component'.`grid'.
 			-- If `a_start_from_current' is True, search will start from current selected item, if any,
 			-- otherwise, it will start from next item of current selected item.			
@@ -432,7 +432,7 @@ feature{NONE} -- Implementation/Search
 			searchable_component.grid.set_focus
 		end
 
-	search_next (a_start_from_current: BOOLEAN) is
+	search_next (a_start_from_current: BOOLEAN)
 			-- Search next according to current first selected item in `searchable_component'.`grid'.
 			-- If `a_start_from_current' is True, search will start from current selected item, if any,
 			-- otherwise, it will start from next item of current selected item.			
@@ -446,7 +446,7 @@ feature{NONE} -- Implementation/Search
 			end
 		end
 
-	prepare_search_engine (a_engine: like search_engine) is
+	prepare_search_engine (a_engine: like search_engine)
 			-- Prepare `a_engine' for search,
 			-- e.g. setup search conditions.
 		require
@@ -471,7 +471,7 @@ feature{NONE} -- Implementation/Search
 
 feature{NONE} -- Implementation/Layout
 
-	put_tool is
+	put_tool
 			-- Put current quick search bar into `searchable_component'.
 		require
 			attached: is_tool_attached
@@ -494,7 +494,7 @@ feature{NONE} -- Implementation/Layout
 				is_tool_on_bottom implies searchable_component.grid_bottom_container.has (Current))
 		end
 
-	remove_tool is
+	remove_tool
 			-- Remove current quick search bar from `searchable_component'.
 		require
 			attached: is_tool_attached
@@ -510,7 +510,7 @@ feature{NONE} -- Implementation/Layout
 				 not searchable_component.grid_bottom_container.has (Current))
 		end
 
-	put_tool_into_container (a_container: EV_BOX) is
+	put_tool_into_container (a_container: EV_BOX)
 			-- Put current quick search bar into `a_container'.
 		require
 			attached: is_tool_attached
@@ -524,7 +524,7 @@ feature{NONE} -- Implementation/Layout
 			tool_in_container: a_container.has (Current)
 		end
 
-	remove_tool_from_container (a_container: EV_BOX) is
+	remove_tool_from_container (a_container: EV_BOX)
 			-- Remove current quick search bar from `a_container'.			
 		require
 			attached: is_tool_attached
@@ -540,7 +540,7 @@ feature{NONE} -- Implementation/Layout
 
 feature{NONE} -- Implementation
 
-	current_keyword: STRING is
+	current_keyword: STRING
 			-- Current keyword
 		do
 			Result := keyword_field.text
@@ -548,7 +548,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	search_engine: EB_GRID_QUICK_SEARCH_ENGINE is
+	search_engine: EB_GRID_QUICK_SEARCH_ENGINE
 			-- Search engine
 		do
 			if search_engine_internal = Void then
@@ -563,7 +563,7 @@ feature{NONE} -- Implementation
 	search_engine_internal: like search_engine
 			-- Internal `search_engine'
 
-	search_with_direction (a_previous: BOOLEAN; a_start_from_current: BOOLEAN) is
+	search_with_direction (a_previous: BOOLEAN; a_start_from_current: BOOLEAN)
 			-- If `a_previsou' is True, search forward, otherwise backward.
 			-- If `a_start_from_current' is True, search will start from current selected item, if any,
 			-- otherwise, it will start from next item of current selected item.			
@@ -591,13 +591,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	no_result_bgcolor: EV_COLOR is
+	no_result_bgcolor: EV_COLOR
 			-- Background color when no result for incremental search.
 		do
 			Result := preferences.search_tool_data.none_result_keyword_field_background_color
 		end
 
-	normal_bgcolor: EV_COLOR is
+	normal_bgcolor: EV_COLOR
 			-- Normal background color.
 		local
 			l_comb: EV_COMBO_BOX
@@ -609,7 +609,7 @@ feature{NONE} -- Implementation
 	delayed_timer: ES_DELAYED_ACTION
 			-- Delayed timer
 
-	search_internal is
+	search_internal
 			-- Search for keyword.
 		do
 			if keyword_field.text.count > 0 then
@@ -617,7 +617,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	wait_to_search_time: INTEGER is 500
+	wait_to_search_time: INTEGER = 500
 			-- Time (in milliseconds) delayed to start search when user inputs keyword
 
 	show_tool_actions_internal: like show_tool_actions
@@ -631,7 +631,7 @@ invariant
 		(is_tool_on_top implies not is_tool_on_bottom) and (not is_tool_on_top implies is_tool_on_bottom)
 	delayed_timer_attached: delayed_timer /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

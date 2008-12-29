@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Assigner command query argument types error."
 	legal: "See notice at end of class."
@@ -17,10 +17,10 @@ create {COMPILER_EXPORTER}
 
 feature -- Properties
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER = 4;
 			-- Error subcode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

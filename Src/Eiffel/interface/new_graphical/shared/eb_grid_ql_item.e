@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item to display a query language item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature -- Initialization
 
-	make (a_item: QL_ITEM; a_column_index: INTEGER; a_row_index: INTEGER; a_path: BOOLEAN) is
+	make (a_item: QL_ITEM; a_column_index: INTEGER; a_row_index: INTEGER; a_path: BOOLEAN)
 			-- Initialize current with `a_item' `column_index' with `a_column_index' and `row_index' with `a_row_index'
 			-- `a_path' is True indicates that current is path item.
 		require
@@ -94,7 +94,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Path style used to diplay path for query item
 		once
 			create Result
@@ -109,7 +109,7 @@ feature{NONE} -- Implementation
 invariant
 	image_intarnal_attached: image_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

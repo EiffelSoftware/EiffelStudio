@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,14 +57,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make Current object
 		do
 			default_create
 			create compute_grid_row_completed_action
 		end
 
-	make_with_grid (g: like parent_grid) is
+	make_with_grid (g: like parent_grid)
 			-- Make current object related to grid `g'
 		do
 			make
@@ -73,13 +73,13 @@ feature {NONE} -- Initialization
 
 feature -- Debug output
 
-	debug_output: STRING is
+	debug_output: STRING
 		deferred
 		end
 
 feature -- Recycling
 
-	reset is
+	reset
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do
@@ -90,7 +90,7 @@ feature -- Recycling
 
 feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 
-	relocate_to_parent_grid (a_parent_grid: like parent_grid) is
+	relocate_to_parent_grid (a_parent_grid: like parent_grid)
 			-- relocate current line to `a_parent_grid'.
 		require
 			is_not_attached_to_row: not is_attached_to_row
@@ -98,7 +98,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			parent_grid := a_parent_grid
 		end
 
-	attach_to_row (a_row: EV_GRID_ROW) is
+	attach_to_row (a_row: EV_GRID_ROW)
 		require
 			row_not_void: a_row /= Void
 			row_parented: a_row.parent /= Void
@@ -119,14 +119,14 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			attached_to_row: row /= Void
 		end
 
-	safe_unattach is
+	safe_unattach
 		do
 			if is_attached_to_row then
 				unattach
 			end
 		end
 
-	unattach is
+	unattach
 		require
 			is_attached_to_row: is_attached_to_row
 		do
@@ -144,7 +144,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			is_not_attached_to_row: not is_attached_to_row
 		end
 
-	refresh is
+	refresh
 		require
 			is_attached_to_row: is_attached_to_row
 		do
@@ -166,7 +166,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 
 feature -- Status
 
-	is_attached_to_row: BOOLEAN is
+	is_attached_to_row: BOOLEAN
 		do
 			Result := row /= Void
 		end
@@ -181,7 +181,7 @@ feature -- Properties
 
 feature -- Change
 
-	set_read_only (b: like is_read_only) is
+	set_read_only (b: like is_read_only)
 			-- set `is_read_only'
 		do
 			is_read_only := b
@@ -189,13 +189,13 @@ feature -- Change
 
 feature -- Query
 
-	text_data_for_clipboard: STRING_32 is
+	text_data_for_clipboard: STRING_32
 		deferred
 		end
 
 feature -- Record layout
 
-	record_layout is
+	record_layout
 		do
 			-- do nothing for now
 		end
@@ -205,13 +205,13 @@ feature -- Graphical computation
 	compute_grid_display_done: BOOLEAN
 			-- is `compute_grid_display' called and done ?
 
-	reset_compute_grid_display_done is
+	reset_compute_grid_display_done
 			-- Reset value of `compute_grid_display_done'
 		do
 			compute_grid_display_done := False
 		end
 
-	computed_grid_item (c: INTEGER): EV_GRID_ITEM is
+	computed_grid_item (c: INTEGER): EV_GRID_ITEM
 		require
 			is_attached_to_row: is_attached_to_row
 		do
@@ -231,7 +231,7 @@ feature -- Graphical computation
 			result_not_void_if_stopped: (row /= Void and debugger_manager.safe_application_is_stopped ) implies Result /= Void
 		end
 
-	compute_grid_row is
+	compute_grid_row
 		require
 			is_attached_to_row: is_attached_to_row
 		do
@@ -239,7 +239,7 @@ feature -- Graphical computation
 			compute_grid_row_completed_action.call (Void) -- call ([Current])				
 		end
 
-	compute_grid_display is
+	compute_grid_display
 			-- Compute the grid display related to current Line
 		require
 			is_attached_to_row: is_attached_to_row
@@ -255,20 +255,20 @@ feature -- Actions
 
 feature -- Updating
 
-	update is
+	update
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
+	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
 		require
 			parent_grid_not_void: parent_grid /= Void
 		do
 			Result := parent_grid.folder_label_item (s)
 		end
 
-	cell (c: INTEGER): EV_GRID_ITEM is
+	cell (c: INTEGER): EV_GRID_ITEM
 		require
 			row_not_void: row /= Void
 		do
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_cell (c: INTEGER; v: EV_GRID_ITEM) is
+	set_cell (c: INTEGER; v: EV_GRID_ITEM)
 		require
 			row_not_void: row /= Void
 		do
@@ -288,7 +288,7 @@ invariant
 	parent_grid_not_void_if_row_not_void: row /= Void implies parent_grid /= Void
 	parent_grid_related_to_attached_row: (row /= Void and then row.parent /= Void) implies parent_grid = row.parent
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

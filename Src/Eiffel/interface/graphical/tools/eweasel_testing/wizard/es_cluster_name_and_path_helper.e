@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Helper for cluster name and path.
 																	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	is_cluster_full_path_valid (a_full_cluster_name_and_path: STRING): BOOLEAN is
+	is_cluster_full_path_valid (a_full_cluster_name_and_path: STRING): BOOLEAN
 			-- Check if `a_full_cluster_name_and_path' valid.
 		require
 			not_void: a_full_cluster_name_and_path /= Void and then not a_full_cluster_name_and_path.is_empty
@@ -42,7 +42,7 @@ feature -- Query
 			end
 		end
 
-	cluster_path_by_id_and_sub_path (a_cluster_id, a_cluster_sub_path: STRING): DIRECTORY_NAME is
+	cluster_path_by_id_and_sub_path (a_cluster_id, a_cluster_sub_path: STRING): DIRECTORY_NAME
 			-- Query cluster directory name by `a_cluster' and `a_cluster_sub_path'
 		require
 			not_void: a_cluster_id /= Void and then not a_cluster_id.is_empty
@@ -67,7 +67,7 @@ feature -- Query
 			valid: Result.is_valid
 		end
 
-	cluster_path (a_cluster_name_and_subpath: STRING): DIRECTORY_NAME is
+	cluster_path (a_cluster_name_and_subpath: STRING): DIRECTORY_NAME
 			-- Query cluster's directory path
 		require
 			not_void: a_cluster_name_and_subpath /= Void and then not a_cluster_name_and_subpath.is_empty
@@ -117,10 +117,10 @@ feature -- Query
 			valid: Result.is_valid
 		end
 
-	cluster_separator: STRING is "/"
+	cluster_separator: STRING = "/"
 			-- Cluster separator.
 
-	has_cluster_id (a_cluster_id: STRING): BOOLEAN is
+	has_cluster_id (a_cluster_id: STRING): BOOLEAN
 			-- Does current system have the cluster which represented by `a_cluster_id'?
 		do
 			Result := id_solution.group_of_id (a_cluster_id) /= Void
@@ -128,7 +128,7 @@ feature -- Query
 
 feature -- Command
 
-	split_cluster_name_and_path (a_full_cluster_name: STRING): TUPLE [cluster_name, cluster_path: STRING] is
+	split_cluster_name_and_path (a_full_cluster_name: STRING): TUPLE [cluster_name, cluster_path: STRING]
 			-- Split cluster name and path from `a_full_cluster_name'.
 		require
 			not_void: a_full_cluster_name /= Void
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	is_cluster_path_same_as_directory_name (a_cluster_name, a_cluster_path: STRING; a_dir: DIRECTORY_NAME): BOOLEAN is
+	is_cluster_path_same_as_directory_name (a_cluster_name, a_cluster_path: STRING; a_dir: DIRECTORY_NAME): BOOLEAN
 			-- If `a_cluster_path' same as `a_dir'
 		require
 			not_void: a_cluster_name /= Void and then not a_cluster_name.is_empty
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	list_of_cluster_path (a_cluster_path: STRING): LIST [STRING] is
+	list_of_cluster_path (a_cluster_path: STRING): LIST [STRING]
 			-- Split `a_cluster_path' to list.
 		require
 			not_void: a_cluster_path /= Void
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	is_cluster_path_valid (a_group: CONF_GROUP; a_path: STRING): BOOLEAN is
+	is_cluster_path_valid (a_group: CONF_GROUP; a_path: STRING): BOOLEAN
 			-- Check if `a_path' exists in `a_group'.
 		require
 			not_void: a_group /= Void
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			l_dir.dispose
 		end
 
-	remove_empty_strings (a_path: LIST [STRING]) is
+	remove_empty_strings (a_path: LIST [STRING])
 			-- Remove emtpy strings in `a_path'.
 		require
 			not_void: a_path /= Void
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

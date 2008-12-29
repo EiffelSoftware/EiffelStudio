@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for undeclared identifier."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,12 +21,12 @@ feature -- Access
 	parameter_count: INTEGER
 			-- Number of expected arguments.
 
-	code: STRING is "VEEN"
+	code: STRING = "VEEN"
 			-- Error code
 
 feature -- Settings
 
-	set_identifier (s: STRING) is
+	set_identifier (s: STRING)
 			-- Assign `s' to `identifier'.
 		require
 			s_not_void: s /= Void
@@ -36,7 +36,7 @@ feature -- Settings
 			identifier_set: identifier = s
 		end
 
-	set_parameter_count (i: INTEGER) is
+	set_parameter_count (i: INTEGER)
 			-- Assign `i to `parameter_count'.
 		require
 			i_positive: i >= 0
@@ -49,7 +49,7 @@ feature -- Settings
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -74,7 +74,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_text: STRING_32
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	is_parameter_count_set: BOOLEAN;
 			-- Did we call `set_parameter_count'?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

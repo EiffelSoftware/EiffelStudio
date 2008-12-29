@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Table recording all the derivations of all the generic classes indexed by class id
@@ -19,7 +19,7 @@ create
 
 feature
 
-	has_derivation (an_id: INTEGER; a_type: CL_TYPE_A): BOOLEAN is
+	has_derivation (an_id: INTEGER; a_type: CL_TYPE_A): BOOLEAN
 		local
 			derivations: FILTER_LIST;
 		do
@@ -29,7 +29,7 @@ feature
 			end;
 		end;
 
-	insert_derivation (an_id: INTEGER; a_type: CL_TYPE_A) is
+	insert_derivation (an_id: INTEGER; a_type: CL_TYPE_A)
 		local
 			derivations: FILTER_LIST;
 			tuple_i: TUPLE_TYPE_A
@@ -47,7 +47,7 @@ feature
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

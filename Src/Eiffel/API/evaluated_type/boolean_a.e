@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for boolean type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize new instance of BOOLEAN_A.
 		do
 			make (associated_class.class_id)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_boolean_a (Current)
@@ -35,18 +35,18 @@ feature -- Visitor
 
 feature -- Property
 
-	is_boolean: BOOLEAN is True
+	is_boolean: BOOLEAN = True
 			-- Is the current type a boolean type ?
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := same_type (other)
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class BOOLEAN
 		once
 			Result := System.boolean_class.compiled_class
@@ -54,13 +54,13 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	c_type: BOOLEAN_I is
+	c_type: BOOLEAN_I
 			-- C type
 		do
 			Result := boolean_c_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

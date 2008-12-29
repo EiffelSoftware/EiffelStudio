@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Description of a generator of table: the aim of this is the split
 		of the routine/attribute offset table generation into several files
@@ -21,7 +21,7 @@ inherit
 
 feature -- Initialization
 
-	init (buffer: GENERATION_BUFFER) is
+	init (buffer: GENERATION_BUFFER)
 			-- Initialization
 		do
 			file_counter_cell.put (1)
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Access
 
-	file_counter: INTEGER is
+	file_counter: INTEGER
 			-- Count of generated files.
 		do
 			Result := file_counter_cell.item
@@ -47,15 +47,15 @@ feature -- Access
 	current_buffer: GENERATION_BUFFER;
 			-- Current buffer
 
-	postfix_file_name: STRING is
+	postfix_file_name: STRING
 			-- Postfix string for file names;
 		deferred
 		end;
 
-	Size_limit: INTEGER is 10000;
+	Size_limit: INTEGER = 10000;
 			-- Limit of size for each generated file
 
-	new_file: INDENT_FILE is
+	new_file: INDENT_FILE
 			-- New file for generation
 		local
 			temp: STRING
@@ -68,7 +68,7 @@ feature -- Access
 			create Result.make_c_code_file (final_file_name (temp, postfix_file_name, packet_number))
 		end;
 
-	init_file (file: INDENT_FILE) is
+	init_file (file: INDENT_FILE)
 			-- Initialization of new file
 		require
 			file_not_void: file /= Void
@@ -77,7 +77,7 @@ feature -- Access
 		deferred
 		end; -- init_file
 
-	update_size (value: INTEGER) is
+	update_size (value: INTEGER)
 			-- Prepare `current_buffer' for writing a table with `value' number of entries.
 		require
 			value_not_negative: value >= 0
@@ -86,7 +86,7 @@ feature -- Access
 			size := size + value
 		end
 
-	update is
+	update
 			-- Update current file
 		do
 			if size > Size_limit then
@@ -95,7 +95,7 @@ feature -- Access
 			end;
 		end;
 
-	finish is
+	finish
 			-- Close `current_buffer'.
 		require
 			current_buffer_exists: current_buffer /= Void;
@@ -110,7 +110,7 @@ feature -- Access
 			increment_file_counter
 		end;
 
-	finish_file  is
+	finish_file
 			-- finish generation of `current_buffer'.
 		require
 			current_buffer_not_void: current_buffer /= Void
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Settings
 
-	increment_file_counter is
+	increment_file_counter
 			-- Increment `file_counter' from 1.
 		do
 			file_counter_cell.put (file_counter + 1)
@@ -134,7 +134,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	file_counter_cell: CELL [INTEGER] is
+	file_counter_cell: CELL [INTEGER]
 			-- Shared value for file name generation in final mode only.
 		once
 			create Result.put (0)
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			file_counter_cell_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

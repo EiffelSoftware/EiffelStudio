@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	Debugger_manager: DEBUGGER_MANAGER is
+	Debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of debugging operations.
 		once
 			create {DEBUGGER_MANAGER} Result.make
@@ -17,7 +17,7 @@ feature -- Access
 			debugger_manager_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All shared access windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	has_modified_classes: BOOLEAN is
+	has_modified_classes: BOOLEAN
 			-- Are there unsaved class texts in the interface?
 		do
 			if is_gui then
@@ -37,25 +37,25 @@ feature -- Access
 
 feature {NONE} -- Element change
 
-	set_output_manager (a_output_manager: EB_OUTPUT_MANAGER) is
+	set_output_manager (a_output_manager: EB_OUTPUT_MANAGER)
 			-- Set `a_output_manager' as Output manager for development windows
 		do
 			Output_manager_cell.put (a_output_manager)
 		end
 
-	set_external_output_manager (a_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER) is
+	set_external_output_manager (a_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER)
 			-- Set `a_output_manager' as Output manager for development windows
 		do
 			External_output_manager_cell.put (a_external_output_manager)
 		end
 
-	set_c_compilation_output_manager(a_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER) is
+	set_c_compilation_output_manager(a_c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER)
 			-- Set `a_c_compilation_output_manager' as c compilation output manager for development windows.
 		do
 			c_compilation_output_manager_cell.put (a_c_compilation_output_manager)
 		end
 
-	set_recent_projects_manager (a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER) is
+	set_recent_projects_manager (a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER)
 			-- Set `a_recent_projects_manager' as Recent projects manager for $EiffelGraphicalCompiler$
 		do
 			Recent_projects_manager_cell.put (a_recent_projects_manager)
@@ -63,25 +63,25 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Shared tools access
 
-	dynamic_lib_window: EB_DYNAMIC_LIB_WINDOW is
+	dynamic_lib_window: EB_DYNAMIC_LIB_WINDOW
 			-- Unique assembly tool
 		do
 			Result := Dynamic_lib_window_cell.item
 		end
 
-	dynamic_lib_window_is_valid: BOOLEAN is
+	dynamic_lib_window_is_valid: BOOLEAN
 			-- Is the dynamic_lib window valid?
 		do
 			Result := (dynamic_lib_window /= Void) and then	(not dynamic_lib_window.destroyed)
 		end
 
-	argument_dialog: EB_ARGUMENT_DIALOG is
+	argument_dialog: EB_ARGUMENT_DIALOG
 			-- Project argument dialog
 		do
 			Result := Argument_dialog_cell.item
 		end
 
-	argument_dialog_is_valid: BOOLEAN is
+	argument_dialog_is_valid: BOOLEAN
 			-- Is `argument_dialog' valid?
 		do
 			Result := (argument_dialog /= Void)
@@ -89,13 +89,13 @@ feature {NONE} -- Shared tools access
 
 feature {NONE} -- Shared tools change
 
-	set_dynamic_lib_window (a_dynamic_lib_window: EB_DYNAMIC_LIB_WINDOW) is
+	set_dynamic_lib_window (a_dynamic_lib_window: EB_DYNAMIC_LIB_WINDOW)
 			-- Makes `a_dynamic_lib_window' shared dynamic library tool.
 		do
 			Dynamic_lib_window_cell.put (a_dynamic_lib_window)
 		end
 
-	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG) is
+	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG)
 			-- Makes 'a_argument_dialog' shared argument dialog.
 		do
 			Argument_dialog_cell.put (a_argument_dialog)
@@ -103,19 +103,19 @@ feature {NONE} -- Shared tools change
 
 feature {NONE} -- Implementation
 
-	Dynamic_lib_window_cell: CELL [EB_DYNAMIC_LIB_WINDOW] is
+	Dynamic_lib_window_cell: CELL [EB_DYNAMIC_LIB_WINDOW]
 			-- Cell for the dynamic library window
 		once
 			create Result.put (Void)
 		end
 
-	Argument_dialog_cell: CELL [EB_ARGUMENT_DIALOG] is
+	Argument_dialog_cell: CELL [EB_ARGUMENT_DIALOG]
 			-- Cell for argument dialog
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

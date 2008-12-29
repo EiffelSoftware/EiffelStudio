@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores inter-thread information from c compiler and external command output"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,31 +11,31 @@ class
 
 feature -- Access
 
-	freezing_storage: EB_PROCESS_IO_STORAGE is
+	freezing_storage: EB_PROCESS_IO_STORAGE
 			-- Storage for IO redirection from launched c compiler in freezing period
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
 		end
 
-	finalizing_storage: EB_PROCESS_IO_STORAGE is
+	finalizing_storage: EB_PROCESS_IO_STORAGE
 			-- Storeage for IO redirection from launched c compiler in finalizing period
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
 		end
 
-	external_storage: EB_PROCESS_IO_STORAGE is
+	external_storage: EB_PROCESS_IO_STORAGE
 			-- Storage for IO redirection from launched external process
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

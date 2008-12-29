@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when a precompiled file or directory cannot be read."
@@ -25,7 +25,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if is_directory then
 				a_text_formatter.add ("Directory: ")
@@ -38,18 +38,18 @@ feature -- Output
 
 feature {REMOTE_PROJECT_DIRECTORY} -- Setting
 
-	set_path (s: STRING) is
+	set_path (s: STRING)
 			-- Assign `s' to `path'.
 		do
 			path := s;
 		end;
 
-	set_is_directory is
+	set_is_directory
 		do
 			is_directory := True
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

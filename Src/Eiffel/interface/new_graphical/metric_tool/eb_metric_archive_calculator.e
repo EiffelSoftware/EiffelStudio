@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric archive calculator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	archive_calculated_actions: ACTION_SEQUENCE [TUPLE [a_archive: EB_METRIC_ARCHIVE_NODE]] is
+	archive_calculated_actions: ACTION_SEQUENCE [TUPLE [a_archive: EB_METRIC_ARCHIVE_NODE]]
 			-- Action to be performed when one archive is calculated.
 			-- Information of the finished archive is stored in `a_archive'.
 		do
@@ -30,7 +30,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	step_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
+	step_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]]
 			-- Step actions, i.e., everytime when certain number of query language items are processed,
 			-- step actions are invoked with the current processed item passed as the only argument.
 		do
@@ -45,7 +45,7 @@ feature -- Access
 	last_error_message: STRING_32
 			-- Last error message
 
-	calculated_archives: LIST [EB_METRIC_ARCHIVE_NODE] is
+	calculated_archives: LIST [EB_METRIC_ARCHIVE_NODE]
 			-- Calculated archive nodes
 		do
 			if calculated_archives_internal = Void then
@@ -56,7 +56,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	calculated_archive: EB_METRIC_ARCHIVE is
+	calculated_archive: EB_METRIC_ARCHIVE
 			-- Archive generated from `calculated_archives'
 		do
 			create Result.make
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did error occur?
 		do
 			Result := last_error_message /= Void
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_last_error_message (a_message: like last_error_message) is
+	set_last_error_message (a_message: like last_error_message)
 			-- Set `last_error_message' with `a_message'.
 		do
 			if a_message = Void then
@@ -87,7 +87,7 @@ feature -- Setting
 
 feature -- Calculation
 
-	calculate_archive (a_task: LINEAR [TUPLE [a_metric: EB_METRIC; a_input_domain: EB_METRIC_DOMAIN; a_keep_result: BOOLEAN; a_filter_result: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]]) is
+	calculate_archive (a_task: LINEAR [TUPLE [a_metric: EB_METRIC; a_input_domain: EB_METRIC_DOMAIN; a_keep_result: BOOLEAN; a_filter_result: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]])
 			-- Calculate metric archive in `a_task' and store `calculated_archives'.
 			-- `a_task' is a list of metrics with there input domain.
 			-- `a_keep_result' indicates if detailed result should be kept.
@@ -177,7 +177,7 @@ feature{NONE} -- Implementation
 	last_step: NATURAL_64
 			-- Last step interval
 
-	temp_step: NATURAL_64 is 20
+	temp_step: NATURAL_64 = 20
 			-- Temporate step interval used during archive calculation
 
 	archive_calculated_actions_internal: like archive_calculated_actions
@@ -189,7 +189,7 @@ feature{NONE} -- Implementation
 	calculated_archives_internal: like calculated_archives
 			-- Implementation of `calculated_archives'
 
-	set_last_step (a_step: like last_step) is
+	set_last_step (a_step: like last_step)
 			-- Set `last_step' with `a_step'.
 		do
 			last_step := a_step
@@ -197,7 +197,7 @@ feature{NONE} -- Implementation
 			last_step_set: last_step = a_step
 		end
 
-	setup_calculation_context (a_domain_generator: QL_DOMAIN_GENERATOR) is
+	setup_calculation_context (a_domain_generator: QL_DOMAIN_GENERATOR)
 			-- Setup archive evaluation context, because when metric is running, we want to keep GUI alive.
 		require
 			a_domain_generator_attached: a_domain_generator /= Void
@@ -211,7 +211,7 @@ feature{NONE} -- Implementation
 			step_actions.do_all (agent l_tick_actions.extend)
 		end
 
-	destroy_calculation_context (a_domain_generator: QL_DOMAIN_GENERATOR) is
+	destroy_calculation_context (a_domain_generator: QL_DOMAIN_GENERATOR)
 			-- Destroy archive calculation context.
 		require
 			a_domain_generator_attached: a_domain_generator /= Void
@@ -223,7 +223,7 @@ feature{NONE} -- Implementation
 			step_actions.do_all (agent l_tick_actions.prune_all)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

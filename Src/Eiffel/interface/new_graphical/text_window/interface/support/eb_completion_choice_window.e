@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that displays a text area and a list of possible features for automatic completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create
 		local
 			vbox: EV_VERTICAL_BOX
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_complete_word: BOOLEAN) is
+	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_complete_word: BOOLEAN)
 			-- Initialize to to complete for `feature_name' in `an_editor'.
 		do
 			feature_mode := True
@@ -85,7 +85,7 @@ feature -- Initialization
 			common_initialization
 		end
 
-	initialize_for_classes (an_editor: EB_SMART_EDITOR; class_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
+	initialize_for_classes (an_editor: EB_SMART_EDITOR; class_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION])
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
 			feature_mode := False
@@ -97,7 +97,7 @@ feature -- Initialization
 			common_initialization
 		end
 
-	common_initialization is
+	common_initialization
 			-- Initialize fields common to class and feature choice window.		
 		do
 			if before_complete /= Void then
@@ -153,7 +153,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	show is
+	show
 			-- Show
 		do
 			check
@@ -168,7 +168,7 @@ feature -- Status Setting
 
 feature -- Query
 
-	has_match: BOOLEAN is
+	has_match: BOOLEAN
 			-- Number of matches based on `a_name' using `buffered_input' value.
 		do
 			if rebuild_list_during_matching then
@@ -178,13 +178,13 @@ feature -- Query
 			end
 		end
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Default font
 		once
 			create Result
 		end
 
-	should_show: BOOLEAN is
+	should_show: BOOLEAN
 			-- Should show in current state?
 		do
 			Result := choice_list.row_count > 0
@@ -192,7 +192,7 @@ feature -- Query
 
 feature {NONE} -- Events handling
 
-	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
+	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
 		do
 			if button = 1 and not choice_list.selected_items.is_empty then
@@ -200,7 +200,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_key_released (ev_key: EV_KEY) is
+	on_key_released (ev_key: EV_KEY)
 			-- process user input in `choice_list'
 		do
 			if ev_key /= Void then
@@ -244,7 +244,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_key_down (ev_key: EV_KEY) is
+	on_key_down (ev_key: EV_KEY)
 			-- process user input in `choice_list'	
 		local
 			ix: INTEGER
@@ -353,7 +353,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_char (character_string: STRING) is
+	on_char (character_string: STRING)
    			-- Process displayable character key press event.
    		local
    			c: CHARACTER
@@ -379,7 +379,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_lose_focus is
+	on_lose_focus
 			-- close window
 		do
 			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
@@ -387,7 +387,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_mouse_wheel (a: INTEGER) is
+	on_mouse_wheel (a: INTEGER)
 			-- Mouse wheel scrolled up or down
 		local
 			l_row: EV_GRID_ROW
@@ -418,19 +418,19 @@ feature {NONE} -- Implementation
 	index_offset: INTEGER
 			-- Index in `sorted_names' of the first element in `choice_list'
 
-	rebuild_list_during_matching: BOOLEAN is
+	rebuild_list_during_matching: BOOLEAN
 			-- Should the list be rebuilt according to current match?
 		do
 		    Result := preferences.editor_data.filter_completion_list
 		end
 
-	automatically_complete_words: BOOLEAN is
+	automatically_complete_words: BOOLEAN
 			-- Should completion list automatically complete words.
 		do
 			Result := preferences.editor_data.auto_complete_words
 		end
 
-	build_displayed_list (name: STRING) is
+	build_displayed_list (name: STRING)
 			-- Build the list based on matches with `name'
 		require
 			sorted_names_not_void: sorted_names /= Void
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close_and_complete is
+	close_and_complete
 			-- close the window and perform completion with selected item
 		do
 			if not choice_list.selected_rows.is_empty then
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			editor.editor_drawing_area.focus_in_actions.resume
 		end
 
-	complete_feature is
+	complete_feature
 			-- Complete feature name
 		local
 			ix: INTEGER
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	complete_class is
+	complete_class
 			-- Complete class name
 		local
 			ix: INTEGER
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exit is
+	exit
 			-- Cancel autocomplete
 		do
 			if not is_closing then
@@ -577,18 +577,18 @@ feature {NONE} -- Implementation
 	is_closing: BOOLEAN
 			-- Is the window being closed?
 
-	current_meta_keys: ARRAY [BOOLEAN] is
+	current_meta_keys: ARRAY [BOOLEAN]
 		do
 			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
 		end
 
-	activate_tooltip is
+	activate_tooltip
 			-- Activate selected item tooltip in list
 		do
 --			choice_list.selected_items.first. selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
 		end
 
-	remove_characters_entered_since_display is
+	remove_characters_entered_since_display
 			-- Remove characters entered so we may put them back
 		require
 			buffered_input_not_void: buffered_input /= Void
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 	last_completed_feature_had_arguments: BOOLEAN
 			-- Did the last inserted completed feature name contain arguments?
 
-	resize_column_to_window_width is
+	resize_column_to_window_width
 			-- Resize the column width to the width of the window
 		local
 			l_sb_wid: INTEGER
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 
 	is_first_show: BOOLEAN
 
-	determine_show_needed is
+	determine_show_needed
 			-- Determins if completion window needs to be show to user.
 			-- `show_needed' is set as a result of calling this routine.
 		require
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- String matching
 
-	pos_of_first_greater (table: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_name: EB_NAME_FOR_COMPLETION): INTEGER is
+	pos_of_first_greater (table: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_name: EB_NAME_FOR_COMPLETION): INTEGER
 			--
 		local
 			low, up, mid: INTEGER
@@ -720,7 +720,7 @@ feature {NONE} -- String matching
 	current_index: INTEGER
 			-- Index of selected item in `choice_list' (if any)
 
-	index_of_closest_match: INTEGER is
+	index_of_closest_match: INTEGER
 			-- The index of the closest name match to `buffered_input' in `sorted_names'.  If there is no part or full
 			-- match return -1.
 		local
@@ -794,7 +794,7 @@ feature {NONE} -- String matching
 			result_too_big: Result <= sorted_names.count
 		end
 
-	select_closest_match is
+	select_closest_match
 			-- Select the closest match in the list
 		do
 			if not is_first_show then
@@ -823,7 +823,7 @@ feature {NONE} -- String matching
 			is_first_show := False
 		end
 
-	match_names_until_done (a_name, a_name2: STRING): INTEGER is
+	match_names_until_done (a_name, a_name2: STRING): INTEGER
 			-- Match the characters of `a_name2' against `a_name' from the start of `a_name2' until no match is
 			-- found or all characters match.  Return the index where the match failed.
 		require
@@ -858,7 +858,7 @@ feature {NONE} -- String matching
 			index_returned_makes_sense: Result >= 0
 		end
 
-	matches_based_on_name (a_name: STRING): ARRAY [EB_NAME_FOR_COMPLETION] is
+	matches_based_on_name (a_name: STRING): ARRAY [EB_NAME_FOR_COMPLETION]
 			-- Array of matches based on `a_name'.  Always use this function before building lists to get correct matches.
 		require
 			sorted_names_not_void: sorted_names /= Void
@@ -891,7 +891,7 @@ feature {NONE} -- String matching
 			has_result: Result /= Void
 		end
 
-	nb_items_to_scroll: INTEGER is
+	nb_items_to_scroll: INTEGER
 			-- Number of items that will be scrolled when doing a page up or down operation.
 		require
 			choice_list_not_void: choice_list /= Void
@@ -906,7 +906,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

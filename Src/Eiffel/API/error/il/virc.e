@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Error when resource compiler cannot be invoked or if during its invocation it fails to
 		generate the binary resources file.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_rc_not_found (a_rc: like resource_compiler) is
+	make_rc_not_found (a_rc: like resource_compiler)
 			-- Create warning when resource compiler is not found.
 		do
 			has_resource_compiler := False
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			resource_compiler_set: resource_compiler = a_rc
 		end
 
-	make_resource_file_not_found (a_file: like resource_file) is
+	make_resource_file_not_found (a_file: like resource_file)
 			-- Create a warning
 		do
 			has_resource_compiler := True
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			resource_file_set: resource_file = a_file
 		end
 
-	make_failed (a_file: like resource_file) is
+	make_failed (a_file: like resource_file)
 			-- Create warning when resource compiler failed.
 		do
 			has_resource_compiler := True
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	code: STRING is "VIRC"
+	code: STRING = "VIRC"
 		-- Error code
 
 feature -- Access
@@ -70,14 +70,14 @@ feature -- Access
 	resource_file: STRING
 			-- Name of file being processed.
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- No need for an error message.
 		do
 			if not has_resource_compiler then
@@ -104,7 +104,7 @@ feature -- Output
 invariant
 	resource_file_set: has_resource_compiler implies resource_file /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

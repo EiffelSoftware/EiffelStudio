@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric criterion factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create criterion_table.make (10)
@@ -36,7 +36,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	metric_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	metric_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -49,7 +49,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	criterion_names_with_scope (a_scope: QL_SCOPE): LIST [STRING] is
+	criterion_names_with_scope (a_scope: QL_SCOPE): LIST [STRING]
 			-- List of name of criterion of type `a_scope'
 		require
 			a_scope_attached: a_scope /= Void
@@ -74,7 +74,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	criteria_with_scope (a_scope: QL_SCOPE): LIST [EB_METRIC_CRITERION] is
+	criteria_with_scope (a_scope: QL_SCOPE): LIST [EB_METRIC_CRITERION]
 			-- List of criterion of type `a_scope'
 			-- Can be Void if there is no criterion of `a_scope' registered in `criterion_table'.
 		local
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_criterion (a_name: STRING; a_scope: QL_SCOPE): BOOLEAN is
+	has_criterion (a_name: STRING; a_scope: QL_SCOPE): BOOLEAN
 			-- Does metric with `a_name' and `a_scope' exist in current?
 		require
 			a_name_attached: a_name /= Void
@@ -119,7 +119,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	new_normal_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_normal_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -131,7 +131,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_name_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_name_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -143,7 +143,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_path_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_path_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -155,7 +155,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_domain_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_domain_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_caller_callee_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_caller_callee_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -179,7 +179,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_supplier_client_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_supplier_client_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -191,7 +191,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_nary_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION is
+	new_nary_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -207,7 +207,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_VALUE_CRITERION is
+	new_value_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_VALUE_CRITERION
 			-- New value criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -219,7 +219,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_external_command_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_EXTERNAL_COMMAND_CRITERION is
+	new_external_command_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_EXTERNAL_COMMAND_CRITERION
 			-- New external command criterion whose `type' is `a_scope' and `name' is `a_name'
 		require
 			a_scope_attached: a_scope /= Void
@@ -233,7 +233,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Initialization
 
-	initialize_target_criteria is
+	initialize_target_criteria
 			-- Initialize target criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -254,7 +254,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (target_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_group_criteria is
+	initialize_group_criteria
 			-- Initialize group criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -282,7 +282,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (group_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_class_criteria is
+	initialize_class_criteria
 			-- Initialize class criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -346,7 +346,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (class_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_generic_criteria is
+	initialize_generic_criteria
 			-- Initialize generic criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -373,7 +373,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (generic_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_feature_criteria is
+	initialize_feature_criteria
 			-- Initialize feature criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -442,7 +442,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (feature_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_argument_criteria is
+	initialize_argument_criteria
 			-- Initialize argument criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -467,7 +467,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (argument_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_local_criteria is
+	initialize_local_criteria
 			-- Initialize local criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -493,7 +493,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (local_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_assertion_criteria is
+	initialize_assertion_criteria
 			-- Initialize assertion criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -527,7 +527,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_external_command_criterion (assertion_scope, query_language_names.ql_cri_is_satisfied_by), query_language_names.ql_cri_is_satisfied_by)
 		end
 
-	initialize_line_criteria is
+	initialize_line_criteria
 			-- Initialize line criteria.
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
@@ -556,7 +556,7 @@ feature{NONE} -- Initialization
 invariant
 	criterion_table_attached: criterion_table /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of attribute sorted by category or skeleton of a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create {GENERIC_SKELETON}
 
 feature -- Creation of CLASS_TYPE skeleton
 
-	instantiation_in (class_type: CLASS_TYPE): SKELETON is
+	instantiation_in (class_type: CLASS_TYPE): SKELETON
 			-- Instantiation of Current in `class_type'.
 		require
 			class_type_not_void: class_type /= Void
@@ -36,7 +36,7 @@ feature -- Creation of CLASS_TYPE skeleton
 			Result.update
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

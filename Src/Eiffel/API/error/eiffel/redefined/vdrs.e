@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the compiler cannot find a final name for a redefinition."
@@ -24,11 +24,11 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature name involved
 
-	code: STRING is "VDRS";
+	code: STRING = "VDRS";
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
             -- Build specific explanation explain for current error
             -- in `a_text_formatter'.
         do
@@ -40,19 +40,19 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (fn: STRING) is
+	set_feature_name (fn: STRING)
 			-- Assign `fn' to `feature_name'.
 		do
 			feature_name := fn;
 		end;
 
-	set_parent_id (i: INTEGER) is
+	set_parent_id (i: INTEGER)
 			-- Assign `i' to `parent_id'.
 		do
 			parent_id := i;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

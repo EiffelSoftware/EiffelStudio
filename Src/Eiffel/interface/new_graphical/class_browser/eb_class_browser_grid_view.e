@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Grid view used in class browser
 				]"
@@ -48,7 +48,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions)
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
@@ -72,21 +72,21 @@ feature{NONE} -- Initialization
 			drop_actions_set: drop_actions = a_drop_actions
 		end
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		deferred
 		ensure
 			grid_attached: grid /= Void
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build sortable and searchable facilities
 		require
 			grid_attached: grid /= Void
 		deferred
 		end
 
-	build_interface is
+	build_interface
 			-- Build interface of current view.
 		do
 			check development_window /= Void end
@@ -113,13 +113,13 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_starting_element (a_class: ANY) is
+	set_starting_element (a_class: ANY)
 			-- Set `start_class' with `a_class'.
 		do
 			starting_element ?= a_class
 		end
 
-	enable_tree_node_highlight is
+	enable_tree_node_highlight
 			-- Enable tree node highlight.
 			-- Go to `is_tree_node_highlight_enabled' for more information.
 		do
@@ -128,7 +128,7 @@ feature -- Setting
 			tree_node_highlight_enabled: is_tree_node_highlight_enabled
 		end
 
-	disable_tree_node_highlight is
+	disable_tree_node_highlight
 			-- Disable tree node highlight.
 			-- Go to `is_tree_node_highlight_enabled' for more information.
 		do
@@ -137,7 +137,7 @@ feature -- Setting
 			tree_node_highlight_disabled: not is_tree_node_highlight_enabled
 		end
 
-	set_trace (a_msg: STRING) is
+	set_trace (a_msg: STRING)
 			-- Set `trace' with `a_msg'.
 		do
 			if a_msg = Void or else a_msg.is_empty then
@@ -147,7 +147,7 @@ feature -- Setting
 			end
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to current grid.
 		do
 			if is_in_error_state then
@@ -161,7 +161,7 @@ feature -- Setting
 			end
 		end
 
-	set_has_grid_been_resized_manually (b: BOOLEAN) is
+	set_has_grid_been_resized_manually (b: BOOLEAN)
 			-- Set `has_grid_been_resized_manually' with `b'.
 		do
 			has_grid_been_resized_manually := b
@@ -169,7 +169,7 @@ feature -- Setting
 			has_grid_been_resized_manually_set: has_grid_been_resized_manually = b
 		end
 
-	set_sorting_order_getter (a_getter: like sorting_order_getter) is
+	set_sorting_order_getter (a_getter: like sorting_order_getter)
 			-- Set `sorting_order_getter' with `a_getter'.
 		do
 			sorting_order_getter := a_getter
@@ -177,7 +177,7 @@ feature -- Setting
 			sorting_order_getter_set: sorting_order_getter = a_getter
 		end
 
-	set_sorting_order_setter (a_setter: like sorting_order_setter) is
+	set_sorting_order_setter (a_setter: like sorting_order_setter)
 			-- Set `sorting_order_setter' with `a_setter'.
 		do
 			sorting_order_setter := a_setter
@@ -185,7 +185,7 @@ feature -- Setting
 			sorting_order_setter_set: sorting_order_setter = a_setter
 		end
 
-	try_auto_resize_grid (a_columns: ARRAY [TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]]; a_force: BOOLEAN) is
+	try_auto_resize_grid (a_columns: ARRAY [TUPLE [min_width: INTEGER; max_width: INTEGER; column_index: INTEGER]]; a_force: BOOLEAN)
 			-- Auto resize `grid' using size given by `a_columns' if `a_force' is True or else if `grid' has not been resized manually by user.
 			-- If `min_width' or `max_width' for some column is negative, then that column will be resized according to its required width.
 			-- For more information about `min_width' and `max_width', see `auto_resize_columns'.
@@ -218,7 +218,7 @@ feature -- Setting
 			end
 		end
 
-	enable_use_fixed_fonts is
+	enable_use_fixed_fonts
 			-- Enable to use fixed fonts.
 			-- Fixed fonts don't change with preferences.
 		do
@@ -227,7 +227,7 @@ feature -- Setting
 			is_fixed_fonts_used_set: is_fixed_fonts_used
 		end
 
-	disable_use_fixed_fonts is
+	disable_use_fixed_fonts
 			-- Enable to use fixed fonts.
 			-- Fixed fonts don't change with preferences.		
 		do
@@ -238,7 +238,7 @@ feature -- Setting
 
 feature -- Navigation
 
-	go_to_parent (a_row: EV_GRID_ROW) is
+	go_to_parent (a_row: EV_GRID_ROW)
 			-- Select parent row of `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -260,7 +260,7 @@ feature -- Navigation
 			end
 		end
 
-	first_non_void_grid_item (a_row: EV_GRID_ROW): EV_GRID_ITEM is
+	first_non_void_grid_item (a_row: EV_GRID_ROW): EV_GRID_ITEM
 			-- First non void item in `a_row'.
 			-- Return Void if there is no item in `a_row'.
 		require
@@ -281,7 +281,7 @@ feature -- Navigation
 			end
 		end
 
-	go_to_first_child (a_row: EV_GRID_ROW) is
+	go_to_first_child (a_row: EV_GRID_ROW)
 			-- Select first child (if any) of `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -304,7 +304,7 @@ feature -- Navigation
 			end
 		end
 
-	expand_row (a_row: EV_GRID_ROW) is
+	expand_row (a_row: EV_GRID_ROW)
 			-- Expand `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -314,7 +314,7 @@ feature -- Navigation
 			end
 		end
 
-	collapse_row_recursively (a_row: EV_GRID_ROW) is
+	collapse_row_recursively (a_row: EV_GRID_ROW)
 			-- Collapse `a_row' recursively.
 		require
 			a_row_attached: a_row /= Void
@@ -339,7 +339,7 @@ feature -- Navigation
 			end
 		end
 
-	expand_row_recursively (a_row: EV_GRID_ROW) is
+	expand_row_recursively (a_row: EV_GRID_ROW)
 			-- Expand `a_row' recursively.
 		require
 			a_row_attached: a_row /= Void
@@ -364,7 +364,7 @@ feature -- Navigation
 			end
 		end
 
-	collapse_row (a_row: EV_GRID_ROW) is
+	collapse_row (a_row: EV_GRID_ROW)
 			-- Collapse subrows of `a_row'.
 			-- But don't collapse `a_row', and make sure direct subrows of `a_row' is visible.
 		require
@@ -392,7 +392,7 @@ feature -- Navigation
 			end
 		end
 
-	collapse_row_normal (a_row: EV_GRID_ROW) is
+	collapse_row_normal (a_row: EV_GRID_ROW)
 			-- Collapse `a_row' normally.
 		require
 			a_row_attached: a_row /= Void
@@ -404,7 +404,7 @@ feature -- Navigation
 
 feature -- View update
 
-	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
+	update (a_observable: QL_OBSERVABLE; a_data: ANY)
 			-- Notification from `a_observable' indicating that `a_data' changed.
 		require else
 			a_observable_can_be_void: a_observable = Void
@@ -418,7 +418,7 @@ feature -- View update
 			update_view
 		end
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output
 		do
 			text.remove_text
@@ -432,7 +432,7 @@ feature -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Tool manager
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of current view
 		do
 			if widget_internal = Void then
@@ -449,7 +449,7 @@ feature -- Access
 			Result := widget_internal
 		end
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 			-- Every view can provide a customized control bar. Normally a tool bar is placed in this area
 			-- through which behavior (such as tooltip display) of current view can be changed.
@@ -464,7 +464,7 @@ feature -- Access
 	grid: ES_EDITOR_TOKEN_GRID
 			-- Grid used to display information
 
-	text_of_grid_item (a_item: EV_GRID_ITEM): STRING is
+	text_of_grid_item (a_item: EV_GRID_ITEM): STRING
 			-- String representation of `a_item'
 		local
 			l_token_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -475,7 +475,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_data_actions: ACTION_SEQUENCE [TUPLE] is
+	retrieve_data_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed to get new data which will force current view to be refreshed.
 		do
 			if retrieve_data_actions_internal = Void then
@@ -486,7 +486,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	show_tooltip_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	show_tooltip_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Checkbox to indicate whether or not tooltip is displayed
 		do
 			if show_tooltip_button_internal = Void then
@@ -507,7 +507,7 @@ feature -- Access
 	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
 			-- Agent to retrieve last recored sorting order
 
-	selected_row_background_color (a_grid_row: EV_GRID_ROW): EV_COLOR is
+	selected_row_background_color (a_grid_row: EV_GRID_ROW): EV_COLOR
 			-- Background color for selected row `a_grid_row'
 		require
 			a_grid_row_attached: a_grid_row /= Void
@@ -535,7 +535,7 @@ feature -- Status report
 			-- If True, when you select one row in tree view, the whole tree node hierarchy
 			-- starting from the row will be highlighted.
 
-	is_in_error_state: BOOLEAN is
+	is_in_error_state: BOOLEAN
 			-- Is current grid in error state?
 		do
 			Result := data = Void
@@ -556,7 +556,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	text: EV_TEXT is
+	text: EV_TEXT
 			-- Text area to display warning/error message
 		do
 			if internal_text = Void then
@@ -576,7 +576,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_color_or_font_changed is
+	on_color_or_font_changed
 			-- Action to be performed when color or font used to display editor tokens changes
 		do
 			if grid.is_displayed then
@@ -590,7 +590,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN is
+	on_predefined_key_pressed (a_key: EV_KEY): BOOLEAN
 			-- Action to be performed when predefined function keys are pressed
 			-- If `a_key' is processed, return True, otherwise False.
 		require
@@ -604,7 +604,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_enter_pressed is
+	on_enter_pressed
 			-- Action to be performed when enter key is pressed
 		local
 			l_item: EV_GRID_ITEM
@@ -617,27 +617,27 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_expand_all_level is
+	on_expand_all_level
 			-- Action to be performed to recursively expand all selected rows.
 		deferred
 		end
 
-	on_collapse_all_level is
+	on_collapse_all_level
 			-- Action to be performed to recursively collapse all selected rows.
 		deferred
 		end
 
-	on_expand_one_level is
+	on_expand_one_level
 			-- Action to be performed to expand all selected rows.
 		deferred
 		end
 
-	on_collapse_one_level is
+	on_collapse_one_level
 			-- Action to be performed to collapse all selected rows.
 		deferred
 		end
 
-	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+	on_post_sort (a_sorting_status_snapshot: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]])
 			-- Action to be performed after a sorting
 		local
 			l_current_sorting_order: STRING
@@ -654,7 +654,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_key_pressed_in_text (a_key: EV_KEY) is
+	on_key_pressed_in_text (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is pressed in `text'
 		require
 			a_key_attached: a_key /= Void
@@ -675,7 +675,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_show_tooltip_changed is
+	on_show_tooltip_changed
 			-- Action to be performed when selection status of `show_tooltip_button' changes
 		do
 			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_button.is_selected then
@@ -683,13 +683,13 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_column_resize_by_user_start (a_header: EV_HEADER_ITEM) is
+	on_column_resize_by_user_start (a_header: EV_HEADER_ITEM)
 			-- Action to be performed when resize of columns of `grid' starts
 		do
 			set_is_resize_by_user (True)
 		end
 
-	on_column_resize_by_user_end (a_header: EV_HEADER_ITEM; a_force: BOOLEAN) is
+	on_column_resize_by_user_end (a_header: EV_HEADER_ITEM; a_force: BOOLEAN)
 			-- Action to be performed when columns of `grid' is resized.
 		do
 			if (a_force or else is_resize_by_user) and then not has_grid_been_resized_manually then
@@ -699,7 +699,7 @@ feature{NONE} -- Actions
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- Recyclable
 		do
 			Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}
@@ -712,7 +712,7 @@ feature {NONE} -- Recycle
 			grid.recycle
 		end
 
-	recycle_agents is
+	recycle_agents
 			-- Recycle agents in preferences.
 		do
 			desynchronize_color_or_font_change_with_editor
@@ -724,7 +724,7 @@ feature {NONE} -- Recycle
 
 feature {NONE} -- Implementation
 
-	default_row_height: INTEGER is
+	default_row_height: INTEGER
 			-- Default height to set grid rows.
 		do
 			Result := grid_row_height_for_tokens (not is_fixed_fonts_used)
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 	value: DOUBLE_REF
 			-- Value of last calculated formatter
 
-	even_line_color: EV_COLOR is
+	even_line_color: EV_COLOR
 			-- Background color for even lines
 		do
 			Result := preferences.class_browser_data.even_row_background_color
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	odd_line_color: EV_COLOR is
+	odd_line_color: EV_COLOR
 			-- Background color for odd lines
 		do
 			Result := preferences.class_browser_data.odd_row_background_color
@@ -761,7 +761,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	update_view is
+	update_view
 			-- Update current view according to change in `model'.
 		do
 			if not is_up_to_date then
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation
 			view_up_to_date: is_up_to_date
 		end
 
-	provide_value_result is
+	provide_value_result
 			-- Provide result for `value'.
 		require
 			value_attached: value /= Void
@@ -798,12 +798,12 @@ feature {NONE} -- Implementation
 			text.set_text (l_text)
 		end
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		deferred
 		end
 
-	provide_error_message is
+	provide_error_message
 			-- Provide error message displayed in Current view.
 		local
 			l_msg: STRING_32
@@ -816,17 +816,17 @@ feature {NONE} -- Implementation
 			text.set_text (l_msg)
 		end
 
-	fill_rows is
+	fill_rows
 			-- Fill rows with `data'.
 		deferred
 		end
 
-	bind_grid is
+	bind_grid
 			-- Bind data in `rows' into `grid'.
 		deferred
 		end
 
-	do_all_in_rows (a_row_list: LIST [EV_GRID_ROW]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]) is
+	do_all_in_rows (a_row_list: LIST [EV_GRID_ROW]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]])
 			-- Call `a_agent' for all rows in `a_row_list'.
 		require
 			a_row_list_attached: a_row_list /= Void
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	do_all_in_items (a_item_list: LIST [EV_GRID_ITEM]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]]) is
+	do_all_in_items (a_item_list: LIST [EV_GRID_ITEM]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]])
 			-- Call `a_agent' for all items in `a_item_list'.
 		require
 			a_item_list_attached: a_item_list /= Void
@@ -869,7 +869,7 @@ feature {NONE} -- Implementation
 			-- Is column resized manually by user
 			-- After user manually resized, we don't auto resize `grid' according to required column width anymore.				
 
-	set_is_resize_by_user (b: BOOLEAN) is
+	set_is_resize_by_user (b: BOOLEAN)
 			-- Set `is_resize_by_user' with `b'.
 		do
 			is_resize_by_user := b
@@ -877,7 +877,7 @@ feature {NONE} -- Implementation
 			is_resize_by_user_set: is_resize_by_user = b
 		end
 
-	select_all_in_dynamic_grid (a_grid: EV_GRID; a_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]; a_columns: LIST [INTEGER]) is
+	select_all_in_dynamic_grid (a_grid: EV_GRID; a_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]; a_columns: LIST [INTEGER])
 			-- Select all rows/items in dynamic grid `a_grid'.			
 			-- `a_item_function' is the function to get grid items on the fly.			
 			-- `a_columns' contains indexes of columns whose items are to be retrieved.
@@ -940,7 +940,7 @@ feature{NONE} -- Implementation/Exception
 
 feature -- Tree hierarchy highlight
 
-	highlight_tree_on_grid_focus_change is
+	highlight_tree_on_grid_focus_change
 			-- Highlight/Dehighlight selected tree hierarchy when focus of `grid' changes.
 		require
 			grid_is_in_tree_mode: grid.is_tree_enabled
@@ -973,7 +973,7 @@ feature -- Tree hierarchy highlight
 			end
 		end
 
-	highlight_row (a_row: EV_GRID_ROW) is
+	highlight_row (a_row: EV_GRID_ROW)
 			-- Highlight `a_row and all its subrows.
 		require
 			a_row_attached: a_row /= Void
@@ -1002,7 +1002,7 @@ feature -- Tree hierarchy highlight
 			end
 		end
 
-	dehighlight_row (a_row: EV_GRID_ROW) is
+	dehighlight_row (a_row: EV_GRID_ROW)
 			-- Dehighlight `a_row' and all its subrows.
 		require
 			a_row_attached: a_row /= Void
@@ -1045,7 +1045,7 @@ feature -- Tree hierarchy highlight
 			end
 		end
 
-	processed_rows: LIST [EV_GRID_ROW] is
+	processed_rows: LIST [EV_GRID_ROW]
 			-- Rows that have been processed during some expansion or collapsion
 		do
 			if processed_rows_internal = Void then
@@ -1064,7 +1064,7 @@ feature -- Tree hierarchy highlight
 
 feature{NONE} -- Implementation/Stone
 
-	item_to_put_in_editor_for_single_item_grid: like item_to_put_in_editor is
+	item_to_put_in_editor_for_single_item_grid: like item_to_put_in_editor
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		local
@@ -1080,7 +1080,7 @@ feature{NONE} -- Implementation/Stone
 			end
 		end
 
-	item_to_put_in_editor_for_tree_row: EV_GRID_ITEM is
+	item_to_put_in_editor_for_tree_row: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.
 		local
@@ -1098,7 +1098,7 @@ feature{NONE} -- Implementation/Stone
 			end
 		end
 
-	is_subrow_recursively_expanded (a_row: EV_GRID_ROW; a_expanded_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]): BOOLEAN is
+	is_subrow_recursively_expanded (a_row: EV_GRID_ROW; a_expanded_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]): BOOLEAN
 			-- Is `a_row' and all its recursive subrows expanded?
 			-- `a_expanded_agent' is a function to decide if the grid row given as the only argument is expanded.
 		require
@@ -1126,13 +1126,13 @@ feature{NONE} -- Implementation/Stone
 			end
 		end
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		deferred
 		end
 
-	open_item_editor (a_item: EV_GRID_ITEM) is
+	open_item_editor (a_item: EV_GRID_ITEM)
 			-- If `a_item' is an editor token item and contains a valid stone, open that stone in editor.
 		require
 			a_item_attached: a_item /= Void
@@ -1152,7 +1152,7 @@ feature{NONE} -- Implementation/Stone
 invariant
 	development_window_attached: not is_recycled implies development_window /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

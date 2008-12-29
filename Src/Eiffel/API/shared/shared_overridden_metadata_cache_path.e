@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shell pattern used to store overridden metadata cache path%
 					% set via command line parameters."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	overridden_metadata_cache_path: STRING is
+	overridden_metadata_cache_path: STRING
 			-- Overridden metadata cache path if any
 		do
 			Result := omcp_cell.item
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	set_overridden_metadata_cache_path (a_path: STRING) is
+	set_overridden_metadata_cache_path (a_path: STRING)
 			-- Set `overridden_metadata_cache_path' with `a_path'.
 		do
 			omcp_cell.replace (a_path)
@@ -29,13 +29,13 @@ feature -- Element Settings
 
 feature {NONE} -- Implementation
 	
-	omcp_cell: CELL [STRING] is
+	omcp_cell: CELL [STRING]
 			-- Once cell used for shell pattern
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

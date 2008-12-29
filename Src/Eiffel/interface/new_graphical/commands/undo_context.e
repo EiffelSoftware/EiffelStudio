@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A context in which reversable operations are performed."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make_with_list (a_list: LINKED_LIST [UNDO_PAIR]) is
+	make_with_list (a_list: LINKED_LIST [UNDO_PAIR])
 			-- Create with `a_list'.
 		do
 			undo_list := a_list
@@ -31,7 +31,7 @@ feature -- Initialization
 			create redo_exhausted_actions
 		end
 
-	default_create is
+	default_create
 			-- Create attributes.
 		do
 			create undo_list.make
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Access
 
-	undo_pairs: LINEAR [UNDO_PAIR] is
+	undo_pairs: LINEAR [UNDO_PAIR]
 			-- Undoable actions that have been preformed.
 			-- Result.`item' is the action that would be undone if `undo` were called.
 		local
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	do_undoable (action, undo_procedure: ANY) is
+	do_undoable (action, undo_procedure: ANY)
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 		require
@@ -120,7 +120,7 @@ feature -- Basic operations
 			redo_exhausted_actions.call (Void)
 		end
 
-	do_named_undoable (a_name: STRING_GENERAL; an_action, an_undo_procedure: ANY) is
+	do_named_undoable (a_name: STRING_GENERAL; an_action, an_undo_procedure: ANY)
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 		require
@@ -132,7 +132,7 @@ feature -- Basic operations
 			undo_list.last.set_name (a_name)
 		end
 
-	undo is
+	undo
 			-- Reverse the most recent reversable action.
 		require
 			not_undo_exhausted: not undo_exhausted
@@ -147,7 +147,7 @@ feature -- Basic operations
 			updated_if_not_wiped_out: not undo_list.is_empty implies undo_list.index = old undo_list.index - 1
 		end
 
-	redo is
+	redo
 			-- Reperform the most recently reversed action.
 		require
 			not_redo_exhausted: not redo_exhausted
@@ -164,7 +164,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	wipe_out is
+	wipe_out
 			-- Disgard all previous undoable commands.
 		do
 			undo_list.wipe_out
@@ -172,7 +172,7 @@ feature -- Element change
 
 feature -- Status report
 
-	undo_exhausted: BOOLEAN is
+	undo_exhausted: BOOLEAN
 			-- Are there no remaining actions to undo?
 		do
 			Result :=
@@ -180,7 +180,7 @@ feature -- Status report
 				undo_list.off
 		end
 
-	redo_exhausted: BOOLEAN is
+	redo_exhausted: BOOLEAN
 			-- Are there no remaining actions to redo?
 		do
 			Result :=
@@ -204,7 +204,7 @@ feature -- Event handling
 
 feature -- Implementation
 
-	conforms (object: ANY; type: STRING): BOOLEAN is
+	conforms (object: ANY; type: STRING): BOOLEAN
 			-- Does `object' conform to `type'?
 		local
 			i: INTERNAL
@@ -220,7 +220,7 @@ feature -- Implementation
 			end
 		end
 
-	conforms_to_array_of (object: ANY; type: STRING): BOOLEAN is
+	conforms_to_array_of (object: ANY; type: STRING): BOOLEAN
 			-- Does `object' conform to ARRAY [`type']?
 		local
 			a: ARRAY [ANY]
@@ -242,7 +242,7 @@ feature -- Implementation
 			end
 		end
 
-	conforms_to_tuple_of_array_of (object: ANY; type: STRING): BOOLEAN is
+	conforms_to_tuple_of_array_of (object: ANY; type: STRING): BOOLEAN
 			-- Does `object' conform to TUPLE [ARRAY [`type']]?
 		local
 			t: TUPLE
@@ -261,7 +261,7 @@ feature  -- Implementation
 
 feature {NONE} -- Implementation
 
-	procedure_array_call (array: ARRAY [ANY]) is
+	procedure_array_call (array: ARRAY [ANY])
 			-- Call all procedures in `array'.
 		require
 			array_not_void: array /= Void
@@ -289,7 +289,7 @@ invariant
 	undo_exhausted_actions_not_void: undo_exhausted_actions /= Void
 	redo_exhausted_actions_not_void: redo_exhausted_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

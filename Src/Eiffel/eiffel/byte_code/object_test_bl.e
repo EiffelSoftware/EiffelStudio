@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte node for object test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 
 feature -- C code generation
 
-	analyze is
+	analyze
 			-- Analyze reverse assignment
 		local
 			source_type: TYPE_A
@@ -107,7 +107,7 @@ feature -- C code generation
 			result_register := Void
 		end
 
-	generate is
+	generate
 			-- Generate object test
 		local
 			buf: GENERATION_BUFFER
@@ -334,7 +334,7 @@ feature {NONE} -- Object test value
 	target_variable: NATURAL_8 = 3;
 			-- Expression value is stored in a target register
 
-indexing
+note
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

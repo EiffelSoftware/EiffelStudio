@@ -1,4 +1,4 @@
-indexing
+note
 	description: "External parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -37,12 +37,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			yyvsp9 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		do
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			yyvs1.put (last_any_value, yyvsp1)
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			yyvs1.put (yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -434,7 +434,7 @@ feature {NONE} -- Semantic actions
 			end
 		end
 
-	yy_do_action_1 is
+	yy_do_action_1
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -455,7 +455,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_2 is
+	yy_do_action_2
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -476,7 +476,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_3 is
+	yy_do_action_3
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -496,7 +496,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_4 is
+	yy_do_action_4
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -516,7 +516,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_5 is
+	yy_do_action_5
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -552,7 +552,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_6 is
+	yy_do_action_6
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -588,7 +588,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_7 is
+	yy_do_action_7
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -624,7 +624,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_8 is
+	yy_do_action_8
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -642,7 +642,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_9 is
+	yy_do_action_9
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -677,7 +677,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_10 is
+	yy_do_action_10
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -713,7 +713,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_11 is
+	yy_do_action_11
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -750,7 +750,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_12 is
+	yy_do_action_12
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -790,7 +790,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_13 is
+	yy_do_action_13
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -829,7 +829,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_14 is
+	yy_do_action_14
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -866,7 +866,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_15 is
+	yy_do_action_15
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -884,7 +884,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_16 is
+	yy_do_action_16
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -924,7 +924,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_17 is
+	yy_do_action_17
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -963,7 +963,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_18 is
+	yy_do_action_18
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1000,7 +1000,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_19 is
+	yy_do_action_19
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1038,7 +1038,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_20 is
+	yy_do_action_20
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1077,7 +1077,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_21 is
+	yy_do_action_21
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1116,7 +1116,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_22 is
+	yy_do_action_22
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1155,7 +1155,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_23 is
+	yy_do_action_23
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1196,7 +1196,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_24 is
+	yy_do_action_24
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1237,7 +1237,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_25 is
+	yy_do_action_25
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1271,7 +1271,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_26 is
+	yy_do_action_26
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1306,7 +1306,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_27 is
+	yy_do_action_27
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1345,7 +1345,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_28 is
+	yy_do_action_28
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1384,7 +1384,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_29 is
+	yy_do_action_29
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1423,7 +1423,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_30 is
+	yy_do_action_30
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1462,7 +1462,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_31 is
+	yy_do_action_31
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1501,7 +1501,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_32 is
+	yy_do_action_32
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1540,7 +1540,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_33 is
+	yy_do_action_33
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1579,7 +1579,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_34 is
+	yy_do_action_34
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1618,7 +1618,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_35 is
+	yy_do_action_35
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1657,7 +1657,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_36 is
+	yy_do_action_36
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1696,7 +1696,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_37 is
+	yy_do_action_37
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1735,7 +1735,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_38 is
+	yy_do_action_38
 			--|#line <not available> "external.y"
 		local
 			yyval2: EXTERNAL_EXTENSION_AS
@@ -1774,7 +1774,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_39 is
+	yy_do_action_39
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1810,7 +1810,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_40 is
+	yy_do_action_40
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -1846,7 +1846,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_41 is
+	yy_do_action_41
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1880,7 +1880,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_42 is
+	yy_do_action_42
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1897,7 +1897,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_43 is
+	yy_do_action_43
 			--|#line <not available> "external.y"
 		local
 			yyval3: SIGNATURE_AS
@@ -1935,7 +1935,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_44 is
+	yy_do_action_44
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1969,7 +1969,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_45 is
+	yy_do_action_45
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -1986,7 +1986,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_46 is
+	yy_do_action_46
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2004,7 +2004,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_47 is
+	yy_do_action_47
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2038,7 +2038,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_48 is
+	yy_do_action_48
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2055,7 +2055,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_49 is
+	yy_do_action_49
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2092,7 +2092,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_50 is
+	yy_do_action_50
 			--|#line <not available> "external.y"
 		local
 			yyval9: ARRAYED_LIST [EXTERNAL_TYPE_AS]
@@ -2113,7 +2113,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_51 is
+	yy_do_action_51
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2147,7 +2147,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_52 is
+	yy_do_action_52
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2165,7 +2165,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_53 is
+	yy_do_action_53
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2205,7 +2205,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_54 is
+	yy_do_action_54
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2246,7 +2246,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_55 is
+	yy_do_action_55
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2286,7 +2286,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_56 is
+	yy_do_action_56
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2326,7 +2326,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_57 is
+	yy_do_action_57
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2366,7 +2366,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_58 is
+	yy_do_action_58
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2406,7 +2406,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_59 is
+	yy_do_action_59
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2446,7 +2446,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_60 is
+	yy_do_action_60
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2486,7 +2486,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_61 is
+	yy_do_action_61
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2520,7 +2520,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_62 is
+	yy_do_action_62
 			--|#line <not available> "external.y"
 		local
 			yyval4: EXTERNAL_TYPE_AS
@@ -2539,7 +2539,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_63 is
+	yy_do_action_63
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -2573,7 +2573,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_64 is
+	yy_do_action_64
 			--|#line <not available> "external.y"
 		local
 			yyval7: INTEGER
@@ -2591,7 +2591,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_65 is
+	yy_do_action_65
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -2625,7 +2625,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_66 is
+	yy_do_action_66
 			--|#line <not available> "external.y"
 		local
 			yyval6: BOOLEAN
@@ -2660,7 +2660,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_67 is
+	yy_do_action_67
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2694,7 +2694,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_68 is
+	yy_do_action_68
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2711,7 +2711,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_69 is
+	yy_do_action_69
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2729,7 +2729,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_70 is
+	yy_do_action_70
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2766,7 +2766,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_71 is
+	yy_do_action_71
 			--|#line <not available> "external.y"
 		local
 			yyval8: USE_LIST_AS
@@ -2787,7 +2787,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_72 is
+	yy_do_action_72
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2823,7 +2823,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_73 is
+	yy_do_action_73
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2859,7 +2859,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_74 is
+	yy_do_action_74
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2895,7 +2895,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_75 is
+	yy_do_action_75
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2931,7 +2931,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_76 is
+	yy_do_action_76
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -2967,7 +2967,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_77 is
+	yy_do_action_77
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -3003,7 +3003,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_78 is
+	yy_do_action_78
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -3039,7 +3039,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_79 is
+	yy_do_action_79
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -3075,7 +3075,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_80 is
+	yy_do_action_80
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -3111,7 +3111,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_81 is
+	yy_do_action_81
 			--|#line <not available> "external.y"
 		local
 			yyval5: ID_AS
@@ -3146,7 +3146,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -3161,7 +3161,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
@@ -3199,7 +3199,7 @@ feature {NONE} -- Table templates
 			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
@@ -3214,7 +3214,7 @@ feature {NONE} -- Table templates
 			   59,   57, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
@@ -3241,7 +3241,7 @@ feature {NONE} -- Table templates
 			    8,    2,    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
@@ -3252,7 +3252,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
@@ -3279,7 +3279,7 @@ feature {NONE} -- Table templates
 			   12,    0,    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
@@ -3288,7 +3288,7 @@ feature {NONE} -- Table templates
 			  125,    9,   10,   53,   54,   91,   92, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
@@ -3315,7 +3315,7 @@ feature {NONE} -- Table templates
 			 -32768,    5,    2, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
@@ -3324,7 +3324,7 @@ feature {NONE} -- Table templates
 			 -32768, -32768,   68, -32768, -32768, -32768, -32768, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
@@ -3353,7 +3353,7 @@ feature {NONE} -- Table templates
 			    0,    0,    0,    0,    0,    0,    0,    0,  145,  146, yyDummy>>)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
@@ -3494,23 +3494,23 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 193
+	yyFinal: INTEGER = 193
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 45
+	yyNtbase: INTEGER = 45
 			-- Number of tokens
 
-	yyLast: INTEGER is 209
+	yyLast: INTEGER = 209
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 299
+	yyMax_token: INTEGER = 299
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 72
+	yyNsyms: INTEGER = 72
 			-- Number of symbols
 			-- (terminal and nonterminal)
 
@@ -3520,14 +3520,14 @@ feature -- User-defined features
 
 feature {NONE} -- Constants
 
-	const_prefix: STRING is "const "
-	const_signed_prefix: STRING is "const signed "
-	const_unsigned_prefix: STRING is "const unsigned "
-	signed_prefix: STRING is "signed "
-	unsigned_prefix: STRING is "unsigned ";
+	const_prefix: STRING = "const "
+	const_signed_prefix: STRING = "const signed "
+	const_unsigned_prefix: STRING = "const unsigned "
+	signed_prefix: STRING = "signed "
+	unsigned_prefix: STRING = "unsigned ";
 			-- Available prefix to C/C++ basic types.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

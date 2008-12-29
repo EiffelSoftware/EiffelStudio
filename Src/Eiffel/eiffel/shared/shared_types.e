@@ -1,107 +1,107 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_TYPES
 
 feature {NONE}
 
-	natural_8_type: NATURAL_A is
+	natural_8_type: NATURAL_A
 			-- Actual integer type of 8 bits
 		once
 			create Result.make (8)
 		end
 
-	natural_16_type: NATURAL_A is
+	natural_16_type: NATURAL_A
 			-- Actual integer type of 16 bits
 		once
 			create Result.make (16)
 		end
 
-	natural_32_type: NATURAL_A is
+	natural_32_type: NATURAL_A
 			-- Actual integer type of 32 bits
 		once
 			create Result.make (32)
 		end
 
-	natural_64_type: NATURAL_A is
+	natural_64_type: NATURAL_A
 			-- Actual integer type of 64 bits
 		once
 			create Result.make (64)
 		end
 
-	Integer_8_type: INTEGER_A is
+	Integer_8_type: INTEGER_A
 			-- Actual integer type of 8 bits
 		once
 			create Result.make (8)
 		end
 
-	Integer_16_type: INTEGER_A is
+	Integer_16_type: INTEGER_A
 			-- Actual integer type of 16 bits
 		once
 			create Result.make (16)
 		end
 
-	Integer_32_type, Integer_type: INTEGER_A is
+	Integer_32_type, Integer_type: INTEGER_A
 			-- Actual integer type of 32 bits
 		once
 			create Result.make (32)
 		end
 
-	Integer_64_type: INTEGER_A is
+	Integer_64_type: INTEGER_A
 			-- Actual integer type of 64 bits
 		once
 			create Result.make (64)
 		end
 
-	Boolean_type: BOOLEAN_A is
+	Boolean_type: BOOLEAN_A
 			-- Actual boolean type
 		once
 			create Result
 		end
 
-	Character_type: CHARACTER_A is
+	Character_type: CHARACTER_A
 			-- Actual character type
 		once
 			create Result.make (False)
 		end
 
-	Wide_char_type: CHARACTER_A is
+	Wide_char_type: CHARACTER_A
 			-- Actual wide character type
 		once
 			create Result.make (True)
 		end
 
-	Real_32_type: REAL_32_A is
+	Real_32_type: REAL_32_A
 			-- Actual real 32 bits type
 		once
 			create Result
 		end
 
-	Real_64_type: REAL_64_A is
+	Real_64_type: REAL_64_A
 			-- Actual real 64 bits type
 		once
 			create Result
 		end
 
-	Void_type: VOID_A is
+	Void_type: VOID_A
 			-- Actual void type
 		once
 			create Result
 		end
 
-	Pointer_type: POINTER_A is
+	Pointer_type: POINTER_A
 			-- Actual pointer type
 		once
 			create Result
 		end
 
-	None_type: NONE_A is
+	None_type: NONE_A
 			-- Actual NONE type
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

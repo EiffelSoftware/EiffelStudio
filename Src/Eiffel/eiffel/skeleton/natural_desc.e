@@ -1,4 +1,4 @@
-indexing
+note
 	description: "natural description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create instance of NATURAL_DESC represented on `n' bits.
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
@@ -30,7 +30,7 @@ feature -- Access
 	size: INTEGER
 			-- Current is stored on `size' bits.
 
-	level: INTEGER is
+	level: INTEGER
 			-- Comparison criteria
 		do
 			inspect size
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 			-- Skeleton characteristic value
 		do
 			inspect size
@@ -52,7 +52,7 @@ feature -- Access
 			end
 		end
 
-	type_i: TYPE_A is
+	type_i: TYPE_A
 			-- Corresponding TYPE_I instance
 		do
 			inspect size
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
@@ -80,7 +80,7 @@ feature -- Code generation
 invariant
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

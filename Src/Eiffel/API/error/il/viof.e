@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate error when a list of possible overloaded features matches a call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			a_class: like class_c; a_feature: FEATURE_I; a_features: like matching_features;
 			a_name: like feature_name; a_class_id: like context_class_id;
 			a_list_type: like arg_list)
-		is
+		
 			-- Create VIOF instance with `l_features'.
 		require
 			a_class_not_void: a_class /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is "VIOF"
+	code: STRING = "VIOF"
 			-- Error code.
 
 	matching_features: LIST [FEATURE_I]
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		local
 			l_feature: E_FEATURE
@@ -122,7 +122,7 @@ invariant
 	feature_name_not_void: feature_name /= Void
 	context_class_id_positive: context_class_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

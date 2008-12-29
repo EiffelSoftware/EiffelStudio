@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store a version number as major,minor,build and revision number"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_from_string (vers: STRING) is
+	make_from_string (vers: STRING)
 			-- Create a new version object with its string representation `vers'.
 		require
 			version_valid: is_version_valid (vers)
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_version (vers: STRING) is
+	set_version (vers: STRING)
 			-- Update current with `vers' string representation of a version.
 		require
 			version_valid: is_version_valid (vers)
@@ -59,7 +59,7 @@ feature -- Settings
 		
 feature -- Checking
 
-	is_version_valid (vers: STRING): BOOLEAN is
+	is_version_valid (vers: STRING): BOOLEAN
 			-- Is `vers' a valid version number?
 			-- I.e. a sequence of four integers separated by colon.
 		local
@@ -105,7 +105,7 @@ feature -- Checking
 invariant
 	positive_composants: major >= 0 and minor >= 0 and build >= 0 and revision >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

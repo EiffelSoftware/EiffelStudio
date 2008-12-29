@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Dialog which show/manage all recorded hisotry test run data.
 																					]"
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			l_box, l_box_2, l_box_3: EV_BOX
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	init_grid is
+	init_grid
 			-- Initialize `grid'
 		do
 			build_columns
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			enable_sorting_on_columns (all_columns)
 		end
 
-	init_service is
+	init_service
 			-- Initialize event list service
 		local
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_columns is
+	build_columns
 			-- Init columns of `grid'.
 		local
 			l_grid: like grid
@@ -180,7 +180,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	fill_maximum_test_run_count_with_session_data is
+	fill_maximum_test_run_count_with_session_data
 			-- Fill `maximum_test_run_count''s text with data from session data
 		local
 			l_count: NATURAL
@@ -189,7 +189,7 @@ feature {NONE} -- Initialization
 			maximum_test_run_count.set_text (l_count.out)
 		end
 
-	init_grid_row is
+	init_grid_row
 			-- Initialize `grid'.
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -225,20 +225,20 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Agents
 
-	on_before_show is
+	on_before_show
 			-- <Precursor>
 		do
 			Precursor {ES_DIALOG}
 			init_grid
 		end
 
-	on_grid_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_grid_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Handle grid pointer double press actions
 		do
 			on_show_test_run_cases
 		end
 
-	on_show_test_run_cases is
+	on_show_test_run_cases
 			-- Handle show test run cases
 		local
 			l_all_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]
@@ -276,7 +276,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_remove is
+	on_remove
 			-- Handle the action that remove current selected row
 		local
 			l_row: ARRAYED_LIST [EV_GRID_ROW]
@@ -295,7 +295,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_default_ok_button is
+	on_default_ok_button
 			-- Handle default button action
 		local
 			l_index, l_count: INTEGER
@@ -339,7 +339,7 @@ feature {NONE} -- Agents
 			testing_result_panel.test_run_result_grid_manager.session_data.set_maximum_remembered_data_count (l_string.to_natural_32)
 		end
 
-	on_remove_all is
+	on_remove_all
 			-- Handle the action that remove all data
 		local
 			l_index, l_count: INTEGER
@@ -361,7 +361,7 @@ feature {NONE} -- Agents
 
 		end
 
-	on_event_added (a_service: EVENT_LIST_S; a_item: EVENT_LIST_ITEM_I) is
+	on_event_added (a_service: EVENT_LIST_S; a_item: EVENT_LIST_ITEM_I)
 			-- Event list service hook
 		local
 			l_index: INTEGER
@@ -376,7 +376,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_maximum_test_run_data_count_focus_out is
+	on_maximum_test_run_data_count_focus_out
 			-- Handle `maximum_test_run_count' focus out actions
 			-- We reset the value if end user provided invalid value
 		local
@@ -390,7 +390,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- UI implementation
 
-	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN] is
+	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns in `grid'
 		local
 			l_grid: ES_GRID
@@ -410,7 +410,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	all_columns_titles: !ARRAYED_LIST [STRING_GENERAL] is
+	all_columns_titles: !ARRAYED_LIST [STRING_GENERAL]
 			-- All columns' titles
 		do
 			create Result.make (3)
@@ -434,7 +434,7 @@ feature {NONE} -- UI implementation
 	grid: ES_GRID
 			-- Grid where show test runs history
 
-	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW) is
+	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
 			-- Populate a event item, fill `a_row' with grid items
 		require
 			not_void: a_row /= Void
@@ -471,7 +471,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	put_all_test_cases_to_event_list (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]) is
+	put_all_test_cases_to_event_list (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
 			-- Put `a_list''s items to event list service
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -502,7 +502,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	put_all_test_results_to_event_list (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]) is
+	put_all_test_results_to_event_list (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM])
 			-- Pu `a_list''s items to event list service
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -529,7 +529,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	remove_data (a_row: !EV_GRID_ROW) is
+	remove_data (a_row: !EV_GRID_ROW)
 			-- Remove test result data related with `a_row'
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -546,7 +546,7 @@ feature {NONE} -- UI implementation
 			end
 		end
 
-	testing_result_panel: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL is
+	testing_result_panel: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 			-- Testing result tool panel
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -559,7 +559,7 @@ feature {NONE} -- UI implementation
 
 feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 
-	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN is
+	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN
 			-- Agent function used to determine row order.
 			--
 			-- `a_row': The primary row to check.
@@ -616,7 +616,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 			end
 		end
 
-	compare_rows (a_row, a_other_row: EV_GRID_ROW; a_column: INTEGER): BOOLEAN is
+	compare_rows (a_row, a_other_row: EV_GRID_ROW; a_column: INTEGER): BOOLEAN
 			-- Compares two rows from the local grid and returns an index based on their comparative result.
 			--
 			-- Note: Basic implementation handles both string and integer string checking. Items with special
@@ -675,7 +675,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 			-- Cached version of `grid_wrapper'
 			-- Note: Do not use directly!
 
-	frozen sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+	frozen sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -776,7 +776,7 @@ feature {NONE} -- Copy from {ES_EVENT_LIST_TOOL_PANEL_BASE} FIXIT: merge?
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

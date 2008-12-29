@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base prompts for requesting user to confirm/cancel saving of modified entities.
 	]"
@@ -161,7 +161,7 @@ invariant
 	not_entities_is_empty: entities /= Void implies not entities.is_empty
 	entities_contains_attached_items: entities /= Void implies not entities.has (Void)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric caller/callee criterion"
 	author: ""
 	date: "$Date$"
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			old_make (create {EB_METRIC_DOMAIN}.make)
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Load `a_criterion' into Current.
 		local
 			l_domain: EB_METRIC_DOMAIN
@@ -48,7 +48,7 @@ feature -- Setting
 			set_value ([a_criterion.only_current_version])
 		end
 
-	store_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Store Current in `a_criterion'.
 		local
 			l_value: like value
@@ -66,7 +66,7 @@ feature -- Setting
 			end
 		end
 
-	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+	change_value_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
 		do
 			Result := change_actions

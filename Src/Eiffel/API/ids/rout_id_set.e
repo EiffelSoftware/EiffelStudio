@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routine identifier sets indexed by routine id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {COMPILER_EXPORTER}
 
-	extend (a_rout_id: like first) is
+	extend (a_rout_id: like first)
 			-- Insert routine id `a_rout_id' in set if not already
 			-- present.
 		local
@@ -65,7 +65,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	has_attribute_origin: BOOLEAN is
+	has_attribute_origin: BOOLEAN
 			-- Is in routine id set an attribute offset table id?
 		require
 			not_empty: not is_empty
@@ -73,7 +73,7 @@ feature {COMPILER_EXPORTER}
 			Result := Routine_id_counter.is_attribute (first)
 		end
 
-	update (l: LINKED_LIST [INHERIT_INFO]) is
+	update (l: LINKED_LIST [INHERIT_INFO])
 			-- Update through inherited features in `l'.
 		require
 			l_not_void: l /= Void
@@ -89,7 +89,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

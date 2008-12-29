@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of a profile filter used to check the language %
@@ -15,31 +15,31 @@ inherit
 
 feature {NONE} -- Implementation
 
-	filter(input_set: PROFILE_SET): PROFILE_SET is
+	filter(input_set: PROFILE_SET): PROFILE_SET
 		do
 		end
 
-	filtering_is_allowed: BOOLEAN is
+	filtering_is_allowed: BOOLEAN
 		do
 		end
 
-	set_operator (new_operator: STRING) is
+	set_operator (new_operator: STRING)
 		do
 		end
 
-	set_value (new_value: COMPARABLE) is
+	set_value (new_value: COMPARABLE)
 		do
 		end
 
-	set_value_range( lower, upper: COMPARABLE) is
+	set_value_range( lower, upper: COMPARABLE)
 		do
 		end
 
-	extend (new_filter: PROFILE_FILTER) is
+	extend (new_filter: PROFILE_FILTER)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

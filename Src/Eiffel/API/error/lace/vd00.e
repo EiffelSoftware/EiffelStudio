@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"General error during the loading of a configuration file."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add (error.out)
 			st.add_new_line
@@ -30,7 +30,7 @@ feature -- Output
 
 feature -- Setting
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
 		require
 			an_error_not_void: an_error /= Void
@@ -38,7 +38,7 @@ feature -- Setting
 			error := an_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface of an test factory which an arbitrary number of tests.
 		

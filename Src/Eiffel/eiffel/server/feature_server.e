@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for storing FEATURE_I objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,20 +19,20 @@ create
 
 feature -- Access
 
-	cache: CACHE [FEATURE_I] is
+	cache: CACHE [FEATURE_I]
 			-- Cache for features
 		once
 			create Result.make
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Has the current server or the associated temporary
 			-- server an item of id `an_id'.
 		do
 			Result := tmp_feature_server.has (an_id) or else Precursor (an_id)
 		end;
 
-	item (an_id: INTEGER): FEATURE_I is
+	item (an_id: INTEGER): FEATURE_I
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
 		do
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	remove (an_id: INTEGER_32) is
+	remove (an_id: INTEGER_32)
 			-- <Precursor>
 		do
 			tmp_feature_server.remove (an_id)
@@ -51,10 +51,10 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 5000;
+	Chunk: INTEGER = 5000;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

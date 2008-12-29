@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that analyze class text to make it clickable and allow automatic completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	stone_at_position (cursor: TEXT_CURSOR): STONE is
+	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 		require
 			cursor_not_void: cursor /= Void
@@ -95,7 +95,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	clear_syntax_error is
+	clear_syntax_error
 			-- wipe out `last_syntax_error'
 		do
 			last_syntax_error := Void
@@ -103,13 +103,13 @@ feature -- Element change
 
 feature -- Analysis preparation
 
-	update is
+	update
 		deferred
 		end
 
 feature -- Reinitialization
 
-	reset is
+	reset
 			-- set class attributes to default values
 		do
 			current_class_i := Void
@@ -123,7 +123,7 @@ feature -- Reinitialization
 			pos_in_file := 1
 		end
 
-	reset_after_search is
+	reset_after_search
 			-- set attributes related to search to default values
 		do
 			error := False
@@ -179,7 +179,7 @@ feature {NONE} -- Click ast exploration
 	clickable_position_list: ARRAY [EB_CLICKABLE_POSITION]
 			-- list of clickable positions
 
-	make_click_list_from_ast is
+	make_click_list_from_ast
 			-- build the click list from information in the CLASS_C object.
 		local
 			pos, i, j, pos_in_txt, c: INTEGER
@@ -289,7 +289,7 @@ feature {NONE} -- Click ast exploration
 			end
 		end
 
-	generate_ast (c: CLASS_C; after_save: BOOLEAN) is
+	generate_ast (c: CLASS_C; after_save: BOOLEAN)
 			-- Parse the text of the class `c'. Return True if could parse successfully,
 			-- False otherwise
 		require
@@ -330,7 +330,7 @@ feature {NONE} -- Click ast exploration
 
 feature {NONE}-- Clickable/Editable implementation
 
-	stone_in_click_ast (a_position: INTEGER): STONE is
+	stone_in_click_ast (a_position: INTEGER): STONE
 			-- search in the click_ast for a stone to associate with `a_position' in text
 		require
 			group_not_void: group /= Void
@@ -389,7 +389,7 @@ feature {NONE}-- Clickable/Editable implementation
 			end
 		end
 
-	described_feature (token: EDITOR_TOKEN; line: EDITOR_LINE; ft: FEATURE_AS): E_FEATURE is
+	described_feature (token: EDITOR_TOKEN; line: EDITOR_LINE; ft: FEATURE_AS): E_FEATURE
 			-- search in feature represented by `ft' the feature associated with `token' if any
 		require
 			token_not_void: token /= Void
@@ -424,7 +424,7 @@ feature {NONE}-- Clickable/Editable implementation
 
 feature {NONE} -- Implementation (`type_from')
 
-	type_from (token: EDITOR_TOKEN; line: EDITOR_LINE): TYPE_A is
+	type_from (token: EDITOR_TOKEN; line: EDITOR_LINE): TYPE_A
 			-- try to analyze class text to find type associated with word represented by `token'
 		require
 			token_not_void: token /= Void
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation (`type_from')
 			end
 		end
 
-	searched_type: TYPE_A is
+	searched_type: TYPE_A
 			-- analyze class text from `current_token' to find type associated with `searched_token'
 		require
 			current_class_i_not_void: current_class_i /= Void
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation (`type_from')
 			end
 		end
 
-	internal_type_from_name (a_name: STRING): TYPE_A is
+	internal_type_from_name (a_name: STRING): TYPE_A
 			--
 		require
 			a_name_not_void: a_name /= Void
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation (`type_from')
 			Result := type
 		end
 
-	move_to_next_target (a_type, a_parent_type: TYPE_A; a_class: CLASS_C) is
+	move_to_next_target (a_type, a_parent_type: TYPE_A; a_class: CLASS_C)
 			-- Makes the transition from `a_parent_type' to `a_type'.
 			-- It binds a loose type and computes the proper constraints for formals.
 			-- if you have `l_a.f.g', `l_a's type would be `a_parent type' and `f's type would be `a_type'.
@@ -809,13 +809,13 @@ feature {NONE} -- Implementation (`type_from')
 			end
 		end
 
-	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
+	create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN
 			-- is "create" preceeding current position ?
 		do
 			Result := locate_create_before_position (a_line, a_token) /= Void
 		end
 
-	locate_create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): EDITOR_TOKEN is
+	locate_create_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): EDITOR_TOKEN
 			-- Attempts to locate "create" before token `a_token'
 		local
 			line: EDITOR_LINE
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation (`type_from')
 			Result_not_void_implies_processed_class_not_void: Result /= Void implies written_class /= Void
 		end
 
-	feature_of_constaint_renamed (a_formal: FORMAL_A; a_new_name: STRING): E_FEATURE is
+	feature_of_constaint_renamed (a_formal: FORMAL_A; a_new_name: STRING): E_FEATURE
 			-- Constaint renamed feature of current class.
 		require
 			a_formal_not_void: a_formal /= Void
@@ -950,7 +950,7 @@ feature {NONE} -- Implementation (`type_from')
 
 feature {NONE}-- Implementation
 
-	feature_part_at (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER is
+	feature_part_at (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER
 			-- find in which part of the feature body `a_token' is
 		local
 			found: BOOLEAN
@@ -989,15 +989,15 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	assertion_part: INTEGER is 1
+	assertion_part: INTEGER = 1
 
-	instruction_part: INTEGER is 2
+	instruction_part: INTEGER = 2
 
-	local_part: INTEGER is 3
+	local_part: INTEGER = 3
 
-	no_interesting_part: INTEGER is 4
+	no_interesting_part: INTEGER = 4
 
-	find_expression_start is
+	find_expression_start
 			-- find where to begin the analysis (set current_token/line)
 		local
 			par_cnt: INTEGER
@@ -1110,7 +1110,7 @@ feature {NONE}-- Implementation
 			error := current_token = Void or else error
 		end
 
-	complete_expression_type (exp: LINKED_LIST[EDITOR_TOKEN]): TYPE_A is
+	complete_expression_type (exp: LINKED_LIST[EDITOR_TOKEN]): TYPE_A
 			-- analyze expression represented by list of token `exp'
 		require
 			exp_not_void: exp /= Void
@@ -1256,7 +1256,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	expression_type (type_list: LINKED_LIST [TYPE_A]; infix_list: ARRAYED_LIST[STRING]): TYPE_A is
+	expression_type (type_list: LINKED_LIST [TYPE_A]; infix_list: ARRAYED_LIST[STRING]): TYPE_A
 			-- find type of expression represented by the list of operands type `type_list' and list of operators `infix_list'
 		require
 			infix_list_not_void: infix_list /= Void
@@ -1320,7 +1320,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	corresponding_type_list (expression_table: ARRAYED_LIST [LINKED_LIST[EDITOR_TOKEN]]): LINKED_LIST [TYPE_A] is
+	corresponding_type_list (expression_table: ARRAYED_LIST [LINKED_LIST[EDITOR_TOKEN]]): LINKED_LIST [TYPE_A]
 			-- create list of type from a list of expression (represented by lists of tokens)
 		require
 			expression_table_not_void: expression_table /= Void
@@ -1476,7 +1476,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	type_of_class_corresponding_to_current_token: TYPE_A is
+	type_of_class_corresponding_to_current_token: TYPE_A
 		require
 			group_not_void: group /= Void
 			group_is_valid: group.is_valid
@@ -1540,7 +1540,7 @@ feature {NONE}-- Implementation
 
 	found_class: CLASS_C
 
-	type_returned_by_infix (a_type: TYPE_A; a_name: STRING): TYPE_A is
+	type_returned_by_infix (a_type: TYPE_A; a_name: STRING): TYPE_A
 			-- type returned by operator named `name' applied on type `a_type'
 		require
 			a_type_not_void: a_type /= Void
@@ -1573,7 +1573,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	type_of_local_entity_named (a_name: STRING): TYPE_A is
+	type_of_local_entity_named (a_name: STRING): TYPE_A
 			-- return type of argument or local variable named `name' found in `current_feature_as'
 			-- Void if there is none
 		require
@@ -1633,7 +1633,7 @@ feature {NONE}-- Implementation
 			--| this should be reintegrated in new completion engine/scanner
 		end
 
-	type_of_constants_or_reserved_word (token: EDITOR_TOKEN): TYPE_A is
+	type_of_constants_or_reserved_word (token: EDITOR_TOKEN): TYPE_A
 			-- return type associated with `token' if it represents a constant
 			-- or a reserved word. If not, return Void
 		require
@@ -1683,7 +1683,7 @@ feature {NONE}-- Implementation
 --| FIXME: Missing manifest arrays and strings
 		end
 
-	type_of_generic (a_str: STRING): TYPE_A is
+	type_of_generic (a_str: STRING): TYPE_A
 			-- Type a formal generic
 		require
 			a_str_not_void: a_str /= Void
@@ -1712,7 +1712,7 @@ feature {NONE}-- Implementation
 
 feature {NONE}-- Implementation
 
-	local_evaluated_type (a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A is
+	local_evaluated_type (a_type: TYPE_AS; a_current_class: CLASS_C; a_feature: FEATURE_I): TYPE_A
 			-- Given `a_type' from AST resolve its type in `a_current_class' for feature called
 			-- `a_feature_name'.
 		require
@@ -1730,7 +1730,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	after_searched_token: BOOLEAN is
+	after_searched_token: BOOLEAN
 			-- is `current_token' after `searched_token' ?
 			-- True if `current_token' is Void
 		local
@@ -1750,7 +1750,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	go_to_previous_token is
+	go_to_previous_token
 			-- move current token backward if possible
 		local
 			found: BOOLEAN
@@ -1837,7 +1837,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	go_to_next_token is
+	go_to_next_token
 			-- move current token forward if possible
 		local
 			found: BOOLEAN
@@ -1923,7 +1923,7 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	skip_parenthesis (opening_char, closing_char: STRING) is
+	skip_parenthesis (opening_char, closing_char: STRING)
 		local
 			op, cl: STRING
 			par_cnt: INTEGER
@@ -1945,7 +1945,7 @@ feature {NONE}-- Implementation
 			error := error or else current_token = Void
 		end
 
-	skip_parenthesis_backward (opening_char, closing_char: STRING) is
+	skip_parenthesis_backward (opening_char, closing_char: STRING)
 		local
 			op, cl: STRING
 			par_cnt: INTEGER
@@ -1969,7 +1969,7 @@ feature {NONE}-- Implementation
 
 feature {NONE} -- Implementation
 
-	is_ok_for_completion: BOOLEAN is
+	is_ok_for_completion: BOOLEAN
 			-- Can we perform completion?
 		do
 			Result := group /= Void and then group.is_valid
@@ -1978,7 +1978,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_context is
+	initialize_context
 			-- Initialize `current_class_i'.
 		require
 			is_ok_for_completion: is_ok_for_completion
@@ -2030,7 +2030,7 @@ feature {NONE} -- Implementation
 			-- Current class_c
 			-- Temp class_c, it could be an overriding class_c, while `current_class_i' is not compiled.
 
-	current_feature_i: FEATURE_I is
+	current_feature_i: FEATURE_I
 			-- Current feature_i
 		local
 			l_current_class_c: CLASS_C
@@ -2053,7 +2053,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	platform_is_windows: BOOLEAN is
+	platform_is_windows: BOOLEAN
 			-- Is the current platform Windows?
 		once
 			Result := (create {PLATFORM_CONSTANTS}).is_windows
@@ -2061,7 +2061,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_sorted (positions: ARRAY [EB_CLICKABLE_POSITION]): BOOLEAN is
+	is_sorted (positions: ARRAY [EB_CLICKABLE_POSITION]): BOOLEAN
 			-- is `positions' sorted ?
 			-- for check purpose only
 		local
@@ -2080,7 +2080,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_greater_than (i: INTEGER; table: ARRAY[INTEGER]): INTEGER is
+	item_greater_than (i: INTEGER; table: ARRAY[INTEGER]): INTEGER
 			-- search in `table', which has to be sorted, the index of the first
 			-- item greater than `i'
 			-- returns 0 if there is none
@@ -2134,58 +2134,58 @@ feature {NONE} -- Implementation
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
-	boolean_values: ARRAY [STRING] is
+	boolean_values: ARRAY [STRING]
 		once
 			Result := <<"True", "False">>
 		end
 
-	feature_call_separators: ARRAY [STRING] is
+	feature_call_separators: ARRAY [STRING]
 		once
 			Result := <<".", "~">>
 		end
 
-	unwanted_symbols: ARRAY [STRING] is
+	unwanted_symbols: ARRAY [STRING]
 		once
 			Result := <<".", "(", "{", "[", "]", "}", ")", "$">>
 		end
 
-	feature_body_keywords: ARRAY [STRING] is
+	feature_body_keywords: ARRAY [STRING]
 		once
 			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "recue", "unique", "is", "assign">>
 		end
 
-	feature_contract_keywords: ARRAY [STRING] is
+	feature_contract_keywords: ARRAY [STRING]
 		once
 			Result := <<"require", "ensure">>
 		end
 
-	feature_executable_keywords: ARRAY [STRING] is
+	feature_executable_keywords: ARRAY [STRING]
 		once
 				-- We treat assgin as fake executable.
 			Result := <<"do", "once", "rescue", "assign">>
 		end
 
-	feature_local_keywords: ARRAY [STRING] is
+	feature_local_keywords: ARRAY [STRING]
 		once
 			Result := <<"local">>
 		end
 
-	special_keywords: ARRAY [STRING] is
+	special_keywords: ARRAY [STRING]
 		once
 			Result := <<"create", "precursor", "result">>
 		end
 
-	parenthesis: ARRAY [STRING] is
+	parenthesis: ARRAY [STRING]
 		once
 			Result := <<"(", ")">>
 		end
 
-	closing_separators: ARRAY [STRING] is
+	closing_separators: ARRAY [STRING]
 		once
 			Result := <<":=", "?=", ";", ",">>
 		end
 
-	infix_groups: LINKED_LIST[ARRAY[STRING]] is
+	infix_groups: LINKED_LIST[ARRAY[STRING]]
 			-- list of operators groups, sorted by priority
 		once
 			create Result.make
@@ -2204,7 +2204,7 @@ invariant
 
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

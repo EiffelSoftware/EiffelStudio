@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform C compilation of the system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_workbench (a_target: like target) is
+	make_workbench (a_target: like target)
 			-- Initialize Current to invoke C compilation
 			-- in workbench mode.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			make (a_target)
 		end
 
-	make_finalized (a_target: like target) is
+	make_finalized (a_target: like target)
 			-- Initialize Current to invoke C compilation
 			-- in finalize mode.
 		do
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the C compilation.
 		local
 			makefile_sh_name: FILE_NAME
@@ -72,7 +72,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			if is_workbench then
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

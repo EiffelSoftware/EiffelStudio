@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of an interval value for `inspect' clauses."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Error reporting
 
-	display (a_text_formatter: TEXT_FORMATTER) is
+	display (a_text_formatter: TEXT_FORMATTER)
 		require
 			st_not_void: a_text_formatter /= Void
 		deferred
@@ -25,7 +25,7 @@ feature -- Error reporting
 
 feature -- Comparison
 
-	is_next (other: like Current): BOOLEAN is
+	is_next (other: like Current): BOOLEAN
 			-- Is `other' next to Current?
 		require
 			other_not_void: other /= Void
@@ -33,21 +33,21 @@ feature -- Comparison
 		deferred
 		end
 
-	is_allowed_unique_value: BOOLEAN is
+	is_allowed_unique_value: BOOLEAN
 			-- Does `Current' represent an allowed unique value?
 			-- (This is now true for positive integers.)
 		do
 			-- False by default.
 		end
 
-	is_signed: BOOLEAN is
+	is_signed: BOOLEAN
 			-- Is current using a signed comparison?
 		do
 		end
 
 feature -- Measurement
 
-	distance (other: like Current): DOUBLE is
+	distance (other: like Current): DOUBLE
 			-- Distance between `other' and Current
 		require
 			other_not_void: other /= Void
@@ -60,7 +60,7 @@ feature -- Measurement
 
 feature -- Iteration
 
-	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE]) is
+	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE])
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		require
@@ -73,7 +73,7 @@ feature -- Iteration
 
 feature -- Evaluation
 
-	inspect_interval (upper: like Current): TYPED_INTERVAL_B [like Current] is
+	inspect_interval (upper: like Current): TYPED_INTERVAL_B [like Current]
 			-- Interval with lower set to `Current' and upper set to `upper'
 		require
 			upper_not_void: upper /= Void
@@ -89,7 +89,7 @@ feature -- Evaluation
 
 feature -- IL code generation
 
-	generate_il_subtract (is_included: BOOLEAN) is
+	generate_il_subtract (is_included: BOOLEAN)
 			-- Generate code to subtract this value if `is_included' is true or
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
@@ -98,7 +98,7 @@ feature -- IL code generation
 
 feature {INTERVAL_B} -- C code generation
 
-	generate_interval (other: like Current) is
+	generate_interval (other: like Current)
 			-- Generate interval Current..`other'.
 		require
 			other_not_void: other /= Void
@@ -109,12 +109,12 @@ feature {INTERVAL_B} -- C code generation
 
 feature {INTERVAL_B, IL_NODE_GENERATOR} -- IL code generation
 
-	il_load_value is
+	il_load_value
 			-- Load value to IL stack.
 		deferred
 		end
 
-	il_load_difference (other: like Current) is
+	il_load_difference (other: like Current)
 			-- Load a difference between current and `other' to IL stack.
 		require
 			other_not_void: other /= Void
@@ -123,7 +123,7 @@ feature {INTERVAL_B, IL_NODE_GENERATOR} -- IL code generation
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Provides access to a class text, where it does not matter whether%N%
 		%it is 0, 1 or more class edit tools."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	class_text (a_class: CLASS_I): STRING_32 is
+	class_text (a_class: CLASS_I): STRING_32
 			-- Most recent version of `a_class'-text.
 			-- (from a file or from an editor).
 		require
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_class_text (a_class: CLASS_I; a_text: STRING_32) is
+	set_class_text (a_class: CLASS_I; a_text: STRING_32)
 			-- Set class text of `a_class' to `a_text' in an editor
 			-- if open; if not, save it.
 		require
@@ -134,13 +134,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	default_pixmaps: EV_STOCK_PIXMAPS is
+	default_pixmaps: EV_STOCK_PIXMAPS
 			-- Default pixmaps and cursors.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

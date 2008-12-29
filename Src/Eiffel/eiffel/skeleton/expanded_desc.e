@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Expanded description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 	type_i: TYPE_A
 			-- Type of attribute
 
-	type_id: INTEGER is
+	type_id: INTEGER
 			-- Type id of the expanded type of the attribute
 		require
 			class_type_exists: class_type /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			Result := class_type.type_id
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 			-- Sk value
 		do
 			Result := {SK_CONST}.Sk_exp | (type_id - 1)
@@ -43,12 +43,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is True
+	is_expanded: BOOLEAN = True
 			-- Is the attribute an expanded one ?
 
 feature -- Comparisons
 
-	same_as (other: ATTR_DESC): BOOLEAN is
+	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			other_exp: EXPANDED_DESC
@@ -62,7 +62,7 @@ feature -- Comparisons
 			end
 		end
 
-	identical_types (otype : TYPE_A) : BOOLEAN is
+	identical_types (otype : TYPE_A) : BOOLEAN
 			-- Are `type_i' and `otype' identical?
 		do
 			if type_i = Void then
@@ -74,7 +74,7 @@ feature -- Comparisons
 
 feature -- Settings
 
-	set_cl_type_i (i: like cl_type_i) is
+	set_cl_type_i (i: like cl_type_i)
 			-- Assign `i' to `cl_type_i'.
 		do
 			cl_type_i := i
@@ -82,7 +82,7 @@ feature -- Settings
 			cl_type_i_set: cl_type_i = i
 		end
 
-	set_class_type (a_class_type: like class_type) is
+	set_class_type (a_class_type: like class_type)
 			-- Set `class_type' with `a_class_type'.
 		require
 			a_class_type_not_void: a_class_type /= Void
@@ -92,7 +92,7 @@ feature -- Settings
 			class_type_set: class_type = a_class_type
 		end
 
-	set_type_i (t : TYPE_A) is
+	set_type_i (t : TYPE_A)
 			-- Assign `t' to `type_i'.
 		require
 			exists: t /= Void
@@ -102,7 +102,7 @@ feature -- Settings
 			set: type_i = t
 		end
 
-	instantiation_in (a_class_type: CLASS_TYPE): EXPANDED_DESC is
+	instantiation_in (a_class_type: CLASS_TYPE): EXPANDED_DESC
 		local
 			l_type: TYPE_A
 		do
@@ -114,7 +114,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
@@ -123,7 +123,7 @@ feature -- Code generation
 			buffer.put_type_id (type_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

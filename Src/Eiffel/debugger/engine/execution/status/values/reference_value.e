@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Run time value representing of reference object."
@@ -34,7 +34,7 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (ref: !like address; id: like dynamic_type_id) is
+	make (ref: !like address; id: like dynamic_type_id)
 			-- Set `address' to (attached)  `ref' address
 			-- and `dynamic_type_id' to `id'.
 		do
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						type: like dynamic_type_id; addr: !like address) is
+						type: like dynamic_type_id; addr: !like address)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 		do
 			Result := private_dynamic_class
 			if Result = Void then
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		local
 			l_cl: CLASS_C
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Expanded status
 
-	get_is_expanded is
+	get_is_expanded
 		local
 			l_cl: CLASS_C
 		do
@@ -115,7 +115,7 @@ feature -- Expanded status
 
 feature {NONE} -- Output value
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -144,7 +144,7 @@ feature {NONE} -- Output value
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -159,7 +159,7 @@ feature -- Output
 			Result := obj.attributes
 		end
 
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- sort `children' and return it.
 		do
 			Result := children
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			-- i.e: is Current a Tuple or a Special object ?
 			--| Nota: may be used only after a call to `children'
 
-	set_hector_addr is
+	set_hector_addr
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -191,13 +191,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Property
 
-	min_slice: INTEGER is
+	min_slice: INTEGER
 			-- From which attribute number should special objects be displayed?
 		do
 			Result := debugger_manager.min_slice
 		end
 
-	max_slice: INTEGER is
+	max_slice: INTEGER
 			-- Up to which attribute number should special objects be displayed?
 		do
 			Result := debugger_manager.max_slice
@@ -209,7 +209,7 @@ feature {NONE} -- Property
 	private_dynamic_class: CLASS_C;
 			-- Saved class
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

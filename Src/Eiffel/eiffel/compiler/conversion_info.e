@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction for a conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_target_type: like target_type) is
+	make (a_target_type: like target_type)
 			-- New instance of ANY to SYSTEM_OBJECT conversion.
 		require
 			a_target_type_not_void: a_target_type /= Void
@@ -27,7 +27,7 @@ feature -- Access
 		
 feature -- Properties
 
-	depend_unit: DEPEND_UNIT is
+	depend_unit: DEPEND_UNIT
 			-- Associated depend unit used for incrementality
 		require
 			has_depend_unit: has_depend_unit
@@ -38,14 +38,14 @@ feature -- Properties
 
 feature -- Status report
 
-	has_depend_unit: BOOLEAN is
+	has_depend_unit: BOOLEAN
 			-- Can `depend_unit' be accessed?
 		do
 		end
 		
 feature -- Byte code generation
 
-	byte_node (an_expr: EXPR_B): EXPR_B is
+	byte_node (an_expr: EXPR_B): EXPR_B
 			-- Generate byte node needed to convert `an_expr' to `target_type'
 		require
 			an_expr_not_void: an_expr /= Void
@@ -57,7 +57,7 @@ feature -- Byte code generation
 invariant
 	target_type_not_void: target_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

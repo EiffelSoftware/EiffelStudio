@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a manifest BIT value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: STRING) is
+	make (v: STRING)
 			-- Create new instance from string representation `v'.
 		require
 			v_not_void: v /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to current object ?
 		do
 			Result := bit_count = other.bit_count and then
@@ -56,10 +56,10 @@ feature -- Access
 
 feature -- Status Report
 
-	is_bit: BOOLEAN is True
+	is_bit: BOOLEAN = True
 			-- Is current constant a bit one?
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is current value compatible with `t' ?
 		local
 			class_type: BITS_A
@@ -70,7 +70,7 @@ feature -- Status Report
 
 feature -- Settings
 
-	set_real_type (t: TYPE_A) is
+	set_real_type (t: TYPE_A)
 			-- Set real number of bits.
 		local
 			class_type: BITS_A
@@ -83,7 +83,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		do
 			buffer.put_string ("RTMB(")
@@ -93,13 +93,13 @@ feature -- Code generation
 			buffer.put_character (')')
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for BIT constant value.
 		do
 			cil_node_generator.generate_il_node (il_generator, create {BIT_CONST_B}.make (bit_value))
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a BIT constant value.
 		do
 			ba.append (Bc_bit)
@@ -107,7 +107,7 @@ feature -- Code generation
 			ba.append_bit (bit_value)
 		end
 
-	dump: STRING is
+	dump: STRING
 		do
 			Result := bit_value
 		end
@@ -115,7 +115,7 @@ feature -- Code generation
 invariant
 	bit_count_non_negative: bit_count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

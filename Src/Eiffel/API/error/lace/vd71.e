@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"General error during the building of a configuration system."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: CONF_ERROR) is
+	make (an_error: CONF_ERROR)
 			-- Create.
 		require
 			an_error_not_void: an_error /= Void
@@ -35,14 +35,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add (error.out)
 			st.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

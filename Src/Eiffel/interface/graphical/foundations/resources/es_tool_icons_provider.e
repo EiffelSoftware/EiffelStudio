@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		
 		It is not recommended to use unless you know you are working with a focused window, or need access to shared
@@ -40,7 +40,7 @@ feature {NONE} -- Access
 	window: !EB_DEVELOPMENT_WINDOW
 			-- <Precursor>
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Combo box used to select viewpoints"
 	author: ""
 	date: "$Date$"
@@ -34,7 +34,7 @@ create
 
 feature -- Access
 
-	current_viewpoint: CONF_GROUP is
+	current_viewpoint: CONF_GROUP
 			-- Current viewpoint
 		do
 			if selected_item /= Void then
@@ -44,7 +44,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	calculate_viewpoints is
+	calculate_viewpoints
 			-- Calculate all viewpoints for `conf_group'
 			-- Refresh combo list
 		local
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

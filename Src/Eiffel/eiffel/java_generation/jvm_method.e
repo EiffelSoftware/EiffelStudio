@@ -1,4 +1,4 @@
-indexing
+note
 	description: "method whos body will actually be generated to byte code.%
 	%objects store not only meta data, but the actual byte code as well.%
    % which can retrieved via `emit' once the code generation is complete."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialisation
 	
-	make (cp: CONSTANT_POOL) is
+	make (cp: CONSTANT_POOL)
 			-- create new method
 		do
 			Precursor (cp)
@@ -53,7 +53,7 @@ feature {NONE} -- Initialisation
 			
 feature
 	
-	set_parameters_from_type_id_list (l: LINKED_LIST [PAIR [INTEGER, STRING]]) is
+	set_parameters_from_type_id_list (l: LINKED_LIST [PAIR [INTEGER, STRING]])
 			-- Set method parameters from a list of pairs containing type 
 			-- ids plus names
 		local
@@ -80,7 +80,7 @@ feature
 			set_max_locals (slot_index)
 		end
 	
-	set_return_type_by_id (a_type_id: INTEGER) is
+	set_return_type_by_id (a_type_id: INTEGER)
 			-- Set return type from a type id
 		do
 			Precursor (a_type_id)
@@ -91,7 +91,7 @@ feature
 
 feature
 	
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			Precursor (file)
 			pre_code_byte_code.emit (file)
@@ -113,13 +113,13 @@ feature
 	
 feature {NONE}			
 	
-	close_attributes_count is
+	close_attributes_count
 		do
 			create attributes_count_bc.make_size (Int_16_size)
 			attributes_count_bc.append_uint_16_from_int (1) -- Attributes count (code)
 		end
 	
-	close_line_number_table is
+	close_line_number_table
 		require
 			line_number_table_not_void: line_number_table /= Void
 		do
@@ -137,7 +137,7 @@ feature {NONE}
 			end
 		end
 	
-	close_local_variable_table is
+	close_local_variable_table
 		require
 			local_variable_table_not_void: local_variable_table /= Void
 		local
@@ -233,7 +233,7 @@ feature {NONE}
 
 feature {ANY} -- Basic Operations
 	
-	close is
+	close
 		local
 			end_method_code: INTEGER
 			attributes_count: INTEGER
@@ -294,7 +294,7 @@ feature {ANY} -- Basic Operations
 			Precursor
 		end
 			
-	add_eiffel_local_info (a_type_id: INTEGER; a_name: STRING) is
+	add_eiffel_local_info (a_type_id: INTEGER; a_name: STRING)
 			-- adds an entry to eiffel_locals
 		require
 			valid_type_id: repository.has_by_id (a_type_id)
@@ -318,7 +318,7 @@ feature -- Code generation statistics
 			-- continous slots as well. So that a long at slot 3, in
 			-- practice occupies slot 3 and 4
 				
-	set_max_locals (i: INTEGER) is
+	set_max_locals (i: INTEGER)
 			-- set `max_locals'
 		require
 			positive: i >= 0
@@ -328,7 +328,7 @@ feature -- Code generation statistics
 			set: max_locals = i
 		end
 
-	start_code_generation is
+	start_code_generation
 			-- call this feature when you are done with seting up the
 			-- signature of the method and want to add actual code
 		require
@@ -338,7 +338,7 @@ feature -- Code generation statistics
 			has_code_generation_started := True
 		end
 			
-	end_code_generation is
+	end_code_generation
 			-- call this feature when you are done with adding the code
 		require
 			code_generation_started: has_code_generation_started
@@ -367,7 +367,7 @@ feature -- Code generation statistics
 	
 feature -- Java Debug
 	
-	put_line_info (n: INTEGER) is
+	put_line_info (n: INTEGER)
 			-- assign the current `position' in `code' with the `n'-th 
 			-- line number in `source_code_file_name'
 		require
@@ -420,7 +420,7 @@ invariant
 	parameters_index_type_id_same_count: parameters_index /= Void and parameter_jvm_type_ids /= Void implies
 	parameters_index.count = parameter_jvm_type_ids.count
 	max_locals_positive: max_locals >= 0
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

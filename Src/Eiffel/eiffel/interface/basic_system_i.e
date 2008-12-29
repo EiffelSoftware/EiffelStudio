@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic classes in a system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ deferred class BASIC_SYSTEM_I
 
 feature -- Generation type
 
-	il_generation: BOOLEAN is
+	il_generation: BOOLEAN
 		deferred
 		end
 
@@ -122,7 +122,7 @@ feature -- Access: XX_REF classes
 
 feature -- Access
 
-	ancestor_class_to_all_classes_id: INTEGER is
+	ancestor_class_to_all_classes_id: INTEGER
 		do
 			if il_generation then
 				Result := system_object_id
@@ -133,7 +133,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	any_id: INTEGER is
+	any_id: INTEGER
 			-- Id of class ANY
 		require
 			any_class_exists: any_class /= Void
@@ -144,7 +144,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	any_type: CL_TYPE_A is
+	any_type: CL_TYPE_A
 			-- Type representing ANY
 		require
 			any_class_exists: any_class /= Void
@@ -155,7 +155,7 @@ feature -- Access
 			any_type_not_void: Result /= Void
 		end
 
-	system_object_id: INTEGER is
+	system_object_id: INTEGER
 			-- Id of class SYSTEM_OBJECT
 		require
 			system_object_class_exists: system_object_class /= Void
@@ -166,7 +166,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	array_id: INTEGER is
+	array_id: INTEGER
 			-- Id of class ARRAY
 		require
 			array_class_exists: array_class /= Void
@@ -177,7 +177,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	native_array_id: INTEGER is
+	native_array_id: INTEGER
 			-- Id of class STRING
 		require
 			native_array_class_exists: native_array_class /= Void
@@ -188,7 +188,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	system_string_id: INTEGER is
+	system_string_id: INTEGER
 			-- Id of class STRING
 		require
 			system_string_class_exists: system_string_class /= Void
@@ -199,7 +199,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	string_8_id: INTEGER is
+	string_8_id: INTEGER
 			-- Id of class STRING
 		require
 			string_8_class_exists: string_8_class /= Void
@@ -210,7 +210,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	special_id: INTEGER is
+	special_id: INTEGER
 			-- Id of class SPECIAL
 		require
 			special_class_exists: special_class /= Void
@@ -221,7 +221,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	bit_id: INTEGER is
+	bit_id: INTEGER
 			-- Id of class BIT_REF
 		require
 			bit_class_exists: bit_class /= Void
@@ -232,7 +232,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	tuple_id: INTEGER is
+	tuple_id: INTEGER
 			-- Id of class TUPLE
 		require
 			tuple_class_exists: tuple_class /= Void
@@ -243,7 +243,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	routine_class_id: INTEGER is
+	routine_class_id: INTEGER
 			-- Id of class ROUTINE
 		require
 			routine_class_exists: routine_class /= Void
@@ -254,7 +254,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	procedure_class_id: INTEGER is
+	procedure_class_id: INTEGER
 			-- Id of class PROCEDURE
 		require
 			procedure_class_exists: procedure_class /= Void
@@ -265,7 +265,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	function_class_id: INTEGER is
+	function_class_id: INTEGER
 			-- Id of class FUNCTION
 		require
 			function_class_exists: function_class /= Void
@@ -276,7 +276,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	predicate_class_id: INTEGER is
+	predicate_class_id: INTEGER
 			-- Id of class PREDICATE
 		require
 			predicate_class_exists: predicate_class /= Void
@@ -287,7 +287,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	system_type_id: INTEGER is
+	system_type_id: INTEGER
 			-- Id of class SYSTEM_STRING
 		require
 			system_type_class_exists: system_type_class /= Void
@@ -298,7 +298,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	eiffel_type_id: INTEGER is
+	eiffel_type_id: INTEGER
 			-- Id of class TYPE
 		require
 			type_class_exists: type_class /= Void
@@ -309,7 +309,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	ise_exception_manager_class_id: INTEGER is
+	ise_exception_manager_class_id: INTEGER
 			-- Id of class ISE_EXCEPTION_MANAGER
 		require
 			type_class_exists: ise_exception_manager_class /= Void
@@ -320,7 +320,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	exception_class_id: INTEGER is
+	exception_class_id: INTEGER
 			-- Id of type EXCEPTION
 		require
 			exception_class_exists: exception_class /= Void
@@ -331,7 +331,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	rt_extension_type_id: INTEGER is
+	rt_extension_type_id: INTEGER
 			-- Id of type RT_EXTENSION
 		require
 			rt_extension_class_exists: rt_extension_class /= Void
@@ -344,7 +344,7 @@ feature -- Access
 
 feature -- Status report
 
-	pointer_ref_type_id: INTEGER is
+	pointer_ref_type_id: INTEGER
 			-- Id of class POINTER_REF
 		require
 			pointer_ref_class_exists: pointer_ref_class /= Void
@@ -355,7 +355,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	real_64_ref_type_id: INTEGER is
+	real_64_ref_type_id: INTEGER
 			-- Dynamic type_id of class DOUBLE_REF
 		require
 			real_64_ref_class_exists: real_64_ref_class /= Void
@@ -366,7 +366,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	real_32_ref_type_id: INTEGER is
+	real_32_ref_type_id: INTEGER
 			-- Dynamic type_id of class REAL_REF
 		require
 			real_32_ref_class_exists: real_32_ref_class /= Void
@@ -377,7 +377,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	integer_ref_type_id (n: INTEGER): INTEGER is
+	integer_ref_type_id (n: INTEGER): INTEGER
 			-- Dynamic type_id of class INTEGER_REF with `n' bits.
 		require
 			int_ref_class_exists: integer_8_ref_class /= Void and then
@@ -399,7 +399,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	natural_ref_type_id (n: INTEGER): INTEGER is
+	natural_ref_type_id (n: INTEGER): INTEGER
 			-- Dynamic type_id of class NATURAL_REF with `n' bits.
 		require
 			int_ref_class_exists: natural_8_ref_class /= Void and then
@@ -421,7 +421,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	boolean_ref_type_id: INTEGER is
+	boolean_ref_type_id: INTEGER
 			-- Dynamic type_id of class BOOLEAN_REF
 		require
 			bool_ref_class_exists: boolean_ref_class /= Void
@@ -432,7 +432,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	character_8_ref_type_id: INTEGER is
+	character_8_ref_type_id: INTEGER
 			-- Dynamic type_id of class CHARACTER_REF
 		require
 			character_8_ref_class_exists: character_8_ref_class /= Void
@@ -443,7 +443,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	character_32_ref_type_id: INTEGER is
+	character_32_ref_type_id: INTEGER
 			-- Dynamic type_id of class UNICODE_CHARACTER_REF
 		require
 			character_32_ref_class_exists: character_32_ref_class /= Void
@@ -456,7 +456,7 @@ feature -- Status report
 
 feature -- Status report
 
-	exception_manager_type_id: INTEGER is
+	exception_manager_type_id: INTEGER
 			-- Dynamic type_id of class ISE_EXCEPTION_MANAGER
 		require
 			exception_manager_class_exist: ise_exception_manager_class /= Void
@@ -467,7 +467,7 @@ feature -- Status report
 			valid_result: Result > 0
 		end
 
-	exception_type_id: INTEGER is
+	exception_type_id: INTEGER
 			-- Dynamic type_id of class EXCEPTION
 		require
 			exception_class_exist: exception_class /= Void
@@ -480,7 +480,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_any_class (c: CLASS_I) is
+	set_any_class (c: CLASS_I)
 			-- Assign `c' to `any_class'.
 		require
 			c_not_void: c /= Void
@@ -491,7 +491,7 @@ feature -- Settings
 			any_class_set: any_class = c
 		end
 
-	set_system_object_class (c: CLASS_I) is
+	set_system_object_class (c: CLASS_I)
 			-- Assign `c' to `system_object_class
 		require
 			c_not_void: c /= Void
@@ -507,7 +507,7 @@ feature -- Settings
 			system_object_class_set: c.is_external_class implies system_object_class = c
 		end
 
-	set_system_value_type_class (c: CLASS_I) is
+	set_system_value_type_class (c: CLASS_I)
 			-- Assign `c' to `system_value_type_class
 		require
 			c_not_void: c /= Void
@@ -523,7 +523,7 @@ feature -- Settings
 			system_object_class_set: c.is_external_class implies system_value_type_class = c
 		end
 
-	set_system_exception_type_class (c: CLASS_I) is
+	set_system_exception_type_class (c: CLASS_I)
 			-- Assign `c' to `set_system_exception_type_class'
 		require
 			c_not_void: c /= Void
@@ -539,7 +539,7 @@ feature -- Settings
 			system_exception_class_set: c.is_external_class implies system_exception_type_class = c
 		end
 
-	set_boolean_class (c: CLASS_I) is
+	set_boolean_class (c: CLASS_I)
 			-- Assign `c' to `boolean_class'.
 		require
 			c_not_void: c /= Void
@@ -550,7 +550,7 @@ feature -- Settings
 			boolean_class_set: boolean_class = c
 		end
 
-	set_character_class (c: CLASS_I; n: INTEGER) is
+	set_character_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `character_n_class'.
 		require
 			c_not_void: c /= Void
@@ -567,7 +567,7 @@ feature -- Settings
 			character_8_class_set: n = 8 implies character_8_class = c
 		end
 
-	set_integer_class (c: CLASS_I; n: INTEGER) is
+	set_integer_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `integer_n_class'.
 		require
 			c_not_void: c /= Void
@@ -587,7 +587,7 @@ feature -- Settings
 			integer_64_class_set: n = 64 implies integer_64_class = c
 		end
 
-	set_natural_class (c: CLASS_I; n: INTEGER) is
+	set_natural_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `natural_n_class'.
 		require
 			c_not_void: c /= Void
@@ -607,7 +607,7 @@ feature -- Settings
 			natural_64_class_set: n = 64 implies natural_64_class = c
 		end
 
-	set_real_class (c: CLASS_I; n: INTEGER) is
+	set_real_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `real_n_class'.
 		require
 			c_not_void: c /= Void
@@ -624,7 +624,7 @@ feature -- Settings
 			real_64_class_set: n = 64 implies real_64_class = c
 		end
 
-	set_pointer_class (c: CLASS_I) is
+	set_pointer_class (c: CLASS_I)
 			-- Assign `c' to `pointer_class'.
 		require
 			c_not_void: c /= Void
@@ -635,7 +635,7 @@ feature -- Settings
 			pointer_class_set: pointer_class = c
 		end
 
-	set_string_class (c: CLASS_I; n: INTEGER) is
+	set_string_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `string_n_class'.
 		require
 			c_not_void: c /= Void
@@ -652,7 +652,7 @@ feature -- Settings
 			string_8_class_set: n = 8 implies string_8_class = c
 		end
 
-	set_system_string_class (c: CLASS_I) is
+	set_system_string_class (c: CLASS_I)
 			-- Assign `c' to `system_string_class'.
 		require
 			c_not_void: c /= Void
@@ -663,7 +663,7 @@ feature -- Settings
 			system_string_class_set: system_string_class = c
 		end
 
-	set_array_class (c: CLASS_I) is
+	set_array_class (c: CLASS_I)
 			-- Assign `c' to `array_class'.
 		require
 			c_not_void: c /= Void
@@ -674,7 +674,7 @@ feature -- Settings
 			array_class_set: array_class = c
 		end
 
-	set_special_class (c: CLASS_I) is
+	set_special_class (c: CLASS_I)
 			-- Assign `c' to `special_class'.
 		require
 			c_not_void: c /= Void
@@ -685,7 +685,7 @@ feature -- Settings
 			special_class_set: special_class = c
 		end
 
-	set_native_array_class (c: CLASS_I) is
+	set_native_array_class (c: CLASS_I)
 			-- Assign `c' to `native_array_class'.
 		require
 			c_not_void: c /= Void
@@ -696,7 +696,7 @@ feature -- Settings
 			native_array_class_set: native_array_class = c
 		end
 
-	set_typed_pointer_class (c: CLASS_I) is
+	set_typed_pointer_class (c: CLASS_I)
 			-- Assign `c' to `typed_pointer_class'.
 		require
 			c_not_void: c /= Void
@@ -707,7 +707,7 @@ feature -- Settings
 			typed_pointer_class_set: typed_pointer_class = c
 		end
 
-	set_bit_class (c: CLASS_I) is
+	set_bit_class (c: CLASS_I)
 			-- Assign `c' to `bit_class'.
 		require
 			c_not_void: c /= Void
@@ -718,7 +718,7 @@ feature -- Settings
 			bit_class_set: bit_class = c
 		end
 
-	set_disposable_class (c: CLASS_I) is
+	set_disposable_class (c: CLASS_I)
 			-- Assign `c' to `disposable_class'.
 		require
 			c_not_void: c /= Void
@@ -729,7 +729,7 @@ feature -- Settings
 			disposable_class_set: disposable_class = c
 		end
 
-	set_tuple_class (c: CLASS_I) is
+	set_tuple_class (c: CLASS_I)
 			-- Assign `c' to `tuple_class'.
 		require
 			c_not_void: c /= Void
@@ -740,7 +740,7 @@ feature -- Settings
 			tuple_class_set: tuple_class = c
 		end
 
-	set_routine_class (c: CLASS_I) is
+	set_routine_class (c: CLASS_I)
 			-- Assign `c' to `routine_class'.
 		require
 			c_not_void: c /= Void
@@ -751,7 +751,7 @@ feature -- Settings
 			routine_class_set: routine_class = c
 		end
 
-	set_procedure_class (c: CLASS_I) is
+	set_procedure_class (c: CLASS_I)
 			-- Assign `c' to `procedure_class'.
 		require
 			c_not_void: c /= Void
@@ -762,7 +762,7 @@ feature -- Settings
 			procedure_class_set: procedure_class = c
 		end
 
-	set_function_class (c: CLASS_I) is
+	set_function_class (c: CLASS_I)
 			-- Assign `c' to `function_class'.
 		require
 			c_not_void: c /= Void
@@ -773,7 +773,7 @@ feature -- Settings
 			function_class_set: function_class = c
 		end
 
-	set_predicate_class (c: CLASS_I) is
+	set_predicate_class (c: CLASS_I)
 			-- Assign `c' to `predicate_class'.
 		require
 			c_not_void: c /= Void
@@ -784,7 +784,7 @@ feature -- Settings
 			predicate_class_set: predicate_class = c
 		end
 
-	set_arguments_class (c: CLASS_I) is
+	set_arguments_class (c: CLASS_I)
 			-- Assign `c' to `arguments_class'.
 		require
 			c_not_void: c /= Void
@@ -795,7 +795,7 @@ feature -- Settings
 			arguments_class: arguments_class = c
 		end
 
-	set_type_class (c: CLASS_I) is
+	set_type_class (c: CLASS_I)
 			-- Assign `c' to `type_class'.
 		require
 			c_not_void: c /= Void
@@ -806,7 +806,7 @@ feature -- Settings
 			type_class_set: type_class = c
 		end
 
-	set_system_type_class (c: CLASS_I) is
+	set_system_type_class (c: CLASS_I)
 			-- Assign `c' to `system_type_class'.
 		require
 			c_not_void: c /= Void
@@ -817,7 +817,7 @@ feature -- Settings
 			system_type_class_set: system_type_class = c
 		end
 
-	set_exception_class (c: CLASS_I) is
+	set_exception_class (c: CLASS_I)
 			-- Assign `c' to `exception_class'.
 		require
 			c_not_void: c /= Void
@@ -827,7 +827,7 @@ feature -- Settings
 			exception_class_set: exception_class = c
 		end
 
-	set_rt_extension_class (c: CLASS_I) is
+	set_rt_extension_class (c: CLASS_I)
 			-- Assign `c' to `rt_extension_class'.
 		require
 			c_not_void: c /= Void
@@ -840,7 +840,7 @@ feature -- Settings
 
 feature -- Settings: XX_REF classes
 
-	set_character_ref_class (c: CLASS_I; n: INTEGER) is
+	set_character_ref_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `character_n_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -857,7 +857,7 @@ feature -- Settings: XX_REF classes
 			character_8_ref_class_set: n = 8 implies character_8_ref_class = c
 		end
 
-	set_boolean_ref_class (c: CLASS_I) is
+	set_boolean_ref_class (c: CLASS_I)
 			-- Assign `c' to `boolean_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -868,7 +868,7 @@ feature -- Settings: XX_REF classes
 			boolean_ref_class_set: boolean_ref_class = c
 		end
 
-	set_integer_ref_class (c: CLASS_I; n: INTEGER) is
+	set_integer_ref_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `integer_n_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -887,7 +887,7 @@ feature -- Settings: XX_REF classes
 			integer_64_ref_class_set: n = 64 implies integer_64_ref_class = c
 		end
 
-	set_natural_ref_class (c: CLASS_I; n: INTEGER) is
+	set_natural_ref_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `natural_n_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -906,7 +906,7 @@ feature -- Settings: XX_REF classes
 			natural_64_ref_class_set: n = 64 implies natural_64_ref_class = c
 		end
 
-	set_real_ref_class (c: CLASS_I; n: INTEGER) is
+	set_real_ref_class (c: CLASS_I; n: INTEGER)
 			-- Assign `c' to `real_n_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -923,7 +923,7 @@ feature -- Settings: XX_REF classes
 			real_64_ref_class_set: n = 64 implies real_64_ref_class = c
 		end
 
-	set_pointer_ref_class (c: CLASS_I) is
+	set_pointer_ref_class (c: CLASS_I)
 			-- Assign `c' to `pointer_ref_class'.
 		require
 			c_not_void: c /= Void
@@ -936,7 +936,7 @@ feature -- Settings: XX_REF classes
 
 feature -- Settings: Exception
 
-	set_exception_manager_class (c: CLASS_I) is
+	set_exception_manager_class (c: CLASS_I)
 			-- Assign `c' to `ise_exception_manager_class'.
 		require
 			c_not_void: c /= Void
@@ -947,7 +947,7 @@ feature -- Settings: Exception
 			ise_exception_manager_class_set: ise_exception_manager_class = c
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

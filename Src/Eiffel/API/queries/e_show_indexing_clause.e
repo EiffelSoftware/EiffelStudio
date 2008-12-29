@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display indexing clause of classes in the universe."
@@ -23,7 +23,7 @@ create
 
 feature -- Execution
 
-	work is
+	work
 			-- Show indexing clauses of clases in universe.
 		local
 			groups: ARRAYED_LIST [CONF_GROUP];
@@ -45,7 +45,7 @@ feature -- Execution
 			end
 		end
 
-	display_a_cluster (a_group: CONF_GROUP) is
+	display_a_cluster (a_group: CONF_GROUP)
 		local
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: HASH_TABLE [CONF_CLASS, STRING];
@@ -93,7 +93,7 @@ feature -- Execution
 			end
 		end;
 
-	display_indexing (e_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+	display_indexing (e_class: CLASS_C; a_text_formatter: TEXT_FORMATTER)
 			-- Display the indexing clause of `classc' if any.
 		local
 			indexes: EIFFEL_LIST [INDEX_AS]
@@ -179,7 +179,7 @@ feature -- Execution
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

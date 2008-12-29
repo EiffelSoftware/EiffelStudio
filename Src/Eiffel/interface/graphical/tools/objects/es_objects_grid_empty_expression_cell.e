@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that represent an expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'
 		do
 			empty_text := a_text
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create apply_actions
 		end
 
-	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER)
 		do
 			make_with_text (empty_text)
 			completion_possibilities_provider := a_provider
@@ -44,14 +44,14 @@ feature -- Query
 	use_text: STRING_32
 			-- Text to use when editing
 
-	activate_with_string (a_text: STRING_32) is
+	activate_with_string (a_text: STRING_32)
 			-- Activate (start editing) with `a_text' displayed
 		do
 			use_text := a_text
 			activate
 		end
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			if use_text /= Void then
@@ -62,7 +62,7 @@ feature -- Query
 			Precursor (popup_window)
 		end
 
-	deactivate is
+	deactivate
 			-- <Precursor>
 		do
 			Precursor
@@ -79,7 +79,7 @@ feature -- Query
 	apply_actions: ACTION_SEQUENCE [TUPLE [STRING_32]]
 			-- Action to perform when applying the changes
 
-	initialize_actions is
+	initialize_actions
 			-- <Precursor>
 		do
 			Precursor {EB_CODE_COMPLETABLE_GRID_EDITABLE_ITEM}
@@ -89,7 +89,7 @@ feature -- Query
 			use_text := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

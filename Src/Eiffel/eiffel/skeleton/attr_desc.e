@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an attribute in an instance of CLASS_TYPE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ feature -- Access
 	attribute_name_id: INTEGER
 			-- Name ID corresponding to `attribute_name'.
 
-	attribute_name: STRING is
+	attribute_name: STRING
 			-- Attribute name
 		require
 			attribute_name_id_positive: attribute_name_id > 0
@@ -61,13 +61,13 @@ feature -- Access
 
 feature -- Settings
 
-	set_feature_id (i: INTEGER) is
+	set_feature_id (i: INTEGER)
 			-- Assign `i' to `feature_id'.
 		do
 			feature_id := i
 		end
 
-	set_attribute_name_id (an_id: INTEGER) is
+	set_attribute_name_id (an_id: INTEGER)
 			-- Assign `s' to `attribute_name'.
 		require
 			an_id_positive: an_id > 0
@@ -77,7 +77,7 @@ feature -- Settings
 			attribute_name_id_set: attribute_name_id = an_id
 		end
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: INTEGER)
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i
@@ -85,32 +85,32 @@ feature -- Settings
 
 feature -- Status report
 
-	level: INTEGER is
+	level: INTEGER
 			-- Comparison criteria
 		deferred
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 			-- Skeleton characteristic value
 		deferred
 		end
 
-	type_i: TYPE_A is
+	type_i: TYPE_A
 			-- Corresponding TYPE_I instance for current description.
 		deferred
 		end
 
-	is_bits: BOOLEAN is
+	is_bits: BOOLEAN
 			-- Is the attribute a BIT one ?
 		do
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is the attribute an expanded one ?
 		do
 		end
 
-	has_formal: BOOLEAN is
+	has_formal: BOOLEAN
 			-- Is the attribute a formal generic one ?
 		do
 			-- Do nothing
@@ -118,14 +118,14 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater then Current ?
 		do
 			Result := level < other.level
 				or else (level = other.level and then rout_id < other.rout_id)
 		end
 
-	same_as (other: ATTR_DESC): BOOLEAN is
+	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' the same as Current ?
 		require
 			good_argument: other /= Void
@@ -136,7 +136,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- file `file'.
 		require
@@ -144,7 +144,7 @@ feature -- Code generation
 		deferred
 		end
 
-	generate_generic_code (buffer: GENERATION_BUFFER; is_final_mode: BOOLEAN; a_class_type: CLASS_TYPE; idx : INTEGER) is
+	generate_generic_code (buffer: GENERATION_BUFFER; is_final_mode: BOOLEAN; a_class_type: CLASS_TYPE; idx : INTEGER)
 			-- Generate full type code for current attribute description in
 			-- `buffer'.
 		require
@@ -166,7 +166,7 @@ feature -- Code generation
 			buffer.put_string ("};%N")
 		end
 
-	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is
+	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC
 			-- Instantiation in `class_type' of the current
 			-- attribute description
 		require
@@ -175,7 +175,7 @@ feature -- Code generation
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

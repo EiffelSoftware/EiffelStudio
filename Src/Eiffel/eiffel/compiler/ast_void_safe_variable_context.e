@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Void-safe context for third pass that tracks variables usage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -137,7 +137,7 @@ feature {NONE} -- Variable stacks
 	initialized_attributes: SEARCH_TABLE [INTEGER];
 			-- Set of attributes that are properly initialized at the top level of a routine
 
-indexing
+note
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

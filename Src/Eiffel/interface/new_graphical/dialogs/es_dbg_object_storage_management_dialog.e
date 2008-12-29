@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to manage debugger's object storage remote operation ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	on_after_initialized is
+	on_after_initialized
             -- Use to perform additional creation initializations, after the UI has been created.	
 		do
 			Precursor {ES_DIALOG}
@@ -63,7 +63,7 @@ feature {NONE} -- User interface initialization
 
 feature -- Actions
 
-	on_save is
+	on_save
 			-- On save action
 		require
 			stone_not_void: object_stone /= Void
@@ -82,7 +82,7 @@ feature -- Actions
 			end
 		end
 
-	on_load is
+	on_load
 			-- On load action
 		require
 			load_operation_enabled: load_operation_enabled or object_stone /= Void
@@ -110,17 +110,17 @@ feature -- Actions
 
 feature {NONE} -- Prompts
 
-	display_not_stopped_error_message is
+	display_not_stopped_error_message
 		do
 			prompts.show_error_prompt (interface_names.l_Only_available_for_stopped_application, Void, Void)
 		end
 
-	display_failure_message is
+	display_failure_message
 		do
 			prompts.show_error_prompt (interface_names.e_operation_failed, Void, Void)
 		end
 
-	display_success_message is
+	display_success_message
 		do
 			prompts.show_info_prompt (interface_names.e_operation_succeeded, Void, Void)
 		end
@@ -176,13 +176,13 @@ feature -- Access
 			Result := dialog_buttons.yes_button
 		end
 
-	button_save: EV_BUTTON is
+	button_save: EV_BUTTON
 			-- Save object button
 		do
 			Result := dialog_window_buttons.item (dialog_buttons.yes_button)
 		end
 
-	button_load: EV_BUTTON is
+	button_load: EV_BUTTON
 			-- Load object button
 		do
 			Result := dialog_window_buttons.item (dialog_buttons.no_button)
@@ -190,7 +190,7 @@ feature -- Access
 
 feature -- Change
 
-	enable_load_operation is
+	enable_load_operation
 			-- Enable load operation
 		do
 			load_operation_enabled := True
@@ -204,7 +204,7 @@ feature -- Change
 			end
 		end
 
-	enable_save_operation is
+	enable_save_operation
 			-- Enable save operation
 		do
 			-- It is possible to load file into existing object, if same type.
@@ -220,7 +220,7 @@ feature -- Change
 			end
 		end
 
-	set_object_stone (st: OBJECT_STONE) is
+	set_object_stone (st: OBJECT_STONE)
 		do
 			object_stone := st
 			if object_stone /= Void and then object_stone.is_valid then
@@ -229,7 +229,7 @@ feature -- Change
 			check_fields
 		end
 
-	check_fields is
+	check_fields
 			--
 		local
 			f: RAW_FILE
@@ -259,7 +259,7 @@ feature -- Change
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

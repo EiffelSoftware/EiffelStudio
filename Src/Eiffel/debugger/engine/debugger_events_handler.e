@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -10,45 +10,45 @@ class
 
 feature -- Status
 
-	start_events_handling is
+	start_events_handling
 		deferred
 		end
 
-	stop_events_handling is
+	stop_events_handling
 		deferred
 		end
 
 feature -- Access
 
-	new_timer: DEBUGGER_TIMER is
+	new_timer: DEBUGGER_TIMER
 			--
 		deferred
 		end
 
-	timer_win32_handle: POINTER is
+	timer_win32_handle: POINTER
 		deferred
 		end
 
 feature -- Change
 
-	recycle is
+	recycle
 			--
 		deferred
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			v_not_void: v /= Void
 		deferred
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			v_not_void: v /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Build a filtered version (troff, ..) of the class text%
@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	make (cn, filter: STRING) is
+	make (cn, filter: STRING)
 			-- Initialize Current with class_name `cn',
 			-- and `filter_name' `filter'.
 		require
@@ -34,13 +34,13 @@ feature -- Initialization
 
 feature {NONE} -- Execution
 
-	associated_cmd: E_CLASS_CMD is
+	associated_cmd: E_CLASS_CMD
 			-- Command to be executed after successful
 			-- retrieving of the class text.
 		deferred
 		end
 
-	process_compiled_class (e_class: CLASS_C) is
+	process_compiled_class (e_class: CLASS_C)
 			-- Execute associated command
 		local
 			cmd: like associated_cmd
@@ -59,7 +59,7 @@ feature {NONE} -- Execution
 			output_window.put_new_line
 		end
 
-	loop_action is
+	loop_action
 			-- Execute Current command from loop.
 		do
 			command_line_io.get_class_name
@@ -69,7 +69,7 @@ feature {NONE} -- Execution
 			check_arguments_and_execute
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used to render code templates to a string.
 	]"
@@ -57,7 +57,7 @@ feature {CODE_TOKEN} -- Processing
 			code.append_character ('%N')
 		end
 
-	process_code_token_id (a_value: !CODE_TOKEN_ID) is
+	process_code_token_id (a_value: !CODE_TOKEN_ID)
 			-- <Precursor>
 		local
 			l_table: like symbol_table
@@ -84,7 +84,7 @@ feature {CODE_TOKEN} -- Processing
 			code.append (a_value.printable_text)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

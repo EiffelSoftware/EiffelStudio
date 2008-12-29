@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to delete diagram components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Display information about `Current'.
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_Diagram_delete_figure, tool.develop_window.window, Void)
 		end
 
-	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE) is
+	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE)
 			-- Remove `a_stone' from diagram.
 			-- (And its relations.)
 		local
@@ -54,7 +54,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE) is
+	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE)
 			-- Remove `a_stone' from diagram.
 		local
 			undo_list: ARRAYED_LIST [TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]]
@@ -80,7 +80,7 @@ feature -- Basic operations
 				[<<agent reinclude_class_list (a_stone.classes, undo_list), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 		end
 
-	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_FIGURE_STONE)
 			-- Remove `a_stone' from diagram.
 			-- (And its relations.)
 		local
@@ -117,7 +117,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_link_midpoint (a_stone: EG_EDGE) is
+	execute_with_link_midpoint (a_stone: EG_EDGE)
 			-- Remove `a_stone' from diagram.
 		local
 			line: EIFFEL_LINK_FIGURE
@@ -140,7 +140,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_inheritance_stone (a_stone: INHERIT_STONE) is
+	execute_with_inheritance_stone (a_stone: INHERIT_STONE)
 			-- Remove `a_stone' from diagram.
 		local
 			l_item: ES_ITEM
@@ -158,7 +158,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_client_stone (a_stone: CLIENT_STONE) is
+	execute_with_client_stone (a_stone: CLIENT_STONE)
 			-- Remove `a_stone' from diagram.
 		local
 			l_item: ES_ITEM
@@ -178,7 +178,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -190,35 +190,35 @@ feature -- Access
 			Result.drop_actions.extend (agent execute_with_class_list)
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_reset_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_remove
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_remove
 		end
 
-	name: STRING is "Delete_hole"
+	name: STRING = "Delete_hole"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := interface_names.m_remove_from_diagram
@@ -226,7 +226,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	remove_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]) is
+	remove_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE])
 			-- Remove all classes in `a_list'.
 		local
 			l_world: EIFFEL_WORLD
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			tool.projector.full_project
 		end
 
-	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]]) is
+	reinclude_class_list (a_list: LIST [EIFFEL_CLASS_FIGURE]; undo_list: LIST [TUPLE [port_x: INTEGER; port_y: INTEGER; needed_links: LIST [ES_ITEM]]])
 			-- Reinclude all classes in `a_list' to position in `undo_list' TUPLE and reinclude all links in `undo_list'.
 		local
 			l_world: EIFFEL_WORLD
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			tool.projector.full_project
 		end
 
-	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]] is
+	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
 			l_linkables: LIST [EG_LINKABLE]
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

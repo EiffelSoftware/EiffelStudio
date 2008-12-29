@@ -1,4 +1,4 @@
-indexing
+note
 		description: "field entry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 		make
 			
 feature {ANY}
-		tag_id: INTEGER is 9
+		tag_id: INTEGER = 9
 			
-		out: STRING is
+		out: STRING
 				do
 				Result := "FieldRef= " + Precursor;
 				end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

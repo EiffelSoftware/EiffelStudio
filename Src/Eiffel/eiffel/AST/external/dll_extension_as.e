@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a DLL external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 
 	initialize (a_dll_type: like type; a_dll_name: ID_AS;
 			a_dll_index: like index; sig: SIGNATURE_AS; use_list: USE_LIST_AS)
-		is
+		
 			-- Create a new C_EXTENSION_AS node
 		require
 			a_dll_type_valid: a_dll_type = {EXTERNAL_CONSTANTS}.dll32_type or
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Initialization
 
-	extension_i: DLL_EXTENSION_I is
+	extension_i: DLL_EXTENSION_I
 			-- DLL_EXTENSION_I corresponding to current extension
 		do
 			create Result.make (type, index, name)
@@ -67,7 +67,7 @@ feature -- Initialization
 
 feature -- Type check
 
-	type_check (ext_as_b: EXTERNAL_AS) is
+	type_check (ext_as_b: EXTERNAL_AS)
 			-- Perform type check on Current associated with `ext_as_b'.
 		local
 			error: BOOLEAN
@@ -91,13 +91,13 @@ feature -- Type check
 
 feature {NONE} -- Implementation
 
-	parse_special_part is
+	parse_special_part
 			-- Parse the dll name
 		do
 			parse_dll_name
 		end
 
-	parse_dll_name is
+	parse_dll_name
 			-- Parse the end of the special part: it should only have a
 			-- file name
 		local
@@ -133,7 +133,7 @@ end
 
 feature -- {EXTERNAL_LANG_AS} Implementation
 
-	set_type (t: INTEGER) is
+	set_type (t: INTEGER)
 			-- Assign `t' to `type'.
 		do
 			type := t
@@ -141,7 +141,7 @@ feature -- {EXTERNAL_LANG_AS} Implementation
 			type_set: type = t
 		end
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 			-- Assign `i' to `index'.
 		do
 			index := i
@@ -149,7 +149,7 @@ feature -- {EXTERNAL_LANG_AS} Implementation
 			index_set: index = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

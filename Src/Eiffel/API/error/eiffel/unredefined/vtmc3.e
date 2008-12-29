@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Error which states that a renaming was applied to a formal.
 					This error occurs in the context of multi constraints.
@@ -23,7 +23,7 @@ create
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 3
+	subcode: INTEGER_32 = 3
 
 	message: STRING
 
@@ -63,7 +63,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_set: message = a_message
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

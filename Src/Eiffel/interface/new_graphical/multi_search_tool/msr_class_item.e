@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent classes found in text or non-class section of text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 	
-	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER) is
+	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER)
 			-- Initialization, set `context_text_internal' and `text_internal' with "-"	
 		require	
 			name_attached: a_name /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	start_index : INTEGER is
+	start_index : INTEGER
 			-- 	This property in a class item takes no sense, 1 returned.
 		do
 			Result := 1
@@ -40,7 +40,7 @@ feature -- Access
 			start_index_equal_one: Result = 1
 		end
 			
-	end_index : INTEGER is
+	end_index : INTEGER
 			-- 	This property in a class item takes no sense, 0 returned. 
 		do
 			Result := 0
@@ -48,7 +48,7 @@ feature -- Access
 			end_index_equal_zero: Result = 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

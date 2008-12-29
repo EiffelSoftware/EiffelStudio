@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Progress observer"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,27 +10,27 @@ deferred class
 
 feature -- Being notificated
 
-	on_progress_start is
+	on_progress_start
 			-- On starting visiting the system
 		deferred
 		end
 
-	on_progress_progress (a_value: REAL) is
+	on_progress_progress (a_value: REAL)
 			-- On progress has been made
 		deferred
 		end
 
-	on_progress_finish is
+	on_progress_finish
 			-- On finishing progress
 		deferred
 		end
 
-	on_progress_stop is
+	on_progress_stop
 			-- On stop visiting the system
 		deferred
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

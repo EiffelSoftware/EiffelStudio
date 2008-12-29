@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog Selection Box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Commands
 
-	change is
+	change
 			-- Change the value 
 		do
 			check
@@ -25,14 +25,14 @@ feature -- Commands
 			dialog_tool.show_modal_to_window (caller)
 		end 
 
-	update_changes is
+	update_changes
 			-- Dialog Committing.
 		require
 			dialog_tool_exists: dialog_tool /= Void
 		deferred 
 		end
 
-	create_tool is
+	create_tool
 		deferred 
 		ensure
 			tool_created: dialog_tool /= Void
@@ -46,7 +46,7 @@ feature -- Implementation
 	change_b: EV_BUTTON;
 		-- Button
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					A quantity vector
 					Two vectors A and B can be applied to a binary operation in the following cases:
@@ -29,7 +29,7 @@ create
 
 feature -- Binary operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: like Current): like Current
 			-- Sum with `other'
 		require
 			other_attached: other /= Void
@@ -38,7 +38,7 @@ feature -- Binary operations
 			Result := result_vector (other, agent add_two_double)
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		require
 			other_attached: other /= Void
@@ -47,7 +47,7 @@ feature -- Binary operations
 			Result := result_vector (other, agent subtract_two_double)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: like Current): like Current
 			-- Product by `other'
 		require
 			other_attached: other /= Void
@@ -56,7 +56,7 @@ feature -- Binary operations
 			Result := result_vector (other, agent multiply_two_double)
 		end
 
-	infix "^" (other: like Current): like Current is
+	infix "^" (other: like Current): like Current
 			-- Power by `other'
 		require
 			other_attached: other /= Void
@@ -65,7 +65,7 @@ feature -- Binary operations
 			Result := result_vector (other, agent power_two_double)
 		end
 
-	infix "/" (other: like Current): like Current is
+	infix "/" (other: like Current): like Current
 			-- Division by `other'
 		require
 			other_attached: other /= Void
@@ -77,7 +77,7 @@ feature -- Binary operations
 
 feature -- Unary operations
 
-	prefix "+": like Current is
+	prefix "+": like Current
 			-- Unary plus
 		do
 			Result := result_from_unary_operation (agent unary_plus)
@@ -85,7 +85,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	prefix "-": like Current is
+	prefix "-": like Current
 			-- Unary minus
 		do
 			Result := result_from_unary_operation (agent unary_minus)
@@ -93,7 +93,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	log_2: like Current is
+	log_2: like Current
 			-- Base 2 logarithm of `Current'
 		do
 			Result := result_from_unary_operation (agent math_log_2)
@@ -101,7 +101,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	cosine: like Current is
+	cosine: like Current
 			-- Trigonometric cosine of radian `Current' approximated
 			-- in the range [-pi/4, +pi/4]
 		do
@@ -110,7 +110,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	arc_cosine: like Current is
+	arc_cosine: like Current
 			-- Trigonometric arccosine of radian `Current'
 			-- in the range [0, pi]
 		do
@@ -119,7 +119,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	sine: like Current is
+	sine: like Current
 			-- Trigonometric sine of radian `Current' approximated
 			-- in range [-pi/4, +pi/4]
 		do
@@ -128,7 +128,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	arc_sine: like Current is
+	arc_sine: like Current
 			-- Trigonometric arcsine of radian `Current'
 			-- in the range [-pi/2, +pi/2]
 		do
@@ -137,7 +137,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	tangent: like Current is
+	tangent: like Current
 			-- Trigonometric tangent of radian `Current' approximated
 			-- in range [-pi/4, +pi/4]
 		do
@@ -146,7 +146,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	arc_tangent: like Current is
+	arc_tangent: like Current
 			-- Trigonometric arctangent of radian `Current'
 			-- in the range [-pi/2, +pi/2]
 		do
@@ -155,7 +155,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	sqrt: like Current is
+	sqrt: like Current
 			-- Square root of `Current'
 		do
 			Result := result_from_unary_operation (agent math_sqrt)
@@ -163,7 +163,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	exp: like Current is
+	exp: like Current
 			-- Exponential of `Current'.
 		do
 			Result := result_from_unary_operation (agent math_exp)
@@ -171,7 +171,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	log: like Current is
+	log: like Current
 			-- Natural logarithm of `Current'
 		do
 			Result := result_from_unary_operation (agent math_log)
@@ -179,7 +179,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	log10: like Current is
+	log10: like Current
 			-- Base 10 logarithm of `Current'
 		do
 			Result := result_from_unary_operation (agent math_log10)
@@ -187,7 +187,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	floor: like Current is
+	floor: like Current
 			-- Greatest integral less than or equal to `Current'
 		do
 			Result := result_from_unary_operation (agent math_floor)
@@ -195,7 +195,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	ceiling: like Current is
+	ceiling: like Current
 			-- Least integral greater than or equal to `Current'
 		do
 			Result := result_from_unary_operation (agent math_ceiling)
@@ -203,7 +203,7 @@ feature -- Unary operations
 			result_attached: Result /= Void
 		end
 
-	dabs (v: DOUBLE): like Current is
+	dabs (v: DOUBLE): like Current
 			-- Absolute of `Current'
 		do
 			Result := result_from_unary_operation (agent math_dabs)
@@ -213,7 +213,7 @@ feature -- Unary operations
 
 feature -- Status report
 
-	is_valid_for_binary_operation (a_vector, b_vector: like Current): BOOLEAN is
+	is_valid_for_binary_operation (a_vector, b_vector: like Current): BOOLEAN
 			-- Are `a_vector' and `b_vector' valid for a binary operation?
 		require
 			a_vector_attached: a_vector /= Void
@@ -230,7 +230,7 @@ feature -- Status report
 			)
 		end
 
-	divisible (other: like Current): BOOLEAN is
+	divisible (other: like Current): BOOLEAN
 			-- May current object be divided by `other'?
 		require
 			other_attached: other /= Void
@@ -249,7 +249,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	result_from_unary_operation (a_calculation_function: FUNCTION [ANY, TUPLE [DOUBLE], DOUBLE]): like Current is
+	result_from_unary_operation (a_calculation_function: FUNCTION [ANY, TUPLE [DOUBLE], DOUBLE]): like Current
 			-- Result vector of `Current' and `other' with `a_calculation_function' applied.
 		require
 			a_calculation_function_attached: a_calculation_function /= Void
@@ -275,7 +275,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	result_vector (other: like Current; a_calculation_function: FUNCTION [ANY, TUPLE[DOUBLE, DOUBLE], DOUBLE]): like Current is
+	result_vector (other: like Current; a_calculation_function: FUNCTION [ANY, TUPLE[DOUBLE, DOUBLE], DOUBLE]): like Current
 			-- Result vector of `Current' and `other' with `a_calculation_function' applied.
 		require
 			other_attached: other /= Void
@@ -342,7 +342,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	add_two_double (a, b: DOUBLE): DOUBLE is
+	add_two_double (a, b: DOUBLE): DOUBLE
 			-- Sum of `a' and `b'
 		do
 			Result := a + b
@@ -350,7 +350,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a + b
 		end
 
-	subtract_two_double (a, b: DOUBLE): DOUBLE is
+	subtract_two_double (a, b: DOUBLE): DOUBLE
 			-- Subtraction of `a' and `b'
 		do
 			Result := a - b
@@ -358,7 +358,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a - b
 		end
 
-	multiply_two_double (a, b: DOUBLE): DOUBLE is
+	multiply_two_double (a, b: DOUBLE): DOUBLE
 			-- Multiplication of `a' and `b'
 		do
 			Result := a * b
@@ -366,7 +366,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a * b
 		end
 
-	power_two_double (a, b: DOUBLE): DOUBLE is
+	power_two_double (a, b: DOUBLE): DOUBLE
 			-- Power of `a' and `b'
 		do
 			Result := a ^ b
@@ -374,7 +374,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a ^ b
 		end
 
-	divide_two_double (a, b: DOUBLE): DOUBLE is
+	divide_two_double (a, b: DOUBLE): DOUBLE
 			-- Quotient of `a' and `b'
 		require
 			not_b_is_zero: b /= 0.0
@@ -384,7 +384,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a / b
 		end
 
-	unary_plus (a: DOUBLE): DOUBLE is
+	unary_plus (a: DOUBLE): DOUBLE
 			-- Unary plus of `a'
 		do
 			Result := +a
@@ -392,7 +392,7 @@ feature{NONE} -- Implementation
 			good_result: Result = + a
 		end
 
-	unary_minus (a: DOUBLE): DOUBLE is
+	unary_minus (a: DOUBLE): DOUBLE
 			-- Unary minus of `a'
 		do
 			Result := -a
@@ -400,7 +400,7 @@ feature{NONE} -- Implementation
 			good_result: Result = -a
 		end
 
-	double_math: DOUBLE_MATH is
+	double_math: DOUBLE_MATH
 			-- Math operations
 		once
 			create Result
@@ -408,7 +408,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	math_log_2 (v: DOUBLE): DOUBLE is
+	math_log_2 (v: DOUBLE): DOUBLE
 			-- Base 2 logarithm of `v'
 		do
 			Result := double_math.log_2 (v)
@@ -416,7 +416,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.log_2 (v)
 		end
 
-	math_cosine (v: DOUBLE): DOUBLE is
+	math_cosine (v: DOUBLE): DOUBLE
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		do
@@ -425,7 +425,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.cosine (v)
 		end
 
-	math_arc_cosine (v: DOUBLE): DOUBLE is
+	math_arc_cosine (v: DOUBLE): DOUBLE
 			-- Trigonometric arccosine of radian `v'
 			-- in the range [0, pi]
 		do
@@ -434,7 +434,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.arc_cosine (v)
 		end
 
-	math_sine (v: DOUBLE): DOUBLE is
+	math_sine (v: DOUBLE): DOUBLE
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
@@ -443,7 +443,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.sine (v)
 		end
 
-	math_arc_sine (v: DOUBLE): DOUBLE is
+	math_arc_sine (v: DOUBLE): DOUBLE
 			-- Trigonometric arcsine of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
@@ -452,7 +452,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.arc_sine (v)
 		end
 
-	math_tangent (v: DOUBLE): DOUBLE is
+	math_tangent (v: DOUBLE): DOUBLE
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		do
@@ -461,7 +461,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.tangent (v)
 		end
 
-	math_arc_tangent (v: DOUBLE): DOUBLE is
+	math_arc_tangent (v: DOUBLE): DOUBLE
 			-- Trigonometric arctangent of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		do
@@ -470,7 +470,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.arc_tangent (v)
 		end
 
-	math_sqrt (v: DOUBLE): DOUBLE is
+	math_sqrt (v: DOUBLE): DOUBLE
 			-- Square root of `v'
 		do
 			Result := double_math.sqrt (v)
@@ -478,7 +478,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.sqrt (v)
 		end
 
-	math_exp (v: DOUBLE): DOUBLE is
+	math_exp (v: DOUBLE): DOUBLE
 			-- Exponential of `v'.
 		do
 			Result := double_math.exp (v)
@@ -486,7 +486,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.exp (v)
 		end
 
-	math_log (v: DOUBLE): DOUBLE is
+	math_log (v: DOUBLE): DOUBLE
 			-- Natural logarithm of `v'
 		do
 			Result := double_math.log (v)
@@ -494,7 +494,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.log (v)
 		end
 
-	math_log10 (v: DOUBLE): DOUBLE is
+	math_log10 (v: DOUBLE): DOUBLE
 			-- Base 10 logarithm of `v'
 		do
 			Result := double_math.log10 (v)
@@ -502,7 +502,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.log10 (v)
 		end
 
-	math_floor (v: DOUBLE): DOUBLE is
+	math_floor (v: DOUBLE): DOUBLE
 			-- Greatest integral less than or equal to `v'
 		do
 			Result := double_math.floor (v)
@@ -510,7 +510,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.floor (v)
 		end
 
-	math_ceiling (v: DOUBLE): DOUBLE is
+	math_ceiling (v: DOUBLE): DOUBLE
 			-- Least integral greater than or equal to `v'
 		do
 			Result := double_math.ceiling (v)
@@ -518,7 +518,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.ceiling (v)
 		end
 
-	math_dabs (v: DOUBLE): DOUBLE is
+	math_dabs (v: DOUBLE): DOUBLE
 			-- Absolute of `v'
 		do
 			Result := double_math.dabs (v)
@@ -526,7 +526,7 @@ feature{NONE} -- Implementation
 			good_result: Result = double_math.dabs (v)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

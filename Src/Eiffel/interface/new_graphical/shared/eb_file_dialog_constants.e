@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that contain constants used with EiffelVision2 file dialogs.
 		To add a new file type for use in EiffelStudio, you must declare the two constants
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status setting
 
-	set_dialog_filters (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING]) is
+	set_dialog_filters (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING])
 			-- Add filters to `a_dialog' corresponding to all items in `filters'.
 		require
 			dialog_not_void: a_dialog /= Void
@@ -46,7 +46,7 @@ feature -- Status setting
 			filters_set: a_dialog.filters.count = filters.count
 		end
 
-	set_dialog_filters_and_add_all (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING]) is
+	set_dialog_filters_and_add_all (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING])
 			-- Add filters to `a_dialog' corresponding to all items in `filters' and also add a final `all_files' option.
 		require
 			dialog_not_void: a_dialog /= Void
@@ -61,7 +61,7 @@ feature -- Status setting
 			filters_set: a_dialog.filters.count = filters.count + 1
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

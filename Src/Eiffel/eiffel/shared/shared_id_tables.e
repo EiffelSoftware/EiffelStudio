@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_ID_TABLES
@@ -8,14 +8,14 @@ inherit
 	
 feature {NONE}
 
-	Body_index_table: ARRAY [INTEGER] is
+	Body_index_table: ARRAY [INTEGER]
 			-- Table of correspondance of between generic body indexes
 			-- and generic body ids
 		once
 			Result := System.body_index_table
 		end;
 
-	Original_body_index_table: ARRAY [INTEGER] is
+	Original_body_index_table: ARRAY [INTEGER]
 			-- Table of original coresspondances
 			-- | The principle is to copy a duplication of `Body_index_table'
 			-- | each time a recompilation is done if not in error. Then
@@ -25,7 +25,7 @@ feature {NONE}
 			Result := System.original_body_index_table;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

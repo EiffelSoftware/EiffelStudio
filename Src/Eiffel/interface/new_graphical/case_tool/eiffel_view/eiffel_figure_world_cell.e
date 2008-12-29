@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that casts the projector in EV_MODEL_WORLD_CELL to EIFFEL_PROJECTOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_world_and_tool (a_world: like world; a_tool: like tool) is
+	make_with_world_and_tool (a_world: like world; a_tool: like tool)
 			-- Make an EIFFEL_FIGURE_WORLD_CELL displaying `a_world' inside `a_tool'.
 		require
 			a_world_not_void: a_world /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			set: tool = a_tool
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MODEL_WORLD_CELL}
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_world (a_world: like world) is
+	set_world (a_world: like world)
 			-- Set `world' to `a_world'.
 		do
 			if world /= Void then
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature {NONE} -- Recycling
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current' and leave `Current' in an unstable state.
 		do
 			autoscroll.destroy
@@ -110,7 +110,7 @@ feature {NONE} -- Recycling
 
 feature {NONE} -- Implementation
 
-	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was pressed in `drawing_area'.
 		do
 			if button = 1 then
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was released over `drawing_area'.
 		do
 			if is_scroll then
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_wheel_on_drawing_area (i: INTEGER) is
+	on_mouse_wheel_on_drawing_area (i: INTEGER)
 			-- User moved mouse wheel.
 		local
 			l_world: EIFFEL_WORLD
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve `scroll_speed' from preferences.
 		local
 			val: INTEGER
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			scroll_speed := val / 100
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

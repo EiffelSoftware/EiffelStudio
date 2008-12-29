@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic structure to hold info about an assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: like assembly_name) is
+	make (n: like assembly_name)
 			-- Initialize current with `n'
 		require
 			n_not_void: n /= Void
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_version (a_version: like version) is
+	set_version (a_version: like version)
 			-- Set `version' with `a_version'.
 		require
 			a_version_not_void: a_version /= Void
@@ -45,7 +45,7 @@ feature -- Settings
 			version_set: version = a_version
 		end
 
-	set_culture (a_culture: like culture) is
+	set_culture (a_culture: like culture)
 			-- Set `culture' with `a_culture'.
 		require
 			a_culture_not_void: a_culture /= Void
@@ -56,7 +56,7 @@ feature -- Settings
 			culture_set: culture = a_culture
 		end
 
-	set_public_key_token (a_public_key_token: like public_key_token) is
+	set_public_key_token (a_public_key_token: like public_key_token)
 			-- Set `public_key_token' with `a_public_key_token'.
 		require
 			a_public_key_token_not_void: a_public_key_token /= Void
@@ -69,7 +69,7 @@ feature -- Settings
 
 feature -- Output
 
-	format (a_text_formatter: TEXT_FORMATTER) is
+	format (a_text_formatter: TEXT_FORMATTER)
 			-- Output name of Current in `a_text_formatter'.
 		require
 			st_not_void: a_text_formatter /= Void
@@ -89,7 +89,7 @@ feature -- Output
 			end
 		end
 
-	full_name: STRING is
+	full_name: STRING
 			-- Output name of Current
 		do
 			create Result.make (64)
@@ -115,7 +115,7 @@ feature -- Output
 invariant
 	assembly_name_not_void: assembly_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to choose a folder among the favorites."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_favorites_manager: EB_FAVORITES_MANAGER) is
+	make (a_favorites_manager: EB_FAVORITES_MANAGER)
 			-- Initialize the dialog
 		do
 			favorites_manager := a_favorites_manager
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			prepare
 		end
 
-	prepare is
+	prepare
 			-- Create the controls and setup the layout
 		local
 			buttons_box: EV_VERTICAL_BOX
@@ -94,7 +94,7 @@ feature -- Access
 	selected: BOOLEAN
 			-- Has the user selected an item
 
-	folder_name: STRING is
+	folder_name: STRING
 			-- Folder name entered by the user, if any.
 		require
 			selected: selected
@@ -111,7 +111,7 @@ feature -- Access
 			Result_valid: Result /= Void and then not Result.is_empty
 		end
 
-	chosen_folder: EB_FAVORITES_ITEM_LIST is
+	chosen_folder: EB_FAVORITES_ITEM_LIST
 			-- Chosen folder.
 		require
 			selected: selected
@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Vision2 events
 
-	on_ok is
+	on_ok
 			-- Terminate the dialog
 		do
 			if folders_tree.selected_item /= Void then
@@ -134,7 +134,7 @@ feature {NONE} -- Vision2 events
 			destroy
 		end
 
-	on_cancel is
+	on_cancel
 			-- Terminate the dialog and clear the selection.
 		do
 			selected := False
@@ -155,7 +155,7 @@ feature {NONE} -- Controls
 
 feature {NONE} -- Implementation
 
-	root_folder_name: STRING is "Favorites"
+	root_folder_name: STRING = "Favorites"
 
 	internal_chosen_folder: EB_FAVORITES_ITEM_LIST
 			-- Chosen folder.
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 	favorites_manager: EB_FAVORITES_MANAGER
 			-- Associated favorites manager
 
-	build_folders_tree is
+	build_folders_tree
 			-- Build the tree corresponding to `a_favorites'.
 		local
 			tree_item: EV_TREE_ITEM
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_tree_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EV_TREE_ITEM is
+	build_tree_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EV_TREE_ITEM
 			-- Build the tree node corresponding to `a_favorites'.
 		local
 			tree_item: EV_TREE_ITEM
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

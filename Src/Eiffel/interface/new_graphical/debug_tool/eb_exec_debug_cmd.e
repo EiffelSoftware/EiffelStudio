@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Set execution format so that breakable point %
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -47,13 +47,13 @@ feature -- Initialization
 
 feature -- Execution
 
-	execute_from_accelerator is
+	execute_from_accelerator
 			-- Execute from accelerator
 		do
 			execute
 		end
 
-	execute is
+	execute
 			-- <Precursor>
 		do
 			eb_debugger_manager.stop_at_breakpoints
@@ -62,7 +62,7 @@ feature -- Execution
 
 feature -- Access
 
-	set_launched (a_launched: BOOLEAN) is
+	set_launched (a_launched: BOOLEAN)
 		do
 			is_launched := a_launched
 			if a_launched then
@@ -77,7 +77,7 @@ feature -- Access
 			refresh_items
 		end
 
-	refresh_items is
+	refresh_items
 		local
 			l_sd_lst: like internal_managed_sd_toolbar_items
 			l_sd_item: like new_sd_toolbar_item
@@ -125,7 +125,7 @@ feature -- Access
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
-	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON; display_text: BOOLEAN) is
+	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON; display_text: BOOLEAN)
 			-- <Precursor>
 		do
 			Precursor (a_item, display_text)
@@ -137,25 +137,25 @@ feature {NONE} -- Attributes
 	is_launched: BOOLEAN
 			-- Is application launched ?
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for the button.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
 		end
 
-	name: STRING is "Exec_debug"
+	name: STRING = "Exec_debug"
 			-- Name of the command.
 
 	tooltext: STRING_GENERAL
 			-- Default text displayed in toolbar button
 
-	is_tooltext_important: BOOLEAN is
+	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
 			Result := True
@@ -167,7 +167,7 @@ feature {NONE} -- Attributes
 	menu_name: STRING_GENERAL;
 			-- Name used in menu entry.
 
-	drop_down_menu: EV_MENU is
+	drop_down_menu: EV_MENU
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
 			l_item: EV_MENU_ITEM
@@ -273,7 +273,7 @@ feature {NONE} -- Attributes
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

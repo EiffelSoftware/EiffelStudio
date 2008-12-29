@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Split area with flat separators."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,19 +17,19 @@ create
 
 feature -- Status setting
 
-	enable_flat_separator is
+	enable_flat_separator
 			-- Set the separator to be "flat"
 		do
 			implementation.enable_flat_separator
 		end
 
-	disable_flat_separator is
+	disable_flat_separator
 			-- Set the separator to be "raised"
 		do
 			implementation.disable_flat_separator
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

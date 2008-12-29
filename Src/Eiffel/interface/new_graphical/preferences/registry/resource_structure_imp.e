@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives the data contained in a XML file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	initialize (default_file: STRING; loc: STRING) is
+	initialize (default_file: STRING; loc: STRING)
 		do
 			if default_file /= Void then
 				make_default (default_file)
@@ -27,7 +27,7 @@ feature -- Initialization
 			end
 		end
 
-	initialize_from_file (default_file: STRING; loc: STRING) is
+	initialize_from_file (default_file: STRING; loc: STRING)
 		local
 			file_name: FILE_NAME
 		do
@@ -42,7 +42,7 @@ feature -- Initialization
 			end
 		end
 
-	make_default_for_file (default_file: STRING) is
+	make_default_for_file (default_file: STRING)
 				-- Initialize Current from file
 				-- named `default_file'.
 		local
@@ -54,7 +54,7 @@ feature -- Initialization
 			root_folder_i.create_interface
 		end
 
-	make_from_location (loc: STRING) is
+	make_from_location (loc: STRING)
 				-- Initialize Current from registry key `loc'.
 		do
 			location := loc
@@ -63,7 +63,7 @@ feature -- Initialization
 			root_folder_i.create_interface
 		end
 
-	make_from_file_name (file_name: FILE_NAME) is
+	make_from_file_name (file_name: FILE_NAME)
 				-- Initialize Current from file
 				-- named `file_name'.
 		do
@@ -75,7 +75,7 @@ feature -- Initialization
 
 feature -- Update
 
-	update (loc: STRING) is
+	update (loc: STRING)
 				-- Initialize Current from registry key `loc'.
 		do
 			location := loc
@@ -88,12 +88,12 @@ feature -- Access
 
 feature -- Saving
 
-	save is
+	save
 		do
 			root_folder_i.root_save (location)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

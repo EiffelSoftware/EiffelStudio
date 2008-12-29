@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project searcher. Search project that match given system name or system UUID or target name or target UUID in given pathes."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Searcher
 
-	search_project (a_path: !STRING; a_system_name, a_system_uuid, a_target_name, a_target_uuid: ?STRING) is
+	search_project (a_path: !STRING; a_system_name, a_system_uuid, a_target_name, a_target_uuid: ?STRING)
 			-- Search project
 			-- `a_path' is in the format of "path1; path2; path3"
 		local
@@ -76,7 +76,7 @@ feature {NONE} -- Access
 
 	system_name, system_uuid, target_name, target_uuid: ?STRING
 
-	file_matcher: RX_PCRE_MATCHER is
+	file_matcher: RX_PCRE_MATCHER
 			-- Config file matcher
 		once
 			create Result.make
@@ -85,13 +85,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implemetation
 
-	search_needed: BOOLEAN is
+	search_needed: BOOLEAN
 			-- Is current context needed to search?
 		do
 			Result := system_name /= Void or system_uuid /= Void or target_name /= Void or target_uuid /= Void
 		end
 
-	search_project_in_directory (a_path: !STRING) is
+	search_project_in_directory (a_path: !STRING)
 			-- Search project in `a_path'
 		require
 			a_path_not_empty: not a_path.is_empty
@@ -114,7 +114,7 @@ feature {NONE} -- Implemetation
 			end
 		end
 
-	check_file (a_file: !STRING) is
+	check_file (a_file: !STRING)
 			-- Check file and see if it is the system we need.
 		require
 			search_needed: search_needed
@@ -194,7 +194,7 @@ feature {NONE} -- Implemetation
 			end
 		end
 
-	reset is
+	reset
 			-- Reset the searcher
 		do
 			project_found := False
@@ -227,7 +227,7 @@ feature {NONE} -- Implemetation
 invariant
 	project_found_implies_project_not_void: project_found implies (found_project /= Void)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

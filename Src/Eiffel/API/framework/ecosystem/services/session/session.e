@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A collection of managed session data, bound to a IDE/project context.
 		
@@ -518,7 +518,7 @@ invariant
 	manager_is_zombie: not is_disposed implies manager.is_interface_usable
 	data_attached: data /= Void
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

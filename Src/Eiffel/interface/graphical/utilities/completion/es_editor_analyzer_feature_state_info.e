@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A specialized editor analyzer state info object, specifically for use within features.
 		]"
@@ -57,7 +57,7 @@ feature -- Status setting
 			is_inline_agent_set: is_inline_agent = a_inline
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

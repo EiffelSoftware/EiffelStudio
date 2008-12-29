@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a feature component used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := ""
@@ -25,7 +25,7 @@ feature -- Access
 			no_description_attached_to_a_line: Result.is_equal ("")
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			l_hash_name: STRING
@@ -40,13 +40,13 @@ feature -- Access
 			Result := internal_hash_code
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- CLASS_I object associated with current item
 		do
 			Result := class_c.lace_class
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- CLASS_C object associated with current item
 		do
 			if internal_class_c = Void then
@@ -57,7 +57,7 @@ feature -- Access
 			good_result: Result = internal_class_c
 		end
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- E_FEATURE object associated with current item
 		require
 			parent_is_real_feature: parent.is_real_feature
@@ -70,7 +70,7 @@ feature -- Access
 			good_result: Result = internal_e_feature
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Is Current item compiled?
 		do
 			Result := True
@@ -103,7 +103,7 @@ feature{NONE} -- Implementation
 	internal_ast: like ast
 			-- Implementation of `ast'
 
-	retrieve_class_c_and_e_feature is
+	retrieve_class_c_and_e_feature
 			-- Retrieve `class_c' and `e_feature'.
 			-- If parent of current is not a real feature, `e_feature' will be set to Void.
 		local
@@ -132,7 +132,7 @@ invariant
 	parent_valid: parent.is_valid_domain_item
 	parent_is_feature: parent.is_feature
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

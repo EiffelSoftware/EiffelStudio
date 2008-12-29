@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Debugger observer provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {DEBUGGER_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Instanciate Current
 		do
 			create application_launched_actions
@@ -72,37 +72,37 @@ feature -- Actions
 
 feature {DEBUGGER_MANAGER} -- Implementation
 
-	on_application_launched (dbg: DEBUGGER_MANAGER) is
+	on_application_launched (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has just been launched.
 		do
 			application_launched_actions.call ([dbg])
 		end
 
-	on_application_resumed (dbg: DEBUGGER_MANAGER) is
+	on_application_resumed (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has been resumed after a stop.
 		do
 			application_resumed_actions.call ([dbg])
 		end
 
-	on_application_debugger_update (dbg: DEBUGGER_MANAGER) is
+	on_application_debugger_update (dbg: DEBUGGER_MANAGER)
 			-- The debugging is terminated.
 		do
 			application_debugger_update_actions.call ([dbg])
 		end
 
-	on_application_stopped (dbg: DEBUGGER_MANAGER) is
+	on_application_stopped (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has just stopped (paused).
 		do
 			application_stopped_actions.call ([dbg])
 		end
 
-	on_application_exited (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has just died (exited).
 		do
 			application_exited_actions.call ([dbg])
 		end
 
-	on_debugging_terminated (dbg: DEBUGGER_MANAGER) is
+	on_debugging_terminated (dbg: DEBUGGER_MANAGER)
 			-- The debugging is terminated.
 		do
 			debugging_terminated_actions.call ([dbg])
@@ -116,7 +116,7 @@ invariant
 	application_exited_actions_not_void: application_exited_actions /= Void
 	debugging_terminated_actions_not_void: debugging_terminated_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

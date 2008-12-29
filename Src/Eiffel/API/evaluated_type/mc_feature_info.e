@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						This class encapsualtes functionality and data needed to produce a proper
 						info report for feature lookup on multi constraint (MC) formal generic type
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for invalid conversion type: %
 		%1. Has an anchor%
 		%2. NONE cannot be a valid type to convert from or to."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (s: STRING) is
+	make (s: STRING)
 			-- Initializes current error with `s'.
 		require
 			s_not_void: s /= Void
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Access
 
-	code: STRING is "VNCP"
+	code: STRING = "VNCP"
 			-- Name of error.
 
 	message: STRING
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
@@ -52,7 +52,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

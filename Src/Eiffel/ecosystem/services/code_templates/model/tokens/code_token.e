@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base token for implementing tokens located in a tokenized code template token list.
 	]"
@@ -74,7 +74,7 @@ feature -- Output
 invariant
 	text_is_valid_text: is_valid_text (text)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

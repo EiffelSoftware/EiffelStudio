@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when there is an additional invalid selection."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 	selected_feature: E_FEATURE;
 
@@ -26,7 +26,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		local
@@ -62,7 +62,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	init (s: FEATURE_I; u: FEATURE_I) is
+	init (s: FEATURE_I; u: FEATURE_I)
 			-- Initialization
 		require
 			valid_args: s /= Void and then u /= Void
@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER}
 			invalid_feature := u.api_feature (u.written_in);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

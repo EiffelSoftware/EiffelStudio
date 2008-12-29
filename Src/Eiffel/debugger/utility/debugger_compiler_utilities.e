@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines used by debugger to access compiler's data..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ inherit
 
 feature -- Class c
 
-	exception_class_c: CLASS_C is
+	exception_class_c: CLASS_C
 			-- EXCEPTION class
 		local
 			cl_i: CLASS_I
@@ -49,7 +49,7 @@ feature -- Class c
 
 feature -- Entry point
 
-	frozen entry_point_class_feature: TUPLE [cl: CLASS_C; feat: FEATURE_I] is
+	frozen entry_point_class_feature: TUPLE [cl: CLASS_C; feat: FEATURE_I]
 			-- System entry point feature
 		local
 			cl_c: CLASS_C
@@ -69,7 +69,7 @@ feature -- Entry point
 			end
 		end
 
-	frozen entry_point_feature: E_FEATURE is
+	frozen entry_point_feature: E_FEATURE
 			-- System entry point api feature
 		local
 			t: like entry_point_class_feature
@@ -82,7 +82,7 @@ feature -- Entry point
 
 feature -- Type adaptation
 
-	frozen adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE is
+	frozen adapted_class_type (ctype: CLASS_TYPE; f: FEATURE_I): CLASS_TYPE
 			-- Adapted class_type receiving the call of `f'
 			--| Note: Only used by dotnet debugger so far.
 		local
@@ -117,7 +117,7 @@ feature -- Type adaptation
 			end
 		end
 
-	frozen ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
+	frozen ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I
 			-- Feature in `an_ancestor' of which `Current' is derived.
 			-- `Void' if not present in that class.
 		require
@@ -148,7 +148,7 @@ feature -- Type adaptation
 			end
 		end
 
-	frozen associated_basic_class_type (cl: CLASS_C): CLASS_TYPE is
+	frozen associated_basic_class_type (cl: CLASS_C): CLASS_TYPE
 			-- Associated classtype for type `cl'
 		require
 			cl_not_void: cl /= Void
@@ -164,7 +164,7 @@ feature -- Type adaptation
 			associated_basic_class_type_not_void: Result /= Void
 		end
 
-	frozen associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is
+	frozen associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE
 			-- Associated _REF classtype for type `cl'
 			--| for instance return INTEGER_REF for INTEGER
 		require
@@ -182,7 +182,7 @@ feature -- Type adaptation
 			associated_reference_basic_class_type_not_void: Result /= Void
 		end
 
-	frozen class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C is
+	frozen class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C
 			-- instance of CLASS_C associated with type `t', in context of class `a_ctx_class'.
 		require
 			t_not_void: t /= Void
@@ -219,7 +219,7 @@ feature -- Type adaptation
 			end
 		end
 
-	frozen class_c_from_type_i (a_type_i: TYPE_A): CLASS_C is
+	frozen class_c_from_type_i (a_type_i: TYPE_A): CLASS_C
 			-- Class C related to `a_type_i' if exists.
 		require
 			a_type_i_not_void: a_type_i /= Void
@@ -234,7 +234,7 @@ feature -- Type adaptation
 			end
 		end
 
-	frozen static_class_for_local (a_type: TYPE_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C is
+	frozen static_class_for_local (a_type: TYPE_AS; a_rout_i: FEATURE_I; a_class: CLASS_C): CLASS_C
 			-- Static class for local represented by `a_type' and `a_rout_i'
 			-- `a_class' should be `a_rout_i.written_class'.
 		local
@@ -250,7 +250,7 @@ feature -- Type adaptation
 
 feature -- Feature access
 
-	frozen feature_from_runtime_data (a_dynamic_class: CLASS_C; a_written_class: CLASS_C; a_featname: STRING): E_FEATURE is
+	frozen feature_from_runtime_data (a_dynamic_class: CLASS_C; a_written_class: CLASS_C; a_featname: STRING): E_FEATURE
 			-- Feature attached to `a_dynamic_class' from feature with name `a_feat_name' on `a_written_class'
 		require
 			written_class_attached: a_written_class /= Void
@@ -290,7 +290,7 @@ feature -- Feature access
 			end
 		end
 
-	frozen fi_version_of_class (fi: FEATURE_I; a_class: CLASS_C): FEATURE_I is
+	frozen fi_version_of_class (fi: FEATURE_I; a_class: CLASS_C): FEATURE_I
 			-- Feature in `a_class' of which `Current' is derived.
 			-- `Void' if not present in that class.
 		require
@@ -305,7 +305,7 @@ feature -- Feature access
 			end
 		end
 
-	frozen agent_feature_for_class_and_type_id (ct_id, fe_id: INTEGER): E_FEATURE is
+	frozen agent_feature_for_class_and_type_id (ct_id, fe_id: INTEGER): E_FEATURE
 			-- Agent feature related to `ct_id' and `fe_id'
 		require
 			id_valid: ct_id > 0 and fe_id > 0
@@ -333,7 +333,7 @@ feature -- Feature access
 			end
 		end
 
-	frozen agent_feature_for_origin_and_offset (a_orig, a_offset: INTEGER): E_FEATURE is
+	frozen agent_feature_for_origin_and_offset (a_orig, a_offset: INTEGER): E_FEATURE
 			-- Agent feature related to `a_orig' and `a_offset'
 		require
 			id_valid: a_orig > 0 and a_offset > 0
@@ -386,7 +386,7 @@ feature -- Feature access
 			end
 		end
 
-	frozen real_feature (a_feat: E_FEATURE): E_FEATURE is
+	frozen real_feature (a_feat: E_FEATURE): E_FEATURE
 			-- real feature of `a_feat'
 			-- i.e: either `a_feat' or the feature inlining `a_feat' in case of inline agent
 		require
@@ -420,7 +420,7 @@ feature -- Feature access
 
 feature -- Access on Byte node
 
-	frozen feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is
+	frozen feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I
 			-- Return FEATURE_I corresponding to `a_call_access_b' in class `cl'
 			-- (this handles the feature renaming cases)
 		require
@@ -466,7 +466,7 @@ feature -- Access on Byte node
 			end
 		end
 
-	frozen class_c_from_expr_b (a_expr_b: EXPR_B): CLASS_C is
+	frozen class_c_from_expr_b (a_expr_b: EXPR_B): CLASS_C
 			-- Class C related to `a_expr_b' if exists.
 		require
 			a_expr_b_not_void: a_expr_b /= Void
@@ -481,7 +481,7 @@ feature -- Access on Byte node
 
 feature -- Query
 
-	frozen descendants_type_names_for (n: STRING): DS_LIST [STRING] is
+	frozen descendants_type_names_for (n: STRING): DS_LIST [STRING]
 			-- CLASS_C associated to `n'
 		require
 			n_not_void: n /= Void
@@ -512,7 +512,7 @@ feature -- Query
 			Result /= Void implies Result.equality_tester /= Void
 		end
 
-	frozen descendants_type_names (cl: CLASS_C): DS_LIST [STRING] is
+	frozen descendants_type_names (cl: CLASS_C): DS_LIST [STRING]
 			-- Type names for available EXCEPTION types
 		local
 			lst: LIST [CLASS_C]
@@ -536,7 +536,7 @@ feature -- Query
 
 		end
 
-	frozen descendants_from (cl: CLASS_C): ARRAYED_LIST [CLASS_C] is
+	frozen descendants_from (cl: CLASS_C): ARRAYED_LIST [CLASS_C]
 			-- Descendant of class `cl'.
 		require
 			cl_not_void: cl /= Void
@@ -572,7 +572,7 @@ feature -- Status report
 	invariant_routine_name: STRING = "_invariant"
 			-- Invariant's feature name
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to Result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_result_b (Current)
@@ -26,28 +26,28 @@ feature -- Visitor
 
 feature
 
-	read_only: BOOLEAN is False;
+	read_only: BOOLEAN = False;
 			-- Is Result a read-only entity ?
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Result type
 		do
 			Result := context.byte_code.result_type;
 		end;
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- Predefined as results is store in a register.
 
-	is_result: BOOLEAN is
+	is_result: BOOLEAN
 			-- Access is result
 		do
 			Result := True
 		end
 
-	is_creatable: BOOLEAN is true;
+	is_creatable: BOOLEAN = true;
 			-- Can an access to Result be a target for a creation ?
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			result_b: RESULT_B;
@@ -56,13 +56,13 @@ feature
 			Result := result_b /= Void
 		end;
 
-	enlarged: RESULT_B is
+	enlarged: RESULT_B
 			-- Enlarges the result node
 		do
 			create {RESULT_BL} Result.make (type)
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- The "Result" string
 		do
 			Result := "Result";
@@ -76,19 +76,19 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	assign_code: CHARACTER is
+	assign_code: CHARACTER
 			-- Assignment code
 		once
 			Result := {BYTE_CONST}.bc_rassign
 		end
 
-	expanded_assign_code: CHARACTER is
+	expanded_assign_code: CHARACTER
 			-- Expanded assignment code
 		once
 			Result := {BYTE_CONST}.bc_rexp_assign
 		end
 
-	reverse_code: CHARACTER is
+	reverse_code: CHARACTER
 			-- Reverse assignment code
 		once
 			Result := {BYTE_CONST}.bc_rreverse
@@ -96,20 +96,20 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := i = 0
 		end;
 
 feature -- Inlining
 
-	pre_inlined_code: INLINED_RESULT_B is
+	pre_inlined_code: INLINED_RESULT_B
 		do
 			create Result
 			Result.set_parent (parent)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

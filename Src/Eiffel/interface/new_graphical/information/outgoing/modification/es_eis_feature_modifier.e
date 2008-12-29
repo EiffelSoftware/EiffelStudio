@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class modifier used to modify EIS feature entries."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Modification: Feature
 
-	modify_feature_entry (a_old_entry, a_new_entry: !EIS_ENTRY) is
+	modify_feature_entry (a_old_entry, a_new_entry: !EIS_ENTRY)
 			-- Modify `a_old_entry' to `a_new_entry' in the feature.
 		require
 			is_interface_usable: is_interface_usable
@@ -41,7 +41,7 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	write_feature_entry (a_entry: !EIS_ENTRY) is
+	write_feature_entry (a_entry: !EIS_ENTRY)
 			-- Write `a_entry' into the class.
 		require
 			is_interface_usable: is_interface_usable
@@ -89,7 +89,7 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
-	remove_feature_entry (a_entry: !EIS_ENTRY; a_clean_empty_clause: BOOLEAN) is
+	remove_feature_entry (a_entry: !EIS_ENTRY; a_clean_empty_clause: BOOLEAN)
 			-- Remove `a_entry' from the class if exists.
 			-- `a_clean_empty_clause' to clean the leading empty clause if any.
 		require
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 	last_removed_position: INTEGER
 
-	keyword_note_or_indexing: !STRING is
+	keyword_note_or_indexing: !STRING
 			-- Get eis container structure keyword from parser.
 			-- Either note or indexing
 		local
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

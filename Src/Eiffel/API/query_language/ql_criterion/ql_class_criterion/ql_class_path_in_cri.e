@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test whether or not a class is from a given folder or recursively in its subfolders"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize `name' with `a_name'.
 			-- Set `is_recursive' to True by default.
 		do
@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 			is_recursive_set: is_recursive
 		end
 
-	make_with_flag (a_name: STRING; a_recursive: BOOLEAN) is
+	make_with_flag (a_name: STRING; a_recursive: BOOLEAN)
 			-- Initialize `name' with `a_name' and `is_recursive' with `a_recursive'.
 		do
 			make (a_name)
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_path: STRING
@@ -68,7 +68,7 @@ feature -- Evaluate
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is
+	require_compiled: BOOLEAN
 			-- Does current criterion require a compiled item?
 		do
 			Result := False
@@ -77,7 +77,7 @@ feature -- Status report
 	is_recursive: BOOLEAN;
 			--Is path search recursive?
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hash table for cecil."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature -- Initialization
 
-	init (hash_size: INTEGER) is
+	init (hash_size: INTEGER)
 			-- Table creation
 		require
 			hash_size_positive: hash_size > 0
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Capacity of current
 		do
 			if values /= Void then
@@ -66,7 +66,7 @@ feature {NONE} -- Access
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Empty the table
 		do
 			keys := Void
@@ -75,7 +75,7 @@ feature -- Removal
 
 feature -- Element change
 
-	put (f: T; s: STRING) is
+	put (f: T; s: STRING)
 			-- Insert `f' in the hash table
 		require
 			good_argument1: f /= Void
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

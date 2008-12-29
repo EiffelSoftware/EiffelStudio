@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Edit Ace file."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 		local
 			lace_name: STRING;
 		do
@@ -33,7 +33,7 @@ feature {NONE} -- Execution
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Refactoring that allows to rename a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature -- Status
 
-	class_set: BOOLEAN is
+	class_set: BOOLEAN
 			-- Has the class to change been set?
 		do
 			Result := class_i /= void
@@ -47,7 +47,7 @@ feature -- Status
 
 feature -- Element change
 
-	set_class (a_class: like class_i) is
+	set_class (a_class: like class_i)
 			-- That class that get's renamed
 		require
 			a_class_not_void: a_class /= void
@@ -57,7 +57,7 @@ feature -- Element change
 
 feature -- Main operation
 
-	execute is
+	execute
 			-- Execute the refactoring.
 		require else
 			class_set: class_set
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	preferences: ERF_CLASS_RENAME_PREFERENCES
 			-- Preferences for this refactoring.
 
-	refactor is
+	refactor
 			-- Do the refactoring changes.
 		require else
 			class_set: class_set
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    ask_run_settings is
+    ask_run_settings
             -- Ask for the settings, that are run specific.
 		require else
 			class_set: class_set
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (class_i.cluster, preferences.new_class_name))
         end
 
-    apply_to_project is
+    apply_to_project
             -- Make project global changes (eg. *.ace, create/remove/rename cluster/files, ...).
 		require else
 			class_set: class_set
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
         	end
 		end
 
-    apply_to_class (a_class: CLASS_I) is
+    apply_to_class (a_class: CLASS_I)
             -- Make the changes in `a_class'.
 		require else
 			class_set: class_set
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 	class_i: EIFFEL_CLASS_I;
 			-- The class to rename.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

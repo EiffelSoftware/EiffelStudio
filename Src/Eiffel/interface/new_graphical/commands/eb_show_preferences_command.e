@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to show the preference window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,14 +23,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create this command.
 		do
 		end
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			l_show_hidden_flag: BOOLEAN
@@ -51,13 +51,13 @@ feature {NONE} -- Execution
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 			-- Command name
 		do
 			Result := "Preferences"
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Preferences
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	preference_window: EB_PREFERENCES_WINDOW;
 			-- Current preference window if any.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

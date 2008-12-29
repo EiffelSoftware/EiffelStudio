@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor to edit or browser a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	setup_editor is
+	setup_editor
 			-- Setup current editor.
 		do
 			name_area.name_text.change_actions.extend (agent on_definition_change)
@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 
 feature -- Basic operation
 
-	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT) is
+	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT)
 			-- Initialize current editor using `a_metric', `mode' with `a_mode' and `unit'with `a_unit'.
 		require
 			a_unit_attached: a_unit /= Void
@@ -47,7 +47,7 @@ feature -- Basic operation
 
 feature -- Setting
 
-	set_mode (a_mode: INTEGER) is
+	set_mode (a_mode: INTEGER)
 			-- Set `mode' with `a_mode'.
 		require
 			a_mode_valid: is_mode_valid (a_mode)
@@ -56,7 +56,7 @@ feature -- Setting
 			mode_set: mode = a_mode
 		end
 
-	set_unit (a_unit: like unit) is
+	set_unit (a_unit: like unit)
 			-- Set `unit' with `a_unit'.
 		require
 			a_unit_attached: a_unit /= Void
@@ -66,7 +66,7 @@ feature -- Setting
 			unit_set: unit = a_unit
 		end
 
-	load_metric (a_metric: like metric; a_read_only: BOOLEAN) is
+	load_metric (a_metric: like metric; a_read_only: BOOLEAN)
 			-- Load metric in current editor.
 			-- If `a_read_only' is True, enable read only mode.
 		do
@@ -93,17 +93,17 @@ feature -- Setting
 			change_actions.resume
 		end
 
-	enable_edit is
+	enable_edit
 			-- Enable edit in current editor.
 		deferred
 		end
 
-	disable_edit is
+	disable_edit
 			-- Disable edit in current editor.
 		deferred
 		end
 
-	check_validity_for_metric is
+	check_validity_for_metric
 			-- Check validity for `metric'.
 		local
 			l_validity: EB_METRIC_ERROR
@@ -128,14 +128,14 @@ feature -- Setting
 
 feature -- Access
 
-	metric: EB_METRIC is
+	metric: EB_METRIC
 			-- Metric in current editor
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	metric_type: INTEGER is
+	metric_type: INTEGER
 			-- Type of metric in current editor
 		deferred
 		ensure
@@ -145,7 +145,7 @@ feature -- Access
 	unit: QL_METRIC_UNIT
 			-- Unit of metric in current editor
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of current editor
 		local
 			l_ver: EV_VERTICAL_BOX
@@ -163,14 +163,14 @@ feature -- Access
 			Result := widget_internal
 		end
 
-	definition_area_widget: EV_WIDGET is
+	definition_area_widget: EV_WIDGET
 			-- Definition area
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	expression_generator: EB_METRIC_EXPRESSION_GENERATOR is
+	expression_generator: EB_METRIC_EXPRESSION_GENERATOR
 			-- Expression generator
 		do
 			if expression_generator_internal = Void then
@@ -181,7 +181,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT is
+	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT
 			-- Output from `expression_generator' in rich text format
 		do
 			if rich_text_output_internal = Void then
@@ -192,7 +192,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	name_area: EB_METRIC_NAME_AREA is
+	name_area: EB_METRIC_NAME_AREA
 			-- Name and description area
 		do
 			if name_area_internal = Void then
@@ -201,7 +201,7 @@ feature -- Access
 			Result := name_area_internal
 		end
 
-	status_area: EB_METRIC_STATUS_AREA is
+	status_area: EB_METRIC_STATUS_AREA
 			-- Area to display current metric status information
 		do
 			if status_area_internal = Void then
@@ -221,7 +221,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_definition_change is
+	on_definition_change
 			-- Action to be performed when definition of metric changes
 		do
 			if not is_loading_metric then
@@ -233,7 +233,7 @@ feature -- Actions
 			metric_definition_changed: not is_loading_metric implies is_definition_changed
 		end
 
-	on_description_change is
+	on_description_change
 			-- Action to be performed when description of metric changes
 		do
 			if not is_loading_metric then
@@ -244,7 +244,7 @@ feature -- Actions
 			metric_description_changed: not is_loading_metric implies is_description_changed
 		end
 
-	on_metric_change is
+	on_metric_change
 			-- Action to be performed when metric changes (Either its definition or its description)
 		do
 			change_actions.call (Void)
@@ -263,13 +263,13 @@ feature -- Status report
 	is_description_changed: BOOLEAN
 			-- Is metric description changed?
 
-	is_metric_changed: BOOLEAN is
+	is_metric_changed: BOOLEAN
 			-- Is metric changed?
 		do
 			Result := is_definition_changed or is_description_changed
 		end
 
-	is_criterion_definable: BOOLEAN is
+	is_criterion_definable: BOOLEAN
 			-- Is criterion of Current definable?
 		do
 			Result := unit.scope /= Void
@@ -292,12 +292,12 @@ feature{NONE} -- Implementation
 	widget_internal: like widget
 			-- Implementation of `widget'
 
-	load_metric_definition (a_metric: like metric) is
+	load_metric_definition (a_metric: like metric)
 			-- Load `a_metric' in current editor.
 		deferred
 		end
 
-	load_metric_name_and_description (a_metric: like metric; a_read_only: BOOLEAN) is
+	load_metric_name_and_description (a_metric: like metric; a_read_only: BOOLEAN)
 			-- Load name and description of `a_metric' in `name_area'.
 			-- If `a_read_only' is True, disable edit in these two fields.
 		do
@@ -332,7 +332,7 @@ invariant
 	expression_generator_attached: expression_generator /= Void
 	change_actions_attached: change_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

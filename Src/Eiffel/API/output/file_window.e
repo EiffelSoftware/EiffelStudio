@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Terminal window that redirects output to a file."
@@ -26,7 +26,7 @@ create
 
 feature -- Element change
 
-	put_string (s: STRING_GENERAL) is
+	put_string (s: STRING_GENERAL)
 			--
 		do
 			file_put_string (s.as_string_8)
@@ -34,7 +34,7 @@ feature -- Element change
 
 feature -- Output
 
-	open_file is
+	open_file
 			-- Open file.
 		local
 			retried: BOOLEAN
@@ -72,7 +72,7 @@ feature -- Output
 			retry
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

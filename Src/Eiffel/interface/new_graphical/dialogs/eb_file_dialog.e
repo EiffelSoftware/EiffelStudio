@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent file dialogs which remember their previous directory
 		if the "preferences.dialog_data.file_open_and_save_dialogs_remember_last_directory" preference
@@ -27,7 +27,7 @@ inherit
 			
 feature {NONE} -- Initialization
 	
-	make_with_preference (a_preference: STRING_PREFERENCE) is
+	make_with_preference (a_preference: STRING_PREFERENCE)
 			-- Create `Current' and assign `a_preference' to `preference'.
 		require
 			a_preference_not_void: a_preference /= Void
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal to window `a_window'.
 		local
 			last_directory: STRING
@@ -63,7 +63,7 @@ feature -- Status setting
 			update_preference
 		end		
 
-	update_preference is
+	update_preference
 			-- Update value of `preference' from `file_path'.
 		do
 			if not file_path.is_empty then
@@ -74,7 +74,7 @@ feature -- Status setting
 invariant
 	preference_not_void: preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

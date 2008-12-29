@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manage customizable toolbars"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	retrieve_toolbar_items (a_command_pool: LIST [EB_TOOLBARABLE_COMMAND]; a_layout: ARRAY [STRING_GENERAL]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_toolbar_items (a_command_pool: LIST [EB_TOOLBARABLE_COMMAND]; a_layout: ARRAY [STRING_GENERAL]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retriebe toolbar items.
 		local
 			l_i: INTEGER
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

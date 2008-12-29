@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manage breakpoints"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (bps: like breakpoints) is
+	make (bps: like breakpoints)
 			-- Instanciate Current with `bps'
 		do
 			set_breakpoints (bps)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Change
 
-	set_breakpoints (lst: like breakpoints) is
+	set_breakpoints (lst: like breakpoints)
 			-- Set `breakpoints' value
 		do
 			if lst /= Void then
@@ -59,20 +59,20 @@ feature -- Properties
 
 feature -- Notification
 
-	notify_breakpoints_changes is
+	notify_breakpoints_changes
 			-- Notify a change in breakpoints
 		do
 			breakpoints_changed := True
 			observers.do_all (agent {BREAKPOINTS_OBSERVER}.on_breakpoints_change_event)
 		end
 
-	reset_breakpoints_changed is
+	reset_breakpoints_changed
 			-- Reset `breakpoints_changed'
 		do
 			breakpoints_changed := False
 		end
 
-	on_breakpoint_added_or_deleted_event (new_or_deleted: BOOLEAN) is
+	on_breakpoint_added_or_deleted_event (new_or_deleted: BOOLEAN)
 			-- Notify a new breakpoint or a removal
 		do
 			if new_or_deleted then
@@ -83,7 +83,7 @@ feature -- Notification
 
 feature -- Observers
 
-	add_observer (o: BREAKPOINTS_OBSERVER) is
+	add_observer (o: BREAKPOINTS_OBSERVER)
 			-- Add `o' to `observers'
 		require
 			o_not_void: o /= Void
@@ -91,7 +91,7 @@ feature -- Observers
 			observers.put_last (o)
 		end
 
-	remove_observer (o: BREAKPOINTS_OBSERVER) is
+	remove_observer (o: BREAKPOINTS_OBSERVER)
 			-- Remove `o' from `observers'
 		require
 			o_not_void: o /= Void
@@ -101,7 +101,7 @@ feature -- Observers
 
 feature -- Factory
 
-	entry_breakpoint_location: BREAKPOINT_LOCATION is
+	entry_breakpoint_location: BREAKPOINT_LOCATION
 			-- Breakpint location for System's entry point
 		local
 			fe: E_FEATURE
@@ -112,7 +112,7 @@ feature -- Factory
 			end
 		end
 
-	breakpoint_location (a_routine: E_FEATURE; a_breakable_index: INTEGER; reuse_location: BOOLEAN): BREAKPOINT_LOCATION is
+	breakpoint_location (a_routine: E_FEATURE; a_breakable_index: INTEGER; reuse_location: BOOLEAN): BREAKPOINT_LOCATION
 			-- BREAKPOINT_LOCATION for `a_routine' and `a_breakable_index'.
 		require
 			valid_input: 	a_routine /= Void and then
@@ -130,7 +130,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_user_breakpoint_key (a_loc: BREAKPOINT_LOCATION): BREAKPOINT_KEY is
+	new_user_breakpoint_key (a_loc: BREAKPOINT_LOCATION): BREAKPOINT_KEY
 			-- New BREAKPOINT_KEY for `a_loc'.
 		do
 			create Result.make (a_loc)
@@ -138,7 +138,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_hidden_breakpoint_key (a_loc: BREAKPOINT_LOCATION): BREAKPOINT_KEY is
+	new_hidden_breakpoint_key (a_loc: BREAKPOINT_LOCATION): BREAKPOINT_KEY
 			-- New hidden BREAKPOINT_KEY for `a_loc'.
 		do
 			create Result.make_hidden (a_loc)
@@ -146,7 +146,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_breakpoint_key (a_loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT_KEY is
+	new_breakpoint_key (a_loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT_KEY
 			-- New BREAKPOINT_KEY for `a_loc'.
 		do
 			if is_hidden then
@@ -158,7 +158,7 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_user_breakpoint (a_loc: BREAKPOINT_LOCATION): BREAKPOINT is
+	new_user_breakpoint (a_loc: BREAKPOINT_LOCATION): BREAKPOINT
 			-- New BREAKPOINT at `a_loc'.
 			-- be sure `a_loc' was retrieved using `breakpoint_location (r, i, True)'
 		require
@@ -170,7 +170,7 @@ feature -- Factory
 			Result_enabled: not a_loc.is_corrupted implies Result.is_enabled
 		end
 
-	new_hidden_breakpoint (a_loc: BREAKPOINT_LOCATION): HIDDEN_BREAKPOINT is
+	new_hidden_breakpoint (a_loc: BREAKPOINT_LOCATION): HIDDEN_BREAKPOINT
 			-- New hidden BREAKPOINT at `a_loc'.
 			-- be sure `a_loc' was retrieved using `breakpoint_location (r, i, True)'
 		require
@@ -202,13 +202,13 @@ feature -- Breakpoints status
 			end
 		end
 
-	has_breakpoint: BOOLEAN is
+	has_breakpoint: BOOLEAN
 			-- Does the program have breakpoint ?
 		do
 			Result := breakpoints.count > 0
 		end
 
-	has_set_and_valid_breakpoint: BOOLEAN is
+	has_set_and_valid_breakpoint: BOOLEAN
 			-- Does the program have a breakpoint (enabled or disabled, hidden or not) ?
 		local
 			bp: BREAKPOINT
@@ -229,7 +229,7 @@ feature -- Breakpoints status
 			end
 		end
 
-	has_enabled_breakpoint (include_hidden: BOOLEAN): BOOLEAN is
+	has_enabled_breakpoint (include_hidden: BOOLEAN): BOOLEAN
 			-- Does the program have enabled breakpoint?
 		local
 			bp: BREAKPOINT
@@ -251,7 +251,7 @@ feature -- Breakpoints status
 			end
 		end
 
-	has_disabled_breakpoint (include_hidden: BOOLEAN): BOOLEAN is
+	has_disabled_breakpoint (include_hidden: BOOLEAN): BOOLEAN
 			-- Does the program have disabled breakpoint?
 		local
 			bp: BREAKPOINT
@@ -274,7 +274,7 @@ feature -- Breakpoints status
 
 feature -- Breakpoints update
 
-	updated_breakpoints_locations_status: HASH_TABLE [INTEGER, BREAKPOINT_LOCATION] is
+	updated_breakpoints_locations_status: HASH_TABLE [INTEGER, BREAKPOINT_LOCATION]
 			-- Update breakpoints location status
 		local
 			bps: like breakpoints
@@ -314,7 +314,7 @@ feature -- Breakpoints update
 			end
 		end
 
-	resynchronize_breakpoints is
+	resynchronize_breakpoints
 			-- Resynchronize the breakpoints after a compilation
 		local
 			bplst: like breakpoints
@@ -339,7 +339,7 @@ feature -- Breakpoints update
 			update
 		end
 
-	synchronize_breakpoint (bp: BREAKPOINT) is
+	synchronize_breakpoint (bp: BREAKPOINT)
 			-- Resychronize the breakpoint after a recompilation.
 			--| note: since we might update `body_index' or `breakable_line_number'
 			--|       which are used to compute the hash_code of breakpoint
@@ -423,19 +423,19 @@ feature -- Breakpoints update
 			retry
 		end
 
-	update is
+	update
 		do
 			breakpoints.update
 		end
 
-	restore is
+	restore
 		do
 			breakpoints.restore
 		end
 
 feature -- Breakpoints tags
 
-	update_breakpoints_tags_provider is
+	update_breakpoints_tags_provider
 			-- Update tags providers
 		local
 			tp, btp: TAGS_PROVIDER
@@ -467,26 +467,26 @@ feature -- Breakpoints tags
 			tp.sort
 		end
 
-	global_tags_provider: TAGS_PROVIDER is
+	global_tags_provider: TAGS_PROVIDER
 		once
 			create Result.make (20)
 			Result.add_provider (tags_provider, "")
 			Result.add_provider (breakpoints_tags_provider, "bp")
 		end
 
-	tags_provider: TAGS_PROVIDER is
+	tags_provider: TAGS_PROVIDER
 		once
 			create Result.make (20)
 		end
 
-	breakpoints_tags_provider: TAGS_PROVIDER is
+	breakpoints_tags_provider: TAGS_PROVIDER
 		once
 			create Result.make (20)
 		end
 
 feature -- Breakpoints access
 
-	breakpoints_at (loc: BREAKPOINT_LOCATION): LIST [BREAKPOINT] is
+	breakpoints_at (loc: BREAKPOINT_LOCATION): LIST [BREAKPOINT]
 			-- Breakpoints located at `loc'.
 			-- first hidden, then user visible breakpoints
 		do
@@ -507,7 +507,7 @@ feature -- Breakpoints access
 			end
 		end
 
-	breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT is
+	breakpoint_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BREAKPOINT
 			-- Breakpoint located at `loc'.
 		require
 			valid_breakpoint: is_breakpoint_set_at (loc, is_hidden)
@@ -526,7 +526,7 @@ feature -- Breakpoints access
 			end
 		end
 
-	user_breakpoint_at (loc: BREAKPOINT_LOCATION): BREAKPOINT is
+	user_breakpoint_at (loc: BREAKPOINT_LOCATION): BREAKPOINT
 			-- User Breakpoint located at `loc'.
 		require
 			valid_breakpoint: is_user_breakpoint_set_at (loc)
@@ -536,7 +536,7 @@ feature -- Breakpoints access
 			Result_not_void: Result /= Void
 		end
 
-	hidden_breakpoint_at (loc: BREAKPOINT_LOCATION): like new_hidden_breakpoint is
+	hidden_breakpoint_at (loc: BREAKPOINT_LOCATION): like new_hidden_breakpoint
 			-- User Breakpoint located at `loc'.
 		require
 			valid_breakpoint: is_user_breakpoint_set_at (loc)
@@ -546,7 +546,7 @@ feature -- Breakpoints access
 			Result_not_void: Result /= Void
 		end
 
-	is_any_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN is
+	is_any_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN
 			-- Is breakpoint set at `loc' ? (enabled or disabled)
 		do
 			error_in_bkpts := False
@@ -562,7 +562,7 @@ feature -- Breakpoints access
 			end
 		end
 
-	is_breakpoint_set_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BOOLEAN is
+	is_breakpoint_set_at (loc: BREAKPOINT_LOCATION; is_hidden: BOOLEAN): BOOLEAN
 			-- Is breakpoint set at `loc' ? (enabled or disabled)
 		do
 			error_in_bkpts := False
@@ -575,13 +575,13 @@ feature -- Breakpoints access
 			end
 		end
 
-	is_user_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN is
+	is_user_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN
 			-- Is user breakpoint set at `loc' ? (enabled or disabled)
 		do
 			Result := is_breakpoint_set_at (loc, False)
 		end
 
-	is_hidden_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN is
+	is_hidden_breakpoint_set_at (loc: BREAKPOINT_LOCATION): BOOLEAN
 			-- Is hidden breakpoint set at `loc' ? (enabled or disabled)
 		do
 			Result := is_breakpoint_set_at (loc, True)
@@ -589,7 +589,7 @@ feature -- Breakpoints access
 
 feature -- Breakpoints access with feature,index
 
-	is_breakpoint_set (f: E_FEATURE; i: INTEGER; is_hidden: BOOLEAN): BOOLEAN is
+	is_breakpoint_set (f: E_FEATURE; i: INTEGER; is_hidden: BOOLEAN): BOOLEAN
 			-- Is the `i'-th breakpoint of `f' set? (enabled or disabled)
 		do
 			error_in_bkpts := False
@@ -599,7 +599,7 @@ feature -- Breakpoints access with feature,index
 			end
 		end
 
-	is_breakpoint_enabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
+	is_breakpoint_enabled (f: E_FEATURE; i: INTEGER): BOOLEAN
 			-- Is the `i'-th breakpoint of `f' enabled
 		local
 			loc: BREAKPOINT_LOCATION
@@ -622,7 +622,7 @@ feature -- Breakpoints access with feature,index
 			end
 		end
 
-	has_user_breakpoint_set (f: E_FEATURE): BOOLEAN is
+	has_user_breakpoint_set (f: E_FEATURE): BOOLEAN
 			-- Has `f' a no hidden breakpoint set to stop?
 			-- note: non hidden breakpoint
 		do
@@ -632,7 +632,7 @@ feature -- Breakpoints access with feature,index
 			end
 		end
 
-	user_breakpoint (f: E_FEATURE; i: INTEGER): BREAKPOINT is
+	user_breakpoint (f: E_FEATURE; i: INTEGER): BREAKPOINT
 			-- User breakpoint located at (`f', `i').
 		require
 			valid_breakpoint: is_breakpoint_set (f, i, False)
@@ -643,7 +643,7 @@ feature -- Breakpoints access with feature,index
 		end
 
 
-	user_breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
+	user_breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER
 			-- Returns `Breakpoint_not_set' if breakpoint is not set,
 			--         `Breakpoint_set' if breakpoint is set,
 			--         `Breakpoint_disabled' if breakpoint is set but disabled,
@@ -676,7 +676,7 @@ feature -- Breakpoints access with feature,index
 			end
 		end
 
-	breakpoints_set_for (f: E_FEATURE; include_hidden: BOOLEAN): LIST [INTEGER] is
+	breakpoints_set_for (f: E_FEATURE; include_hidden: BOOLEAN): LIST [INTEGER]
 			-- Breakpoints set for feature `f'
 		require
 			f_is_breakable: is_feature_breakable (f)
@@ -737,7 +737,7 @@ feature -- Breakpoints access with feature,index
 			retry
 		end
 
-	features_associated_to (bps: LIST [BREAKPOINT]): LIST [E_FEATURE] is
+	features_associated_to (bps: LIST [BREAKPOINT]): LIST [E_FEATURE]
 			-- list of all feature with a breakpoint set (enabled or disabled)
 		local
 			bp: BREAKPOINT
@@ -774,7 +774,7 @@ feature -- Breakpoints access with feature,index
 			non_void_result: Result /= Void
 		end
 
-	features_with_breakpoint_set (include_hidden: BOOLEAN): LIST [E_FEATURE] is
+	features_with_breakpoint_set (include_hidden: BOOLEAN): LIST [E_FEATURE]
 			-- list of all feature with a breakpoint set (enabled or disabled)
 		do
 			Result := features_associated_to (breakpoints_set (include_hidden))
@@ -784,19 +784,19 @@ feature -- Breakpoints access with feature,index
 
 feature -- Query
 
-	user_breakpoints_set: LIST [BREAKPOINT] is
+	user_breakpoints_set: LIST [BREAKPOINT]
 			-- User breakpoints which are set
 		do
 			Result := breakpoints_set (False)
 		end
 
-	user_breakpoints_tagged (a_tags: ARRAY [STRING_32]): LIST [BREAKPOINT] is
+	user_breakpoints_tagged (a_tags: ARRAY [STRING_32]): LIST [BREAKPOINT]
 			-- User breakpoints which are set and match `a_tags'
 		do
 			Result := breakpoints_tagged (a_tags, False)
 		end
 
-	breakpoints_set (include_hidden: BOOLEAN): LIST [BREAKPOINT] is
+	breakpoints_set (include_hidden: BOOLEAN): LIST [BREAKPOINT]
 			-- breakpoints which are set
 		local
 			bp: BREAKPOINT
@@ -819,7 +819,7 @@ feature -- Query
 			non_void_result: Result /= Void
 		end
 
-	breakpoints_tagged (a_tags: ARRAY [STRING_32]; include_hidden: BOOLEAN): LIST [BREAKPOINT] is
+	breakpoints_tagged (a_tags: ARRAY [STRING_32]; include_hidden: BOOLEAN): LIST [BREAKPOINT]
 			-- breakpoints which are set and match `a_tags'	
 		local
 			bp: BREAKPOINT
@@ -846,14 +846,14 @@ feature -- Query
 
 feature -- Breakpoints change
 
-	add_breakpoint (a_bp: BREAKPOINT) is
+	add_breakpoint (a_bp: BREAKPOINT)
 		require
 			a_bp_not_void: a_bp /= Void
 		do
 			breakpoints.add_breakpoint (a_bp)
 		end
 
-	delete_breakpoint (bpk: BREAKPOINT_KEY) is
+	delete_breakpoint (bpk: BREAKPOINT_KEY)
 			-- remove breakpoint related to `bpk'
 			-- if no breakpoint found, do nothing
 			--| Note: accept Void `bpk'
@@ -888,7 +888,7 @@ feature -- Breakpoints change
 
 feature -- Breakpoints addition
 
-	set_user_breakpoint, enable_user_breakpoint (f: E_FEATURE; i: INTEGER) is
+	set_user_breakpoint, enable_user_breakpoint (f: E_FEATURE; i: INTEGER)
 			-- enable the `i'-th breakpoint of `f'
 			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
 		require
@@ -918,7 +918,7 @@ feature -- Breakpoints addition
 			on_breakpoint_added_or_deleted_event (True)
 		end
 
-	enable_user_breakpoints_in_feature (f: E_FEATURE) is
+	enable_user_breakpoints_in_feature (f: E_FEATURE)
 			-- enable all breakpoints set for feature 'f'
 		require
 			non_void_f: f /= Void
@@ -959,7 +959,7 @@ feature -- Breakpoints addition
 			retry
 		end
 
-	enable_first_user_breakpoint_of_feature (f: E_FEATURE) is
+	enable_first_user_breakpoint_of_feature (f: E_FEATURE)
 			-- enable the first breakpoints in feature 'f'
 		require
 			non_void_f: f /= Void
@@ -982,7 +982,7 @@ feature -- Breakpoints addition
 			end
 		end
 
-	enable_first_user_breakpoints_in_class (c: CLASS_C) is
+	enable_first_user_breakpoints_in_class (c: CLASS_C)
 			-- enable all breakpoints set for feature 'f'
 		require
 			valid_class_c: c /= Void
@@ -1009,7 +1009,7 @@ feature -- Breakpoints addition
 			end
 		end
 
-	enable_user_breakpoints_in_class (c: CLASS_C) is
+	enable_user_breakpoints_in_class (c: CLASS_C)
 			-- enable all breakpoints set for feature 'f'
 		require
 			non_void_c: c /= Void
@@ -1040,7 +1040,7 @@ feature -- Breakpoints addition
 
 feature -- Breakpoints removal
 
-	remove_user_breakpoint (f: E_FEATURE; i: INTEGER) is
+	remove_user_breakpoint (f: E_FEATURE; i: INTEGER)
 			-- remove the `i'-th breakpoint of `f'
 			-- if no breakpoint already exists for 'f' at 'i', do nothing
 		require
@@ -1061,7 +1061,7 @@ feature -- Breakpoints removal
 			end
 		end
 
-	remove_user_breakpoints_in_feature (f: E_FEATURE) is
+	remove_user_breakpoints_in_feature (f: E_FEATURE)
 			-- remove all breakpoints set for feature 'f'
 		require
 			non_void_f: f /= Void
@@ -1102,7 +1102,7 @@ feature -- Breakpoints removal
 			retry
 		end
 
-	remove_user_breakpoints_in_class (c: CLASS_C) is
+	remove_user_breakpoints_in_class (c: CLASS_C)
 			-- remove all breakpoints set for class 'c'
 		require
 			non_void_c: c /= Void
@@ -1132,7 +1132,7 @@ feature -- Breakpoints removal
 			on_breakpoint_added_or_deleted_event (True)
 		end
 
-	clear_breakpoints (include_hidden: BOOLEAN) is
+	clear_breakpoints (include_hidden: BOOLEAN)
 			-- Clear the debugging information.
 			-- Save the information if we want to restore it
 			-- after the compilation (do not save the information
@@ -1160,7 +1160,7 @@ feature -- Breakpoints removal
 			on_breakpoint_added_or_deleted_event (True)
 		end
 
-	clear_breakpoints_at_once is
+	clear_breakpoints_at_once
 			-- Clear the debugging information at once
 			-- warning: this clear all breakpoints (including hidden breakpoints)
 		do
@@ -1170,7 +1170,7 @@ feature -- Breakpoints removal
 
 feature -- Breakpoints change
 
-	disable_user_breakpoint (f: E_FEATURE; i: INTEGER) is
+	disable_user_breakpoint (f: E_FEATURE; i: INTEGER)
 			-- disable the `i'-th breakpoint of `f'
 			-- if no breakpoint already exists for 'f' at 'i', a disabled breakpoint is created
 			-- note: non hidden breakpoint
@@ -1202,7 +1202,7 @@ feature -- Breakpoints change
 			end
 		end
 
-	disable_user_breakpoints_in_feature (f: E_FEATURE) is
+	disable_user_breakpoints_in_feature (f: E_FEATURE)
 			-- disable all user breakpoints set for feature 'f'
 		require
 			non_void_f: f /= Void
@@ -1243,7 +1243,7 @@ feature -- Breakpoints change
 			retry
 		end
 
-	disable_user_breakpoints_in_class (c: CLASS_C) is
+	disable_user_breakpoints_in_class (c: CLASS_C)
 			-- disable all breakpoints set for feature 'f'
 		require
 			non_void_c: c /= Void
@@ -1272,7 +1272,7 @@ feature -- Breakpoints change
 			on_breakpoint_added_or_deleted_event (False)
 		end
 
-	disable_all_breakpoints (include_hidden: BOOLEAN) is
+	disable_all_breakpoints (include_hidden: BOOLEAN)
 			-- disable all breakpoints which are currently set and enabled
 		local
 			bp: BREAKPOINT
@@ -1296,7 +1296,7 @@ feature -- Breakpoints change
 			on_breakpoint_added_or_deleted_event (False)
 		end
 
-	enable_all_user_breakpoints is
+	enable_all_user_breakpoints
 			-- enable all breakpoints which are currently set and disabled
 		local
 			bp: BREAKPOINT
@@ -1330,7 +1330,7 @@ feature -- Breakpoints constants
 
 feature -- Debugging purpose
 
-	metrics: TUPLE [total: INTEGER; not_set: INTEGER; enabled: INTEGER; hidden_enabled: INTEGER; disabled: INTEGER; hidden_disabled: INTEGER] is
+	metrics: TUPLE [total: INTEGER; not_set: INTEGER; enabled: INTEGER; hidden_enabled: INTEGER; disabled: INTEGER; hidden_disabled: INTEGER]
 			-- Debug purpose breakpoints metrics.
 		local
 			bps: like breakpoints
@@ -1374,7 +1374,7 @@ invariant
 
 	breakpoints_not_void: breakpoints /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

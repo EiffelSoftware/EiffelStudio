@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A help link selection dialog for displaying a choice of help document links to navigate to.
 	]"
@@ -215,7 +215,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	help_context_document_title (a_context: !HELP_CONTEXT_I): !STRING_GENERAL is
+	help_context_document_title (a_context: !HELP_CONTEXT_I): !STRING_GENERAL
 			-- Retrieves a title for a given help context.
 			--
 			-- `a_context': A help context to build a help document title for.
@@ -342,7 +342,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	populate_help_document_row (a_context: !HELP_CONTEXT_I; a_row: !EV_GRID_ROW) is
+	populate_help_document_row (a_context: !HELP_CONTEXT_I; a_row: !EV_GRID_ROW)
 			-- Populates a single grid row using a help context.
 			--
 			-- `a_context': The help context to populate information on a row with.
@@ -401,7 +401,7 @@ invariant
 	links_attached: is_initializing and is_interface_usable implies links /= Void
 	links_contains_valid_items: is_initializing and is_interface_usable implies not links.for_all (agent is_context_valid)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

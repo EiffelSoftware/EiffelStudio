@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects defining the layout and content of a {ES_TAGABLE_GRID}. Since this applies to a generic
 		{TAGABLE_I}, an descending implementation must be provided for concrete tagable items.
@@ -140,14 +140,14 @@ feature {NONE} -- Query
 
 feature -- Basic functionality
 
-	populate_header (a_header: !EV_GRID_HEADER) is
+	populate_header (a_header: !EV_GRID_HEADER)
 			-- Populate header with items
 		require
 			valid_item_count: a_header.count = column_count
 		do
 		end
 
-	populate_node_row (a_row: !EV_GRID_ROW; a_node: !TAG_BASED_TREE_NODE [G]) is
+	populate_node_row (a_row: !EV_GRID_ROW; a_node: !TAG_BASED_TREE_NODE [G])
 			-- Populate row with tree node information
 		require
 			valid_item_count: a_row.count = column_count
@@ -197,7 +197,7 @@ feature {NONE} -- Factory
 			create Result.make_with_text (a_token)
 		end
 
-	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM is
+	new_token_item (a_node: !TAG_BASED_TREE_NODE [G]): !EV_GRID_ITEM
 			-- Create new item according to given node.
 			--
 			-- `a_node': Node for which token item should be created.
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_token (a_token: !STRING): !STRING is
+	process_token (a_token: !STRING): !STRING
 			-- Replace underscores in `a_token' with whitespace
 		local
 			i: INTEGER
@@ -386,7 +386,7 @@ feature {NONE} -- Constants
 
 	name_column: INTEGER = 1
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

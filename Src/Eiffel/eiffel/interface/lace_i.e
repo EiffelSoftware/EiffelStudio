@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Lace initialization
 		do
 		end
@@ -101,7 +101,7 @@ feature -- Access
 	has_group_changed: BOOLEAN
 			-- Did configuration change (and is not group equivalent to the previous).
 
-	date_has_changed: BOOLEAN is
+	date_has_changed: BOOLEAN
 		do
 			Result := file_modified_date (file_name) /= date
 		end
@@ -112,7 +112,7 @@ feature -- Access
 	conf_system: CONF_SYSTEM
 			-- Current parsed configuration system.
 
-	target: CONF_TARGET is
+	target: CONF_TARGET
 			-- Current parsed target as in the configuration file (may not be processed).
 		require
 			conf_system_set: conf_system /= Void
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Update from retrieved object.
 
-	update_from_retrieved_project (other: like Current) is
+	update_from_retrieved_project (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		require
@@ -142,7 +142,7 @@ feature -- Update from retrieved object.
 		end
 feature -- Status setting
 
-	force_new_target is
+	force_new_target
 			-- Set `is_force_new_target' to True.
 		do
 			is_force_new_target := True
@@ -150,7 +150,7 @@ feature -- Status setting
 			is_force_new_target: is_force_new_target
 		end
 
-	check_precompile is
+	check_precompile
 			-- Check precompile and update `precompile', `is_precompile_invalid' and `is_precompilation_needed'.
 		require
 			valid_conf_system: conf_system /= Void
@@ -192,7 +192,7 @@ feature -- Status setting
 			compilation_need_implies_ok: is_precompilation_needed implies precompile /= Void and not is_precompile_invalid
 		end
 
-	set_file_name (s: STRING) is
+	set_file_name (s: STRING)
 			-- Assign `s' to `file_name'.
 			-- if s is relative, the file_name will be absolute.
 			-- Assign parent directory of file_name
@@ -203,7 +203,7 @@ feature -- Status setting
 			directory_name := file_system.absolute_parent_directory (file_name)
 		end
 
-	set_target_name (s: STRING) is
+	set_target_name (s: STRING)
 			-- Assign `s' to `target_name'.
 		require
 			s_ok: s /= Void and then not s.is_empty
@@ -213,7 +213,7 @@ feature -- Status setting
 			target_name_set: target_name = s
 		end
 
-	set_conf_system (s: like conf_system) is
+	set_conf_system (s: like conf_system)
 			-- Assign `s' to `conf_system'.
 		require
 			s_not_void: s /= Void
@@ -223,13 +223,13 @@ feature -- Status setting
 			conf_system_set: conf_system = s
 		end
 
-	set_date_stamp is
+	set_date_stamp
 			-- Set `date' information to the current timestamp of the file.
 		do
 			date := file_modified_date (file_name)
 		end
 
-	reset_date_stamp is
+	reset_date_stamp
 			-- Reset `date' information, that way a complete recompilation
 			-- is done on Lace.
 		do
@@ -237,7 +237,7 @@ feature -- Status setting
 			date := date - 1
 		end
 
-	recompile is
+	recompile
 			-- Recompile config description
 		require
 			file_name_exists: file_name /= Void
@@ -296,7 +296,7 @@ feature -- Status setting
 	compile_all_classes: BOOLEAN
 			-- Are all classes root? i.e. all the classes must be compiled
 
-	process_user_file (a_project_path: STRING; a_user_file_enabled: BOOLEAN) is
+	process_user_file (a_project_path: STRING; a_user_file_enabled: BOOLEAN)
 			-- Handle the user file.
 			-- If `a_user_file_enabled' and then if we have a user file retrieve it, else create it
 			-- If we have a -project_directory argument, set the new path, else set the default path.
@@ -371,7 +371,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	retrieve_config is
+	retrieve_config
 			-- Parse config file.
 		require
 			file_name_ok: file_name /= Void and then not file_name.is_empty
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			is_error := True
 		end
 
-	compute_target is
+	compute_target
 			-- Compute the target to compile.
 		require
 			conf_system_set: conf_system /= Void
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			is_error := True
 		end
 
-	do_recompilation is
+	do_recompilation
 			-- Recompile config description.
 		do
 			retrieve_config
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			conf_system_set: conf_system /= Void
 		end
 
-	build_universe is
+	build_universe
 			-- Build the universe using the AST
 		require
 			valid_conf_system: conf_system /= Void
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_target (a_target: CONF_TARGET) is
+	parse_target (a_target: CONF_TARGET)
 			-- Parse `a_target' completely (incl. all libraries)
 		require
 			a_target_not_void: a_target /= Void
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			not_force_new_target: not is_force_new_target
 		end
 
-	update_settings (a_target: CONF_TARGET) is
+	update_settings (a_target: CONF_TARGET)
 			-- Update settings set in `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -1218,7 +1218,7 @@ feature {NONE} -- Implementation
 			Error_handler.checksum
 		end
 
-	retrieve_precompile (a_target: CONF_TARGET) is
+	retrieve_precompile (a_target: CONF_TARGET)
 			-- Load the precompile as the system.
 		require
 			valid_conf_system: conf_system /= Void
@@ -1305,7 +1305,7 @@ feature {NONE} -- Implementation
 			valid_system: workbench.system /= Void
 		end
 
-	set_clr_runtime_version (a_version: STRING) is
+	set_clr_runtime_version (a_version: STRING)
 			-- Set clr runtime version, use default if `a_version' is Void.
 		local
 			l_installed_runtimes: DS_LINEAR [STRING]
@@ -1333,7 +1333,7 @@ feature {NONE} -- Implementation
 			l_il_env.register_environment_variable
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

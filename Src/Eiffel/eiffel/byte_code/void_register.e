@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A void register is a special entity which can be propagated to
 			avoid an expression from being put in a register. This is mainly
@@ -22,31 +22,31 @@ inherit
 
 feature
 
-	unused_context: BYTE_CONTEXT is
+	unused_context: BYTE_CONTEXT
 			-- Not needed
 		do
 		end
 
-	c_type: VOID_I is
+	c_type: VOID_I
 			-- Void C type
 		once
 			create Result
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- Do nothing
 		do
 		end
 
-	print_register is
+	print_register
 			-- Do nothing
 		do
 		end -- print_register
 
-	is_temporary: BOOLEAN is True;
+	is_temporary: BOOLEAN = True;
 			-- No register is a temporary value.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

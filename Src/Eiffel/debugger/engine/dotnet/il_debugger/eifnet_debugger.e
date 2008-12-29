@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface to access dotnet debugger services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -78,7 +78,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation
 		do
 			debug ("debugger")
@@ -87,7 +87,7 @@ feature -- Initialization
 			Precursor
 		end
 
-	init is
+	init
 			-- Initialize current object
 		do
 			debug ("debugger")
@@ -99,7 +99,7 @@ feature -- Initialization
 			end
 		end
 
-	create_icor_debug is
+	create_icor_debug
 			-- Create icor_debug as ICorDebug
 		local
 			icor_debug_managed_callback_obj: ICOR_DEBUG_MANAGED_CALLBACK
@@ -150,7 +150,7 @@ feature -- Initialization
 	icor_debug: ICOR_DEBUG
 			-- ICorDebug object used to control and access Dotnet debugger
 
-	initialize_clr_host is
+	initialize_clr_host
 			-- Initialize dotnet runtime, to be sure to use the correct version of the
 			-- runtime after while
 		local
@@ -160,7 +160,7 @@ feature -- Initialization
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)
 		end
 
-	init_debugging_data is
+	init_debugging_data
 		do
 			debug_value_keeper.initialize
 			if eifnet_dbg_evaluator = Void then
@@ -168,7 +168,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_debugging_data is
+	reset_debugging_data
 				-- Reset objects who has session related data
 		do
 			debugger_manager.reset_dbg_evaluator
@@ -185,12 +185,12 @@ feature -- Initialization
 			not is_inside_function_evaluation
 		end
 
-	recycle_debug_value_keeper is
+	recycle_debug_value_keeper
 		do
 			Debug_value_keeper.recycle
 		end
 
-	initialize_debugger_session (a_wel_item_pointer: POINTER) is
+	initialize_debugger_session (a_wel_item_pointer: POINTER)
 			-- Initialize a debugger session
 		require
 			not is_debugging
@@ -227,7 +227,7 @@ feature -- Initialization
 
 feature -- Helpers
 
-	application_status: APPLICATION_STATUS is
+	application_status: APPLICATION_STATUS
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -239,7 +239,7 @@ feature -- Termination monitoring ...
 	timer_monitor_process_termination_on_exit: DEBUGGER_TIMER --EV_TIMEOUT
 			-- Timer used to check if debugging is finished.
 
-	create_monitoring_of_process_termination_on_exit is
+	create_monitoring_of_process_termination_on_exit
 			-- Create and start the timer to check if the debugging is done
 		require
 			timer_void: timer_monitor_process_termination_on_exit = Void
@@ -249,7 +249,7 @@ feature -- Termination monitoring ...
 			timer_monitor_process_termination_on_exit.actions.extend (agent monitor_process_termination_on_exit)
 		end
 
-	destroy_monitoring_of_process_termination_on_exit is
+	destroy_monitoring_of_process_termination_on_exit
 			-- Destroy and clean timer
 		do
 			if timer_monitor_process_termination_on_exit /= Void then
@@ -258,7 +258,7 @@ feature -- Termination monitoring ...
 			end
 		end
 
-	monitor_process_termination_on_exit is
+	monitor_process_termination_on_exit
 			-- Check if the debugging is done and continue the termination
 		do
 			if
@@ -276,7 +276,7 @@ feature -- Termination monitoring ...
 
 feature -- Debugging session Termination ...
 
-	terminate_debugger_session is
+	terminate_debugger_session
 			-- Terminate debugging session and clean what need to be cleaned
 		do
 			is_debugging := False
@@ -288,7 +288,7 @@ feature -- Debugging session Termination ...
 			icor_debug.clean_data
 		end
 
-	terminate_debugging is
+	terminate_debugging
 			-- Terminate the debugging session
 		require
 			is_debugging: is_debugging
@@ -327,7 +327,7 @@ fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
 			end
 		end
 
-	on_exit_process	is
+	on_exit_process
 			-- On ExitProcess callback
 		do
 			eif_debug_display ("[EIFDBG] execution exiting")
@@ -336,7 +336,7 @@ fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
 			not is_debugging
 		end
 
-	notify_exit_process_occurred is
+	notify_exit_process_occurred
 			-- Notify callback `ExitProcess' occurred
 		do
 			exit_process_occurred := True
@@ -344,7 +344,7 @@ fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
 
 feature {NONE} -- Logging
 
-	debugger_message (m: STRING) is
+	debugger_message (m: STRING)
 			-- Put message on context tool's output
 		do
 			Debugger_manager.debugger_message (m)
@@ -355,7 +355,7 @@ feature -- Status
 	last_dbg_call_success: INTEGER
 			-- Last return call success code.
 
-	last_dbg_call_succeed: BOOLEAN is
+	last_dbg_call_succeed: BOOLEAN
 			-- Last call succeed ?
 		do
 			Result := (last_dbg_call_success = 0)
@@ -366,14 +366,14 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 	dbgsync_cb_without_stopping : BOOLEAN
 			-- Do we continue the execution without stopping ?
 
-	on_estudio_callback_just_arrived (cb_id: INTEGER) is
+	on_estudio_callback_just_arrived (cb_id: INTEGER)
 		do
 			set_last_managed_callback (cb_id)
 		end
 
 	estudio_callback_event_processing: BOOLEAN
 
-	estudio_callback_event (cb_id: INTEGER) is
+	estudio_callback_event (cb_id: INTEGER)
 			-- Callback trigger for processing at end of dotnet callback
 		require else
 			not estudio_callback_event_processing
@@ -453,7 +453,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			estudio_callback_event_processing := False
 		end
 
-	consume_managed_callback_info (cb_id: INTEGER) is
+	consume_managed_callback_info (cb_id: INTEGER)
 		local
 			p: POINTER
 			i: INTEGER
@@ -726,7 +726,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 
 feature {EIFNET_EXPORTER} -- Callback access
 
-	is_inside_function_evaluation: BOOLEAN is
+	is_inside_function_evaluation: BOOLEAN
 			-- Is the current context correspond to a function evaluation ?
 		do
 			Result := info.is_evaluating
@@ -734,7 +734,7 @@ feature {EIFNET_EXPORTER} -- Callback access
 
 feature {NONE} -- Callback actions
 
-	icor_debug_controller_interface (p_controller: POINTER): POINTER is
+	icor_debug_controller_interface (p_controller: POINTER): POINTER
 			-- Computed ICorDebugController interface from a Process or AppDomain pointer.
 		local
 			p_process: POINTER
@@ -754,7 +754,7 @@ feature {NONE} -- Callback actions
 			end
 		end
 
-	continue_on_cb (cb_id: INTEGER): BOOLEAN is
+	continue_on_cb (cb_id: INTEGER): BOOLEAN
 			-- Continue without stopping the system
 		do
 				--| Let's continue, we don't stop on this callback
@@ -762,7 +762,7 @@ feature {NONE} -- Callback actions
 			Result := False
 		end
 
-	stop_on_cb (cb_id: INTEGER): BOOLEAN is
+	stop_on_cb (cb_id: INTEGER): BOOLEAN
 			-- Stop the system (on step complete or breakpoint for instance)
 		local
 			execution_stopped: BOOLEAN
@@ -799,7 +799,7 @@ feature {NONE} -- Callback actions
 			Result := execution_stopped
 		end
 
-	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN is
+	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN
 			-- Process end_of_breakpoint_callback and then return if is stopped.
 		require
 			top_callstack_data_initialised: info.current_callstack_initialized
@@ -812,7 +812,7 @@ feature {NONE} -- Callback actions
 			end
 		end
 
-	execution_stopped_on_end_of_breakpoint_callback_while_stepping: BOOLEAN is
+	execution_stopped_on_end_of_breakpoint_callback_while_stepping: BOOLEAN
 			-- Do we stop on this bp slot, if we are in stepping action ?
 		local
 			l_previous_stack_info, l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
@@ -855,7 +855,7 @@ feature {NONE} -- Callback actions
 			end
 		end
 
-	execution_stopped_on_end_of_step_complete_callback: BOOLEAN is
+	execution_stopped_on_end_of_step_complete_callback: BOOLEAN
 			-- Process end_of_step_complete_callback and then return if is stopped.
 		require
 			top_callstack_data_initialised: info.current_callstack_initialized
@@ -1006,7 +1006,7 @@ feature {NONE} -- Callback actions
 			end
 		end
 
-	execution_stopped_on_exception_callback: BOOLEAN is
+	execution_stopped_on_exception_callback: BOOLEAN
 		require
 			exception_occurred: exception_occurred
 		do
@@ -1018,12 +1018,12 @@ feature {NONE} -- Callback actions
 
 feature -- Specific case
 
-	enable_keep_stepping_into_dotnet_feature is
+	enable_keep_stepping_into_dotnet_feature
 		do
 			keep_stepping_into_dotnet_feature_enabled := True
 		end
 
-	disable_keep_stepping_into_dotnet_feature is
+	disable_keep_stepping_into_dotnet_feature
 		do
 			keep_stepping_into_dotnet_feature_enabled := False
 		end
@@ -1034,7 +1034,7 @@ feature -- Specific case
 
 feature -- Various continuing mode from callback
 
-	call_disable_next_estudio_notification is
+	call_disable_next_estudio_notification
 			-- In call_back processing, if we continue/step.. right away
 			-- we don't need to process estudio_notification
 		do
@@ -1043,7 +1043,7 @@ feature -- Various continuing mode from callback
 			end
 		end
 
-	call_terminate_debugging is
+	call_terminate_debugging
 			-- If there is no CorDebugController, then we cannot continue
 			-- thus let's terminate debugging
 		do
@@ -1053,7 +1053,7 @@ feature -- Various continuing mode from callback
 			terminate_debugging
 		end
 
-	call_do_continue_on_cb is
+	call_do_continue_on_cb
 		do
 			if icor_debug_controller /= Void then
 				do_continue
@@ -1063,7 +1063,7 @@ feature -- Various continuing mode from callback
 			end
 		end
 
-	call_do_step_range_on_cb (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
+	call_do_step_range_on_cb (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]])
 		do
 			if icor_debug_controller /= Void then
 				do_step_range (a_bstep_in, a_il_ranges)
@@ -1073,7 +1073,7 @@ feature -- Various continuing mode from callback
 			end
 		end
 
-	call_do_step_out_on_cb is
+	call_do_step_out_on_cb
 		do
 			if icor_debug_controller /= Void then
 				do_step_out
@@ -1083,7 +1083,7 @@ feature -- Various continuing mode from callback
 			end
 		end
 
-	call_do_step_into_on_cb is
+	call_do_step_into_on_cb
 		do
 			if icor_debug_controller /= Void then
 				do_step_into
@@ -1095,7 +1095,7 @@ feature -- Various continuing mode from callback
 
 feature -- Interaction with .Net Debugger
 
-	waiting_debugger_callback (a_title: STRING) is
+	waiting_debugger_callback (a_title: STRING)
 		do
 			debug ("debugger_trace_operation")
 				print ("%N... Waiting for debugger to callback...%N%N")
@@ -1104,7 +1104,7 @@ feature -- Interaction with .Net Debugger
 			eif_debug_display ("[EIFDBG] " + a_title)
 		end
 
-	do_create_process (cmd, cwd, args: STRING; env: STRING_GENERAL) is
+	do_create_process (cmd, cwd, args: STRING; env: STRING_GENERAL)
 			-- Create Process
 		local
 			l_icd_process: POINTER
@@ -1122,7 +1122,7 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_run (cmd, cwd, args: STRING; env: STRING_GENERAL) is
+	do_run (cmd, cwd, args: STRING; env: STRING_GENERAL)
 			-- Start the process to debug
 		do
 			do_create_process (cmd, cwd, args, env)
@@ -1130,7 +1130,7 @@ feature -- Interaction with .Net Debugger
 			last_dbg_call_success := icor_debug.last_call_success
 		end
 
-	do_stop is
+	do_stop
 			-- (Async) Stop the process (on a step complete or breakpoint for instance)
 		require
 			controller_exists: icor_debug_controller /= Void
@@ -1164,7 +1164,7 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_continue is
+	do_continue
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
 			l_hr: INTEGER
@@ -1185,7 +1185,7 @@ feature -- Interaction with .Net Debugger
 
 feature {NONE} -- Stepping Implementation
 
-	new_stepper: ICOR_DEBUG_STEPPER is
+	new_stepper: ICOR_DEBUG_STEPPER
 			-- Retrieve or Create Stepper
 			-- Result value is the error code
 		local
@@ -1208,7 +1208,7 @@ feature {NONE} -- Stepping Implementation
 			end
 		end
 
-	do_step (a_mode: INTEGER; a_continue_enabled: BOOLEAN) is
+	do_step (a_mode: INTEGER; a_continue_enabled: BOOLEAN)
 		require
 --			valid_step_mode: (a_mode = cst_control_step_next)
 --								or else (a_mode = cst_control_step_in)
@@ -1244,7 +1244,7 @@ feature {NONE} -- Stepping Implementation
 
 feature -- Stepping Access
 
-	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
+	do_step_range (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]])
 			-- Step next.
 			-- FIXME: a_il_ranges should be made of NATURAL_32
 		local
@@ -1269,7 +1269,7 @@ feature -- Stepping Access
 			waiting_debugger_callback ("step range")
 		end
 
-	do_global_step_into is
+	do_global_step_into
 			-- Step next on each thread to stop as soon as possible
 			-- Nota: needed for Stop feature
 			-- ie: we'll use a stepper for each thread
@@ -1300,7 +1300,7 @@ feature -- Stepping Access
 			do_continue
 		end
 
-	do_step_next is
+	do_step_next
 			-- Step next.
 		do
 			debug ("debugger_trace_operation")
@@ -1310,7 +1310,7 @@ feature -- Stepping Access
 			waiting_debugger_callback ("step next")
 		end
 
-	do_step_into is
+	do_step_into
 			-- Step in.
 		do
 			debug ("debugger_trace_operation")
@@ -1321,7 +1321,7 @@ feature -- Stepping Access
 			waiting_debugger_callback ("step into")
 		end
 
-	do_step_out is
+	do_step_out
 			-- Step out.
 		do
 			debug ("debugger_trace_operation")
@@ -1332,7 +1332,7 @@ feature -- Stepping Access
 			waiting_debugger_callback ("step out")
 		end
 
-	stepping_possible: BOOLEAN is
+	stepping_possible: BOOLEAN
 			--
 		do
 			Result := icor_debug_controller /= Void and then icor_debug_thread /= Void
@@ -1340,13 +1340,13 @@ feature -- Stepping Access
 
 feature -- Tracer
 
-	eif_debug_display (msg: STRING) is
+	eif_debug_display (msg: STRING)
 		do
 		end
 
 feature -- Bridge to EIFNET_DEBUGGER_INFO
 
-	last_process_id: INTEGER is
+	last_process_id: INTEGER
 			-- Process id of icor_debug_process
 			-- Usually used to get the launch application's process id.
 		local
@@ -1358,7 +1358,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
-	new_active_frame: ICOR_DEBUG_FRAME is
+	new_active_frame: ICOR_DEBUG_FRAME
 			-- Active Thread value retrieved each call from .Net debugger
 		local
 			l_last_thread: ICOR_DEBUG_THREAD
@@ -1369,7 +1369,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
-	current_stack_icor_debug_frame: ICOR_DEBUG_FRAME is
+	current_stack_icor_debug_frame: ICOR_DEBUG_FRAME
 			-- Frame related to current call stack.
 			-- This is a shared instance, so don't release it unless you know
 			-- what you do.
@@ -1387,7 +1387,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 
 feature -- Bridge to formatters
 
-	icor_debug_value_is_null_value (icd: ICOR_DEBUG_VALUE): BOOLEAN is
+	icor_debug_value_is_null_value (icd: ICOR_DEBUG_VALUE): BOOLEAN
 			-- Is `icd' a null reference ?
 		require
 			icd_not_void: icd /= Void
@@ -1405,7 +1405,7 @@ feature -- Bridge to formatters
 
 feature -- Assertion change
 
-	check_assert_on_debuggee (b: BOOLEAN): BOOLEAN is
+	check_assert_on_debuggee (b: BOOLEAN): BOOLEAN
 		local
 			l_frame: ICOR_DEBUG_FRAME
 			l_bool, l_icd: ICOR_DEBUG_VALUE
@@ -1436,24 +1436,24 @@ feature -- Assertion change
 
 feature -- Exception
 
-	reset_evaluation_exception is
+	reset_evaluation_exception
 		do
 			info.reset_last_evaluation_icd_exception
 		end
 
-	exception_occurred: BOOLEAN is
+	exception_occurred: BOOLEAN
 			-- Last callback is about exception ?
 		do
 			Result := last_managed_callback_is_exception
 		end
 
-	active_exception_value: ICOR_DEBUG_VALUE is
+	active_exception_value: ICOR_DEBUG_VALUE
 			-- Active Exception value retrieved each call from .Net debugger
 		do
 			Result := info.icd_exception
 		end
 
-	new_active_exception_value_from_thread: ICOR_DEBUG_VALUE is
+	new_active_exception_value_from_thread: ICOR_DEBUG_VALUE
 		local
 			l_last_thread: ICOR_DEBUG_THREAD
 		do
@@ -1466,7 +1466,7 @@ feature -- Exception
 			end
 		end
 
-	exception_class_name (v: ABSTRACT_REFERENCE_VALUE): STRING is
+	exception_class_name (v: ABSTRACT_REFERENCE_VALUE): STRING
 			-- Exception's class name.
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
@@ -1479,7 +1479,7 @@ feature -- Exception
 			end
 		end
 
-	exception_module_name (v: ABSTRACT_REFERENCE_VALUE): STRING_32 is
+	exception_module_name (v: ABSTRACT_REFERENCE_VALUE): STRING_32
 			-- Exception's module name.
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
@@ -1492,7 +1492,7 @@ feature -- Exception
 			end
 		end
 
-	exception_text (v: ABSTRACT_REFERENCE_VALUE): STRING_32 is
+	exception_text (v: ABSTRACT_REFERENCE_VALUE): STRING_32
 			-- Get `exception_info_to_string' and `exception_info_message' output
 		local
 			retried: BOOLEAN
@@ -1559,7 +1559,7 @@ feature -- Exception
 
 feature -- Easy access
 
-	icor_debug_module_for_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE is
+	icor_debug_module_for_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE
 		require
 			arg_class_c_not_void: a_class_c /= Void
 		local
@@ -1569,7 +1569,7 @@ feature -- Easy access
 			Result := icor_debug_module (l_class_module_name)
 		end
 
-	icor_debug_module_for_class_type (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE is
+	icor_debug_module_for_class_type (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE
 		require
 			a_class_type_not_void: a_class_type /= Void
 		local
@@ -1579,7 +1579,7 @@ feature -- Easy access
 			Result := icor_debug_module (l_class_module_name)
 		end
 
-	icor_debug_module_for_external_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE is
+	icor_debug_module_for_external_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE
 		require
 			a_class_c_not_void: a_class_c /= Void
 		local
@@ -1615,7 +1615,7 @@ feature -- Easy access
 			end
 		end
 
-	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
+	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS
 		require
 			arg_class_type_not_void: a_class_type /= Void
 		local
@@ -1631,7 +1631,7 @@ feature -- Easy access
 
 feature -- Bridge to MD_IMPORT
 
-	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): NATURAL_32 is
+	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Find class token using Meta Data.
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -1644,7 +1644,7 @@ feature -- Bridge to MD_IMPORT
 
 feature -- Function Evaluation
 
-	icd_function_by_names (a_icdmod: ICOR_DEBUG_MODULE; cl_name: STRING; f_name: STRING): ICOR_DEBUG_FUNCTION is
+	icd_function_by_names (a_icdmod: ICOR_DEBUG_MODULE; cl_name: STRING; f_name: STRING): ICOR_DEBUG_FUNCTION
 			-- ICorDebugFunction for `a_icdmod' module,
 			-- with class name `cl_name'
 			-- with feature name `f_name'.
@@ -1671,7 +1671,7 @@ feature -- Function Evaluation
 			end
 		end
 
-	icd_function_by_name (a_icdmod: ICOR_DEBUG_MODULE; a_classtok: NATURAL_32; f_name: STRING): ICOR_DEBUG_FUNCTION is
+	icd_function_by_name (a_icdmod: ICOR_DEBUG_MODULE; a_classtok: NATURAL_32; f_name: STRING): ICOR_DEBUG_FUNCTION
 			-- ICorDebugFunction for `a_icdmod' module,
 			-- with class token `a_classtok'
 			-- with feature name `f_name'.
@@ -1716,7 +1716,7 @@ feature -- Function Evaluation
 			end
 		end
 
-	icd_function_by_feature (icdv: ICOR_DEBUG_VALUE; ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION is
+	icd_function_by_feature (icdv: ICOR_DEBUG_VALUE; ct: CLASS_TYPE; a_feat: FEATURE_I): ICOR_DEBUG_FUNCTION
 			-- ICorDebugFunction for `ct'.`a_feat'
 			-- and optionally on object `icdv'
 		local
@@ -1770,7 +1770,7 @@ feature -- Function Evaluation
 
 feature {EIFNET_DEBUGGER_EVALUATOR} -- Implementation of ICorDebugFunction retriever
 
-	eiffel_icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION is
+	eiffel_icd_function_by_name (ct: CLASS_TYPE; a_f_name: STRING): ICOR_DEBUG_FUNCTION
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
 		local
 			l_feat_i : FEATURE_I
@@ -1812,7 +1812,7 @@ feature -- Specific function evaluation
 --			end
 --		end
 
-	icd_string_value_from_string_class_value (sc: CLASS_C; icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE is
+	icd_string_value_from_string_class_value (sc: CLASS_C; icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE): ICOR_DEBUG_STRING_VALUE
 			-- ICorDebugStringValue for `icd_string_instance_ref' (STRING object)
 			--| `sc' represents the STRING or STRING_32 class_i
 		require
@@ -1859,7 +1859,7 @@ feature -- Specific function evaluation
 	string_value_from_string_class_value (
 				sc: CLASS_C;
 				icd_string_instance_ref: ICOR_DEBUG_VALUE; icd_string_instance: ICOR_DEBUG_OBJECT_VALUE;
-				min, max: INTEGER): STRING_32 is
+				min, max: INTEGER): STRING_32
 			-- STRING value for `icd_string_instance' with limits `min, max'
 			-- precise in `sc' if this is a STRING, or STRING_32
 		local
@@ -1877,7 +1877,7 @@ feature -- Specific function evaluation
 			end
 		end
 
-	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING_32 is
+	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING_32
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_size, l_len: NATURAL_32
@@ -1901,7 +1901,7 @@ feature -- Specific function evaluation
 			end
 		end
 
-	unneutered_icd_string_value	(a_icd_str: ICOR_DEBUG_STRING_VALUE): ICOR_DEBUG_STRING_VALUE is
+	unneutered_icd_string_value	(a_icd_str: ICOR_DEBUG_STRING_VALUE): ICOR_DEBUG_STRING_VALUE
 		require
 			a_icd_str_not_void: a_icd_str /= Void
 		local
@@ -1921,7 +1921,7 @@ feature -- Specific function evaluation
 
  	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE;
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE;
- 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
+ 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING
 			-- ANY.generating_type: STRING evaluation result
 		require
 			icor_debug_object_value_not_void: a_icd_obj /= Void
@@ -1996,7 +1996,7 @@ feature -- Specific function evaluation
 
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE;
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE;
- 				min,max: INTEGER): STRING_32 is
+ 				min,max: INTEGER): STRING_32
 			-- Debug ouput string value
 		local
 			l_icd_frame: ICOR_DEBUG_FRAME
@@ -2080,7 +2080,7 @@ feature -- Specific function evaluation
 			end
 		end
 
- 	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32 is
+ 	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE
@@ -2136,7 +2136,7 @@ feature -- Specific function evaluation
 			end
 		end
 
- 	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32 is
+ 	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING_32
 			-- System.Exception.ToString value
 		local
 			l_icd: ICOR_DEBUG_VALUE
@@ -2181,7 +2181,7 @@ feature -- Specific function evaluation
 		end
 
 	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
-								a_feat: FEATURE_I): ICOR_DEBUG_VALUE is
+								a_feat: FEATURE_I): ICOR_DEBUG_VALUE
 			-- ICorDebugValue object representing the once value.
 			-- This will also set `last_once_available' and `last_once_failed'.
 		require
@@ -2389,13 +2389,13 @@ feature -- Specific function evaluation
 
 feature -- Bridge to debug_value_keeper
 
-	keep_only_objects (a_addresses: LIST [DBG_ADDRESS]) is
+	keep_only_objects (a_addresses: LIST [DBG_ADDRESS])
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Debug_value_keeper.keep_only (a_addresses)
 		end
 
-	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 			-- Keep this object addressed by `a_address'
 		require
 			know_about_object: know_about_kept_object (a_address)
@@ -2403,7 +2403,7 @@ feature -- Bridge to debug_value_keeper
 			Result := Debug_value_keeper.item (a_address)
 		end
 
-	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN is
+	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN
 			-- Do we have a reference for the object addressed by `a_address' ?
 		do
 			Result := Debug_value_keeper.know_about (a_address)
@@ -2418,10 +2418,10 @@ feature -- Bridge
 
 feature {NONE} -- External
 
-	Infinite_time: INTEGER is 0xFFFFFFFF;
+	Infinite_time: INTEGER = 0xFFFFFFFF;
 			-- Value for C externals to have an infinite wait
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

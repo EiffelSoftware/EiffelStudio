@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Produce editor internal names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create editor_numbers_internal.make (5)
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			editors_attached: editor_numbers_internal /= Void
 		end
 
-	make_with_editor_numbers (a_editor_numbers: like editor_numbers_internal) is
+	make_with_editor_numbers (a_editor_numbers: like editor_numbers_internal)
 			-- Set `editors' with a_editors.
 		require
 			a_editor_numbers_attached: a_editor_numbers /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	editor_names: ARRAYED_LIST [STRING] is
+	editor_names: ARRAYED_LIST [STRING]
 			-- Editor names produced from `editor_numbers'
 		do
 			create Result.make (editor_numbers_internal.count)
@@ -47,13 +47,13 @@ feature -- Access
 			end
 		end
 
-	editor_name (a_number: INTEGER): STRING is
+	editor_name (a_number: INTEGER): STRING
 			-- Editor name produced by `a_number'
 		do
 			Result := editor_name_prefix + a_number.out
 		end
 
-	new_editor_name: STRING is
+	new_editor_name: STRING
 			-- Once new editor name is provided, factory will keep a record.
 		local
 			l_number: INTEGER
@@ -63,13 +63,13 @@ feature -- Access
 			editor_numbers_internal.extend (l_number)
 		end
 
-	editor_numbers: like editor_numbers_internal is
+	editor_numbers: like editor_numbers_internal
 			-- `editor_numbers_internal'
 		do
 			Result := editor_numbers_internal.twin
 		end
 
-	editor_number_from_title (a_title: STRING_GENERAL): INTEGER is
+	editor_number_from_title (a_title: STRING_GENERAL): INTEGER
 			-- Editor number from title.
 		local
 			l_str: STRING_GENERAL
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Change elements
 
-	set_editors_numbers (a_editors_number: like editor_numbers_internal) is
+	set_editors_numbers (a_editors_number: like editor_numbers_internal)
 			-- Set `editor_number' with a_editors_number
 		do
 			editor_numbers_internal := a_editors_number.twin
@@ -88,7 +88,7 @@ feature -- Change elements
 			editor_numbers_attached: editor_numbers_internal /= Void
 		end
 
-	remove_editor_name (a_name: STRING_GENERAL) is
+	remove_editor_name (a_name: STRING_GENERAL)
 			-- Remove `a_name' from factory.
 		require
 			a_name_attached: a_name /= Void
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 	editor_numbers_internal: ARRAYED_LIST [INTEGER]
 			-- Index numbers in the internal names of editors.
 
-	new_number: INTEGER is
+	new_number: INTEGER
 			-- The largest number plus one.
 			-- The smallest number is 1.
 		do
@@ -121,9 +121,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	editor_name_prefix: STRING is "Editor_";
+	editor_name_prefix: STRING = "Editor_";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

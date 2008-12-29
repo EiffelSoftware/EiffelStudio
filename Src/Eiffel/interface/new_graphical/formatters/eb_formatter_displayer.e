@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Displayer for formatters"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of Current displayer
 		deferred
 		ensure
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE]) is
+	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE])
 			-- Set `a_refresher' into Current, it serves as a refresher to be invoked to update Current displayer
 		do
 		end

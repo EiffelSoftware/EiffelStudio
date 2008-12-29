@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool that evaluates expressions in the debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	on_before_initialize is
+	on_before_initialize
 			-- <Precursor>
 		do
 			watch_id := tool_descriptor.edition
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			Precursor
 		end
 
-	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- Build all the tool's widgets.
 		local
 			esgrid: ES_OBJECTS_GRID
@@ -187,7 +187,7 @@ feature {NONE} -- Initialization
 			Result.force_last (tbb)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build content for docking.
 
 		do
@@ -195,7 +195,7 @@ feature {NONE} -- Initialization
 			content.drop_actions.extend (agent on_element_drop)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		do
 			develop_window.menus.context_menu_factory.watch_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current, watches_grid)
@@ -230,7 +230,7 @@ feature -- Properties
 
 feature {EB_DEBUGGER_MANAGER} -- Closing
 
-	close is
+	close
 		local
 			wt: ES_WATCH_TOOL
 		do
@@ -253,13 +253,13 @@ feature -- Access
 
 feature -- Change
 
-	set_debugger_manager (a_manager: like debugger_manager) is
+	set_debugger_manager (a_manager: like debugger_manager)
 			-- Affect `a_manager' to `debugger_manager'.
 		do
 			debugger_manager := a_manager
 		end
 
-	show is
+	show
 			-- Show tool
 		do
 			Precursor
@@ -271,14 +271,14 @@ feature -- Change
 
 feature -- Properties setting
 
-	set_hexadecimal_mode (v: BOOLEAN) is
+	set_hexadecimal_mode (v: BOOLEAN)
 		do
 			watches_grid.set_hexadecimal_mode (v)
 		end
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
 		local
 			r: INTEGER
 			lrow: EV_GRID_ROW
@@ -305,7 +305,7 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 feature {NONE} -- Stone handlers
 
-	on_stone_changed (a_old_stone: ?like stone) is
+	on_stone_changed (a_old_stone: ?like stone)
 			-- Assign `a_stone' as new stone.
 		local
 			cst: CALL_STACK_STONE
@@ -330,19 +330,19 @@ feature {NONE} -- Stone handlers
 
 feature -- Change status
 
-	enable_refresh is
+	enable_refresh
 			-- Set `can_refresh' to `True'.
 		do
 			can_refresh := True
 		end
 
-	disable_refresh is
+	disable_refresh
 			-- Set `can_refresh' to `False'.
 		do
 			can_refresh := False
 		end
 
-	prepare_for_debug is
+	prepare_for_debug
 			-- Remove obsolete expressions from `Current'.
 		local
 			evl: DBG_EXPRESSION_EVALUATION
@@ -384,7 +384,7 @@ feature -- Change status
 
 feature -- Memory management
 
-	reset_tool is
+	reset_tool
 		do
 			reset_update_on_idle
 			recycle_expressions
@@ -400,7 +400,7 @@ feature -- Memory management
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -408,7 +408,7 @@ feature {NONE} -- Memory management
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
-	recycle_expressions is
+	recycle_expressions
 			-- Recycle
 		local
 			witem: ES_OBJECTS_GRID_EXPRESSION_LINE
@@ -451,7 +451,7 @@ feature {NONE} -- add new expression from the grid
 			-- Grid row which should always be at the end of the grid
 			-- this is used to enter new expression easily
 
-	ensure_last_row_is_new_expression_row is
+	ensure_last_row_is_new_expression_row
 			-- ensure
 		local
 			glab: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
@@ -475,7 +475,7 @@ feature {NONE} -- add new expression from the grid
 			watches_grid_empty := False
 		end
 
-	add_new_expression_for_context (s: STRING_32) is
+	add_new_expression_for_context (s: STRING_32)
 		local
 			expr: DBG_EXPRESSION
 		do
@@ -485,7 +485,7 @@ feature {NONE} -- add new expression from the grid
 			end
 		end
 
-	add_new_auto_expression (s: STRING_32) is
+	add_new_auto_expression (s: STRING_32)
 		local
 			expr: DBG_EXPRESSION
 		do
@@ -495,14 +495,14 @@ feature {NONE} -- add new expression from the grid
 			end
 		end
 
-	valid_expression_text (s: STRING_32): BOOLEAN is
+	valid_expression_text (s: STRING_32): BOOLEAN
 		do
 			Result := s /= Void and then (not s.is_empty and not s.has ('%R') and not s.has ('%N'))
 		end
 
 feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 
-	on_element_drop (s: CLASSC_STONE) is
+	on_element_drop (s: CLASSC_STONE)
 			-- Something was dropped in `ev_list'.
 		local
 			fst: FEATURE_STONE
@@ -555,7 +555,7 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 			end
 		end
 
-	remove_expression_row (row: EV_GRID_ROW) is
+	remove_expression_row (row: EV_GRID_ROW)
 		require
 			row_not_void: row /= Void
 		local
@@ -571,17 +571,17 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Context menu
 			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
 		end
 
-	is_removable (a: ANY): BOOLEAN is
+	is_removable (a: ANY): BOOLEAN
 		do
 			Result := True
 		end
 
-	remove_object_line (a: ANY) is
+	remove_object_line (a: ANY)
 		do
 			remove_selected
 		end
 
-	has_selected_item: BOOLEAN is
+	has_selected_item: BOOLEAN
 			-- Does the grid have selected item?
 		do
 			if watches_grid /= Void then
@@ -599,7 +599,7 @@ feature {NONE} -- Event handling
 			ensure_last_row_is_new_expression_row
 		end
 
-	open_watch_menu (tbi: SD_TOOL_BAR_ITEM) is
+	open_watch_menu (tbi: SD_TOOL_BAR_ITEM)
 		require
 			is_initialized: is_initialized
 		local
@@ -653,7 +653,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	open_new_created_watch_tool is
+	open_new_created_watch_tool
 			-- Open new created watch tool.
 		local
 			wt: ES_WATCH_TOOL
@@ -666,7 +666,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	define_new_expression is
+	define_new_expression
 			-- Create a new expression.
 		local
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
@@ -694,7 +694,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	toggle_auto_expressions is
+	toggle_auto_expressions
 		do
 			if not auto_expression_enabled then
 				auto_expression_enabled := True
@@ -708,10 +708,10 @@ feature {NONE} -- Event handling
 	auto_expressions_deltas: TUPLE [low: INTEGER; up: INTEGER]
 			-- Default might be (-)2, (+)1
 
-	show_only_auto_expression_successfully_evaluated: BOOLEAN is True
+	show_only_auto_expression_successfully_evaluated: BOOLEAN = True
 			-- Show auto expression only if successfully evaluated ?
 
-	add_auto_expressions is
+	add_auto_expressions
 		local
 			l_auto: AST_DEBUGGER_AUTO_EXPRESSION_VISITOR
 			exprs: LIST [STRING]
@@ -741,7 +741,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	edit_expression is
+	edit_expression
 			-- Edit a selected expression.
 		local
 			rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -772,7 +772,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	open_viewer_on_expression is
+	open_viewer_on_expression
 			-- Open viewer on selected expression
 		do
 			if
@@ -785,7 +785,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	toggle_state_of_selected is
+	toggle_state_of_selected
 			-- Toggle state of the selected expressions from the list.
 		local
 			rows: LIST [EV_GRID_ROW]
@@ -827,7 +827,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	remove_selected is
+	remove_selected
 			-- Remove the selected expressions from the list.
 		local
 			rows: LIST [EV_GRID_ROW]
@@ -864,7 +864,7 @@ feature {NONE} -- Event handling
 			-- Action delayer for `update_commands_on_expressions'
 			-- this way we don't disable command to re-enable right after
 
-	request_update_commands_on_expressions is
+	request_update_commands_on_expressions
 		do
 			if update_commands_on_expressions_delayer = Void then
 				create update_commands_on_expressions_delayer.make (agent update_commands_on_expressions, 100)
@@ -872,7 +872,7 @@ feature {NONE} -- Event handling
 			update_commands_on_expressions_delayer.request_call
 		end
 
-	update_commands_on_expressions is
+	update_commands_on_expressions
 		local
 			lst: LIST [EV_GRID_ROW]
 			row: EV_GRID_ROW
@@ -918,19 +918,19 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_row_selected (row: EV_GRID_ROW) is
+	on_row_selected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
 		do
 			update_commands_on_expressions
 		end
 
-	on_row_deselected (row: EV_GRID_ROW) is
+	on_row_deselected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
 		do
 			request_update_commands_on_expressions
 		end
 
-	key_pressed (k: EV_KEY) is
+	key_pressed (k: EV_KEY)
 			-- A key was pressed in `ev_list'.
 		local
 			ev_app: EV_APPLICATION
@@ -988,7 +988,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	string_key_pressed (s: STRING_32) is
+	string_key_pressed (s: STRING_32)
 			-- A key was pressed in `watches_grid'.
 		local
 			row: EV_GRID_ROW
@@ -1018,7 +1018,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	key_home_pressed is
+	key_home_pressed
 		local
 			g: like watches_grid
 		do
@@ -1026,7 +1026,7 @@ feature {NONE} -- Event handling
 			g.set_virtual_position (g.virtual_x_position, 0)
 		end
 
-	key_end_pressed is
+	key_end_pressed
 		local
 			g: like watches_grid
 		do
@@ -1034,7 +1034,7 @@ feature {NONE} -- Event handling
 			g.set_virtual_position (g.virtual_x_position, g.maximum_virtual_y_position)
 		end
 
-	enter_key_pressed (a_grid: ES_OBJECTS_GRID) is
+	enter_key_pressed (a_grid: ES_OBJECTS_GRID)
 			-- A [enter] key was pressed in `watches_grid'.
 		local
 			row: EV_GRID_ROW
@@ -1061,7 +1061,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	add_expression_with_dialog (dlg: EB_EXPRESSION_DEFINITION_DIALOG) is
+	add_expression_with_dialog (dlg: EB_EXPRESSION_DEFINITION_DIALOG)
 			-- Add a new expression defined by `dlg'.
 		local
 			l_expr: DBG_EXPRESSION
@@ -1070,7 +1070,7 @@ feature {NONE} -- Event handling
 			add_expression (l_expr, False)
 		end
 
-	add_object (ost: OBJECT_STONE; oname: STRING) is
+	add_object (ost: OBJECT_STONE; oname: STRING)
 		require
 			ost_ot_void: ost /= Void
 			oname /= Void
@@ -1084,7 +1084,7 @@ feature {NONE} -- Event handling
 			add_expression (expr, False)
 		end
 
-	add_expression (expr: DBG_EXPRESSION; is_auto: BOOLEAN) is
+	add_expression (expr: DBG_EXPRESSION; is_auto: BOOLEAN)
 		local
 			expr_item: like watched_item_from
 			evl: DBG_EXPRESSION_EVALUATION
@@ -1159,7 +1159,7 @@ feature {NONE} -- Element change: expression moving
 			Result_attached: Result /= Void
 		end
 
-	move_selected (offset: INTEGER) is
+	move_selected (offset: INTEGER)
 			-- Move selected top rows by `offset'
 		local
 			sel_rows: LIST [EV_GRID_ROW]
@@ -1271,7 +1271,7 @@ feature {NONE} -- Implementation: internal data
 	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 		do
 			Result := debugger_manager.object_viewer_cmd
 		end
@@ -1285,7 +1285,7 @@ feature {EB_DEBUGGER_MANAGER} -- Grid
 			-- List of items that are displayed
 			-- ie: mostly ES_OBJECTS_GRID_EXPRESSION_LINE
 
-	remove_auto_expressions_from_watched_items is
+	remove_auto_expressions_from_watched_items
 		local
 			witem: like watched_item_from
 			witems: like watched_items
@@ -1320,7 +1320,7 @@ feature -- Grid management
 
 	watches_grid_empty: BOOLEAN
 
-	clean_watched_grid is
+	clean_watched_grid
 		do
 			if not watches_grid_empty then
 				watches_grid.remove_and_clear_all_rows
@@ -1328,7 +1328,7 @@ feature -- Grid management
 			end
 		end
 
-	record_grid_layout is
+	record_grid_layout
 		do
 			if process_record_layout_on_next_recording_request then
 				watches_grid.record_layout
@@ -1336,7 +1336,7 @@ feature -- Grid management
 			end
 		end
 
-	clear_watch_tool is
+	clear_watch_tool
 			-- Clear watch tool expression.
 		do
 			watched_items.wipe_out
@@ -1381,7 +1381,7 @@ feature -- Expressions storage management
 			retry
 		end
 
-	expressions_to_text (only_selection: BOOLEAN): STRING_32 is
+	expressions_to_text (only_selection: BOOLEAN): STRING_32
 			-- Copy expressions to clipboard
 		local
 			line: like watched_item_from
@@ -1414,7 +1414,7 @@ feature -- Expressions storage management
 			Result_attached: Result /= Void
 		end
 
-	load_expressions_from_text (s: STRING_32) is
+	load_expressions_from_text (s: STRING_32)
 			-- Load expressions from `s'
 		local
 			expr_list: LIST [STRING_32]
@@ -1436,13 +1436,13 @@ feature -- Expressions storage management
 			end
 		end
 
-	copy_expressions_to_clipboard is
+	copy_expressions_to_clipboard
 			-- Copy expressions to clipboard
 		do
 			ev_application.clipboard.set_text (expressions_to_text (True))
 		end
 
-	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
+	set_expression_from_clipboard (grid: ES_OBJECTS_GRID)
 			-- Sets an expression from text held in clipboard
 		local
 			text_data: STRING_32
@@ -1469,7 +1469,7 @@ feature -- Expressions storage management
 			end
 		end
 
-	export_expressions_to_file is
+	export_expressions_to_file
 			-- Export all expressions to file
 		local
 			s: STRING_32
@@ -1500,7 +1500,7 @@ feature -- Expressions storage management
 			end
 		end
 
-	import_expressions_from_file is
+	import_expressions_from_file
 			-- Import expressions from file
 		local
 			s: STRING_32
@@ -1540,14 +1540,14 @@ feature -- Expressions storage management
 
 feature {NONE} -- grid Layout Implementation
 
-	keep_object_reference_fixed (addr: DBG_ADDRESS) is
+	keep_object_reference_fixed (addr: DBG_ADDRESS)
 		do
 			if debugger_manager.application_is_executing then
 				debugger_manager.application_status.keep_object (addr)
 			end
 		end
 
-	initialize_watches_grid_layout (pv: BOOLEAN_PREFERENCE) is
+	initialize_watches_grid_layout (pv: BOOLEAN_PREFERENCE)
 		require
 			not is_grid_layout_initialized
 			watches_grid.layout_manager = Void
@@ -1662,7 +1662,7 @@ feature {NONE} -- Shortcuts
 
 feature -- Access
 
-	refresh_watched_item (a_item: like watched_item_from) is
+	refresh_watched_item (a_item: like watched_item_from)
 			-- Refresh expression grid row item
 		require
 			a_item_not_void: a_item /= Void
@@ -1672,7 +1672,7 @@ feature -- Access
 			a_item.refresh_expression
 		end
 
-	add_dump_value (dv: DUMP_VALUE) is
+	add_dump_value (dv: DUMP_VALUE)
 			-- Add value `dv' to the watch tool's grid
 		local
 			expr: DBG_EXPRESSION
@@ -1685,7 +1685,7 @@ feature -- Access
 			add_expression (expr, False)
 		end
 
-	add_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
+	add_debug_value (dv: ABSTRACT_DEBUG_VALUE)
 			-- Add value `dv' to the watch tool's grid
 		local
 			expr: DBG_EXPRESSION
@@ -1698,7 +1698,7 @@ feature -- Access
 			add_expression (expr, False)
 		end
 
-	refresh is
+	refresh
 			-- Refresh current grid
 			--| Could be optimized to refresh only grid's content display ..
 		do
@@ -1708,18 +1708,18 @@ feature -- Access
 
 feature {NONE} -- Update
 
-	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN)
 			-- Update when debugging
 		do
 		end
 
-	on_update_when_application_is_not_executing is
+	on_update_when_application_is_not_executing
 			-- Update when not debugging
 		do
 			watches_grid.reset_layout_recorded_values
 		end
 
-	real_update (dbg_was_stopped: BOOLEAN) is
+	real_update (dbg_was_stopped: BOOLEAN)
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		local
@@ -1779,7 +1779,7 @@ feature {NONE} -- Update
 
 feature {NONE} -- Auto-completion
 
-	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL) is
+	set_up_complete_possibilities_provider (a_item: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL)
 			-- Set up code completion possibilities.
 		local
 			l_provider: EB_DEBUGGER_EXPRESSION_COMPLETION_POSSIBILITIES_PROVIDER
@@ -1793,23 +1793,23 @@ feature {NONE} -- Auto-completion
 
 feature {NONE} -- Implementation
 
-	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM is
+	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			Result.set_text (s)
 		end
 
-	Cst_expression_col: INTEGER is 1
+	Cst_expression_col: INTEGER = 1
 
-	Cst_type_col: INTEGER is 2
+	Cst_type_col: INTEGER = 2
 
-	Cst_value_col: INTEGER is 3
+	Cst_value_col: INTEGER = 3
 
-	Cst_context_col: INTEGER is 4
+	Cst_context_col: INTEGER = 4
 
-	Cst_nota_col: INTEGER is 5
+	Cst_nota_col: INTEGER = 5
 
-	new_watched_item_from_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; a_grid: ES_OBJECTS_GRID): like watched_item_from is
+	new_watched_item_from_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; a_grid: ES_OBJECTS_GRID): like watched_item_from
 		require
 			evaluation_attached: evl /= Void
 			grid_attached: a_grid /= Void
@@ -1820,7 +1820,7 @@ feature {NONE} -- Implementation
 			Result_evaluation_is_evl: Result.expression_evaluation = evl
 		end
 
-	add_watched_item_to_grid (witem: like watched_item_from; a_grid: ES_OBJECTS_GRID) is
+	add_watched_item_to_grid (witem: like watched_item_from; a_grid: ES_OBJECTS_GRID)
 		require
 			witem /= Void
 			a_grid /= Void
@@ -1830,12 +1830,12 @@ feature {NONE} -- Implementation
 			ensure_last_row_is_new_expression_row
 		end
 
-	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM) is
+	show_text_in_popup (txt: STRING; x, y, button: INTEGER; gi: EV_GRID_ITEM)
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (txt, debugger_manager.debugging_window.window, Void)
 		end
 
-	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE is
+	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE
 		require
 			row_not_void: row /= Void
 		local
@@ -1850,7 +1850,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_auto_expression_watched_item (row: EV_GRID_ROW): BOOLEAN is
+	is_auto_expression_watched_item (row: EV_GRID_ROW): BOOLEAN
 		require
 			row_not_void: row /= Void
 		local
@@ -1860,7 +1860,7 @@ feature {NONE} -- Implementation
 			Result := w /= Void and then w.is_auto_expression
 		end
 
-	watched_item_for_expression (expr: DBG_EXPRESSION): like watched_item_from is
+	watched_item_for_expression (expr: DBG_EXPRESSION): like watched_item_from
 			-- watched item related to `expr'
 		require
 			valid_expr: expr /= Void
@@ -1881,7 +1881,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refresh_expression (expr: DBG_EXPRESSION) is
+	refresh_expression (expr: DBG_EXPRESSION)
 			-- Refresh watched item related to `expr'
 		require
 			valid_expr: expr /= Void
@@ -1893,7 +1893,7 @@ feature {NONE} -- Implementation
 			refresh_watched_item (l_item)
 		end
 
-	refresh_context_expressions is
+	refresh_context_expressions
 			-- Refresh the value and display of context-related expressions.
 		require
 			application_stopped: debugger_manager.safe_application_is_stopped
@@ -1928,7 +1928,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Unevaluated: STRING is ""
+	Unevaluated: STRING = ""
 			-- String that is displayed in the "expression" column when an expression was not evaluated.
 			--	expressions.count = watches_grid.row_count
 
@@ -1936,7 +1936,7 @@ invariant
 	watched_items_not_void: watched_items /= Void
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

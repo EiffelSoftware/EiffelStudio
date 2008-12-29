@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter displaying feature information in a grid view."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature -- Setting
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		do
 			if browser /= Void then
@@ -43,7 +43,7 @@ feature -- Setting
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget'.
 		do
 			if associated_feature /= Void and then associated_feature.is_valid and then selected and then displayed and then actual_veto_format_result then
@@ -61,7 +61,7 @@ feature -- Formatting
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Graphical representation of the information provided.
 		do
 			if associated_feature = Void or browser = Void then
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Setting
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output.
 		do
 			if browser /= Void then
@@ -81,14 +81,14 @@ feature -- Setting
 			end
 		end
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		do
 		end
 
 feature -- Status setting
 
-	set_stone (new_stone: FEATURE_STONE) is
+	set_stone (new_stone: FEATURE_STONE)
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
 			force_stone (new_stone)
@@ -102,7 +102,7 @@ feature -- Status setting
 			end
 		end
 
-	set_feature (a_feature: E_FEATURE) is
+	set_feature (a_feature: E_FEATURE)
 			-- Associate current formatter with `a_feature'.
 		do
 			associated_feature := a_feature
@@ -118,7 +118,7 @@ feature -- Status setting
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			Precursor {EB_FEATURE_INFO_FORMATTER}
@@ -127,7 +127,7 @@ feature {NONE} -- Recyclable
 
 feature{NONE} -- Implementation
 
-	generate_result is
+	generate_result
 			-- Generate result for display
 		local
 			l_retried: BOOLEAN
@@ -144,13 +144,13 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	result_data: QL_FEATURE_DOMAIN is
+	result_data: QL_FEATURE_DOMAIN
 			-- Result for Current formatter
 		do
 			Result ?= system_target_domain.new_domain (domain_generator)
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator to generate result				
 		do
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
@@ -160,21 +160,21 @@ feature{NONE} -- Implementation
 			Result.disable_distinct_item
 		end
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	rebuild_browser is
+	rebuild_browser
 			-- Rebuild `browser'.
 		require
 			browser_attached: browser /= Void
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

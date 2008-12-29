@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Comparison of E_FEATURE instances"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Equality
 
-	same_feature (a_feat, a_other_feat: E_FEATURE): BOOLEAN is
+	same_feature (a_feat, a_other_feat: E_FEATURE): BOOLEAN
 			-- Is `a_feat' same as `a_other_feat'?
 		do
 			if a_feat = Void then
@@ -20,7 +20,7 @@ feature -- Equality
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

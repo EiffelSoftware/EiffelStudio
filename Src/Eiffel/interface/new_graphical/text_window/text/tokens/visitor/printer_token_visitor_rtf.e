@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor token visitor for RTF building."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create {EB_PRINTER_TEXT_GENERATOR}
 
 feature {NONE} -- Initialzation
 
-	make is
+	make
 			-- Initialzation
 		do
 			create print_color_table.make (15)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialzation
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text genrated.
 		do
 				-- We don't need ISE info now.
@@ -48,14 +48,14 @@ feature -- Access
 
 feature {NONE} -- Visit
 
-	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL) is
+	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL)
 		do
 			text_processing.append (rtf_eol)
 		end
 
 feature {NONE} -- Implementation
 
-	build_token_text (a_tok: EDITOR_TOKEN) is
+	build_token_text (a_tok: EDITOR_TOKEN)
 			-- Build token RTF text
 		local
 			l_color: EV_COLOR
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	header_string: STRING is
+	header_string: STRING
 			-- Header string contains color and font table as RTF or definition in PostScript.
 		do
 			create Result.make (print_color_table.count * 5 + print_font_table.count * 10)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- String generation
 
-	color_table_string : STRING is
+	color_table_string : STRING
 			-- Color table string RTF representation
 		local
 			l_color: EV_COLOR
@@ -141,7 +141,7 @@ feature {NONE} -- String generation
 			end
 		end
 
-	font_table_string : STRING is
+	font_table_string : STRING
 			-- Font table string RTF representation
 		local
 			l_font: EV_FONT
@@ -165,55 +165,55 @@ feature {NONE} -- String generation
 			end
 		end
 
-	new_line: STRING is "%N"
+	new_line: STRING = "%N"
 
 feature {NONE} -- RTF Strings
 
-	rtf_space: STRING is " "
+	rtf_space: STRING = " "
 			-- End control word
 
-	rtf_l_brace: STRING is "{"
+	rtf_l_brace: STRING = "{"
 
-	rtf_r_brace: STRING is "}"
+	rtf_r_brace: STRING = "}"
 
-	rtf_semi_colon: STRING is ";"
+	rtf_semi_colon: STRING = ";"
 
-	rtf_b: STRING is "\b"
+	rtf_b: STRING = "\b"
 
-	rtf_b0: STRING is "\b0"
+	rtf_b0: STRING = "\b0"
 
-	rtf_i: STRING is "\i"
+	rtf_i: STRING = "\i"
 
-	rtf_i0: STRING is "\i0"
+	rtf_i0: STRING = "\i0"
 
-	rtf_eol: STRING is "\par%N"
+	rtf_eol: STRING = "\par%N"
 			-- New line
 
-	rtf_cf: STRING is "\cf"
+	rtf_cf: STRING = "\cf"
 			-- Color
 
-	rtf_f: STRING is "\f"
+	rtf_f: STRING = "\f"
 			-- Font
 
-	rtf_fs: STRING is "\fs"
+	rtf_fs: STRING = "\fs"
 			-- Font size
 
-	rtf_red: STRING is "\red"
+	rtf_red: STRING = "\red"
 
-	rtf_green: STRING is "\green"
+	rtf_green: STRING = "\green"
 
-	rtf_blue: STRING is "\blue"
+	rtf_blue: STRING = "\blue"
 
-	rtf_fonttbl: STRING is "\fonttbl"
+	rtf_fonttbl: STRING = "\fonttbl"
 			-- Font table control word
 
-	rtf_colortbl: STRING is "\colortbl"
+	rtf_colortbl: STRING = "\colortbl"
 			-- Color table control word
 
-	rtf_first_control_words: STRING is "\viewkind4\uc1"
+	rtf_first_control_words: STRING = "\viewkind4\uc1"
 			-- 4 is normal view, Unicode
 
-	rtf_font_family (a_font: EV_FONT): STRING is
+	rtf_font_family (a_font: EV_FONT): STRING
 			-- RTF font family string representation.
 		require
 			a_font_not_void: a_font /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- RTF Strings
 			rtf_font_family_not_void: Result /= Void
 		end
 
-	rtf_font_charset (a_font: EV_FONT): STRING is
+	rtf_font_charset (a_font: EV_FONT): STRING
 			--
 		require
 			a_font_not_void: a_font /= Void
@@ -246,7 +246,7 @@ feature {NONE} -- RTF Strings
 			rtf_font_charset_not_void: Result /= Void
 		end
 
-	rtf_font_name (a_font: EV_FONT): STRING is
+	rtf_font_name (a_font: EV_FONT): STRING
 			--
 		require
 			a_font_not_void: a_font /= Void
@@ -256,7 +256,7 @@ feature {NONE} -- RTF Strings
 			rtf_font_name_not_void: Result /= Void
 		end
 
-	rtf_escape_text (a_string: STRING): STRING is
+	rtf_escape_text (a_string: STRING): STRING
 			--
 		require
 			a_string_not_void: a_string /= Void
@@ -286,23 +286,23 @@ feature {NONE} -- RTF Strings
 			rtf_excape_text_not_void: Result /= Void
 		end
 
-	rtf_fcharset: STRING is "\fcharset"
+	rtf_fcharset: STRING = "\fcharset"
 
-	rtf_family_tech: STRING is "\ftech"
+	rtf_family_tech: STRING = "\ftech"
 
-	rtf_family_roman: STRING is "\froman"
+	rtf_family_roman: STRING = "\froman"
 
-	rtf_family_swiss: STRING is "\fswiss"
+	rtf_family_swiss: STRING = "\fswiss"
 
-	rtf_family_script: STRING is "\fscript"
+	rtf_family_script: STRING = "\fscript"
 
-	rtf_family_modern: STRING is "\fmodern"
+	rtf_family_modern: STRING = "\fmodern"
 
-	rtf_family_nill: STRING is "\fnill"
+	rtf_family_nill: STRING = "\fnill"
 
-	rtf_header_font_control_word: STRING is "\rtf1\ansi\ansicpg1252\deff0\deflang1033\deflangfe2052";
+	rtf_header_font_control_word: STRING = "\rtf1\ansi\ansicpg1252\deff0\deflang1033\deflangfe2052";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

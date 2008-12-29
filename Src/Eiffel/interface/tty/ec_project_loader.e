@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command line version for project loading."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_should_stop_on_prompt (v: like should_stop_on_prompt) is
+	set_should_stop_on_prompt (v: like should_stop_on_prompt)
 			-- Set `should_stop_on_prompt' with `v'.
 		do
 			should_stop_on_prompt := v
@@ -31,13 +31,13 @@ feature -- Settings
 
 feature {NONE} -- Settings
 
-	compile_project is
+	compile_project
 			-- Compile newly created project.
 		do
 			-- Nothing to be done, as it is handled later in batch mode.
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING]) is
+	launch_precompile_process (a_arguments: LIST [STRING])
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
@@ -55,7 +55,7 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING) is
+	report_non_readable_configuration_file (a_file_name: STRING)
 			-- Report an error when `a_file_name' cannot be read.
 		do
 			--|FIXME: `out' could cause information loss.
@@ -65,7 +65,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING) is
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -89,7 +89,7 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -102,7 +102,7 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING) is
+	report_cannot_save_converted_file (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
@@ -113,7 +113,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_convert_project (a_file_name: STRING) is
+	report_cannot_convert_project (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
@@ -124,7 +124,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_create_project (a_dir_name: STRING) is
+	report_cannot_create_project (a_dir_name: STRING)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
 			--|FIXME: `out' could cause information loss.
@@ -134,7 +134,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING_GENERAL) is
+	report_cannot_open_project (a_msg: STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do
@@ -143,7 +143,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL) is
+	report_incompatible_project (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
@@ -173,7 +173,7 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL) is
+	report_project_corrupted (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
@@ -182,7 +182,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		do
 			localized_print (a_msg)
@@ -190,7 +190,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL) is
+	report_project_incomplete (a_msg: STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
@@ -199,12 +199,12 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_loaded_successfully is
+	report_project_loaded_successfully
 			-- Report that project was loaded successfully.
 		do
 		end
 
-	report_precompilation_error is
+	report_precompilation_error
 			-- Report that precompilation did not work.
 		do
 			--|FIXME: `out' could cause information loss.
@@ -216,7 +216,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -262,7 +262,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
@@ -343,7 +343,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_new_project_location (a_project_path: STRING) is
+	ask_for_new_project_location (a_project_path: STRING)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		local
@@ -380,7 +380,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_compile_precompile is
+	ask_compile_precompile
 			-- Should a needed precompile be automatically built?
 		local
 			l_answered: BOOLEAN
@@ -405,7 +405,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
 			-- Should new environment values be accepted?
 		local
 			l_answered: BOOLEAN
@@ -432,7 +432,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

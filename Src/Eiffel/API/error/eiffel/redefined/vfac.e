@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assigner command error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; f: FEATURE_I) is
+	make (c: CLASS_C; f: FEATURE_I)
 			-- Create error with current class `c' and feature `f'.
 		require
 			c_not_void: c /= Void
@@ -50,12 +50,12 @@ feature -- Properties
 	assigner: E_FEATURE
 			-- Assigner feature
 
-	code: STRING is "VFAC"
+	code: STRING = "VFAC"
 			-- Error code
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then a_feature /= Void
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Modification
 
-	set_assigner (a: like assigner) is
+	set_assigner (a: like assigner)
 			-- Set version of an assigner associated with `a_feature'.
 		do
 			assigner := a
@@ -75,7 +75,7 @@ feature -- Modification
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -92,7 +92,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like a_feature} a_feature and then {l_class: !like class_c} class_c then
@@ -104,7 +104,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor {EIFFEL_ERROR} (a_text_formatter)
@@ -115,7 +115,7 @@ feature {NONE} -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator to generate xml for metric related items"
 	author: ""
 	date: "$Date$"
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make is
+	make
 			-- Initialize.
 		do
 			create element_stack.make
@@ -30,7 +30,7 @@ feature{NONE} -- Implementation
 
 feature -- Generate
 
-	xml_element (a_item: G; a_parent: XM_COMPOSITE): XM_ELEMENT is
+	xml_element (a_item: G; a_parent: XM_COMPOSITE): XM_ELEMENT
 			-- Xml element for `a_item'
 			-- Generated xml element will be the last child of `a_parent'.
 		require
@@ -45,7 +45,7 @@ feature -- Generate
 			result_attached: Result /= Void
 		end
 
-	xml_document (a_item: G): XM_DOCUMENT is
+	xml_document (a_item: G): XM_DOCUMENT
 			-- Xml document for `a_item'
 		local
 			l_element: XM_ELEMENT
@@ -70,7 +70,7 @@ feature{NONE} -- Implementation
 	target_element: XM_ELEMENT
 			-- Last recored element
 
-	matching_strategy_name (a_strategy_id: INTEGER): STRING is
+	matching_strategy_name (a_strategy_id: INTEGER): STRING
 			-- Matching strategy name of strategy id `a_strategy_id'
 		local
 			l_table: like matching_strategy_table
@@ -92,7 +92,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Process
 
-	process_metric (a_metric: EB_METRIC; a_metric_element: XM_ELEMENT) is
+	process_metric (a_metric: EB_METRIC; a_metric_element: XM_ELEMENT)
 			-- Process `a_metric' to generate attribute name, unit and description.
 			-- `a_metric_element' is the XML element for `a_metric'.
 		require
@@ -116,7 +116,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
+	process_basic_metric (a_basic_metric: EB_METRIC_BASIC)
 			-- Process `a_basic_metric'.
 		local
 			l_criterion: XM_ELEMENT
@@ -143,7 +143,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 		local
 			l_variable_metric: LIST [STRING]
@@ -180,7 +180,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		local
 			l_ratio: XM_ELEMENT
@@ -203,7 +203,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_criterion_common (a_criterion: EB_METRIC_CRITERION; a_element: XM_ELEMENT) is
+	process_criterion_common (a_criterion: EB_METRIC_CRITERION; a_element: XM_ELEMENT)
 			-- Add attribute "name", "unit" and "negation" for `a_criterion' into `a_element'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -214,7 +214,7 @@ feature{NONE} -- Process
 			a_element.add_unqualified_attribute (n_negation, a_criterion.is_negation_used.out)
 		end
 
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
+	process_criterion (a_criterion: EB_METRIC_CRITERION)
 			-- Process `a_criterion'.
 		do
 			check
@@ -222,7 +222,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -240,7 +240,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -260,7 +260,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -282,7 +282,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -305,7 +305,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -327,7 +327,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
+	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -344,7 +344,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -368,7 +368,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_criterion: XM_ELEMENT
@@ -385,7 +385,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION)
 			-- Process `a_criterion'.
 		do
 			check
@@ -393,7 +393,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_nary_criterion_common (a_criterion: EB_METRIC_NARY_CRITERION; a_criterion_name: STRING) is
+	process_nary_criterion_common (a_criterion: EB_METRIC_NARY_CRITERION; a_criterion_name: STRING)
 			-- Process `a_criterion' whose name is `a_criterion_name'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -415,19 +415,19 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
+	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion_common (a_criterion, n_and_criterion)
 		end
 
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
+	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion_common (a_criterion, n_or_criterion)
 		end
 
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
+	process_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		local
 			l_domain: XM_ELEMENT
@@ -444,7 +444,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
+	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			check
@@ -452,7 +452,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_item_common (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING) is
+	process_domain_item_common (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING)
 			-- Add a domain element.
 		local
 			l_domain_item: XM_ELEMENT
@@ -468,43 +468,43 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_target, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_group, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_folder, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_class, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_feature, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			process_domain_item_common (n_delayed, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		local
 			l_archive: XM_ELEMENT
@@ -539,7 +539,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER)
 			-- Process `a_item'.
 		local
 			l_testers_element: XM_ELEMENT
@@ -579,12 +579,12 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 		end
 
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		local
 			l_retriever: XM_ELEMENT
@@ -597,7 +597,7 @@ feature{NONE} -- Process
 			target_element := l_retriever
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		local
 			l_retriever: XM_ELEMENT
@@ -618,7 +618,7 @@ feature{NONE} -- Process
 			element_stack.remove
 		end
 
-	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER)
 			-- Process `a_item'.
 		local
 			l_command: XM_ELEMENT

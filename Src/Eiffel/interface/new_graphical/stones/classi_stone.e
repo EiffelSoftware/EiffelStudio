@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representing an uncompiled Eiffel class."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (aclassi: CLASS_I) is
+	make (aclassi: CLASS_I)
 			-- Copy all information from argument
 			-- OR KEEP A REFERENCE?
 		do
@@ -33,12 +33,12 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 		do
 			Result := actual_class_i
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Name of `class_i'.
 		require
 			is_valid: is_valid
@@ -46,7 +46,7 @@ feature -- Properties
 			Result := class_i.name
 		end
 
-	group: CONF_GROUP is
+	group: CONF_GROUP
 			-- Group associated with current.
 		require
 			is_valid: is_valid
@@ -56,37 +56,37 @@ feature -- Properties
 			group_not_void: Result /= Void
 		end
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		once
 			Result := Cursors.cur_Class
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		once
 			Result := Cursors.cur_X_Class
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- File associated with `class_i'.
 		do
 			Result := class_i.file_name.string
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 		do
 			Result := class_i.name
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 		do
 			Result := Interface_names.s_Class_stone.as_string_32 + stone_signature
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
@@ -97,7 +97,7 @@ feature -- Properties
 														 class_i.file_name)
 		end
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore. It may also
 			-- be a classc_stone if the class is compiled now)
@@ -111,7 +111,7 @@ feature -- Properties
 			end
 		end
 
-	stone_name: STRING_GENERAL is
+	stone_name: STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -123,13 +123,13 @@ feature -- Properties
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
 			Result := class_i /= Void and class_i.is_valid
 		end
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Do `Current' and `other' represent the same class?
 		do
 			Result := {convcur: CLASSI_STONE} other and then class_i.is_equal (convcur.class_i)
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 invariant
 	actual_class_i_not_void: class_i /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

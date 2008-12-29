@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that analyze search the editor content for clickable position"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	initialize (a_content: CLICKABLE_TEXT; a_class: CLASS_I; a_group: like group; after_save: BOOLEAN) is
+	initialize (a_content: CLICKABLE_TEXT; a_class: CLASS_I; a_group: like group; after_save: BOOLEAN)
 			-- initialize the tool before analyzing a class called `a_classname' located in cluster called `a_cluster_name'
 			-- `a_content' is text of this class
 		require
@@ -47,7 +47,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_setup_lines_variables is
+	reset_setup_lines_variables
 			-- reinitialize variables used by `setup_lines'
 			-- to be executed before `setup_lines' is launched for the first time
 		require
@@ -58,7 +58,7 @@ feature -- Initialization
 			features_position.start
 		end
 
-	reset is
+	reset
 			-- set class attributes to default values
 		do
 			Precursor {EB_COMPLETE_INFO_ANALYZER}
@@ -67,7 +67,7 @@ feature -- Initialization
 
 feature -- Analysis preparation
 
-	prepare_on_click_analysis is
+	prepare_on_click_analysis
 			-- gather information necessary to analysis
 		do
 			set_indexes
@@ -75,7 +75,7 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-	setup_line (a_line: EIFFEL_EDITOR_LINE) is
+	setup_line (a_line: EIFFEL_EDITOR_LINE)
 			-- set the `pos_in_text' attribute of interesting tokens.
 		require
 			class_as_already_built: current_class_as /= Void
@@ -160,7 +160,7 @@ feature -- Analysis preparation
 			end
 		end
 
-	update is
+	update
 			-- update class text information
 		do
 			build_features_arrays
@@ -169,7 +169,7 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-	build_completion_list (a_cursor: like current_cursor) is
+	build_completion_list (a_cursor: like current_cursor)
 			-- Build feature completion list.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -181,7 +181,7 @@ feature -- Analysis preparation
 			build_completion_list_analyse (current_token, current_cursor.pos_in_token)
 		end
 
-	build_class_completion_list (a_cursor: like current_cursor) is
+	build_class_completion_list (a_cursor: like current_cursor)
 			-- Build class completion list.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -195,7 +195,7 @@ feature -- Analysis preparation
 
 feature -- Basic Operations
 
-	stone_at_position (cursor: TEXT_CURSOR): STONE is
+	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 		local
 			l_content: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
@@ -240,7 +240,7 @@ feature -- Basic Operations
 			end
 		end
 
-	go_to_left_position is
+	go_to_left_position
 			-- Go to left position by charactor
 		do
 			current_cursor.go_left_char
@@ -250,13 +250,13 @@ feature -- Status
 
 	file_standard_is_windows: BOOLEAN
 
-	set_file_standard_is_windows (value: BOOLEAN) is
+	set_file_standard_is_windows (value: BOOLEAN)
 			-- assign `value' to `file_standard_is_windows'.
 		do
 			file_standard_is_windows := value
 		end
 
-	feature_containing_cursor (a_cursor: TEXT_CURSOR): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME] is
+	feature_containing_cursor (a_cursor: TEXT_CURSOR): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containing current cursor if exits.
 			-- If not void returns.
 		do
@@ -269,7 +269,7 @@ feature -- Status
 
 feature -- Retrieve information from ast
 
-	build_features_arrays is
+	build_features_arrays
 			-- build tables associating FEATURE_AS objects with positions in text
 		require
 			current_class_as_not_void: current_class_as /= Void
@@ -328,7 +328,7 @@ feature -- Retrieve information from ast
 			features_ast_not_void: features_ast /= Void
 		end
 
-	current_pos_in_token: INTEGER is
+	current_pos_in_token: INTEGER
 			-- position of current token
 		do
 			check
@@ -339,7 +339,7 @@ feature -- Retrieve information from ast
 
 feature -- Click list update
 
-	reset_positions_and_indexes is
+	reset_positions_and_indexes
 			-- look for position of subsection of class text (inherit, invariant, creation..)
 			-- and set the `pos_in_text' attribute of interesting tokens.
 		require
@@ -482,7 +482,7 @@ feature -- Click list update
 
 feature {NONE} -- Retrieve information from text
 
-	set_indexes is
+	set_indexes
 			-- calculate `invariant_index' and `features_index'
 		local
 			invariant_assertion_list: EIFFEL_LIST [TAGGED_AS]
@@ -506,7 +506,7 @@ feature {NONE} -- Retrieve information from text
 			end
 		end
 
-	save_cursor_position is
+	save_cursor_position
 			-- Save cursor position
 		do
 			if saved_positions = Void then
@@ -515,7 +515,7 @@ feature {NONE} -- Retrieve information from text
 			saved_positions.put_front (current_cursor.twin)
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor_position
 			-- Retrieve cursor position
 		local
 			l_cursor: EDITOR_CURSOR
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 	current_cursor: EDITOR_CURSOR
 		-- Current cursor
 
-	cursor_token: EDITOR_TOKEN is
+	cursor_token: EDITOR_TOKEN
 			-- Token at cursor position
 		do
 			check
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			Result := current_cursor.token
 		end
 
-	click_possible (a_token: EDITOR_TOKEN): BOOLEAN is
+	click_possible (a_token: EDITOR_TOKEN): BOOLEAN
 			-- Is `a_token' possibly clickable?
 			-- Does the same checking as `setup_line'
 			-- But here we only check if current token can possibly clickable.
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_colon_followed (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN is
+	has_colon_followed (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
 			-- Does `a_token' have a colon followed?
 		require
 			a_token_not_void: a_token /= Void
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

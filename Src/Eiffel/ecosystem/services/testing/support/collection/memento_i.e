@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Generic interface used to describe changed of an object
 		

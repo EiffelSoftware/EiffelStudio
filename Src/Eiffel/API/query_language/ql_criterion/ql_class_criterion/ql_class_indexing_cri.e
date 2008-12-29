@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test certain condition in an indexing clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,14 +28,14 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		deferred
 		end
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is
+	require_compiled: BOOLEAN
 			-- Does current criterion require a compiled item?
 		do
 			Result := False
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	class_ast (a_item: QL_CLASS): CLASS_AS is
+	class_ast (a_item: QL_CLASS): CLASS_AS
 			-- CLASS_AS of `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -66,7 +66,7 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Internal parsers
 
-	roundtrip_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_eiffel_parser: EIFFEL_PARSER
 			-- Roundtrip parser used to retrieve indexing clause
 		do
 			if il_parsing then
@@ -78,7 +78,7 @@ feature {NONE} -- Internal parsers
 			result_attached: Result /= Void
 		end
 
-	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER
 			-- Pure Eiffel parser
 		deferred
 		ensure
@@ -86,7 +86,7 @@ feature {NONE} -- Internal parsers
 			pure_parser: not Result.il_parser
 		end
 
-	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER
 			-- IL Eiffel parser.
 		deferred
 		ensure
@@ -97,7 +97,7 @@ feature {NONE} -- Internal parsers
 	match_list: LEAF_AS_LIST;
 			-- Match list of last class parsed by `roundtrip_eiffel_parser'
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

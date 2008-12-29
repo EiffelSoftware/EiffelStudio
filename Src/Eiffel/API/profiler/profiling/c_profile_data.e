@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile information about a profiled C function."
@@ -22,7 +22,7 @@ create
 
 feature -- Creation feature
 
-	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: C_FUNCTION) is
+	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: C_FUNCTION)
 			-- Create an object containing profile data for a single C function.
 		do
 			p_d_make(num_calls, time, self_s, descen);
@@ -31,7 +31,7 @@ feature -- Creation feature
 
 feature -- Copy features
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying features of `other'.
 			-- (This is also used by `clone'.)
 		do
@@ -44,7 +44,7 @@ feature -- Copy features
 
 feature -- Status report
 
-	function: C_FUNCTION is
+	function: C_FUNCTION
 			-- The function where information is about.
 		do
 			Result := int_function;
@@ -55,7 +55,7 @@ feature {C_PROFILE_DATA} -- Attributes
 	int_function: C_FUNCTION;
 		-- The profiled function
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone representing a cluster"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (clu: CONF_GROUP) is
+	make (clu: CONF_GROUP)
 		require
 			valid_cluster: clu /= Void
 		do
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			group_set: group = clu
 		end
 
-	make_subfolder (clu: CONF_GROUP; a_path: STRING; a_name: STRING) is
+	make_subfolder (clu: CONF_GROUP; a_path: STRING; a_name: STRING)
 			-- Create for a subfolder `path' of `clu'.
 		require
 			valid_cluster: clu /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cluster_i: CLUSTER_I is
+	cluster_i: CLUSTER_I
 		require
 			is_cluster: is_cluster
 		do
@@ -77,12 +77,12 @@ feature -- Access
 	folder_name: STRING
 			-- Subfolder name
 
-	stone_signature: STRING is
+	stone_signature: STRING
 		do
 			Result := group.name.twin
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 		do
 			Result := Interface_names.l_cluster_header (eiffel_system.name,
 															eiffel_universe.target_name,
@@ -90,13 +90,13 @@ feature -- Access
 															group.location.evaluated_path)
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 			-- What represents `Current' in the history.
 		do
 			Result := "[" + stone_signature + "]"
 		end
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
@@ -112,7 +112,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
@@ -128,7 +128,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
- 	synchronized_stone: STONE is
+ 	synchronized_stone: STONE
  			-- Return a valid stone representing the same object after a recompilation.
  		local
  			l_group: like group
@@ -153,7 +153,7 @@ feature -- Access
  			end
  		end
 
-	stone_name: STRING_GENERAL is
+	stone_name: STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -171,13 +171,13 @@ feature -- Access
 
 feature -- Status report
 
- 	same_as (other: STONE): BOOLEAN is
+ 	same_as (other: STONE): BOOLEAN
  			-- Does `other' and `Current' represent the same cluster?
  		do
  			Result := {conv_clu: CLUSTER_STONE} other and then conv_clu.group = group
  		end
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Does current represent an instance of CLUSTER_I?
 		local
 			l_clus: CLUSTER_I
@@ -186,7 +186,7 @@ feature -- Status report
 			Result := l_clus /= Void
 		end
 
- 	is_valid: BOOLEAN is
+ 	is_valid: BOOLEAN
  			-- Does `Current' represent a valid cluster?
  		do
  			if Eiffel_project.initialized and then group /= Void then
@@ -196,7 +196,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN is
+	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN
 			-- Is `a_grp' a recursive cluster?
 		require
 			a_group_not_void: a_group /= Void
@@ -213,7 +213,7 @@ invariant
 	group_not_void: group /= Void
 	path_not_void: path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

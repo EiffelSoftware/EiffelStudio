@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ratio metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_unit: like unit) is
+	make (a_name: STRING; a_unit: like unit)
 			-- Initialize `name' with `a_name' and `unit' with `a_unit'.
 		do
 			Precursor (a_name, a_unit)
@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 			denominator_metric_name := ""
 		end
 
-	make_with_numerator_and_denominator (a_name: STRING; a_unit: like unit; a_num_name: STRING; a_den_name: STRING; a_num_coefficient: like numerator_coefficient; a_den_coefficient: like denominator_coefficient) is
+	make_with_numerator_and_denominator (a_name: STRING; a_unit: like unit; a_num_name: STRING; a_den_name: STRING; a_num_coefficient: like numerator_coefficient; a_den_coefficient: like denominator_coefficient)
 			-- Initialize `name' with `a_name', `unit' with `a_unit', `uuid' with `a_uuid',
 			-- `numerator_metric_name' with `a_num_name' and `denominator_metric_name' with `a_den_name'.
 		require
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_numerator_metric_name (a_name: STRING) is
+	set_numerator_metric_name (a_name: STRING)
 			-- Set `numerator_metric_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -81,7 +81,7 @@ feature -- Setting
 			numerator_metric_name_set: numerator_metric_name /= Void and then numerator_metric_name.is_equal (a_name)
 		end
 
-	set_denominator_metric_name (a_name: STRING) is
+	set_denominator_metric_name (a_name: STRING)
 			-- Set `denominator_metric_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -91,7 +91,7 @@ feature -- Setting
 			denominator_metric_name_set: denominator_metric_name /= Void and then denominator_metric_name.is_equal (a_name)
 		end
 
-	set_numerator_coefficient (a_coefficient: like numerator_coefficient) is
+	set_numerator_coefficient (a_coefficient: like numerator_coefficient)
 			-- Set `numerator_coefficient' with `a_coefficient'.
 		do
 			numerator_coefficient := a_coefficient
@@ -99,7 +99,7 @@ feature -- Setting
 			numerator_coefficient_set: numerator_coefficient = a_coefficient
 		end
 
-	set_denominator_coefficient (a_coefficient: like denominator_coefficient) is
+	set_denominator_coefficient (a_coefficient: like denominator_coefficient)
 			-- Set `denominator_coefficient' with `a_coefficient'.
 		do
 			denominator_coefficient := a_coefficient
@@ -109,19 +109,19 @@ feature -- Setting
 
 feature -- Status report
 
-	is_result_domain_available: BOOLEAN is
+	is_result_domain_available: BOOLEAN
 			-- After metric calculation, can we get the last generated domain
 			-- for detail display?
 		do
 			Result := False
 		end
 
-	is_ratio: BOOLEAN is True
+	is_ratio: BOOLEAN = True
 			-- Is current a ratio metric?
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_ratio_metric (Current)
@@ -129,7 +129,7 @@ feature -- Process
 
 feature -- Metric calculation
 
-	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric calculated over `a_scope'
 		local
 			l_num_metric: EB_METRIC
@@ -167,7 +167,7 @@ invariant
 	numerator_metric_name_valid: numerator_metric_name /= Void
 	denominator_metric_name_valid: denominator_metric_name /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

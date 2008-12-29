@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for strip expression
@@ -19,27 +19,27 @@ feature
 	register: REGISTRABLE;
 			-- Register for array containing the strip
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r
 		do
 			register := r;
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Unanalyze expression
 		do
 			register := Void
 		end;
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			get_register
 		end;
 
-	allocates_memory: BOOLEAN is True;
+	allocates_memory: BOOLEAN = True;
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			cl_type: CLASS_TYPE
@@ -70,7 +70,7 @@ feature
 			buf.put_string (" }");
 		end;
 
-	generate_attribute_names_list is
+	generate_attribute_names_list
 			-- Generate routine ids (from feature ids) as a C list.
 		require
 			attribute_names_not_void: attribute_names /= Void
@@ -103,7 +103,7 @@ feature
 			buf.put_new_line;
 		end;
 
-	set_feature_ids (ids: like feature_ids) is
+	set_feature_ids (ids: like feature_ids)
 			-- Set feature_ids to `ids'
 		require
 			valid_arg: ids /= Void
@@ -115,7 +115,7 @@ invariant
 
 	set_exists: feature_ids /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

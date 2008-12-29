@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Representation of an Eiffel feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -47,7 +47,7 @@ inherit
 
 feature -- Initialization
 
-	make (n: like name_id; a: like alias_name; c: like has_convert_mark; i: INTEGER) is
+	make (n: like name_id; a: like alias_name; c: like has_convert_mark; i: INTEGER)
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
@@ -66,7 +66,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current feature still valid?
 		do
 			Result := (associated_class_id > 0 and then eiffel_system.class_of_id (associated_class_id) /= Void) and then
@@ -78,7 +78,7 @@ feature -- Properties
 	name_id: INTEGER
 			-- Name id in the names heap.
 
-	name: STRING is
+	name: STRING
 			-- Final name of the feature
 		do
 			Result := names_heap.item (name_id)
@@ -90,13 +90,13 @@ feature -- Properties
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
 
-	has_alias_name: BOOLEAN is
+	has_alias_name: BOOLEAN
 			-- Does current routine represent a routine with an alias?
 		do
 			Result := alias_name /= Void
 		end
 
-	assigner_name: STRING is
+	assigner_name: STRING
 			-- Name of the assigner procedure (if any)
 		do
 				-- Void by default
@@ -141,61 +141,61 @@ feature -- Properties
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is current feature a procedure ?
 		do
 			-- Do nothing
 		end;
 
-	is_function: BOOLEAN is
+	is_function: BOOLEAN
 			-- Is current feature a function ?
 		do
 			-- Do nothing
 		end;
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Is current feature an attribute ?
 		do
 			-- Do nothing
 		end;
 
-	is_attribute_with_body: BOOLEAN is
+	is_attribute_with_body: BOOLEAN
 			-- Is current feature an attribute with body?
 		do
 			-- Do nothing
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 			-- Is current feature a constant ?
 		do
 			-- Do nothing
 		end;
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 			-- Is current feature a once one ?
 		do
 			-- Do nothing
 		end;
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is current feature a deferred one ?
 		do
 			-- Do nothing
 		end;
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN
 			-- Is current feature a unique constant ?
 		do
 			-- Do nothing
 		end;
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is current feature an external one ?
 		do
 			-- Do nothing
 		end;
 
-	has_return_value: BOOLEAN is
+	has_return_value: BOOLEAN
 			-- Does current return a value?
 		do
 			Result := is_constant or is_attribute or is_function
@@ -206,37 +206,37 @@ feature -- Properties
 	is_il_external: BOOLEAN
 			-- Is current feature an IL external one?
 
-	is_obsolete: BOOLEAN is
+	is_obsolete: BOOLEAN
 			-- Is Current feature obsolete?
 		do
 			Result := obsolete_message /= Void
 		end;
 
-	has_precondition: BOOLEAN is
+	has_precondition: BOOLEAN
 			-- Is feature declaring some preconditions ?
 		do
 			-- Do nothing
 		end;
 
-	has_postcondition: BOOLEAN is
+	has_postcondition: BOOLEAN
 			-- Is feature declaring some postconditions ?
 		do
 			-- Do nothing
 		end;
 
-	has_assertion: BOOLEAN is
+	has_assertion: BOOLEAN
 			-- Is feature declaring some pre or post conditions ?
 		do
 			Result := has_postcondition or else has_precondition
 		end;
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
  			-- Has current feature some formal arguments ?
 		do
 			Result := arguments /= Void
 		end
 
-	has_rescue_clause: BOOLEAN is
+	has_rescue_clause: BOOLEAN
 			-- Has rescue clause ?
 		local
 			f: like associated_feature_i
@@ -247,27 +247,27 @@ feature -- Properties
 			end
 		end
 
-	arguments: E_FEATURE_ARGUMENTS is
+	arguments: E_FEATURE_ARGUMENTS
 			-- Argument types
 		do
 		end;
 
-	argument_names: LIST [STRING] is
+	argument_names: LIST [STRING]
 			-- Argument names
 		do
 		end;
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS] is
+	locals: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Locals for current feature
 		do
 		end;
 
-	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 		do
 		end
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments of the feature
 		do
 			if arguments /= Void then
@@ -275,7 +275,7 @@ feature -- Properties
 			end;
 		end;
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Feature type
 		do
 		end;
@@ -292,7 +292,7 @@ feature -- Properties
 
 feature -- Access
 
-	written_feature: E_FEATURE is
+	written_feature: E_FEATURE
 			-- Associated feature of Current in the context of the class in which
 			-- current feature is written.
 		local
@@ -309,7 +309,7 @@ feature -- Access
 			end
 		end
 
-	ancestor_version (an_ancestor: CLASS_C): E_FEATURE is
+	ancestor_version (an_ancestor: CLASS_C): E_FEATURE
 			-- Feature in `an_ancestor' of which `Current' is derived.
 			-- `Void' if not present in that class.
 		require
@@ -338,7 +338,7 @@ feature -- Access
 			end
 		end
 
-	precursors: ARRAYED_LIST [CLASS_C] is
+	precursors: ARRAYED_LIST [CLASS_C]
 			-- Precursor definition of written in classes
 			-- of current feature defined in `from_c'
 		local
@@ -372,7 +372,7 @@ feature -- Access
 			end
 		end;
 
-	is_debuggable: BOOLEAN is
+	is_debuggable: BOOLEAN
 			-- Is feature debuggable?
 		local
 			cl: CLASS_C
@@ -397,7 +397,7 @@ feature -- Access
 				(written_class /= Void and then written_class.is_debuggable)
 		end;
 
-	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN is
+	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Text of the feature.
 			-- Void if unreadable file
 		local
@@ -453,7 +453,7 @@ feature -- Access
 			end
 		end;
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class where the feature was evaluated in
 		do
 			check
@@ -462,7 +462,7 @@ feature -- Access
 			Result := Eiffel_system.class_of_id (associated_class_id);
 		end;
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 			-- Class where the feature is written in
 		require
 			good_written_in: written_in /= 0;
@@ -470,14 +470,14 @@ feature -- Access
 			Result := Eiffel_system.class_of_id (written_in);
 		end;
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Has the feature been compiled?
 			-- (Has been compiled if passed degree 4)
 		do
 			Result := body_index /= 0 or else written_class.is_true_external
 		end;
 
-	is_exported_to (client: CLASS_C): BOOLEAN is
+	is_exported_to (client: CLASS_C): BOOLEAN
 			-- Is current feature exported to class `client' ?
 		require
 			good_argument: client /= Void;
@@ -486,7 +486,7 @@ feature -- Access
 			Result := export_status.is_exported_to (client);
 		end;
 
-	ast: FEATURE_AS is
+	ast: FEATURE_AS
 			-- Associated AST structure for feature
 		local
 			class_ast: CLASS_AS;
@@ -518,13 +518,13 @@ feature -- Access
 			end
 		end;
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := name_id
 		end;
 
-	callees (a_flag: NATURAL_16): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]] is
+	callees (a_flag: NATURAL_16): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]]
 			-- Callees of feature in `associated_class'
 			-- from client class `su_class'.
 		require
@@ -577,7 +577,7 @@ feature -- Access
 			valid_result: Result /= Void implies not Result.is_empty
 		end
 
-	callers (cl_class: CLASS_C; a_flag: NATURAL_16): SORTED_TWO_WAY_LIST [STRING] is
+	callers (cl_class: CLASS_C; a_flag: NATURAL_16): SORTED_TWO_WAY_LIST [STRING]
 			-- Callers for feature from `associated_class'
 			-- to client class `cl_class'
 		require
@@ -633,7 +633,7 @@ feature -- Access
 					and then Result.sorted
 		end
 
-	updated_version: E_FEATURE is
+	updated_version: E_FEATURE
 			-- Updated version of feature after a compilation
 			-- (First it checks if the `associated_class' is valid and
 			-- retrieves the feature using `name' from the
@@ -654,7 +654,7 @@ feature -- Access
 			end
 		end
 
-	number_of_breakpoint_slots: INTEGER is
+	number_of_breakpoint_slots: INTEGER
 			-- Number of breakpoint slots in the feature (:::)
 			-- It includes the pre/postcondition (inner & herited)
 			-- and the rescue clause.
@@ -667,7 +667,7 @@ feature -- Access
 			end
 		end
 
-	first_breakpoint_slot_index: INTEGER is
+	first_breakpoint_slot_index: INTEGER
 			-- Index of the first breakpoin-slot of the body
 			-- Take into account inherited and inner assertions
 		local
@@ -681,12 +681,12 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 			Result := name < other.name
 		end
 
-	same_as (other: E_FEATURE): BOOLEAN is
+	same_as (other: E_FEATURE): BOOLEAN
 		require
 			other_not_void: other /= Void
 		do
@@ -700,7 +700,7 @@ feature -- Comparison
 
 feature -- Output
 
-	append_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_signature (a_text_formatter: TEXT_FORMATTER)
 			-- Append the signature of current feature in `a_text_formatter'
 		require
 			non_void_st: a_text_formatter /= Void
@@ -709,7 +709,7 @@ feature -- Output
 			append_just_signature (a_text_formatter)
 		end
 
-	append_just_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_just_signature (a_text_formatter: TEXT_FORMATTER)
 			-- Append just signature of feature in `a_text_formatter'.
 		require
 			st_not_void: a_text_formatter /= Void
@@ -718,7 +718,7 @@ feature -- Output
 			append_just_type (a_text_formatter)
 		end
 
-	append_arguments (a_text_formatter: TEXT_FORMATTER) is
+	append_arguments (a_text_formatter: TEXT_FORMATTER)
 			-- Append just arguments to `a_text_formatter'.
 		require
 			st_not_void: a_text_formatter /= Void
@@ -762,7 +762,7 @@ feature -- Output
 			end
 		end
 
-	append_just_type (a_text_formatter: TEXT_FORMATTER) is
+	append_just_type (a_text_formatter: TEXT_FORMATTER)
 			-- Append type of the feature to `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -774,7 +774,7 @@ feature -- Output
 			end
 		end
 
-	append_name (a_text_formatter: TEXT_FORMATTER) is
+	append_name (a_text_formatter: TEXT_FORMATTER)
 			-- Append the name of the feature in `a_text_formatter'
 		require
 			valid_st: a_text_formatter /= Void
@@ -802,7 +802,7 @@ feature -- Output
 			end
 		end
 
-	append_full_name (a_text_formatter: TEXT_FORMATTER) is
+	append_full_name (a_text_formatter: TEXT_FORMATTER)
 			-- Append name of the feature in `a_text_formatter' in its complete form
 			-- (with infix and prefix keywords and alias names if any).
 		require
@@ -828,7 +828,7 @@ feature -- Output
 			end
 		end
 
-	infix_symbol : STRING is
+	infix_symbol : STRING
 			--
 		require
 			is_infix: is_infix
@@ -838,7 +838,7 @@ feature -- Output
 			infix_symbol_not_void: Result /= Void
 		end
 
-	prefix_symbol : STRING is
+	prefix_symbol : STRING
 			--
 		require
 			is_infix: is_prefix
@@ -848,7 +848,7 @@ feature -- Output
 			prefix_symbol_not_void: Result /= Void
 		end
 
-	alias_symbol: STRING is
+	alias_symbol: STRING
 		require
 			is_alias: has_alias_name
 		do
@@ -859,7 +859,7 @@ feature -- Output
 
 feature -- Output
 
-	feature_signature: STRING is
+	feature_signature: STRING
 			-- Signature of Current feature
 		do
 			create Result.make (50)
@@ -867,7 +867,7 @@ feature -- Output
 			append_arguments_to (Result)
 		end
 
-	append_arguments_to (s: STRING) is
+	append_arguments_to (s: STRING)
 			-- Append arguments to `s'.
 		require
 			s_not_void: s /= Void
@@ -894,7 +894,7 @@ feature -- Output
 			end
 		end
 
-	valid_body_index: BOOLEAN is
+	valid_body_index: BOOLEAN
 			-- The use of this routine as precondition for real_body_id
 			-- allows the enhancement of the external functions
 			-- Indeed, if an external has to be encapsulated (macro, signature)
@@ -910,7 +910,7 @@ feature -- Output
 
 feature -- Implementation
 
-	real_body_id: INTEGER is
+	real_body_id: INTEGER
 			-- Real body id at compilation time.
 		require
 			valid_body_index: valid_body_index
@@ -932,7 +932,7 @@ feature {E_FEATURE} -- Implementation
 
 feature -- Implementation
 
-	associated_feature_i: FEATURE_I is
+	associated_feature_i: FEATURE_I
 			-- Assocated feature_i
 		do
 			if is_invariant then
@@ -950,61 +950,61 @@ feature -- Implementation
 
 feature {FEATURE_I} -- Setting
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: INTEGER)
 			-- Set `written_in' to `i'.
 		do
 			written_in := i;
 		end;
 
-	set_associated_class_id (i: INTEGER) is
+	set_associated_class_id (i: INTEGER)
 			-- Set `associated_class_id' to `i'.
 		do
 			associated_class_id := i
 		end;
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: INTEGER)
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
 		end;
 
-	set_is_origin (b: BOOLEAN) is
+	set_is_origin (b: BOOLEAN)
 			-- Assign `b' to `is_origin'.
 		do
 			is_origin := b;
 		end;
 
-	set_export_status (e: EXPORT_I) is
+	set_export_status (e: EXPORT_I)
 			-- Assign `e' to `export_status'.
 		do
 			export_status := e;
 		end;
 
-	set_is_frozen (b: BOOLEAN) is
+	set_is_frozen (b: BOOLEAN)
 			-- Assign `b' to `is_frozen'.
 		do
 			is_frozen := b;
 		end;
 
-	set_is_infix (b: BOOLEAN) is
+	set_is_infix (b: BOOLEAN)
 			-- Assign `b' to `is_infix'.
 		do
 			is_infix := b;
 		end;
 
-	set_is_prefix (b: BOOLEAN) is
+	set_is_prefix (b: BOOLEAN)
 			-- Assign `b' to `is_prefix'.
 		do
 			is_prefix := b;
 		end;
 
-	set_rout_id_set (set: like rout_id_set) is
+	set_rout_id_set (set: like rout_id_set)
 			-- Assign `set' to `rout_id_set'.
 		do
 			rout_id_set := set;
 		end;
 
-	set_is_il_external (v: like is_il_external) is
+	set_is_il_external (v: like is_il_external)
 			-- Set `is_il_external' to `v'.
 		do
 			is_il_external := v
@@ -1012,7 +1012,7 @@ feature {FEATURE_I} -- Setting
 			is_il_external_set: is_il_external = v
 		end
 
-	set_written_feature_id (v: like written_feature_id) is
+	set_written_feature_id (v: like written_feature_id)
 			-- Set `written_feature_id' with `v'.
 		require
 			v_non_negative: v >= 0
@@ -1026,7 +1026,7 @@ invariant
 	associated_class_not_void: is_valid implies associated_class /= Void
 	written_class_not_void: is_valid implies written_class /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

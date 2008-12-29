@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a class performs multiple inheritance of classes that are either%
 		%external classes or that inherits from external classes."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	subcode: INTEGER is 2
+	subcode: INTEGER = 2
 			-- Identifier for VIFI error.
 
 	parent_classes: LIST [CLASS_C]
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parent_classes (l: like parent_classes) is
+	set_parent_classes (l: like parent_classes)
 			-- Set `l' to `parent_classes'.
 		require
 			l_not_void: l /= Void
@@ -40,7 +40,7 @@ feature -- Setting
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			check
@@ -65,7 +65,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

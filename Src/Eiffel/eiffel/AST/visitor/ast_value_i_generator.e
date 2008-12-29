@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Given a constant value provides its associated VALUE_I instance"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	value_i (a_node: ATOMIC_AS; a_class: CLASS_C): VALUE_I is
+	value_i (a_node: ATOMIC_AS; a_class: CLASS_C): VALUE_I
 			-- Associated VALUE_I instance of `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -48,17 +48,17 @@ feature {NONE} -- Implementation
 	current_class: CLASS_C
 			-- Class in which current AST node appears.
 
-	process_bit_const_as (l_as: BIT_CONST_AS) is
+	process_bit_const_as (l_as: BIT_CONST_AS)
 		do
 			create {BIT_VALUE_I} last_value.make (l_as.value.name)
 		end
 
-	process_bool_as (a_bool: BOOL_AS) is
+	process_bool_as (a_bool: BOOL_AS)
 		do
 			create {BOOL_VALUE_I} last_value.make (a_bool.value)
 		end
 
-	process_char_as (a_char: CHAR_AS) is
+	process_char_as (a_char: CHAR_AS)
 		do
 			if {CHARACTER_8}.min_value <= a_char.value.code and then a_char.value.code <= {CHARACTER_8}.max_value then
 				create {CHAR_VALUE_I} last_value.make_character_8 (a_char.value.to_character_8)
@@ -67,12 +67,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_integer_as (a_int: INTEGER_CONSTANT) is
+	process_integer_as (a_int: INTEGER_CONSTANT)
 		do
 			last_value := a_int.twin
 		end
 
-	process_real_as (a_real: REAL_AS) is
+	process_real_as (a_real: REAL_AS)
 		local
 			l_type: TYPE_A
 		do
@@ -91,17 +91,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_string_as (a_string: STRING_AS) is
+	process_string_as (a_string: STRING_AS)
 		do
 			create {STRING_VALUE_I} last_value.make (a_string.value, False)
 		end
 
-	process_verbatim_string_as (a_string: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (a_string: VERBATIM_STRING_AS)
 		do
 			create {STRING_VALUE_I} last_value.make (a_string.value, False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

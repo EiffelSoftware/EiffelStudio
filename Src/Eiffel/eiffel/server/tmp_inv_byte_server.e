@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for invariant byte code on temporary file. This server is%
 				%used during the compilation. The goal is to merge the file Tmp_inv_byte_file%
 				%and Inv_byte_file if the compilation is successful.%
@@ -24,7 +24,7 @@ feature
 	to_remove: LINKED_LIST [INTEGER];
 			-- Ids to remove during finalization
 
-	make is
+	make
 			-- Hash table creation
 		do
 			Precursor
@@ -32,13 +32,13 @@ feature
 			to_remove.compare_objects
 		end;
 
-	cache: CACHE [INVARIANT_B] is
+	cache: CACHE [INVARIANT_B]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	remove_id (i: INTEGER) is
+	remove_id (i: INTEGER)
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then
@@ -46,7 +46,7 @@ feature
 			end;
 		end;
 
-	flush is
+	flush
 			-- Finalization after a successful recompilation.
 		do
 			Precursor
@@ -62,10 +62,10 @@ feature
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER = 500;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

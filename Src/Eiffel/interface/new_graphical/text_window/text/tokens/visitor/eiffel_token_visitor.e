@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor of Eiffel specific tokens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,79 +13,79 @@ inherit
 
 feature -- Visit
 
-	process_editor_token_breakpoint (a_tok: EDITOR_TOKEN_BREAKPOINT) is
+	process_editor_token_breakpoint (a_tok: EDITOR_TOKEN_BREAKPOINT)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_class (a_tok: EDITOR_TOKEN_CLASS) is
+	process_editor_token_class (a_tok: EDITOR_TOKEN_CLASS)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_cluster (a_tok: EDITOR_TOKEN_CLUSTER) is
+	process_editor_token_cluster (a_tok: EDITOR_TOKEN_CLUSTER)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_error_code (a_tok: EDITOR_TOKEN_ERROR_CODE) is
+	process_editor_token_error_code (a_tok: EDITOR_TOKEN_ERROR_CODE)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_feature (a_tok: EDITOR_TOKEN_FEATURE) is
+	process_editor_token_feature (a_tok: EDITOR_TOKEN_FEATURE)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_feature_start (a_tok: EDITOR_TOKEN_FEATURE_START) is
+	process_editor_token_feature_start (a_tok: EDITOR_TOKEN_FEATURE_START)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_object (a_tok: EDITOR_TOKEN_OBJECT) is
+	process_editor_token_object (a_tok: EDITOR_TOKEN_OBJECT)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_generic (a_tok: EDITOR_TOKEN_GENERIC) is
+	process_editor_token_generic (a_tok: EDITOR_TOKEN_GENERIC)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_local (a_tok: EDITOR_TOKEN_LOCAL) is
+	process_editor_token_local (a_tok: EDITOR_TOKEN_LOCAL)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_reserved (a_tok: EDITOR_TOKEN_RESERVED) is
+	process_editor_token_reserved (a_tok: EDITOR_TOKEN_RESERVED)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_tag (a_tok: EDITOR_TOKEN_TAG) is
+	process_editor_token_tag (a_tok: EDITOR_TOKEN_TAG)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET) is
+	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET)
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

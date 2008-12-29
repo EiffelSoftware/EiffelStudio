@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window containing several tools"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	init_tools_list is
+	init_tools_list
 			-- Create and set up the list of tools that can be put on the left
 			-- and on the bottom-right.
 		do
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Status setting
 
-	hide_tools is
+	hide_tools
 			-- Hide all tools.
 			--| Used for optimization purposes, to avoid computing a lot
 			--| when changing completely the display of the window.
@@ -101,7 +101,7 @@ feature -- Status setting
 			panel.hide
 		end
 
-	show_tools is
+	show_tools
 			-- Show all tools.
 		do
 			panel.show
@@ -136,13 +136,13 @@ feature -- Favorites & History handling.
 	cluster_manager: EB_CLUSTER_MANAGER
 			-- Graphical manager for clusters and classes, contains the cluster tree.
 
-	set_favorites_manager (a_favorites_manager: EB_FAVORITES_MANAGER) is
+	set_favorites_manager (a_favorites_manager: EB_FAVORITES_MANAGER)
 			-- Set `favorites_manager' to `a_favorites_manager'.
 		do
 			favorites_manager := a_favorites_manager
 		end
 
-	set_cluster_manager (a_cluster_manager: EB_CLUSTER_MANAGER) is
+	set_cluster_manager (a_cluster_manager: EB_CLUSTER_MANAGER)
 			-- Set `cluster_manager' to `a_cluster_manager'.
 		do
 			cluster_manager := a_cluster_manager
@@ -153,7 +153,7 @@ feature -- Explorer bar handling.
 	splitter_position: INTEGER
 			-- Position of the main splitter.
 
-	restore_bars is
+	restore_bars
 			-- A maximized item has been restored.
 		do
 				-- Do not force the bar to be shown if it is empty, as
@@ -167,19 +167,19 @@ feature {NONE} -- Initialization flags
 
 feature {NONE} -- Constants
 
-	Frame_constants: EV_FRAME_CONSTANTS is
+	Frame_constants: EV_FRAME_CONSTANTS
 			-- Default constants for Frame look.
 		once
 			create Result
 		end
 
-	Default_colors: EV_STOCK_COLORS is
+	Default_colors: EV_STOCK_COLORS
 			-- Default Vision2 colors.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

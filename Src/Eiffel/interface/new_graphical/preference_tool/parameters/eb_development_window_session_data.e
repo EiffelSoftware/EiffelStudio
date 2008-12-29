@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All shared attributes specific to a development window during a session"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Creation
 
-	make_from_window_data (a_window_data: EB_DEVELOPMENT_WINDOW_DATA) is
+	make_from_window_data (a_window_data: EB_DEVELOPMENT_WINDOW_DATA)
 			-- Make `Current' using window data `a_window_data'.
 		require
 			a_window_data_not_void: a_window_data /= Void
@@ -113,7 +113,7 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 feature {EB_DEVELOPMENT_WINDOW} -- Element change
 
-	save_current_target (a_current_target: like current_target; a_type: BOOLEAN) is
+	save_current_target (a_current_target: like current_target; a_type: BOOLEAN)
 			-- Save the object that the window is currently targeting.
 		do
 			if a_current_target /= Void then
@@ -129,7 +129,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			type_set: current_target_type = a_type
 		end
 
-	save_open_classes (a_open_classes: like open_classes) is
+	save_open_classes (a_open_classes: like open_classes)
 			-- Save Open classes
 		require
 			a_open_classes_not_void: a_open_classes /= Void
@@ -139,7 +139,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			open_classes_not_void: open_classes /= Void
 		end
 
-	save_open_clusters (a_open_clusters: like open_clusters) is
+	save_open_clusters (a_open_clusters: like open_clusters)
 			-- Save open clusters
 		require
 			a_open_clusters_not_void: a_open_clusters /= Void
@@ -149,7 +149,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			open_clusters_not_void: open_clusters /= Void
 		end
 
-	save_formatting_marks (a_show_formatter_marks: like show_formatter_marks) is
+	save_formatting_marks (a_show_formatter_marks: like show_formatter_marks)
 			-- Save formatter marks
 		do
 			show_formatter_marks := a_show_formatter_marks
@@ -157,7 +157,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			show_formatter_marks_set: show_formatter_marks = a_show_formatter_marks
 		end
 
-	save_context_data (a_class_id, a_feature_id: STRING; a_tab_index: INTEGER) is
+	save_context_data (a_class_id, a_feature_id: STRING; a_tab_index: INTEGER)
 			-- Save the context information of the window.
 			-- Feature in feature relation tool.
 			-- Class in class tool. There is no need to save classes targeted in other tools
@@ -171,7 +171,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			feature_relation_feature_id_set: feature_relation_feature_id = a_feature_id
 		end
 
-	save_editor_position (a_position: INTEGER) is
+	save_editor_position (a_position: INTEGER)
 			-- Save the position that editor cursor is currently on.
 		require
 			a_position_valid: a_position > 0
@@ -181,42 +181,42 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			editor_position_set: editor_position = a_position
 		end
 
-	save_size (a_width, a_height: INTEGER) is
+	save_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
 			width := a_width
 			height := a_height
 		end
 
-	save_maximized_size (a_width, a_height: INTEGER) is
+	save_maximized_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
 			maximized_width := a_width
 			maximized_height := a_height
 		end
 
-	save_position (a_x, a_y: INTEGER) is
+	save_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
 			x_position := a_x
 			y_position := a_y
 		end
 
-	save_maximized_position (a_x, a_y: INTEGER) is
+	save_maximized_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
 			maximized_x_position := a_x
 			maximized_y_position := a_y
 		end
 
-	save_window_state (a_minimized, a_maximized: BOOLEAN) is
+	save_window_state (a_minimized, a_maximized: BOOLEAN)
 			-- <Precursor>
 		do
 			is_maximized := a_maximized
 			is_minimized := a_minimized
 		end
 
-	save_force_debug_mode (a_bool: BOOLEAN) is
+	save_force_debug_mode (a_bool: BOOLEAN)
 			-- Save if `is_force_debug_mode'
 		do
 			is_force_debug_mode := a_bool
@@ -224,19 +224,19 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, general_toolbar_layout)
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, refactoring_toolbar_layout)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					eweasel Result Analyzer.
 					Convert eweasel string output to {ES_EWEASEL_TEST_RESULT_ITEM}
@@ -19,7 +19,7 @@ create
 
 feature -- Command
 
-	reset is
+	reset
 			-- Clear all last test run caches
 		local
 			l_test_result_tool: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
@@ -41,7 +41,7 @@ feature -- Command
 			cleared: all_results.is_empty
 		end
 
-	on_eweasel_output (a_string: STRING) is
+	on_eweasel_output (a_string: STRING)
 			-- Handle eweasel output from process library
 			-- Note, this is called in another thread but not Eiffel Studio UI thread
 		do
@@ -50,13 +50,13 @@ feature -- Command
 			mutex.unlock
 		end
 
-	on_eweasel_exit is
+	on_eweasel_exit
 			-- Handle eweasel output string just after eweasel exited.
 		do
 			prcess_output ("", True)
 		end
 
-	start_buffer_string_moving is
+	start_buffer_string_moving
 			-- Call `move_process_library_output_to_testing_tool' in idle actions
 		require
 			cleared: is_idle_agent_cleared
@@ -70,7 +70,7 @@ feature -- Command
 			created: buffer_string_moving_agent /= Void
 		end
 
-	clear_buffer_string_moving is
+	clear_buffer_string_moving
 			-- Clear `buffer_string_moving_agent' if possible
 		local
 			l_env: EV_ENVIRONMENT
@@ -84,7 +84,7 @@ feature -- Command
 			cleared: is_idle_agent_cleared
 		end
 
-	prcess_output (a_string: STRING; a_on_exit: BOOLEAN) is
+	prcess_output (a_string: STRING; a_on_exit: BOOLEAN)
 			-- Call handlers to analyze output string.
 		require
 			not_void: a_string /= Void
@@ -132,7 +132,7 @@ feature -- Command
 			cleared:
 		end
 
-	process_result (a_item: ES_EWEASEL_TEST_RESULT_ITEM) is
+	process_result (a_item: ES_EWEASEL_TEST_RESULT_ITEM)
 			-- Process analyzed result.
 		require
 			not_void: a_item /= Void
@@ -158,7 +158,7 @@ feature -- Command
 			added: all_results.has (a_item)
 		end
 
-	set_all_test_cases_count (a_count: INTEGER) is
+	set_all_test_cases_count (a_count: INTEGER)
 			-- Set `all_test_cases_count' with `a_count'
 		require
 			valie: a_count >= 0
@@ -173,7 +173,7 @@ feature -- Query
 	all_test_cases_count: INTEGER
 			-- How many test cases expected to run
 
-	all_results: ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM] is
+	all_results: ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]
 			-- All result items analyzed from eweasel output.
 		do
 			if internal_all_results = Void then
@@ -184,7 +184,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	all_hanlders: ARRAYED_LIST [ES_EWEASEL_RESULT_HANDLER] is
+	all_hanlders: ARRAYED_LIST [ES_EWEASEL_RESULT_HANDLER]
 			-- All result handlers
 		once
 			create Result.make (5)
@@ -203,7 +203,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	is_idle_agent_cleared: BOOLEAN is
+	is_idle_agent_cleared: BOOLEAN
 			-- If `buffer_string_moving_agent' clear ?
 		do
 			Result := buffer_string_moving_agent = Void
@@ -214,7 +214,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 	one_block_cell: CELL [TUPLE [content: STRING_GENERAL; end_index: INTEGER]]
 			-- One eweasel output block of a test case run
 			-- This feature is used by all {EWEASEL_RESULT_HANDLER} during a execution of `prcess_output'
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
@@ -224,7 +224,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 
 	lines_cell: CELL [LIST [STRING_8]]
 			-- Singleton cell used by `lines'
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (Void)
@@ -232,7 +232,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 			not_void: Result /= Void
 		end
 
-	reset_cache is
+	reset_cache
 			-- Clear cache
 		do
 			one_block_cell.put (Void)
@@ -242,7 +242,7 @@ feature {ES_EWEASEL_RESULT_HANDLER} -- Shared cache
 			cleared: lines_cell.item = Void
 		end
 
-	one_block: TUPLE [content: STRING_GENERAL; end_index: INTEGER] is
+	one_block: TUPLE [content: STRING_GENERAL; end_index: INTEGER]
 			-- Item in `one_block_cell'
 		do
 			Result := one_block_cell.item
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	all_output_string: STRING is
+	all_output_string: STRING
 			-- All eweasel output string.
 		do
 			if internal_all_output_string = Void then
@@ -272,10 +272,10 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	output_buffer: STRING is
+	output_buffer: STRING
 			-- Thread library output buffer
 			-- This is the ONLY multi-thread critical section of testing tool
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make_empty
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	is_need_iteration (a_buffer_string: STRING): BOOLEAN is
+	is_need_iteration (a_buffer_string: STRING): BOOLEAN
 			-- If `a_buffer_string' contain a eweasel block which need analyze
 		local
 			l_finder: ES_EWEASEL_OUTPUT_REGULAR_EXPRESSION_FINDER
@@ -294,9 +294,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Multi-thread implementation
 
-	mutex: MUTEX is
+	mutex: MUTEX
 			-- Mutex used by
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make
@@ -305,7 +305,7 @@ feature {NONE} -- Multi-thread implementation
 	buffer_string_moving_agent: PROCEDURE [ES_EWEASEL_RESULT_ANALYZER, TUPLE]
 			-- Agent instance which created by `start_buffer_string_moving'
 
-	move_process_library_output_to_testing_tool is
+	move_process_library_output_to_testing_tool
 			-- Move process library output to Eiffel Studio UI thread in idle actions
 		do
 			mutex.lock
@@ -316,7 +316,7 @@ feature {NONE} -- Multi-thread implementation
 			mutex.unlock
 		end
 
-	on_eweasel_output_testing_tool (a_string: STRING) is
+	on_eweasel_output_testing_tool (a_string: STRING)
 			-- Handle eweasel output string in Eiffel Studio UI thread
 		require
 			not_void: a_string /= Void and then not a_string.is_empty
@@ -338,7 +338,7 @@ feature {NONE} -- Cache
 	internal_all_results: like all_results;
 			-- Instance holder of `all_result'.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

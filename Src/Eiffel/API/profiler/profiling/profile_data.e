@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of a class containing profile information."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Creation feature
 
-	make(num_call : INTEGER; feature_percentage, feature_total, feature_descendants: REAL) is
+	make(num_call : INTEGER; feature_percentage, feature_total, feature_descendants: REAL)
 			-- Create profile data for a single function
 		do
 			calls := num_call
@@ -31,7 +31,7 @@ feature -- Creation feature
 
 feature -- Output
 
-	out : STRING is
+	out : STRING
 			-- Representation for output.
 		do
 			create Result.make (0);
@@ -49,7 +49,7 @@ feature -- Output
 
 feature -- Compare
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- is `Current' equal to `other'?
 		do
 			Result := calls = other.calls and then
@@ -61,7 +61,7 @@ feature -- Compare
 
 feature -- copy features
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying the attributes of `other'.
 			-- (This is also used by `clone'.)
 		deferred
@@ -69,7 +69,7 @@ feature -- copy features
 
 feature -- Status report
 
-	function: LANGUAGE_FUNCTION is
+	function: LANGUAGE_FUNCTION
 			-- The function where all is about.
 		deferred
 		end
@@ -96,14 +96,14 @@ feature -- attributes
 
 feature {PROFILE_SET} -- Spit Information (for debugging)
 
-	spit_info is
+	spit_info
 		-- Spits all kinds of information about Current.
 		do
 			io.error.put_string (out);
 			io.error.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

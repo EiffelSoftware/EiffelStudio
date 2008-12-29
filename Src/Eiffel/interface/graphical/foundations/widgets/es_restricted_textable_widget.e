@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A {EV_TEXTABLE} widget which has it's text limited to a formattable input.
 		]"
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `widget'.
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

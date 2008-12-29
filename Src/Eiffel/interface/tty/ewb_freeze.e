@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Freeze eiffel system."
@@ -19,24 +19,24 @@ inherit
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := freeze_cmd_name
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := freeze_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := freeze_abb
 		end;
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 		do
 			if Eiffel_project.is_read_only then
 				localized_print_error (ewb_names.read_only_project_cannot_compile)
@@ -48,7 +48,7 @@ feature {NONE} -- Execution
 			end
 		end;
 
-	execute is
+	execute
 		do
 			if Eiffel_project.is_read_only then
 				localized_print_error (ewb_names.read_only_project_cannot_compile)
@@ -66,13 +66,13 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-    perform_compilation is
+    perform_compilation
             -- Melt eiffel project.
         do
             Eiffel_project.freeze;
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

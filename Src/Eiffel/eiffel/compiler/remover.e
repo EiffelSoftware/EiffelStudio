@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Dead code removal
@@ -20,7 +20,7 @@ create
 
 feature
 
-	make is
+	make
 			-- Initialization
 		do
 			old_make
@@ -31,7 +31,7 @@ feature
 
 feature
 
-	record (feat: FEATURE_I; in_class: CLASS_C) is
+	record (feat: FEATURE_I; in_class: CLASS_C)
 			-- Record Eiffel routines reachable by feature `feat' from
 			-- static type `in_class'.
 		local
@@ -63,7 +63,7 @@ feature
 
 feature -- Array optimization
 
-	record_array_descendants is
+	record_array_descendants
 		do
 			array_optimizer.record_array_descendants
 		end
@@ -81,7 +81,7 @@ feature -- Control
 
 feature {NONE}
 
-	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE)
 		local
 			depend_unit: DEPEND_UNIT
 			rout_id: INTEGER
@@ -110,9 +110,9 @@ feature {NONE}
 	features: INTEGER
 		-- Number of features for the current dot
 
-	features_per_message: INTEGER is 100
+	features_per_message: INTEGER = 100
 
-	mark_alive (body_index: INTEGER) is
+	mark_alive (body_index: INTEGER)
 			-- Record feature `feat'
 		do
 			Precursor {FEAT_ITERATOR} (body_index)
@@ -131,7 +131,7 @@ end
 
 feature -- for debug purpose
 
-	print_dep (dep: DEPEND_UNIT) is
+	print_dep (dep: DEPEND_UNIT)
 		local
 			a_class: CLASS_C
 		do
@@ -153,7 +153,7 @@ feature -- for debug purpose
 			io.put_string (")%N")
 		end
 
-	dump_alive is
+	dump_alive
 		local
 			i, j: INTEGER
 		do
@@ -178,7 +178,7 @@ feature -- for debug purpose
 			io.put_string ("%N")
 		end
 
-	dump_marked is
+	dump_marked
 		local
 			i, j: INTEGER
 			marked: BOOLEAN
@@ -205,7 +205,7 @@ feature -- for debug purpose
 			io.put_string ("%N%N%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

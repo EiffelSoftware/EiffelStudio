@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a generic type has not the exact number %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VTUG";
+	code: STRING = "VTUG";
 
 	e_feature: E_FEATURE;
 
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if e_feature /= Void then
 				a_text_formatter.add ("In feature: ");
@@ -68,7 +68,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like e_feature} e_feature and then {l_class: !like class_c} class_c then
@@ -80,14 +80,14 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_base_class (c: CLASS_C) is
+	set_base_class (c: CLASS_C)
 		require
 			valid_c: c /= Void
 		do
 			base_class := c
 		end;
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		require
 			valid_t: t /= Void
@@ -95,20 +95,20 @@ feature {COMPILER_EXPORTER}
 			type := t;
 		end;
 
-	set_feature (f: FEATURE_I) is
+	set_feature (f: FEATURE_I)
 		do
 			if f /= Void then
 				e_feature := f.enclosing_feature.api_feature (f.written_in);
 			end
 		end;
 
-	set_entity_name (i: STRING) is
+	set_entity_name (i: STRING)
 			-- Assign `i' to `entity_name' ?
 		do
 			entity_name := i;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

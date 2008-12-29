@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Temporary data structure of a class produced after first pass.
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize_from_class_as (a_class_as: CLASS_AS) is
+	initialize_from_class_as (a_class_as: CLASS_AS)
 				-- Initialize `Current'.
 			require
 				a_class_as_not_void: a_class_as /= Void
@@ -90,7 +90,7 @@ feature -- Access
 	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
 			-- Convertors
 
-	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
+	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			-- Feature abstract syntax
 		do
 			if Tmp_ast_server.has (class_id) then
@@ -100,7 +100,7 @@ feature -- Access
 			end;
 		end;
 
-	creation_table (feat_table: FEATURE_TABLE): HASH_TABLE [EXPORT_I, STRING] is
+	creation_table (feat_table: FEATURE_TABLE): HASH_TABLE [EXPORT_I, STRING]
 			-- Creators table
 		require
 			good_argument: feat_table /= Void;
@@ -193,7 +193,7 @@ feature -- Access
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

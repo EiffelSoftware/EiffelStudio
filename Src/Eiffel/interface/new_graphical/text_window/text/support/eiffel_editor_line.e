@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A editor line, Eiffel style."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialisation
 
-	make_empty_line is
+	make_empty_line
 			-- Create an empty line.
 		local
 			t_eol: EDITOR_TOKEN_EOL
@@ -42,7 +42,7 @@ feature -- Initialisation
 			update_token_information
 		end
 
-	make_from_lexer (lexer: EDITOR_SCANNER) is
+	make_from_lexer (lexer: EDITOR_SCANNER)
 			-- Create a line using token from `lexer'
 		local
 			t_eol				: EDITOR_TOKEN_EOL
@@ -82,19 +82,19 @@ feature -- Initialisation
 
 feature -- Access
 
-	breakpoint_token: EDITOR_TOKEN_BREAKPOINT is
+	breakpoint_token: EDITOR_TOKEN_BREAKPOINT
 			-- Token containing the breakpoint information for the line.
 		do
 			Result ?= real_first_token
 		end
 
-	number_token: EDITOR_TOKEN_LINE_NUMBER is
+	number_token: EDITOR_TOKEN_LINE_NUMBER
 			-- Token containing the line number information for the line.
 		do
 			Result ?= real_first_token.next
 		end
 
-	content: LIST [EDITOR_TOKEN] is
+	content: LIST [EDITOR_TOKEN]
 			-- Content tokens in current
 			-- Breakpoint token, line number token and EOL token are not included.
 		local
@@ -114,7 +114,7 @@ feature -- Access
 invariant
 	has_breakpoint_token: breakpoint_token /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

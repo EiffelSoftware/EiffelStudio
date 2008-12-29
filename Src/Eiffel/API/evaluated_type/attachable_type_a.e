@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type that can be explicitly marked as attached or detachable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,19 +22,19 @@ inherit
 
 feature -- Status report
 
-	has_attached_mark: BOOLEAN is
+	has_attached_mark: BOOLEAN
 			-- Is type explicitly marked as attached?
 		do
 			Result := attachment_bits & has_attached_mark_mask /= 0
 		end
 
-	has_detachable_mark: BOOLEAN is
+	has_detachable_mark: BOOLEAN
 			-- Is type explicitly marked as attached?
 		do
 			Result := attachment_bits & has_detachable_mark_mask /= 0
 		end
 
-	is_attached: BOOLEAN is
+	is_attached: BOOLEAN
 			-- Is the type attached?
 		do
 			Result := (attachment_bits & is_attached_mask /= 0) or else is_expanded
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Modification
 
-	set_attached_mark is
+	set_attached_mark
 			-- Mark class type declaration as having an explicit attached mark.
 		do
 			attachment_bits := has_attached_mark_mask | is_attached_mask
@@ -63,7 +63,7 @@ feature -- Modification
 			is_attached: is_attached
 		end
 
-	set_detachable_mark is
+	set_detachable_mark
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			attachment_bits := has_detachable_mark_mask
@@ -72,7 +72,7 @@ feature -- Modification
 			not_is_attached: not is_expanded implies not is_attached
 		end
 
-	set_is_attached is
+	set_is_attached
 			-- Set attached type property.
 		require
 			not_has_detachable_mark: is_expanded or else not has_detachable_mark
@@ -216,19 +216,19 @@ feature {NONE} -- Attachment properties
 	attachment_bits: NATURAL_8
 			-- Associated attachment flags
 
-	has_detachable_mark_mask: NATURAL_8 is 1
+	has_detachable_mark_mask: NATURAL_8 = 1
 			-- Mask in `attachment_bits' that tells whether the type has an explicit detachable mark
 
-	has_attached_mark_mask: NATURAL_8 is 2
+	has_attached_mark_mask: NATURAL_8 = 2
 			-- Mask in `attachment_bits' that tells whether the type has an explicit attached mark
 
-	is_attached_mask: NATURAL_8 is 4
+	is_attached_mask: NATURAL_8 = 4
 			-- Mask in `attachment_bits' that tells whether the type is attached
 
-	is_implicitly_attached_mask: NATURAL_8 is 8;
+	is_implicitly_attached_mask: NATURAL_8 = 8;
 			-- Mask in `attachment_bits' that tells whether the type is implicitly attached
 
-indexing
+note
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

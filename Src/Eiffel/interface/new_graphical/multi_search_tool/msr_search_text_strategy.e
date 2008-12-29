@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search in a string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_range: like surrounding_text_range;
 			a_class_name: like class_name;
 			a_path: like text_in_file_path;
-			a_source_text: STRING_32) is
+			a_source_text: STRING_32)
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			source_text_attached: a_source_text = text_to_be_searched_internal.real_string
 		end
 
-	make_empty is
+	make_empty
 			-- Empty object
 		do
 			create pcre_regex.make
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text_to_be_searched: STRING_32 is
+	text_to_be_searched: STRING_32
 			-- Text to be searched in
 		require
 			is_text_to_be_searched_set : is_text_to_be_searched_set
@@ -63,7 +63,7 @@ feature -- Access
 			text_to_be_searched_not_void: Result = text_to_be_searched_internal.real_string
 		end
 
-	text_to_be_searched_adapter: MSR_STRING_ADAPTER is
+	text_to_be_searched_adapter: MSR_STRING_ADAPTER
 			-- `text_to_be_searched_internal', an adapter contains `text_to_be_searched'
 		do
 			Result := text_to_be_searched_internal
@@ -71,7 +71,7 @@ feature -- Access
 			text_to_be_searched_adapter_not_void: Result /= Void
 		end
 
-	text_in_file_path: FILE_NAME is
+	text_in_file_path: FILE_NAME
 			-- Path of the file in which the searching text is
 		require
 			text_in_file_path_not_void: is_text_in_file_path_set
@@ -81,7 +81,7 @@ feature -- Access
 			text_in_file_path_not_void: Result = text_in_file_path_internal
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name of the searching text
 		require
 			is_launched : is_launched
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_text_to_be_searched_set : BOOLEAN is
+	is_text_to_be_searched_set : BOOLEAN
 			-- Is `text_to_be_searched' set?
 		do
 			Result := (not text_to_be_searched_internal.real_string.is_empty)
@@ -104,7 +104,7 @@ feature -- Status report
 			text_to_be_searched_not_void: Result = (not text_to_be_searched_internal.real_string.is_empty)
 		end
 
-	is_text_in_file_path_set: BOOLEAN is
+	is_text_in_file_path_set: BOOLEAN
 			-- Is `text_in_file_path' set?
 		do
 			Result := (text_in_file_path_internal /= Void)
@@ -112,13 +112,13 @@ feature -- Status report
 			is_text_in_file_path_set : Result = (text_in_file_path_internal /= Void)
 		end
 
-	is_class_name_set: BOOLEAN is
+	is_class_name_set: BOOLEAN
 			-- Is `class_name' set?
 		do
 			Result := (class_name_internal /= Void)
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result :=
@@ -129,7 +129,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text_to_be_searched (text: STRING_32) is
+	set_text_to_be_searched (text: STRING_32)
 			-- Set `text_to_be_searched_internal' with text.
 		require
 			text_not_void: text /= Void
@@ -139,7 +139,7 @@ feature -- Status setting
 			text_to_be_searched_internal_not_void: text_to_be_searched_internal.real_string = text
 		end
 
-	set_text_in_file_path (p_file_path: FILE_NAME) is
+	set_text_in_file_path (p_file_path: FILE_NAME)
 			-- Set `text_in_file_path_internal' with p_file_path.
 		require
 			p_file_path_not_void: p_file_path /= Void
@@ -149,7 +149,7 @@ feature -- Status setting
 			text_in_file_path_internal_not_void: text_in_file_path_internal = p_file_path
 		end
 
-	set_class_name (name: STRING) is
+	set_class_name (name: STRING)
 			-- Set `class_name_internal' with name.
 		require
 			name_not_void: name /= Void
@@ -159,7 +159,7 @@ feature -- Status setting
 			class_name_internal_not_void: class_name_internal /= Void
 		end
 
-	set_data (a_data: ANY) is
+	set_data (a_data: ANY)
 			-- Set `data' with a_data.
 		require
 			a_data_not_void: a_data /= Void
@@ -169,7 +169,7 @@ feature -- Status setting
 			data_not_void: data /= Void
 		end
 
-	set_date (a_date: INTEGER) is
+	set_date (a_date: INTEGER)
 			-- Set `date' with a_date.
 		do
 			date := a_date
@@ -177,7 +177,7 @@ feature -- Status setting
 
 feature -- Basic operations		
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -190,7 +190,7 @@ feature -- Basic operations
 			class_name_internal_void: class_name_internal = Void
 		end
 
-	launch is
+	launch
 			-- Launch searching.
 		local
 				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 	date: INTEGER
 			-- Date of the current source
 
-	add_new_item is
+	add_new_item
 			-- Add new item from the pcre_regex's captures.
 		local
 			last_item, new_item : MSR_TEXT_ITEM
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			item_matched_internal.extend (new_item)
 		end
 
-	build_class_name is
+	build_class_name
 			-- Build the class name of the text if exists --not well solved
 		local
 			l_class_name:STRING
@@ -349,7 +349,7 @@ invariant
 
 	is_launched implies (class_name_internal /= Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

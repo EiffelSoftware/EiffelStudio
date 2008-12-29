@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Commander interface for interacting with the Errors and Warnings tool.
 	]"
@@ -55,7 +55,7 @@ feature -- Basic operations
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

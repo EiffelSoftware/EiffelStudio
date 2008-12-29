@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to popup a dialog to setup customized formatter"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry associated with `Current'.
 		do
 			Result := Interface_names.t_setup_customized_formatter
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 		do
 			reload_customized_formatter (False)
 			popup_formatter_dialog (window_manager.last_focused_development_window)

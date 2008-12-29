@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Symple criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_agent: like evaluate_agent; a_require_compiled: BOOLEAN) is
+	make (a_agent: like evaluate_agent; a_require_compiled: BOOLEAN)
 			-- Initialize `evaluate_agent' with `a_agent' and
 			-- `require_compiled' with `a_require_compiled'.
 		require
@@ -30,7 +30,7 @@ feature{NONE} -- Initialization
 			require_compiled_internal_set: require_compiled_internal = a_require_compiled
 		end
 
-	make_without_evaluate_agent (a_require_compiled: BOOLEAN) is
+	make_without_evaluate_agent (a_require_compiled: BOOLEAN)
 			-- Initialize `require_compiled' with `a_require_compiled'.
 		do
 			require_compiled_internal := a_require_compiled
@@ -40,7 +40,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is
+	require_compiled: BOOLEAN
 			-- Does current criterion require a compiled item?
 		do
 			Result := require_compiled_internal
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: like item_type): BOOLEAN is
+	is_satisfied_by (a_item: like item_type): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_evaluate_agent: like evaluate_agent
@@ -64,7 +64,7 @@ feature -- Evaluate
 
 feature -- Setting
 
-	set_evaluate_agent (a_evaluate_agent: like evaluate_agent) is
+	set_evaluate_agent (a_evaluate_agent: like evaluate_agent)
 			-- Set `evaluate_agent' with `a_evaluate_agent'.
 		do
 			evaluate_agent := a_evaluate_agent
@@ -83,7 +83,7 @@ feature{NONE} -- Implementation
 invariant
 --	evaluate_agent_attached: evaluate_agent /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

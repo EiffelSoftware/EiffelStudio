@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Warning for obsolete features."
@@ -37,26 +37,26 @@ feature -- Properties
 	associated_feature: E_FEATURE;
 			-- Feature using the obsolete
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		do
 			Result := "Obsolete Class";
 		end;
 
-	help_file_name: STRING is
+	help_file_name: STRING
 		do
 			Result := "OBS_CLASS"
 		end;
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := classes_defined
 		end;
 
-	classes_defined: BOOLEAN is
+	classes_defined: BOOLEAN
 			-- Is the feature defined for error?
 		do
 			Result := associated_class /= Void and then
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			m: STRING
 		do
@@ -96,14 +96,14 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor (a_text_formatter)
 			print_single_line_error_message_extended (a_text_formatter)
 		end
 
-	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_message: STRING_8
@@ -123,21 +123,21 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_class (c: CLASS_C) is
+	set_class (c: CLASS_C)
 		require
 			valid_c: c /= Void
 		do
 			associated_class := c
 		end;
 
-	set_obsolete_class (c: CLASS_C) is
+	set_obsolete_class (c: CLASS_C)
 		require
 			valid_c: c /= Void
 		do
 			obsolete_class := c
 		end;
 
-	set_feature (f: FEATURE_I) is
+	set_feature (f: FEATURE_I)
 			-- Assign `f' to `feature'
 		require
 			f_not_void: f /= Void
@@ -148,7 +148,7 @@ feature {COMPILER_EXPORTER}
 			associated_feature_not_void: associated_feature /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

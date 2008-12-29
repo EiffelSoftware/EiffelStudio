@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects join all debug values: STRING, INTEGER, BOOLEAN, REFERENCES, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,19 +17,19 @@ create {DUMP_VALUE_FACTORY}
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
-	set_string_for_dotnet_value  (a: ANY) is
+	set_string_for_dotnet_value  (a: ANY)
 		do
 		end
 
-	set_object_for_dotnet_value  (a: ANY) is
+	set_object_for_dotnet_value  (a: ANY)
 		do
 		end
 
-	set_native_array_object_for_dotnet_value  (a: ANY) is
+	set_native_array_object_for_dotnet_value  (a: ANY)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

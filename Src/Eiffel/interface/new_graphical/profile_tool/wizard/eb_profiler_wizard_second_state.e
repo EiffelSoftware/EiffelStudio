@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Second state of the profiler wizard (Choose execution profile)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			execution_profile_radio_box: EV_VERTICAL_BOX
@@ -87,7 +87,7 @@ feature -- Basic Operation
 			generate_execution_profile.select_actions.extend (agent on_change_check_button)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		do
 			if use_existing_execution_profile.is_selected then
 				if not is_supplied_execution_profile_valid then
@@ -100,7 +100,7 @@ feature -- Basic Operation
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			execution_profile_filename: FILE_NAME
@@ -121,7 +121,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (Interface_names.wt_Execution_Profile)
 			subtitle.set_text (Interface_names.ws_Execution_Profile)
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_supplied_execution_profile_valid: BOOLEAN is
+	is_supplied_execution_profile_valid: BOOLEAN
 			-- Is the supplied execution profile a valid file?
 		local
 			execution_profile_file: RAW_FILE
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_change_check_button is
+	on_change_check_button
 			-- The user has selected a different button
 		local
 			existing_profile_selected: BOOLEAN
@@ -172,7 +172,7 @@ feature {NONE} -- Vision2 controls
 	execution_profile_text_field: EB_WIZARD_SMART_TEXT_FIELD;
 			-- Path where the execution profile to use is located.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

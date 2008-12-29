@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Stone representing an eiffel feature stone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE) is
+	make (a_feature: E_FEATURE)
 			-- Initialize feature stone.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -57,7 +57,7 @@ feature -- Properties
 	e_feature: E_FEATURE
 		-- Feature associated with stone
 
-	start_position: INTEGER is
+	start_position: INTEGER
 			-- Start position of the feature in
 			-- the origin file
 		do
@@ -65,7 +65,7 @@ feature -- Properties
 			Result := internal_start_position
 		end
 
-	end_position: INTEGER is
+	end_position: INTEGER
 			-- End position of the feature in
 			-- the origin file
 		do
@@ -75,7 +75,7 @@ feature -- Properties
 
 feature -- Access
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- Feature name of feature
 		do
 			check
@@ -84,7 +84,7 @@ feature -- Access
 			Result := e_feature.name
 		end
 
-	origin_name: STRING is
+	origin_name: STRING
 			-- Name of the feature in its written class.
 		local
 			f: E_FEATURE
@@ -101,13 +101,13 @@ feature -- Access
 			end
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 			-- Name used in the history list
 		do
 			Result := interface_names.l_from (Interface_names.s_feature_stone.as_string_32 + feature_name, e_class.class_signature)
 		end
 
-	stone_name: STRING_GENERAL is
+	stone_name: STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -119,14 +119,14 @@ feature -- Access
 
 feature -- Status report
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
 		do
 			Result := {fns: FEATURE_STONE} other and then same_feature (e_feature, fns.e_feature)
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
 			Result := e_feature /= Void and then e_feature.is_valid and then Precursor {CLASSC_STONE}
@@ -134,7 +134,7 @@ feature -- Status report
 
 feature -- dragging
 
-	origin_text: STRING is
+	origin_text: STRING
 			-- Text of the feature
 		local
 			temp: STRING
@@ -161,7 +161,7 @@ feature -- dragging
 			Result.append ("%N")
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- The one from class origin of `e_feature'
 		do
 			if e_feature /= Void and then e_feature.is_valid then
@@ -169,7 +169,7 @@ feature -- dragging
 			end
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Signature of Current feature
 		do
 			check
@@ -178,7 +178,7 @@ feature -- dragging
 			Result := e_feature.feature_signature
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Name for the stone.
 		local
 			l_feature_name: STRING_32
@@ -209,19 +209,19 @@ feature -- dragging
 
 		end
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor representing `Current' when dropping is allowed.
 		once
 			Result := Cursors.cur_feature
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor representing `Current' when dropping is forbidden.
 		once
 			Result := Cursors.cur_X_feature
 		end
 
-	line_number: INTEGER is
+	line_number: INTEGER
 			-- Line number of feature text
 		require
 			is_valid: is_valid
@@ -230,7 +230,7 @@ feature -- dragging
 			Result := internal_start_line_number
 		end
 
-	update is
+	update
 			-- Update current feature stone.
 		do
 			if internal_start_position = -1 and then e_feature /= Void then
@@ -247,7 +247,7 @@ feature -- dragging
 			end
 		end
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		local
@@ -273,7 +273,7 @@ feature -- dragging
 
 feature -- Hashable
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := e_class.name.hash_code
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 	internal_start_line_number: INTEGER;
 			-- Line number of `internal_start_position'.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

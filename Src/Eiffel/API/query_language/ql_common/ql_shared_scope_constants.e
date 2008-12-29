@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scope index in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,39 +14,39 @@ inherit
 
 feature -- Scope index
 
-	quantity_scope_index: INTEGER is 1
+	quantity_scope_index: INTEGER = 1
 			-- Scope index for quantity item
 
-	line_scope_index: INTEGER is 2
+	line_scope_index: INTEGER = 2
 			-- Scope index for line item
 
-	local_scope_index: INTEGER is 3
+	local_scope_index: INTEGER = 3
 			-- Scope index for local variable item
 
-	argument_scope_index: INTEGER is 4
+	argument_scope_index: INTEGER = 4
 			-- Scope index for argument item
 
-	assertion_scope_index: INTEGER is 5
+	assertion_scope_index: INTEGER = 5
 			-- Scope index for assertion item
 
-	feature_scope_index: INTEGER is 6
+	feature_scope_index: INTEGER = 6
 			-- Scope index for feature item
 
-	generic_scope_index: INTEGER is 7
+	generic_scope_index: INTEGER = 7
 			-- Scope index for class generic
 
-	class_scope_index: INTEGER is 8
+	class_scope_index: INTEGER = 8
 			-- Scope index for class item
 
-	group_scope_index: INTEGER is 9
+	group_scope_index: INTEGER = 9
 			-- Scope index for group item
 
-	target_scope_index: INTEGER is 10
+	target_scope_index: INTEGER = 10
 			-- Scope index for target item
 
 feature -- Scope names
 
-	scope_names: HASH_TABLE [STRING, INTEGER] is
+	scope_names: HASH_TABLE [STRING, INTEGER]
 			-- Names for scopes
 		once
 			create Result.make (9)
@@ -64,7 +64,7 @@ feature -- Scope names
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

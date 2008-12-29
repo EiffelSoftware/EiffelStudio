@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that shared an instance of DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	Debugger_manager: DEBUGGER_MANAGER is
+	Debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of debugging operations.
 		do
 			Result := Debugger_manager_cell.item
@@ -21,12 +21,12 @@ feature -- Access
 			debugger_manager_not_void: Result /= Void
 		end
 
-	Breakpoints_manager: BREAKPOINTS_MANAGER is
+	Breakpoints_manager: BREAKPOINTS_MANAGER
 		do
 			Result := Debugger_manager.breakpoints_manager
 		end
 
-	set_debugger_manager (v: like debugger_manager) is
+	set_debugger_manager (v: like debugger_manager)
 		do
 			Debugger_manager_cell.replace (v)
 			debugger_manager_change_actions.call ([v])
@@ -36,13 +36,13 @@ feature -- Access
 
 feature {NONE} -- Cell
 
-	Debugger_manager_change_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]] is
+	Debugger_manager_change_actions: ACTION_SEQUENCE [TUPLE [DEBUGGER_MANAGER]]
 			-- Actions executed when current active shared debugger_manager is changed.
 		once
 			create Result
 		end
 
-	Debugger_manager_cell: CELL [DEBUGGER_MANAGER] is
+	Debugger_manager_cell: CELL [DEBUGGER_MANAGER]
 			-- Manager in charge of debugging operations.
 		once
 			create Result.put (Void)
@@ -56,7 +56,7 @@ feature {NONE} -- Cell
 			end
 		end
 
-	debugger_on_project_loaded is
+	debugger_on_project_loaded
 			-- Propagate `Project loaded' event to `debugger_manager'
 		local
 			dm: like Debugger_manager
@@ -68,7 +68,7 @@ feature {NONE} -- Cell
 			end
 		end
 
-	debugger_on_project_closed is
+	debugger_on_project_closed
 			-- Propagate `Project closed' event to `debugger_manager'
 		local
 			dm: like Debugger_manager
@@ -80,7 +80,7 @@ feature {NONE} -- Cell
 			end
 		end
 
-	debugger_on_project_recompiled (is_successful: BOOLEAN) is
+	debugger_on_project_recompiled (is_successful: BOOLEAN)
 			-- Propagate `Project recompiled' event to `debugger_manager'
 		local
 			dm: like Debugger_manager
@@ -91,7 +91,7 @@ feature {NONE} -- Cell
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

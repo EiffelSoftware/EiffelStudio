@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text fragment factory"
 	author: ""
 	date: "$Date$"
@@ -22,7 +22,7 @@ inherit
 		
 feature -- Access
 
-	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file_name" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file" tool buffer selected fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$path" tool buffer selected fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -49,7 +49,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$directory_name" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -58,7 +58,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_w_code (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_w_code (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$w_code" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -73,7 +73,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_f_code (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_f_code (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$f_code" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -88,7 +88,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_project_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_project_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$project_path" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -103,7 +103,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_target_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_target_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$targer_path" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -116,7 +116,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_group_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_group_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$group_path" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -125,7 +125,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$group_name" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -134,7 +134,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$class_name" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -143,7 +143,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$line" fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -152,7 +152,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}" buffer fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -161,7 +161,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@{CLASS}" class buffer selected fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -170,7 +170,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}.feature" buffer fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -179,7 +179,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "[Tool name]" tool buffer fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -188,7 +188,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@[Tool name]" tool buffer selected fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -197,7 +197,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	new_target_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_target_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$target_name" text fragment
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -214,7 +214,7 @@ feature -- Access
 
 feature -- Text Normalizer
 
-	lower_case_text_normalizer (a_text: STRING): STRING is
+	lower_case_text_normalizer (a_text: STRING): STRING
 			-- Text normalizer, return a copy of `a_text' in which all letters are turned into lower case
 		require
 			a_text_attached: a_text /= Void
@@ -224,7 +224,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	upper_case_text_normalizer (a_text: STRING): STRING is
+	upper_case_text_normalizer (a_text: STRING): STRING
 			-- Text normalizer, return a copy of `a_text' in which all letters are turned into upper case
 		require
 			a_text_attached: a_text /= Void
@@ -234,7 +234,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_name_text_normalizer (a_text: STRING): STRING is
+	class_name_text_normalizer (a_text: STRING): STRING
 			-- Text normalize which turns `a_text' in form of "{ class_name }" into "CLASS_NAME",
 			-- i.e., remove surrounding "{" and "}", remove heading and trailing space and turn all letters into upper case.
 		require
@@ -249,7 +249,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_selected_text_normalizer (a_text: STRING): STRING is
+	class_selected_text_normalizer (a_text: STRING): STRING
 			-- Text normalize which turns `a_text' in form of "@{ class_name }" into "CLASS_NAME",
 			-- i.e., remove surrounding "@{" and "}", remove heading and trailing space and turn all letters into upper case.
 		require
@@ -264,7 +264,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_feature_text_normalizer (a_text: STRING): STRING is
+	class_feature_text_normalizer (a_text: STRING): STRING
 			-- Text normalize which turns `a_text' in form of "{ class_name }.feature_name" into "CLASS_NAME.feature_name",
 			-- i.e., remove surrounding "{" and "}", remove heading and trailing space and turn all letters related to class
 			-- into upper case and all letters related to feature into lower case.
@@ -296,7 +296,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	tool_name_text_normalizer (a_text: STRING): STRING is
+	tool_name_text_normalizer (a_text: STRING): STRING
 			-- Text normalize which turns `a_text' in form of "[ tool_name ]" into "tool name",
 			-- i.e., remove surrounding "{" and "}", remove heading and trailing space and turn all letters into lower case.
 		require
@@ -311,7 +311,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	tool_selected_text_normalizer (a_text: STRING): STRING is
+	tool_selected_text_normalizer (a_text: STRING): STRING
 			-- Text normalize which turns `a_text' in form of "@[ tool_name ]" into "CLASS_NAME",
 			-- i.e., remove surrounding "@{" and "}", remove heading and trailing space and turn all letters into lower case.
 		require
@@ -328,7 +328,7 @@ feature -- Text Normalizer
 
 feature{NONE} -- Implementation
 
-	is_string_case_insensitive_equal (a_string, b_string: STRING): BOOLEAN is
+	is_string_case_insensitive_equal (a_string, b_string: STRING): BOOLEAN
 			-- Is `a_string' is case-insensitive equal to `b_string'?
 		require
 			a_string_attached: a_string /= Void
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a_string.is_case_insensitive_equal (b_string)
 		end
 
-	new_w_code_replacement (a_text: STRING): STRING is
+	new_w_code_replacement (a_text: STRING): STRING
 			-- New w_code replacement for `a_text'.
 			-- Return path of `w_code' directory if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -355,7 +355,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_f_code_replacement (a_text: STRING): STRING is
+	new_f_code_replacement (a_text: STRING): STRING
 			-- New w_code replacement for `a_text'.
 			-- Return path of `f_code' directory if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -371,7 +371,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_project_directory_replacement (a_text: STRING): STRING is
+	new_project_directory_replacement (a_text: STRING): STRING
 			-- New project_path replacement for `a_text'.
 			-- Return path of current porject if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -387,7 +387,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_target_directory_replacement (a_text: STRING): STRING is
+	new_target_directory_replacement (a_text: STRING): STRING
 			-- New target_path replacement for `a_text'.
 			-- Return path of current target if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -403,7 +403,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_target_name_replacement (a_text: STRING): STRING is
+	new_target_name_replacement (a_text: STRING): STRING
 			-- New target_name replacement for `a_text'.
 			-- Return path of current target if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -419,7 +419,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	basic_text_fragment (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	basic_text_fragment (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- Basic text fragment for text in `a_scanner'
 		require
 			a_scanner_attached: a_scanner /= Void
@@ -431,7 +431,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	is_true (a_text: STRING): BOOLEAN is
+	is_true (a_text: STRING): BOOLEAN
 			-- Is `a_text' valid?
 			-- Always returns True.
 		require

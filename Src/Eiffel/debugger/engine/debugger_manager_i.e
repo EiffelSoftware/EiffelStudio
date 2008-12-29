@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (dm: DEBUGGER_MANAGER) is
+	make (dm: DEBUGGER_MANAGER)
 			-- Initialize `Current'.
 		do
 			interface := dm
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	load_system_dependent_debug_info is
+	load_system_dependent_debug_info
 		do
 		end
 
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 
 	interface: DEBUGGER_MANAGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

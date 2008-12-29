@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the Search tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -29,37 +29,37 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
-	criterion_completion_list_width: INTEGER is
+	criterion_completion_list_width: INTEGER
 			-- Width (in pixels) of criterion completion list
 		do
 			Result := criterion_completion_list_width_preference.value
 		end
 
-	criterion_completion_list_height: INTEGER is
+	criterion_completion_list_height: INTEGER
 			-- Height (in pixels) of criterion completion list
 		do
 			Result := criterion_completion_list_height_preference.value
 		end
 
-	is_invisible_result_filtered: BOOLEAN is
+	is_invisible_result_filtered: BOOLEAN
 			-- Is invisible result item filtered?
 		do
 			Result := filter_invisible_result_preference.value
 		end
 
-	is_percentage_for_ratio_displayed: BOOLEAN is
+	is_percentage_for_ratio_displayed: BOOLEAN
 			-- Is percentage for ratio metric displayed?
 		do
 			Result := display_percentage_for_ratio_preference.value
 		end
 
-	should_go_to_result_panel_automatically: BOOLEAN is
+	should_go_to_result_panel_automatically: BOOLEAN
 			-- Should go to result panel automatically after metric evaluation?
 		do
 			Result := automatic_go_to_result_panel_preference.value
 		end
 
-	unit_order: LINKED_LIST [QL_METRIC_UNIT] is
+	unit_order: LINKED_LIST [QL_METRIC_UNIT]
 			-- List of metric units in order
 		local
 			l_order_string: STRING
@@ -82,67 +82,67 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			result_attached: Result /= Void
 		end
 
-	is_tree_view_for_history: BOOLEAN is
+	is_tree_view_for_history: BOOLEAN
 			-- Is tree view used to display metric history?
 		do
 			Result := tree_view_for_history_preference.value
 		end
 
-	history_flat_view_sorting_order: STRING is
+	history_flat_view_sorting_order: STRING
 			-- History flat view sorting order
 		do
 			Result := flat_view_sorting_order_preference.value
 		end
 
-	history_tree_view_sorting_order: STRING is
+	history_tree_view_sorting_order: STRING
 			-- History tree view sorting order
 		do
 			Result := tree_view_sorting_order_preference.value
 		end
 
-	is_old_archive_item_hidden: BOOLEAN is
+	is_old_archive_item_hidden: BOOLEAN
 			-- Should old archive items be hidden?
 		do
 			Result := hide_old_item_preference.value
 		end
 
-	old_archive_item_age: INTEGER is
+	old_archive_item_age: INTEGER
 			-- Age in days for an archive item to be considered old
 		do
 			Result := old_item_day_preference.value
 		end
 
-	is_archive_detailed_result_kept: BOOLEAN is
+	is_archive_detailed_result_kept: BOOLEAN
 			-- Is detailed result kept when recalculation metric archive history?
 		do
 			Result := keep_archive_detailed_result_preference.value
 		end
 
-	is_metric_detailed_result_kept: BOOLEAN is
+	is_metric_detailed_result_kept: BOOLEAN
 			-- Is detailed result kept when metric is evaluated?
 		do
 			Result := keep_metric_detailed_result_preference.value
 		end
 
-	should_warning_be_checked: BOOLEAN is
+	should_warning_be_checked: BOOLEAN
 			-- Should defined metric archive warning be checked when metric archive is recalculated?
 		do
 			Result := check_warning_preference.value
 		end
 
-	warning_background_color: EV_COLOR is
+	warning_background_color: EV_COLOR
 			-- Background color for grid rows which contained a metric archive value which violates predefined warning criteria.
 		do
 			Result := warning_background_color_preference.value
 		end
 
-	is_metric_information_displayed_in_result_panel: BOOLEAN is
+	is_metric_information_displayed_in_result_panel: BOOLEAN
 			-- is_metric information displayed in result panel?
 		do
 			Result := metric_information_in_result_panel_preference.value
 		end
 
-	highlight_background_color: EV_COLOR is
+	highlight_background_color: EV_COLOR
 			-- Background color for highlighted text or grid row
 		do
 			Result := highlight_background_color_preference.value
@@ -152,7 +152,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 
 feature -- Setting
 
-	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
+	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT])
 			-- Set `unit_order_preference' with `a_unit_list'.
 		require
 			a_unit_list_attached: a_unit_list /= Void
@@ -201,27 +201,27 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	criterion_completion_list_width_string: STRING is "tools.metric_tool.criterion_completion_list_width"
-	criterion_completion_list_height_string: STRING is "tools.metric_tool.criterion_completion_list_height"
-	filter_invisible_result_string: STRING is "tools.metric_tool.filter_invisible_result"
-	display_percentage_for_ratio_string: STRING is "tools.metric_tool.display_percentage_for_ratio"
-	automatic_go_to_result_panel_string: STRING is "tools.metric_tool.automatic_go_to_result_panel"
-	unit_order_string: STRING is "tools.metric_tool.unit_order"
-	tree_view_for_history_string: STRING is "tools.metric_tool.tree_view_for_metric_history"
-	flat_view_sorting_order_string: STRING is "tools.metric_tool.history_flat_view_sorting_order"
-	tree_view_sorting_order_string: STRING is "tools.metric_tool.history_tree_view_sorting_order"
-	hide_old_item_string: STRING is "tools.metric_tool.hide_old_archive"
-	old_item_day_string: STRING is "tools.metric_tool.old_archive_age_in_days"
-	keep_archive_detailed_result_string: STRING is "tools.metric_tool.keep_archive_detailed_result"
-	keep_metric_detailed_result_string: STRING is "tools.metric_tool.keep_metric_detailed_result"
-	check_warning_string: STRING is "tools.metric_tool.check_defined_warning"
-	warning_background_color_string: STRING is "tools.metric_tool.warning_background_color"
-	metric_information_in_result_panel_string: STRING is "tools.metric_tool.maximize_metric_result_area"
-	highlight_background_color_string: STRING is "tools.metric_tool.highlight_background_color"
+	criterion_completion_list_width_string: STRING = "tools.metric_tool.criterion_completion_list_width"
+	criterion_completion_list_height_string: STRING = "tools.metric_tool.criterion_completion_list_height"
+	filter_invisible_result_string: STRING = "tools.metric_tool.filter_invisible_result"
+	display_percentage_for_ratio_string: STRING = "tools.metric_tool.display_percentage_for_ratio"
+	automatic_go_to_result_panel_string: STRING = "tools.metric_tool.automatic_go_to_result_panel"
+	unit_order_string: STRING = "tools.metric_tool.unit_order"
+	tree_view_for_history_string: STRING = "tools.metric_tool.tree_view_for_metric_history"
+	flat_view_sorting_order_string: STRING = "tools.metric_tool.history_flat_view_sorting_order"
+	tree_view_sorting_order_string: STRING = "tools.metric_tool.history_tree_view_sorting_order"
+	hide_old_item_string: STRING = "tools.metric_tool.hide_old_archive"
+	old_item_day_string: STRING = "tools.metric_tool.old_archive_age_in_days"
+	keep_archive_detailed_result_string: STRING = "tools.metric_tool.keep_archive_detailed_result"
+	keep_metric_detailed_result_string: STRING = "tools.metric_tool.keep_metric_detailed_result"
+	check_warning_string: STRING = "tools.metric_tool.check_defined_warning"
+	warning_background_color_string: STRING = "tools.metric_tool.warning_background_color"
+	metric_information_in_result_panel_string: STRING = "tools.metric_tool.maximize_metric_result_area"
+	highlight_background_color_string: STRING = "tools.metric_tool.highlight_background_color"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 	preferences: PREFERENCES
 			-- Preferences
 
-	metric_tool_unit_table: HASH_TABLE [QL_METRIC_UNIT, INTEGER] is
+	metric_tool_unit_table: HASH_TABLE [QL_METRIC_UNIT, INTEGER]
 			-- Table of metric units used in metric tool
 			-- Key is hash-code of a unit, value is that unit.
 		once
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	initial_unit_order: STRING is
+	initial_unit_order: STRING
 			-- String representation initial metric unit order
 		do
 			create Result.make (64)
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common functionality for all views for ES_CLASSes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an CLASS_FIGURE
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			pointer_double_press_actions.extend (agent on_pointer_double_pressed)
 		end
 
-	initialize is
+	initialize
 			-- Initialize a class figure with given model.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -73,7 +73,7 @@ feature -- Access
 	model: ES_CLASS
 			-- Model for `Current'.
 
-	world: EIFFEL_WORLD is
+	world: EIFFEL_WORLD
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EG_LINKABLE_FIGURE}
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -95,7 +95,7 @@ feature -- Element change
 			end
 		end
 
-	apply_right_angles is
+	apply_right_angles
 			-- Apply right angles to all links in `links'.
 		local
 			l_item: EIFFEL_LINK_FIGURE
@@ -117,21 +117,21 @@ feature -- Element change
 			end
 		end
 
-	fade_out is
+	fade_out
 			-- Fade out `Current'.
 		deferred
 		ensure
 			is_faded: is_faded
 		end
 
-	fade_in is
+	fade_in
 			-- Fade in `Current'.
 		deferred
 		ensure
 			not_is_faded: not is_faded
 		end
 
-	update_fade is
+	update_fade
 			-- Fade out if `is_cluster_above'.
 		do
 			if is_cluster_above then
@@ -147,13 +147,13 @@ feature -- Element change
 
 feature -- XML
 
-	id_string: STRING is "CLASS_FIGURE_ID"
+	id_string: STRING = "CLASS_FIGURE_ID"
 			-- ID string
 
-	group_id_string: STRING is "GROUP_ID"
+	group_id_string: STRING = "GROUP_ID"
 			-- Group id
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- XML element
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
@@ -161,7 +161,7 @@ feature -- XML
 			Result.add_attribute (group_id_string, xml_namespace, model.group_id)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 				-- Discard CLASS_FIGURE_ID and GROUP_ID, since they have been read in factory.
@@ -172,7 +172,7 @@ feature -- XML
 
 feature {EG_FIGURE_WORLD} -- Element change
 
-	add_link (a_link: EG_LINK_FIGURE) is
+	add_link (a_link: EG_LINK_FIGURE)
 			-- Add `a_link' to `links'.
 		local
 			l_cluster: EG_CLUSTER_FIGURE
@@ -213,7 +213,7 @@ feature {EG_FIGURE_WORLD} -- Element change
 
 feature {NONE} -- Implementation
 
-	on_needed_on_diagram_changed is
+	on_needed_on_diagram_changed
 			-- `model'.`is_needed_on_diagram' changed.
 		do
 			if model.is_needed_on_diagram then
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	on_pebble_request: ANY is
+	on_pebble_request: ANY
 			-- A pebble was requested for `Current'.
 		local
 			class_list: ARRAYED_LIST [EIFFEL_CLASS_FIGURE]
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_pointer_double_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_pointer_double_pressed (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User double pressed on `Current'.
 		local
 			cg: ES_CLASS_GRAPH
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	arrange_around (classes: LIST [ES_CLASS]; ax,ay: INTEGER; radius: INTEGER) is
+	arrange_around (classes: LIST [ES_CLASS]; ax,ay: INTEGER; radius: INTEGER)
 			-- Arrange classes on a circle with center at (`ax', `ay') and `radius'.
 		local
 			nb: INTEGER
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation (adding relations)
 
-	on_class_drop (a_stone: CLASSI_FIGURE_STONE) is
+	on_class_drop (a_stone: CLASSI_FIGURE_STONE)
 			-- `a_stone' was dropped on `Current'.
 		local
 			class_file: PLAIN_TEXT_FILE
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE) is
+	add_inheritance_relation (other: EIFFEL_CLASS_FIGURE)
 			-- Add `Current' to others inheritance clause.
 		local
 			es_link: ES_INHERITANCE_LINK
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
+	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK)
 			-- Add `Current' to `an_other's inheritance clause, show `a_link' if succesfull.
 		do
 			an_other.code_generator.add_ancestor (model.class_i.name)
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
+	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK)
 			-- Remove `Current' from `an_other's inheritance clause, hide `a_link' if succesfull.
 		do
 			an_other.code_generator.remove_ancestor (model.class_i.name)
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	add_client_relation (client: EIFFEL_CLASS_FIGURE; is_aggregated: BOOLEAN) is
+	add_client_relation (client: EIFFEL_CLASS_FIGURE; is_aggregated: BOOLEAN)
 			-- Add relation with `Current' as supplier and `client' as client
 			-- expanded if `is_aggregated'.
 		require
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
+	reinclude_removed_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			--
 		do
 			a_client.code_generator.undelete_code (added_code)
@@ -517,7 +517,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
+	remove_added_feature_and_link (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			--
 		do
 			a_client.code_generator.delete_code (added_code)
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK) is
+	remove_added_feature (a_client: ES_CLASS; added_code: LIST [TUPLE [STRING, INTEGER]]; added_feature: FEATURE_AS; a_link: ES_CLIENT_SUPPLIER_LINK)
 			--
 		do
 			a_client.code_generator.delete_code (added_code)
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation (adding relations)
 			end
 		end
 
-	drop_allowed (a_stone: CLASSI_FIGURE_STONE): BOOLEAN is
+	drop_allowed (a_stone: CLASSI_FIGURE_STONE): BOOLEAN
 			-- Is `a_stone' droppable on `Current'?
 		local
 			new_child: CLASS_I
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation (adding relations)
 
 feature {NONE} -- Implementation (move)
 
-	veto_function (a_any: ANY): BOOLEAN is
+	veto_function (a_any: ANY): BOOLEAN
 			-- Veto function
 		require
 			a_any_not_void: a_any /= Void
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation (move)
 			end
 		end
 
-	save_position is
+	save_position
 			-- Make a backup of current coordinates.
 		do
 			saved_x := port_x
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation (move)
 	saved_x, saved_y: INTEGER
 			-- Saved positions.
 
-	extend_history is
+	extend_history
 			-- Register move in the history.
 		local
 			offset_x, offset_y: INTEGER
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation (move)
 			end
 		end
 
-	move_figures_for (figures: LIST [EG_FIGURE]; ax, ay: INTEGER) is
+	move_figures_for (figures: LIST [EG_FIGURE]; ax, ay: INTEGER)
 			-- Move all figures in `figures' for `ax', `ay'.
 		require
 			figures_not_void: figures /= Void
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation (move)
 			world.context_editor.restart_force_directed
 		end
 
-	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 		do
 			if world.context_editor.is_force_directed_used then
 				-- FIXME: The timer event should be fired even when `Current' is moved.
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation (move)
 			end
 		end
 
-	on_handle_start is
+	on_handle_start
 			-- User started to move `Current'.
 		do
 			was_fixed := is_fixed
@@ -661,13 +661,13 @@ feature {NONE} -- Implementation (move)
 			end
 		end
 
-	on_handle_end is
+	on_handle_end
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
 		end
 
-	faded_color (a_color: EV_COLOR): EV_COLOR is
+	faded_color (a_color: EV_COLOR): EV_COLOR
 			-- Return brighter color then `a_color'
 		require
 			a_color_exists: a_color /= Void
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation (move)
 			Result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

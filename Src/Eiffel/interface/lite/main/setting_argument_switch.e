@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument switch for overriding/setting configuration properties."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,13 +20,13 @@ create
 
 feature -- Access
 
-	value_validator: !SETTING_ARGUMENT_VALIDATOR is
+	value_validator: !SETTING_ARGUMENT_VALIDATOR
 			-- Retrieves an validator used to check current switch value
 		once
 			create Result
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

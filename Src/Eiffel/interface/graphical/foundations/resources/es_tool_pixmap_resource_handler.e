@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Handles icon resource managment for tools, preventing duplication of loaded resources.
 	]"
@@ -31,7 +31,7 @@ feature -- Query
 			Result := l_file_name.string.as_attached
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

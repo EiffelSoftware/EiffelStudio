@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Customized formatter whose functionality is defined by specified metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature{NONE} -- Initialization
 
-	old_make (a_manager: like manager) is
+	old_make (a_manager: like manager)
 			-- Create a formatter associated with `a_manager'.
 		do
 			Precursor (a_manager)
@@ -48,7 +48,7 @@ feature{NONE} -- Initialization
 			end
 		end
 
-	make (a_manager: like manager; a_cmd_name: STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location; a_tooltip: like tooltip) is
+	make (a_manager: like manager; a_cmd_name: STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location; a_tooltip: like tooltip)
 			-- Initialize Current.
 		require
 			a_manager_attached: a_manager /= Void
@@ -77,13 +77,13 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case).
 		do
 			Result := command_name_internal
 		end
 
-	element_name: STRING is
+	element_name: STRING
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 			-- Void if element is not retrievable.
@@ -96,7 +96,7 @@ feature -- Access
 	tooltip: STRING_GENERAL
 			-- Tooltip
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is displayed.
 		local
 			l_header: STRING_32
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end
 
-	temp_header: STRING_GENERAL is
+	temp_header: STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is working.
 		local
 			l_temp_header: STRING_32
@@ -126,20 +126,20 @@ feature -- Access
 			end
 		end
 
-	post_fix: STRING is
+	post_fix: STRING
 			-- Postfix name of current format.
 			-- Used as an extension while saving.
 		do
 			Result := "cus"
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- String representation in the associated menu.
 		do
 			Result := menu_name_internal.twin
 		end
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		do
 			if (not is_pixmap_loaded) or else symbol_internal = Void then
@@ -153,7 +153,7 @@ feature -- Access
 			Result := symbol_internal
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		do
 			if not is_pixmap_loaded then
@@ -162,7 +162,7 @@ feature -- Access
 			Result := pixel_buffer_internal
 		end
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Graphical representation of the information provided.
 		do
 			if stone = Void or browser = Void then
@@ -178,7 +178,7 @@ feature -- Access
 	valid_stone_function: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]
 			-- Function to check if given stone is suitable for Current formatter
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of Current formatter
 		do
 			Result := ("custom_").as_string_32
@@ -188,7 +188,7 @@ feature -- Access
 	viewer: STRING
 			-- Viewer
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [displayer_generators.generator_with_name (viewer), viewer]
@@ -197,7 +197,7 @@ feature -- Access
 	icon_location: STRING
 			-- Location of icon file for Current formatter
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := Void
@@ -206,7 +206,7 @@ feature -- Access
 	descriptor: EB_CUSTOMIZED_FORMATTER_DESP
 			-- Descriptor of Current formatter
 
-	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING] is
+	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
 			-- Getter to retrieve sorting order status
 		do
 			if descriptor /= Void and then tool /= Void then
@@ -214,7 +214,7 @@ feature -- Access
 			end
 		end
 
-	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]] is
+	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
 			-- Setter to set sorting order given as the only argument
 		do
 			if descriptor /= Void and then tool /= Void then
@@ -227,19 +227,19 @@ feature -- Access
 
 feature -- Status report
 
-	has_breakpoints: BOOLEAN is
+	has_breakpoints: BOOLEAN
 			-- Should `Current' display breakpoints?
 		do
 			Result := False
 		end
 
-	is_dotnet_formatter: BOOLEAN is
+	is_dotnet_formatter: BOOLEAN
 			-- Is Current able to format .NET class texts?
 		do
 			Result := True
 		end
 
-	line_numbers_allowed: BOOLEAN is
+	line_numbers_allowed: BOOLEAN
 			-- Does it make sense to show line numbers in Current?
 		do
 			Result := False
@@ -248,7 +248,7 @@ feature -- Status report
 	is_filter_enabled: BOOLEAN
 			-- Is filter on domain result enabled?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current formatter valid?
 		local
 			l_metric_manager: like metric_manager
@@ -257,17 +257,17 @@ feature -- Status report
 			Result := l_metric_manager.is_metric_loaded and then l_metric_manager.is_metric_calculatable (metric)
 		end
 
-	is_customized_fomatter: BOOLEAN is True
+	is_customized_fomatter: BOOLEAN = True
 			-- Is Current a customized formatter?
 
 feature -- Setting
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		do
 		end
 
-	set_tooltip (a_tooltip: like tooltip) is
+	set_tooltip (a_tooltip: like tooltip)
 			-- Set `tooltip' with `a_tooltip'.
 		do
 			tooltip := a_tooltip
@@ -275,7 +275,7 @@ feature -- Setting
 			tooltip_set: tooltip = a_tooltip
 		end
 
-	set_metric (a_metric_name: like metric) is
+	set_metric (a_metric_name: like metric)
 			-- Set `metric' with `a_metric_name'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -285,7 +285,7 @@ feature -- Setting
 			metric_set: metric.is_equal (a_metric_name)
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		do
 			if browser /= Void then
@@ -293,7 +293,7 @@ feature -- Setting
 			end
 		end
 
-	set_pixmap_and_pixel_buffer (a_pixmap: like pixmap; a_pixel_buffer: like pixel_buffer) is
+	set_pixmap_and_pixel_buffer (a_pixmap: like pixmap; a_pixel_buffer: like pixel_buffer)
 			-- Set `pixmap' with `a_pixmap'.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -308,7 +308,7 @@ feature -- Setting
 			pixmap.stretch (16, 16)
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Associate current formatter with stone contained in `new_stone'.
 		do
 			force_stone (new_stone)
@@ -323,7 +323,7 @@ feature -- Setting
 			ensure_display_in_widget_owner
 		end
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output.
 		do
 			if browser /= Void then
@@ -331,7 +331,7 @@ feature -- Setting
 			end
 		end
 
-	set_valid_stone_function (a_valid_stone_function: like valid_stone_function) is
+	set_valid_stone_function (a_valid_stone_function: like valid_stone_function)
 			-- Set `valid_stone_function' with `a_valid_stone_function'.
 		require
 			a_valid_stone_function_attached: a_valid_stone_function /= Void
@@ -341,7 +341,7 @@ feature -- Setting
 			valid_stone_function_set: valid_stone_function = a_valid_stone_function
 		end
 
-	format is
+	format
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
 			if stone /= Void and then selected and then displayed and then actual_veto_format_result then
@@ -360,7 +360,7 @@ feature -- Setting
 			end
 		end
 
-	generate_result is
+	generate_result
 			-- Generate result for `stone'.
 		require
 			browser_attached: browser /= Void
@@ -406,7 +406,7 @@ feature -- Setting
 			retry
 		end
 
-	set_is_filter_enabled (b: BOOLEAN) is
+	set_is_filter_enabled (b: BOOLEAN)
 			-- Set `is_filter_enabled' with `b'.
 		do
 			is_filter_enabled := b
@@ -414,7 +414,7 @@ feature -- Setting
 			is_filter_enabled_set: is_filter_enabled = b
 		end
 
-	set_viewer (a_viewer: like viewer) is
+	set_viewer (a_viewer: like viewer)
 			-- Set `viewer' with `a_viewer'.
 		require
 			a_viewer_attached: a_viewer /= Void
@@ -424,7 +424,7 @@ feature -- Setting
 			viewer_set: viewer /= Void and then viewer.is_equal (a_viewer)
 		end
 
-	set_icon_location (a_location: like icon_location) is
+	set_icon_location (a_location: like icon_location)
 			-- Set `icon_location' with `a_location'.
 		do
 			if a_location = Void then
@@ -435,7 +435,7 @@ feature -- Setting
 			set_is_pixmap_loaded (False)
 		end
 
-	set_descriptor (a_descriptor: like descriptor) is
+	set_descriptor (a_descriptor: like descriptor)
 			-- Set `descriptor' with `a_descriptor'.
 		do
 			descriptor := a_descriptor
@@ -443,7 +443,7 @@ feature -- Setting
 			descriptor_attached: descriptor /= Void
 		end
 
-	set_tool (a_tool: like tool) is
+	set_tool (a_tool: like tool)
 			-- Set `tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
@@ -453,7 +453,7 @@ feature -- Setting
 			tool_set: tool.is_equal (a_tool)
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set both the `associated_button' and
 			-- `associated_menu_entry' to be sensitive.
 		do
@@ -481,7 +481,7 @@ feature{NONE} -- Implementation/Data
 	pixmap: EV_PIXMAP
 			-- Customized pixmap for Current formatter
 
-	placeholder: STRING_GENERAL is
+	placeholder: STRING_GENERAL
 			-- Placeholder for header/temp_header replacement.
 		do
 			create {STRING_32} Result.make_from_string ("$target")
@@ -492,7 +492,7 @@ feature{NONE} -- Implementation/Data
 	symbol_internal: like symbol
 			-- Implementation of `symbol'
 
-	viewer_table: HASH_TABLE [FUNCTION [ANY, TUPLE [EB_DEVELOPMENT_WINDOW, EV_PND_ACTION_SEQUENCE], like browser], STRING] is
+	viewer_table: HASH_TABLE [FUNCTION [ANY, TUPLE [EB_DEVELOPMENT_WINDOW, EV_PND_ACTION_SEQUENCE], like browser], STRING]
 			-- Table to retrieve builder agents for viewer whose type name is given as argument
 		do
 			if viewer_table_internal = Void then
@@ -504,7 +504,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	new_class_flat_browser (a_development_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like browser is
+	new_class_flat_browser (a_development_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like browser
 			--
 		do
 			create {EB_CLASS_BROWSER_FLAT_VIEW} Result.make (a_development_window, a_drop_actions)
@@ -519,7 +519,7 @@ feature{NONE} -- Implementation/Data
 	pixel_buffer_internal: like pixel_buffer
 			-- Implementation of `pixel_buffer'
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		do
 			Result := actual_veto_format_result
@@ -527,7 +527,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation/Setting
 
-	set_command_name_internal (a_name: like command_name_internal) is
+	set_command_name_internal (a_name: like command_name_internal)
 			-- Set `command_name_internal' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -537,7 +537,7 @@ feature{NONE} -- Implementation/Setting
 			command_name_internal_set: command_name_internal.is_equal (a_name)
 		end
 
-	set_header_internal (a_header: like header_internal) is
+	set_header_internal (a_header: like header_internal)
 			-- Set `header_internal' with` a_header'.
 		require
 			a_header_attached: a_header /= Void
@@ -547,7 +547,7 @@ feature{NONE} -- Implementation/Setting
 			header_internal_set: header_internal.is_equal (a_header)
 		end
 
-	set_temp_header_internal (a_temp_header: like temp_header_internal) is
+	set_temp_header_internal (a_temp_header: like temp_header_internal)
 			-- Set `temp_header_internal' with` a_temp_header'.
 		require
 			a_temp_header_attached: a_temp_header /= Void
@@ -557,7 +557,7 @@ feature{NONE} -- Implementation/Setting
 			temp_header_internal_set: temp_header_internal.is_equal (a_temp_header)
 		end
 
-	set_menu_name_internal (a_name: like menu_name_internal) is
+	set_menu_name_internal (a_name: like menu_name_internal)
 			-- Set `menu_name_internal' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -567,7 +567,7 @@ feature{NONE} -- Implementation/Setting
 			menu_name_internal_set: menu_name_internal.is_equal (a_name)
 		end
 
-	load_pixmap is
+	load_pixmap
 			-- Load pixmap.
 		local
 			l_pixmap_loader: EB_PIXMAP_LOAD_HELPER
@@ -584,7 +584,7 @@ feature{NONE} -- Implementation/Setting
 			pixel_buffer_attached: pixel_buffer_internal /= Void
 		end
 
-	set_is_pixmap_loaded (b: BOOLEAN) is
+	set_is_pixmap_loaded (b: BOOLEAN)
 			-- Set `is_pixmap_loaded' with `b'.
 		do
 			is_pixmap_loaded := b
@@ -592,7 +592,7 @@ feature{NONE} -- Implementation/Setting
 			is_pixmap_loaded_set: is_pixmap_loaded = b
 		end
 
-	default_name: STRING is "Unnamed formatter"
+	default_name: STRING = "Unnamed formatter"
 			-- Default formatter name
 
 invariant
@@ -601,7 +601,7 @@ invariant
 	temp_header_internal_attached: temp_header_internal /= Void
 	menu_name_internal_attached: menu_name_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

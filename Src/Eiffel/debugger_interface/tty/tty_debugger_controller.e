@@ -1,4 +1,4 @@
-indexing
+note
 	description: "TTY debugger's controller."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
 		local
 			is_yes: BOOLEAN
 		do
@@ -33,7 +33,7 @@ feature -- Access
 		end
 
 	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
+			a_button_count: INTEGER; a_pref_string: STRING)
 		do
 			if manager.is_true_boolean_value (a_pref_string) then
 				a_action.call (Void)
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	activate_debugger_environment (b: BOOLEAN) is
+	activate_debugger_environment (b: BOOLEAN)
 		do
 			Precursor {DEBUGGER_CONTROLLER} (b)
 			if b then
@@ -56,7 +56,7 @@ feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 
 	manager: TTY_DEBUGGER_MANAGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

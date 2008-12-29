@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common bahavior used in xml parsing"
 	author: ""
 	date: "$Date$"
@@ -26,7 +26,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			initialize_state_transitions_tag
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did error occur during xml parsing?
 		do
 			Result := last_error /= Void
@@ -54,19 +54,19 @@ feature -- Status report
 
 feature{NONE} -- Event handlers
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			create_last_error (a_message)
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		do
 			current_content.append (a_content)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -86,7 +86,7 @@ feature{NONE} -- Event handlers
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		local
 			l_attr: HASH_TABLE [INTEGER, STRING]
@@ -115,7 +115,7 @@ feature{NONE} -- Event handlers
 			end
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		local
 			l_tag: INTEGER
@@ -129,7 +129,7 @@ feature{NONE} -- Event handlers
 			current_attributes.clear_all
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		local
 			l_tag: INTEGER
@@ -146,7 +146,7 @@ feature{NONE} -- Event handlers
 
 feature{NONE} -- Error handling
 
-	create_last_error (a_message: STRING_GENERAL) is
+	create_last_error (a_message: STRING_GENERAL)
 			-- Create `last_error' with `a_message'.
 			-- Raise an exception
 		do
@@ -184,29 +184,29 @@ feature{NONE} -- Implementation
 	attribute_name_table: HASH_TABLE [STRING, INTEGER]
 			-- Table of attributes in form of [attribute_name, attribute_id]
 
-	t_none: INTEGER is
+	t_none: INTEGER
 			-- Phony non node.
 		deferred
 		end
 
 feature{NONE} -- Implementation
 
-	initialize_state_transitions_tag is
+	initialize_state_transitions_tag
 			-- Initialize `state_transitions_tag'.
 		deferred
 		end
 
-	initialize_tag_attributes is
+	initialize_tag_attributes
 			-- Initialize `tag_attributes'.
 		deferred
 		end
 
-	initialize_processors is
+	initialize_processors
 			-- Initialize processors for analysing nodes.
 		deferred
 		end
 
-	initialize_attribute_name_table is
+	initialize_attribute_name_table
 			-- Initialize `attribute_name_table'.
 		local
 			l_attrs: like tag_attributes
@@ -234,7 +234,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	retrieve_attribute_value (a_attr_id: INTEGER) is
+	retrieve_attribute_value (a_attr_id: INTEGER)
 			-- Retrieve value of attribute whose id is `a_attr_id' from `current_attributes'.
 			-- If succeeded, store last retrieved attribute value in `last_tested_attribute',
 			-- otherwise raise an error.

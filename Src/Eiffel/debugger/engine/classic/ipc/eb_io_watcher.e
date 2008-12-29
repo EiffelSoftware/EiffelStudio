@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mechanism to call an action when a file/pipe is changed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a default IO-listener. No action is associated, and
 			-- therefore nothing will happen when the file/pipe is changed.
 		do
 			create implementation
 		end
 
-	make_with_action (an_action: like action) is
+	make_with_action (an_action: like action)
 			-- Create an IO-listener with `an_action' as callback feature.
 		require
 			an_agent_not_void: an_action /= Void
@@ -39,13 +39,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' destroyed?
 		do
 			Result := implementation.is_destroyed
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current' and clean up.
 		do
 			implementation.destroy
@@ -53,7 +53,7 @@ feature -- Access
 			is_destroyed: is_destroyed
 		end
 
-	action: PROCEDURE [ANY, TUPLE] is
+	action: PROCEDURE [ANY, TUPLE]
 			-- Callback feature called with the file/pipe is changed.
 		do
 			Result := implementation.action
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_action (an_action: like action) is
+	set_action (an_action: like action)
 			-- Set `an_action' as callback feature.
 		require
 			an_agent_not_void: an_action /= Void
@@ -72,7 +72,7 @@ feature -- Element change
 			agent_set: action = an_action
 		end
 
-	remove_action is
+	remove_action
 			-- Remove the current action
 		require
 			not_destroyed: not is_destroyed
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	implementation: EB_IO_WATCHER_IMP;
 			-- Platform dependent implementation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

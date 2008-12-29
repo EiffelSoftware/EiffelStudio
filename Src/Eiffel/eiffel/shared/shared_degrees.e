@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Shared Degrees during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -10,37 +10,37 @@ class SHARED_DEGREES
 
 feature {NONE} -- Access
 
-	Degree_5: DEGREE_5 is
+	Degree_5: DEGREE_5
 			-- Degree 5
 		once
 			create Result.make
 		end
 
-	Degree_4: DEGREE_4 is
+	Degree_4: DEGREE_4
 			-- Degree 4
 		once
 			create Result.make
 		end
 
-	Degree_3: DEGREE_3 is
+	Degree_3: DEGREE_3
 			-- Degree 3
 		once
 			create Result.make
 		end
 
-	Degree_2: DEGREE_2 is
+	Degree_2: DEGREE_2
 			-- Degree 2
 		once
 			create Result.make
 		end
 
-	Degree_1: DEGREE_1 is
+	Degree_1: DEGREE_1
 			-- Degree 1
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

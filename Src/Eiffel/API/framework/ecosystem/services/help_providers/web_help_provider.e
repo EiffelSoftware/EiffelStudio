@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base implementation for a help provider used to fetch content online.
 	]"
@@ -194,7 +194,7 @@ feature {NONE} -- Regular expressions
 			result_is_compiled: Result.is_compiled
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

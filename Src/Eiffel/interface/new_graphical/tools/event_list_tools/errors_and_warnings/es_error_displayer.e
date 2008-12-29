@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An error display for the graphical version of EiffelStudio, used in combination with the event list service {EVENT_LIST_SERVICE_S}
 	]"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	frozen error_context: UUID is
+	frozen error_context: UUID
 			-- Error event list context identifier
 		once
 			create Result.make_from_string ("E1FFE10E-D722-4249-A34C-39290C2C194A")
@@ -81,7 +81,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW) is
+	show_errors_and_warnings_tool (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Shows the error and warnings tool for window `a_window'
 			--
 			-- `a_window': The EiffelStudio development window to display the errors and warnings tool for
@@ -101,7 +101,7 @@ feature {NONE} -- Basic operations
 
 feature -- Output
 
-	trace_warnings (handler: ERROR_HANDLER) is
+	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		local
 			l_warnings: LIST [ERROR]
@@ -126,7 +126,7 @@ feature -- Output
 			end
 		end
 
-	trace_errors (handler: ERROR_HANDLER) is
+	trace_errors (handler: ERROR_HANDLER)
 			-- Display error messages from `handler'.
 		local
 			l_errors: LIST [ERROR]
@@ -158,7 +158,7 @@ feature -- Output
 			end
 		end
 
-	force_display is
+	force_display
 			-- Make sure the user can see the messages we send.
 		do
 			if (create {SERVICE_CONSUMER [EVENT_LIST_S]}).is_service_available then
@@ -201,7 +201,7 @@ feature {NONE} -- Factory
 invariant
 	window_manager_attached: window_manager /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

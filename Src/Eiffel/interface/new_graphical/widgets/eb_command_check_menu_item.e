@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu item for a menuable command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CHECK_MENU_ITEM_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

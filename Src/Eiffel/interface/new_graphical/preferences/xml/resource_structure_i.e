@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives the data contained in a XML file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,13 +9,13 @@ deferred class
 
 feature -- Initialization
 
-	make (in: like interface) is
+	make (in: like interface)
 			-- Creation procedure.
 		do
 			interface := in
 		end
 
-	make_default (default_file: STRING) is
+	make_default (default_file: STRING)
 			-- Initialize Current from file
 			-- named `default_file'.
 		require
@@ -35,14 +35,14 @@ feature -- Initialization
 
 feature -- Access
 
-	item, resource (resource_name: STRING): RESOURCE is
+	item, resource (resource_name: STRING): RESOURCE
 			-- Resource named `resource_name'.
 			-- Name does not include path.
 		do
 			Result := table.item (resource_name)
 		end
 
-	folder (path: STRING): RESOURCE_FOLDER is
+	folder (path: STRING): RESOURCE_FOLDER
 			-- Folder at location `path'
 		local
 			i, j: INTEGER
@@ -73,7 +73,7 @@ feature -- Access
 			Result := f.interface
 		end
 
-	child_list (path: STRING): LINKED_LIST [like folder] is
+	child_list (path: STRING): LINKED_LIST [like folder]
 			-- List of child folder of folder located at `path'.
 		local
 			f: like folder
@@ -82,7 +82,7 @@ feature -- Access
 			Result := f.child_list
 		end
 
-	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
+	resource_list (path: STRING): LINKED_LIST [RESOURCE]
 			-- List of resources of folder located at `path'.
 		local
 			f: like folder
@@ -93,13 +93,13 @@ feature -- Access
 
 feature -- Modification
 
-	put_resource (r: RESOURCE) is
+	put_resource (r: RESOURCE)
 			-- Add `r' in resource hash table.
 		do
 			table.put_resource (r)
 		end
 
-	replace_resource (r: RESOURCE) is
+	replace_resource (r: RESOURCE)
 			-- Replace `r' in resource hash table.
 		do
 			table.replace_resource (r)
@@ -107,7 +107,7 @@ feature -- Modification
 
 feature -- Save
 
-	save is
+	save
 			-- Save contents of structure.
 		deferred
 		end
@@ -117,7 +117,7 @@ feature -- Status report
 	root_folder_i: RESOURCE_FOLDER_I
 			-- Root of the folder hierarchy.
 
-	has_folder (s: STRING): BOOLEAN is
+	has_folder (s: STRING): BOOLEAN
 			-- Does folder `s' exists?
 		do
 			Result := (folder (s) /= Void)
@@ -130,7 +130,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	folder_child (par: RESOURCE_FOLDER_I; child_name: STRING): RESOURCE_FOLDER_I is
+	folder_child (par: RESOURCE_FOLDER_I; child_name: STRING): RESOURCE_FOLDER_I
 			-- Child of `par' with name `child_name'
 			-- Void if `par' has no child called `child_name'.
 		local
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 		-- Hash Table of Resources.
 		-- The key used is their "short" name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

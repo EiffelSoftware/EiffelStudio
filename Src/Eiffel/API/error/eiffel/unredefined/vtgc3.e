@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for the formal generic part of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 3
+	subcode: INTEGER_32 = 3
 
 	error_info: MC_FEATURE_INFO
 			-- List of types with same feature.
@@ -35,7 +35,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 			--
@@ -75,7 +75,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_set: constraints = a_type_set
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

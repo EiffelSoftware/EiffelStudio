@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a delayed domain used in Eiffel query language
 		
@@ -32,7 +32,7 @@ inherit
 
 feature -- Status report
 
-	is_delayed: BOOLEAN is True
+	is_delayed: BOOLEAN = True
 			-- Is `Current' a delayed domain?
 			-- A delayed domain means that `content' of the domain is not defined until a certain time.
 			-- For example, in query:
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Notification
 
-	update (a_observable: QL_DOMAIN_GENERATOR; a_data: like item_type) is
+	update (a_observable: QL_DOMAIN_GENERATOR; a_data: like item_type)
 			-- Notification from `a_observable' indicating that `a_data' changed.
 		local
 			a_item: like item_type
@@ -57,7 +57,7 @@ feature -- Notification
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

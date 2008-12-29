@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to undo the last refactoring."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: ERF_MANAGER) is
+	make (a_manager: ERF_MANAGER)
 			-- Create associated to `a_manager'.
 		require
 			a_manager_not_void: a_manager /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_tooltext_important: BOOLEAN is
+	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
 			Result := True
@@ -48,48 +48,48 @@ feature -- Status
 
 feature -- Access
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What is printed in the customize dialog.
 		do
 			Result := interface_names.f_refactoring_undo
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for toolbar button
 		do
 			Result := interface_names.b_refactoring_undo
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := tooltext
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon_buffer
 		end
 
-	Name: STRING is "RF_undo"
+	Name: STRING = "RF_undo"
 			-- Name of `Current' to identify it.
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute.
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 invariant
 	manager_not_void: manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

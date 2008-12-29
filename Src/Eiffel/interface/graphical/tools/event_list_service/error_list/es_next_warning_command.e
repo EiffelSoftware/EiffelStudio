@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A command to navigate to the next warning in the warnings and warnings tool list {ES_ERRORS_AND_WARNINGS_TOOL}
 	]"
@@ -71,7 +71,7 @@ feature -- Execution
 			tool_commander.go_to_next_warning (True)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

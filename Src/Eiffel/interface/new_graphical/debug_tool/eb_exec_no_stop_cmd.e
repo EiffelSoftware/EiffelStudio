@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Set execution format so that no breakable point %
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Execution		
 
-	execute is
+	execute
 			-- Set the execution format to `stone'.
 		do
 			if is_sensitive then
@@ -51,40 +51,40 @@ feature -- Execution
 
 feature {NONE} -- Attributes
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for the button.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon_buffer
 		end
 
-	name: STRING is "Exec_no_stop"
+	name: STRING = "Exec_no_stop"
 			-- Name of the command.
 
-	internal_tooltip: STRING_GENERAL is
+	internal_tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_no_stop
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_no_stop
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry.
 		once
 			Result := Interface_names.m_Exec_nostop
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

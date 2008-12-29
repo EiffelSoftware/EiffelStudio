@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Information about ALL history test run recorded.
 					This is topmost level test run information.
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_total_test_runs.make (10)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_maximum_remembered_data_count (a_count: like maximum_remembered_data_count) is
+	set_maximum_remembered_data_count (a_count: like maximum_remembered_data_count)
 			-- Set `maximum_remembered_data_count' with `a_count'
 		do
 			maximum_remembered_data_count := a_count
@@ -40,7 +40,7 @@ feature -- Command
 			set: maximum_remembered_data_count = a_count
 		end
 
-	remove_test_run_data (a_item: !ES_EWEASEL_TEST_RUN_DATA_ITEM) is
+	remove_test_run_data (a_item: !ES_EWEASEL_TEST_RUN_DATA_ITEM)
 			-- Remove `a_list' from `all_test_runs'
 		do
 			internal_total_test_runs.prune_all (a_item)
@@ -48,7 +48,7 @@ feature -- Command
 			pruned: not has_test_data (a_item)
 		end
 
-	append_test_run_data (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]; a_related_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]) is
+	append_test_run_data (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_RESULT_ITEM]; a_related_test_cases: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
 			-- Added a test run data to session data
 		local
 			l_item: ES_EWEASEL_TEST_RUN_DATA_ITEM
@@ -92,13 +92,13 @@ feature -- Query
 			Result := internal_total_test_runs.has (a_item)
 		end
 
-	all_test_runs: like internal_total_test_runs is
+	all_test_runs: like internal_total_test_runs
 			-- All test run data's snapshot
 		do
 			Result := internal_total_test_runs.twin
 		end
 
-	current_session_data: ES_EWEASEL_TEST_RUN_DATA_ITEM is
+	current_session_data: ES_EWEASEL_TEST_RUN_DATA_ITEM
 			-- Current session data
 			-- Result void if none
 		do
@@ -119,7 +119,7 @@ feature {ES_RUN_ALL_EWEASEL_TEST_RESULTS_DIALOG} -- Internal setting
 				-- we use this value in indicate which session data is current shown in {ES_TESTING_RESULT_TOOL_PANEL}
 				-- Value 0 means this is not used
 
-	set_current_session_data_index (a_int: like current_session_data_index) is
+	set_current_session_data_index (a_int: like current_session_data_index)
 			-- Set `current_session_data_index' with `a_int'
 		do
 			current_session_data_index := a_int
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			-- Total test runs data.
 
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

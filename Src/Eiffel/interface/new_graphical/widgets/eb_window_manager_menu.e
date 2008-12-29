@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu representing all the opened windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window_manager: EB_WINDOW_MANAGER) is
+	make (a_window_manager: EB_WINDOW_MANAGER)
 			-- Initialization: build the widget and the menu.
 		do
 				-- Setup the manager.
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Element change
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the object is no more used.
 		do
 			window_manager.remove_observer (Current)
@@ -70,7 +70,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Initialization Implementation
 
-	build_menu is
+	build_menu
 			-- build the menu corresponding to `a_favorites'
 		local
 			menu_item: EV_MENU_ITEM
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization Implementation
 
 feature -- Observer pattern
 
-	on_item_added (an_item: EB_WINDOW) is
+	on_item_added (an_item: EB_WINDOW)
 			-- `an_item' has just been added
 		local
 			menu_item: EV_MENU_ITEM
@@ -155,7 +155,7 @@ feature -- Observer pattern
 			extend (menu_item)
 		end
 
-	on_item_removed (an_item: EB_WINDOW) is
+	on_item_removed (an_item: EB_WINDOW)
 			-- `an_item' has just been removed.
 		local
 			menu_item_to_remove: EV_MENU_ITEM
@@ -167,7 +167,7 @@ feature -- Observer pattern
 			end
 		end
 
-	on_item_changed (an_item: EB_WINDOW) is
+	on_item_changed (an_item: EB_WINDOW)
 			-- `an_item' has just been removed.
 		local
 			menu_item_to_change: EV_MENU_ITEM
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 	window_manager: EB_WINDOW_MANAGER;
 			-- Associated window manager
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

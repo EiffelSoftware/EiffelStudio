@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria with generic scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create agent_table.make (10)
@@ -66,7 +66,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_false_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion that always returns False
 		do
 			create Result.make (agent false_agent, False)
@@ -74,7 +74,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_has_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic has constraint
 		do
 			create Result.make (agent has_constraint_agent, True)
@@ -82,7 +82,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_creation_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_has_creation_constraint_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic has creation contraint
 		do
 			create Result.make (agent has_creation_constraint_agent, True)
@@ -90,7 +90,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_is_compiled_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
@@ -98,7 +98,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_visible_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_is_visible_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic is visible
 		do
 			create Result.make (agent is_visible_agent, True)
@@ -106,7 +106,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_expanded_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_is_expanded_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic is expanded
 		do
 			create Result.make (agent is_expanded_agent, True)
@@ -114,7 +114,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_reference_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_is_reference_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion to test if a generic is reference
 		do
 			create Result.make (agent is_reference_agent, True)
@@ -122,7 +122,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_SIMPLE_GENERIC_CRITERION is
+	new_true_criterion: QL_SIMPLE_GENERIC_CRITERION
 			-- New criterion that always returns True (tautology criterion)
 		do
 			create Result.make (agent true_agent, False)
@@ -130,7 +130,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_NAME_IS_CRI
 			-- New {QL_GENERIC_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -140,7 +140,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_TEXT_CONTAIN_CRI is
+	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GENERIC_TEXT_CONTAIN_CRI
 			-- New {QL_GENERIC_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void
@@ -150,7 +150,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
@@ -160,23 +160,23 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false: INTEGER is 1
-	c_has_constraint: INTEGER is 2
-	c_has_creation_constraint: INTEGER is 3
-	c_is_compiled: INTEGER is 4
-	c_is_expanded: INTEGER is 5
-	c_is_reference: INTEGER is 6
-	c_is_visible: INTEGER is 7
-	c_true: INTEGER is 8
-	c_name_is: INTEGER is 9
-	c_text_contain: INTEGER is 10
-	c_contain_ast: INTEGER is 11
-	c_value_of_metric_is: INTEGER is 12
-	c_is_satisfied_by: INTEGER is 13
+	c_false: INTEGER = 1
+	c_has_constraint: INTEGER = 2
+	c_has_creation_constraint: INTEGER = 3
+	c_is_compiled: INTEGER = 4
+	c_is_expanded: INTEGER = 5
+	c_is_reference: INTEGER = 6
+	c_is_visible: INTEGER = 7
+	c_true: INTEGER = 8
+	c_name_is: INTEGER = 9
+	c_text_contain: INTEGER = 10
+	c_contain_ast: INTEGER = 11
+	c_value_of_metric_is: INTEGER = 12
+	c_is_satisfied_by: INTEGER = 13
 
 feature{NONE} -- Implementation
 
-	false_agent (a_item: QL_GENERIC): BOOLEAN is
+	false_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent that always returns False.
 			-- Require compiled: False
 		require
@@ -185,7 +185,7 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	true_agent (a_item: QL_GENERIC): BOOLEAN is
+	true_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
 		require
@@ -195,7 +195,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_compiled_agent (a_item: QL_GENERIC): BOOLEAN is
+	is_compiled_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
 		require
@@ -205,7 +205,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_compiled
 		end
 
-	is_visible_agent (a_item: QL_GENERIC): BOOLEAN is
+	is_visible_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' is visible
 			-- Require compiled: True
 		require
@@ -215,7 +215,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_visible
 		end
 
-	has_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
+	has_constraint_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' has constaint
 			-- Require compiled: True
 		require
@@ -225,7 +225,7 @@ feature{NONE} -- Implementation
 			Result := a_item.has_constraint
 		end
 
-	has_creation_constraint_agent (a_item: QL_GENERIC): BOOLEAN is
+	has_creation_constraint_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' has creation constaint
 			-- Require compiled: True
 		require
@@ -235,7 +235,7 @@ feature{NONE} -- Implementation
 			Result := a_item.has_creation_constraint
 		end
 
-	is_expanded_agent (a_item: QL_GENERIC): BOOLEAN is
+	is_expanded_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' is expanded
 			-- Require compiled: True
 		require
@@ -245,7 +245,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_expanded
 		end
 
-	is_reference_agent (a_item: QL_GENERIC): BOOLEAN is
+	is_reference_agent (a_item: QL_GENERIC): BOOLEAN
 			-- Agent to test if `a_item' is reference
 			-- Require compiled: True
 		require
@@ -255,7 +255,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_reference
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

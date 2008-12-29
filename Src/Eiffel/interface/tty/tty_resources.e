@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"All resouorces for the application."
@@ -24,13 +24,13 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize resource table
 		do
 			internal_initialize
 		end
 
-	internal_initialize is
+	internal_initialize
 			-- Initialize the resource table.
 			-- (By default, resources will be looked the `eifinit'
 			-- directory in $ISE_EIFFEL, $HOME, and $ISE_DEFAULTS looking
@@ -68,7 +68,7 @@ feature -- Status report
 	error_occurred: BOOLEAN;
 			-- Did an error occur while reading the default preferences file ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

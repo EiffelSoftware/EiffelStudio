@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when there are entities with the same name."
@@ -21,12 +21,12 @@ feature -- Properties
 	entity_name: STRING;
 			-- Argument name violating the VREG rule
 
-	code: STRING is "VREG";
+	code: STRING = "VREG";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Duplicate name: ");
 			a_text_formatter.add (entity_name);
@@ -35,13 +35,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_entity_name (s: STRING) is
+	set_entity_name (s: STRING)
 			-- Assign `s' to `argument_name'.
 		do
 			entity_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Selection table:
 
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; a_feat_tbl: FEATURE_TABLE) is
+	make (n: INTEGER; a_feat_tbl: FEATURE_TABLE)
 			--
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- HASH_TABLE like feature
 
-	item (an_id: INTEGER): FEATURE_I is
+	item (an_id: INTEGER): FEATURE_I
 			-- Item of name ID `an_id'
 		require
 			an_id_positive: an_id > 0
@@ -73,7 +73,7 @@ feature -- HASH_TABLE like feature
 			end
 		end
 
-	item_for_iteration: FEATURE_I is
+	item_for_iteration: FEATURE_I
 		local
 			l_id: INTEGER
 		do
@@ -82,7 +82,7 @@ feature -- HASH_TABLE like feature
 			Result := feature_table.item_id (l_id)
 		end
 
-	found_item: FEATURE_I is
+	found_item: FEATURE_I
 			--
 		local
 			l_id: INTEGER
@@ -92,7 +92,7 @@ feature -- HASH_TABLE like feature
 			Result := feature_table.item_id (l_id)
 		end
 
-	put (new: FEATURE_I; key: INTEGER) is
+	put (new: FEATURE_I; key: INTEGER)
 		require
 			new_not_void: new /= Void
 		do
@@ -101,7 +101,7 @@ feature -- HASH_TABLE like feature
 
 feature -- Element change
 
-	add_feature (a_feat: FEATURE_I) is
+	add_feature (a_feat: FEATURE_I)
 			-- Add `a_feat' in Current
 		require
 			a_feat_not_void: a_feat /= Void
@@ -125,7 +125,7 @@ feature -- Element change
 			end
 		end
 
-	remove_feature (a_feat: FEATURE_I) is
+	remove_feature (a_feat: FEATURE_I)
 			-- Add `a_feat' in Current
 		require
 			a_feat_not_void: a_feat /= Void
@@ -150,7 +150,7 @@ feature -- Element change
 
 feature -- Final mode
 
-	add_units (a_class: CLASS_C) is
+	add_units (a_class: CLASS_C)
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
@@ -182,7 +182,7 @@ feature -- Final mode
 
 feature -- Incrementality
 
-	equiv (other: like Current; c: CLASS_C): BOOLEAN is
+	equiv (other: like Current; c: CLASS_C): BOOLEAN
 			-- Incrementality test on the select table in second pass.
 		require
 			good_argument: other /= Void
@@ -223,7 +223,7 @@ feature -- Incrementality
 
 feature -- Generation
 
-	descriptors (c: CLASS_C): DESC_LIST is
+	descriptors (c: CLASS_C): DESC_LIST
 			-- Descriptors of class types associated
 			-- with class `c'
 		require
@@ -297,7 +297,7 @@ feature -- Generation
 			end
 		end
 
-	generate (c: CLASS_C) is
+	generate (c: CLASS_C)
 			-- Generate descriptor C tables of class
 			-- types associated with class `c'.
 		require
@@ -325,7 +325,7 @@ feature -- Generation
 
 feature -- Melting
 
-	melt (c: CLASS_C) is
+	melt (c: CLASS_C)
 			-- Melt descriptors of class types
 			-- associated with class `c'.
 			--| (The result is put in the melted
@@ -338,7 +338,7 @@ feature -- Melting
 
 feature {NONE} -- Implementation
 
-	is_consistent: BOOLEAN is
+	is_consistent: BOOLEAN
 			-- Is Current consistent?
 		local
 			l_cursor: CURSOR
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			go_to (l_cursor)
 		end
 
-	add_feature_unit (id: INTEGER; a_feature: FEATURE_I) is
+	add_feature_unit (id: INTEGER; a_feature: FEATURE_I)
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		require
@@ -390,7 +390,7 @@ invariant
 		feature_table.select_table = Current
 	is_consistent: is_consistent
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

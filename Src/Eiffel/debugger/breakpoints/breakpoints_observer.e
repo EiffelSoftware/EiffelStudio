@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that observes breakpoints manager"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -11,18 +11,18 @@ deferred class
 
 feature {BREAKPOINTS_MANAGER} -- Events
 
-	on_breakpoints_creation_or_removal_event is
+	on_breakpoints_creation_or_removal_event
 			-- Creation or removal of breakpoints occurred.
 		deferred
 		end
 
-	on_breakpoints_change_event is
+	on_breakpoints_change_event
 			-- Breakpoints changed.
 		deferred
 		end
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

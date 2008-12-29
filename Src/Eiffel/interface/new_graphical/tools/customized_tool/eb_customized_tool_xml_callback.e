@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XML callbacks used for customized tool definition file parsing"
 	author: ""
 	date: "$Date$"
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			make_null
@@ -42,13 +42,13 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_tools_start is
+	on_tools_start
 			-- Action to be performed when start tag of "tools" finishes.
 		do
 			tool_receiver.extend (agent tools.extend)
 		end
 
-	on_tools_end is
+	on_tools_end
 			-- Action to be performed when tag of "tools" finishes.
 		do
 			tool_receiver.remove
@@ -56,7 +56,7 @@ feature{NONE} -- Actions
 			tool_receiver_is_empty: tool_receiver.is_empty
 		end
 
-	on_tool_start is
+	on_tool_start
 			-- Action to be performed when start tag of "tool" finishes.
 		local
 			l_name: STRING_GENERAL
@@ -70,19 +70,19 @@ feature{NONE} -- Actions
 			tool_receiver.item.call ([create {EB_CUSTOMIZED_TOOL_DESP}.make (l_name, l_id)])
 		end
 
-	on_handlers_start is
+	on_handlers_start
 			-- Action to be performed when start tag of "handlers" finishes.
 		do
 			handler_receiver.extend (agent (tools.last).extend_handler)
 		end
 
-	on_handlers_end is
+	on_handlers_end
 			-- Action to be performed when tag of "handlers" finishes.
 		do
 			handler_receiver.remove
 		end
 
-	on_pixmap_start is
+	on_pixmap_start
 			-- Action to be performed when start tag of "pixmap" finishes.
 		do
 			check not tools.is_empty end
@@ -90,7 +90,7 @@ feature{NONE} -- Actions
 			tools.last.set_pixmap_location (last_tested_attribute.twin)
 		end
 
-	on_handler_start is
+	on_handler_start
 			-- Action to be performed when start tag of "handler" finishes.
 		local
 			l_stone_name: STRING
@@ -106,7 +106,7 @@ feature{NONE} -- Actions
 
 feature{NONE}  -- Implementation
 
-	initialize_state_transitions_tag is
+	initialize_state_transitions_tag
 			-- Initialize `state_transitions_tag'.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -138,7 +138,7 @@ feature{NONE}  -- Implementation
 			state_transitions_tag := l_states
 		end
 
-	initialize_tag_attributes is
+	initialize_tag_attributes
 			-- Initialize `tag_attributes'.
 		local
 			l_tag_attrs: like tag_attributes
@@ -171,7 +171,7 @@ feature{NONE}  -- Implementation
 			tag_attributes := l_tag_attrs
 		end
 
-	initialize_processors is
+	initialize_processors
 			-- Initialize processors for analysing nodes.
 		local
 			l_start_prc: like tag_start_processors

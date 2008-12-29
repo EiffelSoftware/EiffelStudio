@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facilities to locate and create project directories/files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location, a_target: STRING) is
+	make (a_location, a_target: STRING)
 			-- Initialize Current project location at `a_location' for a target `a_target'.
 		require
 			a_location_not_void: a_location /= Void
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Directory creation
 
-	create_project_directories is
+	create_project_directories
 			-- Create basic structure for project.
 		local
 			l_dirs: ARRAY [DIRECTORY_NAME]
@@ -59,14 +59,14 @@ feature -- Directory creation
 			l_dirs.do_all (agent safe_create_directory)
 		end
 
-	create_profiler_directory is
+	create_profiler_directory
 			-- Directory where the profiler files are generated
 		do
 			create_project_directories
 			safe_create_directory (profiler_path)
 		end
 
-	create_local_assemblies_directory (is_final: BOOLEAN) is
+	create_local_assemblies_directory (is_final: BOOLEAN)
 			-- Directory where local assemblies will be generated.
 		do
 			create_project_directories
@@ -79,7 +79,7 @@ feature -- Directory creation
 
 feature -- Directories
 
-	path: DIRECTORY_NAME is
+	path: DIRECTORY_NAME
 			-- Path for current location.
 		do
 			Result := internal_path
@@ -91,7 +91,7 @@ feature -- Directories
 			path_not_void: Result /= Void
 		end
 
-	backup_path: DIRECTORY_NAME is
+	backup_path: DIRECTORY_NAME
 			-- Path where backups will be saved during a compilation.
 		do
 			Result := internal_backup_path
@@ -104,7 +104,7 @@ feature -- Directories
 			backup_path_not_void: Result /= Void
 		end
 
-	compilation_path: DIRECTORY_NAME is
+	compilation_path: DIRECTORY_NAME
 			-- Path to `COMP' where compiler data will be stored.
 		do
 			Result := internal_compilation_path
@@ -117,7 +117,7 @@ feature -- Directories
 			compilation_path_not_void: Result /= Void
 		end
 
-	documentation_path: DIRECTORY_NAME is
+	documentation_path: DIRECTORY_NAME
 			-- Path where documentation will be generated if not location is given.
 		do
 			Result := internal_documentation_path
@@ -130,7 +130,7 @@ feature -- Directories
 			documentation_path_not_void: Result /= Void
 		end
 
-	eifgens_path: DIRECTORY_NAME is
+	eifgens_path: DIRECTORY_NAME
 			-- Path to `EIFGENs' directory.
 		do
 			Result := internal_eifgens_path
@@ -143,7 +143,7 @@ feature -- Directories
 			eifgens_path_not_void: Result /= Void
 		end
 
-	final_assemblies_path: DIRECTORY_NAME is
+	final_assemblies_path: DIRECTORY_NAME
 			-- Path to `F_code/Assemblies' directory with project directory.
 		do
 			Result := internal_final_assemblies_path
@@ -156,7 +156,7 @@ feature -- Directories
 			final_assemblies_path_not_void: Result /= Void
 		end
 
-	final_path: DIRECTORY_NAME is
+	final_path: DIRECTORY_NAME
 			-- Path to `F_code' directory with project directory.
 		do
 			Result := internal_final_path
@@ -169,7 +169,7 @@ feature -- Directories
 			final_path_not_void: Result /= Void
 		end
 
-	partial_generation_path: DIRECTORY_NAME is
+	partial_generation_path: DIRECTORY_NAME
 			-- Path to where partial classes will be merged.
 		do
 			Result := internal_partial_generation_path
@@ -182,7 +182,7 @@ feature -- Directories
 			partial_generation_path_not_void: Result /= Void
 		end
 
-	profiler_path: DIRECTORY_NAME is
+	profiler_path: DIRECTORY_NAME
 			-- Path to `Profiler' directory within project directory.
 		do
 			Result := internal_profiler_path
@@ -195,7 +195,7 @@ feature -- Directories
 			profiler_path_not_void: Result /= Void
 		end
 
-	target_path: DIRECTORY_NAME is
+	target_path: DIRECTORY_NAME
 			-- Path to `target' directory within project directory.
 		do
 			Result := internal_target_path
@@ -208,7 +208,7 @@ feature -- Directories
 			target_path_not_void: Result /= Void
 		end
 
-	workbench_assemblies_path: DIRECTORY_NAME is
+	workbench_assemblies_path: DIRECTORY_NAME
 			-- Path to `W_code/Assemblies' directory with project directory.
 		do
 			Result := internal_workbench_assemblies_path
@@ -221,7 +221,7 @@ feature -- Directories
 			workbench_assemblies_path_not_void: Result /= Void
 		end
 
-	workbench_path: DIRECTORY_NAME is
+	workbench_path: DIRECTORY_NAME
 			-- Path to `W_code' directory with project directory.
 		do
 			Result := internal_workbench_path
@@ -234,7 +234,7 @@ feature -- Directories
 			workbench_path_not_void: Result /= Void
 		end
 
-	data_path: DIRECTORY_NAME is
+	data_path: DIRECTORY_NAME
 			-- Path to `Data" directory which is used to store customized formatter, metrics, docking layout files.
 		do
 			Result := internal_data_path
@@ -247,7 +247,7 @@ feature -- Directories
 			data_path_not_void: Result /= Void
 		end
 
-	eifgens_cluster_path: DIRECTORY_NAME is
+	eifgens_cluster_path: DIRECTORY_NAME
 			-- Path to internal cluster located in EIFGENs directory
 		do
 			Result := internal_eifgens_cluster_path
@@ -273,7 +273,7 @@ feature -- Directories
 
 feature -- Files
 
-	project_file_name: FILE_NAME is
+	project_file_name: FILE_NAME
 			-- Path to `project.epr'.
 		do
 			Result := internal_project_file_name
@@ -286,7 +286,7 @@ feature -- Files
 			project_file_name_not_void: Result /= Void
 		end
 
-	project_file: PROJECT_EIFFEL_FILE is
+	project_file: PROJECT_EIFFEL_FILE
 			-- Access to project file data.
 		do
 				-- It is not stored within Current because Current is saved to disk
@@ -297,7 +297,7 @@ feature -- Files
 			project_file_not_void: Result /= Void
 		end
 
-	precompilation_file_name: FILE_NAME is
+	precompilation_file_name: FILE_NAME
 			-- Path to `precomp.eif'.
 		do
 			Result := internal_precompilation_file_name
@@ -310,7 +310,7 @@ feature -- Files
 			precompilation_file_name_not_void: Result /= Void
 		end
 
-	lock_file_name: FILE_NAME is
+	lock_file_name: FILE_NAME
 			-- Path to `ec.lock'.
 		do
 			Result := internal_lock_file_name
@@ -366,7 +366,7 @@ feature -- Files
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Is project compiled?
 		do
 			Result := project_file.exists
@@ -374,13 +374,13 @@ feature -- Status report
 
 feature -- Access
 
-	is_project_file_valid: BOOLEAN is
+	is_project_file_valid: BOOLEAN
 			-- Is the `project_epr' file valid?
 		do
 			Result := project_file.is_valid
 		end
 
-	is_path_readable: BOOLEAN is
+	is_path_readable: BOOLEAN
 			-- Is `path' readable?
 		local
 			l_dir: DIRECTORY
@@ -389,7 +389,7 @@ feature -- Access
 			Result := l_dir.exists and then l_dir.is_readable
 		end
 
-	is_path_writable: BOOLEAN is
+	is_path_writable: BOOLEAN
 			-- Is `path' writable?
 		local
 			l_dir: DIRECTORY
@@ -398,7 +398,7 @@ feature -- Access
 			Result := l_dir.exists and then l_dir.is_writable
 		end
 
-	path_exists: BOOLEAN is
+	path_exists: BOOLEAN
 			-- Does `path' exist?
 		local
 			l_dir: DIRECTORY
@@ -407,7 +407,7 @@ feature -- Access
 			Result := l_dir.exists
 		end
 
-	is_project_readable: BOOLEAN is
+	is_project_readable: BOOLEAN
 			-- May the project be used for browsing and debugging?
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
@@ -420,7 +420,7 @@ feature -- Access
 					and then project_file.is_readable
 		end
 
-	is_project_writable: BOOLEAN is
+	is_project_writable: BOOLEAN
 			-- May the project be both compiled and used for browsing?
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
@@ -433,7 +433,7 @@ feature -- Access
 					and then project_file.is_writable
 		end
 
-	is_lock_file_present: BOOLEAN is
+	is_lock_file_present: BOOLEAN
 			-- Is `lock_file_name' present?
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -442,7 +442,7 @@ feature -- Access
 			Result := l_file.exists
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
 		local
@@ -458,7 +458,7 @@ feature -- Access
 
 feature -- Locking
 
-	create_lock_file is
+	create_lock_file
 			-- Create `lock_file_name'.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -485,7 +485,7 @@ feature -- Locking
 			retry
 		end
 
-	delete_lock_file is
+	delete_lock_file
 			-- Delete `lock_file_name'.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -502,7 +502,7 @@ feature -- Locking
 
 feature -- Settings
 
-	set_location (a_location: like location) is
+	set_location (a_location: like location)
 			-- Set `location' with `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -514,7 +514,7 @@ feature -- Settings
 			locationt_set: location = a_location
 		end
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' with `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -528,7 +528,7 @@ feature -- Settings
 
 feature -- Directory creation
 
-	safe_create_directory (a_dir: DIRECTORY_NAME) is
+	safe_create_directory (a_dir: DIRECTORY_NAME)
 			-- Create `a_dir' if it doesn't exist.
 		require
 			a_dir_attached: a_dir /= Void
@@ -543,7 +543,7 @@ feature -- Directory creation
 
 feature {NONE} -- Implementation
 
-	reset_content is
+	reset_content
 			-- Reset all paths to Void.
 		do
 			internal_path := Void
@@ -593,7 +593,7 @@ invariant
 	target_not_void: target /= Void
 	target_not_empty: not target.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

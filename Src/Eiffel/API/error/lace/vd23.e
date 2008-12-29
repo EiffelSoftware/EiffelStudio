@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"No basic class in cluster."
@@ -20,7 +20,7 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Class name: ");
 			a_text_formatter.add (class_name);
@@ -29,13 +29,13 @@ feature -- Output
 
 feature {UNIVERSE_I} -- Setting
 
-	set_class_name (s: STRING) is
+	set_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

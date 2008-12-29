@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User specific options for a given target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize user specific option for target `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -28,7 +28,7 @@ feature -- Access
 	name: STRING
 			-- Name for current target.
 
-	last_location: STRING is
+	last_location: STRING
 			-- EIFGENs location for `a_target'.
 		local
 			l_list: like locations
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Update
 
-	set_last_location (a_location: like last_location) is
+	set_last_location (a_location: like last_location)
 			-- Set `last_location' to `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -71,7 +71,7 @@ feature -- Update
 			last_location_set: last_location /= Void and then last_location.is_equal (a_location)
 		end
 
-	set_favorites (a_favorites: like favorites) is
+	set_favorites (a_favorites: like favorites)
 			-- Set `favorites' to `a_favorites'.
 		do
 			favorites := a_favorites
@@ -82,7 +82,7 @@ feature -- Update
 invariant
 	name_not_void: name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

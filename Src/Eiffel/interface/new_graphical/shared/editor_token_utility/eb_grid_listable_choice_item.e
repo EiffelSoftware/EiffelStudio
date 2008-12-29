@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editable editor token grid item."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Element change
 
-	set_item_components (a_item_components: like item_components) is
+	set_item_components (a_item_components: like item_components)
 			-- Set each item in `Current' to the list of tokens referenced in `a_item_components'.
 		require
 			a_item_components_not_void: a_item_components /= Void
@@ -43,7 +43,7 @@ feature -- Element change
 			item_components_set: item_components = a_item_components
 		end
 
-	set_list_item (a_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM) is
+	set_list_item (a_item: !EB_GRID_LISTABLE_CHOICE_ITEM_ITEM)
 			-- Set current as `a_item'
 		local
 			i, l_count: INTEGER
@@ -66,7 +66,7 @@ feature -- Element change
 			selected_item_internal := a_item
 		end
 
-	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Context menu factory
 		do
 			context_menu_factory := a_factory
@@ -74,7 +74,7 @@ feature -- Element change
 			context_menu_factory_set: context_menu_factory = a_factory
 		end
 
-	set_selection_changing_action (a_action: like selection_changing_action) is
+	set_selection_changing_action (a_action: like selection_changing_action)
 			-- Set `selection_changing_action' with `a_action'
 		do
 			selection_changing_action := a_action
@@ -87,7 +87,7 @@ feature -- Access
 	item_components: INDEXABLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM, INTEGER]
 		-- Item tokens used to make up the list.
 
-	selected_item: ?EB_GRID_LISTABLE_CHOICE_ITEM_ITEM is
+	selected_item: ?EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			-- Selected item.
 		local
 			l_list: !ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		-- Text field used to edit `Current' on `activate'
 		-- Void when `Current' isn't being activated.
 
-	set_tokens is
+	set_tokens
 			-- Update `choice_list' with `item_components'.
 		require
 			choice_list_not_void: choice_list /= Void
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	has_user_selected_item: BOOLEAN
 		-- Did the user select an entry in the list?
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			l_vbox: EV_VERTICAL_BOX
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 				-- No selection yet.
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_move (a_x, a_y: INTEGER) is
+	on_mouse_move (a_x, a_y: INTEGER)
 			-- Handle mouse moving actions.
 		local
 			l_item: EV_GRID_ITEM
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Handle mouse actions.
 		local
 			l_item: EV_GRID_ITEM
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key (a_key: EV_KEY) is
+	on_key (a_key: EV_KEY)
 			-- Handle key action on `choice_list'
 		do
 			if a_key /= Void then
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		local
 			l_item: ES_GRID_LIST_ITEM
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			Precursor {ES_GRID_LIST_ITEM}
 		end
 
-	safe_redraw is
+	safe_redraw
 			-- Redraw Current if parented
 		do
 			if item_components /= Void and then item_components.index_set.count > 1 then
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display (a_drawable: EV_DRAWABLE; a_selected: BOOLEAN; a_focused: BOOLEAN) is
+	display (a_drawable: EV_DRAWABLE; a_selected: BOOLEAN; a_focused: BOOLEAN)
 			-- Display Current in `a_drawable'.
 		local
 			x, y: INTEGER
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
 
-	drop_down_pixmap: EV_PIXMAP is
+	drop_down_pixmap: EV_PIXMAP
 			-- Drop drawn pixmap
 		local
 			l_mask: EV_BITMAP
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

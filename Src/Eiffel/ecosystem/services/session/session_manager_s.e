@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract interface for a session persistance manager, for retrieving an storing sessions from a user's home profile.
 	]"
@@ -167,7 +167,7 @@ feature -- Retrieval
 			a_session_is_clean: not a_session.is_dirty
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile filter used to check whether the name of a function matches %
@@ -24,20 +24,20 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize Current.
 		do
 		end;
 
 feature -- Checking
 
-	copy_value (item: PROFILE_DATA) is
+	copy_value (item: PROFILE_DATA)
 		do
 			item_value := item.function.out;
 			item_value.to_lower
 		end;
 
-	filtering_is_allowed: BOOLEAN is
+	filtering_is_allowed: BOOLEAN
 			-- May `filter' be called?
 		do
 			Result := operator /= Void and then value /= Void
@@ -45,7 +45,7 @@ feature -- Checking
 
 feature -- Value setting
 
-	set_value (new_value: COMPARABLE) is
+	set_value (new_value: COMPARABLE)
 			-- Value as used in Comparing-features
 		do
 			value ?= new_value;
@@ -57,7 +57,7 @@ feature -- Value setting
 
 feature -- Comparing
 
-	equal_to: BOOLEAN is
+	equal_to: BOOLEAN
 			-- Is value equal to the specified value?
 		local
 			wildcard_matcher: KMP_WILD
@@ -70,22 +70,22 @@ feature -- Comparing
 			end
 		end;
 
-	min: BOOLEAN is
+	min: BOOLEAN
 			-- Is value equal to the minimum value?
 		do
 		end;
 
-	max: BOOLEAN is
+	max: BOOLEAN
 			-- Is value equal to the maximum value?
 		do
 		end;
 
-	avg: BOOLEAN is
+	avg: BOOLEAN
 			-- Is value equal to average value?
 		do
 		end;
 
-	less_than: BOOLEAN is
+	less_than: BOOLEAN
 			-- Is value less than the specified value?
 		do
 			if not has_wildcards (value) then
@@ -95,7 +95,7 @@ feature -- Comparing
 			end
 		end;
 
-	in_interval: BOOLEAN is
+	in_interval: BOOLEAN
 			-- Is value in specified interval?
 			-- Result: NO (intervals are not allowed here.)
 		do
@@ -109,18 +109,18 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	set_value_range (first, second: COMPARABLE) is
+	set_value_range (first, second: COMPARABLE)
 			-- Value range as used in the Comparing-features 
 		do
 		end;
 
-	has_wildcards (item: STRING): BOOLEAN is
+	has_wildcards (item: STRING): BOOLEAN
 		do
 			Result := (item.index_of ('*', 1) > 0) or else
 					(item.index_of ('?', 1) > 0)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

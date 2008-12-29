@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to decide whether or not a class is a client of another class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,19 +17,19 @@ create
 
 feature{NONE} -- Implementation
 
-	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of client classes of `a_class_c'.
 		do
 			Result := a_class_c.clients
 		end
 
-	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of syntactically client classes by `a_class_c'.
 		do
 			Result := a_class_c.syntactical_clients
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

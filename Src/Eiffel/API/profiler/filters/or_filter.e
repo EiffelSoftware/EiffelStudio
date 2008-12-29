@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile filter used to perform the OR operation between %
@@ -18,7 +18,7 @@ create
 
 feature -- Checking
 
-	check_item (item: PROFILE_DATA): BOOLEAN is
+	check_item (item: PROFILE_DATA): BOOLEAN
 		do
 			from
 				filters.start
@@ -32,7 +32,7 @@ feature -- Checking
 			end
 		end
 
-	filter (input_set: PROFILE_SET): PROFILE_SET is
+	filter (input_set: PROFILE_SET): PROFILE_SET
 		do
 			from
 				create Result.make
@@ -48,7 +48,7 @@ feature -- Checking
 			Result.stop_computation;
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

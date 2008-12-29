@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows that allows the user to put handles on links"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the dialog box.
 		local
 			ok_button, cancel_button: EV_BUTTON
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	handle_left_selected: BOOLEAN is
+	handle_left_selected: BOOLEAN
 			-- Did the user choose "Put handle left on this link"?
 		do
 			Result := cb_left.is_selected
@@ -137,7 +137,7 @@ feature -- Status report
 
 feature {EB_LINK_TOOL_COMMAND} -- Status setting
 
-	set_for_client_link is
+	set_for_client_link
 			-- Add list of features represented by `link_figure'.
 		local
 			frame_list: EV_FRAME
@@ -157,7 +157,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Status setting
 
 feature {EB_LINK_TOOL_COMMAND} -- Element change
 
-	set_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+	set_strings (a_string_array: INDEXABLE [STRING, INTEGER])
 			-- Wipe out `feature_list' and re-initialize with an item
 			-- for each of `a_string_array'.
 		do
@@ -165,7 +165,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Element change
 			feature_list.set_strings (a_string_array)
 		end
 
-	set_link_tool_command (ltc: EB_LINK_TOOL_COMMAND) is
+	set_link_tool_command (ltc: EB_LINK_TOOL_COMMAND)
 			-- Assign `ltc' to `link_tool_command'.
 		require
 			command_exists: ltc /= Void
@@ -175,7 +175,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Element change
 			assigned: link_tool_command = ltc
 		end
 
-	set_link_figure (lf: EIFFEL_LINK_FIGURE) is
+	set_link_figure (lf: EIFFEL_LINK_FIGURE)
 			-- Assign `lf' to `link_figure'.
 		require
 			figure_exists: lf /= Void
@@ -187,7 +187,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Element change
 
 feature {EB_LINK_TOOL_COMMAND} -- Events
 
-	cancel_action is
+	cancel_action
 			-- Close dialog.
 		do
 			cancelled := True
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 	link_tool_command: EB_LINK_TOOL_COMMAND
 			-- Associated command.
 
-	ok_action is
+	ok_action
 			-- Close dialog.
 		do
 			cancelled := False
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			link_tool_command.on_dialog_closed
 		end
 
-	apply_action is
+	apply_action
 			-- Close dialog.
 		do
 				-- We need to check if `link_figure' is still on the diagram.
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

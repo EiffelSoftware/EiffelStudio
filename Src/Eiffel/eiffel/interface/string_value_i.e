@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a manifest string constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING; is_dotnet: BOOLEAN) is
+	make (s: STRING; is_dotnet: BOOLEAN)
 			-- Set `string_value' with `s'.
 			-- Set `is_dotnet_string' with `is_dotnet'.
 		require
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := string_value.is_equal (other.string_value)
 		end
 
-	is_propagation_equivalent (other: like Current): BOOLEAN is
+	is_propagation_equivalent (other: like Current): BOOLEAN
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
 			Result := True
@@ -69,10 +69,10 @@ feature -- Status Report
 	is_dotnet_string: BOOLEAN
 			-- Is current a manifest System.String constant?
 
-	is_string: BOOLEAN is True
+	is_string: BOOLEAN = True
 			-- Is the current constant a string one ?
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		local
 			class_type: CL_TYPE_A
@@ -83,14 +83,14 @@ feature -- Status Report
 				class_type.class_id = system_string_id)
 		end
 
-	internal_string_value: STRING is
+	internal_string_value: STRING
 		do
 			Result := eiffel_string (string_value)
 		end
 
 feature -- Settings
 
-	set_real_type (t: CL_TYPE_A) is
+	set_real_type (t: CL_TYPE_A)
 			-- Extract type and set `is_dotnet_string' accordingly.
 		local
 			l_cl_type: CL_TYPE_A
@@ -103,7 +103,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		do
 			buffer.put_string ("RTMS_EX_H(")
@@ -115,7 +115,7 @@ feature -- Code generation
 			buffer.put_character (')')
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for string constant value.
 		do
 			if is_dotnet_string then
@@ -125,7 +125,7 @@ feature -- Code generation
 			end
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a string constant value.
 		do
 			ba.append (Bc_string)
@@ -133,7 +133,7 @@ feature -- Code generation
 			ba.append_raw_string (string_value)
 		end
 
-	dump: STRING is
+	dump: STRING
 		do
 			create Result.make (string_value.count + 2)
 			Result.extend ('"')
@@ -141,7 +141,7 @@ feature -- Code generation
 			Result.extend ('"')
 		end
 
-	append_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_signature (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add_char ('"')
 			a_text_formatter.add_manifest_string (eiffel_string (string_value))
@@ -150,7 +150,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	system_string_id: INTEGER is
+	system_string_id: INTEGER
 			-- ID of SYSTEM_STRING if we are in IL code generation
 			-- Otherwise, -1 (to avoid conflicts with basic type
 			-- that have a class_id of 0).
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

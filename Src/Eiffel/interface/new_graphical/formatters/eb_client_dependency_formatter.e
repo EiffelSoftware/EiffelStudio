@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Client dependency formatter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -25,30 +25,30 @@ feature -- Access
 			Result.put (pixmaps.icon_pixmaps.class_clients_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.class_clients_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showclients
 		end
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_clients
 		end
 
-	post_fix: STRING is "cli"
+	post_fix: STRING = "cli"
 			-- String symbol of the command, used as an extension when saving.
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget' if `must_format' and `selected'.
 		do
 			if stone /= Void and then selected and then displayed and then actual_veto_format_result then
@@ -66,7 +66,7 @@ feature -- Formatting
 
 feature{NONE} -- Implementation
 
-	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION is
+	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION
 			-- Criterion to filter dependency classes		
 		do
 			create {QL_CLASS_CLIENT_RELATION_CRI} Result.make (a_domain, browser.normal_referenced_button.is_selected, browser.syntactical_button.is_selected, False)
@@ -75,7 +75,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

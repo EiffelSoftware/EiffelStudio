@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to select which kind of new link will be created."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like tool) is
+	make (a_target: like tool)
 			-- Initialize `Current'.
 			-- Client-supplier links are selected by default.
 		do
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform operation.
 		do
 			if selected_type = inheritance then
@@ -45,7 +45,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -62,14 +62,14 @@ feature -- Status report
 	selected_type: INTEGER
 			-- Currently selected type of new links
 
-	inheritance: INTEGER is 1
-	supplier: INTEGER is 2
-	aggregate: INTEGER is 3
+	inheritance: INTEGER = 1
+	supplier: INTEGER = 2
+	aggregate: INTEGER = 3
 			-- Possible values for `selected_type'.
 
 feature -- Status setting
 
-	select_type (a_type: INTEGER) is
+	select_type (a_type: INTEGER)
 			-- Set current type of link to `Supplier', `Inheritance' or`Aggregate'.
 		require
 			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
@@ -108,7 +108,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			if selected_type = inheritance then
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			if selected_type = inheritance then
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			if selected_type = inheritance then
@@ -144,23 +144,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_create_links
 		end
 
-	name: STRING is "New_links"
+	name: STRING = "New_links"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := tooltip
 		end
 
-	show_text_menu is
+	show_text_menu
 			-- Show menu to enable selection of link type.
 		local
 			menu: EV_MENU
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			menu.show_at (current_widget, current_widget.pointer_position.x, button_height)
 		end
 
-	current_widget: EV_WIDGET is
+	current_widget: EV_WIDGET
 			-- Current widget
 		do
 			if current_sd_button /= Void then
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	button_height: INTEGER is
+	button_height: INTEGER
 			-- Height of button
 		do
 			if current_sd_button /= Void then
@@ -212,7 +212,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 	current_sd_button: EB_SD_COMMAND_TOOL_BAR_BUTTON;
 			-- Current toggle button.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

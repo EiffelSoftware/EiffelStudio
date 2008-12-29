@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search in a string, only the first match is captured."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Initialization
 					a_class_name: like class_name;
 					a_path: like text_in_file_path;
 					a_source_text: STRING_32;
-					a_start: like start_position) is
+					a_start: like start_position)
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Access
 
-	start_position : INTEGER is
+	start_position : INTEGER
 			-- Start position of `text_to_be_searched'
 		do
 			if is_text_to_be_searched_set then
@@ -63,7 +63,7 @@ feature -- Access
 
 feature --Element change
 
-	set_start_position (position: INTEGER) is
+	set_start_position (position: INTEGER)
 			-- Set `start_position_internal' with position.
 		require else
 			position_is_in_the_scope: position <= text_to_be_searched.count and position >= 1
@@ -75,7 +75,7 @@ feature --Element change
 
 feature -- Basic operations
 
-	launch is
+	launch
 			-- Launch searching.
 		local
 				-- Uncomment and use the following line to enable Unicode search when Gobo is ready.
@@ -128,7 +128,7 @@ invariant
 
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

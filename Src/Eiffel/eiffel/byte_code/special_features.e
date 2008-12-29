@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special optimization on calls where target is a basic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
+	has (feature_name_id: INTEGER; compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
 			-- Does Current have `feature_name_id'?
 		require
 			valid_feature_name_id: feature_name_id > 0
@@ -50,7 +50,7 @@ feature -- Access code
 
 feature -- Status
 
-	valid_function_type (type: INTEGER): BOOLEAN is
+	valid_function_type (type: INTEGER): BOOLEAN
 			-- Is `f' a valid function type supported by Current.
 		do
 			Result := type >= min_type_id and type <= max_type_id
@@ -60,7 +60,7 @@ feature -- Status
 
 feature -- Byte code special generation
 
-	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
+	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A)
 			-- Generate byte code sequence that will be used with basic types.
 		require
 			basic_type_not_void: basic_type /= Void
@@ -163,7 +163,7 @@ feature -- Byte code special generation
 
 feature -- C special code generation
 
-	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
+	generate (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
 		require
 			valid_output_buffer: buffer /= Void
 			valid_target: target /= Void
@@ -302,7 +302,7 @@ feature -- C special code generation
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
-	c_type_table: HASH_TABLE [INTEGER, INTEGER] is
+	c_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
@@ -387,7 +387,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.standard_copy_name_id)
 		end
 
-	byte_type_table: HASH_TABLE [INTEGER, INTEGER] is
+	byte_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
@@ -455,68 +455,68 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 feature {NONE} -- Fast access to feature name
 
-	min_type_id: INTEGER is 1
-	is_equal_type: INTEGER is 1
-	set_item_type: INTEGER is 2
-	out_type: INTEGER is 3
-	hash_code_type: INTEGER is 4
-	max_type: INTEGER is 5
-	min_type: INTEGER is 6
-	abs_type: INTEGER is 7
-	generator_type: INTEGER is 8
-	to_integer_32_type: INTEGER is 9
-	offset_type: INTEGER is 10
-	default_type: INTEGER is 11
-	bit_and_type: INTEGER is 12
-	bit_or_type: INTEGER is 13
-	bit_xor_type: INTEGER is 14
-	bit_not_type: INTEGER is 15
-	bit_shift_left_type: INTEGER is 16
-	bit_shift_right_type: INTEGER is 17
-	bit_test_type: INTEGER is 18
-	zero_type: INTEGER is 19
-	one_type: INTEGER is 20
-	memory_move: INTEGER is 21
-	memory_copy: INTEGER is 22
-	memory_set: INTEGER is 23
-	to_integer_8_type: INTEGER is 24
-	to_integer_16_type: INTEGER is 25
-	to_integer_64_type: INTEGER is 26
-	set_bit_with_mask_type: INTEGER is 27
-	memory_alloc: INTEGER is 28
-	memory_free: INTEGER is 29
-	to_character_8_type: INTEGER is 30
-	upper_type: INTEGER is 31
-	lower_type: INTEGER is 32
-	is_digit_type: INTEGER is 33
-	memory_calloc: INTEGER is 34
-	to_real_64_type: INTEGER is 35
-	to_real_32_type: INTEGER is 36
-	three_way_comparison_type: INTEGER is 37
-	to_natural_8_type: INTEGER is 38
-	to_natural_16_type: INTEGER is 39
-	to_natural_32_type: INTEGER is 40
-	to_natural_64_type: INTEGER is 41
-	twin_type: INTEGER is 42
-	as_integer_8_type: INTEGER is 43
-	as_integer_16_type: INTEGER is 44
-	as_integer_32_type: INTEGER is 45
-	as_integer_64_type: INTEGER is 46
-	as_natural_8_type: INTEGER is 47
-	as_natural_16_type: INTEGER is 48
-	as_natural_32_type: INTEGER is 49
-	as_natural_64_type: INTEGER is 50
-	set_bit_type: INTEGER is 51
-	is_space_type: INTEGER is 52
-	to_character_32_type: INTEGER is 53
-	ceiling_real_type: INTEGER is 54
-	floor_real_type: INTEGER is 55
-	as_attached_type: INTEGER is 56
-	max_type_id: INTEGER is 56
+	min_type_id: INTEGER = 1
+	is_equal_type: INTEGER = 1
+	set_item_type: INTEGER = 2
+	out_type: INTEGER = 3
+	hash_code_type: INTEGER = 4
+	max_type: INTEGER = 5
+	min_type: INTEGER = 6
+	abs_type: INTEGER = 7
+	generator_type: INTEGER = 8
+	to_integer_32_type: INTEGER = 9
+	offset_type: INTEGER = 10
+	default_type: INTEGER = 11
+	bit_and_type: INTEGER = 12
+	bit_or_type: INTEGER = 13
+	bit_xor_type: INTEGER = 14
+	bit_not_type: INTEGER = 15
+	bit_shift_left_type: INTEGER = 16
+	bit_shift_right_type: INTEGER = 17
+	bit_test_type: INTEGER = 18
+	zero_type: INTEGER = 19
+	one_type: INTEGER = 20
+	memory_move: INTEGER = 21
+	memory_copy: INTEGER = 22
+	memory_set: INTEGER = 23
+	to_integer_8_type: INTEGER = 24
+	to_integer_16_type: INTEGER = 25
+	to_integer_64_type: INTEGER = 26
+	set_bit_with_mask_type: INTEGER = 27
+	memory_alloc: INTEGER = 28
+	memory_free: INTEGER = 29
+	to_character_8_type: INTEGER = 30
+	upper_type: INTEGER = 31
+	lower_type: INTEGER = 32
+	is_digit_type: INTEGER = 33
+	memory_calloc: INTEGER = 34
+	to_real_64_type: INTEGER = 35
+	to_real_32_type: INTEGER = 36
+	three_way_comparison_type: INTEGER = 37
+	to_natural_8_type: INTEGER = 38
+	to_natural_16_type: INTEGER = 39
+	to_natural_32_type: INTEGER = 40
+	to_natural_64_type: INTEGER = 41
+	twin_type: INTEGER = 42
+	as_integer_8_type: INTEGER = 43
+	as_integer_16_type: INTEGER = 44
+	as_integer_32_type: INTEGER = 45
+	as_integer_64_type: INTEGER = 46
+	as_natural_8_type: INTEGER = 47
+	as_natural_16_type: INTEGER = 48
+	as_natural_32_type: INTEGER = 49
+	as_natural_64_type: INTEGER = 50
+	set_bit_type: INTEGER = 51
+	is_space_type: INTEGER = 52
+	to_character_32_type: INTEGER = 53
+	ceiling_real_type: INTEGER = 54
+	floor_real_type: INTEGER = 55
+	as_attached_type: INTEGER = 56
+	max_type_id: INTEGER = 56
 
 feature {NONE} -- Byte code generation
 
-	make_bit_operation_code (ba: BYTE_ARRAY; op: INTEGER) is
+	make_bit_operation_code (ba: BYTE_ARRAY; op: INTEGER)
 			-- Make byte code for call on bit operations from INTEGER.
 		require
 			ba_not_void: ba /= Void
@@ -549,7 +549,7 @@ feature {NONE} -- C code generation
 
 	generate_lower_upper (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_A; f_type: INTEGER; target: REGISTRABLE)
-		is
+		
 			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
 		require
 			buffer_not_void: buffer /= Void
@@ -571,7 +571,7 @@ feature {NONE} -- C code generation
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_A; target: REGISTRABLE)
-		is
+		
 			-- Generate fast wrapper for call on `is_digit'.
 		require
 			buffer_not_void: buffer /= Void
@@ -589,7 +589,7 @@ feature {NONE} -- C code generation
 
 	generate_is_space (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_A; target: REGISTRABLE)
-		is
+		
 			-- Generate fast wrapper for call on `is_space' of CHARACTER.
 		require
 			buffer_not_void: buffer /= Void
@@ -605,7 +605,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
-	generate_equal (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_equal (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `equal' where target and parameter
 			-- are both basic types.
 		require
@@ -621,7 +621,7 @@ feature {NONE} -- C code generation
 			parameter.print_immediate_register
 		end
 
-	generate_offset (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_offset (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `+' where target and parameter
 			-- are both basic types. Only `POINTER' and `CHARACTER' are handled, the
 			-- other basic types have their own handling by the compiler.
@@ -653,7 +653,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 		end
 
-	generate_out (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
+	generate_out (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
 			-- Generate fast wrapper for call on `out' where target
 			-- is a basic type.
 		require
@@ -704,7 +704,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_hashcode (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
+	generate_hashcode (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
 			-- Generate fast wrapper for call on `hash_code' where target
 			-- is a basic type.
 		require
@@ -726,7 +726,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_generator (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
+	generate_generator (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
 			-- Generate fast wrapper for call on `generator' where target
 			-- is a basic type.
 		require
@@ -771,7 +771,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_max (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_max (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `max' where target and parameter
 			-- are both basic types.
 		require
@@ -814,7 +814,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `min' where target and parameter
 			-- are both basic types.
 		require
@@ -857,7 +857,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `three_way_comparison' where target and parameter
 			-- are both basic types.
 		require
@@ -900,7 +900,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_abs (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
+	generate_abs (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
 			-- Generate fast wrapper for call on `abs' where target
 			-- is a basic type.
 		require
@@ -934,7 +934,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
-	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
+	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
 			-- Generate fast wrapper for call on `memory_copy',
 			-- `memory_move', `memory_set' and `memory_calloc' from POINTER.
 		require
@@ -1002,7 +1002,7 @@ feature {NONE} -- C code generation
 			buffer.put_string (")")
 		end
 
-	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL) is
+	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `bit_xxx' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1041,7 +1041,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
+	generate_set_bit (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
 			-- Generate fast wrapper for call on `set_bit' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1068,7 +1068,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B]) is
+	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [PARAMETER_B])
 			-- Generate fast wrapper for call on `set_bit_with_mask' where target and parameter
 			-- are both basic types of type INTEGER.
 		require
@@ -1093,7 +1093,7 @@ feature {NONE} -- C code generation
 			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
-	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
+	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
 			-- Generate fast wrapper for call on `zero' for INTEGER,
 			-- REAL and DOUBLE.
 		require
@@ -1111,7 +1111,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_one (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
+	generate_one (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
 			-- Generate fast wrapper for call on `one' for INTEGER,
 			-- REAL and DOUBLE.
 		require
@@ -1131,12 +1131,12 @@ feature {NONE} -- C code generation
 
 feature {NONE} -- Type information
 
-	boolean_type: INTEGER is 1
-	character_type: INTEGER is 2
-	integer_type: INTEGER is 3
-	pointer_type: INTEGER is 4
-	real_32_type: INTEGER is 5
-	real_64_type: INTEGER is 6
+	boolean_type: INTEGER = 1
+	character_type: INTEGER = 2
+	integer_type: INTEGER = 3
+	pointer_type: INTEGER = 4
+	real_32_type: INTEGER = 5
+	real_64_type: INTEGER = 6
 			-- Constant defining type
 
 	integer_size: INTEGER
@@ -1149,7 +1149,7 @@ feature {NONE} -- Type information
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
 
-	type_of (b: BASIC_A): INTEGER is
+	type_of (b: BASIC_A): INTEGER
 			-- Returns corresponding type constants to `b'.
 		require
 			b_not_void: b /= Void
@@ -1203,7 +1203,7 @@ feature {NONE} -- Type information
 						Result = real_32_type or else Result = real_64_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric text criterion"
 	author: ""
 	date: "$Date$"
@@ -27,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		local
 			l_value: like value
@@ -47,7 +47,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- Grid item for Current property
 		do
 			Result := Current
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Load `a_criterion' into Current.
 		do
 			change_value_actions.block
@@ -64,7 +64,7 @@ feature -- Setting
 			change_value_actions.resume
 		end
 
-	store_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Store Current in `a_criterion'.
 		local
 			l_value: like value
@@ -80,7 +80,7 @@ feature -- Setting
 
 		end
 
-	safe_value: like value is
+	safe_value: like value
 			-- Returns `value'.
 			-- If `value' is Void, return a default value.
 		do
@@ -95,7 +95,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		local
 			l_value: like value
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	property_dialog: EB_METRIC_TEXT_PROPERTY_DIALOG
 			-- Dialog to display advanced options for text criterion
 
-	display_value_agent (a_value: like value): STRING_32 is
+	display_value_agent (a_value: like value): STRING_32
 			-- Action to return displayable string
 		local
 			l_str: STRING_GENERAL

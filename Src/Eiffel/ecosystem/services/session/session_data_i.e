@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base interface for all session data object structures
 	]"
@@ -81,7 +81,7 @@ feature {SESSION_I} -- Action handlers
 invariant
 	session_attached: is_part_of_session implies session /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

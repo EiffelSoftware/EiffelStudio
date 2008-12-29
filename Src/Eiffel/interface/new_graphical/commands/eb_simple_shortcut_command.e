@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command invoked by shortcut"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Init
 
-	make (a_acc: like accelerator) is
+	make (a_acc: like accelerator)
 			-- Set `accelerator' with `a_acc'.
 		do
 			accelerator := a_acc
@@ -26,13 +26,13 @@ feature -- Init
 
 feature {NONE} -- Excution
 
-	execute is
+	execute
 			-- Excution
 		do
 			-- Do nothing.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

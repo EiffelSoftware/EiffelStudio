@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion list auto-completion provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_possibilities: like completion_possibilities) is
+	make (a_possibilities: like completion_possibilities)
 			-- Initialize `completion_possibilities' with `a_possibilities'.
 		require
 			a_possibilities_attached: a_possibilities /= Void
@@ -41,7 +41,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	insertion: STRING_32 is
+	insertion: STRING_32
 			-- String to be partially completed
 		local
 			l_text: STRING_32
@@ -71,7 +71,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	insertion_remainder: INTEGER is
+	insertion_remainder: INTEGER
 			-- The number of characters in the insertion remaining from the cursor position to the
 			-- end of the token
 		local
@@ -85,7 +85,7 @@ feature{NONE} -- Implementation
 invariant
 	completion_possibilities_attached: completion_possibilities /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

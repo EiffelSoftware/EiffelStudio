@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects representing a class format for documentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f_type: INTEGER) is
+	make (f_type: INTEGER)
 			-- Create as `f_type'.
 		do
 			set_type (f_type)
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_type (a_type: INTEGER) is
+	set_type (a_type: INTEGER)
 			-- Set type to `a_type'.
 		require
 			a_type_valid: a_type >= cf_Chart and then a_type <= cf_Flatshort
@@ -32,7 +32,7 @@ feature -- Status setting
 			type := a_type
 		end
 
-	set_generated (f: BOOLEAN) is
+	set_generated (f: BOOLEAN)
 			-- Set global flag `is_generated' for class format `type' to `f'.
 		do
 			generated_list.put_i_th (f, type)
@@ -45,13 +45,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_generated: BOOLEAN is
+	is_generated: BOOLEAN
 			-- Should format `type' be generated?.
 		do
 			Result := generated_list @ type
 		end
 
-	file_extension: STRING is
+	file_extension: STRING
 			-- To append to the filename.
 		do
 			inspect
@@ -71,7 +71,7 @@ feature -- Status report
 			end
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Only used in interface.
 		do
 			inspect
@@ -91,7 +91,7 @@ feature -- Status report
 			end
 		end
 
-	description: STRING is
+	description: STRING
 			-- Appearing in menu item for example.
 		do
 			inspect
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	generated_list: ARRAYED_LIST [BOOLEAN] is
+	generated_list: ARRAYED_LIST [BOOLEAN]
 			-- Global list of flags for which format is (to be) generated.
 		once
 			create Result.make_filled (6)
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			Result.put_i_th (False, cf_Flatshort)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

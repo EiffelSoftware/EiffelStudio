@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Retrieve the `project.eif' of the precompiled project."
@@ -20,7 +20,7 @@ inherit
 
 feature
 
-	retrieve_precompiled (a_project_location: PROJECT_DIRECTORY) is
+	retrieve_precompiled (a_project_location: PROJECT_DIRECTORY)
 			-- Initialize the system with precompiled information
 			-- contained in precompile project in `a_project_location'.
 		require
@@ -93,7 +93,7 @@ feature
 			end
 		end
 
-	set_precomp_dir is
+	set_precomp_dir
 			-- Update precompilation related once functions.
 		require
 			driver_not_void: Workbench.precompiled_driver /= Void
@@ -106,7 +106,7 @@ feature
 			Precompilation_directories.copy (precomp_dirs)
 		end;
 
-	check_version_number is
+	check_version_number
 			-- Check the version number for all precompilation.
 			-- Raise an error if there an incompatible version.
 		require
@@ -129,7 +129,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	precompiled_project_directory (a_project_location: PROJECT_DIRECTORY): REMOTE_PROJECT_DIRECTORY is
+	precompiled_project_directory (a_project_location: PROJECT_DIRECTORY): REMOTE_PROJECT_DIRECTORY
 			-- Precompiled project directory containing all other
 			-- precompiled libraries listed in `precompiled_project'
 		require
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			valid_project: Result /= Void implies Result.is_valid
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

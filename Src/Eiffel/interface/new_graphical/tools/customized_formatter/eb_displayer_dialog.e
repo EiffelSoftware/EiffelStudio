@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup tools in which a formatter is displayed"
 	author: ""
 	date: "$Date$"
@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_formatter_name: like formatter_name; a_tools: like tools) is
+	make (a_formatter_name: like formatter_name; a_tools: like tools)
 			-- Initialize `tools' with `a_tools'.
 		require
 			a_formatter_name_attached: a_formatter_name /= Void
@@ -46,7 +46,7 @@ feature{NONE} -- Initialization
 			show_actions.extend (agent on_show)
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_box: EV_VERTICAL_BOX
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_has_changed (b: BOOLEAN) is
+	set_has_changed (b: BOOLEAN)
 			-- Set `has_changed' with `b'.
 		do
 			has_changed := b
@@ -100,7 +100,7 @@ feature -- Setting
 			has_changed_set: has_changed = b
 		end
 
-	set_tools (a_tools: like tools) is
+	set_tools (a_tools: like tools)
 			-- Set `tools' with `a_tools'.
 		require
 			a_tools_attached: a_tools /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 			end
 		end
 
-	set_formatter_name (a_name: like formatter_name) is
+	set_formatter_name (a_name: like formatter_name)
 			-- Set `formatter_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -136,13 +136,13 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_tool_checkbox_change (a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM) is
+	on_tool_checkbox_change (a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM)
 			-- Action to be performed when selection status of `a_checkbox' changed
 		do
 			set_has_changed (True)
 		end
 
-	on_view_change (a_view: EV_GRID_CHOICE_ITEM) is
+	on_view_change (a_view: EV_GRID_CHOICE_ITEM)
 			-- Action to be performed when view changes
 		do
 			a_view.set_data ("")
@@ -150,7 +150,7 @@ feature{NONE} -- Actions
 			set_has_changed (True)
 		end
 
-	on_ok_pressed is
+	on_ok_pressed
 			-- Action to be performed when "OK" button is pressed
 		do
 			if has_changed then
@@ -158,7 +158,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_show is
+	on_show
 			-- Action to be performed when Current dialog is shown
 		do
 			last_value_from_grid := Void
@@ -170,7 +170,7 @@ feature{NONE} -- Actions
 			set_title (interface_names.t_setup_formatter_tools (formatter_name))
 		end
 
-	on_key_pressed_in_grid (a_key: EV_KEY) is
+	on_key_pressed_in_grid (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is pressed in `grid'.
 		require
 			a_key_attached: a_key /= Void
@@ -203,7 +203,7 @@ feature{NONE} -- Implementation
 	grid_wrapper: EVS_GRID_WRAPPER [TUPLE [STRING_32, STRING]]
 			-- Grid wrapper for `grid' to support sorting
 
-	value_from_grid: like value is
+	value_from_grid: like value
 			-- Value from `grid'
 		local
 			i: INTEGER
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	view_name_table: HASH_TABLE [STRING, STRING_GENERAL] is
+	view_name_table: HASH_TABLE [STRING, STRING_GENERAL]
 			-- View name table.
 			-- [View storage name, View display name]
 		local
@@ -259,7 +259,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	view_name_list: LIST [STRING_GENERAL] is
+	view_name_list: LIST [STRING_GENERAL]
 			-- List of supported view names.
 		local
 			l_view_table: like view_table
@@ -281,7 +281,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	view_table: HASH_TABLE [TUPLE [view_name: STRING_GENERAL; view_help: STRING_GENERAL], STRING] is
+	view_table: HASH_TABLE [TUPLE [view_name: STRING_GENERAL; view_help: STRING_GENERAL], STRING]
 			-- View table.
 			-- [View display name, View store name]
 		local
@@ -304,7 +304,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	tool_name_tester (a_tool, b_tool: TUPLE [display_name: STRING_32; store_name: STRING]; a_order: INTEGER): BOOLEAN is
+	tool_name_tester (a_tool, b_tool: TUPLE [display_name: STRING_32; store_name: STRING]; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_tool' and `b_tool' according to `a_order'
 		require
 			a_tool_attached: a_tool /= Void and then a_tool.display_name /= Void
@@ -317,7 +317,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [STRING_32, STRING]]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [STRING_32, STRING]])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -343,7 +343,7 @@ feature{NONE} -- Implementation/Sorting
 
 feature{NONE} -- Implementation/Binding
 
-	bind_grid is
+	bind_grid
 			-- Bind grid.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [TUPLE [display_name: STRING_32; store_name:STRING]]
@@ -391,7 +391,7 @@ feature{NONE} -- Implementation/Binding
 			end
 		end
 
-	bind_row (a_grid_row: EV_GRID_ROW; a_tool: STRING; a_selected: BOOLEAN; a_view: STRING; a_sorting: STRING) is
+	bind_row (a_grid_row: EV_GRID_ROW; a_tool: STRING; a_selected: BOOLEAN; a_view: STRING; a_sorting: STRING)
 			-- Bind `a_tool' with view `a_view' and selected status `a_selected' in `a_grid_row'.
 		require
 			a_grid_row_attached: a_grid_row /= Void

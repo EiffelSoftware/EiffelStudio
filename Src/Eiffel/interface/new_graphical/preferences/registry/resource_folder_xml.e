@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects containing the information relative to a resource folder."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,19 +15,19 @@ create
 
 feature -- Initialization
 
-	make (doc: XML_ELEMENT; struct: like structure) is
+	make (doc: XML_ELEMENT; struct: like structure)
 		do
 			make_default (doc, struct)
 		end
 
-	make_root (file_name: FILE_NAME; struct: RESOURCE_STRUCTURE) is
+	make_root (file_name: FILE_NAME; struct: RESOURCE_STRUCTURE)
 		do
 			make_default_root (file_name, struct)
 		end
 
 feature -- Update
 
-	update_root (file_name: FILE_NAME) is
+	update_root (file_name: FILE_NAME)
 		local
 			file: RAW_FILE
 			s: STRING
@@ -61,7 +61,7 @@ feature -- Update
 			end
 		end
 
-	update_attributes (doc: XML_ELEMENT) is
+	update_attributes (doc: XML_ELEMENT)
 		local
 			res_xml: XML_RESOURCE
 			resource: RESOURCE
@@ -108,7 +108,7 @@ feature -- Update
 
 feature -- Saving
 
-	root_save (location: FILE_NAME) is
+	root_save (location: FILE_NAME)
 		local
 			file: RAW_FILE
 			s: STRING
@@ -134,7 +134,7 @@ feature -- Saving
 
 feature -- Output
 
-	xml_trace (identation: STRING): STRING is
+	xml_trace (identation: STRING): STRING
 			-- XML representation of Current and its content.
 		local
 			new_ident: STRING
@@ -172,7 +172,7 @@ feature -- Output
 			Result.append ("</TOPIC>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

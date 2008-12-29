@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Extractor to fetch EIS entries of a tag. The extractor only read from the storage.
 			The actually extracting has been done or being done at background by
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: like tag) is
+	make (a_tag: like tag)
 			-- Initialize with `a_tag'.
 			-- Empty tag indicates to view entries without tag.
 		do
@@ -42,7 +42,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	extract is
+	extract
 			-- Perform extracting.
 			-- Only read from the storage.
 			-- The actually extracting has been done or being done at background by
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Fourth page of new unit test wizard
 
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Redefine
 		do
 			wizard_information := an_info
@@ -104,7 +104,7 @@ feature {NONE} -- Wizard UI Implementation
 			subtitle.set_text (interface_names.t_Select_features_for_which)
 		end
 
-	update_features_to_test is
+	update_features_to_test
 			-- Update features to test information
 		do
 			wizard_information.features_to_test.wipe_out
@@ -239,7 +239,7 @@ feature {NONE} -- Wizard UI Implementation
 			update_features_to_test
 		end
 
-	on_add_to_be_implemented_checks_selected is
+	on_add_to_be_implemented_checks_selected
 			-- On `add_to_be_implemented_checks' selected
 		do
 			wizard_information.set_add_to_be_implemented_selected (add_to_be_implemented_checks.is_selected)
@@ -266,7 +266,7 @@ feature {NONE} -- Wizard UI Implementation
 			end
 		end
 
-	expand_all_items is
+	expand_all_items
 			-- Expand all feature tree items
 		local
 			l_items: like all_items_under
@@ -336,7 +336,7 @@ feature {NONE} -- Wizard UI Implementation
 			-- All items temporary used by `all_items_under'
 			-- It should not called by any other features directly.
 
-	check_all_imp (a_check: BOOLEAN) is
+	check_all_imp (a_check: BOOLEAN)
 			-- Recursive select all tree items.
 		local
 			l_all_items: like all_items_under
@@ -363,7 +363,7 @@ feature {NONE} -- Wizard UI Implementation
 
 feature {NONE}	-- Tree manipulation
 
-	build_tree_ui is
+	build_tree_ui
 			-- Build tree UI
 		local
 			l_class_name: STRING
@@ -545,7 +545,7 @@ feature {NONE}	-- Tree manipulation
 
 feature {NONE} -- Implementation
 
-	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY is
+	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once
 			create Result
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM is
+	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM
 			-- Build the tree node corresponding to feature clause named `n'.
 			-- Modified from {EB_FEATURES_TREE}, now the class replaced by {ES}
 		require
@@ -636,14 +636,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	feature_name (a_ef: E_FEATURE): STRING is
+	feature_name (a_ef: E_FEATURE): STRING
 			-- Feature name of `a_ef' depending of the signature displayed or not.
 		require
 			a_ef_not_void: a_ef /= Void
 		do
 			Result := a_ef.name.twin
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

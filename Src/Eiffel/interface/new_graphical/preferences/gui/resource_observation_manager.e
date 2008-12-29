@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Resource manager. Provide features for registering observers to resources%
 		%for them to be notified when resources are changed"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	observer_manager: OBSERVER_MANAGEMENT is
+	observer_manager: OBSERVER_MANAGEMENT
 			-- Observer manager.
 		once
 			create Result.make
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_observer (s: STRING; w: OBSERVER) is
+	add_observer (s: STRING; w: OBSERVER)
 		-- register w to the resource of name s, if any
 		require
 			w_exists: w /= Void
@@ -37,7 +37,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_observer (s: STRING; w: OBSERVER) is
+	remove_observer (s: STRING; w: OBSERVER)
 		-- unregister w to the resource of name s, if any
 		require
 			w_exists: w /= Void
@@ -50,7 +50,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

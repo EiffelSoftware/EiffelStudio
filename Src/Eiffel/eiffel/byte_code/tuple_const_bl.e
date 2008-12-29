@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged byte code for manifest tuples"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ feature
 	metamorphose_reg: REGISTER
 			-- Register for metamorphosis
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'
 		do
 			register := r
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			real_ty: TUPLE_TYPE_A
@@ -75,7 +75,7 @@ feature
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Unanalyze expression
 		local
 			expr: EXPR_B
@@ -93,7 +93,7 @@ feature
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free the registers.
 		do
 			Precursor {TUPLE_CONST_B}
@@ -102,7 +102,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			real_ty: TUPLE_TYPE_A
@@ -116,7 +116,7 @@ feature
 
 feature {NONE} -- C code generation
 
-	generate_tuple_creation (workbench_mode: BOOLEAN) is
+	generate_tuple_creation (workbench_mode: BOOLEAN)
 			-- Generate the object creation of
 			-- manifest array.
 		local
@@ -133,7 +133,7 @@ feature {NONE} -- C code generation
 			info.generate_end (buf)
 		end
 
-	fill_tuple is
+	fill_tuple
 			-- Generate the registers for the expressions
 			-- to fill the manifest tuple.
 		local
@@ -204,7 +204,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

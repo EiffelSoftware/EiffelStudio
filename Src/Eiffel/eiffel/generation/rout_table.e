@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a table of routine pointer for the final Eiffel executable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,7 +54,7 @@ create
 
 feature -- Insertion
 
-	extend (v: ROUT_ENTRY) is
+	extend (v: ROUT_ENTRY)
 			-- <Precursor>
 		do
 			Precursor {POLY_TABLE} (v)
@@ -66,7 +66,7 @@ feature -- Insertion
 			end
 		end
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- <Precursor>
 		do
 			Precursor {POLY_TABLE} (other)
@@ -80,19 +80,19 @@ feature -- Insertion
 
 feature -- Status report
 
-	is_routine_table: BOOLEAN is
+	is_routine_table: BOOLEAN
 			-- Is the table a routine table?
 		do
 			Result := True
 		end
 
-	is_attribute_table: BOOLEAN is
+	is_attribute_table: BOOLEAN
 			-- Is the current table an attribute table ?
 		do
 				-- False here.
 		end
 
-	is_implemented: BOOLEAN is
+	is_implemented: BOOLEAN
 			-- Is implemented
 			-- in a static type greater than `type_id'.
 		require
@@ -101,7 +101,7 @@ feature -- Status report
 			Result := position <= max_position
 		end
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- Feature name of the first implemented feature available
 			-- in a static type greater than `type_id' found by last
 			-- call to `goto_implemented (type_id)'.
@@ -112,14 +112,14 @@ feature -- Status report
 			Result := array_item (position).routine_name
 		end
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
 			-- New entry corresponding to `f' in class of class ID `c'
 		do
 			Result := f.new_rout_entry
 			Result.set_class_id (c)
 		end
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
@@ -174,7 +174,7 @@ feature -- Status report
 
 feature -- Code generation
 
-	generate (writer: TABLE_GENERATOR) is
+	generate (writer: TABLE_GENERATOR)
 			-- Generation of the routine table in buffer "erout*.c".
 		require
 			writer_attached: writer /= Void
@@ -189,7 +189,7 @@ feature -- Code generation
 			internal_generate (writer.current_buffer, 0, final_table_size, l_min_used, max_used)
 		end
 
-	generate_full (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
+	generate_full (real_rout_id: INTEGER; buffer: GENERATION_BUFFER)
 			-- Generation of the table in buffer "erout*.c" without optimizing the lower bound.
 		local
 			l_rout_id: INTEGER
@@ -221,7 +221,7 @@ feature -- Code generation
 			end
 		end
 
-	goto_implemented (a_type: TYPE_A; a_context_type: CLASS_TYPE) is
+	goto_implemented (a_type: TYPE_A; a_context_type: CLASS_TYPE)
 			-- Go to first implemented feature available in
 			-- a static type greater than `type_id'.
 		require
@@ -260,7 +260,7 @@ feature -- Code generation
 
 feature {POLY_TABLE} -- Special data
 
-	tmp_poly_table: ARRAY [ROUT_ENTRY] is
+	tmp_poly_table: ARRAY [ROUT_ENTRY]
 			-- Contain a copy of Current during a merge
 		once
 			create Result.make (1, Block_size)
@@ -268,7 +268,7 @@ feature {POLY_TABLE} -- Special data
 
 feature {NONE} -- Implementation
 
-	add_header_files (include_list: ARRAY [INTEGER]) is
+	add_header_files (include_list: ARRAY [INTEGER])
 			-- Add `include_list' in header files of the `erout' files.
 		require
 			include_list_not_void: include_list /= Void
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_generate (buffer: GENERATION_BUFFER; an_offset, a_table_size, a_min, a_max: INTEGER) is
+	internal_generate (buffer: GENERATION_BUFFER; an_offset, a_table_size, a_min, a_max: INTEGER)
 			-- Generate current routine table starting from index `a_min' to `a_max'.
 		require
 			buffer_not_void: buffer /= Void
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			buffer.put_new_line
 		end
 
-	generate_wrapper (buffer: GENERATION_BUFFER; a_entry: ROUT_ENTRY; a_seed_pattern_id, a_pattern_id: INTEGER; a_wrapped_name, a_routine_name: STRING) is
+	generate_wrapper (buffer: GENERATION_BUFFER; a_entry: ROUT_ENTRY; a_seed_pattern_id, a_pattern_id: INTEGER; a_wrapped_name, a_routine_name: STRING)
 			-- Generate wrapper for `a_routine_name' called `a_wrapped_name' using signature information from `a_seed_pattern_id' and `a_pattern_id'.
 		require
 			buffer_not_void: buffer /= Void
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 			buffer.generate_block_close
 		end
 
-	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER) is
+	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER)
 			-- Generate code to initialize current array with `a_routine_name'. Generate a
 			-- loop if `a_lower' is different from `a_upper'.
 		require
@@ -643,10 +643,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	function_ptr_cast_string: STRING is "(char *(*)()) ";
+	function_ptr_cast_string: STRING = "(char *(*)()) ";
 			-- String representing cast to type of function pointer
 
-	write is
+	write
 			-- Generate table using writer.
 		do
 			generate (Rout_generator)
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			generate_type_table (rout_generator)
 		end
 
-	wrapper_buffer: GENERATION_BUFFER is
+	wrapper_buffer: GENERATION_BUFFER
 			-- Buffer to generate a polymorphic wrapper.
 		once
 			create Result.make (500)
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			wrapper_buffer_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tuple access for C code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- <Precursor>
 		do
 			register := r
@@ -36,7 +36,7 @@ feature -- Settings
 
 feature -- C Code generation
 
-	analyze is
+	analyze
 			-- Analyze current byte code.
 		do
 			if source /= Void then
@@ -44,7 +44,7 @@ feature -- C Code generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- <Precursor>
 		do
 			if source /= Void then
@@ -53,7 +53,7 @@ feature -- C Code generation
 			set_register (Void)
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate `r'
 		do
 			if not context.propagated then
@@ -64,7 +64,7 @@ feature -- C Code generation
 			end
 		end
 
-	generate_on (a_register: REGISTRABLE) is
+	generate_on (a_register: REGISTRABLE)
 			-- Generate C code for access.
 		local
 			buf: like buffer
@@ -97,13 +97,13 @@ feature -- C Code generation
 			end
 		end
 
-	generate_access is
+	generate_access
 		local
 		do
 			generate_internal (current_register)
 		end
 
-	generate_internal (a_register: REGISTRABLE) is
+	generate_internal (a_register: REGISTRABLE)
 		local
 			buf: like buffer
 		do
@@ -118,7 +118,7 @@ feature -- C Code generation
 			buf.put_character (')')
 		end
 
-	tuple_element_name: STRING is
+	tuple_element_name: STRING
 			-- String representation of TUPLE element type.
 		do
 			inspect
@@ -144,7 +144,7 @@ feature -- C Code generation
 			tuple_element_name_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

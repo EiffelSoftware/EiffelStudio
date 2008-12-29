@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Output compilation degree messages into a file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_file_name: STRING) is
+	make (a_file_name: STRING)
 			-- Initialize
 		do
 			output_file_name := a_file_name
@@ -37,27 +37,27 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	put_melting_changes_message is
+	put_melting_changes_message
 			-- Put message indicating that melting changes is ocurring.
 		do
 		end
 
-	put_freezing_message is
+	put_freezing_message
 			-- Put message indicating that freezing is occurring.
 		do
 		end
 
-	put_start_dead_code_removal_message is
+	put_start_dead_code_removal_message
 			-- Put message indicating the start of dead code removal.
 		do
 		end
 
-	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
+	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER)
 			-- Put message progress the start of dead code removal.
 		do
 		end
 
-	put_string (a_message: STRING) is
+	put_string (a_message: STRING)
 			-- Put `a_message' to output window.
 		do
 			open_file
@@ -68,7 +68,7 @@ feature -- Basic operations
 			end
 		end
 
-	put_system_compiled is
+	put_system_compiled
 			-- Put message indicating that the system has been compiled.
 		do
 				-- Wait for the file to be writable.
@@ -84,11 +84,11 @@ feature -- Basic operations
 			close_file
 		end
 
-	put_header (displayed_version_number: STRING) is
+	put_header (displayed_version_number: STRING)
 		do
 		end
 
-	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
+	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING)
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			open_file
@@ -109,14 +109,14 @@ feature {NONE} -- Implementation
 	output_file_name: STRING
 			-- Output file name
 
-	degree_message (a_degree: INTEGER): STRING is
+	degree_message (a_degree: INTEGER): STRING
 			-- Display the message corresponding to degree `a_degree'.
 		do
 			create Result.make (2)
 			Result.append_integer (a_degree)
 		end
 
-	open_file is
+	open_file
 			-- Open the output file
 		local
 			retried: BOOLEAN
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	close_file is
+	close_file
 			-- Close the output file
 		local
 			retried: BOOLEAN
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER)
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	percentage_output (nbr_to_go: INTEGER): STRING is
+	percentage_output (nbr_to_go: INTEGER): STRING
 			-- Return percentage based on `nbr_to_go' and
 			-- `total_number'
 		do
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			Result.append_string ("%%")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

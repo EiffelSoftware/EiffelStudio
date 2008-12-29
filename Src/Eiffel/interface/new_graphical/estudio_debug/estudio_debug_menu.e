@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the special debug menu for eStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_window (w: EV_WINDOW) is
+	make_with_window (w: EV_WINDOW)
 		local
 			menu_item: !EV_MENU_ITEM
 			menu: !EV_MENU
@@ -171,7 +171,7 @@ feature {NONE} -- Access
 	ma_window: MA_WINDOW;
 			-- Memory analyzer window.
 
-	replay_window: REPLAY_BACKUP_WINDOW is
+	replay_window: REPLAY_BACKUP_WINDOW
 			-- Replace backup window
 		once
 			create Result.make
@@ -209,7 +209,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	paste_new_uuid (tf: EV_TEXTABLE) is
+	paste_new_uuid (tf: EV_TEXTABLE)
 		local
 			uuid_gene: UUID_GENERATOR
 		do
@@ -219,7 +219,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Actions
 
-	on_launch_memory_analyzer is
+	on_launch_memory_analyzer
 			-- Launch Memory Analyzer.
 		local
 			l_dir: DIRECTORY_NAME
@@ -247,7 +247,7 @@ feature {NONE} -- Actions
 			window_manager.last_focused_development_window.shell_tools.show_tool ({ES_LOGGER_TOOL}, True)
 		end
 
-	on_generate_uuid is
+	on_generate_uuid
 			-- Launch UUID generator
 		local
 			l_dlg: EV_DIALOG
@@ -279,7 +279,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_replay_backup is
+	on_replay_backup
 			-- Launch tool that enables us to replay precisely a backup.
 		do
 			replay_window.window.raise
@@ -435,7 +435,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_center_floating_tools is
+	on_center_floating_tools
 		local
 			dw: EB_DEVELOPMENT_WINDOW
 			lst: LIST [SD_CONTENT]
@@ -468,7 +468,7 @@ feature {NONE} -- Actions
 
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

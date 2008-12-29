@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for constants (hardwired in final mode)
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	make (v: like value)
 			-- Assign `v' to `value'.
 		require
 			v_not_void: v /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_constant_b (Current)
@@ -43,7 +43,7 @@ feature -- Visitor
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluate current.
 		do
 			Result := value
@@ -57,13 +57,13 @@ feature -- Access
 	access: ACCESS_B;
 			-- Accessing constant when hardwiring not possible
 
-	canonical: CALL_B is
+	canonical: CALL_B
 			-- Canonical call
 		do
 			Result := access
 		end;
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Access type
 		do
 			Result := access.type;
@@ -71,21 +71,21 @@ feature -- Access
 
 feature -- Status
 
-	is_constant_expression, is_constant: BOOLEAN is True
+	is_constant_expression, is_constant: BOOLEAN = True
 			-- Current is constant
 
-	need_target: BOOLEAN is False
+	need_target: BOOLEAN = False
 			-- Current does not need a target to be accessed.
 
 feature -- Setting
 
-	set_access (a: like access) is
+	set_access (a: like access)
 			-- Assign `a' to `access'.
 		do
 			access := a;
 		end;
 
-	set_parent (n: NESTED_B) is
+	set_parent (n: NESTED_B)
 			-- Assign `n' to `parent'.
 		do
 			parent := n;
@@ -94,7 +94,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access to constant ?
 		local
 			constant_b: CONSTANT_B;
@@ -108,7 +108,7 @@ feature -- Comparison
 			end
 		end;
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Does current access makes use of a GC-able variable
 		do
 			if context.workbench_mode then
@@ -116,7 +116,7 @@ feature -- Comparison
 			end;
 		end;
 
-	is_single: BOOLEAN is
+	is_single: BOOLEAN
 			-- Is access a single one ?
 		do
 			if context.workbench_mode then
@@ -127,7 +127,7 @@ feature -- Comparison
 			end;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate register accross access
 		do
 			if context.workbench_mode then
@@ -135,7 +135,7 @@ feature -- Comparison
 			end;
 		end;
 
-	print_register is
+	print_register
 			-- Print register value (generates constant)
 		do
 			if context.workbench_mode then
@@ -145,7 +145,7 @@ feature -- Comparison
 			end;
 		end;
 
-	free_register is
+	free_register
 			-- Free register used by constant
 		do
 			if context.workbench_mode then
@@ -153,7 +153,7 @@ feature -- Comparison
 			end;
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		do
 			if context.workbench_mode then
@@ -161,7 +161,7 @@ feature -- Comparison
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Analyze constant
 		do
 			if context.workbench_mode then
@@ -169,7 +169,7 @@ feature -- Comparison
 			end;
 		end;
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze constant access on `reg'
 		do
 			if context.workbench_mode then
@@ -177,7 +177,7 @@ feature -- Comparison
 			end;
 		end;
 
-	generate is
+	generate
 			-- Generate constant
 		do
 			if context.workbench_mode then
@@ -185,7 +185,7 @@ feature -- Comparison
 			end;
 		end;
 
-	generate_on (reg: REGISTRABLE) is
+	generate_on (reg: REGISTRABLE)
 			-- Generate constant access on `reg'
 		do
 			if context.workbench_mode then
@@ -195,7 +195,7 @@ feature -- Comparison
 			end;
 		end;
 
-	generate_parameters (reg: REGISTRABLE) is
+	generate_parameters (reg: REGISTRABLE)
 			-- Generate code for parameters computation.
 			-- `reg' ("Current") is not used except for
 			-- inlining
@@ -207,7 +207,7 @@ feature -- Comparison
 			end
 		end
 
-	enlarged: like Current is
+	enlarged: like Current
 			-- Enlarge access
 		do
 			if context.workbench_mode then
@@ -216,12 +216,12 @@ feature -- Comparison
 			Result := Current;
 		end;
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 		do
 			Result := value.is_string or else value.is_bit
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

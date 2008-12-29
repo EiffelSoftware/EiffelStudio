@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to show/hide a widget"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			is_visible := target.is_show_requested
@@ -34,7 +34,7 @@ feature -- Access
 	
 feature -- Execution
 
-	execute is
+	execute
 			-- toggle between show and hide.
 		do
 			if is_visible then
@@ -44,7 +44,7 @@ feature -- Execution
 			end
 		end
 
-	enable_visible is
+	enable_visible
 			-- Set `is_visible' to True
 		do
 			if not is_visible then
@@ -53,7 +53,7 @@ feature -- Execution
 			end
 		end
 
-	disable_visible is
+	disable_visible
 			-- Set `is_visible' to True
 		do
 			if is_visible then
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	target: EV_WIDGET;
 			-- Target that can be shown or hidden.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

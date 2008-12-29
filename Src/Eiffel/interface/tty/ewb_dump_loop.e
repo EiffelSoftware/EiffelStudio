@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Dump loop"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature
 
-	execute is
+	execute
 			-- Dump class information.
 		local
 			done: BOOLEAN
@@ -72,7 +72,7 @@ feature
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

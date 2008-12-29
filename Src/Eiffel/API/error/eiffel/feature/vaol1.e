@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when an old expression is found somewhere else %
@@ -19,15 +19,15 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VAOL";
+	code: STRING = "VAOL";
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

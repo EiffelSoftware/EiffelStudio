@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Class tree folder item that only displayed test classes.
 	]"

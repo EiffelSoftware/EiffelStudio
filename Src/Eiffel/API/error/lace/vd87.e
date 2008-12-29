@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error if unique class names are enforced and the class names are not unique."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_first, a_second: CLASS_I) is
+	make (a_first, a_second: CLASS_I)
 			-- Create.
 		require
 			a_first_not_void: a_first /= Void
@@ -69,7 +69,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

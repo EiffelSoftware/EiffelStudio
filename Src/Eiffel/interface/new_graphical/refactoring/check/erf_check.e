@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Checks that are run before a refactoring and test if it is save to do the refactoring."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operation
 
-	execute is
+	execute
 			-- Execute the check.
 		deferred
 		ensure
@@ -28,7 +28,7 @@ feature -- Status report
 	error_message: STRING_GENERAL;
 			-- The description for the problem if `success' is false.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

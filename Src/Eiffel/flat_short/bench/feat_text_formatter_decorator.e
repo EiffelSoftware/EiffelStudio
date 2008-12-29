@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatting decorator for feature ast (flat and breakable format)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ feature -- Property
 
 feature -- Execution
 
-	execute (a_target_feat: E_FEATURE) is
+	execute (a_target_feat: E_FEATURE)
 			-- Format feature_as and make all items
 			-- clickable with class `c' as context
 		require
@@ -137,7 +137,7 @@ feature -- Execution
 
 feature -- Element change
 
-	put_origin_comment is
+	put_origin_comment
 			-- Print the origin comment if necessary and
 			-- print the export status.
 		do
@@ -154,7 +154,7 @@ feature -- Element change
 			end;
 		end;
 
-	chained_assertion: CHAINED_ASSERTIONS is
+	chained_assertion: CHAINED_ASSERTIONS
 			-- Chained assertion for current analyzed feature.
 		do
 			Result := assert_server.current_assertion
@@ -162,7 +162,7 @@ feature -- Element change
 
 feature {NONE} -- Feature comments
 
-	print_error is
+	print_error
 			-- Print error if any.
 		local
 			l_array: ARRAYED_LIST [STRING]
@@ -184,7 +184,7 @@ feature {NONE} -- Feature comments
 
 	export_status: EXPORT_I;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

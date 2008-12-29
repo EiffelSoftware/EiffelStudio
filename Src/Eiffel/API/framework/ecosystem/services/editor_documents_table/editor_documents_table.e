@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 		Note: Service is not yet in effect. This was developed early in 6.2 but was not used. Hopefully it
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
+	safe_dispose (a_disposing: BOOLEAN)
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			--
@@ -409,7 +409,7 @@ feature {NONE} -- Document management
 			result_consistent: Result = documents_for_window (a_window_id)
 		end
 
-	document_for_editor (a_editor: EB_SMART_EDITOR): EDITOR_DOCUMENT_I is
+	document_for_editor (a_editor: EB_SMART_EDITOR): EDITOR_DOCUMENT_I
 			-- Attempts to locate the last activated document using an editor
 			--
 			-- `a_editor': The editor to retrieve the associated document for.
@@ -453,7 +453,7 @@ invariant
 	documents_attached: documents /= Void
 	documents_contains_attached_items: not documents.has_item (Void)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

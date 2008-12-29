@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for calls to a problematic feature of a multi constraing formal generic type. The feature was not found."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Properties
 		-- Feature name.
 		-- This is the name of the feature whch occured multiple times.
 
-	subcode: INTEGER_32 is 1
+	subcode: INTEGER_32 = 1
 		-- Error subcode
 
 	type_set: TYPE_SET_A
@@ -64,7 +64,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_set: type_set = a_type_set
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

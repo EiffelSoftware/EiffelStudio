@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Notion of an activatable / inactivatable part of the total %
@@ -12,7 +12,7 @@ class ACTIVATABLE
 
 feature -- Properties
 
-	is_active: BOOLEAN is
+	is_active: BOOLEAN
 			-- Is `Current' taken into account during the
 			-- computation of the result of the query?
 		do
@@ -21,14 +21,14 @@ feature -- Properties
 
 feature -- Setting
 
-	activate is
+	activate
 		do
 			int_active := true;
 		ensure
 			activated: is_active;
 		end;
 
-	inactivate is
+	inactivate
 		do
 			int_active := false;
 		ensure
@@ -39,7 +39,7 @@ feature {NONE} -- Attributes
 
 	int_active: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

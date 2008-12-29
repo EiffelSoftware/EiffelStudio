@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when feature is not valid for static access."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,17 +15,17 @@ inherit
 
 feature -- Access
 
-	code: STRING is "VSTA"
+	code: STRING = "VSTA"
 			-- Error code
 			
-	subcode: INTEGER is 2
+	subcode: INTEGER = 2
 
 	non_static_feature: E_FEATURE
 			-- Name of routine on which non-valid static access is performed.
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -37,7 +37,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			ec: CLASS_C
 		do
@@ -51,14 +51,14 @@ feature -- Output
 
 feature -- Setting
 
-	set_non_static_feature (f: FEATURE_I) is
+	set_non_static_feature (f: FEATURE_I)
 		require
 			valid_f: f /= Void
 		do
 			non_static_feature := f.api_feature (f.written_in)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a dependency row in dependency view"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_item: like item; a_row_node: like row_node; a_row_type: INTEGER; a_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW) is
+	make (a_item: like item; a_row_node: like row_node; a_row_type: INTEGER; a_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW)
 			-- Initialize `item' with `a_item', `row_node' with `a_row_node', `row_type' with `a_row_type'  and `browser' with `a_browser'.
 		require
 			a_row_type_valid: is_row_type_valid (a_row_type)
@@ -62,7 +62,7 @@ feature -- Access
 	image: STRING_32
 			-- Image of current row used in grid search
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Grid item to be displayed
 		local
 			l_text: LIST [EDITOR_TOKEN]
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Status report
 
-	should_path_be_displayed: BOOLEAN is
+	should_path_be_displayed: BOOLEAN
 			-- Should path of `item' be displayed?
 		do
 			Result := item.is_group
@@ -105,7 +105,7 @@ feature -- Status report
 	has_been_expanded: BOOLEAN
 			-- Has current row been expanded?
 
-	is_lazy_expandable: BOOLEAN is
+	is_lazy_expandable: BOOLEAN
 			-- Is current row able for lazy expandable?
 			-- Used to indicate that subrows of current row is to be inserted later when
 			-- current row is expanded for the first time because the retrieval of the subrows are
@@ -118,7 +118,7 @@ feature -- Status report
 			-- Should current row be displayed?
 			-- Default: True
 
-	is_row_type_valid (a_row_type: INTEGER): BOOLEAN is
+	is_row_type_valid (a_row_type: INTEGER): BOOLEAN
 			-- Is `a_row_type' a valid row type?
 		do
 			Result := a_row_type = group_row_type or else
@@ -130,16 +130,16 @@ feature -- Status report
 
 feature -- Constants
 
-	group_row_type: INTEGER is 1
-	folder_row_type: INTEGER is 2
-	referenced_class_row_type: INTEGER is 3
-	referencer_class_row_type: INTEGER is 4
-	feature_row_type: INTEGER is 5
+	group_row_type: INTEGER = 1
+	folder_row_type: INTEGER = 2
+	referenced_class_row_type: INTEGER = 3
+	referencer_class_row_type: INTEGER = 4
+	feature_row_type: INTEGER = 5
 			-- Different row types
 
 feature -- Setting
 
-	set_item (a_item: like item) is
+	set_item (a_item: like item)
 			-- Set `item' with `a_item'.
 		do
 			item := a_item
@@ -147,7 +147,7 @@ feature -- Setting
 			item_set: item = a_item
 		end
 
-	set_row_node (a_row_node: like row_node) is
+	set_row_node (a_row_node: like row_node)
 			-- Set `row_node' with `a_row_node'.
 		do
 			row_node := a_row_node
@@ -155,7 +155,7 @@ feature -- Setting
 			row_node_set: row_node = a_row_node
 		end
 
-	set_is_expanded (a_expanded: BOOLEAN) is
+	set_is_expanded (a_expanded: BOOLEAN)
 			-- Set `is_expanded' with `a_expanded'.
 		do
 			is_expanded := a_expanded
@@ -166,7 +166,7 @@ feature -- Setting
 			is_expanded_set: is_expanded = a_expanded
 		end
 
-	set_feature_list (a_feature_list: like feature_list) is
+	set_feature_list (a_feature_list: like feature_list)
 			-- Set `feature_list' with `a_feature_list'.
 		require
 			current_is_feature_row: row_type = feature_row_type
@@ -176,7 +176,7 @@ feature -- Setting
 			feature_list_set: feature_list = a_feature_list
 		end
 
-	set_should_current_row_be_displayed (b: BOOLEAN) is
+	set_should_current_row_be_displayed (b: BOOLEAN)
 			-- Set `should_current_row_be_dispalyed' with `b'.
 		do
 			should_current_row_be_displayed := b
@@ -184,7 +184,7 @@ feature -- Setting
 			should_current_row_be_displayed_set: should_current_row_be_displayed = b
 		end
 
-	set_row_type (a_row_type: INTEGER) is
+	set_row_type (a_row_type: INTEGER)
 			-- Set `row_type' with `a_row_type'.
 		require
 			a_row_type_valid: is_row_type_valid (a_row_type)
@@ -196,7 +196,7 @@ feature -- Setting
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_column: INTEGER) is
+	bind_row (a_row: EV_GRID_ROW; a_column: INTEGER)
 			-- Bind current in `a_row' at `a_column'.
 		require
 			a_row_attached: a_row /= Void
@@ -212,7 +212,7 @@ feature -- Grid binding
 			set_grid_row (a_row)
 		end
 
-	bind_feature_list_rows (a_parent_row: EV_GRID_ROW; a_column: INTEGER) is
+	bind_feature_list_rows (a_parent_row: EV_GRID_ROW; a_column: INTEGER)
 			-- Bind callers/callees rows as subrows of `a_parent_row'.
 			-- Binded rows will start their first item at `a_column'-th column.
 		require
@@ -249,7 +249,7 @@ feature -- Grid binding
 			end
 		end
 
-	refresh_row is
+	refresh_row
 			-- Refresh current row.
 		require
 			is_binded: is_binded_to_grid
@@ -260,7 +260,7 @@ feature -- Grid binding
 			bind_row (grid_row, l_column)
 		end
 
-	set_row_count (a_row_count: INTEGER) is
+	set_row_count (a_row_count: INTEGER)
 			-- Set `row_count' with `a_row_count'.
 		do
 			if row_count /= a_row_count then
@@ -275,7 +275,7 @@ feature -- Grid binding
 
 feature{NONE} -- Implementation
 
-	class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+	class_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Style to generate text for class
 		once
 			create Result
@@ -284,7 +284,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Feature style
 		once
 			create Result
@@ -301,7 +301,7 @@ feature{NONE} -- Implementation
 	grid_item_internal: like grid_item
 			-- Implementation of `grid_item'.
 
-	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Path style
 		once
 			create Result
@@ -315,7 +315,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	path_grid_item_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN; a_stop_on_target: BOOLEAN; a_force_complete: BOOLEAN): LIST [EDITOR_TOKEN] is
+	path_grid_item_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN; a_stop_on_target: BOOLEAN; a_force_complete: BOOLEAN): LIST [EDITOR_TOKEN]
 			-- Editor token representations of path of `a_class' used in grid item.
 			-- If `a_class' is used in cluster, display "folder.folder.folder"
 			-- If `a_class' is used in library, display "cluster.cluster.folder.folder.folder"
@@ -356,7 +356,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	path_tooltip_text (a_class: QL_CLASS): LIST [EDITOR_TOKEN] is
+	path_tooltip_text (a_class: QL_CLASS): LIST [EDITOR_TOKEN]
 			-- Tooltip to display path of `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -369,7 +369,7 @@ feature{NONE} -- Implementation
 			Result.append (l_style.text)
 		end
 
-	full_class_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	full_class_path_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Full class path style including (group, folder, class)
 		once
 			create Result
@@ -382,7 +382,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	class_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	class_path_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Path style
 		once
 			create Result
@@ -396,7 +396,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	number_tokens: LIST [EDITOR_TOKEN] is
+	number_tokens: LIST [EDITOR_TOKEN]
 			-- Editor tokens representing a children number of `row_node'
 		local
 			l_str: STRING
@@ -420,7 +420,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	generate_base_text_and_image is
+	generate_base_text_and_image
 			-- Generate `base_text' and `image'.
 		local
 			l_path_style: like item_path_style
@@ -486,7 +486,7 @@ feature{NONE} -- Implementation
 	is_up_to_date: BOOLEAN
 			-- Is status of Current row up-to-date?
 
-	set_is_up_to_date (b: BOOLEAN) is
+	set_is_up_to_date (b: BOOLEAN)
 			-- Set `is_up_to_date' with `b'.
 		do
 			is_up_to_date := b
@@ -496,7 +496,7 @@ feature{NONE} -- Implementation
 
 feature{EB_CLASS_BROWSER_DEPENDENCY_VIEW} -- Stone
 
-	set_grid_item_stone is
+	set_grid_item_stone
 			-- Set stone for `item' into `grid_item'.
 		local
 			l_item: like item
@@ -524,7 +524,7 @@ feature{EB_CLASS_BROWSER_DEPENDENCY_VIEW} -- Stone
 	is_stone_set: BOOLEAN
 			-- Is stone set into `grid_item'?
 
-	set_is_stone_set (b: BOOLEAN) is
+	set_is_stone_set (b: BOOLEAN)
 			-- Set `is_stone_set' with `b'.
 		do
 			is_stone_set := b
@@ -540,7 +540,7 @@ invariant
 	grid_item_internal_attached: grid_item_internal /= Void
 	base_text_attached: base_text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

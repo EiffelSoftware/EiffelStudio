@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for creating an instance of TYPE [X] type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: like type_data) is
+	make (v: like type_data)
 			-- Assign `v' to `type_data'.
 		require
 			v_not_void: v /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_type_expr_b (Current)
@@ -48,7 +48,7 @@ feature -- Access
 	type_data: GEN_TYPE_A
 			-- Character value
 
-	type: CL_TYPE_A is
+	type: CL_TYPE_A
 			-- String type
 		do
 			if is_dotnet_type then
@@ -66,29 +66,29 @@ feature -- Properties
 	is_dotnet_type: BOOLEAN
 			-- Is current a manifest System.Type constant?
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Register `r' is not used for type computation
 		do
 		end
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A type expression is a simple expression
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A type constant is constant.
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 			-- Current always allocates memory.
 
 feature -- Settings
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'
 		do
 			register := r
 		end
 
-	set_is_dotnet_type (v: like is_dotnet_type) is
+	set_is_dotnet_type (v: like is_dotnet_type)
 			-- Set `is_dotnet_type' with `v'.
 		do
 			is_dotnet_type := v
@@ -98,7 +98,7 @@ feature -- Settings
 
 feature -- Code analyzis
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate `r'
 		do
 			if not context.propagated then
@@ -109,13 +109,13 @@ feature -- Code analyzis
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo analysis work.
 		do
 			register := Void
 		end
 
-	analyze is
+	analyze
 			-- Analyze the type
 		do
 				-- We get a register to store the type because of the garbage
@@ -127,7 +127,7 @@ feature -- Code analyzis
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generate the type
 		local
 			buf: GENERATION_BUFFER
@@ -146,7 +146,7 @@ feature -- C code generation
 			l_type_creator.generate_end (buf)
 		end
 
-	print_register is
+	print_register
 			-- Print the type (or the register in which it is held)
 		do
 			register.print_register
@@ -154,7 +154,7 @@ feature -- C code generation
 
 feature {NONE} -- Implementation: types
 
-	system_type_type: CL_TYPE_A is
+	system_type_type: CL_TYPE_A
 			-- Type of SYSTEM_TYPE.
 		require
 			il_generation: System.il_generation
@@ -168,7 +168,7 @@ invariant
 	type_data_not_void: type_data /= Void
 	type_data_generics_count: type_data.generics.count = 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

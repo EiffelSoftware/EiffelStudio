@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate the documentation for a project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make_flat (f_name: like filter_name; b: BOOLEAN) is
+	make_flat (f_name: like filter_name; b: BOOLEAN)
 			-- Initialize document generation to flat.
 			-- Set `do_parents' to `b'.
 		do
@@ -30,7 +30,7 @@ feature -- Initialization
 			do_parents := b
 		end;
 
-	make_flat_short (f_name: like filter_name; b: BOOLEAN) is
+	make_flat_short (f_name: like filter_name; b: BOOLEAN)
 			-- Initialize document generation to flat_short.
 			-- Set `do_parents' to `b'.
 		do
@@ -39,7 +39,7 @@ feature -- Initialization
 			do_parents := b
 		end;
 
-	make_text (f_name: like filter_name) is
+	make_text (f_name: like filter_name)
 			-- Initialize document generation to text.
 			-- Set `do_parents' to `b'.
 		do
@@ -48,7 +48,7 @@ feature -- Initialization
 			do_parents := False
 		end;
 
-	make_short (f_name: like filter_name; b: BOOLEAN) is
+	make_short (f_name: like filter_name; b: BOOLEAN)
 			-- Initialize document generation to text.
 			-- Set `do_parents' to `b'.
 		do
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 		do
 			inspect
 				format_type
@@ -74,7 +74,7 @@ feature -- Access
 			end
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			inspect
 				format_type
@@ -89,7 +89,7 @@ feature -- Access
 			end
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			inspect
 				format_type
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Execution
 
-	loop_action is
+	loop_action
 			-- Action to be done before `execute'.
 		do
 			command_line_io.get_filter_name;
@@ -118,7 +118,7 @@ feature -- Execution
 			check_arguments_and_execute
 		end;
 
-	execute is
+	execute
 		local
 			cmd: E_GENERATE_DOCUMENTATION
 		do
@@ -142,7 +142,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_OUTPUT_CMD is
+	associated_cmd: E_OUTPUT_CMD
 			-- Associated system command to be executed
 		do
 		end;
@@ -153,12 +153,12 @@ feature {NONE} -- Implementation
 	format_type: INTEGER;
 			-- Format type
 
-	flat_short_type: INTEGER is 1
-	short_type: INTEGER is 2
-	flat_type: INTEGER is 3
-	text_type: INTEGER is 4;
+	flat_short_type: INTEGER = 1
+	short_type: INTEGER = 2
+	flat_type: INTEGER = 3
+	text_type: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

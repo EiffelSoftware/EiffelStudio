@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Area in EB_CONTEXT_TOOL to display metrics calculation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature -- Initialization
 
-	make (dw: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+	make (dw: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
 			-- Initialize `Current'.
 		do
 			develop_window := dw
@@ -88,21 +88,21 @@ feature -- Initialization
 			end
 		end
 
-	attach_to_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_manager: SD_DOCKING_MANAGER)
 			-- <Precursor>
 		do
 			Precursor {EB_TOOL} (a_manager)
 			content.show_actions.extend (agent on_select)
 		end
 
-	build_interface is
+	build_interface
 			-- <Precursor>
 		do
 		end
 
 feature -- Actions
 
-	on_select is
+	on_select
 			-- Metric tool has been selected, synchronize.
 		do
 			if content.is_visible then
@@ -115,14 +115,14 @@ feature -- Actions
 			end
 		end
 
-	on_deselect is
+	on_deselect
 			-- Metric tool has been deselected.
 		do
 			set_is_shown (False)
 			on_tab_change
 		end
 
-	on_send_metric_value_in_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+	on_send_metric_value_in_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY)
 			-- Action to be performed to send last evaluated metric value (stored in `a_archive') in history
 			-- `a_panel' is the metric tool panel from which the sending request occurs.
 		require
@@ -132,14 +132,14 @@ feature -- Actions
 			send_metric_value_in_history_actions.call ([a_archive, a_panel])
 		end
 
-	show is
+	show
 			-- <Precursor>
 		do
 			Precursor {EB_TOOL}
 			on_select
 		end
 
-	close is
+	close
 			-- <Precursor>
 		do
 			Precursor {EB_TOOL}
@@ -148,7 +148,7 @@ feature -- Actions
 
 feature -- Basic operations
 
-	go_to_definition (a_metric: EB_METRIC; a_new: BOOLEAN) is
+	go_to_definition (a_metric: EB_METRIC; a_new: BOOLEAN)
 			-- Go to definition panel of metric named `a_name'.
 			-- `a_new' is True indicates that `a_metric' is a new metric from quick metric definition.
 		require
@@ -164,7 +164,7 @@ feature -- Basic operations
 			end
 		end
 
-	go_to_result is
+	go_to_result
 			-- Go to result tab.
 		local
 			l_notebook: EV_NOTEBOOK
@@ -175,7 +175,7 @@ feature -- Basic operations
 			end
 		end
 
-	load_metrics_and_display_error (a_force: BOOLEAN; a_msg: STRING_GENERAL) is
+	load_metrics_and_display_error (a_force: BOOLEAN; a_msg: STRING_GENERAL)
 			-- Load metrics if they are not already loaded.
 			-- If `a_force' is True, load metrics even though they are already loaded.
 			-- When loading metrics, `a_msg' will be displayed in a dialog.
@@ -188,7 +188,7 @@ feature -- Basic operations
 			display_error_message
 		end
 
-	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN; a_filtered: BOOLEAN) is
+	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN; a_filtered: BOOLEAN)
 			-- Register metric result for display.
 		require
 			a_metric_attached: a_metric /= Void
@@ -198,7 +198,7 @@ feature -- Basic operations
 			detail_result_panel.on_display_metric_value (a_metric, a_value, a_input, a_result, a_time, a_from_history, a_filtered)
 		end
 
-	register_archive_result_for_display (ref_archive, cur_archive: LIST [EB_METRIC_ARCHIVE_NODE]) is
+	register_archive_result_for_display (ref_archive, cur_archive: LIST [EB_METRIC_ARCHIVE_NODE])
 			-- Register metric archive for display.
 		require
 			archives_valid: not (ref_archive = Void and then cur_archive = Void)
@@ -206,7 +206,7 @@ feature -- Basic operations
 			detail_result_panel.on_display_archive_value (cur_archive, ref_archive)
 		end
 
-	store_metrics is
+	store_metrics
 			-- Store metrics.
 		do
 			metric_manager.store_userdefined_metrics
@@ -216,7 +216,7 @@ feature -- Basic operations
 			metric_manager.metric_loaded_actions.call (Void)
 		end
 
-	display_error_message is
+	display_error_message
 			-- Display error message from `metric_manager'.
 		do
 			if not metric_manager.is_exit_requested then
@@ -226,12 +226,12 @@ feature -- Basic operations
 			end
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the metrics.
 		do
 		end
 
-	set_is_shown (b: BOOLEAN) is
+	set_is_shown (b: BOOLEAN)
 			-- Set `is_shown' with `b'.
 		do
 			is_shown := b
@@ -239,7 +239,7 @@ feature -- Basic operations
 			is_shown_set: is_shown = b
 		end
 
-	set_last_metric_value_historied (b: BOOLEAN) is
+	set_last_metric_value_historied (b: BOOLEAN)
 			-- Set `last_metric_value_historied' with `b'.
 		do
 			last_metric_value_historied := b
@@ -270,7 +270,7 @@ feature -- Access
 	metric_notebook: EV_NOTEBOOK
 			-- Notebook for metric tool panels
 
-	send_metric_value_in_history_actions: ACTION_SEQUENCE [TUPLE [a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY]] is
+	send_metric_value_in_history_actions: ACTION_SEQUENCE [TUPLE [a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY]]
 			-- Actions to be performed when last evalauted metric (stored in `a_archive') has been sent into history
 			-- `a_panel' is the metric tool panel from which the sending request occurs.			
 		do
@@ -284,7 +284,7 @@ feature -- Access
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Remove all references to `Current', and leave `Current' in an
 			-- unstable state, so that we know `Current' is not referenced any longer.
 		do
@@ -321,31 +321,31 @@ feature -- Status report
 	is_recompiled: BOOLEAN
 			-- Has system been recompiled?
 
-	is_eiffel_compiling: BOOLEAN is
+	is_eiffel_compiling: BOOLEAN
 			-- Is eiffel compiling?
 		do
 			Result := metric_manager.is_eiffel_compiling
 		end
 
-	is_metric_evaluating: BOOLEAN is
+	is_metric_evaluating: BOOLEAN
 			-- Is metric being evaluated?
 		do
 			Result := metric_manager.is_metric_evaluating
 		end
 
-	is_archive_calculating: BOOLEAN is
+	is_archive_calculating: BOOLEAN
 			-- Is metric archive being calculated?
 		do
 			Result := metric_manager.is_archive_calculating
 		end
 
-	is_project_loaded: BOOLEAN is
+	is_project_loaded: BOOLEAN
 			-- Is a project loaded?		
 		do
 			Result := metric_manager.is_project_loaded
 		end
 
-	is_history_recalculation_running: BOOLEAN is
+	is_history_recalculation_running: BOOLEAN
 			-- Is metric history recalculation running?
 		do
 			Result := metric_manager.is_history_recalculation_running
@@ -354,7 +354,7 @@ feature -- Status report
 	last_metric_value_historied: BOOLEAN
 			-- Has last evaluated metric value been sent to history?
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Is Metrics tool ready?
 			-- Ready means that a project is loaded and no compilation or metric calculation is undergoing, so a new metric calculation
 			-- can start.
@@ -364,7 +364,7 @@ feature -- Status report
 
 feature{NONE} -- Actions
 
-	on_tab_change is
+	on_tab_change
 			-- Action to be performed when selected tab changes
 		local
 			l_selected_index: INTEGER
@@ -393,7 +393,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- Action to be performed when project loaded
 		do
 			if content.user_widget.is_displayed then
@@ -403,33 +403,33 @@ feature{NONE} -- Actions
 			project_load_actions.call (Void)
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Action to be performed when project unloaded
 		do
 			project_unload_actions.call (Void)
 		end
 
-	on_compile_start is
+	on_compile_start
 			-- Action to be performed when Eiffel compilation starts
 		do
 			compile_start_actions.call (Void)
 		end
 
-	on_compile_stop is
+	on_compile_stop
 			-- Action to be performed when Eiffel compilation stops
 		do
 			is_metric_validation_checked.put (False)
 			compile_stop_actions.call (Void)
 		end
 
-	on_metric_evaluation_start (a_data: ANY) is
+	on_metric_evaluation_start (a_data: ANY)
 			-- Action to be performed when metric evaluation starts
 			-- `a_data' can be the metric tool panel from which metric evaluation starts.
 		do
 			metric_evaluation_start_actions.call ([a_data])
 		end
 
-	on_metric_evaluation_stop (a_data: ANY) is
+	on_metric_evaluation_stop (a_data: ANY)
 			-- Action to be performed when metric evaluation stops
 			-- `a_data' can be the metric tool panel from which metric evaluation stops.
 		do
@@ -437,27 +437,27 @@ feature{NONE} -- Actions
 			metric_evaluation_stop_actions.call ([a_data])
 		end
 
-	on_archive_calculation_start (a_data: ANY) is
+	on_archive_calculation_start (a_data: ANY)
 			-- Action to be performed when metric archive calculation starts
 			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
 		do
 			archive_calculation_start_actions.call ([a_data])
 		end
 
-	on_archive_calculation_stop (a_data: ANY) is
+	on_archive_calculation_stop (a_data: ANY)
 			-- Action to be performed when metric archive calculation stops
 			-- `a_data' can be the metric tool panel from which metric archive calculation stops.
 		do
 			archive_calculation_stop_actions.call ([a_data])
 		end
 
-	on_metric_loaded is
+	on_metric_loaded
 			-- Action to be performed when metrics loaded in `metric_manager'
 		do
 			metric_loaded_actions.call (Void)
 		end
 
-	on_tab_droppable (a_pebble: ANY): BOOLEAN is
+	on_tab_droppable (a_pebble: ANY): BOOLEAN
 			-- Function to decide if `a_pebble' can be dropped on a `metric_notebook' tab
 		local
 			l_stone: STONE
@@ -476,7 +476,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_tab_dropped (a_pebble: ANY) is
+	on_tab_dropped (a_pebble: ANY)
 			-- Action called when `a_pebble' is dropped on `metric_notebook'.
 			-- It will target current to `a_pebble'.
 		local
@@ -495,21 +495,21 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_history_recalculation_start (a_data: ANY) is
+	on_history_recalculation_start (a_data: ANY)
 			-- Action to be performed when history recalculation starts
 			-- `a_data' can be the metric tool panel from which history recalculation starts.
 		do
 			history_recalculation_start_actions.call ([a_data])
 		end
 
-	on_history_recalculation_stop (a_data: ANY) is
+	on_history_recalculation_stop (a_data: ANY)
 			-- Action to be performed when history recalculation stops
 			-- `a_data' can be the metric tool panel from which history recalculation stops.
 		do
 			history_recalculation_stop_actions.call ([a_data])
 		end
 
-	on_metric_renamed (a_old_name, a_new_name: STRING) is
+	on_metric_renamed (a_old_name, a_new_name: STRING)
 			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
 		do
 			metric_renamed_actions.call ([a_old_name, a_new_name])
@@ -520,7 +520,7 @@ feature{NONE} -- Implementation
 	send_metric_value_in_history_actions_internal: like send_metric_value_in_history_actions;
 		-- Implementation of `send_metric_value_in_history_actions'
 
-	notify_project_loaded is
+	notify_project_loaded
 			-- Notify `metric_manager' that project has been loaded.
 		do
 			if not metric_manager.is_project_loaded then
@@ -528,7 +528,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	notify_project_unloaded is
+	notify_project_unloaded
 			-- Notify `metric_manager' that project has been unloaded.
 		do
 			if metric_manager.is_project_loaded then
@@ -544,19 +544,19 @@ feature{NONE} -- Implementation
 
 feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 
-	is_tool_opened: BOOLEAN is
+	is_tool_opened: BOOLEAN
 			-- Is Current tool opened?
 		do
 			Result := content.is_visible
 		end
 
-	is_tool_visible: BOOLEAN is
+	is_tool_visible: BOOLEAN
 			-- Is Current tool visible?
 		do
 			Result := widget.is_displayed
 		end
 
-	set_title (a_result: STRING_GENERAL) is
+	set_title (a_result: STRING_GENERAL)
 			-- Set title of Current tool.
 			-- If `a_result' is not Void, display it on title.
 		local
@@ -576,7 +576,7 @@ feature{EB_METRIC_EVALUATION_PANEL} -- Title change
 invariant
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

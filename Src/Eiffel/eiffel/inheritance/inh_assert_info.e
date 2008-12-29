@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INH_ASSERT_INFO
@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (feat: FEATURE_I) is
+	make (feat: FEATURE_I)
 			-- Update `has_precondition' and
 			-- `has_postcondition' fields.
 		do
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 		do
 			Result := System.class_of_id (written_in)
 		ensure
@@ -42,14 +42,14 @@ feature -- Access
 	has_precondition: BOOLEAN
 			-- Is has_precondition set to True?
 
-	has_assertion: BOOLEAN is
+	has_assertion: BOOLEAN
 		do
 			Result := (has_precondition or else has_postcondition)
 		end
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 			-- Check to see if assertions has changed
 		do
 			Result := (has_precondition = other.has_precondition) and then
@@ -59,7 +59,7 @@ feature -- Comparison
 
 feature -- Debugging
 
-	trace is
+	trace
 		do
 			io.put_string ("written_in class: ")
 			io.put_string (System.class_of_id (written_in).name)
@@ -75,7 +75,7 @@ feature -- Debugging
 			io.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

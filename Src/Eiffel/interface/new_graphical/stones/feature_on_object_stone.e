@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representating a feature related to an object."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (addr: DBG_ADDRESS; a_feature: E_FEATURE) is
+	make (addr: DBG_ADDRESS; a_feature: E_FEATURE)
 		do
 			feature_make (a_feature)
 			object_address := addr
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Change
 
-	attach_object_stone (o: like object_stone) is
+	attach_object_stone (o: like object_stone)
 			-- Attach `o' to Current's `object_stone'.
 		do
 			object_stone := o
@@ -50,7 +50,7 @@ feature -- Access
 	object_address: DBG_ADDRESS
 		-- Address of the object referenced by current feature stone.
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 		local
 			conv: like Current
 		do
@@ -68,7 +68,7 @@ feature -- Access
 			end
 		end
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
@@ -90,13 +90,13 @@ feature -- Access
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 		do
 			Result := Precursor {FEATURE_STONE}
 					and (object_stone = Void or else object_stone.is_valid)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

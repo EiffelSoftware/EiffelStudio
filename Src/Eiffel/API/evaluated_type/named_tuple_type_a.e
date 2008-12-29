@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tuples whose actual generic parameters are named."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_id: INTEGER; g: like generics; n: like names) is
+	make (a_class_id: INTEGER; g: like generics; n: like names)
 			-- Create new instance of NAMED_TUPLE_TYPE_A.
 		require
 			a_class_id_positive: a_class_id > 0
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_named_tuple_type_a (Current)
@@ -52,10 +52,10 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_named_tuple: BOOLEAN is True
+	is_named_tuple: BOOLEAN = True
 			-- Current is a labelled TUPLE.
 
-	label_position_by_id (a_id: INTEGER): INTEGER is
+	label_position_by_id (a_id: INTEGER): INTEGER
 			-- If present, position of `a_id' in Current, otherwise `0'.
 		do
 			if a_id > 0 then
@@ -65,7 +65,7 @@ feature -- Status report
 			label_position_non_negative: Result >= 0
 		end
 
-	label_position (a_name: STRING): INTEGER is
+	label_position (a_name: STRING): INTEGER
 			-- If present, position of `a_name' in Current, otherwise `0'.
 		require
 			a_name_not_void: a_name /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 			label_position_non_negative: Result >= 0
 		end
 
-	label_name (i: INTEGER): STRING is
+	label_name (i: INTEGER): STRING
 			-- Name of `i-th' label of Current.
 		require
 			valid_index: generics.valid_index (i)
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Checking
 
-	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is
+	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS)
 			-- Check validity of `labels' of current in `a_context_class'.
 		local
 			l_named_tuple_node: NAMED_TUPLE_TYPE_AS
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Checking
 
-	check_tuple_feature_clash (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_name_id: INTEGER; a_node: TYPE_AS; a_pos: INTEGER) is
+	check_tuple_feature_clash (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_name_id: INTEGER; a_node: TYPE_AS; a_pos: INTEGER)
 			-- Check that `a_name_id' is not the same as a feature of TUPLE.
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -211,7 +211,7 @@ invariant
 	names_not_void: names /= Void
 	names_not_empty: names.count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

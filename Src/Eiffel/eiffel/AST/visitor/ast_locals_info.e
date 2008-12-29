@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate a table between local names and LOCAL_INFO instance for a routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	local_table (a_class: CLASS_C; a_feature: FEATURE_I; a_node: BODY_AS): HASH_TABLE [LOCAL_INFO, INTEGER] is
+	local_table (a_class: CLASS_C; a_feature: FEATURE_I; a_node: BODY_AS): HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Local table.
 		require
 			a_class_not_void: a_class /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Settings
 
-	reset is
+	reset
 			-- Reset current.
 		do
 			current_class := Void
@@ -69,17 +69,17 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Implementation
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 		do
 			l_as.body.process (Current)
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 		do
 			safe_process (l_as.content)
 		end
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 		local
 			l_feat_tbl: FEATURE_TABLE
 			l_id_list: IDENTIFIER_LIST
@@ -120,12 +120,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	empty_local_table: HASH_TABLE [LOCAL_INFO, INTEGER] is
+	empty_local_table: HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Empty local table
 		once
 			create Result.make (0)
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

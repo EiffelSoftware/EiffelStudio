@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged byte node representing a call (either call or item) to an agent"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,7 +60,7 @@ create
 
 feature -- Code generation
 
-	generate_on (reg: REGISTRABLE) is
+	generate_on (reg: REGISTRABLE)
 			-- Generate access call of feature in current on `current_register'
 		local
 			l_cl_type: GEN_TYPE_A
@@ -107,7 +107,7 @@ feature -- Code generation
 			end
 		end
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze agent call on `reg'
 		local
 			tmp_register: REGISTER
@@ -135,11 +135,11 @@ feature -- Code generation
 			end
 		end
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 		do
 		end
 
-	init (a: AGENT_CALL_B) is
+	init (a: AGENT_CALL_B)
 		do
 			fill_from (a)
 
@@ -154,14 +154,14 @@ feature -- Code generation
 			end
 		end
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		do
 			Result := Current
 		end
 
-	fill_from (a: AGENT_CALL_B) is
+	fill_from (a: AGENT_CALL_B)
 		local
 			a_bl: AGENT_CALL_BL
 		do
@@ -227,7 +227,7 @@ feature {AGENT_CALL_BL}--Optimized parameters
 
 feature {NONE} --Implementation
 
-	init_attribute (id: INTEGER; reg: REGISTRABLE): ATTRIBUTE_B is
+	init_attribute (id: INTEGER; reg: REGISTRABLE): ATTRIBUTE_B
 			-- Initializes an attribute byte node to access attribute with id `id' of object in `reg'
 		local
 			l_feat: FEATURE_I
@@ -289,7 +289,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	generate_function_cast (a_type: GEN_TYPE_A) is
+	generate_function_cast (a_type: GEN_TYPE_A)
 			-- Generates a c function cast
 		local
 			l_arg_types: ARRAY [STRING]
@@ -330,7 +330,7 @@ feature {NONE} --Implementation
 			l_ret_type.generate_function_cast (buffer, l_arg_types, context.workbench_mode)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

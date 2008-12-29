@@ -1,4 +1,4 @@
-indexing
+note
 		description: "[
 						Representation of a JVM Label.
 						bridges the label id as known by the compiler front end
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialisation
 
-		make (a_id: INTEGER) is
+		make (a_id: INTEGER)
 				do
 						id := a_id
 				ensure
@@ -42,7 +42,7 @@ feature -- Access
 			
 feature {ANY} -- Status Settings
 			
-		is_open: BOOLEAN is
+		is_open: BOOLEAN
 				-- Is the label open ?
 				-- i.e. `byte_code_position' has net been set yet.
 				do
@@ -57,7 +57,7 @@ feature {ANY} -- Status Settings
 
 feature {ANY} -- Basic operations
 			
-		close (pos: INTEGER) is
+		close (pos: INTEGER)
 				-- close the label and assign a valid `byte_code_position'
 				-- to it.
 				require
@@ -74,7 +74,7 @@ feature {ANY} -- Basic operations
 invariant
 		is_open_not_is_closed: is_open = not is_closed
 		byte_code_position_valid: is_closed implies byte_code_position > 0
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

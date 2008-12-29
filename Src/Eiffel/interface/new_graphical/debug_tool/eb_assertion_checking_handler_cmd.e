@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to manage exception handling."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 --			create accelerator.make_with_key_combination (
@@ -38,14 +38,14 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	reset is
+	reset
 		do
 			assertion_checking_changed := False
 			update_items
 			set_select (assertion_checking_changed)
 		end
 
-	execute is
+	execute
 			-- Pause the execution.
 		local
 			app_exec: APPLICATION_EXECUTION
@@ -74,26 +74,26 @@ feature -- Execution
 
 	assertion_checking_changed: BOOLEAN
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 		do
 			Result := assertion_checking_changed
 		end
 
 feature {NONE} -- Attributes
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Dbg_assertion_checking
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			if assertion_checking_changed then
@@ -103,10 +103,10 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	name: STRING is "Assertion_checking_handler"
+	name: STRING = "Assertion_checking_handler"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			if assertion_checking_changed then
@@ -116,7 +116,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			if assertion_checking_changed then
@@ -126,7 +126,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			if assertion_checking_changed then
@@ -136,7 +136,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

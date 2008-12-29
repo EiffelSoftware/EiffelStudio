@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "First state of the profiler wizard (Choose compilation mode)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature -- Basic Operation
 
-	build is 
+	build 
 			-- Build entries.
 		local
 			compilation_mode_radio_box: EV_VERTICAL_BOX
@@ -63,7 +63,7 @@ feature -- Basic Operation
 			end
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		local
 			next_state: EB_WIZARD_STATE_WINDOW
 		do
@@ -76,7 +76,7 @@ feature -- Basic Operation
 			proceed_with_new_state (next_state)
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		do
 			Precursor
@@ -89,7 +89,7 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (Interface_names.wt_Compilation_mode)
 			subtitle.set_text (Interface_names.ws_Compilation_mode)
@@ -106,7 +106,7 @@ feature {NONE} -- Vision2 controls
 			-- When checked, analyse the profiling of a system compiled
 			-- in finalized mode.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

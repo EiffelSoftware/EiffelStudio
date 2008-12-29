@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for `tty'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ class TTY_CONSTANTS
 
 feature -- Access
 
-	warning_messages: WARNING_MESSAGES is
+	warning_messages: WARNING_MESSAGES
 			-- Access to warning messages.
 		once
 			create Result
@@ -17,7 +17,7 @@ feature -- Access
 			warning_message_not_void: warning_messages /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

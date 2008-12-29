@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Stone representing a replayed call stack stone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_position: TUPLE [line: INTEGER; nested: INTEGER]) is
+	make (a_feature: E_FEATURE; a_position: TUPLE [line: INTEGER; nested: INTEGER])
 			-- Initialize stone.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -38,7 +38,7 @@ feature -- Properties
 
 feature -- Status report
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
 		do
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- dragging
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		do
@@ -63,7 +63,7 @@ feature -- dragging
 invariant
 	call_position_not_void: call_position /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

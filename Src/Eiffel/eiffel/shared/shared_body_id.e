@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Constants for body_indexes of invariant and initialization routine
@@ -10,17 +10,17 @@ inherit
 	
 feature {NONE}
 
-	Invariant_body_index: INTEGER is
+	Invariant_body_index: INTEGER
 		once
 			Result := System.body_index_counter.invariant_body_index
 		end
 
-	Initialization_body_index: INTEGER is
+	Initialization_body_index: INTEGER
 		once
 			Result := System.body_index_counter.initialization_body_index
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

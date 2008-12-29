@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that projects an EIFFEL_WORLD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_buffer (a_world: like world; a_drawing_area: EV_DRAWING_AREA) is
+	make_with_buffer (a_world: like world; a_drawing_area: EV_DRAWING_AREA)
 			-- Create an EIFFEL_PROJECTOR projecting `a_world' to `a_drawing_area'.
 		local
 			l_figure: EG_FIGURE
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status settings
 
-	enable_painting is
+	enable_painting
 			-- Set `is_painting_disabled' to False.
 		do
 			is_painting_disabled := False
@@ -77,7 +77,7 @@ feature -- Status settings
 			set: not is_painting_disabled
 		end
 
-	disable_painting is
+	disable_painting
 			-- Set `is_painting_disabled' to True.
 		do
 			is_painting_disabled := True
@@ -87,7 +87,7 @@ feature -- Status settings
 
 feature -- Display updates
 
-	full_project is
+	full_project
 			-- Project entire area.
 		local
 			rectangle: EV_RECTANGLE
@@ -99,7 +99,7 @@ feature -- Display updates
 			end
 		end
 
-	project is
+	project
 			-- Make a standard projection of world on device.
 		local
 			e, u: EV_RECTANGLE
@@ -124,7 +124,7 @@ feature -- Display updates
 			is_projecting := False
 		end
 
-	project_rectangle (u: EV_RECTANGLE) is
+	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'
 		do
 			if not is_painting_disabled then
@@ -134,14 +134,14 @@ feature -- Display updates
 
 feature {NONE} -- Implementation
 
-	on_paint (x, y, w, h: INTEGER) is
+	on_paint (x, y, w, h: INTEGER)
 		do
 			if not is_painting_disabled then
 				update_rectangle (create {EV_RECTANGLE}.make (x, y, w, h), x, y)
 			end
 		end
 
-	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER) is
+	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		do
 			if not is_painting_disabled then
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update is
+	update
 			-- Update display by drawing the right part of the buffer on `area'.
 		do
 			if not is_painting_disabled then
@@ -157,13 +157,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_cursor: EV_POINTER_STYLE is
+	default_cursor: EV_POINTER_STYLE
 			-- Default cursor on eiffel world.
 		do
 			Result := cursors.open_hand_cursor
 		end
 
-	draw_bon_class (a_class: BON_CLASS_FIGURE) is
+	draw_bon_class (a_class: BON_CLASS_FIGURE)
 			-- Draw `a_class'
 		local
 			l_ellipse, r_ellipse: EV_MODEL_ELLIPSE
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_bon_client_supplier (group: BON_CLIENT_SUPPLIER_FIGURE) is
+	draw_bon_client_supplier (group: BON_CLIENT_SUPPLIER_FIGURE)
 			-- Draw `group'.
 		require -- from EV_MODEL_PROJECTION_ROUTINES
 			group_not_void: group /= Void
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_bon_inheritance (group: BON_INHERITANCE_FIGURE) is
+	draw_bon_inheritance (group: BON_INHERITANCE_FIGURE)
 			-- Draw `group'.
 		require
 			group_not_void: group /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_uml_inheritance (group: UML_INHERITANCE_FIGURE) is
+	draw_uml_inheritance (group: UML_INHERITANCE_FIGURE)
 			-- Draw `group'.
 		require
 			group_not_void: group /= Void
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_figure_umlpolyline (line: EV_MODEL_POLYLINE; is_client_supplier: BOOLEAN) is
+	draw_figure_umlpolyline (line: EV_MODEL_POLYLINE; is_client_supplier: BOOLEAN)
 			-- Draw standard representation of `polyline' to canvas.
 		local
 			p: EV_MODEL_POLYGON
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_figure_bonpolyline (line: EV_MODEL_POLYLINE; is_client_supplier: BOOLEAN) is
+	draw_figure_bonpolyline (line: EV_MODEL_POLYLINE; is_client_supplier: BOOLEAN)
 			-- Draw standard representation of `polyline' to canvas.
 		local
 			p: EV_MODEL_POLYGON
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

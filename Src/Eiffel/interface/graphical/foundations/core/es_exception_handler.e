@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Helper base class for handling exception cases and displaying graphical error messages.
 	]"
@@ -59,7 +59,7 @@ feature -- Basic operations
 			l_prompt.show_on_active_window
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

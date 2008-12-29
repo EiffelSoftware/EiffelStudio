@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create Current and pass addresses to C
 		do
 			request_type := Rep_stopped
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Register that the application is stopped
 			-- and parse the string passed from C.
 			-- The format of the passed string is:
@@ -202,7 +202,7 @@ feature -- Execution
 --			retry
 		end
 
-	process_paused_state (a_pause_reason: INTEGER; a_app: APPLICATION_EXECUTION) is
+	process_paused_state (a_pause_reason: INTEGER; a_app: APPLICATION_EXECUTION)
 			-- Process paused state
 		local
 			need_to: TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
@@ -290,7 +290,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execution_stopped_on_catcall_event (app: APPLICATION_EXECUTION): BOOLEAN is
+	execution_stopped_on_catcall_event (app: APPLICATION_EXECUTION): BOOLEAN
 			-- Do we stop execution on this catcall warning event ?
 		require
 			catcall_occurred: app.status.reason_is_catcall
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execution_stopped_on_exception_event (app: APPLICATION_EXECUTION): BOOLEAN is
+	execution_stopped_on_exception_event (app: APPLICATION_EXECUTION): BOOLEAN
 			-- Do we stop execution on this exception event ?
 		require
 			exception_occurred: app.status.exception_occurred
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execution_stopped_on_breakpoint_event (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
+	execution_stopped_on_breakpoint_event (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
 			-- Do we stop execution and resend breakpoints on this breakpoint event ?
 		require
 			appstat: app.status.reason = {APPLICATION_STATUS_CONSTANTS}.Pg_break
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			Result := execution_stopped_on_breakpoint (app)
 		end
 
-	execution_stopped_on_breakpoint (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN] is
+	execution_stopped_on_breakpoint (app: APPLICATION_EXECUTION): TUPLE [stop: BOOLEAN; update_bp: BOOLEAN]
 			-- Do we stop execution and resend breakpoints on this breakpoint event ?
 		local
 			bps: LIST [BREAKPOINT]
@@ -419,13 +419,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cont_request: EWB_REQUEST is
+	cont_request: EWB_REQUEST
 			-- Request to relaunch the application when needed.
 		once
 			create Result.make (Rqst_cont)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

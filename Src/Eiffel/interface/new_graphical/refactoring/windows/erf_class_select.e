@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog that lets the user select a class of a given list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build interface.
 		local
 			vb_top, vb: EV_VERTICAL_BOX
@@ -83,7 +83,7 @@ feature -- Status report
 	ok_pressed: BOOLEAN
 			-- Did the user confirm the action?
 
-	is_multiple_selections: BOOLEAN is
+	is_multiple_selections: BOOLEAN
 			-- Can multiple classes be choosen?
 		do
 			Result := class_list.multiple_selection_enabled
@@ -97,7 +97,7 @@ feature -- Access
 	cancel_button: EV_BUTTON
 			-- Button with label "Cancel".
 
-	selected_class: CLASS_I is
+	selected_class: CLASS_I
 			-- The class the user selected.
 		local
 			l_class_c: CLASS_C
@@ -112,7 +112,7 @@ feature -- Access
 			end
 		end
 
-	selected_classes: ARRAYED_LIST [CLASS_I] is
+	selected_classes: ARRAYED_LIST [CLASS_I]
 			-- The classes the user selected with multiple selection.
 		local
 			l_class_c: CLASS_C
@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_classes (a_classes: LIST [CLASS_C]) is
+	set_classes (a_classes: LIST [CLASS_C])
 			-- Set the classe from which the user can choose.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -165,19 +165,19 @@ feature -- Element change
 			end
 		end
 
-	enable_multiple_selections is
+	enable_multiple_selections
 			-- Enable multiple selections.
 		do
 			class_list.enable_multiple_selection
 		end
 
-	disable_multiple_selections is
+	disable_multiple_selections
 			-- Disable multiple selections.
 		do
 			class_list.disable_multiple_selection
 		end
 
-	select_all is
+	select_all
 			-- Select all classes.
 		do
 			class_list.do_all (agent {EV_LIST_ITEM}.enable_select)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 	class_list: EV_LIST
 			-- The graphical list of classes.
 
-	on_ok_pressed is
+	on_ok_pressed
 			-- The user pressed OK.
 		do
 			if selected_class /= Void then
@@ -199,20 +199,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cancel_pressed is
+	on_cancel_pressed
 			-- The user pressed Cancel.
 		do
 			ok_pressed := False
 			destroy
 		end
 
-	on_show is
+	on_show
 			-- Triggered when the dialog is shown.
 		do
 			class_list.set_focus
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

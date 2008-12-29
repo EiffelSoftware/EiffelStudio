@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a manifest constant constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_char_val_b (Current)
@@ -31,7 +31,7 @@ feature -- Visitor
 
 feature -- Measurement
 
-	distance (other: like Current): DOUBLE is
+	distance (other: like Current): DOUBLE
 			-- Distance between `other' and Current
 		do
 			Result := other.value.natural_32_code - value.natural_32_code
@@ -39,7 +39,7 @@ feature -- Measurement
 
 feature -- Error reporting
 
-	display (a_text_formatter: TEXT_FORMATTER) is
+	display (a_text_formatter: TEXT_FORMATTER)
 		do
 			if value.natural_32_code <= {CHARACTER_8}.max_value.as_natural_32 then
 				a_text_formatter.add_char ('%'')
@@ -57,7 +57,7 @@ feature -- Error reporting
 
 feature -- Iteration
 
-	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE]) is
+	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE])
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		local
@@ -81,7 +81,7 @@ feature -- Iteration
 
 feature -- IL code generation
 
-	generate_il_subtract (is_included: BOOLEAN) is
+	generate_il_subtract (is_included: BOOLEAN)
 			-- Generate code to subtract this value if `is_included' is true or
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
@@ -100,13 +100,13 @@ feature -- IL code generation
 
 feature {TYPED_INTERVAL_B} -- IL code generation
 
-	il_load_value is
+	il_load_value
 			-- Load value to IL stack.
 		do
 			il_generator.put_natural_32_constant (value.natural_32_code)
 		end
 
-	il_load_difference (other: like Current) is
+	il_load_difference (other: like Current)
 			-- Load a difference between current and `other' to IL stack.
 		do
 			il_generator.put_natural_32_constant (value.natural_32_code - other.value.natural_32_code)
@@ -114,7 +114,7 @@ feature {TYPED_INTERVAL_B} -- IL code generation
 
 feature {NONE} -- Implementation: C generation
 
-	generate_value (v: like value) is
+	generate_value (v: like value)
 			-- Generate single value `v'.
 		local
 			buf: GENERATION_BUFFER
@@ -130,13 +130,13 @@ feature {NONE} -- Implementation: C generation
 			end
 		end
 
-	next_value (v: like value): like value is
+	next_value (v: like value): like value
 			-- Value after given value `v'
 		do
 			Result := (v.natural_32_code + 1).to_character_32
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

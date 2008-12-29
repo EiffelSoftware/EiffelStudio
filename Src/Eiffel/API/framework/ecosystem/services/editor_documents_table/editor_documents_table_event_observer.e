@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An observer for events implemented on a {EDITOR_DOCUMENTS_TABLE_S} session interface.
 	]"
@@ -51,7 +51,7 @@ feature {EDITOR_DOCUMENTS_TABLE_S} -- Event handlers
 		do
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

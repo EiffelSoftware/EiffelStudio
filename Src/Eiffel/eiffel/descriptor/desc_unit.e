@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor unit: block in class type descriptor corresponding to%
 		%given parent class."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c_id: INTEGER; sz: INTEGER) is
+	make (c_id: INTEGER; sz: INTEGER)
 		do
 			class_id := c_id
 			create area.make (sz)
@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature -- Generation
 
-	generate (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
+	generate (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING)
 			-- C code of Current descriptor unit
 			--|Note1: Currently the feature type is written for all the
 			--|features when in practice it is used rather seldom. Try
@@ -128,7 +128,7 @@ feature -- Generation
 			end
 		end
 
-	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER; id_string: STRING) is
+	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER; id_string: STRING)
 			-- C code of Current precompiled descriptor unit
 			--|Note1: Currently the feature type is written for all the
 			--|features when in practice it is used rather seldom. Try
@@ -243,7 +243,7 @@ feature -- Generation
 			end
 		end
 
-	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
+	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING)
 			-- C code for generic types in Current descriptor unit
 		require
 			buffer_not_void: buffer /= Void
@@ -281,7 +281,7 @@ feature -- Generation
 
 feature -- Melting
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Append byte code of Current descriptor
 			-- unit to the `ba' byte array.
 			-- Format:
@@ -359,7 +359,7 @@ feature -- Melting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

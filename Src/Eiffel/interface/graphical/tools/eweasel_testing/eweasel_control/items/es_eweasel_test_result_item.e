@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					All information of one eweasel test case run result.
 					This class can be used for session data storage.
@@ -44,7 +44,7 @@ feature -- General data about current index in whole test run
 
 feature -- Command
 
-	set_test_run_time (a_time: like test_run_time) is
+	set_test_run_time (a_time: like test_run_time)
 			-- Set `test_run_time' with `a_time'
 		do
 			test_run_time := a_time
@@ -52,7 +52,7 @@ feature -- Command
 			set: test_run_time = a_time
 		end
 
-	set_title (a_text: STRING_GENERAL) is
+	set_title (a_text: STRING_GENERAL)
 			-- Set `title' with `a_text'
 		do
 			title := a_text
@@ -60,7 +60,7 @@ feature -- Command
 			set: title = a_text
 		end
 
-	set_execution_error_in (a_text: STRING_GENERAL) is
+	set_execution_error_in (a_text: STRING_GENERAL)
 			-- Set `execution_error_in' with `a_text'
 		do
 			execution_error_in := a_text
@@ -68,7 +68,7 @@ feature -- Command
 			set: execution_error_in = a_text
 		end
 
-	set_original_eweasel_ouput (a_text: like orignal_eweasel_ouput) is
+	set_original_eweasel_ouput (a_text: like orignal_eweasel_ouput)
 			-- Set `orignal_eweasel_ouput' with `a_text'
 		do
 			orignal_eweasel_ouput := a_text
@@ -76,7 +76,7 @@ feature -- Command
 			set: orignal_eweasel_ouput = a_text
 		end
 
-	set_tag (a_tag: like tag) is
+	set_tag (a_tag: like tag)
 			-- Set `tag' with `a_tag'
 		do
 			tag := a_tag
@@ -84,7 +84,7 @@ feature -- Command
 			set: tag = a_tag
 		end
 
-	set_result_type (a_type: like result_type) is
+	set_result_type (a_type: like result_type)
 			-- Set `result_type' with `a_type'
 		require
 			valid: (create {ES_EWEASEL_RESULT_TYPE}).is_valid (a_type)
@@ -94,7 +94,7 @@ feature -- Command
 			set: result_type = a_type
 		end
 
-	set_root_class_name (a_name: like root_class_name) is
+	set_root_class_name (a_name: like root_class_name)
 			-- Set `root_class_name' with `a_name'
 		do
 			root_class_name := a_name
@@ -104,7 +104,7 @@ feature -- Command
 
 feature -- General data setting
 
-	set_total_test_cases_count (a_count: like total_test_cases_count) is
+	set_total_test_cases_count (a_count: like total_test_cases_count)
 			-- Set `total_test_cases_count' with `a_count'
 		do
 			total_test_cases_count := a_count
@@ -112,7 +112,7 @@ feature -- General data setting
 			set: total_test_cases_count = a_count
 		end
 
-	set_test_case_result_index (a_count: like test_case_result_index) is
+	set_test_case_result_index (a_count: like test_case_result_index)
 			-- Set `test_case_result_index' with `a_count'
 		do
 			test_case_result_index := a_count
@@ -142,7 +142,7 @@ feature -- Not used for the moment
 	original_text: STRING_GENERAL
 			-- Orignal text in eweasel
 
-	set_description (a_text: STRING_GENERAL) is
+	set_description (a_text: STRING_GENERAL)
 			-- set `description' with `a_text'
 		do
 			description := a_text
@@ -150,7 +150,7 @@ feature -- Not used for the moment
 			set: description = a_text
 		end
 
-	set_test_result (a_text: STRING_GENERAL) is
+	set_test_result (a_text: STRING_GENERAL)
 			-- set `test_result' with `a_text'
 		do
 			test_result := a_text
@@ -158,7 +158,7 @@ feature -- Not used for the moment
 			set: test_result = a_text
 		end
 
-	set_test_case_folder (a_text: STRING_GENERAL) is
+	set_test_case_folder (a_text: STRING_GENERAL)
 			-- set `test_case_folder' with `a_text'
 		do
 			test_case_folder := a_text
@@ -166,14 +166,14 @@ feature -- Not used for the moment
 			set: test_case_folder = a_text
 		end
 
-	set_original_text (a_text: STRING_GENERAL) is
+	set_original_text (a_text: STRING_GENERAL)
 			-- set `orignal_text' with `a_text'
 		do
 			original_text := a_text
 		ensure
 			set: original_text = a_text
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compiled class SPECIAL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Validity
 
-	check_validity is
+	check_validity
 			-- Check validity of class SPECIAL
 		local
 			special_error: SPECIAL_ERROR
@@ -90,7 +90,7 @@ feature -- Validity
 
 feature -- Typing
 
-	new_type (data: CL_TYPE_A): SPECIAL_CLASS_TYPE is
+	new_type (data: CL_TYPE_A): SPECIAL_CLASS_TYPE
 			-- New class type for class SPECIAL
 		local
 			l_data: GEN_TYPE_A
@@ -112,12 +112,12 @@ feature -- Typing
 
 feature -- Status report
 
-	is_special: BOOLEAN is True
+	is_special: BOOLEAN = True
 			-- Is class SPECIAL?
 
 feature -- Code generation
 
-	generate_dynamic_types (buffer: GENERATION_BUFFER) is
+	generate_dynamic_types (buffer: GENERATION_BUFFER)
 			-- Generate dynamic types of type classes available in the system
 		local
 			class_type: CLASS_TYPE
@@ -225,7 +225,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	make_signature: DYN_PROC_I is
+	make_signature: DYN_PROC_I
 			-- Required signature for feature `make' of class SPECIAL
 		local
 			args: FEAT_ARG
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			item_signature_not_void: Result /= Void
 		end
 
-	item_signature: DYN_FUNC_I is
+	item_signature: DYN_FUNC_I
 			-- Required signature for feature `item' of class SPECIAL
 		local
 			args: FEAT_ARG
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			item_signature_not_void: Result /= Void
 		end
 
-	put_signature: DYN_PROC_I is
+	put_signature: DYN_PROC_I
 			-- Required signature for feature `put' of class SPECIAL
 		local
 			args: FEAT_ARG
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			put_signature_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to stop in a feature while debugging."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,25 +30,25 @@ inherit
 
 feature -- Access
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What is printed in the customize dialog.
 		do
 			Result := Interface_names.f_Enable_stop_points
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_bkpt_enable
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new docking toolbar button for `Current'.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
@@ -58,7 +58,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new mini toolbar button for `Current'.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
@@ -68,42 +68,42 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Enable_stop_points
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.icon_pixmaps.breakpoints_enable_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.breakpoints_enable_icon_buffer
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.breakpoints_enable_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.breakpoints_enable_icon_buffer
 		end
 
-	name: STRING is "Enable_bkpt"
+	name: STRING = "Enable_bkpt"
 			-- Name of `Current' to identify it.
 
 feature -- Update
 
-	drop_breakable (bs: BREAKABLE_STONE) is
+	drop_breakable (bs: BREAKABLE_STONE)
 			-- Process breakable stone
 		local
 			index: INTEGER
@@ -126,14 +126,14 @@ feature -- Update
 			end
 		end
 
-	drop_call_stack (dropped: CALL_STACK_STONE) is
+	drop_call_stack (dropped: CALL_STACK_STONE)
 			-- Accept all stone types
 		do
 --			Project_window.process_call_stack (dropped)
 		end
 --| FIXME
 
-	drop_feature (fs: FEATURE_STONE) is
+	drop_feature (fs: FEATURE_STONE)
 			-- Process feature stone.
 		local
 			f: E_FEATURE
@@ -154,7 +154,7 @@ feature -- Update
 			end
 		end
 
-	drop_class (cs: CLASSC_STONE) is
+	drop_class (cs: CLASSC_STONE)
 			-- Process class stone
 		local
 			conv_fst: FEATURE_STONE
@@ -176,7 +176,7 @@ feature -- Update
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Enable all breakpoints in the application.
 		local
 			bpm: BREAKPOINTS_MANAGER
@@ -188,7 +188,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	update_debuggable_for (f: E_FEATURE) is
+	update_debuggable_for (f: E_FEATURE)
 			-- Update the debuggable information for feature `f'.
 			-- Set all breakpoints in `f'.
 		require
@@ -205,25 +205,25 @@ feature {NONE} -- Implementation
 --| END FIXME
 		end
 
-	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
+	quick_refresh_on_class_drop (unused: CLASSC_STONE)
 			-- Quick refresh all windows.
 		do
 			window_manager.synchronize_all_about_breakpoints
 		end
 
-	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
+	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE)
 			-- Quick refresh all windows.
 		do
 			window_manager.synchronize_all_about_breakpoints
 		end
 
-	is_fst_debuggable (fst: FEATURE_STONE): BOOLEAN is
+	is_fst_debuggable (fst: FEATURE_STONE): BOOLEAN
 			-- Does `fst' represent a feature that is debuggable?
 		do
 			Result := fst.e_feature.is_debuggable
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

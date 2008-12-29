@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creation of a like Current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,14 @@ inherit
 
 feature -- C code generation
 
-	analyze is
+	analyze
 			-- Mark we need the dynamic type of current
 		do
 			context.mark_current_used
 			context.add_dftype_current
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id (dynamic type) of current	
 		do
 			context.generate_current_dftype
@@ -39,7 +39,7 @@ feature -- C code generation
 
 feature -- Il code generation
 
-	generate_il is
+	generate_il
 			-- Generate byte code for like Current creation type.
 		local
 			cl_type_i: CL_TYPE_A
@@ -55,14 +55,14 @@ feature -- Il code generation
 			end
 		end
 
-	generate_il_type is
+	generate_il_type
 			-- Load type of Current object.
 		do
 			il_generator.generate_current_as_reference
 			il_generator.load_type
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_A is
+	created_in (other: CLASS_TYPE): TYPE_A
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
 			Result := other.type
@@ -70,7 +70,7 @@ feature -- Il code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a like Current creation type.
 		do
 			ba.append (Bc_ccur)
@@ -78,27 +78,27 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	generate_gen_type_conversion (a_level: NATURAL) is
+	generate_gen_type_conversion (a_level: NATURAL)
 
 		do
 			-- Nothing.
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
 
 		do
 			context.generate_current_dftype
 			context.buffer.put_character (',')
 		end
 
-	make_type_byte_code (ba : BYTE_ARRAY) is
+	make_type_byte_code (ba : BYTE_ARRAY)
 
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_current_type)
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER;
-						final_mode : BOOLEAN; idx_cnt : COUNTER) is
+						final_mode : BOOLEAN; idx_cnt : COUNTER)
 		local
 			dummy : INTEGER
 		do
@@ -107,7 +107,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid_init (buffer : GENERATION_BUFFER;
-					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL) is
+					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
 		local
 			dummy : INTEGER
 		do
@@ -122,7 +122,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	type_to_create : CL_TYPE_A is
+	type_to_create : CL_TYPE_A
 
 		do
 			-- None.
@@ -130,7 +130,7 @@ feature -- Generic conformance
 			-- carries all the info in it's header.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

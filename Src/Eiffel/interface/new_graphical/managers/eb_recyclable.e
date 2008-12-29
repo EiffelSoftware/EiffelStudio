@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Object recycler for explicit recycling of active objects enabling
 		disconnection between objects/agents that the GC is unable to recognize.
@@ -27,7 +27,7 @@ inherit
 
 feature -- Basic operations
 
-	frozen recycle is
+	frozen recycle
 			-- To be called when the button has became useless.
 		local
 			l_pool: like internal_recycle_pool
@@ -142,7 +142,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	frozen detach_entities (a_recyclable: EB_RECYCLABLE) is
+	frozen detach_entities (a_recyclable: EB_RECYCLABLE)
 			-- Detaches objects from their container.
 			-- Note: Please enable the debug clause recycle_and_detach to enable this feature for debugging purposes.
 			--
@@ -224,7 +224,7 @@ feature {ANY} -- Extension
 
 feature -- Agent assistance
 
-	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
+	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
 			-- Registers an action sequence and automatically pools it for later removal.
 			--
 			-- `a_sequence': Action sequence to extend an action on.
@@ -239,7 +239,7 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has (a_action)
 		end
 
-	register_kamikaze_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
+	register_kamikaze_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
 			-- Registers a single-execute action sequence and automatically pools it for later removal, if it was not used.
 			--
 			-- `a_sequence': Action sequence to extend an action on.
@@ -254,7 +254,7 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has_kamikaze_action (a_action)
 		end
 
-	unregister_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]) is
+	unregister_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
 			-- Unregisters an action sequence and automatically pools it for later removal.
 			--
 			-- `a_sequence': Action sequence to remove an action on.
@@ -397,13 +397,13 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 			-- Note: It's recommended that you do not detach objects here.
 		deferred
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- Detaches objects from their container
 		do
 			detach_entities (Current)
@@ -423,7 +423,7 @@ invariant
 	recycler_attached: is_auto_recycled implies recycler /= Void
 	not_is_recycled: is_recycling implies not is_recycled
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

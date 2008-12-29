@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an AND operation on two argument criteria"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_ARGUMENT): BOOLEAN is
+	is_satisfied_by (a_item: QL_ARGUMENT): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			Result := left.is_satisfied_by (a_item) and then right.is_satisfied_by (a_item)
@@ -50,13 +50,13 @@ feature -- Criterion
 
 feature -- Access
 
-	intrinsic_domain: QL_ARGUMENT_DOMAIN is
+	intrinsic_domain: QL_ARGUMENT_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		do
 			Result ?= intrinsic_domain_internal
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

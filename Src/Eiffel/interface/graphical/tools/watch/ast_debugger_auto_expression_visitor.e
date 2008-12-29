@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST visitor to retrieve auto expressions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,14 +38,14 @@ inherit
 
 feature -- Entry
 
-	process (a_as: FEATURE_AS; cl: CLASS_C) is
+	process (a_as: FEATURE_AS; cl: CLASS_C)
 		do
 			create_level
 			leaf_as_list := match_list_server.item (cl.class_id)
 			process_feature_as (a_as)
 		end
 
-	auto_expressions (a_bp_index: INTEGER; a_delta_lower, a_delta_upper: INTEGER; a_f: E_FEATURE; cl: CLASS_C): LIST [STRING] is
+	auto_expressions (a_bp_index: INTEGER; a_delta_lower, a_delta_upper: INTEGER; a_f: E_FEATURE; cl: CLASS_C): LIST [STRING]
 		local
 			l_as: FEATURE_AS
 			fi, afi: FEATURE_I
@@ -130,7 +130,7 @@ feature -- Entry
 			retry
 		end
 
-	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I is
+	ancestor_version_of (fi: FEATURE_I; an_ancestor: CLASS_C): FEATURE_I
 			-- Feature in `an_ancestor' of which `Current' is derived.
 			-- `Void' if not present in that class.
 			--| FIXME jfiat [2007/05/31] : duplication of DBG_EVALUATOR.ancestor_version_of (..)
@@ -164,7 +164,7 @@ feature -- Entry
 
 feature -- Processing
 
-	process_access_feat_as (a_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (a_as: ACCESS_FEAT_AS)
 			-- Processes a feature access 'a.b.<access>'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -176,7 +176,7 @@ feature -- Processing
 			end
 		end
 
-	process_array_as (a_as: ARRAY_AS) is
+	process_array_as (a_as: ARRAY_AS)
 			-- Process manifest array '<<...>>'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -186,7 +186,7 @@ feature -- Processing
 			leave_brackets
 		end
 
-	process_assign_as (a_as: ASSIGN_AS) is
+	process_assign_as (a_as: ASSIGN_AS)
 			-- Process assign 'a := <expression>'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -200,7 +200,7 @@ feature -- Processing
 			a_as.source.process (Current)
 		end
 
-	process_assigner_call_as (a_as: ASSIGNER_CALL_AS) is
+	process_assigner_call_as (a_as: ASSIGNER_CALL_AS)
 			-- Process assigner call 'a.b := <expression>'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -214,7 +214,7 @@ feature -- Processing
 			a_as.source.process (Current)
 		end
 
-	process_bang_creation_as (a_as: BANG_CREATION_AS) is
+	process_bang_creation_as (a_as: BANG_CREATION_AS)
 			-- Process old !! creation.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -232,7 +232,7 @@ feature -- Processing
 			end
 		end
 
-	process_case_as (a_as: CASE_AS) is
+	process_case_as (a_as: CASE_AS)
 			-- Process an inspect's when case.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -246,7 +246,7 @@ feature -- Processing
 			a_as.compound.process (Current)
 		end
 
-	process_create_creation_as (a_as: CREATE_CREATION_AS) is
+	process_create_creation_as (a_as: CREATE_CREATION_AS)
 			-- Processes a creation expression
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -264,7 +264,7 @@ feature -- Processing
 			end
 		end
 
-	process_creation_expr_as (a_as: CREATION_EXPR_AS) is
+	process_creation_expr_as (a_as: CREATION_EXPR_AS)
 			-- Processes a creation expression.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -278,7 +278,7 @@ feature -- Processing
 			end
 		end
 
-	process_eiffel_list (a_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (a_as: EIFFEL_LIST [AST_EIFFEL])
 			-- Processes a list of Eiffel abstract syntax nodes.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -295,7 +295,7 @@ feature -- Processing
 			end
 		end
 
-	process_expr_call_as (a_as: EXPR_CALL_AS) is
+	process_expr_call_as (a_as: EXPR_CALL_AS)
 			-- Processes an expression call where a recieve is explicitly (' a := ...')  or
 			-- implicitly ('a_f (..., ...)') defined.
 			--
@@ -305,7 +305,7 @@ feature -- Processing
 			Precursor (a_as)
 		end
 
-	process_inspect_as (a_as: INSPECT_AS) is
+	process_inspect_as (a_as: INSPECT_AS)
 			-- Processes an inspect clause.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -317,7 +317,7 @@ feature -- Processing
 			a_as.case_list.process (Current)
 		end
 
-	process_instr_call_as (a_as: INSTR_CALL_AS) is
+	process_instr_call_as (a_as: INSTR_CALL_AS)
 			-- Processes an instruction call.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -327,7 +327,7 @@ feature -- Processing
 			a_as.call.process (Current)
 		end
 
-	process_interval_as (a_as: INTERVAL_AS) is
+	process_interval_as (a_as: INTERVAL_AS)
 			-- Processes an interval, found in inspect when cases.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -343,7 +343,7 @@ feature -- Processing
 			end
 		end
 
-	process_loop_as (a_as: LOOP_AS) is
+	process_loop_as (a_as: LOOP_AS)
 			-- Process a from loop.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -365,7 +365,7 @@ feature -- Processing
 			safe_process (a_as.compound)
 		end
 
-	process_nested_as (a_as: NESTED_AS) is
+	process_nested_as (a_as: NESTED_AS)
 			-- Processes a nested instruction/expression 'a.b.c'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -383,7 +383,7 @@ feature -- Processing
 			a_as.message.process (Current)
 		end
 
-	process_parameter_list_as (a_as: PARAMETER_LIST_AS) is
+	process_parameter_list_as (a_as: PARAMETER_LIST_AS)
 			-- Processes a list of parameters
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -395,14 +395,14 @@ feature -- Processing
 			set_can_add_auto_span (False)
 		end
 
-	process_result_as (a_as: RESULT_AS) is
+	process_result_as (a_as: RESULT_AS)
 			-- <Precursor>
 		do
 			Precursor (a_as)
 			add_auto_span (a_as)
 		end
 
-	process_reverse_as (a_as: REVERSE_AS) is
+	process_reverse_as (a_as: REVERSE_AS)
 			-- Process reverse assignment 'a ?= b'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -416,7 +416,7 @@ feature -- Processing
 			a_as.source.process (Current)
 		end
 
-	process_static_access_as (a_as: STATIC_ACCESS_AS) is
+	process_static_access_as (a_as: STATIC_ACCESS_AS)
 			-- Process static access instruction/expression '{TYPE}.feature'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -428,7 +428,7 @@ feature -- Processing
 			end
 		end
 
-	process_tuple_as (a_as: TUPLE_AS) is
+	process_tuple_as (a_as: TUPLE_AS)
 			-- Process manifest tuple '[]'.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -440,7 +440,7 @@ feature -- Processing
 
 feature {NONE} -- Generic Node Processing
 
-	process_atomic_intervaa_as (a_as: ATOMIC_AS) is
+	process_atomic_intervaa_as (a_as: ATOMIC_AS)
 			-- Process atomic interval value for inspect when cases.
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -464,7 +464,7 @@ feature {NONE} -- Generic Node Processing
 
 feature {NONE} -- Access
 
-	can_add_auto_span: BOOLEAN assign set_can_add_auto_span is
+	can_add_auto_span: BOOLEAN assign set_can_add_auto_span
 			-- Can an expression be processed at this point?
 		require
 			level_manager_attached: level_stack /= Void
@@ -472,7 +472,7 @@ feature {NONE} -- Access
 			Result := current_level_item.can_add_auto_span
 		end
 
-	is_expression_instruction: BOOLEAN assign set_is_expression_instruction is
+	is_expression_instruction: BOOLEAN assign set_is_expression_instruction
 			-- Is current instruction assumed to be an expression?
 		require
 			level_manager_attached: level_stack /= Void
@@ -482,7 +482,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status Setting
 
-	set_can_add_auto_span (a_can_add: like can_add_auto_span) is
+	set_can_add_auto_span (a_can_add: like can_add_auto_span)
 			-- Set `can_process_expression' with `a_can_add'.
 			--
 			-- `a_can_add': True if an auto expression can be added; False otherwise.
@@ -494,7 +494,7 @@ feature {NONE} -- Status Setting
 			can_add_auto_span_set: can_add_auto_span = a_can_add
 		end
 
-	set_is_expression_instruction (a_expression: like is_expression_instruction) is
+	set_is_expression_instruction (a_expression: like is_expression_instruction)
 			-- Set `is_expression_instruction' with `a_expression'.
 			--
 			-- `a_expression': True if current instruction is assumed to be an expression; False otherwise.
@@ -508,7 +508,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Level Process Management
 
-	create_level is
+	create_level
 			-- Initialize level state manager
 		do
 			create level_stack.make (1)
@@ -517,18 +517,18 @@ feature {NONE} -- Level Process Management
 
 	level_stack: ARRAYED_STACK [like current_level_item]
 
-	current_level_item: TUPLE [can_add_auto_span: BOOLEAN; is_expression_instruction: BOOLEAN] is
+	current_level_item: TUPLE [can_add_auto_span: BOOLEAN; is_expression_instruction: BOOLEAN]
 		do
 			Result := level_stack.item
 		end
 
-	current_level: INTEGER is
+	current_level: INTEGER
 			-- Level count of currently nested expression processing states
 		do
 			Result := level_stack.count
 		end
 
-	increase_level is
+	increase_level
 			-- Increases expression processing level so instructions may be processes as if they were new instructions
 		do
 			level_stack.put (create {like current_level_item})
@@ -536,7 +536,7 @@ feature {NONE} -- Level Process Management
 			current_level_increased: current_level = old current_level + 1
 		end
 
-	decrease_level is
+	decrease_level
 			-- Decreases expression processing level so any last processed expression states are forgotton
 			-- and state returns to that which it was before an increase.
 		require
@@ -550,14 +550,14 @@ feature {NONE} -- Level Process Management
 --	level_manager: LEVEL_STATE_MANAGER [like current_level_item]
 --			-- Level state manager for autos
 
-	enter_brackets is
+	enter_brackets
 			-- Enter a new bracketed block (paranthesis, manifest arrays or manifest tuples)
 		do
 			increase_level
 			set_is_expression_instruction (True)
 		end
 
-	leave_brackets is
+	leave_brackets
 			-- Enter a new bracketed block (paranthesis, manifest arrays or manifest tuples)
 		do
 			decrease_level
@@ -568,7 +568,7 @@ feature {NONE} -- Auto Span Declaration
 	start_as: AST_EIFFEL
 			-- Starting as node of an autos expression
 
-	reset_auto_spans is
+	reset_auto_spans
 			-- Resets auto span so next added span will start anew.
 		do
 			start_as := Void
@@ -576,7 +576,7 @@ feature {NONE} -- Auto Span Declaration
 			start_as_unattached: start_as = Void
 		end
 
-	add_auto_span (a_as: AST_EIFFEL) is
+	add_auto_span (a_as: AST_EIFFEL)
 			-- Adds a new auto expression span for `a_as' to autos span heap.
 			--
 			-- `a_as': Abstract syntax node to add span for.
@@ -632,12 +632,12 @@ feature {NONE} -- Auto Span Declaration
 				TUPLE [i_start_line: INTEGER; i_start_index: INTEGER;
 						i_end_line: INTEGER; i_end_index: INTEGER;
 						i_text: STRING]
-				is
+				
 		do
 			Result := [a_line_start, a_index_start, a_line_end, a_index_end, a_text]
 		end
 
-	auto_expression (a_expr: like null_text_span) is
+	auto_expression (a_expr: like null_text_span)
 			-- Adds the span of an expression to an internal list.
 			--
 			-- `a_expr': A TextSpan object indicating the expression to add.
@@ -662,7 +662,7 @@ feature {NONE} -- Auto Span Declaration
 
 feature -- {NONE} -- Autos Heap
 
-	autos_span_heap: HASH_TABLE [ARRAYED_LIST [like null_text_span], INTEGER] is
+	autos_span_heap: HASH_TABLE [ARRAYED_LIST [like null_text_span], INTEGER]
 			-- Table of spans index by line number
 			-- Key: Line number where auto expressions were found.
 			-- Value: Mutable list of text spans.
@@ -677,7 +677,7 @@ feature -- {NONE} -- Autos Heap
 			internal_autos_span_heap_attached: internal_autos_span_heap /= Void
 		end
 
-	add_span_to_line (a_span: like null_text_span; a_line: INTEGER) is
+	add_span_to_line (a_span: like null_text_span; a_line: INTEGER)
 			-- Add text span `a_span' for line `a_line' to autos span heap.
 			--
 			-- `a_span': TextSpan to add to autos heap.
@@ -711,9 +711,9 @@ feature -- Conversion
 	null_text_span: TUPLE [i_start_line: INTEGER; i_start_index: INTEGER;
 						i_end_line: INTEGER; i_end_index: INTEGER;
 						i_text: STRING]
-		is
+		
 			-- A null TextSpan
-		indexing
+		note
 			once_status: global
 		once
 			Result := [0,0,0,0, Void]
@@ -722,13 +722,13 @@ feature -- Conversion
 					Result.i_end_line = 0 and Result.i_end_index = 0
 		end
 
-	is_null_text_span (a_span: like null_text_span): BOOLEAN is
+	is_null_text_span (a_span: like null_text_span): BOOLEAN
 			-- Is `a_span' considered a null TextSpan?
 		do
 			Result := is_text_span_equal (a_span, null_text_span)
 		end
 
-	is_text_span_equal (a_span: like null_text_span; a_other_span: like null_text_span): BOOLEAN is
+	is_text_span_equal (a_span: like null_text_span; a_other_span: like null_text_span): BOOLEAN
 			-- Determins if `a_span' and `a_other_span' are equal.
 			--
 			-- `a_span': A source text span to test with.
@@ -748,7 +748,7 @@ feature {NONE} -- Implementation
 
 	leaf_as_list: LEAF_AS_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

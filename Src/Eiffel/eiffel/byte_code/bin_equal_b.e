@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class BIN_EQUAL_B
@@ -23,29 +23,29 @@ inherit
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is True
+	is_built_in: BOOLEAN = True
 			-- Is the current binary operator a built-in one ?
 
-	is_commutative: BOOLEAN is True
+	is_commutative: BOOLEAN = True
 			-- Operation is commutative.
 
-	is_type_fixed: BOOLEAN is True
+	is_type_fixed: BOOLEAN = True
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 
 feature
 
-	set_register: ANY is do end;
+	set_register: ANY do end;
 
-	register: ANY is do end;
+	register: ANY do end;
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type is boolean
 		do
 			Result := Boolean_type;
 		end;
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 			-- Does the expression allocates memory ?
 		local
 			left_type: TYPE_A;
@@ -58,17 +58,17 @@ feature
 				(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
 		end
 
-	generate_boolean_constant is
+	generate_boolean_constant
 		deferred
 		end;
 
-	generate_negation is
+	generate_negation
 			-- Generate negation of an equality test (if required).
 		do
 				-- Nothing by default
 		end
 
-	generate_equal_macro (name: STRING) is
+	generate_equal_macro (name: STRING)
 			-- Generate a macro that performs an equality test.
 		require
 			name_attached: name /= Void
@@ -78,7 +78,7 @@ feature
 			generate_equal_end
 		end
 
-	generate_equal_end is
+	generate_equal_end
 			-- Generate last portion of equality.
 		do
 			if left_register = Void then
@@ -95,17 +95,17 @@ feature
 			buffer.put_character (')');
 		end;
 
-	right_register: REGISTRABLE is
+	right_register: REGISTRABLE
 			-- Where metamorphosed right value is kept
 		do
 		end;
 
-	set_right_register (r: REGISTRABLE) is
+	set_right_register (r: REGISTRABLE)
 			-- Assign `r' to `right_register'
 		do
 		end;
 
-	get_left_register is
+	get_left_register
 			-- Get register for left expression
 		do
 			if left_register = Void then
@@ -113,7 +113,7 @@ feature
 			end;
 		end;
 
-	get_right_register is
+	get_right_register
 			-- Get register for right expression
 		do
 			if right_register = Void then
@@ -121,7 +121,7 @@ feature
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			left_type: TYPE_A;
@@ -143,7 +143,7 @@ feature
 			end;
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		local
 			void_register: REGISTER;
@@ -153,7 +153,7 @@ feature
 			set_right_register (void_register);
 		end;
 
-	free_register is
+	free_register
 			-- Free registers used
 		do
 			Precursor {BINARY_B}
@@ -165,7 +165,7 @@ feature
 			end;
 		end;
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			basic_i: BASIC_A
@@ -186,7 +186,7 @@ feature
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print expression value
 		local
 			left_type: TYPE_A;
@@ -238,20 +238,20 @@ feature
 
 feature -- Array optimization
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := right.is_unsafe or else
 				left.is_unsafe
 		end
 
-	optimized_byte_node: EXPR_B is
+	optimized_byte_node: EXPR_B
 		do
 			Result := Current;
 			left := left.optimized_byte_node;
 			right := right.optimized_byte_node
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := left.calls_special_features (array_desc)
 				or else right.calls_special_features (array_desc)
@@ -259,21 +259,21 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current;
 			left := left.pre_inlined_code
 			right := right.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			left := left.inlined_byte_code
 			right := right.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

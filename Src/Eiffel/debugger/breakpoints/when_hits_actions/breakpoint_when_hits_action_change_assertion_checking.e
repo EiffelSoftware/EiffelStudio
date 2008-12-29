@@ -1,4 +1,4 @@
-indexing
+note
 description: "When breakpoint hits discard or restore assertion checking..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_status: BOOLEAN) is
+	make (a_status: BOOLEAN)
 		do
 			set_status (a_status)
 		end
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Change
 
-	set_status (a_status: BOOLEAN) is
+	set_status (a_status: BOOLEAN)
 			-- Set `status' with `a_status'
 		do
 			status := a_status
@@ -38,7 +38,7 @@ feature -- Change
 
 feature -- Execute
 
-	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 			-- Execute action
 		do
 			if a_dm.safe_application_is_stopped then
@@ -50,7 +50,7 @@ feature -- Execute
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

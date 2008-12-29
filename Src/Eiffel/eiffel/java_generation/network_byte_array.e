@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that writes data into a character array. conversion to network byte order (
 		big endian) will be done automatically if
@@ -22,7 +22,7 @@ inherit
 
 feature {ANY} -- Element Change
 
-	put_uint_8_from_int (i: INTEGER; pos: INTEGER) is
+	put_uint_8_from_int (i: INTEGER; pos: INTEGER)
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
@@ -34,7 +34,7 @@ feature {ANY} -- Element Change
 			area.put (i.to_character_8, pos)
 		end
 
-	put_sint_8_from_int (i: INTEGER; pos: INTEGER) is
+	put_sint_8_from_int (i: INTEGER; pos: INTEGER)
 			-- puts the 8 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
@@ -46,7 +46,7 @@ feature {ANY} -- Element Change
 			area.put (i.to_character_8, pos)
 		end
 
-	put_uint_16_from_int (i: INTEGER; pos: INTEGER) is
+	put_uint_16_from_int (i: INTEGER; pos: INTEGER)
 			-- put 16 bit unsigned integer
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -60,7 +60,7 @@ feature {ANY} -- Element Change
 			put_uint_8_from_int (i.bit_and (0x000000FF), pos + Int_8_size)
 		end
 
-	put_sint_16_from_int (i: INTEGER; pos: INTEGER) is
+	put_sint_16_from_int (i: INTEGER; pos: INTEGER)
 			-- put 16 bit singned integer
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
@@ -74,7 +74,7 @@ feature {ANY} -- Element Change
 			put_uint_8_from_int (i.bit_and (0x000000FF), pos + Int_8_size)
 		end
 
-	put_uint_32_from_int (i: INTEGER; pos: INTEGER) is
+	put_uint_32_from_int (i: INTEGER; pos: INTEGER)
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -89,7 +89,7 @@ feature {ANY} -- Element Change
 			put_uint_16_from_int (i.bit_and (0x0000FFFF), pos + Int_16_size)
 		end
 
-	put_sint_32_from_int (i: INTEGER; pos: INTEGER) is
+	put_sint_32_from_int (i: INTEGER; pos: INTEGER)
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -104,7 +104,7 @@ feature {ANY} -- Element Change
 			put_uint_16_from_int (i.bit_and (0x0000FFFF), pos + Int_16_size)
 		end
 
-	put_uint_64_from_int_64 (i: INTEGER_64; pos: INTEGER) is
+	put_uint_64_from_int_64 (i: INTEGER_64; pos: INTEGER)
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -121,7 +121,7 @@ feature {ANY} -- Element Change
 			-- still missing int 64 to int 32 conversion (in class INTEGER_64)
 		end
 
-	put_sint_64_from_int_64 (i: INTEGER_64; pos: INTEGER) is
+	put_sint_64_from_int_64 (i: INTEGER_64; pos: INTEGER)
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -138,7 +138,7 @@ feature {ANY} -- Element Change
 			-- still missing int 64 to int 32 conversion (in class INTEGER_64)
 		end
 
-	put_utf8_from_string (s: STRING; pos: INTEGER) is
+	put_utf8_from_string (s: STRING; pos: INTEGER)
 			-- puts `s' at pos
 			-- byte for byte from `s' will be written to the array
 			-- there will be no additional info on size or a terminating
@@ -154,7 +154,7 @@ feature {ANY} -- Element Change
 			end
 		end
 
-	put_double_from_double (d: DOUBLE; pos: INTEGER) is
+	put_double_from_double (d: DOUBLE; pos: INTEGER)
 			-- Note: `ca_wdouble' does not seem to work. FIXME
 		require
 			index_small_enough: (pos + Double_size) <= count;
@@ -163,7 +163,7 @@ feature {ANY} -- Element Change
 			ca_wdouble ($area, d, pos - 1)
 		end
 
-	put_float_from_real (f: REAL; pos: INTEGER) is
+	put_float_from_real (f: REAL; pos: INTEGER)
 			-- Note: `ca_wdouble' does not seem to work. FIXME
 		require
 			index_small_enough: (pos + Double_size) <= count;
@@ -176,14 +176,14 @@ feature {ANY} -- Element Change
 
 feature {NONE} --
 
-	ca_wdouble (ptr: POINTER; val: DOUBLE; pos: INTEGER) is
+	ca_wdouble (ptr: POINTER; val: DOUBLE; pos: INTEGER)
 			-- Note: This does not seem to write the double into the
 			-- memory as Java would expect it. FIXME
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

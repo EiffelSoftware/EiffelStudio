@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A basic implementation of {ES_CONTRACT_SOURCE_I} for editor source nodes that represents contracts but are not actually
 		a contract themselves.
@@ -47,7 +47,7 @@ feature -- Status report
 	is_editable: BOOLEAN
 			-- <Precursor>
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tree showing the classes present in the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
+	make (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Initialize the tree of clusters.
 		do
 			default_create
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			is_show_classes := True
 		end
 
-	make_without_targets (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY) is
+	make_without_targets (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Create a tree where targets of system are not shown.
 		do
 			make (a_context_menu_factory)
@@ -111,13 +111,13 @@ feature {NONE} -- Initialization
 			set: is_show_classes = a_show_classes
 		end
 
-	prepare is
+	prepare
 			-- Create the controls and setup the layout.
 		do
 			set_pixmaps_size (16, 16)
 		end
 
-	build_tree is
+	build_tree
 			-- Remove and replace contents of `Current'.
 		local
 			l_env: EV_ENVIRONMENT
@@ -205,7 +205,7 @@ feature {NONE} -- Initialization
 
 feature -- Activation
 
-	associate_textable_recursively (a_textable: EV_TEXT_COMPONENT; a_list: EV_DYNAMIC_LIST [EV_TREE_NODE]) is
+	associate_textable_recursively (a_textable: EV_TEXT_COMPONENT; a_list: EV_DYNAMIC_LIST [EV_TREE_NODE])
 			-- Associate `a_textable' with all items in `a_list'
 		require
 			not_void: a_textable /= Void
@@ -237,13 +237,13 @@ feature -- Activation
 			end
 		end
 
-	associate_textable_with_classes (a_textable: EV_TEXT_COMPONENT) is
+	associate_textable_with_classes (a_textable: EV_TEXT_COMPONENT)
 			-- Set `textable' to `a_textable'
 		do
 			textable := a_textable
 		end
 
-	associate_with_window (a_window: EB_DEVELOPMENT_WINDOW) is
+	associate_with_window (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Set `window' to `a_window'.
 		do
 			if window = Void then
@@ -252,19 +252,19 @@ feature -- Activation
 			window := a_window
 		end
 
-	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
 			-- Add a double click action for classes.
 		do
 			classes_double_click_agents.extend (p)
 		end
 
-	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
 			-- Add a double click action for classes.
 		do
 			cluster_double_click_agents.extend (p)
 		end
 
-	show_stone (a_stone: STONE) is
+	show_stone (a_stone: STONE)
 			-- Display node that represents `a_stone'.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -294,7 +294,7 @@ feature -- Activation
 			end
 		end
 
-	show_subfolder (a_group: CONF_GROUP; a_path: STRING) is
+	show_subfolder (a_group: CONF_GROUP; a_path: STRING)
 			-- Expand all parents of `a_group' and `a_path' and show the folder.
 		require
 			a_group_not_void: a_group /= Void
@@ -342,7 +342,7 @@ feature -- Activation
 			end
 		end
 
-	show_class (a_class: CLASS_I) is
+	show_class (a_class: CLASS_I)
 			-- Expand all parents of `a_class' and highlight `a_class'.
 		local
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -360,62 +360,62 @@ feature -- Activation
 
 feature -- Observer pattern
 
-	refresh is
+	refresh
 			-- Rebuild the tree.
 		do
 			build_tree
 		end
 
-	on_class_added (a_class: EIFFEL_CLASS_I) is
+	on_class_added (a_class: EIFFEL_CLASS_I)
 			-- Refresh the tree to display the new class.
 		do
 			refresh
 		end
 
-	on_class_removed (a_class: EIFFEL_CLASS_I) is
+	on_class_removed (a_class: EIFFEL_CLASS_I)
 			-- Refresh the tree not to display the old class.
 		do
 			refresh
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
 			-- Refresh the tree to display `a_class' in its new folder.
 			-- `old_path' is old relative path in `old_group'
 		do
 			refresh
 		end
 
-	on_cluster_added (a_cluster: CLUSTER_I) is
+	on_cluster_added (a_cluster: CLUSTER_I)
 			-- Refresh the tree to display the new cluster.
 		do
 			refresh
 		end
 
-	on_cluster_changed (a_cluster: CLUSTER_I) is
+	on_cluster_changed (a_cluster: CLUSTER_I)
 			-- Refresh the tree to display the modified cluster.
 		do
 			refresh
 		end
 
-	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I) is
+	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I)
 			-- Refresh the tree to display `a_cluster' in its new folder.
 		do
 			refresh
 		end
 
-	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING) is
+	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING)
 			-- Refresh the tree not to display the old cluster.
 		do
 			refresh
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- Refresh the tree to display the new project.
 		do
 			refresh
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Erase the tree.
 		do
 			wipe_out
@@ -431,7 +431,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		local
@@ -478,7 +478,7 @@ feature {NONE} -- Rebuilding
 		-- Full name of item selected in `Current' before rebuilding,
 		-- including path.
 
-	store_expanded_state is
+	store_expanded_state
 			-- Store expanded state of `Current' into `expanded_clusters'.
 		do
 			expanded_clusters.wipe_out
@@ -493,7 +493,7 @@ feature {NONE} -- Rebuilding
 				-- Actually perform recursion.
 		end
 
-	recursive_store (tree_list: EV_TREE_NODE_LIST) is
+	recursive_store (tree_list: EV_TREE_NODE_LIST)
 			-- Store full path name of clusters associated with all
 			-- expanded nodes of `tree_item', recursively into `expanded_clusters'.
 		require
@@ -519,7 +519,7 @@ feature {NONE} -- Rebuilding
 			end
 		end
 
-	restore_expanded_state is
+	restore_expanded_state
 			-- Restore all nodes of `Current', represented in `expanded_clusters'.
 		local
 			keys: ARRAY [STRING]
@@ -553,7 +553,7 @@ feature {NONE} -- Rebuilding
 			end
 		end
 
-	select_tree_item (full_path: STRING; tree_list: EV_TREE_NODE_LIST) is
+	select_tree_item (full_path: STRING; tree_list: EV_TREE_NODE_LIST)
 			-- Select item in `tree_list' recursively, whose data path matches `full_path'.
 		require
 			full_path_not_void: full_path /= Void
@@ -588,7 +588,7 @@ feature {NONE} -- Rebuilding
 			end
 		end
 
-	expand_tree_item (full_path: STRING; tree_item: EV_TREE_NODE_LIST) is
+	expand_tree_item (full_path: STRING; tree_item: EV_TREE_NODE_LIST)
 			-- Expand item of `tree_item', whose data matches `full_path'.
 		require
 			full_path_not_void: full_path /= Void
@@ -624,7 +624,7 @@ feature {NONE} -- Rebuilding
 
 feature {NONE} -- Implementation
 
-	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING is
+	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING
 			-- `Result' is a path name representing `tree_node' in the
 			-- form "base.kernel.COMPARABLE".
 		require
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	on_key_pushed (a_key: EV_KEY) is
+	on_key_pushed (a_key: EV_KEY)
 			-- If `a_key' is enter, set a stone in the development window.
 		local
 			conv_class: EB_CLASSES_TREE_CLASS_ITEM
@@ -678,13 +678,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cluster_drop (a_cluster: CLUSTER_STONE) is
+	on_cluster_drop (a_cluster: CLUSTER_STONE)
 			-- Move `a_cluster' to the tree root.
 		do
 --			manager.move_cluster (a_cluster.cluster_i, Void)
 		end
 
-	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP] is
+	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP]
 			-- List of parent groups of `group', from the root to `group', `cluster' included.
 		local
 			l_group, l_next_group: CONF_GROUP
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			result_not_empty: not Result.is_empty
 		end
 
-	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
+	find_subfolder_in (a_name: STRING; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM
 			-- Fint the tree item associated to `a_name' in `parent_cluster'.
 		require
 			parent_cluster_not_void: parent_cluster /= Void
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM is
+	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_FOLDER_ITEM
 			-- Find the tree item associated to `clusteri' in `parent_cluster'.
 		local
 			folder_list: EV_TREE_NODE_LIST
@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_class_in (a_class: CLASS_I; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_CLASS_ITEM is
+	find_class_in (a_class: CLASS_I; parent_cluster: EB_CLASSES_TREE_FOLDER_ITEM): EB_CLASSES_TREE_CLASS_ITEM
 			-- Find the tree item associated to `a_class' in `parent_cluster'.
 		local
 			folder_list: EV_TREE_NODE_LIST
@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 	textable: EV_TEXT_COMPONENT
 			-- Text component classes should be associated with.
 
-	build_group_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM) is
+	build_group_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_grps: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]; a_header: EB_CLASSES_TREE_HEADER_ITEM)
 			-- Build a tree for `a_grps' under `a_header' and add it to the tree if we have elements.
 			-- Attach the tree to `a_list'
 		require
@@ -858,7 +858,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_target_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]) is
+	build_target_tree (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE])
 			-- Build a tree for the targets of the current system, that make up the application target.
 			-- Attach the tree to `a_list'
 		require
@@ -886,7 +886,7 @@ feature {NONE} -- Implementation
 	has_targets: BOOLEAN
 			-- Is tree showing targets?
 
-	groups_from_sorted_clusters (a_sorted_clusters: DS_LIST [EB_SORTED_CLUSTER]; a_recursive: BOOLEAN): LIST [CONF_GROUP] is
+	groups_from_sorted_clusters (a_sorted_clusters: DS_LIST [EB_SORTED_CLUSTER]; a_recursive: BOOLEAN): LIST [CONF_GROUP]
 			-- List of groups from `a_sorted_clusters'.
 			-- If `a_recursive' is True, retrieve groups recursively.
 		local
@@ -921,7 +921,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	find_groups (a_source: EB_SORTED_CLUSTER; a_group_set: DS_HASH_SET [CONF_GROUP]; a_recursive: BOOLEAN) is
+	find_groups (a_source: EB_SORTED_CLUSTER; a_group_set: DS_HASH_SET [CONF_GROUP]; a_recursive: BOOLEAN)
 			-- Find groups from `a_source' and store them in `a_group_set'.
 			-- If `a_recursive' is True, search for groups recursively.
 		require
@@ -954,7 +954,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_append_list (a_source: DS_LIST [EB_SORTED_CLUSTER]; a_dest: DS_LIST [EB_SORTED_CLUSTER]) is
+	safe_append_list (a_source: DS_LIST [EB_SORTED_CLUSTER]; a_dest: DS_LIST [EB_SORTED_CLUSTER])
 			-- If `a_dest' is not Void, append it to `a_source'.
 		require
 			a_source_attached: a_source /= Void
@@ -964,7 +964,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_group_valid (a_data: ANY): BOOLEAN is
+	is_group_valid (a_data: ANY): BOOLEAN
 			-- Does `a_data' contain valid groups information?
 		local
 			l_groups: LIST [CONF_GROUP]
@@ -1006,7 +1006,7 @@ invariant
 	cluster_double_click_agents_not_void: cluster_double_click_agents /= Void
 	expanded_clusters_not_void: expanded_clusters /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

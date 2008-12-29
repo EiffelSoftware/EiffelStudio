@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a Rose diagram for XMI Export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature --Initialization
 
-	make (id: INTEGER; c: XMI_CLUSTER) is
+	make (id: INTEGER; c: XMI_CLUSTER)
 			-- Initialization of `Current'.
 		do
 			xmi_id := id
@@ -26,7 +26,7 @@ feature --Initialization
 			create xmi_presentations.make
 		end
 
-	make_as_root (id: INTEGER; idref: INTEGER) is
+	make_as_root (id: INTEGER; idref: INTEGER)
 			-- Initialization of `Current' as the root diagram in Rose.
 		do
 			xmi_id := id
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_presentation (r: XMI_PRESENTATION) is
+	add_presentation (r: XMI_PRESENTATION)
 			-- Adds `r' to `xmi_presentations'.
 		require
 			new_presentation_not_void: r /= Void
@@ -67,7 +67,7 @@ feature -- Element change
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the diagram.	
 		do
 			if is_root then
@@ -132,7 +132,7 @@ feature -- Actions
 			end
 		end	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

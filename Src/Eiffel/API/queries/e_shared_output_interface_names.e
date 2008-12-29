@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared names used in output commands"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	output_interface_names: E_OUTPUT_INTERFACE_NAMES is
+	output_interface_names: E_OUTPUT_INTERFACE_NAMES
 			-- Names
 		once
 			create Result
@@ -19,7 +19,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

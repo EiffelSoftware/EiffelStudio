@@ -1,4 +1,4 @@
-indexing
+note
 	desription: "A temporary register to hold the result of an expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,13 +31,13 @@ feature
 	regnum: INTEGER
 			-- Which register is it ?
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 			-- C type of the register
 		do
 			Result := context.register_type (level)
 		end
 
-	make (ctype: TYPE_C) is
+	make (ctype: TYPE_C)
 			-- Create a register of C type `ctype'.
 		require
 			valid_type: ctype /= Void
@@ -47,14 +47,14 @@ feature
 			get_register
 		end
 
-	make_with_level (t: INTEGER) is
+	make_with_level (t: INTEGER)
 			-- Create a register of C type identified by`t'.
 		do
 			level := t
 			get_register
 		end
 
-	get_register is
+	get_register
 			-- Get a register for C type `c_type'
 		do
 			regnum := context.register_server.get_register (level)
@@ -65,7 +65,7 @@ feature
 			valid_register: regnum /= 0
 		end
 
-	free_register is
+	free_register
 			-- Free register used by the expression
 		require else
 			register_exists: regnum /= 0
@@ -73,22 +73,22 @@ feature
 			context.register_server.free_register (level, regnum)
 		end
 
-	print_register is
+	print_register
 			-- Generates the C representation of `register'
 		do
 			context.put_register_name (level, regnum, context.buffer)
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- ASCII representation of register
 		do
 			Result := context.register_name (level, regnum)
 		end;
 
-	is_temporary: BOOLEAN is True
+	is_temporary: BOOLEAN = True
 			-- Register is a temporary one.
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- It is a predefined register, since it stores temporarly
 			-- object.
 
@@ -102,7 +102,7 @@ invariant
 	not_void_type: c_type.level /= C_void
 	valid_c_type: c_type.level >= 1 and c_type.level <= c_nb_types
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Names used in output commands"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,60 +11,60 @@ class
 
 feature -- Access
 
-	ellipse: STRING is "..."
-	from_word: STRING is "from"
-	history_branch: STRING is "History branch #"
-	separator: STRING is "-----------------"
-	long_separator: STRING is "---------------------------------------------"
-	version_from_class: STRING is "Version from class"
-	version_from: STRING is "(version from)"
-	class_word: STRING is "Class"
-	colon: STRING is ":"
-	not_in_system: STRING is "(not in system)"
+	ellipse: STRING = "..."
+	from_word: STRING = "from"
+	history_branch: STRING = "History branch #"
+	separator: STRING = "-----------------"
+	long_separator: STRING = "---------------------------------------------"
+	version_from_class: STRING = "Version from class"
+	version_from: STRING = "(version from)"
+	class_word: STRING = "Class"
+	colon: STRING = ":"
+	not_in_system: STRING = "(not in system)"
 
-	compilation_for_system: STRING is "compilation for system."
-	compilations_for_system: STRING is "compilations for system."
+	compilation_for_system: STRING = "compilation for system."
+	compilations_for_system: STRING = "compilations for system."
 
-	cluster_in_system: STRING is "cluster in the system."
-	clusters_in_system: STRING is "clusters in the system."
+	cluster_in_system: STRING = "cluster in the system."
+	clusters_in_system: STRING = "clusters in the system."
 
-	library_in_system: STRING is "library in the system."
-	libraries_in_system: STRING is "libraries in the system."
+	library_in_system: STRING = "library in the system."
+	libraries_in_system: STRING = "libraries in the system."
 
-	assembly_in_system: STRING is "assembly in the system."
-	assemblies_in_system: STRING is "assemblies in the system."
+	assembly_in_system: STRING = "assembly in the system."
+	assemblies_in_system: STRING = "assemblies in the system."
 
-	classes_in_system: STRING is "classes in the system."
-	class_in_system: STRING is "class in the system."
-	classes_in_universe: STRING is "classes in the universe"
-	class_in_universe: STRING is "class in the universe"
-	compiled: STRING is "compiled"
-	melted: STRING is "melted"
-	precompiled: STRING is "precompiled"
-	all_classes: STRING is "classes in the universe."
+	classes_in_system: STRING = "classes in the system."
+	class_in_system: STRING = "class in the system."
+	classes_in_universe: STRING = "classes in the universe"
+	class_in_universe: STRING = "class in the universe"
+	compiled: STRING = "compiled"
+	melted: STRING = "melted"
+	precompiled: STRING = "precompiled"
+	all_classes: STRING = "classes in the universe."
 
-	clusters: STRING is "Clusters"
-	libraries: STRING is "Libraries"
-	assemblies: STRING is "Assemblies"
+	clusters: STRING = "Clusters"
+	libraries: STRING = "Libraries"
+	assemblies: STRING = "Assemblies"
 
-	cluster: STRING is "cluster"
-	library: STRING is "library"
-	assembly: STRING is "assembly"
-	override: STRING is "override"
+	cluster: STRING = "cluster"
+	library: STRING = "library"
+	assembly: STRING = "assembly"
+	override: STRING = "override"
 
-	one_class: STRING is "class"
-	classes: STRING is "classes"
+	one_class: STRING = "class"
+	classes: STRING = "classes"
 
-	lparan: STRING is "("
-	rparan: STRING is ")"
-	less_than: STRING is "<"
-	larger_than: STRING is ">"
-	comma: STRING is ","
+	lparan: STRING = "("
+	rparan: STRING = ")"
+	less_than: STRING = "<"
+	larger_than: STRING = ">"
+	comma: STRING = ","
 
-	root_class: STRING is "Root class"
-	for_system: STRING is "For system";
+	root_class: STRING = "Root class"
+	for_system: STRING = "For system";
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

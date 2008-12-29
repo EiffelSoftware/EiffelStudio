@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for invariants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Output
 
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format Current in `ctxt'.
 		require
 			ctxt_not_void: ctxt /= Void
@@ -70,7 +70,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

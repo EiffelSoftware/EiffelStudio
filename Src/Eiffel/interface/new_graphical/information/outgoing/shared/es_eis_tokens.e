@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All tokens used by EIS parsers"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Built in variables
 	class_name_var_name: !STRING_8 = "class_name"
 	feature_name_var_name: !STRING_8 = "feature_name";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

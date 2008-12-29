@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the topological sort on classes finds a cycle."
@@ -25,19 +25,19 @@ feature -- Properties
 	involved_classes: LINKED_LIST [INTEGER];
 			-- Id's of classes invloved in the inheritance graph
 
-	code: STRING is "VHPR";
+	code: STRING = "VHPR";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -60,13 +60,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_involved_classes (l: LINKED_LIST [INTEGER]) is
+	set_involved_classes (l: LINKED_LIST [INTEGER])
 			-- Assign `l' to `involved_classes'.
 		do
 			involved_classes := l;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

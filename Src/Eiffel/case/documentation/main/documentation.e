@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Project Documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Documentation Module.
 		do
 			filter_name := "html-stylesheet"
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING)
 			-- Change text filter to `a_filter'.
 		require
 			a_filter_not_void: a_filter /= Void
@@ -56,7 +56,7 @@ feature -- Status setting
 			filter_name := a_filter
 		end
 
-	set_universe (a_universe: DOCUMENTATION_UNIVERSE) is
+	set_universe (a_universe: DOCUMENTATION_UNIVERSE)
 			-- Change `doc_universe' to `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Actions
 
-	generate (deg: DEGREE_OUTPUT) is
+	generate (deg: DEGREE_OUTPUT)
 			-- Generate documentation, according to the user selection.
 		local
 			cl_name: STRING
@@ -240,7 +240,7 @@ feature -- Actions
 			end
 		end
 
-	any_class_format_generated: BOOLEAN is
+	any_class_format_generated: BOOLEAN
 			-- Are any of the class formats requested?
 		local
 			af: LINEAR [INTEGER]
@@ -256,7 +256,7 @@ feature -- Actions
 			end
 		end
 
-	generated_class_formats_string: STRING_32 is
+	generated_class_formats_string: STRING_32
 			-- To display when user is wasting time watching slow progressing.
 		local
 			af: LINEAR [INTEGER]
@@ -276,7 +276,7 @@ feature -- Actions
 			end
 		end
 
-	create_directories is
+	create_directories
 			-- Create directories where documentation is
 			-- to be generated.
 		require
@@ -295,7 +295,7 @@ feature -- Actions
 			end
 		end
 
-	create_directory_for_group (a_group: CONF_GROUP) is
+	create_directory_for_group (a_group: CONF_GROUP)
 			--
 		require
 			root_directory /= Void
@@ -313,7 +313,7 @@ feature -- Actions
 			end
 		end
 
-	copy_additional_file (fn: STRING) is
+	copy_additional_file (fn: STRING)
 			-- Copy `fn' to directory where documentation is to be generated.
 		require
 			fn_not_void: fn /= Void
@@ -336,7 +336,7 @@ feature -- Actions
 
 feature -- Settings
 
-	set_directory (p: DIRECTORY) is
+	set_directory (p: DIRECTORY)
 			-- Assign `p' to `root_directory'.
 			-- This is the location where the documentation will be generated.
 		require
@@ -353,13 +353,13 @@ feature -- Settings
 			directory_is_writable: p.is_writable
 		end
 
-	set_all_universe is
+	set_all_universe
 		do
 			doc_universe.include_all
 		end
 
 	set_class_formats (clickable, flat, short, flatshort,
-		relational, chart: BOOLEAN) is
+		relational, chart: BOOLEAN)
 			-- Set boolean values to the different possible class formats.
 		local
 			cf: CLASS_FORMAT
@@ -378,14 +378,14 @@ feature -- Settings
 			cf.set_generated (flatshort)
 		end
 
-	set_cluster_formats (a_clusters_charts, a_cluster_diagrams: BOOLEAN) is
+	set_cluster_formats (a_clusters_charts, a_cluster_diagrams: BOOLEAN)
 			-- Specify whether cluster charts and diagrams should be generated.
 		do
 			cluster_chart_generated := a_clusters_charts
 			cluster_diagram_generated := a_cluster_diagrams
 		end
 
-	set_system_formats (a_classes, a_clusters, a_cluster_hierarchy: BOOLEAN) is
+	set_system_formats (a_classes, a_clusters, a_cluster_hierarchy: BOOLEAN)
 			-- Assign flags to systemwide formats.
 		do
 			class_list_generated := a_classes
@@ -393,7 +393,7 @@ feature -- Settings
 			cluster_hierarchy_generated := a_cluster_hierarchy
 		end
 
-	set_diagram_views (views: HASH_TABLE [STRING, STRING]) is
+	set_diagram_views (views: HASH_TABLE [STRING, STRING])
 			-- Assign `views' to `diagram_views'.
 		do
 			diagram_views := views
@@ -422,7 +422,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_defaults is
+	set_defaults
 		local
 			cf: CLASS_FORMAT
 			i: INTEGER
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 	classes: DS_ARRAYED_LIST [CONF_CLASS]
 			-- Classes to be generated.
 
-	groups: DS_ARRAYED_LIST [CONF_GROUP] is
+	groups: DS_ARRAYED_LIST [CONF_GROUP]
 			-- Groups to be generated.
 		do
 			Result := doc_universe.groups
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			-- (View name, cluster name) couples for `clusters'.
 			-- Void if not `cluster_diagrams_generated'.
 
-	generate_goto_html is
+	generate_goto_html
 			-- Generate HTML file that contains the JavaScript function
 			-- `go_to' wich takes 2 arguments. The first one is the base
 			-- path and the second is a class name. It looks up the address
@@ -569,19 +569,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Filtered generation
 
-	set_target_file_name (f: FILE_NAME) is
+	set_target_file_name (f: FILE_NAME)
 		do
 			target_file_name := f
 			target_file_name.add_extension (filter.file_suffix)
 		end
 
-	set_base_cluster (c: CONF_GROUP) is
+	set_base_cluster (c: CONF_GROUP)
 		do
 			base_path := base_relative_path (c).out
 			filter.set_base_path (base_path)
 		end
 
-	set_default_class_redirect (p: STRING) is
+	set_default_class_redirect (p: STRING)
 			-- In case of a class link outside a class format,
 			-- link to format `p'.
 		do
@@ -589,7 +589,7 @@ feature {NONE} -- Filtered generation
 			filter.prepend_to_file_suffix (class_links)
 		end
 
-	set_default_feature_redirect (p: STRING) is
+	set_default_feature_redirect (p: STRING)
 			-- In case of a feature link outside a feature format,
 			-- link to format `p'.
 		do
@@ -597,13 +597,13 @@ feature {NONE} -- Filtered generation
 			filter.set_feature_redirect (feature_links)
 		end
 
-	set_document_title (a_title: STRING) is
+	set_document_title (a_title: STRING)
 			-- Set "$title$" keyword in `filter'.
 		do
 			filter.set_keyword (kw_Title, a_title)
 		end
 
-	set_class_name (a_class: STRING) is
+	set_class_name (a_class: STRING)
 			-- Set "$class$" keyword in `filter'.
 		do
 			filter.set_keyword (kw_Class, a_class)
@@ -626,7 +626,7 @@ feature -- Access
 	feature_links: STRING
 			-- Class format linked to by feature links.
 
-	relative_to_base (rel_filename: STRING): STRING is
+	relative_to_base (rel_filename: STRING): STRING
 			-- Path of `rel_filename' relative to documentation root dir.
 		do
 			create Result.make_from_string (base_path)
@@ -641,7 +641,7 @@ feature -- Access
 
 feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 
-	relative_path (a_cluster: CONF_GROUP): FILE_NAME is
+	relative_path (a_cluster: CONF_GROUP): FILE_NAME
 			-- Path of `a_cluster' relative to `root_directory'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -652,7 +652,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 			create Result.make_from_string (l_string)
 		end
 
-	base_relative_path (a_cluster: CONF_GROUP): FILE_NAME is
+	base_relative_path (a_cluster: CONF_GROUP): FILE_NAME
 			-- Path from `a_cluster' to `root_directory'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -670,7 +670,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 
 feature -- Specific Generation
 
-	prepare_for_file (base_dir: FILE_NAME; file_name: STRING) is
+	prepare_for_file (base_dir: FILE_NAME; file_name: STRING)
 			-- Set `target_file_name' to relative `base_dir' and `file_name'.
 		local
 			final_name: FILE_NAME
@@ -683,7 +683,7 @@ feature -- Specific Generation
 			set_target_file_name (final_name)
 		end
 
-	generate_from_text_filter (text: TEXT_FILTER) is
+	generate_from_text_filter (text: TEXT_FILTER)
 			-- Output `ctxt.text' using `filter' to `target_file_name'.
 		local
 			fi: PLAIN_TEXT_FILE
@@ -694,7 +694,7 @@ feature -- Specific Generation
 			filter.wipe_out_image
 		end
 
-	generate_index is
+	generate_index
 			-- Write project index to `target_file_name'.
 		do
 			filter.prepend_to_file_suffix (class_links)
@@ -702,7 +702,7 @@ feature -- Specific Generation
 			generate_from_text_filter (filter)
 		end
 
-	generate_dictionary is
+	generate_dictionary
 			-- Write project class list to `target_file_name'.
 		do
 			filter.prepend_to_file_suffix (class_links)
@@ -711,7 +711,7 @@ feature -- Specific Generation
 			filter.set_feature_redirect (Void)
 		end
 
-	generate_cluster_list is
+	generate_cluster_list
 			-- Write project cluster list to `target_file_name'.
 		do
 			filter.prepend_to_file_suffix (class_links)
@@ -719,7 +719,7 @@ feature -- Specific Generation
 			generate_from_text_filter (filter)
 		end
 
-	generate_cluster_hierarchy is
+	generate_cluster_hierarchy
 			-- Write project cluster hierarchy to `target_file_name'.
 		do
 			filter.prepend_to_file_suffix (class_links)
@@ -727,7 +727,7 @@ feature -- Specific Generation
 			generate_from_text_filter (filter)
 		end
 
-	generate_cluster_index (a_group: CONF_GROUP) is
+	generate_cluster_index (a_group: CONF_GROUP)
 			-- Write project a_group index to `target_file_name'.
 		local
 			l_group: CONF_GROUP
@@ -744,7 +744,7 @@ feature -- Specific Generation
 			generate_from_text_filter (filter)
 		end
 
-	generate_cluster_diagram (cluster: CONF_GROUP) is
+	generate_cluster_diagram (cluster: CONF_GROUP)
 			-- Write project cluster diagram to `target_file_name'.
 		local
 			g: EB_DIAGRAM_HTML_GENERATOR
@@ -762,7 +762,7 @@ feature -- Specific Generation
 			g.execute
 		end
 
-	generate_class (a_class: CONF_CLASS; a_format: CLASS_FORMAT) is
+	generate_class (a_class: CONF_CLASS; a_format: CLASS_FORMAT)
 			-- Write project class `format' to `target_file_name'.
 		require
 			a_class_not_void: a_class /= Void
@@ -833,7 +833,7 @@ feature -- Specific Generation
 
 feature {NONE} -- Menu bars
 
-	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN) is
+	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN)
 			-- Append a menu bar to `text'.
 		do
 			insert_menu_item (text, "class_list", "Classes", d, class_list_generated)
@@ -841,7 +841,7 @@ feature {NONE} -- Menu bars
 			insert_menu_item (text, "cluster_hierarchy", "Cluster hierarchy", h, cluster_hierarchy_generated)
 		end
 
-	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING) is
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING)
 			-- Append a menu bar to `text'.
 		local
 			af: LINEAR [INTEGER]
@@ -854,7 +854,7 @@ feature {NONE} -- Menu bars
 			end
 		end
 
-	insert_menu_item (text: TEXT_FORMATTER; link, label: STRING; enabled, generated: BOOLEAN) is
+	insert_menu_item (text: TEXT_FORMATTER; link, label: STRING; enabled, generated: BOOLEAN)
 			-- Insert in `text', a menu item `label' with `link', if `generated' `True'.
 			-- Insert as disabled if not `enabled'.
 			-- `link' is a file relative to root dir without extension.
@@ -869,7 +869,7 @@ feature {NONE} -- Menu bars
 			end
 		end
 
-	insert_class_menu_item (text: TEXT_FORMATTER; class_name: STRING; a_format, class_format: CLASS_FORMAT) is
+	insert_class_menu_item (text: TEXT_FORMATTER; class_name: STRING; a_format, class_format: CLASS_FORMAT)
 			-- Insert in `text', a menu item for `class_name' for `format'.
 		local
 			path: STRING
@@ -882,7 +882,7 @@ feature {NONE} -- Menu bars
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of the supplier of a class: each feature%
 				%name written in the associated class is associated to%
 				%a supplier list (list of ids), indexed by body index."
@@ -33,34 +33,34 @@ create
 
 feature
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		do
 			Result := System.class_of_id (class_id)
 		end
 
-	put (f: ?FEATURE_DEPENDANCE; bindex: INTEGER) is
+	put (f: ?FEATURE_DEPENDANCE; bindex: INTEGER)
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)
 			Precursor {HASH_TABLE} (f, bindex)
 		end
 
-	force (f: ?FEATURE_DEPENDANCE; bindex: INTEGER) is
+	force (f: ?FEATURE_DEPENDANCE; bindex: INTEGER)
 			-- We must update the correspondance table in the server
 		do
 			System.depend_server.add_correspondance (bindex, class_id)
 			Precursor {HASH_TABLE} (f, bindex)
 		end
 
-	remove (bindex: INTEGER) is
+	remove (bindex: INTEGER)
 			-- we must update the correspondance table in the server
 		do
 			System.depend_server.remove_correspondance (bindex)
 			Precursor {HASH_TABLE} (bindex)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

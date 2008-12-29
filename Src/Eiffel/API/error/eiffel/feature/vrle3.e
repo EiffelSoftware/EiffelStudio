@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Error when an access to Result is invalid: invariant or procedure."
 	legal: "See notice at end of class."
@@ -16,12 +16,12 @@ inherit
 
 feature -- Property
 
-	code: STRING is "VEEN"
+	code: STRING = "VEEN"
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

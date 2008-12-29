@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Views for configuration components. targets and clusters."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_conf_notable: !CONF_NOTABLE; a_eis_grid: !ES_EIS_ENTRY_GRID) is
+	make (a_conf_notable: !CONF_NOTABLE; a_eis_grid: !ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 
 feature -- Querry
 
-	valid_notable (a_notable: !CONF_NOTABLE): BOOLEAN is
+	valid_notable (a_notable: !CONF_NOTABLE): BOOLEAN
 			-- Is `a_notable' a supported component?
 		do
 			Result := {lt_target: CONF_TARGET}a_notable or else {lt_cluster: CONF_CLUSTER}a_notable
 		end
 
-	component_editable: BOOLEAN is
+	component_editable: BOOLEAN
 			-- Is component editable?
 		local
 			l_lib: CONF_LIBRARY
@@ -74,7 +74,7 @@ feature -- Querry
 
 feature -- Operation
 
-	create_new_entry is
+	create_new_entry
 			-- Create new EIS entry in `a_conf_notable'.
 		local
 			l_entry: !EIS_ENTRY
@@ -112,7 +112,7 @@ feature -- Operation
 			end
 		end
 
-	delete_selected_entries is
+	delete_selected_entries
 			-- <precursor>
 		local
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -156,7 +156,7 @@ feature -- Operation
 
 feature {NONE} -- Conf modification
 
-	write_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM) is
+	write_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM)
 			-- Add `a_entry' in `a_conf_notable' without saving.
 			-- `a_conf_notable' to add the entry
 			-- `a_system' to save the configure file.
@@ -176,7 +176,7 @@ feature {NONE} -- Conf modification
 			last_entry_modified := a_system.store_successful
 		end
 
-	modify_entry_in_conf (a_old_entry, a_new_entry: !EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: !CONF_SYSTEM) is
+	modify_entry_in_conf (a_old_entry, a_new_entry: !EIS_ENTRY; a_conf: CONF_NOTABLE; a_system: !CONF_SYSTEM)
 			-- Modify `a_old_entry' into `a_new_entry' in `a_conf'
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
@@ -210,7 +210,7 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	remove_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM) is
+	remove_entry (a_entry: !EIS_ENTRY; a_conf_notable: !CONF_NOTABLE; a_system: !CONF_SYSTEM)
 			-- Remove `a_entry' from `a_conf_notable' and save in `a_system'
 		require
 			a_entry_editable: entry_editable (a_entry)
@@ -239,7 +239,7 @@ feature {NONE} -- Conf modification
 			end
 		end
 
-	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN is
+	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
@@ -273,7 +273,7 @@ feature {NONE} -- Conf modification
 
 feature {NONE} -- Callbacks
 
-	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On name changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -302,7 +302,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -331,7 +331,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -360,7 +360,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On tags changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -399,7 +399,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On others changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -437,7 +437,7 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- Implementation
 
-	system_of_conf_notable (a_notable: !CONF_NOTABLE): ?CONF_SYSTEM is
+	system_of_conf_notable (a_notable: !CONF_NOTABLE): ?CONF_SYSTEM
 			-- Get system from `a_notable'
 		do
 			if {lt_target: CONF_TARGET}a_notable then
@@ -449,13 +449,13 @@ feature {NONE} -- Implementation
 			valid_a_notable_implies_not_void: valid_notable (a_notable) implies Result /= Void
 		end
 
-	new_extractor: !ES_EIS_EXTRACTOR is
+	new_extractor: !ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_CONF_EXTRACTOR}Result.make (conf_notable)
 		end
 
-	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR is
+	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 			if
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

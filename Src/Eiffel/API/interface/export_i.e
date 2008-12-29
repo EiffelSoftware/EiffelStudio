@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class EXPORT_I
@@ -10,19 +10,19 @@ inherit
 
 feature -- Properties
 
-	is_none: BOOLEAN is
+	is_none: BOOLEAN
 			-- Is the current object an instance of EXPORT_NONE_I ?
 		do
 			-- Do nothing
 		end;
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is the current object an instance of EXPORT_SET_I ?
 		do
 			-- Do nothing
 		end;
 
-	is_all: BOOLEAN is
+	is_all: BOOLEAN
 			-- Is the current object an instance of EXPORT_ALL_I ?
 		do
 			-- Do nothing
@@ -30,7 +30,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_exported_to (c: CLASS_C): BOOLEAN is
+	is_exported_to (c: CLASS_C): BOOLEAN
 			-- Is current exported to `c'?
 		require
 			good_argument: c /= Void;
@@ -40,27 +40,27 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN
 		deferred
 		end;
 
 feature {COMPILER_EXPORTER} -- Queries
 
-	valid_for (client: CLASS_C): BOOLEAN is
+	valid_for (client: CLASS_C): BOOLEAN
 			-- Is the export clause for client `client' ?
 		require
 			good_argument: client /= Void;
 		deferred
 		end;
 
-    is_subset (other: EXPORT_I): BOOLEAN is
+    is_subset (other: EXPORT_I): BOOLEAN
             -- Is Current a subset or equal to other?
         require
             valid_other: other /= Void
         deferred
         end;
 
-	equiv (other: EXPORT_I): BOOLEAN is
+	equiv (other: EXPORT_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
 			-- [since this relation is not symetric, we have to call
 			-- something like "old_export_status.equiv (new_export_status)']
@@ -69,14 +69,14 @@ feature {COMPILER_EXPORTER} -- Queries
 		deferred
 		end;
 
-	trace is
+	trace
 			-- Debug purpose
 		deferred
 		end;
 
 feature {COMPILER_EXPORTER} -- Concatanation of export statuses
 
-	concatenation (other: EXPORT_I): EXPORT_I is
+	concatenation (other: EXPORT_I): EXPORT_I
 			-- Concatenation of Current and `other'
 		require
 			good_argument: other /= Void
@@ -85,14 +85,14 @@ feature {COMPILER_EXPORTER} -- Concatanation of export statuses
 
 feature -- Incrementality
 
-	same_as (other: EXPORT_I): BOOLEAN is
+	same_as (other: EXPORT_I): BOOLEAN
 			-- Is `other' the same as Current ?
 		require
 			good_argument: other /= Void
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

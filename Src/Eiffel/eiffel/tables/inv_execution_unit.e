@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Invariant execution unit
@@ -16,9 +16,9 @@ create
 
 feature
 
-	real_pattern_id: INTEGER is do end;
+	real_pattern_id: INTEGER do end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the invariant execution unit still valid ?
 		local
 			assoc: CLASS_C
@@ -29,7 +29,7 @@ feature
 				System.class_type_of_id (type_id) = class_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

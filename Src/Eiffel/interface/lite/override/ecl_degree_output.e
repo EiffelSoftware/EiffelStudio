@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specialized version of {DEGREE_OUTPUT} to permit a configurable short/verbose output for the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Status setting
 
-	set_is_output_quiet (a_quiet: BOOLEAN) is
+	set_is_output_quiet (a_quiet: BOOLEAN)
 			-- Set `is_output_quiet' to `a_quiet'
 		do
 			is_output_quiet := a_quiet
@@ -37,19 +37,19 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	display_message (a_message: STRING) is
+	display_message (a_message: STRING)
 			-- Display `a_message' to output.
 		do
 			output_window.put_string (a_message)
 		end
 
-	display_new_line is
+	display_new_line
 			-- Display a new line on the output.
 		do
 			output_window.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

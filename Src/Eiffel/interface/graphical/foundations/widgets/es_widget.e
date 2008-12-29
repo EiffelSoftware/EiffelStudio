@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base widget implementation for all custom/composite widgets used in EiffelStudio.
 	]"
@@ -256,7 +256,7 @@ feature {NONE} -- Factory
 			not_result_has_parent: not Result.has_parent
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

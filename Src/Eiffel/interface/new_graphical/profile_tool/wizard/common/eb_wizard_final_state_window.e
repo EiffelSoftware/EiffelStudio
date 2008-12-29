@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Template for the last state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,14 +19,14 @@ inherit
 
 feature -- Basic Operations
 
-	display is
+	display
 			-- Display Current State
 		do
 			first_window.set_final_state (interface_names.b_Finish)
 			build
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 			-- destroy the window.
 			-- Descendants have to redefine this routine
 			-- if they want to add generation, warnings, ...
@@ -38,10 +38,10 @@ feature -- Basic Operations
 
 feature -- Access
 
-	is_final_state: BOOLEAN is TRUE;
+	is_final_state: BOOLEAN = TRUE;
 			-- This state is a final state.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

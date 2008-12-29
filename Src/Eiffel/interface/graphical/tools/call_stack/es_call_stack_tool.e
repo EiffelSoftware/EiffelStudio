@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for the debugger's execution call stack tool.
 	]"
@@ -32,7 +32,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-	set_execution_replay_level (dep: INTEGER_32; deplim: INTEGER_32; rep: REPLAYED_CALL_STACK_ELEMENT) is
+	set_execution_replay_level (dep: INTEGER_32; deplim: INTEGER_32; rep: REPLAYED_CALL_STACK_ELEMENT)
 			-- Set execution replay active level on the panel
 		require
 			app_is_stopped: debugger_manager.safe_application_is_stopped
@@ -79,7 +79,7 @@ feature {NONE} -- Factory
 			create Result.make (window, Current)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

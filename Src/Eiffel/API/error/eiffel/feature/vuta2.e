@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error in Object_call which target is not attached"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; t: like target_type; l: LOCATION_AS) is
+	make (c: AST_CONTEXT; t: like target_type; l: LOCATION_AS)
 			-- Create error object for Object_call target
 			-- of type `t' at location `l' in the context `c'.
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	subcode: INTEGER is 2
+	subcode: INTEGER = 2
 			-- Subcode of error
 
 feature {NONE} -- Access
@@ -45,7 +45,7 @@ feature {NONE} -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			Precursor (a_text_formatter)
 			a_text_formatter.add ("Type: ")
@@ -53,7 +53,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

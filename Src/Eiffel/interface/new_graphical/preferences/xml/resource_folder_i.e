@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects containing the information relative to a resource folder."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Initialization
 
-	make_default (doc: XML_ELEMENT; struct: like structure) is
+	make_default (doc: XML_ELEMENT; struct: like structure)
 			-- Initialization of Current, belonging to `struct',
 			-- according to `doc'.
 		local
@@ -59,13 +59,13 @@ feature -- Initialization
 			end
 		end
 
-	make_root (location: STRING; struct: RESOURCE_STRUCTURE) is
+	make_root (location: STRING; struct: RESOURCE_STRUCTURE)
 			-- Create Current (as a root folder of `struct')
 			-- taking data from `location'.
 		deferred
 		end
 
-	make_default_root (file_name: FILE_NAME; struct: like structure) is
+	make_default_root (file_name: FILE_NAME; struct: like structure)
 			-- Create Current (as a root folder of `struct')
 			-- taking data from `file_name'.
 		local
@@ -103,7 +103,7 @@ feature -- Initialization
 --| END FIXME
 		end
 
-	load_default_attributes (xml_elem: XML_ELEMENT) is
+	load_default_attributes (xml_elem: XML_ELEMENT)
 			-- effective load of data from `xml_elem'.
 		local
 			res_xml: XML_RESOURCE
@@ -154,14 +154,14 @@ feature -- Initialization
 
 feature -- Update
 
-	update_root (location: STRING) is
+	update_root (location: STRING)
 			-- Update information with data from `location'.
 		deferred
 		end
 
 feature -- Status Report
 
-	child_of_name (ch_name: STRING): like Current is
+	child_of_name (ch_name: STRING): like Current
 			-- Child of Current, whose name is `ch_name'.
 			-- Void if no child has this name.
 		local
@@ -181,7 +181,7 @@ feature -- Status Report
 			end
 		end
 
-	resource_of_name (res_name: STRING): RESOURCE is
+	resource_of_name (res_name: STRING): RESOURCE
 			-- Resource of Current, whose name is `res_name'.
 			-- Void if no resource has this name.
 		local
@@ -227,7 +227,7 @@ feature -- Access
 
 feature -- Save
 
-	root_save (location: STRING) is
+	root_save (location: STRING)
 			-- Save folder in `location' as a root folder.
 			-- Used as a part of `save' from RESOURCE_STRUCTURE_I
 		deferred
@@ -235,7 +235,7 @@ feature -- Save
 
 feature -- Interface creation
 
-	create_interface is
+	create_interface
 			-- Create an interface for Current.
 		local
 			in: like interface
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 invariant
 	structure_exists: structure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

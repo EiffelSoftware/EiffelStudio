@@ -1,4 +1,4 @@
-indexing
+note
 	description: "extends NETWORK_BYTE_ARRAY to be appendable (also in the middle of the stream"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			basic_make (Initial_size)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 							
 		end
 			
-	make_size (a_size: INTEGER) is
+	make_size (a_size: INTEGER)
 		require
 			valid_size: a_size >= 0
 		do
@@ -40,15 +40,15 @@ feature {ANY}
 			
 feature {ANY}
 			
-	Initial_size: INTEGER is 50
-	Inc_size: INTEGER is 50
+	Initial_size: INTEGER = 50
+	Inc_size: INTEGER = 50
 			
 	position: INTEGER
 			-- position of cursor in array
 			
 feature {NONE}
 			
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `position'.
 		require
 			pos_large_enough: i > 0
@@ -59,7 +59,7 @@ feature {NONE}
 			
 feature {ANY}
 			
-	append_uint_8_from_int (i: INTEGER) is
+	append_uint_8_from_int (i: INTEGER)
 			-- puts the 8 least significant bits of `i' at `position'
 			-- using network byte order
 			-- enlarges
@@ -77,7 +77,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_uint_16_from_int (i: INTEGER) is
+	append_uint_16_from_int (i: INTEGER)
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
@@ -94,7 +94,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_sint_16_from_int (i: INTEGER) is
+	append_sint_16_from_int (i: INTEGER)
 			-- puts the 16 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
@@ -111,7 +111,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_uint_32_from_int (i: INTEGER) is
+	append_uint_32_from_int (i: INTEGER)
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -130,7 +130,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_sint_32_from_int (i: INTEGER) is
+	append_sint_32_from_int (i: INTEGER)
 			-- puts the 32 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -149,7 +149,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_uint_64_from_int_64 (i: INTEGER_64) is
+	append_uint_64_from_int_64 (i: INTEGER_64)
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
 		require
@@ -166,7 +166,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_sint_64_from_int_64 (i: INTEGER_64) is
+	append_sint_64_from_int_64 (i: INTEGER_64)
 			-- puts the 64 least significant bits of `i' at `pos'
 			-- using network byte order
 			-- Note: on most machines INTEGER is only 32 bit and signed,
@@ -185,7 +185,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_utf8_from_string (s: STRING) is
+	append_utf8_from_string (s: STRING)
 			-- puts `s' at pos
 			-- byte for byte from `s' will be written to the array
 			-- there will be no additional info on size or a terminating
@@ -208,7 +208,7 @@ feature {ANY}
 			end
 		end
 			
-	append_byte_code (other: APPENDABLE_NETWORK_BYTE_ARRAY) is
+	append_byte_code (other: APPENDABLE_NETWORK_BYTE_ARRAY)
 			-- appends all bytes from `other' (in the range of
 			-- 0..`other.position' to `Current' starting at (position + `Int_8_size'))
 			-- Note: seems to be buggy, needs some work!
@@ -231,7 +231,7 @@ feature {ANY}
 			internal_copy (other_area, area, other.position - 1, position)
 		end
 						
-	append_double_from_double (d: DOUBLE) is
+	append_double_from_double (d: DOUBLE)
 			-- Note: `put_double_from_double' does not seem to work. FIXME
 		local
 			new_position: INTEGER
@@ -244,7 +244,7 @@ feature {ANY}
 			position := new_position
 		end
 			
-	append_float_from_real (f: REAL) is
+	append_float_from_real (f: REAL)
 		local
 			new_position: INTEGER
 		do
@@ -256,7 +256,7 @@ feature {ANY}
 			position := new_position
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

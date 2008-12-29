@@ -1,4 +1,4 @@
-indexing
+note
 	description: "name and other conversion routines for jvm code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 feature {NONE} -- Initialization
 feature {NONE}
 
-	rename_type (a: STRING): STRING is
+	rename_type (a: STRING): STRING
 			-- Rename type names as they come from Eiffel into jvm type names
 			-- Note: does not embed object types into L;, shorten
 			-- basic types to one letter abbrevs or shorten array names
@@ -26,7 +26,7 @@ feature {NONE}
 			Result := java_to_jvm_name (Result)
 		end
 
-	hack_rename (a: STRING) is
+	hack_rename (a: STRING)
 			-- dirty hack to rename occurrences of "System.Object" to "java/lang/Object"
 			-- This is needed because of "System.Object" is hardcoded in
 			-- the compiler (this will be removed at some point and then
@@ -35,7 +35,7 @@ feature {NONE}
 			a.replace_substring_all ("System.Object", "java/lang/Object")
 		end
 
-	eiffel_external_parameters_to_jvm_parameters (params: ARRAY [STRING]): ARRAY [STRING] is
+	eiffel_external_parameters_to_jvm_parameters (params: ARRAY [STRING]): ARRAY [STRING]
 			-- converts the parameter type names as specified in the
 			-- eiffel external clause to jvm type names (the ones with a
 			-- starting "L" and a closing ";"
@@ -60,7 +60,7 @@ feature {NONE}
 			same_size: params /= Void implies params.count = Result.count
 		end
 
-	eiffel_external_parameter_names_to_jvm_parameters (params: ARRAY [STRING]): STRING is
+	eiffel_external_parameter_names_to_jvm_parameters (params: ARRAY [STRING]): STRING
 			-- takes an array of parameter type names as specified in
 			-- eiffel source code in the java external signature clause
 			-- and converts them to their jvm equivalent in form of a
@@ -85,7 +85,7 @@ feature {NONE}
 			result_count: Result.count >= params.count
 		end
 
-	eiffel_external_signature_to_jvm_signature (params: ARRAY [STRING]; return_type: STRING): STRING is
+	eiffel_external_signature_to_jvm_signature (params: ARRAY [STRING]; return_type: STRING): STRING
 			-- converts the eiffel external signature type names as
 			-- found in the eiffel class text in the external signature
 			-- clause to a type description as demanded by the JVM
@@ -106,7 +106,7 @@ feature {NONE}
 			end
 		end
 
-	java_to_jvm_name (in: STRING): STRING is
+	java_to_jvm_name (in: STRING): STRING
 			-- converts a java type name into a name as requested in many
 			-- places in the JVM class file. That is object types start
 			-- are of the form Lpackage/name/ClassName;
@@ -137,7 +137,7 @@ feature {NONE}
 			end
 		end
 
-	convert_non_array (in: STRING): STRING is
+	convert_non_array (in: STRING): STRING
 			-- if `in' is a name for a native java name (like int,
 			-- short, ...) it will return it's JVM short name (I, S, ...)
 			-- otherwise `Result' will be of the form L<in>;
@@ -205,7 +205,7 @@ feature {NONE}
 									  in.is_equal ("boolean")) implies Result.is_equal ("L" + in + ";")
 		end
 
-	jvm_type_descriptor_to_jvm_type_names (s: STRING): ARRAY [STRING] is
+	jvm_type_descriptor_to_jvm_type_names (s: STRING): ARRAY [STRING]
 			-- takes a string of concatenated jvm type names (as in "I",
 			-- "[I" or "Ljava/lang/String;" and gives you back an array of
 			-- strings filled with the type names that make the string `s' up.
@@ -274,7 +274,7 @@ feature {NONE}
 			result_not_void: Result /= Void
 		end
 
-	jvm_type_descriptors_to_jvm_type_ids (s: STRING): ARRAY [INTEGER] is
+	jvm_type_descriptors_to_jvm_type_ids (s: STRING): ARRAY [INTEGER]
 			-- takes a string of concatenated jvm type names (as in "I", "[I" or "Ljava/lang/String;")
 			-- and gives you an array of the corresponding jvm type
 			-- ids back
@@ -359,7 +359,7 @@ feature {NONE}
 		end
 
 feature
-	eiffel_type_id_to_jvm_type_id (eiffel: INTEGER) : INTEGER is
+	eiffel_type_id_to_jvm_type_id (eiffel: INTEGER) : INTEGER
 			-- takes an eiffel type id (as supplied by the parser front
 			-- end) and returns it's JVM type id. Please note that while
 			-- eiffel type ids are a bidirectional match to a type JVM
@@ -370,7 +370,7 @@ feature
 			Result := repository.item (eiffel).jvm_type_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

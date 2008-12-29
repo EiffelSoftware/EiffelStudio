@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Inspect expression is not of type INTEGER or CHARACTER."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1;
 		end;
@@ -27,7 +27,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Type: ");
 			type.append_to (a_text_formatter);
@@ -36,12 +36,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 		do
 			type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

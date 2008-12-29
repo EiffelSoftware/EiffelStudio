@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Grid common helper functions used by {ES_TEST_CASE_GRID_MANAGER} and {ES_TEST_RUN_RESULT_GRID_MANAGER}
 																													]"
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	new_editor_token_item (a_class_name: !STRING): !EB_GRID_EDITOR_TOKEN_ITEM is
+	new_editor_token_item (a_class_name: !STRING): !EB_GRID_EDITOR_TOKEN_ITEM
 			-- Create a grid editor token item base on `a_class_name'
 		local
 			l_class_token: EDITOR_TOKEN_CLASS
@@ -51,7 +51,7 @@ feature -- Command
 			end
 		end
 
-	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_pointer_press (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- Handle `grid' pointer press actions to active {EV_GRID_EDITABLE_ITEM} if possible
 		local
 			l_x, l_y: INTEGER
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 
 	grid: !EV_GRID;
 			-- Grid current helping
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

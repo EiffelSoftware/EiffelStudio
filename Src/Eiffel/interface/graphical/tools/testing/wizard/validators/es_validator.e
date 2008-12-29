@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Validator that is able to define a error message.
 	]"

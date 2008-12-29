@@ -1,4 +1,4 @@
-indexing
+note
 	Description: "Description of a constant value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		require
 			arg_non_void: other /= Void
@@ -38,30 +38,30 @@ feature -- Comparison
 
 feature -- Status report
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		require
 			good_argument: t /= Void
 		deferred
 		end
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN
 			-- Is the constant an integer or natural constant ?
 		do
 		end
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN
 			-- Is the constant a real constant ?
 		do
 		end
 
-	is_character: BOOLEAN is
+	is_character: BOOLEAN
 			-- is the constant a character constant ?
 		do
 			-- Do nothing
 		end
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN
 			-- Is constant a real constant?
 		do
 			Result := is_real_32 or is_real_64
@@ -69,36 +69,36 @@ feature -- Status report
 			is_real_definition: Result = (is_real_32 or is_real_64)
 		end
 
-	is_real_32: BOOLEAN is
+	is_real_32: BOOLEAN
 			-- is the constant a real 32 bits constant ?
 		do
 			-- Do nothing
 		end
 
-	is_real_64: BOOLEAN is
+	is_real_64: BOOLEAN
 			-- Is the constant a real 64 bits constant ?
 		do
 			-- Do nothing
 		end
 
-	is_string: BOOLEAN is
+	is_string: BOOLEAN
 			-- Is the constant a string constant ?
 		do
 			-- Do nothing
 		end
 
-	is_bit: BOOLEAN is
+	is_bit: BOOLEAN
 			-- Is the constant a bit constant ?
 		do
 			-- Do nothing
 		end
 
-	is_no_value: BOOLEAN is
+	is_no_value: BOOLEAN
 			-- Is current representing no value?
 		do
 		end
 
-	is_numeric: BOOLEAN is
+	is_numeric: BOOLEAN
 			-- Is current a numeric value?
 		do
 			Result := is_integer or is_real_32 or is_real_64
@@ -106,19 +106,19 @@ feature -- Status report
 			is_numeric_definition: is_integer or is_real_32 or is_real_64
 		end
 
-	is_propagation_equivalent (other: like Current): BOOLEAN is
+	is_propagation_equivalent (other: like Current): BOOLEAN
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
 			Result := same_type (other) and then is_equivalent (other)
 		end
 
-	boolean_value: BOOLEAN is
+	boolean_value: BOOLEAN
 		require
 			is_boolean: is_boolean
 		do
 		end
 
-	no_value: NO_VALUE_I is
+	no_value: NO_VALUE_I
 			-- Shared instance of `NO_VALUE_I'.
 		once
 			create Result
@@ -128,7 +128,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_real_type (t: TYPE_A) is
+	set_real_type (t: TYPE_A)
 			-- Sometime type of constants needs to be changed.
 			-- For example by default an integer constant is of type
 			-- INTEGER, but type of constant might be INTEGER_8 and
@@ -144,7 +144,7 @@ feature -- Settings
 
 feature -- Multi-branch instruction processing
 
-	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B
 			-- Inspect value of the given `value_type'
 		require
 			value_type_not_void: value_type /= Void
@@ -158,44 +158,44 @@ feature -- Multi-branch instruction processing
 
 feature -- Code generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		require
 			good_argument: buffer /= Void
 		deferred
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for constant value.
 		deferred
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a constant value.
 		require
 			good_argument: ba /= Void
 		deferred
 		end
 
-	append_signature (a_text_formatter: TEXT_FORMATTER) is
+	append_signature (a_text_formatter: TEXT_FORMATTER)
 		require
 			st_not_void: a_text_formatter /= Void
 		do
 			a_text_formatter.add_string (dump)
 		end
 
-	dump: STRING is
+	dump: STRING
 		deferred
 		end
 
-	string_value: STRING is
+	string_value: STRING
 		do
 			Result := dump
 		end
 
 feature -- Unary operators
 
-	unary_plus: VALUE_I is
+	unary_plus: VALUE_I
 			-- Apply `+' operator to Current.
 		require
 			is_operation_valid: is_numeric or is_no_value
@@ -205,7 +205,7 @@ feature -- Unary operators
 			unary_plus_not_void: Result /= Void
 		end
 
-	unary_minus: VALUE_I is
+	unary_minus: VALUE_I
 			-- Apply `-' operator to Current.
 		require
 			is_operation_valid: is_numeric or is_no_value
@@ -219,7 +219,7 @@ feature -- Unary operators
 			unary_minus_not_void: Result /= Void
 		end
 
-	unary_not: VALUE_I is
+	unary_not: VALUE_I
 			-- Apply `not operator to Current.
 		require
 			is_operation_valid: is_boolean or is_no_value
@@ -235,12 +235,12 @@ feature -- Unary operators
 
 feature -- Debugging
 
-	trace is
+	trace
 		do
 			io.error.put_string (dump)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

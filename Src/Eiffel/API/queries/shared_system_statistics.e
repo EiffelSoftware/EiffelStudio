@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Object that shared the system statistics."
@@ -12,13 +12,13 @@ class
 
 feature {NONE} -- Shared system's statistics
 
-	Statistics: SYSTEM_STATISTICS is
+	Statistics: SYSTEM_STATISTICS
 			-- Statistics of the Eiffel System
 		once
 			create Result.make
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used to prepare and format output of ICOR_DEBUG_VALUE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	prepared_debug_value (icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	prepared_debug_value (icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- strip_reference an unboxed value
 		require
 			arg_value_not_void: icd /= Void
@@ -57,7 +57,7 @@ feature -- Access
 			Result_not_void: Result /= Void implies Result.item_not_null
 		end
 
-	icor_debug_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
+	icor_debug_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE
 			-- Prepare `a_data' and return ICorDebugStringValue from `a_data'
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -82,7 +82,7 @@ feature -- Transforming
 --			Result := get_string_value (a_icd_string_value)
 --		end
 
-	icor_debug_value_as_string_to_string (a_data: ICOR_DEBUG_VALUE): STRING_32 is
+	icor_debug_value_as_string_to_string (a_data: ICOR_DEBUG_VALUE): STRING_32
 			-- STRING value from `a_data' which is supposed to be a System.String value.
 		local
 			l_data: ICOR_DEBUG_VALUE
@@ -119,7 +119,7 @@ feature -- Transforming
 --			end
 --		end
 
-	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
+	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER
 		local
 			l_icdv: ICOR_DEBUG_VALUE
 		do
@@ -130,7 +130,7 @@ feature -- Transforming
 			end
 		end
 
-	icor_debug_value_to_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
+	icor_debug_value_to_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN
 		local
 			l_icdv: ICOR_DEBUG_VALUE
 		do
@@ -143,12 +143,12 @@ feature -- Transforming
 
 feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_VALUE_EXPORTER} -- Dereferenced to Specialized Value
 
-	prepared_icor_debug_value_is_null (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
+	prepared_icor_debug_value_is_null (a_data: ICOR_DEBUG_VALUE): BOOLEAN
 		do
 			Result := a_data.is_null_reference
 		end
 
-	prepared_icor_debug_value_as_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING_32 is
+	prepared_icor_debug_value_as_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING_32
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
@@ -159,7 +159,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			end
 		end
 
-	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING_32 is
+	prepared_icor_debug_value_as_string (a_data: ICOR_DEBUG_VALUE): STRING_32
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE
 		do
@@ -170,7 +170,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			end
 		end
 
-	prepared_icor_debug_value_as_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
+	prepared_icor_debug_value_as_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -178,7 +178,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_boolean (0)
 		end
 
-	prepared_icor_debug_value_as_character (a_data: ICOR_DEBUG_VALUE): CHARACTER is
+	prepared_icor_debug_value_as_character (a_data: ICOR_DEBUG_VALUE): CHARACTER
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -186,7 +186,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_character (0)
 		end
 
-	prepared_icor_debug_value_as_natural_8 (a_data: ICOR_DEBUG_VALUE): NATURAL_8 is
+	prepared_icor_debug_value_as_natural_8 (a_data: ICOR_DEBUG_VALUE): NATURAL_8
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -194,7 +194,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_natural_8 (0)
 		end
 
-	prepared_icor_debug_value_as_natural_16 (a_data: ICOR_DEBUG_VALUE): NATURAL_16 is
+	prepared_icor_debug_value_as_natural_16 (a_data: ICOR_DEBUG_VALUE): NATURAL_16
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -202,7 +202,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_natural_16 (0)
 		end
 
-	prepared_icor_debug_value_as_natural_32 (a_data: ICOR_DEBUG_VALUE): NATURAL_32 is
+	prepared_icor_debug_value_as_natural_32 (a_data: ICOR_DEBUG_VALUE): NATURAL_32
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -210,7 +210,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_natural_32 (0)
 		end
 
-	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): NATURAL_64 is
+	prepared_icor_debug_value_as_natural_64 (a_data: ICOR_DEBUG_VALUE): NATURAL_64
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -218,7 +218,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_natural_64 (0)
 		end
 
-	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8 is
+	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -226,7 +226,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_integer_8 (0)
 		end
 
-	prepared_icor_debug_value_as_integer_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16 is
+	prepared_icor_debug_value_as_integer_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -234,7 +234,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_integer_16 (0)
 		end
 
-	prepared_icor_debug_value_as_integer_32 (a_data: ICOR_DEBUG_VALUE): INTEGER is -- INTEGER_32
+	prepared_icor_debug_value_as_integer_32 (a_data: ICOR_DEBUG_VALUE): INTEGER -- INTEGER_32
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -242,7 +242,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_integer_32 (0)
 		end
 
-	prepared_icor_debug_value_as_integer_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64 is
+	prepared_icor_debug_value_as_integer_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -250,7 +250,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_integer_64 (0)
 		end
 
-	prepared_icor_debug_value_as_real (a_data: ICOR_DEBUG_VALUE): REAL is
+	prepared_icor_debug_value_as_real (a_data: ICOR_DEBUG_VALUE): REAL
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -258,7 +258,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_real_32 (0)
 		end
 
-	prepared_icor_debug_value_as_double (a_data: ICOR_DEBUG_VALUE): DOUBLE is
+	prepared_icor_debug_value_as_double (a_data: ICOR_DEBUG_VALUE): DOUBLE
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -266,7 +266,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_real_64 (0)
 		end
 
-	prepared_icor_debug_value_as_pointer (a_data: ICOR_DEBUG_VALUE): POINTER is
+	prepared_icor_debug_value_as_pointer (a_data: ICOR_DEBUG_VALUE): POINTER
 		local
 			l_mp: MANAGED_POINTER
 		do
@@ -274,7 +274,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			Result := l_mp.read_pointer (0)
 		end
 
-	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING is
+	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING
 		local
 			l_type: INTEGER
 
@@ -371,7 +371,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 
 feature -- Dereferenced to Value
 
-	prepared_icor_debug_value (a_data: ICOR_DEBUG_VALUE): ANY is
+	prepared_icor_debug_value (a_data: ICOR_DEBUG_VALUE): ANY
 		local
 			l_icd: ICOR_DEBUG_VALUE
 		do
@@ -442,7 +442,7 @@ feature -- Dereferenced to Value
 			end
 		end
 
-	prepared_icor_debug_value_to_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING is
+	prepared_icor_debug_value_to_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING
 		local
 			l_result: ANY
 		do
@@ -473,7 +473,7 @@ feature -- internal Status
 
 	last_strip_references_call_success: INTEGER
 
-	last_strip_references_call_succeed: BOOLEAN is
+	last_strip_references_call_succeed: BOOLEAN
 			-- does last call to strip_references succeed ?
 		do
 			Result := (last_strip_references_call_success = 0)
@@ -481,7 +481,7 @@ feature -- internal Status
 
 feature {NONE} -- preparing
 
-	strip_references (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	strip_references (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- Debug Value stripped from Reference.
 		local
 			l_icor_ref: ICOR_DEBUG_REFERENCE_VALUE
@@ -588,7 +588,7 @@ feature {NONE} -- preparing
 			end
 		end
 
-	unbox_debug_value (icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+	unbox_debug_value (icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- Take out the value from the box, it it is boxed object
 		require
 			arg_value_not_void: icd /= Void
@@ -613,7 +613,7 @@ feature {NONE} -- preparing
 
 feature {NONE} -- Implementation
 
-	sizeof_CORDB_ADDRESS: INTEGER is
+	sizeof_CORDB_ADDRESS: INTEGER
 			-- Number of bytes in a value of type `CORDB_ADDRESS'
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -621,7 +621,7 @@ feature {NONE} -- Implementation
 			"sizeof(CORDB_ADDRESS)"
 		end
 
-	value_data_pointer (a_icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER is
+	value_data_pointer (a_icdvalue: ICOR_DEBUG_VALUE): MANAGED_POINTER
 		local
 			l_icd_with_value: ICOR_DEBUG_VALUE_WITH_VALUE
 			l_size: NATURAL_32
@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_string_value (icd: ICOR_DEBUG_STRING_VALUE): STRING_32 is
+	get_string_value (icd: ICOR_DEBUG_STRING_VALUE): STRING_32
 		local
 			l_length: NATURAL_32
 		do
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_truncated_string_value (icd: ICOR_DEBUG_STRING_VALUE; a_size: INTEGER): STRING_32 is
+	get_truncated_string_value (icd: ICOR_DEBUG_STRING_VALUE; a_size: INTEGER): STRING_32
 		require
 			a_size = -1 or a_size > 0
 		local
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

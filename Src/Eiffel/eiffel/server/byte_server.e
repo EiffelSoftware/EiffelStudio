@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for byte code routine indexed by body_index"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Update
 
-	cache: CACHE [BYTE_CODE] is
+	cache: CACHE [BYTE_CODE]
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -27,7 +27,7 @@ feature -- Update
 
 feature -- Access
 
-	item (an_id: INTEGER): BYTE_CODE is
+	item (an_id: INTEGER): BYTE_CODE
 			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	disk_item (an_id: INTEGER): BYTE_CODE is
+	disk_item (an_id: INTEGER): BYTE_CODE
 			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is the id `an_id' present in `Tmp_byte_server' or
 			-- Current ?
 		require else
@@ -56,7 +56,7 @@ feature -- Access
 			Result := Precursor (an_id) or else Tmp_byte_server.has (an_id);
 		end;
 
-	remove (an_id: INTEGER_32) is
+	remove (an_id: INTEGER_32)
 			-- <Precursor>
 		do
 			tmp_byte_server.remove (an_id)
@@ -65,13 +65,13 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Build a filtered version (troff, ..) of some text."
@@ -11,7 +11,7 @@ deferred class EWB_FILTER
 
 feature -- Initialization
 
-	init (fn: STRING) is
+	init (fn: STRING)
 			-- Initialize Current filter_name as `fn'.
 		require
 			fn_not_void: fn /= Void
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature {NONE} -- Execution
 
-	associated_cmd: E_OUTPUT_CMD is
+	associated_cmd: E_OUTPUT_CMD
 			-- Associated class command to be executed
 			-- after successfully retrieving the compiled
 			-- class
@@ -37,12 +37,12 @@ feature {NONE} -- Execution
 			non_void_result: Result /= Void
 		end;
 
-	loop_action is
+	loop_action
 			-- Execute Current command from loop.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

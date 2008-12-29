@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument parser for lite eiffel compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize argument parser
 		do
 			make_parser (False, False)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	configuration_file: STRING is
+	configuration_file: STRING
 			-- Eiffel compiler configuration file
 		require
 			successful: is_successful
@@ -46,7 +46,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	target: STRING is
+	target: STRING
 		require
 			successful: is_successful
 		local
@@ -60,7 +60,7 @@ feature -- Access
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	project_location: STRING is
+	project_location: STRING
 			-- Location to compile Eiffel project in
 		require
 			successful: is_successful
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Status report
 
-	precompile: BOOLEAN is
+	precompile: BOOLEAN
 			-- Indiciates if compiler should precompile project
 		require
 			successful: is_successful
@@ -111,7 +111,7 @@ feature -- Status report
 			Result := has_option (precomp_switch)
 		end
 
-	optimize: BOOLEAN is
+	optimize: BOOLEAN
 			-- Indiciates if compiler should generate optimized code
 		require
 			successful: is_successful
@@ -119,7 +119,7 @@ feature -- Status report
 			Result := has_option (finalize_switch)
 		end
 
-	force_lookup: BOOLEAN is
+	force_lookup: BOOLEAN
 			-- Indiciates if compiler should re-examine directory structures for new/removed classes
 		require
 			successful: is_successful
@@ -127,7 +127,7 @@ feature -- Status report
 			Result := has_option (force_switch)
 		end
 
-	freeze_code: BOOLEAN is
+	freeze_code: BOOLEAN
 			-- Indiciates if compiler should freeze melted code
 		require
 			successful: is_successful
@@ -135,7 +135,7 @@ feature -- Status report
 			Result := has_option (freeze_switch)
 		end
 
-	compile_c_code: BOOLEAN is
+	compile_c_code: BOOLEAN
 			-- Indiciates if compiler should trigger compiliation of the C code, after
 			-- a successful Eifel compilation
 		require
@@ -144,7 +144,7 @@ feature -- Status report
 			Result := has_option (c_compile_switch)
 		end
 
-	configuration_settings: HASH_TABLE [STRING, STRING] is
+	configuration_settings: HASH_TABLE [STRING, STRING]
 			-- Table of override configuration settings
 			-- Key: Setting nane
 			-- Value: Value
@@ -172,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	clean_project: BOOLEAN is
+	clean_project: BOOLEAN
 			-- Indiciates if compiler should delete the previous project compiled information
 			-- before compiling.
 		require
@@ -181,7 +181,7 @@ feature -- Status report
 			Result := has_option (clean_switch)
 		end
 
-	interactive_mode: BOOLEAN is
+	interactive_mode: BOOLEAN
 			-- Indiciates if compiler should interacte with user
 		require
 			successful: is_successful
@@ -189,7 +189,7 @@ feature -- Status report
 			Result := has_option (interactive_switch)
 		end
 
-	verbose_output: BOOLEAN is
+	verbose_output: BOOLEAN
 			-- Indiciates if compiler should display verbose information on compiler output
 		require
 			successful: is_successful
@@ -199,37 +199,37 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	name: !STRING is
+	name: !STRING
 			-- Full name of application
 		once
 			Result := "Eiffel Compiler Lite Edition"
 		end
 
-	version: !STRING is
+	version: !STRING
 			-- Version number of application
 		once
 			Result := "6.4.0"
 		end
 
-	non_switched_argument_name: !STRING_8 is
+	non_switched_argument_name: !STRING_8
 			-- Name of lose argument, used in usage information
 		do
 			Result := "ecf"
 		end
 
-	non_switched_argument_description: !STRING_8 is
+	non_switched_argument_description: !STRING_8
 			-- Description of loose argument, used in usage information
 		do
 			Result := "Eiffel compiler configuration file."
 		end
 
-	non_switched_argument_type: !STRING_8 is
+	non_switched_argument_type: !STRING_8
 			-- Type of lose argument, used in usage information.
 		do
 			Result := "configuration file"
 		end
 
-	switches: ARRAYED_LIST [!ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- Retrieve a list of available switch
 		local
 			l_optimize_flags: HASH_TABLE [!STRING_8, CHARACTER]
@@ -251,7 +251,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make_hidden (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
 		end
 
-	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP] is
+	switch_groups: ARRAYED_LIST [!ARGUMENT_GROUP]
 			-- Valid switch grouping
 		do
 			create Result.make (4)
@@ -314,7 +314,7 @@ feature {NONE} -- Option names
 	interactive_switch: STRING = "prompt"
 	alias_switch: STRING = "alias"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

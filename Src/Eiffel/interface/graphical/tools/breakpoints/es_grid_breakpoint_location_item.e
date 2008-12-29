@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a breakpoint location grid item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_loc: BREAKPOINT_LOCATION) is
+	make (a_loc: BREAKPOINT_LOCATION)
 			-- Create Current item
 		do
 			make_with_expose_action_agent (agent redraw_location)
@@ -50,7 +50,7 @@ feature -- Access
 	pixmap: EV_PIXMAP
 			-- Pixmap
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Require width when resize_to_content occurs.
 		local
 			f: EV_FONT
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Change
 
-	set_location (a_loc: like location) is
+	set_location (a_loc: like location)
 			-- Set `location' to `a_loc'
 		local
 			r: E_FEATURE
@@ -101,21 +101,21 @@ feature -- Change
 			end
 		end
 
-	set_font (v: like font) is
+	set_font (v: like font)
 			-- Set font
 		do
 			font := v
 			parent_redraw_item
 		end
 
-	set_pixmap (v: like pixmap) is
+	set_pixmap (v: like pixmap)
 			-- Set pixmap
 		do
 			pixmap := v
 			parent_redraw_item
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove pixmap
 		do
 			pixmap := Void
@@ -140,7 +140,7 @@ feature -- Cached information
 
 feature -- Pebble
 
-	pebble_at_position: STONE is
+	pebble_at_position: STONE
 			-- Pebble at pointer position
 			-- Void if no pebble found at that position		
 		local
@@ -160,7 +160,7 @@ feature -- Pebble
 
 feature {NONE} -- Implementation
 
-	redraw_location (a_drawable: EV_DRAWABLE) is
+	redraw_location (a_drawable: EV_DRAWABLE)
 			-- Redraw span cell
 		local
 			g: EV_GRID
@@ -267,16 +267,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extra_space_after_pixmap: INTEGER is 5
+	extra_space_after_pixmap: INTEGER = 5
 			-- Space between pixmap and text.
 
-	internal_default_font: EV_FONT is
+	internal_default_font: EV_FONT
 			-- Default font used for `Current'.
 		once
 			create Result
 		end
 
-	parent_redraw_item is
+	parent_redraw_item
 		local
 			l_parent: like parent
 		do

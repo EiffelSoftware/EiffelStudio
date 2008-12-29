@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"$EiffelGraphicalCompiler$ notion of a formatted text"
 	legal: "See notice at end of class."
@@ -12,64 +12,64 @@ inherit
 
 feature -- Properties
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the Current text window able to edit text?
 		deferred
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of window
 		deferred
 		ensure
 			non_void_result: Result /= Void
 		end
 
-	number_of_lines: INTEGER is
+	number_of_lines: INTEGER
 			-- Number of lines in `text'
 		deferred
 		end
 
-	changed: BOOLEAN is
+	changed: BOOLEAN
 			-- Has the text been edited since last display?
 		deferred
 		end
 
 feature -- Setting
 
-	set_font_to_default is
+	set_font_to_default
 			-- Set font to its default font.
 		do
 		end
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing text window
 		deferred
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Cursor position of text
 		deferred
 		end
 
 feature -- Text operations
 
-	copy_selection is
+	copy_selection
 			-- Copy the highlighted text.
 		deferred
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the highlighted text.
 		deferred
 		end
 
-	deselect_all is
+	deselect_all
 		deferred
 		end
 
-	set_position (a_position: INTEGER) is
+	set_position (a_position: INTEGER)
 			-- Set cursor_position to `a_position'.
 		require
 			valid_position: a_position >= 1
@@ -78,7 +78,7 @@ feature -- Text operations
 			position_set: position = a_position
 		end
 
-	highlight_selected (a, b: INTEGER) is
+	highlight_selected (a, b: INTEGER)
 			-- Highlight between lines `a' and `b' using reverse video.
 		require
 			first_fewer_than_last: a <= b
@@ -88,34 +88,34 @@ feature -- Text operations
 
 feature -- Status setting
 
-	set_changed (b: BOOLEAN) is
+	set_changed (b: BOOLEAN)
 			-- Set `changed' to b.
 		deferred
 		end
 
-	disable_clicking is
+	disable_clicking
 			-- Disable the ability to drag and drop stones
 			-- and set `changed' to False.
 		do
 		end
 
-	enable_editable is
+	enable_editable
 			-- Allow editing of text.
 		deferred
 		end
 
-	disable_editable is
+	disable_editable
 			-- Allow editing of text.
 		deferred
 		end
 
-	reset is
+	reset
 			-- Reset the contents of the text window.
 		do
 			clear_window
 		end
 
-	select_lines (first, last: INTEGER) is
+	select_lines (first, last: INTEGER)
 			-- Select the text between `first' and `last' lines.
 			-- This text will be physically highlightened on the screen.
 		require
@@ -137,41 +137,41 @@ feature -- Update
 
 feature {NONE} -- Command arguments
 
-	context_data_useful: BOOLEAN is True
+	context_data_useful: BOOLEAN = True
 
-	new_tooler_action: ANY is
+	new_tooler_action: ANY
 			-- Callback value to indicate that a new tool should come up.
 		once
 			create Result
 		end
 
-	retarget_tooler_action: ANY is
+	retarget_tooler_action: ANY
 			-- Callback value to indicate that a tool need to change its
 			-- content with the one selected by the user.
 		once
 			create Result
 		end
 
-	super_melt_action: ANY is
+	super_melt_action: ANY
 			-- Callback value to indicate that the feature will be super melted.
 		once
 			create Result
 		end
 
-	insert_breakpoint_action: ANY is
+	insert_breakpoint_action: ANY
 			-- Callback value to indicate that a breakpoint will be put at
 			-- the first call of the routine.
 		once
 			create Result
 		end
 
-	modify_event_action: ANY is
+	modify_event_action: ANY
 			-- Callback value to indicate that the text has modified.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

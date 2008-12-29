@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Managers that are used throughout the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,92 +22,92 @@ inherit
 
 feature -- Status report
 
-	process_manager: EB_PROCESS_MANAGER is
+	process_manager: EB_PROCESS_MANAGER
 			-- Manager to manipulated processed spawned by Current process
 		once
 			create Result.make (freezing_launcher, finalizing_launcher, external_launcher)
 		end
 
-	external_launcher: EB_EXTERNAL_LAUNCHER is
+	external_launcher: EB_EXTERNAL_LAUNCHER
 			-- Launcher to launch external processed used in external output tool
 		once
 			create Result.initialize
 		end
 
-	freezing_launcher: EB_FREEZING_LAUNCHER is
+	freezing_launcher: EB_FREEZING_LAUNCHER
 			-- Launcher to launch c compiler for freezing
 		once
 			create Result.make
 		end
 
-	finalizing_launcher: EB_FINALIZING_LAUNCHER is
+	finalizing_launcher: EB_FINALIZING_LAUNCHER
 			-- Launcher to luanch c compiler for finalizing
 		once
 			create Result.make
 		end
 
-	idle_printing_manager: EB_IDLE_PRINTING_MANAGER is
+	idle_printing_manager: EB_IDLE_PRINTING_MANAGER
 			-- Manager to maintain output data got from launched processes
 		once
 			create Result.make
 		end
 
-	external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER is
+	external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
 			-- Manager for output from external processes
 		do
 			Result := external_output_manager_cell.item
 		end
 
-	c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER is
+	c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER
 			-- Manager for output from C compiler
 		do
 			Result := c_compilation_output_manager_cell.item
 		end
 
-	output_manager: EB_OUTPUT_MANAGER is
+	output_manager: EB_OUTPUT_MANAGER
 			-- Output manager for all output messages.
 		do
 			Result := output_manager_cell.item
 		end
 
-	graphical_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER is
+	graphical_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
 			-- Output manager for all output tool in Development windows.
 		do
 			Result ?= output_manager_cell.item
 		end
 
-	recent_projects_manager: EB_RECENT_PROJECTS_MANAGER is
+	recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			-- Manager for the recently opened projects.
 		do
 			Result := recent_projects_manager_cell.item
 		end
 
-	favorites: EB_FAVORITES is
+	favorites: EB_FAVORITES
 			-- Singleton Objects, this ensure that all windows use the
 			-- same Favorites.
 		once
 			create Result
 		end
 
-	customized_formatter_manager: EB_CUSTOMIZED_FORMATTER_MANAGER is
+	customized_formatter_manager: EB_CUSTOMIZED_FORMATTER_MANAGER
 			-- Customized formatter manager
 		once
 			create Result
 		end
 
-	customized_tool_manager: EB_CUSTOMIZED_TOOL_MANAGER is
+	customized_tool_manager: EB_CUSTOMIZED_TOOL_MANAGER
 			-- Customized tool manager
 		once
 			create Result
 		end
 
-	Refactoring_manager: ERF_MANAGER is
+	Refactoring_manager: ERF_MANAGER
 			-- The refactoring manager.
 		once
 			create Result.make
 		end
 
-	incoming_command_manager: ES_INCOMING_COMMAND_MANAGER is
+	incoming_command_manager: ES_INCOMING_COMMAND_MANAGER
 			-- Incoming command manager
 		do
 			Result := incoming_command_manager_cell.item
@@ -121,37 +121,37 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	Recent_projects_manager_cell: CELL [EB_RECENT_PROJECTS_MANAGER] is
+	Recent_projects_manager_cell: CELL [EB_RECENT_PROJECTS_MANAGER]
 			-- Recent projects manager for ebench
 		once
 			create Result.put (Void)
 		end
 
-	Output_manager_cell: CELL [EB_OUTPUT_MANAGER] is
+	Output_manager_cell: CELL [EB_OUTPUT_MANAGER]
 			-- Output manager for development windows	
 		once
 			create Result.put (Void)
 		end
 
-	External_output_manager_cell: CELL [EB_EXTERNAL_OUTPUT_MANAGER] is
+	External_output_manager_cell: CELL [EB_EXTERNAL_OUTPUT_MANAGER]
 			-- External output manager
 		once
 			create Result.put (Void)
 		end
 
-	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER] is
+	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER]
 			-- C compiler output manager
 		once
 			create Result.put (Void)
 		end
 
-	incoming_command_manager_cell: CELL [ES_INCOMING_COMMAND_MANAGER] is
+	incoming_command_manager_cell: CELL [ES_INCOMING_COMMAND_MANAGER]
 			-- Incoming command manager
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

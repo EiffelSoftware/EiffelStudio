@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Look for expanded circuit through the expanded client rule."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create current instance
 		do
 			create id_set.make
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_current_type (t: like current_type) is
+	set_current_type (t: like current_type)
 			-- Assign `t' to `current_type'.
 		do
 			current_type := t
@@ -44,7 +44,7 @@ feature -- Settings
 
 feature -- Checking
 
-	check_expanded is
+	check_expanded
 			-- Check `current_type'
 		require
 			current_type_exists: current_type /= Void
@@ -60,7 +60,7 @@ feature -- Checking
 			current_type := Void
 		end
 
-	check_actual_type (a_type: TYPE_A) is
+	check_actual_type (a_type: TYPE_A)
 		require
 			type_has_generics: a_type.has_generics
 		do
@@ -71,7 +71,7 @@ feature -- Checking
 
 feature {NONE} -- Implementation
 
-	recursive_check (class_type: CLASS_TYPE) is
+	recursive_check (class_type: CLASS_TYPE)
 		require
 			good_argument: class_type /= Void
 		local
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recursive_check_type (a_type: TYPE_A) is
+	recursive_check_type (a_type: TYPE_A)
 		local
 			ass_c: CLASS_C
 			generics: ARRAY [TYPE_A]
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 invariant
 	id_set_not_void: id_set /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

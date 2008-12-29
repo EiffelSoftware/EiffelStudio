@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN) is
+	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN)
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 	is_tree_view_enabled: BOOLEAN
 		-- Is Tree view enabled for displaying ancestor/descendant hierarchy?
 
-	is_flat_view_enabled: BOOLEAN is
+	is_flat_view_enabled: BOOLEAN
 			-- Is flat view enabled for displaying supplier/client referenced?
 		do
 			Result := not is_tree_view_enabled
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Access
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		do
 			if control_tool_internal = Void then
@@ -76,7 +76,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	control_tool_bar: SD_TOOL_BAR is
+	control_tool_bar: SD_TOOL_BAR
 			-- Tool bar contained in `control_bar'
 		do
 			if control_tool_bar_internal = Void then
@@ -92,7 +92,7 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
@@ -107,7 +107,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normal_referenced_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	normal_referenced_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_grid_focus_in is
+	on_grid_focus_in
 			-- Action to be performed when `grid' gets focus
 		do
 			if is_tree_node_highlight_enabled then
@@ -132,7 +132,7 @@ feature -- Actions
 			end
 		end
 
-	on_grid_focus_out is
+	on_grid_focus_out
 			-- Action to be performed when `grid' loses focus
 		do
 			if is_tree_node_highlight_enabled then
@@ -140,7 +140,7 @@ feature -- Actions
 			end
 		end
 
-	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Action to be performed when mouse is double clicked in `grid'
 		local
 			l_grid_item: EV_GRID_ITEM
@@ -158,7 +158,7 @@ feature -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when some key is pressed in `grid'
 		require
 			a_key_attached: a_key /= Void
@@ -168,21 +168,21 @@ feature -- Actions
 			l_processed := on_predefined_key_pressed (a_key)
 		end
 
-	on_expand_all_level is
+	on_expand_all_level
 			-- Action to be performed to recursively expand all selected rows.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent expand_row_recursively)
 		end
 
-	on_collapse_all_level is
+	on_collapse_all_level
 			-- Action to be performed to recursively collapse all selected rows.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent collapse_row_recursively)
 		end
 
-	on_expand_one_level is
+	on_expand_one_level
 			-- Action to be performed to expand all selected rows.
 		local
 			l_selected_rows: like selected_rows
@@ -203,7 +203,7 @@ feature -- Actions
 			end
 		end
 
-	on_collapse_one_level is
+	on_collapse_one_level
 			-- Action to be performed to collapse all selected rows.
 		local
 			l_selected_rows: like selected_rows
@@ -224,14 +224,14 @@ feature -- Actions
 			end
 		end
 
-	on_collapse_one_level_partly is
+	on_collapse_one_level_partly
 			-- Action to be performed to collapse on level but leave the first level of child rows open.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent collapse_row)
 		end
 
-	on_show_path_changed is
+	on_show_path_changed
 			-- Action to be performed when selection status of `display_path_button' changes
 		do
 			is_up_to_date := False
@@ -245,7 +245,7 @@ feature -- Actions
 			grid_sorting_setting_correct: is_sorting_setting_valid
 		end
 
-	on_refresh_for_flat_view is
+	on_refresh_for_flat_view
 			-- Refresh data for flat view.
 		do
 			is_up_to_date := False
@@ -256,14 +256,14 @@ feature -- Actions
 
 feature -- Status report
 
-	should_tooltip_be_displayed: BOOLEAN is
+	should_tooltip_be_displayed: BOOLEAN
 			-- Should tooltip display be vetoed?
 		do
 		end
 
 feature -- Notification
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		do
 			fill_rows
@@ -279,7 +279,7 @@ feature -- Notification
 
 feature -- Sorting
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_TREE_ROW]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_CLASS_BROWSER_TREE_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -293,7 +293,7 @@ feature -- Sorting
 			bind_grid
 		end
 
-	sort_classes (a_classes: DS_LIST [EB_CLASS_BROWSER_TREE_ROW]; a_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW]) is
+	sort_classes (a_classes: DS_LIST [EB_CLASS_BROWSER_TREE_ROW]; a_sorter: DS_QUICK_SORTER [EB_CLASS_BROWSER_TREE_ROW])
 			-- Sort `a_class' using `a_sorter'.
 		require
 			a_classes_attached: a_classes /= Void
@@ -312,7 +312,7 @@ feature -- Sorting
 			end
 		end
 
-	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN is
+	class_name_tester (row_a, row_b: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			row_a_valid: row_a /= Void
@@ -338,7 +338,7 @@ feature -- Sorting
 			end
 		end
 
-	class_tester (class_a, class_b: QL_CLASS): BOOLEAN is
+	class_tester (class_a, class_b: QL_CLASS): BOOLEAN
 			-- Compare `row_a' and `row_b' ascendingly.
 		require
 			class_a_valid: class_a /= Void
@@ -358,13 +358,13 @@ feature -- Sorting
 			end
 		end
 
-	current_class_sort_order: INTEGER is
+	current_class_sort_order: INTEGER
 			-- Current sort order on class column
 		do
 			Result := column_sort_info.item (1).current_order
 		end
 
-	path_name_tester (a_row, b_row: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN is
+	path_name_tester (a_row, b_row: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_row' and `b_row' according to order `a_order'
 		require
 			a_row_attached: a_row /= Void
@@ -382,7 +382,7 @@ feature{NONE} -- Implementation
 	data: QL_CLASS_DOMAIN
 			-- Data to be displayed in current view
 
-	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_TREE_ROW] is
+	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_TREE_ROW]
 			-- Rows to be displayed
 		do
 			if rows_internal = Void then
@@ -396,7 +396,7 @@ feature{NONE} -- Implementation
 	rows_internal: like rows
 			-- Implementation of `rows'
 
-	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
@@ -418,7 +418,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_rows  is
+	fill_rows
 			-- Fill rows with `data'.
 		local
 			l_data: like data
@@ -461,7 +461,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_row_tree (a_row: EB_CLASS_BROWSER_TREE_ROW; a_class_domain: like data) is
+	fill_row_tree (a_row: EB_CLASS_BROWSER_TREE_ROW; a_class_domain: like data)
 			-- Fill row tree.
 		require
 			a_row_attached: a_row /= Void
@@ -516,7 +516,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	processed_classes: DS_HASH_SET [QL_CLASS] is
+	processed_classes: DS_HASH_SET [QL_CLASS]
 			-- Processed classes
 		do
 			if processed_classes_internal = Void then
@@ -531,7 +531,7 @@ feature{NONE} -- Implementation
 	processed_classes_internal: like processed_classes
 			-- Implementation of `processed_classes'
 
-	bind_grid is
+	bind_grid
 			-- Bind `rows' in `grid'.
 		local
 			l_row: EB_CLASS_BROWSER_TREE_ROW
@@ -559,7 +559,7 @@ feature{NONE} -- Implementation
 			try_auto_resize_grid (<<[500, 800, 1]>>, False)
 		end
 
-	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
+	first_occurrence (a_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW
 			-- Given `a_row' which represents a processed class (like "ARRAYED_LIST..."),
 			-- return the first occurrence of the same class in `grid'.
 		require
@@ -576,7 +576,7 @@ feature{NONE} -- Implementation
 			good_result: not Result.is_collapsed
 		end
 
-	first_occurrence_internal (a_start_row, a_source_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW is
+	first_occurrence_internal (a_start_row, a_source_row: EB_CLASS_BROWSER_TREE_ROW): EB_CLASS_BROWSER_TREE_ROW
 			-- Find the first occurrence of class in `a_source_row' recursively starting from `a_start_row'.
 		require
 			a_start_row_attached: a_start_row /= Void
@@ -606,7 +606,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	selected_rows: LIST [EV_GRID_ROW] is
+	selected_rows: LIST [EV_GRID_ROW]
 			-- Selected rows in `grid'.
 			-- If empty, put the first row in `grid' in result.
 		do
@@ -617,7 +617,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	class_table: HASH_TABLE [QL_CLASS, INTEGER] is
+	class_table: HASH_TABLE [QL_CLASS, INTEGER]
 			-- Table for classes in `data'
 			-- Key is class_id, value is that class
 		do
@@ -635,7 +635,7 @@ feature{NONE} -- Implementation
 	control_tool_internal: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Implementation of `control_bar'
 
-	display_path_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	display_path_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to turn on/off item path display
 		do
 			if display_path_button_internal = Void then
@@ -659,7 +659,7 @@ feature{NONE} -- Implementation
 	normal_referenced_button_internal: like normal_referenced_button
 			-- Implementation of `normal_referenced_button'
 
-	recycle_agents is
+	recycle_agents
 			-- Recycle agents
 		do
 			if display_path_button_internal /= Void then
@@ -674,7 +674,7 @@ feature{NONE} -- Implementation
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 		end
 
-	is_sorting_setting_valid: BOOLEAN is
+	is_sorting_setting_valid: BOOLEAN
 			-- Is setting for grid sorting valid?
 			-- The criterion is: the class name column is sortable, and if the location column is displayed
 			-- and then current view is in flat mode, the location column is sortable
@@ -689,7 +689,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	setup_sorting_for_location is
+	setup_sorting_for_location
 			-- Set sorting information for location column.
 		require
 			is_flat_view_enabled: is_flat_view_enabled
@@ -707,7 +707,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Initialization
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		do
 			create grid
@@ -733,7 +733,7 @@ feature{NONE} -- Initialization
 			set_select_all_action (agent do  end)
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build facilities to support sort and search
 		local
 			l_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]
@@ -759,22 +759,22 @@ feature{NONE} -- Initialization
 	control_tool_bar_internal: like control_tool_bar;
 			-- Implementation of `control_tool_bar'
 
-	class_name_column_index: INTEGER is 1
+	class_name_column_index: INTEGER = 1
 			-- Index of class name column
 
-	location_column_index: INTEGER is 2;
+	location_column_index: INTEGER = 2;
 			-- Index of location column
 
 feature{NONE} -- Implementation/Stone
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.
 		do
 			Result := item_to_put_in_editor_for_tree_row
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

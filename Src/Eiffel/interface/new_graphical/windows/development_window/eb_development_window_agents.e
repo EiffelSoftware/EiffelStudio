@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Agents in EB_DEVELOPMENT_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Clean up
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- Detaches objects from their container
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
@@ -48,7 +48,7 @@ feature {NONE} -- Clean up
 			on_customized_tools_changed_agent_internal_detached: on_customized_tools_changed_agent_internal = Void
 		end
 
-	internal_recycle is
+	internal_recycle
 			-- <Precursor>
 		do
 			text_observer_manager.remove_observer (Current)
@@ -57,7 +57,7 @@ feature {NONE} -- Clean up
 
 feature -- Text observer Agents
 
-	on_text_reset is
+	on_text_reset
 			-- The main editor has just been wiped out
 			-- before loading a new file.
 		local
@@ -81,7 +81,7 @@ feature -- Text observer Agents
 			end
 		end
 
-	on_text_edited (unused: BOOLEAN) is
+	on_text_edited (unused: BOOLEAN)
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
 		local
@@ -106,7 +106,7 @@ feature -- Text observer Agents
 			end
 		end
 
-	on_text_back_to_its_last_saved_state is
+	on_text_back_to_its_last_saved_state
 			-- On text back to last saved state.
 		local
 			str: STRING_32
@@ -122,7 +122,7 @@ feature -- Text observer Agents
 			end
 		end
 
-	on_cursor_moved is
+	on_cursor_moved
 			-- The cursor has moved, reflect the change in the status bar.
 			-- And reflect location editing in the text in features tool and address bar.
 		local
@@ -145,7 +145,7 @@ feature -- Text observer Agents
 			end
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- The main editor has just been reloaded.
 		do
 			if not is_recycled then
@@ -206,21 +206,21 @@ feature -- Agents
 			end
 		end
 
-	on_c_compilation_starts is
+	on_c_compilation_starts
 			-- Enable commands when freezing or finalizing starts.
 		do
 			develop_window.commands.c_workbench_compilation_cmd.disable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.disable_sensitive
 		end
 
-	on_c_compilation_stops is
+	on_c_compilation_stops
 			-- Disable commands when freezing or finalizing stops.
 		do
 			develop_window.commands.c_workbench_compilation_cmd.enable_sensitive
 			develop_window.commands.c_finalized_compilation_cmd.enable_sensitive
 		end
 
-	on_focus is
+	on_focus
 			-- Focus gained
 		require
 			not_is_recycled: not is_recycled
@@ -257,7 +257,7 @@ feature -- Agents
 			end
 		end
 
-	on_project_created is
+	on_project_created
 			-- Inform tools that the current project has been loaded or re-loaded.
 		local
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -277,7 +277,7 @@ feature -- Agents
 			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- Inform tools that the current project has been loaded or re-loaded.
 		do
 			develop_window.cluster_manager.on_project_loaded
@@ -287,7 +287,7 @@ feature -- Agents
 			develop_window.tools.breakpoints_tool.on_project_loaded
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Inform tools that the current project will soon been unloaded.
 		local
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -309,7 +309,7 @@ feature -- Agents
 			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
-	on_customized_tools_changed (a_changed_tools: LIST [STRING]) is
+	on_customized_tools_changed (a_changed_tools: LIST [STRING])
 			-- Action to be performed when customized tools changes			
 		require
 			a_changed_tools_attached: a_changed_tools /= Void
@@ -339,7 +339,7 @@ feature -- Agents
 			end
 		end
 
-	on_customized_tools_changed_agent: PROCEDURE [ANY, TUPLE [LIST [STRING]]] is
+	on_customized_tools_changed_agent: PROCEDURE [ANY, TUPLE [LIST [STRING]]]
 			-- Agent of `on_cutomized_tools_changed'
 		do
 			if on_customized_tools_changed_agent_internal = Void then
@@ -350,7 +350,7 @@ feature -- Agents
 
 feature {NONE} -- Query
 
-	active_history_owner: ?EB_HISTORY_OWNER is
+	active_history_owner: ?EB_HISTORY_OWNER
 			-- A history owner for an active tool in the UI.
 		require
 			is_interface_usable: is_interface_usable
@@ -387,7 +387,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	enable_commands_on_project_created is
+	enable_commands_on_project_created
 			-- Enable commands when a new project has been created (not yet compiled)
 		do
 			develop_window.commands.system_info_cmd.enable_sensitive
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.new_cluster_cmd.enable_sensitive
 		end
 
-	enable_commands_on_project_loaded is
+	enable_commands_on_project_loaded
 			-- Enable commands when a new project has been created and compiled
 		do
 			if eiffel_layout.has_profiler then
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			develop_window.commands.customized_tool_command.enable_sensitive
 		end
 
-	disable_commands_on_project_unloaded is
+	disable_commands_on_project_unloaded
 			-- Enable commands when a project has been closed.
 		do
 			if eiffel_layout.has_dll_generation then
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 invariant
 	not_void: not is_recycled implies develop_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

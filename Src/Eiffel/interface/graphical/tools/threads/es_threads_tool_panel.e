@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool that displays the threads during a debugging session."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	on_before_initialize is
+	on_before_initialize
 			-- <Precursor>
 		do
 			create notes_on_threads.make (3)
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (set_row_highlight_bg_color_agent)
 		end
 
-	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			box: EV_VERTICAL_BOX
@@ -98,7 +98,7 @@ feature {NONE} -- Factory
 
 feature -- Status setting
 
-	selected_row: EV_GRID_ROW is
+	selected_row: EV_GRID_ROW
 		require
 			single_row_selection_enabled: grid.is_single_row_selection_enabled
 		local
@@ -110,7 +110,7 @@ feature -- Status setting
 			end
 		end
 
-	on_item_double_clicked (ax,ay,abut: INTEGER; gi:EV_GRID_ITEM) is
+	on_item_double_clicked (ax,ay,abut: INTEGER; gi:EV_GRID_ITEM)
 		local
 			gedit: EV_GRID_EDITABLE_ITEM
 		do
@@ -124,7 +124,7 @@ feature -- Status setting
 			end
 		end
 
-	on_row_double_clicked (a_row: EV_GRID_ROW) is
+	on_row_double_clicked (a_row: EV_GRID_ROW)
 		local
 			tid: like thread_id_from_row
 		do
@@ -136,7 +136,7 @@ feature -- Status setting
 			end
 		end
 
-	set_callstack_thread (tid: POINTER) is
+	set_callstack_thread (tid: POINTER)
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
 			if Debugger_manager.application_current_thread_id /= tid then
@@ -144,12 +144,12 @@ feature -- Status setting
 			end
 		end
 
-	refresh is
+	refresh
 			-- Class has changed in `development_window'.
 		do
 		end
 
-	reset_tool is
+	reset_tool
 		do
 			reset_update_on_idle
 			if notes_on_threads /= Void then
@@ -158,7 +158,7 @@ feature -- Status setting
 			clean_threads_info
 		end
 
-	show is
+	show
 			-- <Precursor>
 		do
 			Precursor
@@ -170,19 +170,19 @@ feature -- Status setting
 
 feature {NONE} -- Update
 
-	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN)
 			-- Update when debugging
 		do
 			request_clean_threads_info
 		end
 
-	on_update_when_application_is_not_executing is
+	on_update_when_application_is_not_executing
 			-- Update when not debugging
 		do
 			request_clean_threads_info
 		end
 
-	real_update (dbg_was_stopped: BOOLEAN) is
+	real_update (dbg_was_stopped: BOOLEAN)
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running			
 		local
@@ -199,7 +199,7 @@ feature {NONE} -- Update
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -210,21 +210,21 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Implementation		
 
-	clean_threads_info is
+	clean_threads_info
 		do
 			if grid /= Void then
 				grid.call_delayed_clean
 			end
 		end
 
-	request_clean_threads_info is
+	request_clean_threads_info
 		do
 			if grid /= Void then
 				grid.request_delayed_clean
 			end
 		end
 
-	refresh_threads_info is
+	refresh_threads_info
 			-- Refresh thread info according to debugger data
 		require
 			application_is_executing: debugger_manager.application_is_executing
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation note
 
-	update_notes_from_item (gi: EV_GRID_EDITABLE_ITEM) is
+	update_notes_from_item (gi: EV_GRID_EDITABLE_ITEM)
 			-- Update note attached to thread
 		local
 			tid: like thread_id_from_row
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation note
 
 feature {NONE} -- Implementation, cosmetic
 
-	thread_id_from_row (r: EV_GRID_ROW): POINTER is
+	thread_id_from_row (r: EV_GRID_ROW): POINTER
 			-- Thread id related to `r'
 		local
 			tid: POINTER_REF
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Store agent for `set_row_highlight_bg_color' so that it gets properly removed
 			-- when recycling.
 
-	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
+	set_row_highlight_bg_color (v: COLOR_PREFERENCE)
 			-- set Background color for highlighted row.
 		do
 			row_highlight_bg_color := v.value
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation, cosmetic
 	row_highlight_bg_color: EV_COLOR;
 			-- Background color for highlighted row.
 
-	active_thread_font: EV_FONT is
+	active_thread_font: EV_FONT
 		once
 			create Result
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
@@ -385,7 +385,7 @@ feature {NONE} -- Constants
 	col_priority_index: INTEGER = 3
 	col_note_index: 	INTEGER = 4
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

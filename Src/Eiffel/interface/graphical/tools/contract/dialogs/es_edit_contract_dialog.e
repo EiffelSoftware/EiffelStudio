@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dialog used to edit an existing contract in the contract tool {ES_CONTRACT_TOOL}.
 	]"
@@ -91,7 +91,7 @@ feature {NONE} -- Action handler
 			is_dirty: is_dirty
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

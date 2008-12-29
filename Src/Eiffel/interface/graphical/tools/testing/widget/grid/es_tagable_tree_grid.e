@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a grid visualizing a {TAG_BASED_TREE} for items of type {TAGABLE_I}.
 		
@@ -56,7 +56,7 @@ create
 
 feature {NONE} --Initialization
 
-	on_before_initialize is
+	on_before_initialize
 			-- <Precursor>
 		do
 			Precursor
@@ -150,7 +150,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Element change
 
-	fill is
+	fill
 			-- <Precursor>
 		do
 			initialize_layout
@@ -169,7 +169,7 @@ feature {NONE} -- Element change
 			initialize_layout
 		end
 
-	add_untagged_item (a_item: !G) is
+	add_untagged_item (a_item: !G)
 			-- <Precursor>
 		local
 			i: INTEGER
@@ -269,7 +269,7 @@ feature -- Basic functionality
 
 feature {NONE} -- Implementation
 
-	on_row_expansion (a_row: EV_GRID_ROW) is
+	on_row_expansion (a_row: EV_GRID_ROW)
 			-- Make sure tree node represented by `a_row' is evaluated.
 		do
 			if {l_node: ES_TAGABLE_GRID_TAG_DATA [G]} a_row.data then

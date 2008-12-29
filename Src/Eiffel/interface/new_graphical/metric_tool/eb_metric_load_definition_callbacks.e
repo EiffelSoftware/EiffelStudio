@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The callbacks that react on metric definitation xml parsing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_factory (a_factory: like factory) is
+	make_with_factory (a_factory: like factory)
 			-- Initialize `factory' with `a_factory'.
 		require
 			a_factory_attached: a_factory /= Void
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Setting
 
-	wipe_out_metrics is
+	wipe_out_metrics
 			-- Wipe out `metrics'.
 		do
 			metrics.wipe_out
@@ -70,7 +70,7 @@ feature -- Setting
 
 feature{NONE} -- Callbacks
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		do
 			inspect
@@ -154,7 +154,7 @@ feature{NONE} -- Callbacks
 			current_attributes.clear_all
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			inspect
@@ -229,7 +229,7 @@ feature{NONE} -- Callbacks
 			element_stack.remove
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		local
 			l_current_state: INTEGER
@@ -251,7 +251,7 @@ feature{NONE} -- Callbacks
 
 feature{NONE} -- Process
 
-	process_metric_finish is
+	process_metric_finish
 			-- Process "metric" definition list node.
 		local
 			l_metrics: like metrics
@@ -266,7 +266,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_basic_metric is
+	process_basic_metric
 			-- Process "basic_metric" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; unit: STRING]
@@ -277,7 +277,7 @@ feature{NONE} -- Process
 			create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
 		end
 
-	process_linear_metric is
+	process_linear_metric
 			-- Process "linear_metric" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; unit: STRING]
@@ -287,7 +287,7 @@ feature{NONE} -- Process
 			current_metric := current_linear_metric
 		end
 
-	process_ratio_metric is
+	process_ratio_metric
 			-- Process "ratio_metric" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; unit: STRING]
@@ -323,7 +323,7 @@ feature{NONE} -- Process
 			current_metric := current_ratio_metric
 		end
 
-	process_variable_metric is
+	process_variable_metric
 			-- Process "variable_metric" definition list node.		
 		require
 			current_linear_metric_attached: current_linear_metric /= Void
@@ -355,7 +355,7 @@ feature{NONE} -- Process
 			current_linear_metric.variable_metric.extend (l_metric)
 		end
 
-	process_criterion is
+	process_criterion
 			-- Process "criterion" definition list node.		
 		do
 			if not current_criterion.is_empty then
@@ -363,7 +363,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_normal_criterion is
+	process_normal_criterion
 			-- Process "normal_criterion" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -376,7 +376,7 @@ feature{NONE} -- Process
 			register_criterion (current_normal_criterion)
 		end
 
-	process_domain_criterion is
+	process_domain_criterion
 			-- Process "domain_criterion" definition list node.
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -389,7 +389,7 @@ feature{NONE} -- Process
 			domain_receiver_stack.extend ([agent current_domain_criterion.set_domain, False])
 		end
 
-	process_text_criterion is
+	process_text_criterion
 			-- Process "text_criterion" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -439,7 +439,7 @@ feature{NONE} -- Process
 			last_criterion := current_text_criterion
 		end
 
-	process_path_criterion is
+	process_path_criterion
 			-- Process "path_criterion" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -452,7 +452,7 @@ feature{NONE} -- Process
 			register_criterion (current_path_criterion)
 		end
 
-	process_caller_callee_criterion is
+	process_caller_callee_criterion
 			-- Process "caller_criterion" definition list node.		
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -479,7 +479,7 @@ feature{NONE} -- Process
 			domain_receiver_stack.extend ([agent current_caller_criterion.set_domain, False])
 		end
 
-	process_supplier_client_criterion is
+	process_supplier_client_criterion
 			-- Process "client_criterion" definition list node.
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -536,7 +536,7 @@ feature{NONE} -- Process
 
 		end
 
-	process_value_criterion is
+	process_value_criterion
 			-- Process value criterion.
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -569,7 +569,7 @@ feature{NONE} -- Process
 			tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
 		end
 
-	process_external_command_criterion is
+	process_external_command_criterion
 			-- Proces "command" node.
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
@@ -582,7 +582,7 @@ feature{NONE} -- Process
 			external_command_tester_stack.extend (current_command_criterion.tester)
 		end
 
-	process_nary_criterion (a_for_and: BOOLEAN) is
+	process_nary_criterion (a_for_and: BOOLEAN)
 			-- Process nary criterion.
 			-- If `a_for_and' is True, treat that nary criterion as an "AND" criterion,
 			-- otherwise an "OR" criterion.
@@ -601,19 +601,19 @@ feature{NONE} -- Process
 			register_criterion (l_criterion)
 		end
 
-	process_and_criterion is
+	process_and_criterion
 			-- Process "and_criterion".
 		do
 			process_nary_criterion (True)
 		end
 
-	process_or_criterion is
+	process_or_criterion
 			-- Process "or_criterion".
 		do
 			process_nary_criterion (False)
 		end
 
-	process_text_finish is
+	process_text_finish
 			-- Process "text" definition list node.
 		do
 			if current_tag.item /= t_text then
@@ -623,7 +623,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_path_finish is
+	process_path_finish
 			-- Process "path" definition list node.		
 		do
 			if current_tag.item /= t_path then
@@ -633,7 +633,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_description_finish is
+	process_description_finish
 			-- Process "description" definition list node.		
 		do
 			if current_metric /= Void then
@@ -643,13 +643,13 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_input is
+	process_input
 			-- Process when start tag of "input" finished.
 		do
 			external_command_tester_stack.item.set_input_as_file (boolean_attribute_value (at_as_file_name, n_as_file_name))
 		end
 
-	process_output is
+	process_output
 			-- Process when start tag of "output" finishes.
 		local
 			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
@@ -659,7 +659,7 @@ feature{NONE} -- Process
 			l_tester.set_input_as_file (boolean_attribute_value (at_as_file_name, n_as_file_name))
 		end
 
-	process_error is
+	process_error
 			-- Process when start tag of "error" finishes.
 		local
 			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
@@ -670,13 +670,13 @@ feature{NONE} -- Process
 			l_tester.set_input_as_file (boolean_attribute_value (at_redirected_to_output, n_redirected_to_output))
 		end
 
-	process_working_directory_finish is
+	process_working_directory_finish
 			-- Process when "working_directory" node finishes.
 		do
 			process_command_related_finish (t_working_directory, agent (external_command_tester_stack.item).set_working_directory)
 		end
 
-	process_exit_code is
+	process_exit_code
 			-- Process when start tag of "exit_code" finishes.
 		local
 			l_tester: EB_METRIC_EXTERNAL_COMMAND_TESTER
@@ -686,31 +686,31 @@ feature{NONE} -- Process
 			l_tester.set_exit_code (integer_attribute_value (at_value, n_value))
 		end
 
-	process_command_finish is
+	process_command_finish
 			-- Process when "command" node finishes.
 		do
 			process_command_related_finish (t_command, agent (external_command_tester_stack.item).set_command)
 		end
 
-	process_input_finish is
+	process_input_finish
 			-- Process when "input" node finishes.
 		do
 			process_command_related_finish (t_input, agent (external_command_tester_stack.item).set_input)
 		end
 
-	process_output_finish is
+	process_output_finish
 			-- Process when "output" node finishes.
 		do
 			process_command_related_finish (t_output, agent (external_command_tester_stack.item).set_output)
 		end
 
-	process_error_finish is
+	process_error_finish
 			-- Process when "error" node finishes.
 		do
 			process_command_related_finish (t_error, agent (external_command_tester_stack.item).set_error)
 		end
 
-	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
+	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Process.
 		require
 			a_agent_attached: a_agent /= Void
@@ -777,7 +777,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/XML structure
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -973,7 +973,7 @@ feature{NONE} -- Implementation/XML structure
 			Result.force (l_trans, t_metric_value)
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible attributes of tags.
 		local
 			l_attr: HASH_TABLE [INTEGER, STRING]
@@ -1212,7 +1212,7 @@ feature{NONE} -- Implementation/XML structure
 			Result.force (l_attr, t_exit_code)
 		end
 
-	element_index_table: HASH_TABLE [INTEGER, STRING] is
+	element_index_table: HASH_TABLE [INTEGER, STRING]
 			-- Table of indexes of supported elements indexed by element name.
 		once
 			create Result.make (20)
@@ -1245,7 +1245,7 @@ feature{NONE} -- Implementation/XML structure
 
 feature{NONE} -- Implementation
 
-	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING] is
+	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING]
 			-- Metric identifier of `current_metric'
 		require
 			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
@@ -1271,7 +1271,7 @@ feature{NONE} -- Implementation
 			Result := [l_name, l_unit]
 		end
 
-	current_criterion_identifier: TUPLE [name: STRING; scope: QL_SCOPE; is_negation_used: BOOLEAN] is
+	current_criterion_identifier: TUPLE [name: STRING; scope: QL_SCOPE; is_negation_used: BOOLEAN]
 			-- Criterion identifier
 			-- `name' is name of the criterion, `scope' is its scope.
 			-- `is_negation_used' decides whether or not a "not" operation is applied when the criterion is evaluated.
@@ -1314,7 +1314,7 @@ feature{NONE} -- Implementation
 			Result := [l_name, l_ql_scope, l_negation_used]
 		end
 
-	setup_criterion (a_criterion: EB_METRIC_CRITERION; a_negation: BOOLEAN) is
+	setup_criterion (a_criterion: EB_METRIC_CRITERION; a_negation: BOOLEAN)
 			-- Setup `a_criterion' with `a_negation'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -1322,7 +1322,7 @@ feature{NONE} -- Implementation
 			a_criterion.set_is_negation_used (a_negation)
 		end
 
-	register_criterion (a_criterion: EB_METRIC_CRITERION) is
+	register_criterion (a_criterion: EB_METRIC_CRITERION)
 			-- Register `a_criterion' into `current_criterion_stack' or `current_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -1346,7 +1346,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	check_metric_name (a_name: STRING) is
+	check_metric_name (a_name: STRING)
 			-- Check if `a_name' is a valid metric name.
 		do
 			if a_name = Void or else a_name.is_empty then
@@ -1358,7 +1358,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	coefficient_for_ratio_metric (a_value: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]): DOUBLE is
+	coefficient_for_ratio_metric (a_value: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]): DOUBLE
 			-- Coefficient from `a_value' for ratio metric.
 			-- If `a_value' doesn't represent a valid double, file an error with error message retrieved by `a_error_message_agent'.
 		require
@@ -1372,7 +1372,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	is_unit_valid (a_unit: STRING): BOOLEAN is
+	is_unit_valid (a_unit: STRING): BOOLEAN
 			-- Is `a_unit' valid?
 			-- `a_unit' should be left and right trimmed and should be in lowercase.
 		require
@@ -1389,7 +1389,7 @@ invariant
 	domain_receiver_stack_attached: domain_receiver_stack /= Void
 	external_command_tester_stack_attached: external_command_tester_stack /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

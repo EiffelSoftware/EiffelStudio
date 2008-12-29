@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for "or else"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_or_else_b (Current)
@@ -23,14 +23,14 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_or: BOOLEAN is
+	is_or: BOOLEAN
 			-- Is Current just `or', i.e. order does not matter?
 		do
 		end
 
 feature -- Enlarging
 
-	built_in_enlarged: EXPR_B is
+	built_in_enlarged: EXPR_B
 			-- Enlarge node. Try to get rid of useless code if possible.
 		local
 			l_b_or_else_bl: B_OR_ELSE_BL
@@ -96,19 +96,19 @@ feature -- Enlarging
 			end
 		end
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate the operator
 		do
 			a_buffer.put_four_character (' ', '|', '|', ' ')
 		end;
 
-	is_commutative: BOOLEAN is
+	is_commutative: BOOLEAN
 			-- Is operation commutative ?
 		do
 			Result := not has_call;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "XMI code constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature --Initialization
 
-	make is
+	make
 			-- Initialize the constant elements of code.
 		do
 			header := "<?xml version = '1.0' encoding = %'UTF-8%' ?>%N%
@@ -70,7 +70,7 @@ feature -- Access
 	header: STRING
 			-- Header code of the XMI file.	
 
-	content_start (idref: INTEGER): STRING is
+	content_start (idref: INTEGER): STRING
 			-- Code of the beginning of the XMI file content.
 		require
 			ref_consistent: idref > 0
@@ -106,7 +106,7 @@ feature -- Access
 	extensions_end: STRING;
 			-- Code of the end of the XMI file extensions.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

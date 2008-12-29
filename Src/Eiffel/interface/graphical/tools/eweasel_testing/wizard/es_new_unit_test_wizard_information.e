@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					eweasel test case creation wizard information
 																			]"
@@ -105,7 +105,7 @@ feature -- Query
 	is_add_to_be_implemented_selected: BOOLEAN
 			-- If `add_to_be_implemented' check box selected?
 
-	has_cluster_id (a_cluster_id: STRING): BOOLEAN is
+	has_cluster_id (a_cluster_id: STRING): BOOLEAN
 			-- If `a_cluster_id' exists in current system?
 		do
 			Result := id_solution.group_of_id (a_cluster_id) /= Void
@@ -129,7 +129,7 @@ feature -- Query
 					(test_case_name /= Void and then not test_case_name.is_empty)
 		end
 
-	is_cluster_valid: BOOLEAN is
+	is_cluster_valid: BOOLEAN
 			-- If cluster information valid?
 		do
 			Result := internal_cluster_id /= Void and then not internal_cluster_id.is_empty
@@ -188,7 +188,7 @@ feature -- Command
 			set: internal_cluster_sub_path = a_path
 		end
 
-	set_run_after_all_selected (a_bool: like is_run_after_all_selected) is
+	set_run_after_all_selected (a_bool: like is_run_after_all_selected)
 			-- Set `is_run_after_all_selected' with `a_bool'
 		do
 			is_run_after_all_selected := a_bool
@@ -196,7 +196,7 @@ feature -- Command
 			set: is_run_after_all_selected = a_bool
 		end
 
-	set_run_before_all_selected (a_bool: like is_run_before_all_selected) is
+	set_run_before_all_selected (a_bool: like is_run_before_all_selected)
 			-- Set `is_run_before_all_selected' with `a_bool'
 		do
 			is_run_before_all_selected := a_bool
@@ -204,7 +204,7 @@ feature -- Command
 			set: is_run_before_all_selected = a_bool
 		end
 
-	set_run_before_each_selected (a_bool: like is_run_before_each_selected) is
+	set_run_before_each_selected (a_bool: like is_run_before_each_selected)
 			-- Set `is_run_before_each_selected' with `a_bool'
 		do
 			is_run_before_each_selected := a_bool
@@ -212,7 +212,7 @@ feature -- Command
 			set: is_run_before_each_selected = a_bool
 		end
 
-	set_run_after_each_selected (a_bool: like is_run_after_each_selected) is
+	set_run_after_each_selected (a_bool: like is_run_after_each_selected)
 			-- Set `is_run_after_each_selected' with `a_bool'
 		do
 			is_run_after_each_selected := a_bool
@@ -220,7 +220,7 @@ feature -- Command
 			set: is_run_after_each_selected = a_bool
 		end
 
-	set_add_to_be_implemented_selected (a_bool: like is_add_to_be_implemented_selected) is
+	set_add_to_be_implemented_selected (a_bool: like is_add_to_be_implemented_selected)
 			-- Set `is_add_to_be_implemented_selected' with `a_bool'
 		do
 			is_add_to_be_implemented_selected := a_bool
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 invariant
 	not_void: features_to_test /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

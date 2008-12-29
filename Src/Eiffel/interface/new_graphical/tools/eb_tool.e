@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		EiffelGraphicalCompiler$ tool. Ancestor of all tools in the workbench,
 		providing dragging capabilities (transport). A tool is
@@ -78,14 +78,14 @@ feature {NONE} -- Initialization
 			tool_descriptor_set: tool_descriptor = a_tool
 		end
 
-	build_interface is
+	build_interface
 			-- Build all the tool's widgets.
 		deferred
 		ensure
 			widget_created: widget /= Void
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build the `content' item and
 			-- Add it to `a_docking_manager'.
 		do
@@ -109,14 +109,14 @@ feature {NONE} -- Initialization
 			register_action (content.close_request_actions, agent close)
 		end
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Build `mini_toolbar'
 		do
 		end
 
 feature -- Change
 
-	set_manager (m: like develop_window) is
+	set_manager (m: like develop_window)
 			-- Set value `m' to `develop_window'
 		require
 			m /= Void
@@ -126,12 +126,12 @@ feature -- Change
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current
 		deferred
 		end
 
-	title_for_pre: STRING is
+	title_for_pre: STRING
 			-- Title of the tool
 		do
 			Result := tool_descriptor.type_id
@@ -139,7 +139,7 @@ feature -- Access
 			valid_title: Result /= Void and then not Result.is_empty
 		end
 
-	title: STRING_GENERAL is
+	title: STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
 		do
 			Result := tool_descriptor.edition_title
@@ -150,7 +150,7 @@ feature -- Access
 	mini_toolbar: EV_WIDGET
 			-- Mini tool bar assiociate with Current.
 
-	minimized_title: STRING_GENERAL is
+	minimized_title: STRING_GENERAL
 			-- Title of the tool when minimized.
 			--
 			-- By default this name is the same as `title', redefine this
@@ -161,7 +161,7 @@ feature -- Access
 			valid_minimized_title: minimized_title /= Void and then not minimized_title.is_empty
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it may appear in a menu.
 			--
 			-- By default this name is the same as `title', redefine this
@@ -172,13 +172,13 @@ feature -- Access
 			valid_menu_name: menu_name /= Void and then not menu_name.is_empty
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap as it appears in toolbars and menu, there is no pixmap by default.
 		do
 			Result := tool_descriptor.icon_pixmap
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer as it appears in toolbars and menu, there is no pixmap by default.
 		do
 			Result := tool_descriptor.icon
@@ -194,7 +194,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is Current shown on the screen?
 		do
 			if is_interface_usable and then content /= Void and then not is_recycled then
@@ -205,7 +205,7 @@ feature -- Status report
 			widget_is_displayed: Result implies widget.is_displayed
 		end
 
-	is_auto_hide: BOOLEAN is
+	is_auto_hide: BOOLEAN
 			-- Is current auto hide status and content visible?
 		do
 			if is_interface_usable and then content /= Void and then content.is_visible then
@@ -213,14 +213,14 @@ feature -- Status report
 			end
 		end
 
-	is_customized_tool: BOOLEAN is
+	is_customized_tool: BOOLEAN
 			-- Is Current tool a customized tool?
 		do
 		end
 
 feature -- Status setting
 
-	close is
+	close
 			-- Close the tool (if possible)
 		do
 			content.hide
@@ -228,7 +228,7 @@ feature -- Status setting
 			tool_descriptor.close
 		end
 
-	show is
+	show
 			-- Show the tool (if possible)
 		do
 			if not shown or else is_auto_hide then
@@ -237,13 +237,13 @@ feature -- Status setting
 			content.set_focus
 		end
 
-	show_with_setting is
+	show_with_setting
 			-- Show current tool (if possible), and do some settings
 		do
 			show
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Any widget of the tool has focus?
 		do
 			if widget /= Void then
@@ -280,7 +280,7 @@ feature {ES_TOOL} -- Event handlers
 
 feature {NONE} -- Implementation
 
-	has_focus_on_widgets_internal (a_widget: EV_WIDGET): BOOLEAN is
+	has_focus_on_widgets_internal (a_widget: EV_WIDGET): BOOLEAN
 			-- Any widget has focus.
 		local
 			l_container: EV_CONTAINER
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_focus_to_editor_when_idle is
+	set_focus_to_editor_when_idle
 			-- Set focus to editor when idle.
 		local
 			l_editor: EB_SMART_EDITOR
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_focus_if_possible (a_widget: EV_WIDGET) is
+	set_focus_if_possible (a_widget: EV_WIDGET)
 			-- Set focus to `a_widget' when possble.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -376,7 +376,7 @@ invariant
 		-- Customizable tool needs to be converted.
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

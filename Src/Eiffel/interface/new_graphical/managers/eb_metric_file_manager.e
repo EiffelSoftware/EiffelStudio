@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that handles a metric file containing recorded measures%
 		%and the related metric definitions."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create XML elements to store metrics and measures.
 		local
 			l_node: XM_ELEMENT
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- File creation
 
-	metric_file_name: FILE_NAME is
+	metric_file_name: FILE_NAME
 			-- Location of XML file for metric macros.
 		local
 			directory: DIRECTORY
@@ -75,14 +75,14 @@ feature -- File creation
 			Result := internal_metric_file_name
 		end
 
-	destroy_file_name is
+	destroy_file_name
 			-- Destroy file name when `metric_file' does no longer exist
 			-- to make re-creation possible.
 		do
 			internal_metric_file_name := Void
 		end
 
-	create_metric_file (name: STRING) is
+	create_metric_file (name: STRING)
 			-- Create `metric_file' if not yet created.
 		require
 			name_not_empty: name /= Void and then not name.is_empty
@@ -94,7 +94,7 @@ feature -- File creation
 			end
 		end
 
-	store is
+	store
 			-- Overwrite `metric_file' with new data of `file_header'.
 		require
 			header_not_void: file_header /= Void
@@ -123,7 +123,7 @@ feature -- File creation
 
 feature -- Metric definitions
 
-	metric_element (name, unit, type: STRING): XM_ELEMENT is
+	metric_element (name, unit, type: STRING): XM_ELEMENT
 			-- XML element for new metric definitions.
 		require
 			name_not_empty: name /= Void and then not name.is_empty
@@ -140,7 +140,7 @@ feature -- Metric definitions
 			Result.add_attribute ("Type", l_namespace, type)
 		end
 
-	add_metric (metric: XM_ELEMENT; index: INTEGER) is
+	add_metric (metric: XM_ELEMENT; index: INTEGER)
 			-- Add `metric' to `metric_header' at `index' position.
 		require
 			metric_not_void: metric /= Void
@@ -148,7 +148,7 @@ feature -- Metric definitions
 			metric_header.put (metric, index)
 		end
 
-	replace_metric (index_old_metric: INTEGER; new_metric: XM_ELEMENT) is
+	replace_metric (index_old_metric: INTEGER; new_metric: XM_ELEMENT)
 			-- Overwrite metric at `index_old_metric' with `new_metric'.
 		require
 			new_metric_not_void: new_metric /= Void
@@ -159,7 +159,7 @@ feature -- Metric definitions
 			metric_header.put (new_metric, index_old_metric)
 		end
 
-	index_of_metric (metric_name: STRING): INTEGER is
+	index_of_metric (metric_name: STRING): INTEGER
 			-- Return index of metric whose name is `metric_name' in `metric_header'.
 		require
 			metric_name_not_empty: metric_name /= Void and then not metric_name.is_empty
@@ -191,7 +191,7 @@ feature -- Metric definitions
 			index_found: Result >= 1 and Result <= metric_header.count
 		end
 
-	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER) is
+	new_metric_notify_all (new_metric: EB_METRIC; new_metric_element: XM_ELEMENT; overwrite: BOOLEAN; index: INTEGER)
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -209,7 +209,7 @@ feature -- Metric definitions
 		rescue
 		end
 
-	management_metric_notify_all (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT]) is
+	management_metric_notify_all (metric_list: ARRAYED_LIST [EB_METRIC]; xml_list: ARRAYED_LIST [XM_ELEMENT])
 			-- Notify all observers of a change in metric definitions.
 		do
 			if metric_file.is_closed then
@@ -229,7 +229,7 @@ feature -- Metric definitions
 
 feature -- Recorded_measures
 
-	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XM_ELEMENT is
+	measure_element (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING): XM_ELEMENT
 			-- XML element for new recorded measures.
 		local
 			l_namespace: XM_NAMESPACE
@@ -244,7 +244,7 @@ feature -- Recorded_measures
 			Result.put_last (Xml_routines.xml_node (Result, "RESULT", row.i_th (5)))
 		end
 
-	add_row (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING) is
+	add_row (row: EV_MULTI_COLUMN_LIST_ROW; status: STRING)
 			-- Add new measure to `measure_header'.
 		require
 			row_not_void: row /= Void
@@ -256,7 +256,7 @@ feature -- Recorded_measures
 			measure_header.put_last (added_row)
 		end
 
-	delete_row (index: INTEGER) is
+	delete_row (index: INTEGER)
 			-- Remove recorded measure at `index'.
 		require
 			correct_range: index >= 1 and index <= measure_header.count
@@ -264,7 +264,7 @@ feature -- Recorded_measures
 			measure_header.remove (index)
 		end
 
-	update_row (row: EV_MULTI_COLUMN_LIST_ROW; index: INTEGER) is
+	update_row (row: EV_MULTI_COLUMN_LIST_ROW; index: INTEGER)
 			-- Overwrite recorded measure at `index' after measure has changed.
 		require
 			row_not_void: row /= Void
@@ -277,7 +277,7 @@ feature -- Recorded_measures
 			measure_header.put (updated_row, index)
 		end
 
-	measure_notify_all is
+	measure_notify_all
 			-- Notify all observers of a change in recorded measures.
 		do
 			if metric_file.is_closed then
@@ -295,7 +295,7 @@ feature -- Recorded_measures
 		rescue
 		end
 
-	measure_notify_all_but (tool: EB_METRIC_OBSERVER) is
+	measure_notify_all_but (tool: EB_METRIC_OBSERVER)
 			-- Notify all observers of a change in recorded measures.
 		do
 			if metric_file.is_closed then
@@ -315,7 +315,7 @@ feature -- Recorded_measures
 		rescue
 		end
 
-	set_recompiled (bool: BOOLEAN) is
+	set_recompiled (bool: BOOLEAN)
 			-- Assign `bool' to `is_recompiled' of each_observer.
 		do
 			from
@@ -333,7 +333,7 @@ feature -- Observer
 	observer_list: ARRAYED_LIST [EB_METRIC_OBSERVER]
 		-- List of observers currently displayed.
 
-	add_observer (an_observer: EB_METRIC_OBSERVER) is
+	add_observer (an_observer: EB_METRIC_OBSERVER)
 			-- Add `an_observer' to `observer_list'.
 		require
 			observer_not_void: an_observer /= Void
@@ -343,7 +343,7 @@ feature -- Observer
 			added_observer: observer_list.has (an_observer)
 		end
 
-	remove_observer (an_observer: EB_METRIC_OBSERVER) is
+	remove_observer (an_observer: EB_METRIC_OBSERVER)
 			-- Remove `an_observer' from `observer_list'.
 		require
 			observer_not_void: an_observer /= Void
@@ -354,7 +354,7 @@ feature -- Observer
 			removed_observer: not observer_list.has (an_observer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for integer type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create instance of INTEGER_A represented by `n' bits.
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_integer_a (Current)
@@ -46,7 +46,7 @@ feature -- Visitor
 
 feature -- Property
 
-	is_integer: BOOLEAN is True
+	is_integer: BOOLEAN = True
 			-- Is the current type an integer type ?
 
 	size: INTEGER_8
@@ -54,13 +54,13 @@ feature -- Property
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := {i: INTEGER_A} other and then size = i.size
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class INTEGER
 		do
 			inspect size
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- IL code generation
 
-	minimum_interval_value: INTERVAL_VAL_B is
+	minimum_interval_value: INTERVAL_VAL_B
 			-- Minimum value in inspect interval for current type
 		do
 			inspect size
@@ -88,7 +88,7 @@ feature -- IL code generation
 			end
 		end
 
-	maximum_interval_value: INTERVAL_VAL_B is
+	maximum_interval_value: INTERVAL_VAL_B
 			-- Maximum value in inspect interval for current type
 		do
 			inspect size
@@ -103,7 +103,7 @@ feature -- IL code generation
 			end
 		end
 
-	heaviest (other: TYPE_A): TYPE_A is
+	heaviest (other: TYPE_A): TYPE_A
 		local
 			l_long: like Current
 		do
@@ -125,10 +125,10 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER}
 
-	is_numeric: BOOLEAN is True
+	is_numeric: BOOLEAN = True
 			-- Is the current type a numeric type ?
 
-	c_type: INTEGER_I is
+	c_type: INTEGER_I
 			-- C type
 		do
 			inspect size
@@ -142,7 +142,7 @@ feature {COMPILER_EXPORTER}
 invariant
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

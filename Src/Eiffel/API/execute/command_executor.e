@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Calls commands outside the eiffel environment."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Command Execution
 
-	execute (command: STRING) is
+	execute (command: STRING)
 			-- Execute external `command'.
 		require
 			valid_command: command /= Void
@@ -22,7 +22,7 @@ feature -- Command Execution
 			Execution_environment.launch (command)
 		end
 
-	execute_with_args (appl_name, args: STRING) is
+	execute_with_args (appl_name, args: STRING)
 			-- Execute external command `appl_name' with following arguments.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -31,7 +31,7 @@ feature -- Command Execution
 			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_directory)
 		end
 
-	execute_with_args_and_working_directory (appl_name, args, working_directory: STRING) is
+	execute_with_args_and_working_directory (appl_name, args, working_directory: STRING)
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -42,7 +42,7 @@ feature -- Command Execution
 		end
 
 	execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory: STRING;
-				envir: HASH_TABLE [STRING, STRING]) is
+				envir: HASH_TABLE [STRING, STRING])
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -68,7 +68,7 @@ feature -- Command Execution
 
 feature -- Compiler specific calls
 
-	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING) is
+	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING)
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
 		do
@@ -77,7 +77,7 @@ feature -- Compiler specific calls
 				prelink_cmd_name.to_c, driver_name.to_c)
 		end
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN) is
+	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
@@ -98,19 +98,19 @@ feature -- Compiler specific calls
 			Execution_environment.change_working_directory (cwd)
 		end
 
-	terminate_c_compilation is
+	terminate_c_compilation
 			-- Terminate running c compilation, if any.
 		do
 		end
 
 feature {NONE} -- Externals
 
-	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
+	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY)
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All shared attributes specific to dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,31 +26,31 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
-	confirm_terminate_freezing: BOOLEAN is
+	confirm_terminate_freezing: BOOLEAN
 			-- Should running freezing be terminated?
 		do
 			Result := confirm_on_terminate_freezing_preference.value
 		end
 
-	confirm_terminate_finalizing: BOOLEAN is
+	confirm_terminate_finalizing: BOOLEAN
 			-- Should running finalizing be terminated?
 		do
 			Result := confirm_on_terminate_finalizing_preference.value
 		end
 
-	confirm_terminate_process: BOOLEAN is
+	confirm_terminate_process: BOOLEAN
 			-- Should running c compilation and external command (if any) be terminated?
 		do
 			Result := confirm_on_terminate_process_preference.value
 		end
 
-	confirm_terminate_external_command: BOOLEAN is
+	confirm_terminate_external_command: BOOLEAN
 			-- Should running external command be terminated before closing a development window?
 		do
 			Result := confirm_on_terminate_external_command_preference.value
 		end
 
-	confirm_freeze: BOOLEAN is
+	confirm_freeze: BOOLEAN
 			-- About the freezing dialog (Freezing implies some C compilation.
 			-- ..do you want to proceed? Yes/No): should we display it or
 			-- assume that the user has choosen "Yes"
@@ -58,7 +58,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_freeze_preference.value
 		end
 
-	confirm_finalize: BOOLEAN is
+	confirm_finalize: BOOLEAN
 			-- About the finalizing dialog (Finalizing implies some C compilation.
 			-- ..do you want to proceed? Yes/No): should we display it or
 			-- assume that the user has choosen "Yes"
@@ -66,164 +66,164 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_finalize_preference.value
 		end
 
-	confirm_finalize_assertions: BOOLEAN is
+	confirm_finalize_assertions: BOOLEAN
 			-- Should assertions be automatically discarded when finalizing?
 		do
 			Result := confirm_finalize_assertions_preference.value
 		end
 
-	confirm_finalize_precompile: BOOLEAN is
+	confirm_finalize_precompile: BOOLEAN
 			-- Should .NET precompile projects be finalize?
 		do
 			Result := confirm_finalize_precompile_preference.value
 		end
 
-	confirm_save_before_compile: BOOLEAN is
+	confirm_save_before_compile: BOOLEAN
 			-- Should all files be saved before compiling without displaying
 			-- a dialog?
 		do
 			Result := confirm_save_before_compile_preference.value
 		end
 
-	confirm_on_exit: BOOLEAN is
+	confirm_on_exit: BOOLEAN
 			-- Should we display a dialog to confirm an exit command?
 		do
 			Result := confirm_on_exit_preference.value
 		end
 
-	confirm_clear_breakpoints: BOOLEAN is
+	confirm_clear_breakpoints: BOOLEAN
 			-- Should we display a dialog when clearing all breakpoints?
 		do
 			Result := confirm_clear_breakpoints_preference.value
 		end
 
-	confirm_ignore_all_breakpoints: BOOLEAN is
+	confirm_ignore_all_breakpoints: BOOLEAN
 			-- Should we display a dialog when clicking on "Run application without
 			-- stopping at breakpoints"?
 		do
 			Result := confirm_ignore_all_breakpoints_preference.value
 		end
 
-	confirm_always_compile_before_executing: BOOLEAN is
+	confirm_always_compile_before_executing: BOOLEAN
 			-- Should we display a dialog when asked for execution ?
 		do
 			Result := confirm_always_compile_before_executing_preference.value
 		end
 
-	confirm_convert_project: BOOLEAN is
+	confirm_convert_project: BOOLEAN
 			-- Should we display a dialog before converting an old project?
 		do
 			Result := confirm_convert_project_preference.value
 		end
 
-	confirm_build_precompile: BOOLEAN is
+	confirm_build_precompile: BOOLEAN
 			-- Should we display a dialog before building a needed precompile?
 		do
 			Result := confirm_build_precompile_preference.value
 		end
 
-	confirm_delete_eis_entries: BOOLEAN is
+	confirm_delete_eis_entries: BOOLEAN
 			-- Should we display a dialog before deleting EIS entries?
 		do
 			Result := confirm_delete_eis_entries_prefernce.value
 		end
 
-	acknowledge_not_loaded: BOOLEAN is
+	acknowledge_not_loaded: BOOLEAN
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
 		do
 			Result := acknowledge_not_loaded_preference.value
 		end
 
-	show_starting_dialog: BOOLEAN is
+	show_starting_dialog: BOOLEAN
 			--
 		do
 			Result := show_starting_dialog_preference.value
 		end
 
-	confirm_change_resource_need_restart: BOOLEAN is
+	confirm_change_resource_need_restart: BOOLEAN
 			--
 		do
 			Result := confirm_change_resource_need_restart_preference.value
 		end
 
-	generate_homonyms: BOOLEAN is
+	generate_homonyms: BOOLEAN
 			--
 		do
 			Result := generate_homonyms_preference.value
 		end
 
-	stop_execution_when_compiling: BOOLEAN is
+	stop_execution_when_compiling: BOOLEAN
 			--
 		do
 			Result := stop_execution_when_compiling_preference.value
 		end
 
-	confirm_kill: BOOLEAN is
+	confirm_kill: BOOLEAN
 			--
 		do
 			Result := confirm_kill_preference.value
 		end
 
-	confirm_kill_and_restart: BOOLEAN is
+	confirm_kill_and_restart: BOOLEAN
 			--
 		do
 			Result := confirm_kill_and_restart_preference.value
 		end
 
-	already_editing_class: BOOLEAN is
+	already_editing_class: BOOLEAN
 			--
 		do
 			Result := already_editing_class_preference.value
 		end
 
-	executing_command: BOOLEAN is
+	executing_command: BOOLEAN
 			--
 		do
 			Result := executing_command_preference.value
 		end
 
-	project_settings_width: INTEGER is
+	project_settings_width: INTEGER
 		do
 			Result := project_settings_width_preference.value
 		end
 
-	project_settings_height: INTEGER is
+	project_settings_height: INTEGER
 		do
 			Result := project_settings_height_preference.value
 		end
 
-	project_settings_position_x: INTEGER is
+	project_settings_position_x: INTEGER
 		do
 			Result := project_settings_position_x_preference.value
 		end
 
-	project_settings_position_y: INTEGER is
+	project_settings_position_y: INTEGER
 		do
 			Result := project_settings_position_y_preference.value
 		end
 
-	project_settings_split_position: INTEGER is
+	project_settings_split_position: INTEGER
 		do
 			Result := project_settings_split_position_preference.value
 		end
 
-	starting_dialog_width: INTEGER is
+	starting_dialog_width: INTEGER
 		do
 			Result := starting_dialog_width_preference.value
 		end
 
-	starting_dialog_height: INTEGER is
+	starting_dialog_height: INTEGER
 		do
 			Result := starting_dialog_height_preference.value
 		end
 
-	open_project_dialog_width: INTEGER is
+	open_project_dialog_width: INTEGER
 		do
 			Result := open_project_dialog_width_preference.value
 		end
 
-	open_project_dialog_height: INTEGER is
+	open_project_dialog_height: INTEGER
 		do
 			Result := open_project_dialog_height_preference.value
 		end
@@ -338,67 +338,67 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 feature -- Preference strings
 
-	confirm_on_terminate_freezing_string: STRING is "interface.dialogs.confirm_on_terminate_freezing"
-	confirm_on_terminate_finalizing_string: STRING is "interface.dialogs.confirm_on_terminate_finalizing"
-	confirm_on_terminate_process_string: STRING is "interface.dialogs.confirm_on_terminate_process"
-	confirm_on_terminate_external_command_string: STRING is "interface.dialogs.confirm_on_terminate_external_command"
+	confirm_on_terminate_freezing_string: STRING = "interface.dialogs.confirm_on_terminate_freezing"
+	confirm_on_terminate_finalizing_string: STRING = "interface.dialogs.confirm_on_terminate_finalizing"
+	confirm_on_terminate_process_string: STRING = "interface.dialogs.confirm_on_terminate_process"
+	confirm_on_terminate_external_command_string: STRING = "interface.dialogs.confirm_on_terminate_external_command"
 
-	confirm_on_exit_string: STRING is "interface.dialogs.confirm_on_exit"
-	confirm_finalize_string: STRING is "interface.dialogs.confirm_finalize"
-	confirm_freeze_string: STRING is "interface.dialogs.confirm_freeze"
-	confirm_save_before_compile_string: STRING is "interface.dialogs.confirm_save_before_compile"
-	confirm_finalize_assertions_string: STRING is "interface.dialogs.confirm_finalize_assertions"
-	confirm_clear_breakpoints_string: STRING is "interface.dialogs.confirm_clear_breakpoints"
-	confirm_ignore_all_breakpoints_string: STRING is "interface.dialogs.confirm_ignore_all_breakpoints"
-	confirm_always_apply_debugger_profiles_before_closing_string: STRING is "interface.dialogs.confirm_always_apply_debugger_profiles_before_closing"
-	confirm_always_compile_before_executing_string: STRING is "interface.dialogs.confirm_always_compile_before_executing"
-	confirm_convert_project_string: STRING is "interface.dialogs.confirm_convert_project"
-	confirm_build_precompile_string: STRING is "interface.dialogs.confirm_build_precompile"
-	confirm_delete_eis_entries_string: STRING is "interface.dialogs.confirm_delete_eis_entries"
-	confirm_replace_all_string: STRING is "interface.dialogs.confirm_replace_all"
-	confirm_remove_metric_string: STRING is "interface.dialogs.confirm_remove_metric"
-	confirm_save_metric_string: STRING is "interface.dialogs.confirm_save_metric"
-	acknowledge_not_loaded_string: STRING is "interface.dialogs.acknowledge_not_loaded"
-	confirm_finalize_precompile_string: STRING is "interface.dialogs.confirm_finalize_precompile"
-	show_starting_dialog_string: STRING is "interface.dialogs.show_starting_dialog"
-	confirm_change_resource_need_restart_string: STRING is "interface.dialogs.confirm_resource_change_needs_restart"
-	generate_homonyms_string: STRING is "interface.dialogs.generate_homonyms"
-	stop_execution_when_compiling_string: STRING is "interface.dialogs.stop_execution_when_compiling"
-	confirm_kill_string: STRING is "interface.dialogs.confirm_kill"
-	confirm_kill_and_restart_string: STRING is "interface.dialogs.confirm_kill_and_restart"
-	already_editing_class_string: STRING is "interface.dialogs.already_editing_class"
-	executing_command_string: STRING is "interface.dialogs.executing_command"
-	file_open_and_save_dialogs_remember_last_directory_string: STRING is "interface.dialogs.file_open_and_save_dialogs_remember_last_directory"
+	confirm_on_exit_string: STRING = "interface.dialogs.confirm_on_exit"
+	confirm_finalize_string: STRING = "interface.dialogs.confirm_finalize"
+	confirm_freeze_string: STRING = "interface.dialogs.confirm_freeze"
+	confirm_save_before_compile_string: STRING = "interface.dialogs.confirm_save_before_compile"
+	confirm_finalize_assertions_string: STRING = "interface.dialogs.confirm_finalize_assertions"
+	confirm_clear_breakpoints_string: STRING = "interface.dialogs.confirm_clear_breakpoints"
+	confirm_ignore_all_breakpoints_string: STRING = "interface.dialogs.confirm_ignore_all_breakpoints"
+	confirm_always_apply_debugger_profiles_before_closing_string: STRING = "interface.dialogs.confirm_always_apply_debugger_profiles_before_closing"
+	confirm_always_compile_before_executing_string: STRING = "interface.dialogs.confirm_always_compile_before_executing"
+	confirm_convert_project_string: STRING = "interface.dialogs.confirm_convert_project"
+	confirm_build_precompile_string: STRING = "interface.dialogs.confirm_build_precompile"
+	confirm_delete_eis_entries_string: STRING = "interface.dialogs.confirm_delete_eis_entries"
+	confirm_replace_all_string: STRING = "interface.dialogs.confirm_replace_all"
+	confirm_remove_metric_string: STRING = "interface.dialogs.confirm_remove_metric"
+	confirm_save_metric_string: STRING = "interface.dialogs.confirm_save_metric"
+	acknowledge_not_loaded_string: STRING = "interface.dialogs.acknowledge_not_loaded"
+	confirm_finalize_precompile_string: STRING = "interface.dialogs.confirm_finalize_precompile"
+	show_starting_dialog_string: STRING = "interface.dialogs.show_starting_dialog"
+	confirm_change_resource_need_restart_string: STRING = "interface.dialogs.confirm_resource_change_needs_restart"
+	generate_homonyms_string: STRING = "interface.dialogs.generate_homonyms"
+	stop_execution_when_compiling_string: STRING = "interface.dialogs.stop_execution_when_compiling"
+	confirm_kill_string: STRING = "interface.dialogs.confirm_kill"
+	confirm_kill_and_restart_string: STRING = "interface.dialogs.confirm_kill_and_restart"
+	already_editing_class_string: STRING = "interface.dialogs.already_editing_class"
+	executing_command_string: STRING = "interface.dialogs.executing_command"
+	file_open_and_save_dialogs_remember_last_directory_string: STRING = "interface.dialogs.file_open_and_save_dialogs_remember_last_directory"
 
-	last_opened_project_directory_string: STRING is "interface.dialogs.last_opened_project_directory"
-	last_opened_dynamic_lib_directory_string: STRING is "interface.dialogs.last_opened_dynamic_lib_directory"
+	last_opened_project_directory_string: STRING = "interface.dialogs.last_opened_project_directory"
+	last_opened_dynamic_lib_directory_string: STRING = "interface.dialogs.last_opened_dynamic_lib_directory"
 --	last_opened_file_directory_preference_string: STRING is "interface.dialogs.last_opened_file_directory"
-	last_opened_metric_browse_archive_directory_preference_string: STRING is "interface.dialogs.last_opened_metric_browse_archive_directory"
-	last_imported_metric_definition_directory_preference_string: STRING is "interface.dialogs.last_imported_metric_definition_directory"
+	last_opened_metric_browse_archive_directory_preference_string: STRING = "interface.dialogs.last_opened_metric_browse_archive_directory"
+	last_imported_metric_definition_directory_preference_string: STRING = "interface.dialogs.last_imported_metric_definition_directory"
 
-	last_saved_dynamic_lib_directory_preference_string: STRING is "interface.dialogs.last_saved_dynamic_lib_directory"
-	last_saved_call_stack_directory_preference_string: STRING is "interface.dialogs.last_saved_call_stack_directory"
-	last_saved_debugger_exception_directory_preference_string: STRING is "interface.dialogs.last_saved_debugger_exception_directory"
-	last_saved_diagram_postscript_directory_preference_string: STRING is "interface.dialogs.last_saved_diagram_postscript_directory"
-	last_saved_exception_directory_preference_string: STRING is "interface.dialogs.last_saved_exception_directory"
-	last_saved_save_file_as_directory_preference_string: STRING is "interface.dialogs.last_saved_save_file_as_directory"
-	last_saved_profile_result_directory_preference_string: STRING is "interface.dialogs.last_saved_profile_result_directory"
+	last_saved_dynamic_lib_directory_preference_string: STRING = "interface.dialogs.last_saved_dynamic_lib_directory"
+	last_saved_call_stack_directory_preference_string: STRING = "interface.dialogs.last_saved_call_stack_directory"
+	last_saved_debugger_exception_directory_preference_string: STRING = "interface.dialogs.last_saved_debugger_exception_directory"
+	last_saved_diagram_postscript_directory_preference_string: STRING = "interface.dialogs.last_saved_diagram_postscript_directory"
+	last_saved_exception_directory_preference_string: STRING = "interface.dialogs.last_saved_exception_directory"
+	last_saved_save_file_as_directory_preference_string: STRING = "interface.dialogs.last_saved_save_file_as_directory"
+	last_saved_profile_result_directory_preference_string: STRING = "interface.dialogs.last_saved_profile_result_directory"
 
-	project_settings_width_preference_string: STRING is "interface.dialogs.project_settings_width"
-	project_settings_height_preference_string: STRING is "interface.dialogs.project_settings_height"
-	project_settings_position_x_preference_string: STRING is "interface.dialogs.project_settings_position_x"
-	project_settings_position_y_preference_string: STRING is "interface.dialogs.project_settings_position_y"
-	project_settings_split_position_preference_string: STRING is "interface.dialogs.project_settings_split_position"
+	project_settings_width_preference_string: STRING = "interface.dialogs.project_settings_width"
+	project_settings_height_preference_string: STRING = "interface.dialogs.project_settings_height"
+	project_settings_position_x_preference_string: STRING = "interface.dialogs.project_settings_position_x"
+	project_settings_position_y_preference_string: STRING = "interface.dialogs.project_settings_position_y"
+	project_settings_split_position_preference_string: STRING = "interface.dialogs.project_settings_split_position"
 
-	starting_dialog_width_preference_string: STRING is "interface.dialogs.starting_dialog_width"
-	starting_dialog_height_preference_string: STRING is "interface.dialogs.starting_dialog_height"
-	open_project_dialog_width_preference_string: STRING is "interface.dialogs.open_project_dialog_width"
-	open_project_dialog_height_preference_string: STRING is "interface.dialogs.open_project_dialog_height"
-	discard_target_scope_customized_formatter_string: STRING is "interface.dialogs.discard_target_scope_customized_formatter"
+	starting_dialog_width_preference_string: STRING = "interface.dialogs.starting_dialog_width"
+	starting_dialog_height_preference_string: STRING = "interface.dialogs.starting_dialog_height"
+	open_project_dialog_width_preference_string: STRING = "interface.dialogs.open_project_dialog_width"
+	open_project_dialog_height_preference_string: STRING = "interface.dialogs.open_project_dialog_height"
+	discard_target_scope_customized_formatter_string: STRING = "interface.dialogs.discard_target_scope_customized_formatter"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -498,7 +498,7 @@ invariant
 	open_project_dialog_width_preference_not_void: open_project_dialog_width_preference /= Void
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

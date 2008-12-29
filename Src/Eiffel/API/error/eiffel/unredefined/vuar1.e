@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for calling a feature with the wrong number of arguments."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
 	argument_count: INTEGER;
 
@@ -30,7 +30,7 @@ feature -- Properties
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then is_feature_defined and then
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if called_feature /= Void then
 				print_called_feature (a_text_formatter);
@@ -60,27 +60,27 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_argument_count (i: INTEGER) is
+	set_argument_count (i: INTEGER)
 		do
 			argument_count := i
 		end;
 
-	set_formal_count(i: INTEGER) is
+	set_formal_count(i: INTEGER)
 		do
 			formal_count := i
 		end;
 
-	set_local_name (s: STRING) is
+	set_local_name (s: STRING)
 		do
 			called_local := s;
 		end;
 
-	set_arg_name (s: STRING) is
+	set_arg_name (s: STRING)
 		do
 			called_arg := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

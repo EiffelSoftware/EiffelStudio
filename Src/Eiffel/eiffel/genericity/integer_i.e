@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C type for integers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create instance of LONG_I represented by `n' bits.
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
@@ -30,7 +30,7 @@ feature -- Access
 	size: INTEGER_8
 			-- Current is stored on `size' bits.
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			inspect size
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	tuple_code: NATURAL_8 is
+	tuple_code: NATURAL_8
 			-- Tuple code for class type
 		do
 			inspect
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			inspect size
 			when 8 then Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i1
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			inspect size
 			when 8 then Result := {SK_CONST}.Sk_int8
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	c_string: STRING is
+	c_string: STRING
 			-- String generated for the type.
 		do
 			inspect size
@@ -84,14 +84,14 @@ feature -- Access
 			end
 		end
 
-	typed_field: STRING is
+	typed_field: STRING
 			-- Value field of a C structure corresponding to this type
 		do
 			Result := "it_i"
 			Result.append_integer (size // 8)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			inspect size
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	new_attribute_description: INTEGER_DESC is
+	new_attribute_description: INTEGER_DESC
 			-- Type description for skeleton
 		do
 			create Result.make (size)
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Byte code generation
 
-	make_default_byte_code (ba: BYTE_ARRAY) is
+	make_default_byte_code (ba: BYTE_ARRAY)
 			-- Generate default value of basic type on stack.
 		do
 			inspect size
@@ -131,7 +131,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		local
 			l_string: STRING
@@ -147,16 +147,16 @@ feature -- C code generation
 
 feature {NONE} -- Constants for generation
 
-	String_integer_8: STRING is "EIF_INTEGER_8"
-	String_integer_16: STRING is "EIF_INTEGER_16"
-	String_integer_32: STRING is "EIF_INTEGER_32"
-	String_integer_64: STRING is "EIF_INTEGER_64"
+	String_integer_8: STRING = "EIF_INTEGER_8"
+	String_integer_16: STRING = "EIF_INTEGER_16"
+	String_integer_32: STRING = "EIF_INTEGER_32"
+	String_integer_64: STRING = "EIF_INTEGER_64"
 
 invariant
 
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

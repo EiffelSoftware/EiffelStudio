@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 					Describes a breakpoint's location. It is by its `body_index' 
 				  	and its `breakable_line_number' (line number in stop points view).
@@ -33,7 +33,7 @@ create {BREAKPOINTS_MANAGER}
 
 feature {NONE} -- Creation
 
-	make (a_feature: E_FEATURE; a_breakable_index: INTEGER) is
+	make (a_feature: E_FEATURE; a_breakable_index: INTEGER)
 			-- Create a breakpoint in the feature `a_feature'
 			-- at the line `a_breakable_index'.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Creation
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
@@ -117,7 +117,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is using `Current' safe?
 		local
 			l_feat_i: FEATURE_I
@@ -142,7 +142,7 @@ feature -- Access
 			end
 		end
 
-	is_set_for_application: BOOLEAN is
+	is_set_for_application: BOOLEAN
 			-- Is the breakpoint location set for the application?
 		do
 			Result := application_status = Application_breakpoint_set
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Query
 
-	real_body_ids_list: LIST [INTEGER] is
+	real_body_ids_list: LIST [INTEGER]
 			-- List of real body ids related to Current location
 			-- i.e: `routine'
 		local
@@ -186,13 +186,13 @@ feature -- Query
 
 feature {BREAKPOINTS_MANAGER, BREAKPOINT_KEY} -- Change
 
-	set_is_corrupted (b: like is_corrupted) is
+	set_is_corrupted (b: like is_corrupted)
 			-- Set `is_corrupted' to `b'
 		do
 			is_corrupted := b
 		end
 
-	update_routine_version is
+	update_routine_version
 			-- Set `routine' to the updated_version of `routine'
 		require
 			routine_not_void: routine /= Void
@@ -202,7 +202,7 @@ feature {BREAKPOINTS_MANAGER, BREAKPOINT_KEY} -- Change
 
 feature -- Change status
 
-	set_application_set is
+	set_application_set
 			-- Tell that this breakpoint has been added in the application.
 		do
 			application_status := Application_breakpoint_set
@@ -210,7 +210,7 @@ feature -- Change status
 			location_is_set_for_application: application_status = Application_breakpoint_set
 		end
 
-	set_application_not_set is
+	set_application_not_set
 			-- Tell that this breakpoint has been removed in the application.
 		do
 			application_status := Application_breakpoint_not_set
@@ -220,7 +220,7 @@ feature -- Change status
 
 feature -- String representation
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation of Current location.
 		local
 			lcl: CLASS_C
@@ -248,7 +248,7 @@ feature -- String representation
 
 feature -- debug output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Debug output.
 		do
 			Result := to_string
@@ -262,7 +262,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_set: INTEGER 	= 0
 	Application_breakpoint_not_set: INTEGER = 1
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

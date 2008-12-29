@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an UML view for an eiffel cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create {UML_CLUSTER_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a UML_CLUSTER_FIGURE.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			is_shown := True
 		end
 
-	make_with_model (a_model: like model) is
+	make_with_model (a_model: like model)
 			-- Create a UML_CLUSTER_FIGURE with `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -93,61 +93,61 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	left: INTEGER is
+	left: INTEGER
 			-- Left most position.
 		do
 			Result := rectangle.point_a_x
 		end
 
-	top: INTEGER is
+	top: INTEGER
 			-- Top most position
 		do
 			Result := rectangle.point_a_y
 		end
 
-	right: INTEGER is
+	right: INTEGER
 			-- Right most position.
 		do
 			Result := rectangle.point_b_x
 		end
 
-	bottom: INTEGER is
+	bottom: INTEGER
 			-- Bottom most position.
 		do
 			Result := rectangle.point_b_y
 		end
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		do
 			Result := rectangle.x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		do
 			Result := rectangle.y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		do
 			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 			Result := rectangle.height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		do
 			Result := rectangle.width
 		end
 
-	minimum_size: EV_RECTANGLE is
+	minimum_size: EV_RECTANGLE
 			-- `Current' has to be of `Result' size
 			-- to include all visible elements starting from `number_of_figures' + 1.
 		local
@@ -197,13 +197,13 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := "UML_CLUSTER_FIGURE"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
@@ -211,7 +211,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE} (node)
@@ -235,7 +235,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
@@ -243,7 +243,7 @@ feature -- Element change
 			name_label.pointer_double_press_actions.prune_all (agent on_label_double_press)
 		end
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		local
 			m: DOUBLE
@@ -300,7 +300,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of current may have changed.
 		local
 			l_min_size: like minimum_size
@@ -360,7 +360,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -382,7 +382,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 
 feature {EG_LAYOUT} -- Layouting
 
-	set_to_minimum_size is
+	set_to_minimum_size
 			-- Set `rectangle' to `minimum_size'.
 		local
 			l_min_size: like minimum_size
@@ -396,7 +396,7 @@ feature {EG_LAYOUT} -- Layouting
 
 feature {EIFFEL_WORLD} -- Show/Hide
 
-	disable_shown is
+	disable_shown
 			-- Hide `Current'.
 		do
 			rectangle.hide
@@ -412,7 +412,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			is_shown := False
 		end
 
-	enable_shown is
+	enable_shown
 			-- Show `Current'.
 		do
 			rectangle.show
@@ -430,7 +430,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	label_rectangle_border: INTEGER is
+	label_rectangle_border: INTEGER
 			-- The border between the rectangle and the label.
 		do
 			Result := real_label_rectangle_border.truncated_to_integer
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 	real_label_rectangle_border: REAL
 			-- Real value for `label_rectangle_border'.
 
-	rectangle_border: INTEGER is
+	rectangle_border: INTEGER
 			-- Minimum border between elements and `rectangle' border.
 		do
 			Result := real_rectangle_border.truncated_to_integer
@@ -463,17 +463,17 @@ feature {NONE} -- Implementation
 	real_rectangle_border: REAL
 			-- Real value for `rectangle_border'.
 
-	number_of_figures: INTEGER is 7
+	number_of_figures: INTEGER = 7
 			-- Number of figures to visualize `Current'.
 			-- high_quality: (`rectangle', `label_rectangle', `name_label', `resizer_top_left', `resizer_top_right', `resizer_bottom_right', `resizer_bottom_left').
 
-	set_top_left_position (ax, ay: INTEGER) is
+	set_top_left_position (ax, ay: INTEGER)
 			-- Set position of top left corner to (`ax', `ay').
 		do
 			rectangle.set_point_a_position (ax, ay)
 		end
 
-	set_bottom_right_position (ax, ay: INTEGER) is
+	set_bottom_right_position (ax, ay: INTEGER)
 			-- Set position of bottom right corner to (`ax', `ay').
 		do
 			rectangle.set_point_b_position (ax, ay)
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 	label_rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle for the label.
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			s, rest: STRING
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_label_double_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_label_double_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Iconify or deiconify `Current'.
 		local
 			ew: EIFFEL_WORLD
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	toggle_is_iconified is
+	toggle_is_iconified
 			-- Toggle value of `is_iconified'.
 		do
 			is_iconified := not is_iconified
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve properties from preferences.
 		do
 			name_label.set_identified_font (uml_cluster_name_font)
@@ -603,13 +603,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

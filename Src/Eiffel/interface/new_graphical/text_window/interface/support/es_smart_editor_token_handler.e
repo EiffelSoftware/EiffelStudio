@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A token handler implementation for EiffelStudio's smart editor {EB_SMART_EDITOR}.
 		
@@ -311,7 +311,7 @@ feature -- Basic operations
 
 feature {NONE} -- Action handlers
 
-	on_token_selected (a_window: like popup_window; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_token_selected (a_window: like popup_window; a_x: INTEGER; a_y: INTEGER; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when a popup window's editor token is selected.
 			--
 			-- `a_window': The popup window on which the token was clicked.
@@ -373,7 +373,7 @@ feature {NONE} -- Action handlers
 			last_token_handled_unchanged: last_token_handled = old last_token_handled
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

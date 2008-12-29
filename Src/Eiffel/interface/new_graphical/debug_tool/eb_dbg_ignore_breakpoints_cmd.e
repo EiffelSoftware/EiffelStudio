@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Command to toggle ignore breakpoints status."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 --			create accelerator.make_with_key_combination (
@@ -39,14 +39,14 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	reset is
+	reset
 		do
 			set_select (False)
 		ensure
 			breakpoints_not_ignored: breakpoints_ignored = False
 		end
 
-	execute is
+	execute
 			-- Pause the execution.
 		do
 			if breakpoints_ignored then
@@ -61,7 +61,7 @@ feature -- Status
 	breakpoints_ignored: BOOLEAN
 			-- Breakpoints ignored ?
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Graphical button selected ? (pushed)
 		do
 			Result := breakpoints_ignored
@@ -69,7 +69,7 @@ feature -- Status
 
 feature -- Change text
 
-	set_select (b: BOOLEAN) is
+	set_select (b: BOOLEAN)
 			-- <Precursor>
 		do
 			breakpoints_ignored := b
@@ -79,13 +79,13 @@ feature -- Change text
 
 feature {NONE} -- Attributes
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			if breakpoints_ignored then
@@ -95,7 +95,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			if breakpoints_ignored then
@@ -108,7 +108,7 @@ feature {NONE} -- Attributes
 	name: STRING = "Ignore_breakpoints_cmd"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			if breakpoints_ignored then
@@ -118,7 +118,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			if breakpoints_ignored then
@@ -128,7 +128,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			if breakpoints_ignored then
@@ -138,7 +138,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

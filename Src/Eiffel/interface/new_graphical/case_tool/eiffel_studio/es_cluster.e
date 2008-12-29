@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a graph model for a given group"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_group: like group) is
+	make (a_group: like group)
 			-- Create an ES_CLUSTER from `cluster_i'.
 		require
 			a_group_not_void: a_group /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			is_needed_on_diagram := True
 		end
 
-	make_with_id (a_group: like group; a_id: STRING) is
+	make_with_id (a_group: like group; a_id: STRING)
 			-- Create an ES_CLUSTER from `cluster_i'.
 		require
 			a_group_not_void: a_group /= Void
@@ -80,7 +80,7 @@ feature -- Access
 	cluster_id: STRING
 			-- ES_CLUSTER identifier
 
-	needed_links: LIST [ES_ITEM] is
+	needed_links: LIST [ES_ITEM]
 			-- `links' that are EIFFEL_ITEMS and are needed_on_diagram.
 		local
 			l_links: like internal_links
@@ -101,7 +101,7 @@ feature -- Access
 			end
 		end
 
-	needed_linkables: LIST [ES_ITEM] is
+	needed_linkables: LIST [ES_ITEM]
 			-- `linkables' that are EIFFEL_ITEMS and are needed_on_diagram.
 		local
 			l_linkables: like linkables
@@ -124,7 +124,7 @@ feature -- Access
 
 feature {EIFFEL_CLUSTER_FIGURE} -- Element Change
 
-	set_group_id (a_str: STRING) is
+	set_group_id (a_str: STRING)
 			-- Set `group_id' with `a_str'
 		require
 			a_str_not_void: a_str /= Void
@@ -134,7 +134,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Element Change
 			group_id_not_void: group_id /= Void
 		end
 
-	set_cluster_id (a_id: STRING) is
+	set_cluster_id (a_id: STRING)
 			-- Set `cluster_id' with `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -146,7 +146,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Element Change
 
 feature -- Element change
 
-	synchronize is
+	synchronize
 			-- Some properties may have changed due to recompilation.
 			-- | Check sub clusters, if not correct, disconnect the relationship.
 		local
@@ -192,7 +192,7 @@ feature -- Element change
 			end
 		end
 
-	node_of (a_class: CLASS_I): like node_type is
+	node_of (a_class: CLASS_I): like node_type
 			-- Node of `a_class'
 		local
 			l_linkables: like linkables
@@ -212,7 +212,7 @@ feature -- Element change
 			end
 		end
 
-	sub_cluster_of (a_cluster: CONF_GROUP): like Current is
+	sub_cluster_of (a_cluster: CONF_GROUP): like Current
 			--
 		local
 			l_linkables: like linkables
@@ -240,7 +240,7 @@ invariant
 	group_not_void: group /= Void
 	identifier_not_void: group_id /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

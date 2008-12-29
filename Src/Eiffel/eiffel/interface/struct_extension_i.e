@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C macro extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (a_fn: INTEGER; is_cpp_struct: BOOLEAN) is
+	make (a_fn: INTEGER; is_cpp_struct: BOOLEAN)
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_struct.
 			-- Set `field_name_id' to `a_fn'.
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	is_struct: BOOLEAN is True
+	is_struct: BOOLEAN = True
 
 	is_cpp: BOOLEAN
 		-- Is Current struct a C++ one?
@@ -43,7 +43,7 @@ feature -- Properties
 
 feature -- Code generation
 
-	generate_body (struct_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (struct_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate encapsulation to C/C++ struct external `struct_byte_code'.
 		local
 			l_buffer: GENERATION_BUFFER
@@ -61,7 +61,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
 			-- Generate inline C/C++ struct external.
 		require
 			external_name_not_void: external_name /= Void
@@ -74,7 +74,7 @@ feature -- Code generation
 
 feature {NONE} -- Code generation helper
 
-	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
 			-- Generate access to C/C++ struct external.
 		require
 			external_name_not_void: external_name /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Code generation helper
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

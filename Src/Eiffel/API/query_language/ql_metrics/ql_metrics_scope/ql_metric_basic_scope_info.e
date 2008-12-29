@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of one item in basic scope of a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Access
 	metric: QL_METRIC_BASIC
 			-- Metric to which current basic scope belongs
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope
 		deferred
 		ensure
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_registered_to_metric: BOOLEAN is
+	is_registered_to_metric: BOOLEAN
 			-- Is current basic scope definition registered in a metric?
 		do
 			Result := metric /= Void
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Metric registration
 
-	set_metric (a_metric: like metric) is
+	set_metric (a_metric: like metric)
 			-- Set `metric' with `a_metric'.
 		require
 			current_not_registered: not is_registered_to_metric
@@ -54,7 +54,7 @@ feature -- Metric registration
 
 feature{NONE} -- Implementation
 
-	evaluate_item (a_item: QL_ITEM) is
+	evaluate_item (a_item: QL_ITEM)
 			-- Call `calculate_function' to evaluate `a_item'.
 		require
 			metric_attached: metric /= Void
@@ -64,7 +64,7 @@ feature{NONE} -- Implementation
 invariant
 	scope_attached: scope /= Void
 	domain_generator_attached: domain_generator /= Void
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

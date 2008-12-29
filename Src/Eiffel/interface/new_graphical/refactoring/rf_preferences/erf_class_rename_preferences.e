@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All preferences for the class rename refactoring."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,37 +16,37 @@ inherit
 
 feature -- Value
 
-	file_rename: BOOLEAN is
+	file_rename: BOOLEAN
 			-- Should the file be renamed?
 		do
 			Result := file_rename_preference.value
 		end
 
-	old_class_name: STRING is
+	old_class_name: STRING
 			-- The old name of the class.
 		do
 			Result := old_class_name_preference.value
 		end
 
-	new_class_name: STRING is
+	new_class_name: STRING
 			-- The new name of the class.
 		do
 			Result := new_class_name_preference.value
 		end
 
-	all_classes: BOOLEAN is
+	all_classes: BOOLEAN
 			-- Should all classes be processed?
 		do
 			Result := all_classes_preference.value
 		end
 
-	update_comments: BOOLEAN is
+	update_comments: BOOLEAN
 			-- Should the occurance of the class name in comments be changed?
 		do
 			Result := update_comments_preference.value
 		end
 
-	update_strings: BOOLEAN is
+	update_strings: BOOLEAN
 			-- Should the occurance of the class name in strings be changed?
 		do
 			Result := update_strings_preference.value
@@ -54,7 +54,7 @@ feature -- Value
 
 feature -- Change value
 
-	set_old_class_name (a_name: STRING) is
+	set_old_class_name (a_name: STRING)
 			-- Set the old class name.
 		require
 			a_name_not_void: a_name /= void
@@ -63,7 +63,7 @@ feature -- Change value
 			old_class_name_preference.set_value (a_name)
 		end
 
-	set_new_class_name (a_name: STRING) is
+	set_new_class_name (a_name: STRING)
 			-- Set the new class name.
 		require
 			a_name_not_void: a_name /= void
@@ -72,25 +72,25 @@ feature -- Change value
 			new_class_name_preference.set_value (a_name)
 		end
 
-	set_all_classes (a_value: BOOLEAN) is
+	set_all_classes (a_value: BOOLEAN)
 			-- Set the all classes flag.
 		do
 			all_classes_preference.set_value (a_value)
 		end
 
-	set_file_rename (a_value: BOOLEAN) is
+	set_file_rename (a_value: BOOLEAN)
 			-- Set the rename file flag.
 		do
 			file_rename_preference.set_value (a_value)
 		end
 
-	set_update_comments (a_value: BOOLEAN) is
+	set_update_comments (a_value: BOOLEAN)
 			-- Set the update comments flag.
 		do
 			update_comments_preference.set_value (a_value)
 		end
 
-	set_update_strings (a_value: BOOLEAN) is
+	set_update_strings (a_value: BOOLEAN)
 			-- Set the update strings flag.
 		do
 			update_strings_preference.set_value (a_value)
@@ -107,16 +107,16 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	file_rename_string: STRING is "tools.refactoring.class_rename.file_rename"
-	old_class_name_string: STRING is "tools.refactoring.class_rename.old_class_name"
-	new_class_name_string: STRING is "tools.refactoring.class_rename.new_class_name"
-	all_classes_string: STRING is "tools.refactoring.class_rename.all_classes"
-	update_comments_string: STRING is "tools.refactoring.class_rename.update_comments"
-	update_strings_string: STRING is "tools.refactoring.class_rename.update_strings"
+	file_rename_string: STRING = "tools.refactoring.class_rename.file_rename"
+	old_class_name_string: STRING = "tools.refactoring.class_rename.old_class_name"
+	new_class_name_string: STRING = "tools.refactoring.class_rename.new_class_name"
+	all_classes_string: STRING = "tools.refactoring.class_rename.all_classes"
+	update_comments_string: STRING = "tools.refactoring.class_rename.update_comments"
+	update_strings_string: STRING = "tools.refactoring.class_rename.update_strings"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -152,7 +152,7 @@ invariant
 	update_comments_preference_not_void: update_comments_preference /= Void
 	update_strings_preference_not_void: update_strings_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

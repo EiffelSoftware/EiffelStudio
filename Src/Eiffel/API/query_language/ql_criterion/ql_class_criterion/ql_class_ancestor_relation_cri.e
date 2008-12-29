@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Criterion to test if a given class domain contain ancestor classes of a class.
 					Supported ancestor relation includes:
@@ -39,7 +39,7 @@ create
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
-	intrinsic_domain: QL_CLASS_DOMAIN is
+	intrinsic_domain: QL_CLASS_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion			
 		local
 			l_list: like candidate_class_list
@@ -70,10 +70,10 @@ feature{QL_DOMAIN} -- Intrinsic domain
 
 feature -- Access
 
-	ancestor_type: INTEGER is 1
-	proper_ancestor_type: INTEGER is 2
-	parent_type: INTEGER is 3
-	indirect_parent_type: INTEGER is 4
+	ancestor_type: INTEGER = 1
+	proper_ancestor_type: INTEGER = 2
+	parent_type: INTEGER = 3
+	indirect_parent_type: INTEGER = 4
 			-- Different types of ancestor relationship
 			-- If we have the following inheritance tree:
 			--				A
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_ancestor_relation_valid (a_relation: INTEGER): BOOLEAN is
+	is_ancestor_relation_valid (a_relation: INTEGER): BOOLEAN
 			-- Is `a_relation' a valid ancestor relation?			
 		do
 			Result := a_relation = ancestor_type or
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	reset is
+	reset
 			-- Reset internal structure
 		do
 			Precursor
@@ -116,7 +116,7 @@ feature{NONE} -- Implementation
 			candidate_class_table_is_empty: candidate_class_table.is_empty
 		end
 
-	find_ancestor_classes (a_class_c: CLASS_C) is
+	find_ancestor_classes (a_class_c: CLASS_C)
 			-- Find ancestor classes of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -124,7 +124,7 @@ feature{NONE} -- Implementation
 			find_classes (a_class_c, True, True)
 		end
 
-	find_proper_ancestor_classes (a_class_c: CLASS_C) is
+	find_proper_ancestor_classes (a_class_c: CLASS_C)
 			-- Find ancestor classes of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -132,7 +132,7 @@ feature{NONE} -- Implementation
 			find_classes (a_class_c, False, True)
 		end
 
-	find_parent_classes (a_class_c: CLASS_C) is
+	find_parent_classes (a_class_c: CLASS_C)
 			-- Find parent classes of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -140,7 +140,7 @@ feature{NONE} -- Implementation
 			find_classes (a_class_c, False, False)
 		end
 
-	find_indirect_parent_classes (a_class_c: CLASS_C) is
+	find_indirect_parent_classes (a_class_c: CLASS_C)
 			-- Find indirect parent classes of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -160,7 +160,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_classes (a_class_c: CLASS_C; a_including_self: BOOLEAN; a_recursive: BOOLEAN) is
+	find_classes (a_class_c: CLASS_C; a_including_self: BOOLEAN; a_recursive: BOOLEAN)
 			-- Find all ancestors of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
 			-- If `a_including_self' is True, `a_class_c' will be in resultset.
 			-- If `a_recursive' is True, find recursively.
@@ -214,7 +214,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]] is
+	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
 			-- Finder used to find result for current criterion
 		do
 			inspect
@@ -237,7 +237,7 @@ feature{NONE} -- Implementation
 			-- Key is `class_id' of a candidate class, value is a list of its related classes,
 			-- they can be ancestors, descendants ...
 
-	related_classes (a_class_id: INTEGER): LIST [QL_CLASS] is
+	related_classes (a_class_id: INTEGER): LIST [QL_CLASS]
 			-- List of related classes with class whose `class_id' is `a_class_id'
 		local
 			l_list: LIST [CLASS_C]
@@ -260,7 +260,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	is_satisfied_by_internal (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by_internal (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			Result := candidate_class_list.has (a_item.class_c.class_id)
@@ -269,7 +269,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

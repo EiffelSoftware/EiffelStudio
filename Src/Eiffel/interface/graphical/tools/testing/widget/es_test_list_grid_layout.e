@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_LIST_GRID_LAYOUT}."
 	author: ""
 	date: "$Date$"
@@ -194,14 +194,14 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	populate_header (a_header: !EV_GRID_HEADER) is
+	populate_header (a_header: !EV_GRID_HEADER)
 			-- <Precursor>
 		do
 			a_header.i_th (tests_column).set_text (locale_formatter.translation (t_tests))
 			a_header.i_th (status_column).set_text (locale_formatter.translation (t_status))
 		end
 
-	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I) is
+	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I)
 			-- <Precursor>
 		do
 			a_row.set_item (tests_column, test_item (a_item))
@@ -315,7 +315,7 @@ feature {NONE} -- Constants
 			Result := grey
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

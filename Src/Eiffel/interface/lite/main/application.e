@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel lite compiler application root"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Application entry point.
 		local
 			l_env: ECL_EIFFEL_ENV
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			l_eifgen_init.dispose
 		end
 
-	start (a_parser: ARGUMENT_PARSER) is
+	start (a_parser: ARGUMENT_PARSER)
 			-- Starts application after all command-line arguments have been validated.
 		require
 			a_parser_attached: a_parser /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Query
 
-	command_for_parser_state (a_parser: ARGUMENT_PARSER): EWB_COMP is
+	command_for_parser_state (a_parser: ARGUMENT_PARSER): EWB_COMP
 			-- Retrieves a command given a parser's `a_parser' state
 		require
 			a_parser_attached: a_parser /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
-	load_project_file (a_parser: ARGUMENT_PARSER): PROJECT_LOADER is
+	load_project_file (a_parser: ARGUMENT_PARSER): PROJECT_LOADER
 			-- Loads a configuration file from parser `a_parser'
 		require
 			a_parser_attached: a_parser /= Void
@@ -274,7 +274,7 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
-	modified_configuration_file (a_parser: ARGUMENT_PARSER): PLAIN_TEXT_FILE is
+	modified_configuration_file (a_parser: ARGUMENT_PARSER): PLAIN_TEXT_FILE
 			-- Retrieve a modified configuration file stream opened for writing.
 		require
 			a_parser_attached: a_parser /= Void
@@ -324,7 +324,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	inject_src_configuration_file (a_src_file: STRING; a_dest_file: PLAIN_TEXT_FILE): BOOLEAN is
+	inject_src_configuration_file (a_src_file: STRING; a_dest_file: PLAIN_TEXT_FILE): BOOLEAN
 			-- Injects a source file `a_src_file' into open file `a_dest_file'.
 		require
 			a_src_file_attached: a_src_file /= Void
@@ -354,7 +354,7 @@ feature {NONE} -- Query
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

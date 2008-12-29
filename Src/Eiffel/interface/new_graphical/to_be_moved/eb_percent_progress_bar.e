@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Progress bar for displaying percentage information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			disable_segmentation
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	reset is
+	reset
 			-- Reset values for percentage.
 		local
 			l_range: like range
@@ -49,7 +49,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	reset_with_range (a_range: INTEGER_INTERVAL) is
+	reset_with_range (a_range: INTEGER_INTERVAL)
 			-- Assign `a_range' to `range'.
 			-- Set `value' to `a_range'.lower.
 		require
@@ -63,7 +63,7 @@ feature -- Element change
 			value_assigned: value = a_range.lower
 		end
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Assign `a_value' to `value'.
 		do
 			Precursor (a_value)
@@ -71,13 +71,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

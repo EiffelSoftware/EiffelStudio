@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelStudio preference window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,14 +42,14 @@ create
 
 feature -- Access
 
-	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW) is
+	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW)
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
 			make_with_hidden (a_preferences, a_obs_parent_window, False)
 		end
 
-	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN) is
+	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN)
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
@@ -59,13 +59,13 @@ feature -- Access
 
 	pref_control: EB_PREFERENCES_GRID_CONTROL
 
-	on_close is
+	on_close
 			-- Window was closed
 		do
 			hide
 		end
 
-	hide is
+	hide
 			-- Window was closed through cancel button
 		do
 			preferences.misc_data.preference_window_height_preference.set_value (height)
@@ -73,7 +73,7 @@ feature -- Access
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

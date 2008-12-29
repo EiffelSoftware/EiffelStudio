@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for nested call
@@ -18,7 +18,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_nested_b (Current)
@@ -32,31 +32,31 @@ feature
 	message: CALL_B;
 			-- Message to send to the target
 
-	set_target (t: ACCESS_B) is
+	set_target (t: ACCESS_B)
 			-- Assign `t' to `target'.
 		do
 			target := t;
 		end;
 
-	set_message (m: CALL_B) is
+	set_message (m: CALL_B)
 			-- Assign `m' to `message'.
 		do
 			message := m;
 		end;
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression of the remote call
 		do
 			Result := message.type
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in the local target or message ?
 		do
 			Result := message.used (r) or target.used (r);
 		end;
 
-	is_single: BOOLEAN is
+	is_single: BOOLEAN
 			-- Is call a single one ?
 		do
 			if
@@ -70,7 +70,7 @@ feature
 			end;
 		end;
 
-	enlarged: NESTED_BL is
+	enlarged: NESTED_BL
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		do
@@ -78,7 +78,7 @@ feature
 			Result := sub_enlarged (Void);
 		end;
 
-	sub_enlarged (p: NESTED_BL): NESTED_BL is
+	sub_enlarged (p: NESTED_BL): NESTED_BL
 			-- Enlarge node and set parent to `p'
 		do
 			create Result;
@@ -87,19 +87,19 @@ feature
 			Result.set_message (message.sub_enlarged (Result));
 		end;
 
-	need_invariant: BOOLEAN is
+	need_invariant: BOOLEAN
 		do
 			Result := message.need_invariant
 		end;
 
-	set_need_invariant (b: BOOLEAN) is
+	set_need_invariant (b: BOOLEAN)
 		do
 			message.set_need_invariant (b)
 		end
 
 feature -- IL code generation
 
-	need_target: BOOLEAN is
+	need_target: BOOLEAN
 			-- Does current call really need a target to be performed?
 			-- E.g. not (a constant or a static external)
 		do
@@ -108,12 +108,12 @@ feature -- IL code generation
 
 feature -- Array optimization
 
-	is_special_feature: BOOLEAN is
+	is_special_feature: BOOLEAN
 		do
 			Result := target.is_special_feature
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			if target.conforms_to_array_opt and then
 				(target.array_descriptor = array_desc)
@@ -127,13 +127,13 @@ feature -- Array optimization
 				message.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := target.is_unsafe or else
 				message.is_unsafe
 		end
 
-	optimized_byte_node: CALL_B is
+	optimized_byte_node: CALL_B
 		local
 			opt_context: OPTIMIZATION_CONTEXT;
 			array_desc: INTEGER;
@@ -193,12 +193,12 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := target.size + message.size + 1
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		local
 			inlined_current_b: INLINED_CURRENT_B
 			access: like target
@@ -244,7 +244,7 @@ feature -- Inlining
 			message := message.pre_inlined_code
 		end;
 
-	inlined_byte_code: NESTED_B is
+	inlined_byte_code: NESTED_B
 		do
 			Result := Current
 				-- FIXME
@@ -262,7 +262,7 @@ feature -- Inlining
 			message := message.inlined_byte_code;
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

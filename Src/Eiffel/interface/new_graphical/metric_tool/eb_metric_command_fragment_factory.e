@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Factory to create text replacement fragments for placeholders 
 			such as $file_name in metric external command criterion"
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_item (a_item: like item) is
+	set_item (a_item: like item)
 			-- Set `item' with `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -32,7 +32,7 @@ feature -- Setting
 
 feature -- Access
 
-	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file_name" fragment			
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent path (item, ?), agent is_true)
@@ -40,7 +40,7 @@ feature -- Access
 			Result.set_location (a_scanner.position)
 		end
 
-	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file" tool buffer selected fragment
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent file (item, ?), agent is_true)
@@ -48,13 +48,13 @@ feature -- Access
 			Result.set_location (a_scanner.position)
 		end
 
-	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$path" tool buffer selected fragment
 		do
 			Result := new_file_name (a_scanner)
 		end
 
-	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$directory_name" fragment
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent directory_name (item, ?), agent is_true)
@@ -62,7 +62,7 @@ feature -- Access
 			Result.set_location (a_scanner.position)
 		end
 
-	new_group_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_group_directory (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$group_path" fragment
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent group_directory (item, ?), agent is_true)
@@ -70,7 +70,7 @@ feature -- Access
 			Result.set_location (a_scanner.position)
 		end
 
-	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$class_name" fragment
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent class_name (item, ?), agent is_true)
@@ -78,43 +78,43 @@ feature -- Access
 			Result.set_location (a_scanner.position)
 		end
 
-	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$line" fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}" buffer fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@{CLASS}" class buffer selected fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}.feature" buffer fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "[Tool name]" tool buffer fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@[Tool name]" tool buffer selected fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 		end
 
-	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$group_name" fragment
 		do
 			create {EB_AGENT_BASED_TEXT_FRAGMENT} Result.make (a_scanner.text, agent group_name (item, ?), agent is_true)
@@ -124,7 +124,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	path (a_item: QL_ITEM; a_text: STRING): STRING is
+	path (a_item: QL_ITEM; a_text: STRING): STRING
 			-- File name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -151,7 +151,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	file (a_item: QL_ITEM; a_text: STRING): STRING is
+	file (a_item: QL_ITEM; a_text: STRING): STRING
 			-- File name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -178,7 +178,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	class_name (a_item: QL_ITEM; a_text: STRING): STRING is
+	class_name (a_item: QL_ITEM; a_text: STRING): STRING
 			-- Class name of `a_item' if `a_item' is a code structure item,
 			-- otherwise return a copy of `a_text'.
 		require
@@ -192,7 +192,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	group_directory (a_item: QL_ITEM; a_text: STRING): STRING is
+	group_directory (a_item: QL_ITEM; a_text: STRING): STRING
 			-- Directory name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -254,7 +254,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	directory_name (a_item: QL_ITEM; a_text: STRING): STRING is
+	directory_name (a_item: QL_ITEM; a_text: STRING): STRING
 			-- Directory name of `a_item'
 		require
 			a_item_attached: a_item /= Void

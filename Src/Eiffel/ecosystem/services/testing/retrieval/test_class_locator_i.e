@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface which scans project for potential test classes.
 	]"
@@ -32,7 +32,7 @@ feature -- Status report
 
 feature {TEST_PROJECT_I} -- Status setting
 
-	locate_classes (a_project: like project) is
+	locate_classes (a_project: like project)
 			-- Locate potential test classes in project
 			--
 			-- `a_project': Test project for which test classes shall be reported

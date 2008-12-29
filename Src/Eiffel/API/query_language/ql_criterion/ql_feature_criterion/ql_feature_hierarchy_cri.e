@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion for feature hierarchy relationship"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
+	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			check
@@ -49,7 +49,7 @@ feature -- Evaluate
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
-	intrinsic_domain: QL_FEATURE_DOMAIN is
+	intrinsic_domain: QL_FEATURE_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		local
 			l_user_data_list: like user_data_list
@@ -86,7 +86,7 @@ feature{NONE} -- Implementation
 	user_data_list: LIST [ANY]
 			-- User data for every item in `feature_list'.
 
-	record_descendants (classes: LIST [CLASS_C]; e_class: CLASS_C) is
+	record_descendants (classes: LIST [CLASS_C]; e_class: CLASS_C)
 			-- Record the descendants of `class_c' to `classes'.
 		require
 			valid_classes: classes /= Void
@@ -113,7 +113,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	record_ancestors (classes: LIST [CLASS_C]; e_class: CLASS_C) is
+	record_ancestors (classes: LIST [CLASS_C]; e_class: CLASS_C)
 			-- Record parents of `class_c' to `classes'.	
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
@@ -134,7 +134,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	reset is
+	reset
 			-- Reset internal data structure.
 		do
 			if user_data_list = Void then
@@ -154,7 +154,7 @@ feature{NONE} -- Implementation
 			implementor_list_valid: feature_list.is_empty
 		end
 
-	features_from_domain (a_domain: QL_DOMAIN): QL_FEATURE_DOMAIN is
+	features_from_domain (a_domain: QL_DOMAIN): QL_FEATURE_DOMAIN
 			-- A domain in where all features that are included in `a_domain' are included
 		require
 			a_domain_attached: a_domain /= Void
@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	query_feature_item (a_feature: E_FEATURE): QL_FEATURE is
+	query_feature_item (a_feature: E_FEATURE): QL_FEATURE
 			-- Query feature representation of `a_feature'
 			-- Take case of both visible and invisible features.
 		require
@@ -185,7 +185,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	query_invariant_item (a_class: CLASS_C): QL_FEATURE is
+	query_invariant_item (a_class: CLASS_C): QL_FEATURE
 			-- Query invariant representation of invariant part in `a_class'
 			-- Take case of both visible and invisible features.
 		require
@@ -206,7 +206,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Evaluate
 
-	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN is
+	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN
 			-- Evaluate `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -220,7 +220,7 @@ invariant
 	list_count_valid:
 		(feature_list /= Void and then user_data_list /= Void) implies (feature_list.count = user_data_list.count)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

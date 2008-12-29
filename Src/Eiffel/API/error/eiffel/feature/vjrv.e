@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for invalid reverse assignment attempt."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,12 +20,12 @@ feature -- Properties
 
 	target_name: STRING;
 
-	code: STRING is "VJRV";
+	code: STRING = "VJRV";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Target name: ");
 			a_text_formatter.add (target_name);
@@ -37,18 +37,18 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_target_name (s: STRING) is
+	set_target_name (s: STRING)
 		do
 			target_name := s;
 		end;
 
-	set_target_type (t: TYPE_A) is
+	set_target_type (t: TYPE_A)
 			-- Assign `t' to `target_type'.
 		do
 			target_type := t;
 		end; -- set_target_type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

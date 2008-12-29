@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Buffer containing the text where a pattern is to be searched"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {SEARCH_BUFFER}
 		
 feature -- Initialization
 
-	make_from_string (a_string: STRING) is
+	make_from_string (a_string: STRING)
 			-- create a new search buffer from `a_string'
 		do
 			Precursor (a_string)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	line_number_at_index (index: INTEGER): INTEGER is
+	line_number_at_index (index: INTEGER): INTEGER
 			-- return the line number corresponding to the `index'th character
 		local
 			i: INTEGER
@@ -59,7 +59,7 @@ feature -- Status report
 			end
 		end
 
-	new_line_index(line_number: INTEGER): INTEGER is
+	new_line_index(line_number: INTEGER): INTEGER
 			-- index of the new line preceeding `char_index'
 		require
 			valid_line_number: line_number > 0 and line_number <= count
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	new_line_positions: ARRAYED_LIST [INTEGER] 
 			-- new lines indexes 
 
-	process_line_count is
+	process_line_count
 			-- detect new lines in the buffer
 		local
 			i: INTEGER
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end			
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

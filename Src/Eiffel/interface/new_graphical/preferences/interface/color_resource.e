@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A resource value for color resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING) is
+	make (a_name: STRING; a_value: STRING)
 			-- Initialize Current with `a_name' and value `a_value'.
 		do
 			name := a_name
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
  
 feature -- Access
 
-	actual_value: EV_COLOR is
+	actual_value: EV_COLOR
 			-- Color value of resource
 		do
 			if not color_is_void then
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	negative_value: EV_COLOR is
+	negative_value: EV_COLOR
 			-- Negative value of resource
 		do
 			if not color_is_void then
@@ -49,7 +49,7 @@ feature -- Access
 			end
 		end
 
-	valid_actual_value: EV_COLOR is
+	valid_actual_value: EV_COLOR
 			-- Non void color value
 		do
 			Result := actual_value
@@ -60,7 +60,7 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
-	default_color: EV_COLOR is
+	default_color: EV_COLOR
 			-- Default color (Black)
 		once
 			create Result.make_with_rgb (0, 0, 0)
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_value_with_color (new_value: STRING; col: EV_COLOR) is
+	set_value_with_color (new_value: STRING; col: EV_COLOR)
 		require
 			color_exists: col /= Void
 			value_exists: new_value /= Void
@@ -88,7 +88,7 @@ feature -- Status setting
 			color_is_void := False
 		end
 
-	set_value (new_value: STRING) is
+	set_value (new_value: STRING)
 			-- Set `value' to `new_value'.
 		local
 			s: STRING
@@ -120,7 +120,7 @@ feature -- Status setting
 			end
 		end
 
-		set_void is
+		set_void
 				-- Set current on "auto" value.
 			require
 				may_be_void: is_voidable
@@ -132,7 +132,7 @@ feature -- Status setting
 				color_is_void := True
 			end
 			
-		allow_void is
+		allow_void
 				-- `Current' may return a Void color after this, and be set to auto.
 			do
 				is_voidable := True
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 
 	r, g, b: INTEGER
 
-	head_real (s: STRING; i: INTEGER): REAL is
+	head_real (s: STRING; i: INTEGER): REAL
 			-- Real represented by the `i' first characters of `s'
 			-- Result is always in [0..1], being truncated if necessary.
 			-- (Result is 0 if no integer is recognized)
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	head_integer (s: STRING; i: INTEGER): INTEGER is
+	head_integer (s: STRING; i: INTEGER): INTEGER
 			-- Integer represented by the `i' first characters of `s'
 			-- Result is always in [0..255], being truncated if necessary.
 			-- (Result is 0 if no integer is recognized)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 
 feature -- Output
 
-	xml_trace: STRING is
+	xml_trace: STRING
 			-- XML representation of current
 		do
 			Result := "<TEXT>"
@@ -196,13 +196,13 @@ feature -- Output
 			Result.append ("</COLOR></TEXT>")
 		end
 
-	registry_name: STRING is
+	registry_name: STRING
 			-- name of Current in the registry
 		do
 			Result := "EIFCOL_" + name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

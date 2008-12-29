@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,22 +68,22 @@ feature -- Access
 
 feature -- Status report
 
-	is_constant: BOOLEAN is True
+	is_constant: BOOLEAN = True
 			-- Is the current feature a constant one ?
 
-	redefinable: BOOLEAN is False
+	redefinable: BOOLEAN = False
 			-- Is a constant redefinable ?
 
 feature -- Settings
 
-	set_type (t: like type; a: like assigner_name_id) is
+	set_type (t: like type; a: like assigner_name_id)
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
 			assigner_name_id := a
 		end
 
-	set_value (v: like value) is
+	set_value (v: like value)
 			-- Assign `v' to `value'.
 		require
 			good_argument: v /= Void
@@ -91,7 +91,7 @@ feature -- Settings
 			value := v
 		end
 
-	set_extension (an_extension: like extension) is
+	set_extension (an_extension: like extension)
 			-- Set `extension' with `an_extension'.
 		require
 			an_extension_not_void: an_extension /= Void
@@ -101,7 +101,7 @@ feature -- Settings
 			extension_set: extension = an_extension
 		end
 
-	check_types (feat_tbl: FEATURE_TABLE) is
+	check_types (feat_tbl: FEATURE_TABLE)
 			-- Check Result and argument types
 		local
 			actual_type: TYPE_A
@@ -130,7 +130,7 @@ feature -- Settings
 			end
 		end
 
-	new_rout_entry: ROUT_ENTRY is
+	new_rout_entry: ROUT_ENTRY
 			-- New routine unit
 		require else
 			has_to_be_generated: generate_in > 0
@@ -159,7 +159,7 @@ feature -- Settings
 
 feature -- Status
 
-	to_generate_in (a_class: CLASS_C): BOOLEAN is
+	to_generate_in (a_class: CLASS_C): BOOLEAN
 			-- Has current feature in class `a_class" to be generated ?
 		local
 			class_id: INTEGER
@@ -189,7 +189,7 @@ feature -- Status
 
 feature -- Incrementality
 
-	equiv (other: FEATURE_I): BOOLEAN is
+	equiv (other: FEATURE_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
 		local
 			other_constant: like Current
@@ -203,7 +203,7 @@ feature -- Incrementality
 
 feature -- C code generation
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
 			-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_buffer: buffer /= Void
@@ -308,7 +308,7 @@ feature -- C code generation
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
 			-- Byte code access for constant. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
 		local
@@ -348,7 +348,7 @@ feature -- C code generation
 
 feature -- IL Code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL code for constant.
 		local
 			type_i: TYPE_A
@@ -373,7 +373,7 @@ feature -- IL Code generation
 
 feature -- Byte code generation
 
-	melt (exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT)
 			-- Generate byte code for constant.
 			-- [Remember there is no byte code tree for constant].
 		local
@@ -435,7 +435,7 @@ feature -- Byte code generation
 			Execution_table.mark_melted (exec)
 		end
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 			-- is the constant (implemented like) a once function ?
 		local
 			l_val: STRING_VALUE_I
@@ -452,7 +452,7 @@ feature -- Byte code generation
 			end
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_CONSTANT_I
@@ -464,14 +464,14 @@ feature -- Byte code generation
 			Result := rep
 		end
 
-	selected: CONSTANT_I is
+	selected: CONSTANT_I
 			-- Selected constant
 		do
 			create Result.make
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_CONSTANT_I
@@ -482,7 +482,7 @@ feature -- Byte code generation
 			Result := unselect
 		end
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer datas form `other' into Current
 		do
 			Precursor {ENCAPSULATED_I} (other)
@@ -491,7 +491,7 @@ feature -- Byte code generation
 			extension := other.extension
 		end
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer datas form `Current' into `other'
 		do
 			Precursor {ENCAPSULATED_I} (other)
@@ -503,7 +503,7 @@ feature -- Byte code generation
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_CONSTANT is
+	new_api_feature: E_CONSTANT
 			-- API feature creation
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			Result.set_value (value.string_value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

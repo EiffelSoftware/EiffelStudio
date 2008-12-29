@@ -1,4 +1,4 @@
-indexing
+note
 description: "Encapsulation of a C++ extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -28,15 +28,15 @@ feature -- Properties
 
 feature -- Convenience
 
-	is_cpp: BOOLEAN is True
+	is_cpp: BOOLEAN = True
 
-	set_class_name (n: STRING) is
+	set_class_name (n: STRING)
 			-- Assign `n' to `class_name'.
 		do
 			class_name := n
 		end
 
-	set_type (t: INTEGER) is
+	set_type (t: INTEGER)
 			-- Assing `t' to `type'.
 		do
 			type := t
@@ -44,7 +44,7 @@ feature -- Convenience
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 		do
 			Result := Precursor {EXTERNAL_EXT_I} (other) and then
 				(type = other.type and equal (class_name, other.class_name))
@@ -52,7 +52,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_body (cpp_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (cpp_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate encapsulation to C++ external which has `nb' parameters.
 		local
 			l_buffer: GENERATION_BUFFER
@@ -98,7 +98,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
 			-- Generate inline call to C++ external.
 		require
 			external_name_not_void: external_name /= Void
@@ -116,7 +116,7 @@ feature -- Code generation
 
 feature {NONE} -- Code generation
 
-	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A) is
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A)
 		require
 			external_name_not_void: external_name /= Void
 			nb_nonnegative: nb >= 0
@@ -178,7 +178,7 @@ feature {NONE} -- Code generation
 			buffer.put_character (')')
 		end
 
-	generate_cpp_object_access (parameters: BYTE_LIST [EXPR_B]) is
+	generate_cpp_object_access (parameters: BYTE_LIST [EXPR_B])
 			-- Generate the C++ access code.
 		require
 			parameters_valid: parameters /= Void implies parameters.count >= 1
@@ -192,7 +192,7 @@ feature {NONE} -- Code generation
 			generate_i_th_parameter (parameters, 1)
 		end
 
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN) is
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN)
 			-- Generate the arguments to the C++ call
 		local
 			i, j: INTEGER
@@ -236,7 +236,7 @@ feature {NONE} -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

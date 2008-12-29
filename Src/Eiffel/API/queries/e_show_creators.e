@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display class creation procedures of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		local
 			l_factory: like feature_criterion_factory
@@ -27,7 +27,7 @@ feature -- Access
 			Result := l_factory.simple_criterion_with_index (l_factory.c_is_creator)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

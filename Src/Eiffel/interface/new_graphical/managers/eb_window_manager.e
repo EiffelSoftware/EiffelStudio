@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window manager for tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,7 +60,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a window manager.
 		do
 			create managed_windows.make (10)
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	new_menu: EB_WINDOW_MANAGER_MENU is
+	new_menu: EB_WINDOW_MANAGER_MENU
 			-- Menu corresponding to current: This is a menu with
 			-- the following entries: New Window, Minimize All and
 			-- an entry for each opened window.
@@ -109,7 +109,7 @@ feature -- Basic operations
 			create Result.make (Current)
 		end
 
-	new_widget: EB_WINDOW_MANAGER_LIST is
+	new_widget: EB_WINDOW_MANAGER_LIST
 			-- Widget corresponding to current: This is a list with
 			-- all opened windows.
 			--
@@ -118,7 +118,7 @@ feature -- Basic operations
 			create Result.make (Current)
 		end
 
-	create_window is
+	create_window
 			-- Create a new development window and update `last_created_window'.
 		local
 			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
@@ -130,7 +130,7 @@ feature -- Basic operations
 			initialize_window (l_window, True)
 		end
 
-	create_editor_window is
+	create_editor_window
 			-- Create a new editor window and update `last_created_window'.
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
@@ -142,7 +142,7 @@ feature -- Basic operations
 			initialize_window (l_window, True)
 		end
 
-	create_context_window is
+	create_context_window
 			-- Create a new context window and update `last_created_window'.
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
@@ -154,7 +154,7 @@ feature -- Basic operations
 			initialize_window (l_window, True)
 		end
 
-	load_window_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	load_window_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Load `a_dev_window''s session data.
 			-- If `a_dev_window' is void, a new development window will be created.
 		local
@@ -167,7 +167,7 @@ feature -- Basic operations
 			initialize_window (l_window, False)
 		end
 
-	initialize_window (a_window: EB_DEVELOPMENT_WINDOW; a_new_window: BOOLEAN) is
+	initialize_window (a_window: EB_DEVELOPMENT_WINDOW; a_new_window: BOOLEAN)
 			-- Initialize `a_window'.
 			-- If `a_window' is not `a_new_window', we ignore window title.
 		require
@@ -192,7 +192,7 @@ feature -- Basic operations
 			a_window.give_focus
 		end
 
-	create_dynamic_lib_window is
+	create_dynamic_lib_window
 			-- Create a new dynamic library window if necessary and display it.
 		local
 			a_window: EB_DYNAMIC_LIB_WINDOW
@@ -213,7 +213,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	development_windows_with_class (cl_name: STRING): LIST [EB_DEVELOPMENT_WINDOW] is
+	development_windows_with_class (cl_name: STRING): LIST [EB_DEVELOPMENT_WINDOW]
 			-- List of all windows with `cl_name' opened.
 		require
 			cl_name_not_void: cl_name /= Void
@@ -241,7 +241,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	compile_start_actions: ACTION_SEQUENCE [TUPLE] is
+	compile_start_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Eiffel compilation starts
 		do
 			if compile_start_actions_internal = Void then
@@ -260,7 +260,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	development_windows: !ARRAYED_LIST [EB_DEVELOPMENT_WINDOW] is
+	development_windows: !ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]
 			-- All development windows managed by Current
 		local
 			l_windows: like managed_windows
@@ -283,7 +283,7 @@ feature -- Access
 
 feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
 
-	all_modified_classes: ARRAYED_LIST [CLASS_I] is
+	all_modified_classes: ARRAYED_LIST [CLASS_I]
 			-- Retrieves a list of all modified classes
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
@@ -313,7 +313,7 @@ feature -- Status report
 			-- Window created by the last call to `create_window'.
 			-- Void if none.
 
-	development_windows_count: INTEGER is
+	development_windows_count: INTEGER
 			-- number of visible development windows
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
@@ -334,13 +334,13 @@ feature -- Status report
 			managed_windows.go_i_th (l_index)
 		end
 
-	has_active_development_windows: BOOLEAN is
+	has_active_development_windows: BOOLEAN
 			-- Are there any active development window up?
 		do
 			Result := (development_windows_count /= 0)
 		end
 
-	has_modified_windows: BOOLEAN is
+	has_modified_windows: BOOLEAN
 			-- Are there any window having been modified and not yet saved?
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
@@ -364,7 +364,7 @@ feature -- Status report
 			managed_windows.go_i_th (l_index)
 		end
 
-	development_window_from_window (a_window: EV_WINDOW): EB_DEVELOPMENT_WINDOW is
+	development_window_from_window (a_window: EV_WINDOW): EB_DEVELOPMENT_WINDOW
 			-- Return the development window whose widget is `a_window'.
 		local
 			l_index: INTEGER
@@ -387,7 +387,7 @@ feature -- Status report
 			managed_windows.go_i_th (l_index)
 		end
 
-	last_focused_development_window: EB_DEVELOPMENT_WINDOW is
+	last_focused_development_window: EB_DEVELOPMENT_WINDOW
 			-- Return the development window which last had the keyboard focus.
 		do
 			from
@@ -403,7 +403,7 @@ feature -- Status report
 			end
 		end
 
-	last_focused_window: EB_WINDOW is
+	last_focused_window: EB_WINDOW
 			-- Return the window which last had the keyboard focus.
 			-- Return Void if no window is focused.
 		local
@@ -417,7 +417,7 @@ feature -- Status report
 			end
 		end
 
-	a_development_window: EB_DEVELOPMENT_WINDOW is
+	a_development_window: EB_DEVELOPMENT_WINDOW
 			-- Return a random development window
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -440,7 +440,7 @@ feature -- Status report
 
 feature -- Query
 
-	development_window_from_id (a_window_id: NATURAL_32): EB_DEVELOPMENT_WINDOW is
+	development_window_from_id (a_window_id: NATURAL_32): EB_DEVELOPMENT_WINDOW
 			-- Retrieve a development window using a window id matched to {EB_DEVELOPMENT_WINDOW}.window_id
 		require
 			a_window_id_positive: a_window_id > 0
@@ -526,7 +526,7 @@ feature -- Query
 
 feature -- Actions on a given window
 
-	show_window (a_window: EB_WINDOW)  is
+	show_window (a_window: EB_WINDOW)
 			-- Show the window.
 		do
 				-- We call `raise' since it takes care of really showing the window
@@ -535,14 +535,14 @@ feature -- Actions on a given window
 			notify_observers (a_window, Notify_shown_window)
 		end
 
-	hide_window (a_window: EB_WINDOW) is
+	hide_window (a_window: EB_WINDOW)
 			-- Hide the window
 		do
 			a_window.window.hide
 			notify_observers (a_window, Notify_hidden_window)
 		end
 
-	destroy_window (a_window: EB_WINDOW) is
+	destroy_window (a_window: EB_WINDOW)
 			-- Destroy the window.
 		do
 				-- Remove this window from managed windows.
@@ -560,7 +560,7 @@ feature -- Actions on a given window
 			a_window.destroy_imp
 		end
 
-	record_window_change (a_window: EB_WINDOW) is
+	record_window_change (a_window: EB_WINDOW)
 			-- Record that `a_window' has changed and notify the observers.
 		do
 			notify_observers (a_window, Notify_changed_window)
@@ -568,31 +568,31 @@ feature -- Actions on a given window
 
 feature -- Actions on all windows
 
-	raise_all_unsaved is
+	raise_all_unsaved
 			-- Raise all the editors.
 		do
 			for_all (agent raise_unsaved_action)
 		end
 
-	refresh_all is
+	refresh_all
 			-- Refresh all the windows after a compilation
 		do
 			for_all (agent refresh_action)
 		end
 
-	save_all is
+	save_all
 			-- Ask each window to save its content.
 		do
 			for_all (agent save_action)
 		end
 
-	save_all_before_compiling is
+	save_all_before_compiling
 			-- Ask each window to save its content.
 		do
 			for_all (agent save_before_compiling_action)
 		end
 
-	backup_all is
+	backup_all
 			-- Create a backup file (.swp) for all development window.
 		do
 			not_backuped := 0
@@ -602,43 +602,43 @@ feature -- Actions on all windows
 	not_backuped: INTEGER
 			-- Number of files that could not be backed up during a back up.
 
-	minimize_all is
+	minimize_all
 			-- Minimize all windows
 		do
 			for_all (agent minimize_action)
 		end
 
-	disable_all is
+	disable_all
 			-- Disable sensitivity on all windows.
 		do
 			for_all (agent disable_action)
 		end
 
-	enable_all is
+	enable_all
 			-- Enable sensitivity on all windows.
 		do
 			for_all (agent enable_action)
 		end
 
-	quick_refresh_all_margins is
+	quick_refresh_all_margins
 			-- Redraws the margins of all the editor windows.
 		do
 			for_all (agent quick_refresh_margin_action)
 		end
 
-	quick_refresh_all_editors is
+	quick_refresh_all_editors
 			-- Redraws the editors of all the windows.
 		do
 			for_all (agent quick_refresh_action)
 		end
 
-	raise_all is
+	raise_all
 			-- Raise all windows.
 		do
 			for_all (agent show_window)
 		end
 
-	close_all is
+	close_all
 			-- Close all windows.
 		local
 			l_snapshot: like managed_windows
@@ -654,13 +654,13 @@ feature -- Actions on all windows
 			end
 		end
 
-	synchronize_all_about_breakpoints is
+	synchronize_all_about_breakpoints
 		do
 			quick_refresh_all_margins
 			for_all (agent synchronize_breakpoints_action)
 		end
 
-	synchronize_all is
+	synchronize_all
 			-- A compilation is over. Warn all windows and tools.
 		do
 				-- Reload the cluster tree in the cluster manager.
@@ -696,7 +696,7 @@ feature -- Actions on all windows
 			for_all (agent synchronize_action)
 		end
 
-	display_message_and_percentage (m: STRING_GENERAL; a_value: INTEGER) is
+	display_message_and_percentage (m: STRING_GENERAL; a_value: INTEGER)
 			-- Display message `m' and `a_value' percentage in status bars of all development windows.
 		require
 			one_line_message: m /= Void and then (not m.has_code (('%N').natural_32_code) and not m.has_code (('%R').natural_32_code))
@@ -726,7 +726,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_message (m: STRING_GENERAL) is
+	display_message (m: STRING_GENERAL)
 			-- Display a message in status bars of all development windows.
 		require
 			one_line_message: m /= Void and then (not m.has_code (('%N').natural_32_code) and not m.has_code (('%R').natural_32_code))
@@ -751,7 +751,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_percentage (a_value: INTEGER) is
+	display_percentage (a_value: INTEGER)
 			-- Display `a_value' percentage in status bars of all development windows.
 		require
 			a_value_valid: a_value >= 0 and then a_value <= 100
@@ -780,7 +780,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_c_compilation_progress (mess: STRING_GENERAL) is
+	display_c_compilation_progress (mess: STRING_GENERAL)
 			-- Display `mess' in status bars of all development windows.
 		require
 			mess_not_void: mess /= Void
@@ -815,7 +815,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	for_all_development_windows (p: PROCEDURE [ANY, TUPLE [EB_DEVELOPMENT_WINDOW]]) is
+	for_all_development_windows (p: PROCEDURE [ANY, TUPLE [EB_DEVELOPMENT_WINDOW]])
 			-- Call `p' on all development windows.
 		local
 			cv_dev: EB_DEVELOPMENT_WINDOW
@@ -840,13 +840,13 @@ feature -- Actions on all windows
 
 feature {EB_SHORTCUT_MANAGER} -- Actions on all windows
 
-	refresh_commands is
+	refresh_commands
 			-- Refresh all windows commands.
 		do
 			for_all (agent refresh_commands_action)
 		end
 
-	refresh_external_commands is
+	refresh_external_commands
 			-- Only refresh external commands
 		do
 			for_all (agent refresh_external_commands_action)
@@ -854,14 +854,14 @@ feature {EB_SHORTCUT_MANAGER} -- Actions on all windows
 
 feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events
 
-	set_focused_window (w: EB_WINDOW) is
+	set_focused_window (w: EB_WINDOW)
 			-- Tell `Current' `w' has been given the focus.
 		do
 			focused_windows.prune_all (w)
 			focused_windows.extend (w)
 		end
 
-	try_to_destroy_window (a_window: EB_WINDOW) is
+	try_to_destroy_window (a_window: EB_WINDOW)
 			-- Destroy the window if it is possible.
 			-- The window-level checks should be performed in EB_WINDOW::destroy.
 			-- This method only takes into account the cases when closing the
@@ -886,7 +886,7 @@ feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events
 
 feature {NONE} -- Exit implementation
 
-	confirm_and_quit is
+	confirm_and_quit
 			-- If a compilation is under way, do not exit.
 		local
 			l_exit_save_prompt: ES_SAVE_CLASSES_PROMPT
@@ -922,14 +922,14 @@ feature {NONE} -- Exit implementation
 			end
 		end
 
-	kill_process_and_confirm_quit is
+	kill_process_and_confirm_quit
 			-- Kill running c compilation and external command, if any and then quit.
 		do
 			process_manager.terminate_process
 			quit
 		end
 
-	save_and_quit is
+	save_and_quit
 			-- Save all windows and destroy the last development window.
 		do
 			save_all
@@ -940,7 +940,7 @@ feature {NONE} -- Exit implementation
 			end
 		end
 
-	quit is
+	quit
 			-- Destroy the last development window.
 		do
 			if process_manager.is_process_running then
@@ -952,7 +952,7 @@ feature {NONE} -- Exit implementation
 
 feature -- Events
 
-	load_favorites is
+	load_favorites
 			-- Try to initialize the favorites with the 'preferences.wb' file.
 		local
 			fn: FILE_NAME
@@ -981,7 +981,7 @@ feature -- Events
 			retry
 		end
 
-	save_favorites is
+	save_favorites
 			-- Try to save the favorites' state within the 'preferences.wb' file.
 		local
 			fn: FILE_NAME
@@ -1007,7 +1007,7 @@ feature -- Events
 			retry
 		end
 
-	load_session is
+	load_session
 			-- Try to recreate previous project session, if any.
 		local
 			l_i, l_window_count: INTEGER
@@ -1090,7 +1090,7 @@ feature -- Events
 			retry
 		end
 
-	save_session is
+	save_session
 			-- Try to store current session data.
 		local
 			retried: BOOLEAN
@@ -1120,7 +1120,7 @@ feature -- Events
 			retry
 		end
 
-	on_compile is
+	on_compile
 			-- A compilation has been launched.
 			-- Update the display accordingly, ie gray out all forbidden commands.
 		do
@@ -1136,7 +1136,7 @@ feature -- Events
 			compile_start_actions.call (Void)
 		end
 
-	on_refactoring_start is
+	on_refactoring_start
 			-- A refactoring has been started.
 		do
 			Melt_project_cmd.disable_sensitive
@@ -1148,7 +1148,7 @@ feature -- Events
 			for_all (agent c_compilation_start_action)
 		end
 
-	on_refactoring_end is
+	on_refactoring_end
 			-- A refactoring has finished.
 		do
 			Melt_project_cmd.enable_sensitive
@@ -1160,7 +1160,7 @@ feature -- Events
 			for_all (agent c_compilation_stop_action)
 		end
 
-	on_c_compilation_start is
+	on_c_compilation_start
 			-- Freezing or finalizing has been launched.
 			-- Update the display accordingly, ie gray out all forbidden commands.
 		do
@@ -1174,7 +1174,7 @@ feature -- Events
 			end
 		end
 
-	on_c_compilation_stop is
+	on_c_compilation_stop
 			-- Freezing or finalizing has finished.
 			-- Update the display accordingly.
 		do
@@ -1186,7 +1186,7 @@ feature -- Events
 			run_finalized_cmd.enable_sensitive
 		end
 
-	on_project_created is
+	on_project_created
 			-- A new project has been created. Update the state of some commands.
 		do
 			Melt_project_cmd.enable_sensitive
@@ -1199,7 +1199,7 @@ feature -- Events
 			for_all (agent create_project_action)
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- A new project has been loaded. Warn all managed windows.
 		do
 			if Eiffel_project.initialized then
@@ -1246,7 +1246,7 @@ feature -- Events
 			for_all (agent load_project_action)
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Current project has been closed. Warn all managed windows.
 		do
 			Manager.on_project_unloaded
@@ -1279,51 +1279,51 @@ feature {NONE} -- Implementation
 	focused_windows: ARRAYED_LIST [EB_WINDOW]
 			-- Focused windows (chronological order).
 
-	close_action (a_window: EB_WINDOW)  is
+	close_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `close_all'.
 		do
 			destroy_window (a_window)
 			notify_observers (a_window, Notify_removed_window)
 		end
 
-	minimize_action (a_window: EB_WINDOW) is
+	minimize_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `minimize_all'.
 		do
 			a_window.window.minimize
 		end
 
-	disable_action (a_window: EB_WINDOW) is
+	disable_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `disable_all'.
 		do
 			a_window.window.disable_sensitive
 		end
 
-	enable_action (a_window: EB_WINDOW) is
+	enable_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `enable_all'.
 		do
 			a_window.window.enable_sensitive
 		end
 
-	refresh_action (a_window: EB_WINDOW)  is
+	refresh_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `refresh'.
 		do
 			a_window.refresh
 			notify_observers (a_window, Notify_changed_window)
 		end
 
-	refresh_commands_action (a_window: EB_WINDOW)  is
+	refresh_commands_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `refresh_all_commands'.
 		do
 			a_window.refresh_all_commands
 		end
 
-	refresh_external_commands_action (a_window: EB_WINDOW)  is
+	refresh_external_commands_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `refresh_external_commands'.
 		do
 			a_window.refresh_external_commands
 		end
 
-	synchronize_breakpoints_action (a_window: EB_WINDOW) is
+	synchronize_breakpoints_action (a_window: EB_WINDOW)
 			-- Action to synchronize `a_window' regarding the breakpoints data.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1334,7 +1334,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_action (a_window: EB_WINDOW)  is
+	synchronize_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `refresh'.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1354,7 +1354,7 @@ feature {NONE} -- Implementation
 			notify_observers (a_window, Notify_changed_window)
 		end
 
-	backup_action (a_window: EB_WINDOW) is
+	backup_action (a_window: EB_WINDOW)
 			-- Create a backup file of the text contained in `a_window'.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1366,7 +1366,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	quick_refresh_action (a_window: EB_WINDOW)  is
+	quick_refresh_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `quich_refresh_all_editors'.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1377,7 +1377,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	quick_refresh_margin_action (a_window: EB_WINDOW)  is
+	quick_refresh_margin_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `quick_refresh_all_margins'.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1388,7 +1388,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	raise_unsaved_action (a_window: EB_WINDOW) is
+	raise_unsaved_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `raise_non_saved'.
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
@@ -1399,7 +1399,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_action (a_window: EB_WINDOW) is
+	save_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `save_all'.
 		local
 			l_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1415,7 +1415,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_before_compiling_action (a_window: EB_WINDOW) is
+	save_before_compiling_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `save_all_before_compiling'.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1428,7 +1428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_project_action (a_window: EB_WINDOW) is
+	create_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `create_project'.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1439,7 +1439,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	load_project_action (a_window: EB_WINDOW) is
+	load_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `load_project'.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1450,7 +1450,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unload_project_action (a_window: EB_WINDOW) is
+	unload_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `unload_project'.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1461,7 +1461,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	c_compilation_start_action (a_window: EB_WINDOW) is
+	c_compilation_start_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' when freezing or finalizing starts.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1472,7 +1472,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	c_compilation_stop_action (a_window: EB_WINDOW) is
+	c_compilation_stop_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' when freezing or finalizing stops.
 		local
 			a_dev_window: EB_DEVELOPMENT_WINDOW
@@ -1483,7 +1483,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	for_all (action: PROCEDURE [ANY, TUPLE]) is
+	for_all (action: PROCEDURE [ANY, TUPLE])
 			-- Iterate `action' on every managed window.
 		local
 			l_index: INTEGER
@@ -1504,7 +1504,7 @@ feature {NONE} -- Implementation
 
 feature {EB_WINDOW_MANAGER_OBSERVER, EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Observer pattern
 
-	add_observer (an_observer: EB_WINDOW_MANAGER_OBSERVER) is
+	add_observer (an_observer: EB_WINDOW_MANAGER_OBSERVER)
 			-- Add `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -1515,7 +1515,7 @@ feature {EB_WINDOW_MANAGER_OBSERVER, EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -
 			observers.extend (an_observer)
 		end
 
-	remove_observer (an_observer: EB_WINDOW_MANAGER_OBSERVER) is
+	remove_observer (an_observer: EB_WINDOW_MANAGER_OBSERVER)
 			-- Remove `an_observer' from the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -1537,7 +1537,7 @@ feature {EB_WINDOW_MANAGER_OBSERVER, EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -
 
 feature {EB_WINDOW} -- Implementation / Observer pattern
 
-	notify_observers (an_item: EB_WINDOW; item_change: INTEGER) is
+	notify_observers (an_item: EB_WINDOW; item_change: INTEGER)
 			-- Notify all observers about the change of `an_item'.
 		require
 		--	valid_item_change:
@@ -1579,7 +1579,7 @@ feature {EB_C_COMPILER_LAUNCHER, EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU,
 
 feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
-	new_title: STRING_GENERAL is
+	new_title: STRING_GENERAL
 			-- Find an empty titled not yet used.
 		local
 			l_index: INTEGER
@@ -1622,7 +1622,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			Result := l_str
 		end
 
-	stop_ev_application is
+	stop_ev_application
 			-- Stop `application' by killing main event loop of EiffelVision2.
 		require
 			no_more_development_windows: development_windows_count = 0
@@ -1630,7 +1630,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			ev_application.destroy
 		end
 
-	store_last_focused_window is
+	store_last_focused_window
 			-- Store layout of last focused window so new windows may be initialized
 			-- to match.
 		local
@@ -1644,19 +1644,19 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 feature {EB_WINDOW} -- Implementation / Private Constants
 
-	Notify_hidden_window: INTEGER is -2
+	Notify_hidden_window: INTEGER = -2
 		-- Notification constant for `notify_observers'.
 
-	Notify_removed_window: INTEGER is -1
+	Notify_removed_window: INTEGER = -1
 		-- Notification constant for `notify_observers'.
 
-	Notify_added_window: INTEGER is 1
+	Notify_added_window: INTEGER = 1
 		-- Notification constant for `notify_observers'.
 
-	Notify_shown_window: INTEGER is 2
+	Notify_shown_window: INTEGER = 2
 		-- Notification constant for `notify_observers'.
 
-	Notify_changed_window: INTEGER is 0
+	Notify_changed_window: INTEGER = 0
 		-- Notification constant for `notify_observers'.
 
 feature{NONE} -- Implementation
@@ -1664,13 +1664,13 @@ feature{NONE} -- Implementation
 	state_message_waiting_count: INTEGER
 			-- Times that we have been waiting for displaying a c compilation message.
 
-	max_waiting_count: INTEGER is 30;
+	max_waiting_count: INTEGER = 30;
 			-- Max value of `state_message_waiting_count'
 
 	compile_start_actions_internal: like compile_start_actions;
 			-- Implementation of `compile_start_actions'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

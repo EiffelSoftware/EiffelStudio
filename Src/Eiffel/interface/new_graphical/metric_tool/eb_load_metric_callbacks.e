@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The callbacks that react on metric xml parsing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create element_stack.make
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Does parsing contain error?
 		do
 			Result := last_error /= Void
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Setting
 
-	clear_last_error is
+	clear_last_error
 			-- Clear `last_error'.
 		do
 			last_error := Void
@@ -76,7 +76,7 @@ feature -- Setting
 			last_error_is_cleared: last_error = Void and then not has_error
 		end
 
-	set_first_parsed_node (a_node: like first_parsed_node) is
+	set_first_parsed_node (a_node: like first_parsed_node)
 			-- Set `first_parsed_node' with `a_node'.
 		do
 			if a_node = Void then
@@ -91,7 +91,7 @@ feature -- Setting
 				((a_node /= Void and then old first_parsed_node /= Void) implies first_parsed_node = old first_parsed_node)
 		end
 
-	set_is_for_whole_file (b: BOOLEAN) is
+	set_is_for_whole_file (b: BOOLEAN)
 			-- Set `is_for_whole_file' with `b'.
 		do
 			is_for_whole_file := b
@@ -101,13 +101,13 @@ feature -- Setting
 
 feature -- Callbacks
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			create_last_error (a_message)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -136,7 +136,7 @@ feature -- Callbacks
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		local
 			l_attr: HASH_TABLE [INTEGER, STRING]
@@ -177,28 +177,28 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible attributes of tags.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	element_index_table: HASH_TABLE [INTEGER, STRING] is
+	element_index_table: HASH_TABLE [INTEGER, STRING]
 			-- Table of indexes of supported elements indexed by element name.
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE[STRING], EB_METRIC_DOMAIN_ITEM], STRING] is
+	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE[STRING], EB_METRIC_DOMAIN_ITEM], STRING]
 			-- Domain item type
 		once
 			create Result.make (6)
@@ -212,7 +212,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	check_uuid_validity (a_uuid_str: STRING_GENERAL) is
+	check_uuid_validity (a_uuid_str: STRING_GENERAL)
 			-- Check validity of `a_uuid_str'.
 			-- `a_location' is where `a_uuid_str' appears.
 		do
@@ -233,7 +233,7 @@ feature{NONE} -- Implementation
 			-- If no UUID has been checked or the last checked UUID is invalid,
 			-- this will be Void
 
-	operator_name_set: DS_HASH_SET [STRING] is
+	operator_name_set: DS_HASH_SET [STRING]
 			-- Operator name set
 		local
 			l_tbl: like operator_name_table
@@ -292,7 +292,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Status report
 
-	is_domain_item_type_valid (a_scope: STRING): BOOLEAN is
+	is_domain_item_type_valid (a_scope: STRING): BOOLEAN
 			-- Is `a_scope' a valid domain item type?
 		require
 			a_scope_attached: a_scope /= Void
@@ -302,7 +302,7 @@ feature{NONE} -- Status report
 
 feature{NONE} -- Implementation
 
-	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: STRING_GENERAL) is
+	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: STRING_GENERAL)
 			-- Test if last registered receiver from `a_stack' has receivered data
 			-- If so, remove that receiver from `a_stack'. If not, fire an error `a_error_message'.
 		require
@@ -320,7 +320,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	remove_domain_receiver_from_stack is
+	remove_domain_receiver_from_stack
 			-- Test if last registered domain receiver from `domain_receiver_stack' has receivered a
 			-- domain. If so, remove that domain receiver. If not, file an error.
 		do
@@ -330,7 +330,7 @@ feature{NONE} -- Implementation
 			)
 		end
 
-	create_last_error (a_message: STRING_GENERAL) is
+	create_last_error (a_message: STRING_GENERAL)
 			-- Create `last_error' with `a_message'.
 		do
 			create last_error.make (a_message)
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 			has_error: has_error
 		end
 
-	set_current_tester_item (a_item: EB_METRIC_VALUE_RETRIEVER) is
+	set_current_tester_item (a_item: EB_METRIC_VALUE_RETRIEVER)
 			-- Set `a_item' into `current_tester_item'.
 		require
 			current_tester_item_attached: current_tester_item /= Void
@@ -349,7 +349,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Process
 
-	process_domain is
+	process_domain
 			-- Process "domain" definition list node.		
 		local
 			l_domain_receiver: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
@@ -364,7 +364,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_finish is
+	process_domain_finish
 			-- Process when a domain node has been parsed.				
 		local
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
@@ -376,7 +376,7 @@ feature{NONE} -- Process
 			l_item.is_called := True
 		end
 
-	process_domain_item is
+	process_domain_item
 			-- Process "domain_item" definition list node.		
 		local
 			l_id: STRING
@@ -418,7 +418,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_tester is
+	process_tester
 			-- Process tester.
 		local
 			l_relation_str: STRING
@@ -448,7 +448,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_tester_item is
+	process_tester_item
 			-- Process tester item.
 		require
 			current_tester_attached: current_tester /= Void
@@ -479,7 +479,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_constant_value is
+	process_constant_value
 			-- Process "constant_value" node.
 		local
 			l_base_value: STRING
@@ -511,7 +511,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_metric_value is
+	process_metric_value
 			-- Process "metric_value" node.
 		local
 			l_metric_name: STRING
@@ -552,7 +552,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_tester_finish is
+	process_tester_finish
 			-- Process when a tester node has been parsed.
 		local
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
@@ -564,7 +564,7 @@ feature{NONE} -- Process
 			l_item.is_called := True
 		end
 
-	process_value_retriever_finish is
+	process_value_retriever_finish
 			-- Process when a value retriever has been parsed.
 		local
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
@@ -578,7 +578,7 @@ feature{NONE} -- Process
 
 feature -- XML element validity testing
 
-	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): BOOLEAN is
+	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): BOOLEAN
 			-- Retrieve boolean value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid boolean,
 			-- raise an error.
@@ -593,7 +593,7 @@ feature -- XML element validity testing
 			Result := last_tested_boolean
 		end
 
-	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): INTEGER is
+	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): INTEGER
 			-- Retrieve integer value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid integer,
 			-- raise an error.
@@ -614,7 +614,7 @@ invariant
 	tester_receiver_stack_attached: tester_receiver_stack /= Void
 	value_retriever_stack_attached: value_retriever_stack /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Start test run command
 																]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		do
 			manager := a_manager
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute is
+	execute
 			-- <Precursor>
 		do
 			manager.launch_eweasel (False)
@@ -47,7 +47,7 @@ feature -- Command
 
 feature -- Query
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- <Precursor>
 		local
 			l_factory: ES_EWEASEL_SINGLETON_FACTORY
@@ -58,43 +58,43 @@ feature -- Query
 
 feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "Start_test_run"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_run_last_tests
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

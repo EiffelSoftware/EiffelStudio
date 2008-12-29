@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Time checker
@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	time_check is
+	time_check
 			-- Check time stamps of compiled classes of the system
 		require
 			system.root_creators.for_all (
@@ -27,7 +27,7 @@ feature
 			end;
 		end;
 
-	check_suppliers_of_unchanged_classes is
+	check_suppliers_of_unchanged_classes
 			-- Check if there is no conflicts for the suppliers
 			-- of the `old' classes but only if the system is moved
 			-- i.e. if a class has been added or removed
@@ -111,7 +111,7 @@ end;
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

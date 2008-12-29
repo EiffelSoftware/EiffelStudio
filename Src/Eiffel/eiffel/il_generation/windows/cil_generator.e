@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special object responsible for generating IL byte code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (deg_output: DEGREE_OUTPUT) is
+	make (deg_output: DEGREE_OUTPUT)
 			-- Generate a COM+ assembly.
 		do
 			degree_output := deg_output
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation: Access
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate a .NET assembly
 		local
 			file_name, location: STRING
@@ -259,7 +259,7 @@ feature -- Generation
 			end
 		end
 
-	deploy is
+	deploy
 			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
 			-- copy configuration file to load local assemblies.
 		local
@@ -363,7 +363,7 @@ feature -- Generation
 
 feature {NONE} -- Type description
 
-	generate_all_types (classes: ARRAY [CLASS_C]) is
+	generate_all_types (classes: ARRAY [CLASS_C])
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
@@ -392,7 +392,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	compute_root_class is
+	compute_root_class
 			-- Initialize `root_class_routine' with CLASS_C instance that defines
 			-- creation routine of current system.
 			--| In most cases `System.root_type.associated_class' is equal to
@@ -411,7 +411,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_types (classes: ARRAY [CLASS_C]) is
+	generate_types (classes: ARRAY [CLASS_C])
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
@@ -438,7 +438,7 @@ feature {NONE} -- Type description
 			generate_creation_classes (classes)
 		end
 
-	generate_class_interfaces (classes: ARRAY [CLASS_C]) is
+	generate_class_interfaces (classes: ARRAY [CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
@@ -527,7 +527,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_class_mappings (classes: ARRAY [CLASS_C]; for_interface: BOOLEAN) is
+	generate_class_mappings (classes: ARRAY [CLASS_C]; for_interface: BOOLEAN)
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
@@ -588,7 +588,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_class_attributes (classes: ARRAY [CLASS_C]) is
+	generate_class_attributes (classes: ARRAY [CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes' sorted in
 			-- topological order.
 		require
@@ -636,7 +636,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_features_description (classes: ARRAY [CLASS_C]) is
+	generate_features_description (classes: ARRAY [CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
@@ -706,7 +706,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_features_implementation (classes: ARRAY [CLASS_C]) is
+	generate_features_implementation (classes: ARRAY [CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
@@ -792,7 +792,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_creation_classes (classes: ARRAY [CLASS_C]) is
+	generate_creation_classes (classes: ARRAY [CLASS_C])
 			-- Generate mapping between Eiffel and IL generator with `classes'
 			-- sorted in the topological order.
 		require
@@ -841,7 +841,7 @@ feature {NONE} -- Type description
 			end
 		end
 
-	generate_entry_point is
+	generate_entry_point
 			-- Generate call to creation routine from ROOT_CLASS
 		local
 			a_class: CLASS_C
@@ -871,7 +871,7 @@ feature {NONE} -- Sort
 	ordered_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
 			-- Classes sorted by their module appartenance.
 
-	prepare_classes (system_classes: CLASS_C_SERVER) is
+	prepare_classes (system_classes: CLASS_C_SERVER)
 			-- Initialize `ordered_classes' so that it is organized by modules
 			-- and for each modules classes are sorted following their topological order.
 		require
@@ -933,7 +933,7 @@ feature {NONE} -- Sort
 			ordered_classes_not_void: ordered_classes /= Void
 		end
 
-	force_recompilation is
+	force_recompilation
 			-- Traverse `ordered_classes' and if a class has to be generated
 			-- then for all classes belonging to the same entry in `ordered_classes'
 			-- should be recompiled.
@@ -1014,7 +1014,7 @@ feature {NONE} -- Sort
 			end
 		end
 
-	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C] is
+	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C]
 			-- Initialize a sorted array of CLASS_C from `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -1038,7 +1038,7 @@ feature {NONE} -- Sort
 			sorted_array_from_list_not_void: Result /= Void
 		end
 
-	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [CLASS_C] is
+	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [CLASS_C]
 			-- `system_classes' sorted following their topological
 			-- order.
 		require
@@ -1069,7 +1069,7 @@ feature {NONE} -- Sort
 
 feature {NONE} -- File copying
 
-	copy_to_local (a_source: STRING) is
+	copy_to_local (a_source: STRING)
 			-- Copy `a_source' into `Assemblies' directory.
 		require
 			a_source_not_void: a_source /= Void
@@ -1140,13 +1140,13 @@ feature {NONE} -- Progression
 	degree_output: DEGREE_OUTPUT
 			-- Progression bar.
 
-	degree_number: INTEGER is 1
+	degree_number: INTEGER = 1
 			-- Degree in which compilation is performed.
 
-	dll_type: STRING is "dll"
+	dll_type: STRING = "dll"
 			-- Type of generation
 
-	is_class_generated (a_class: CLASS_C): BOOLEAN is
+	is_class_generated (a_class: CLASS_C): BOOLEAN
 			-- Is `a_class' to be generated?
 		do
 				-- We force generation of basic classes even if only the reference version
@@ -1160,7 +1160,7 @@ feature {NONE} -- Progression
 invariant
 	system_exists: System /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

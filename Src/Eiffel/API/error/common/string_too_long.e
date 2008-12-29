@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Syntax error for manifest string too long."
@@ -22,13 +22,13 @@ create {ERROR_HANDLER}
 
 feature -- Property
 
-	syntax_message: STRING is
+	syntax_message: STRING
 			-- Specific syntax message.
         do
 			Result := "string too long"
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

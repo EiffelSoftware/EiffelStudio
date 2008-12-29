@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides access to retrieval and setting of properties using IDs
 	]"
@@ -131,7 +131,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `changed_events'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

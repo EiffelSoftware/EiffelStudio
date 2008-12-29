@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Invokes the profiler for the steps between the %
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (p: STRING; a: STRING; f: STRING; m: STRING) is
+	make (p: STRING; a: STRING; f: STRING; m: STRING)
 			-- The used profiler is `p'.
 			-- The application must be invoked with 'a'.
 			-- The output should be written into `f'.
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	must_invoke_profiler: BOOLEAN is
+	must_invoke_profiler: BOOLEAN
 			-- Must the profiler be invoked in order to convert its
 			-- output?
 		do
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Execution
 
-	invoke_profiler is
+	invoke_profiler
 			-- Invoke the profiler, depends on which profiler is
 			-- used.
 		require
@@ -81,7 +81,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	invoke_gprof is
+	invoke_gprof
 			-- Invokes gprof in order to generate the text file.
 		local
 			exec_string: STRING;
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	invoke_win32_ms is
+	invoke_win32_ms
 			-- Invokes the profiler from Microsoft in order to
 			-- generate the text file.
 		local
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

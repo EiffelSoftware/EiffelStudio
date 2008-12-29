@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Boolean constant for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (v: BOOLEAN) is
+	make (v: BOOLEAN)
 			-- Assign `v' to `value'.
 		do
 			value := v
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bool_const_b (Current)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluation of Current.
 		do
 			create {BOOL_VALUE_I} Result.make (value)
@@ -56,16 +56,16 @@ feature -- Evaluation
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expression.
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- A constant is a predefined structure.
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A boolean constant is constant.
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Boolean type
 		do
 			Result := boolean_type
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Print boolean constant
 		do
 			if value then
@@ -83,17 +83,17 @@ feature -- C code generation
 			end
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- False
 		do
 		end
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true;
+	is_fast_as_local: BOOLEAN = true;
 			-- Is expression calculation as fast as loading a local?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

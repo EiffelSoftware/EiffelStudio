@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	fixme: "We should either use the SK_XX constants or the tuple one, instead of yet adding some more"
@@ -37,7 +37,7 @@ feature -- Access
 
 	Other_code: INTEGER = 0x15000000;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

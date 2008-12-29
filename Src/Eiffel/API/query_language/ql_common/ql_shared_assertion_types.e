@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared assertion types used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Assertion types
 
-	require_type: QL_ASSERTION_TYPE is
+	require_type: QL_ASSERTION_TYPE
 			-- Require type
 		once
 			create Result.make (query_language_names.ql_require_assertion)
@@ -22,7 +22,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-	require_else_type: QL_ASSERTION_TYPE is
+	require_else_type: QL_ASSERTION_TYPE
 			-- Require else type
 		once
 			create Result.make (query_language_names.ql_require_else_assertion)
@@ -30,7 +30,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-	ensure_type: QL_ASSERTION_TYPE is
+	ensure_type: QL_ASSERTION_TYPE
 			-- Ensure type
 		once
 			create Result.make (query_language_names.ql_ensure_assertion)
@@ -38,7 +38,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-	ensure_then_type: QL_ASSERTION_TYPE is
+	ensure_then_type: QL_ASSERTION_TYPE
 			-- Ensure then type
 		once
 			create Result.make (query_language_names.ql_ensure_then_assertion)
@@ -46,7 +46,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-	invariant_type: QL_ASSERTION_TYPE is
+	invariant_type: QL_ASSERTION_TYPE
 			-- Invariant type
 		once
 			create Result.make (query_language_names.ql_invariant_assertion)
@@ -54,7 +54,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-	assertion_types: LIST [QL_ASSERTION_TYPE] is
+	assertion_types: LIST [QL_ASSERTION_TYPE]
 			-- Shared assertion types
 		once
 			create {ARRAYED_LIST [QL_ASSERTION_TYPE]}Result.make (5)
@@ -67,7 +67,7 @@ feature -- Assertion types
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

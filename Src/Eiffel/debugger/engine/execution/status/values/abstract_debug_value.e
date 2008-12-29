@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of value during the execution of the application."
@@ -87,7 +87,7 @@ feature {DEBUG_VALUE_EXPORTER} -- Internal Properties
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Return class of value
 		deferred
 		end;
@@ -95,7 +95,7 @@ feature -- Access
 	item_number: INTEGER
 			-- number of the object in the local list, attribute list, etc...
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		deferred
 		ensure
@@ -109,20 +109,20 @@ feature -- Access
 
 feature -- Change
 
-	set_static_class (cl: like static_class) is
+	set_static_class (cl: like static_class)
 			-- Set `static_class' as `cl'.
 		do
 			static_class := cl
 		end
 
-	reset_children is
+	reset_children
 			-- Reset internal data related to children
 		do
 		end
 
 feature -- Comparison
 
-	is_less alias "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is
+	is_less alias "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN
 			-- Is `Current''s name lexicographically lower than `other''s?
 		do
 			Result := name < other.name
@@ -130,20 +130,20 @@ feature -- Comparison
 
 feature -- Output for debugger
 
-	extra_output_details: STRING_32 is
+	extra_output_details: STRING_32
 		do
 		end
 
 feature {DEBUG_VALUE_EXPORTER} -- Computed Value access
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		deferred
 		ensure
 			Result_attached: Result /= Void
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		deferred
 		ensure
@@ -152,18 +152,18 @@ feature {DEBUG_VALUE_EXPORTER} -- Computed Value access
 
 feature -- Output
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		deferred
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		deferred
 		end
 
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- sort `children' and return it.
 		do
 			Result := children
@@ -174,12 +174,12 @@ feature -- Output
 			end
 		end
 
-	address: DBG_ADDRESS is
+	address: DBG_ADDRESS
 			-- Address of the object represented by `Current'. Void if none.
 		do
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		deferred
@@ -189,7 +189,7 @@ feature -- Output
 
 feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IPC_REQUEST, OBJECT_ADDR} -- Hector address
 
-	set_hector_addr is
+	set_hector_addr
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -198,7 +198,7 @@ feature {DUMP_VALUE, CALL_STACK_ELEMENT, DBG_EVALUATOR, ABSTRACT_DEBUG_VALUE, IP
 
 feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 
-	set_item_number (n: like item_number) is
+	set_item_number (n: like item_number)
 			-- set `item_number' to `n'
 		require
 			n >= 0
@@ -210,7 +210,7 @@ feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 
 feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE, APPLICATION_EXECUTION} -- Setting
 
-	set_name (n: like name) is
+	set_name (n: like name)
 			-- Set `name' to `n'.
 		do
 			name := n
@@ -220,7 +220,7 @@ feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VA
 
 feature {NONE} -- Implementation
 
-	set_default_name is
+	set_default_name
 			-- Set the name to `default' in order to	
 			-- satisfy the invariant and the less than routine.
 			-- When the client uses this
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			name := "default"
 		end
 
-	Any_class: CLASS_C is
+	Any_class: CLASS_C
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end
@@ -248,19 +248,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	NONE_representation: STRING is "NONE = Void"
+	NONE_representation: STRING = "NONE = Void"
 
-	Left_address_delim: STRING is " <"
+	Left_address_delim: STRING = " <"
 
-	Right_address_delim: STRING is ">"
+	Right_address_delim: STRING = ">"
 
-	Equal_sign_str: STRING is " = "
+	Equal_sign_str: STRING = " = "
 
-	Is_unknown: STRING is " = Unknown"
+	Is_unknown: STRING = " = Unknown"
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := abstract_debug_value_id
 		end
@@ -270,7 +270,7 @@ invariant
 	non_void_name: name /= Void;
 	valid_attribute: is_attribute implies e_class /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

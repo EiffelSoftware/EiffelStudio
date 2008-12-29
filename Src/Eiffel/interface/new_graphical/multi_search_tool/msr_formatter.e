@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				mute_escape_characters is used to insert escape character in the front of every meta-character."	
 				The following is cited from RX_PCRE_MATCHER library.
@@ -41,7 +41,7 @@ class
 
 feature -- Path building
 
-	extend_file_path (a_path: FILE_NAME; file_name: STRING): FILE_NAME is
+	extend_file_path (a_path: FILE_NAME; file_name: STRING): FILE_NAME
 			-- Make new file path, if no diretory seperator at the end of a_path, add one.
 		local
 			s: STRING
@@ -56,7 +56,7 @@ feature -- Path building
 
 feature -- Muter action
 
-	mute_escape_characters (string: STRING_32): STRING_32 is
+	mute_escape_characters (string: STRING_32): STRING_32
 			-- Mute all escape characters in input string
 		require
 			string_not_void: string /= Void
@@ -77,7 +77,7 @@ feature -- Muter action
 			Result := l_string
 		end
 
-	build_match_whole_word (p_string: STRING_32): STRING_32 is
+	build_match_whole_word (p_string: STRING_32): STRING_32
 			-- Make the p_string starts and ends with "\b"
 		require
 			p_string_not_void: p_string /= Void
@@ -92,7 +92,7 @@ feature -- Muter action
 			build_match_whole_word_not_void: Result /= Void
 		end
 
-	replace_RNT_to_space (p_string: STRING_32): STRING_32 is
+	replace_RNT_to_space (p_string: STRING_32): STRING_32
 			-- replace all RNT in p_string to spaces
 		require
 			p_string_not_void: p_string /= Void
@@ -125,7 +125,7 @@ feature -- Muter action
 
 feature -- Status report
 
-	occurrences_in_bound (c: CHARACTER_32; s: STRING_32; start_pos: INTEGER; end_pos: INTEGER) : INTEGER is
+	occurrences_in_bound (c: CHARACTER_32; s: STRING_32; start_pos: INTEGER; end_pos: INTEGER) : INTEGER
 			-- count c occurrence in s between start_pos and end_pos
 		local
 			l_s: STRING_32
@@ -136,7 +136,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	mute_characters: ARRAYED_LIST [STRING] is
+	mute_characters: ARRAYED_LIST [STRING]
 			-- Contains all meta-characters
 		local
 			l_arrayed_list: ARRAYED_LIST [STRING]
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 
 invariant
 	invariant_clause: True -- Your invariant here
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

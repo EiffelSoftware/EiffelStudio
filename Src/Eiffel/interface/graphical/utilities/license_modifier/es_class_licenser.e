@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Performs license text modifications on a class.
 		
@@ -283,7 +283,7 @@ feature {NONE} -- Internationalization
 	invalid_license_license: !STRING = "${NOTE_KEYWORD}%N%Tlicense: %"The specified license contains syntax errors!%""
 			-- The default, invalid license.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

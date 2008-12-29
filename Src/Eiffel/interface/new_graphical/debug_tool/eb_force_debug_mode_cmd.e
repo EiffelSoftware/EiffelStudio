@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to force the environment to stay in debug maode"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current'.
 		do
 			eb_debugger_manager := a_manager
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute
 		do
 			execute_for_opening (True)
 		end
 
-	execute_for_opening (a_save_tools_layout: BOOLEAN) is
+	execute_for_opening (a_save_tools_layout: BOOLEAN)
 			-- Execute for opening Eiffel Studio directly into debug mode.
 		do
 			internal_is_selected := not internal_is_selected
@@ -72,7 +72,7 @@ feature -- Status
 	internal_is_selected: BOOLEAN
 			-- Is selected?
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Value of `internal_is_selected'.
 		do
 			Result := internal_is_selected --eb_debugger_manager.raised
@@ -80,7 +80,7 @@ feature -- Status
 
 feature -- Status change
 
-	synchronize_items is
+	synchronize_items
 			-- Synchronize items.
 		do
 			set_select (is_selected)
@@ -88,46 +88,46 @@ feature -- Status change
 
 feature {NONE} -- Properties
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Force_debug_mode
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Force_debug_mode
 		end
 
-	name: STRING is "Force_debug_mode"
+	name: STRING = "Force_debug_mode"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Force_debug_mode
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			Result := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debugger_environment_force_debug_mode_icon_buffer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

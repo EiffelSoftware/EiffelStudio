@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a class inheritance (ancestor/descendant) criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_criterion_domain: like criterion_domain; a_relation_type: INTEGER) is
+	make (a_criterion_domain: like criterion_domain; a_relation_type: INTEGER)
 			-- Initialize `criteiron_domain' with `a_criterion_domain'.			
 		require
 			a_criterion_domain_attached: a_criterion_domain /= Void
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_inheritance_relation_valid (a_relation: INTEGER): BOOLEAN is
+	is_inheritance_relation_valid (a_relation: INTEGER): BOOLEAN
 			-- Is `a_relation' a valid ancestor relation?			
 		deferred
 		end
@@ -42,7 +42,7 @@ feature -- Status report
 invariant
 	inheritance_relation_valid: is_inheritance_relation_valid (inheritance_relation)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Warning for inherited routines which call unqualified replicated features but themselves are not replicated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class; a_feature, a_callee: FEATURE_I) is
+	make (a_class: like associated_class; a_feature, a_callee: FEATURE_I)
 			-- New instance of replicated feature call in `a_feat' from `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -53,19 +53,19 @@ feature -- Properties
 	callee_feature: E_FEATURE
 			-- Unqualified replicated callee that is incorrectly called my a non-replicated feature.
 
-	code: STRING is "VMCS"
+	code: STRING = "VMCS"
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Unqualified Call of Replicated Feature: ")
 			callee_feature.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

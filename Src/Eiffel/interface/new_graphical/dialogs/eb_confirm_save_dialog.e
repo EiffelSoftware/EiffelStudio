@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog for confirming a save action"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch (a_target: like target; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
+	make_and_launch (a_target: like target; a_caller: EB_CONFIRM_SAVE_CALLBACK)
 			-- Initialize and popup the dialog
 		local
 			clsi_stone: CLASSI_STONE
@@ -58,20 +58,20 @@ feature -- Access
 
 feature -- Execution
 
-	save_text is
+	save_text
 			-- Save text and quit.
 		do
 			target.save_text
 			dont_save_text
 		end
 
-	dont_save_text is
+	dont_save_text
 			-- Directly quit.
 		do
 			caller.process
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

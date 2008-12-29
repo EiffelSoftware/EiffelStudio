@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a deferred function"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,17 +23,17 @@ feature
 	assigner_name_id: INTEGER
 			-- Id of `assigner_name' in `Names_heap' table
 
-	set_type (t: like type; a: like assigner_name_id) is
+	set_type (t: like type; a: like assigner_name_id)
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
 			assigner_name_id := a
 		end
 
-	is_function: BOOLEAN is True;
+	is_function: BOOLEAN = True;
 			-- Is the current feature a function ?
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_DEF_FUNC_I;
@@ -45,14 +45,14 @@ feature
 			Result := rep;
 		end;
 
-	selected: DEF_FUNC_I is
+	selected: DEF_FUNC_I
 			-- <Precursor>
 		do
 			create Result
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_DEF_FUNC_I
@@ -63,14 +63,14 @@ feature
 			Result := unselect;
 		end;
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer data
 		do
 			Precursor {DEF_PROC_I} (other)
 			other.set_type (type, assigner_name_id)
 		end
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer data from `other' into Current
 		do
 			Precursor {DEF_PROC_I} (other)
@@ -79,14 +79,14 @@ feature
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_FUNCTION is
+	new_api_feature: E_FUNCTION
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			update_api (Result)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

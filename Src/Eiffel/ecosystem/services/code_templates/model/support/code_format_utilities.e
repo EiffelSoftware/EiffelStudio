@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utilities for parsing and formatting strings found in a code template file.
 	]"
@@ -95,7 +95,7 @@ feature {CODE_VERSION} -- Access
 			result_is_compiled: Result.is_compiled
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Value retriever to get a value for value criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	value (a_ql_domain: QL_DOMAIN): DOUBLE is
+	value (a_ql_domain: QL_DOMAIN): DOUBLE
 			-- Retrieved value
 		require
 			value_retrievable: is_retrievable
@@ -22,7 +22,7 @@ feature -- Access
 		deferred
 		end
 
-	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE
 			-- Retrieved value
 		require
 			value_retrievable: is_retrievable
@@ -32,20 +32,20 @@ feature -- Access
 
 feature -- Status report
 
-	is_retrievable: BOOLEAN is
+	is_retrievable: BOOLEAN
 			-- Is `value' retrievable?
 		deferred
 		end
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_value_retriever (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

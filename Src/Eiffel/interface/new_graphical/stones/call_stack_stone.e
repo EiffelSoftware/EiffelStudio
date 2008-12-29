@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representating a breakable point."
 	legal: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (level_num: INTEGER) is
+	make (level_num: INTEGER)
 			-- Initialize `level_number' to `level_num'.
 		require
 			level_num: level_num > 0
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 		do
 			Result := {conv: CALL_STACK_STONE} other and then
 				Precursor {OBJECT_STONE} (other) and then
@@ -85,21 +85,21 @@ feature -- Access
 	level_number: INTEGER
 			-- Level number of call stack
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Setstop
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_setstop
 		end
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 		do
 			if is_valid then
 				Result := twin
@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 		local
 			ecs: EIFFEL_CALL_STACK
 			cs: CALL_STACK_ELEMENT
@@ -134,7 +134,7 @@ feature -- Access
 --			Result := {ef: like e_feature} e_feature and then ef.is_invariant
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

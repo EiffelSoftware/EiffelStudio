@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text fragment which delegates tasks to agents"
 	author: ""
 	date: "$Date$"
@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_text: like text; a_new_text_function: like new_text_function; a_text_validity_function: like text_validity_function) is
+	make (a_text: like text; a_new_text_function: like new_text_function; a_text_validity_function: like text_validity_function)
 			-- Initialize `text' with `a_text', `new_text_function' with `a_new_text_function' and
 			-- `text_validity_function' with `a_text_validity_funciton'.
 		require
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	new_text: like text is
+	new_text: like text
 			-- New text which will replace `text'
 		do
 			Result := new_text_internal
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Set `text' with `a_text'
 		require
 			a_text_attached: a_text /= Void
@@ -71,7 +71,7 @@ feature -- Setting
 			normalized_text_internal_set: normalized_text_internal = Void
 		end
 
-	set_new_text_function (a_func: like new_text_function) is
+	set_new_text_function (a_func: like new_text_function)
 			-- Set `new_text_function' with `a_func'.
 		do
 			new_text_function := a_func
@@ -79,7 +79,7 @@ feature -- Setting
 			new_text_function_set: new_text_function = a_func
 		end
 
-	set_prepare_procedure (a_procedure: like prepare_procedure) is
+	set_prepare_procedure (a_procedure: like prepare_procedure)
 			-- Set `prepare_procedure' with `a_procedure'.
 		do
 			prepare_procedure := a_procedure
@@ -87,7 +87,7 @@ feature -- Setting
 			prepare_procedure_set: prepare_procedure = a_procedure
 		end
 
-	set_dispose_procedure (a_procedure: like dispose_procedure) is
+	set_dispose_procedure (a_procedure: like dispose_procedure)
 			-- Set `dispose_procedure' with `a_procedure'.
 		do
 			dispose_procedure := a_procedure
@@ -95,7 +95,7 @@ feature -- Setting
 			dispose_procedure_set: dispose_procedure = a_procedure
 		end
 
-	prepare_before_replacement is
+	prepare_before_replacement
 			-- Prepare replacement.
 		do
 			if prepare_procedure /= Void then
@@ -105,7 +105,7 @@ feature -- Setting
 			set_is_replacement_prepared (True)
 		end
 
-	dispose_after_replacement is
+	dispose_after_replacement
 			-- Dispose after replacement
 		do
 			if dispose_procedure /= Void then
@@ -117,7 +117,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	set_is_replacement_prepared (a_prepared: BOOLEAN) is
+	set_is_replacement_prepared (a_prepared: BOOLEAN)
 			-- Set `is_replacement_prepared' with `a_prepared'.
 		do
 			is_replacement_prepared := a_prepared
@@ -128,7 +128,7 @@ feature{NONE} -- Implementation
 	new_text_internal: like new_text
 			-- Implementation of `new_text'
 
-	set_new_text_internal (a_text: like new_text_internal) is
+	set_new_text_internal (a_text: like new_text_internal)
 			-- Set `new_text_internal' with `a_text'.
 		do
 			new_text_internal := a_text

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Abstraction of an control allowing adding, removal and in-place editing of
 			program arguments.
@@ -39,7 +39,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: !EV_VERTICAL_BOX) is
+	build_widget_interface (a_widget: !EV_VERTICAL_BOX)
 			-- Builds widget's interface.
 			-- `a_widget': The widget to initialize of build upon.
 		local
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			update
         end
 
-	Layout_constants: EV_LAYOUT_CONSTANTS is
+	Layout_constants: EV_LAYOUT_CONSTANTS
 			-- Constants for vision2 layout
 		once
 				--| FIXME: get rid of this feature
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature -- Interface access
 
-	set_focus_on_widget is
+	set_focus_on_widget
 			-- Set focus on widget
 		do
 			if is_shown then
@@ -96,7 +96,7 @@ feature -- Interface access
 
 feature {EB_ARGUMENT_DIALOG} -- Storage
 
-	load_dbg_options is
+	load_dbg_options
 			-- Retrieve and initialize the arguments from user options.
 		local
 			l_row: EV_GRID_ROW
@@ -160,7 +160,7 @@ feature {EB_ARGUMENT_DIALOG} -- Storage
 			set_changed (Void, False)
 		end
 
-	store_dbg_options is
+	store_dbg_options
 			-- Store the current arguments and set current
 			-- arguments for system execution.
 		local
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 feature -- Query
 
-	selected_profile: like profile_from_row is
+	selected_profile: like profile_from_row
 		local
 			lrow: EV_GRID_ROW
 		do
@@ -239,7 +239,7 @@ feature -- Query
 			end
 		end
 
-	selected_profile_parameters: DEBUGGER_EXECUTION_PARAMETERS is
+	selected_profile_parameters: DEBUGGER_EXECUTION_PARAMETERS
 			-- Selected profile's execution parameters
 		local
 			p: like selected_profile
@@ -250,7 +250,7 @@ feature -- Query
 			end
 		end
 
-	default_profile_row: EV_GRID_ROW is
+	default_profile_row: EV_GRID_ROW
 			-- "Default" profile's row.
 		do
 			if profiles_grid.row_count > 0 then
@@ -260,7 +260,7 @@ feature -- Query
 
 feature {NONE} -- GUI
 
-	on_focused is
+	on_focused
 			-- Widget focused in
 		do
 				--| Set focus to a new argument field or to a check box
@@ -272,7 +272,7 @@ feature {NONE} -- GUI
 
 feature {NONE} -- Display profiles impl
 
-	build_display_profiles_box is
+	build_display_profiles_box
 		local
 			f: EV_FRAME
 			g: ES_GRID
@@ -385,7 +385,7 @@ feature {NONE} -- GUI Properties
 
 feature {NONE} -- Grid events
 
-	on_profiles_grid_key_pressed (a_key: EV_KEY) is
+	on_profiles_grid_key_pressed (a_key: EV_KEY)
 			-- `a_key' has been pressed on `profiles_grid'
 		local
 			l_ctler: ES_GRID_ROW_CONTROLLER
@@ -426,7 +426,7 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	move_first_selected_row_by (offset: INTEGER) is
+	move_first_selected_row_by (offset: INTEGER)
 			-- Move first selected row by `offset'
 		local
 			c: INTEGER
@@ -450,7 +450,7 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	on_row_selected (a_row: EV_GRID_ROW) is
+	on_row_selected (a_row: EV_GRID_ROW)
 			-- `a_row' has been selected
 		local
 			r: EV_GRID_ROW
@@ -477,7 +477,7 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	set_row_root_as_selected (a_is_selected: BOOLEAN; a_row: EV_GRID_ROW) is
+	set_row_root_as_selected (a_is_selected: BOOLEAN; a_row: EV_GRID_ROW)
 		require
 			a_row /= Void implies a_row.parent_row_root = a_row
 		local
@@ -496,7 +496,7 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	on_row_unselected (a_row: EV_GRID_ROW) is
+	on_row_unselected (a_row: EV_GRID_ROW)
 			-- `a_row' has been unselected
 		local
 			gi: EV_GRID_SPAN_LABEL_ITEM
@@ -523,7 +523,7 @@ feature {NONE} -- Grid events
 			end
 		end
 
-	on_item_double_clicked (ax, ay, ab: INTEGER; gi: EV_GRID_ITEM) is
+	on_item_double_clicked (ax, ay, ab: INTEGER; gi: EV_GRID_ITEM)
 			-- `gi' has been double clicked
 		local
 			gei: EV_GRID_EDITABLE_ITEM
@@ -543,7 +543,7 @@ feature -- Status
 
 feature -- Status Setting
 
-	set_changed (p: like profile_from_row; b: BOOLEAN) is
+	set_changed (p: like profile_from_row; b: BOOLEAN)
 			-- Notify change
 		do
 			if has_changed /= b then
@@ -562,13 +562,13 @@ feature -- Status Setting
 			end
 		end
 
-	update is
+	update
 			-- Update all elements after changes.
 		do
 			load_dbg_options
 		end
 
-	on_show is
+	on_show
 		local
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
@@ -582,7 +582,7 @@ feature -- Status Setting
 
 feature -- Data change
 
-	new_profile: like profile_from_row is
+	new_profile: like profile_from_row
 			-- New empty profile
 		do
 			Result := [Void, create {DEBUGGER_EXECUTION_PARAMETERS}]
@@ -591,7 +591,7 @@ feature -- Data change
 			Result_not_void: Result /= Void
 		end
 
-	update_title (p: like new_profile) is
+	update_title (p: like new_profile)
 			-- Update profile's title of `p'
 			-- with a new unused name
 		require
@@ -640,7 +640,7 @@ feature -- Data change
 			title_not_empty: p.title /= Void and then not p.title.is_empty
 		end
 
-	same_string_value (s1, s2: STRING_GENERAL): BOOLEAN is
+	same_string_value (s1, s2: STRING_GENERAL): BOOLEAN
 			-- is `s1' and `s2' the same text ?
 		require
 			same_type: (s1 /= Void and s2 /= Void) implies s1.same_type (s2)
@@ -654,7 +654,7 @@ feature -- Data change
 			end
 		end
 
-	change_title_on (v: STRING_32; p: like profile_from_row) is
+	change_title_on (v: STRING_32; p: like profile_from_row)
 		require
 			v /= Void
 		local
@@ -676,7 +676,7 @@ feature -- Data change
 			end
 		end
 
-	change_cwd_on (v: STRING; p: like profile_from_row) is
+	change_cwd_on (v: STRING; p: like profile_from_row)
 		require
 			v /= Void
 		local
@@ -697,7 +697,7 @@ feature -- Data change
 			end
 		end
 
-	change_args_on (v: STRING; p: like profile_from_row) is
+	change_args_on (v: STRING; p: like profile_from_row)
 		require
 			v /= Void
 		local
@@ -718,7 +718,7 @@ feature -- Data change
 			end
 		end
 
-	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row) is
+	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row)
 		local
 			params: DEBUGGER_EXECUTION_PARAMETERS
 		do
@@ -733,7 +733,7 @@ feature -- Data change
 			set_changed (p, True)
 		end
 
-	update_title_row_of (p: like profile_from_row) is
+	update_title_row_of (p: like profile_from_row)
 		local
 			l_row: EV_GRID_ROW
 		do
@@ -745,7 +745,7 @@ feature -- Data change
 
 feature {EB_ARGUMENT_DIALOG} -- Status change
 
-	apply_changes is
+	apply_changes
 			--
 		require
 			has_changed: has_changed
@@ -755,7 +755,7 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 			not_has_changed: not has_changed
 		end
 
-	reset_changes is
+	reset_changes
 			--
 		require
 			has_changed: has_changed
@@ -765,7 +765,7 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 			not_has_changed: not has_changed
 		end
 
-	validate is
+	validate
 			-- Update the selected profile in user options
 		local
 			profs: DEBUGGER_PROFILES
@@ -804,7 +804,7 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 
 feature {NONE} -- Button Actions
 
-	add_new_profile is
+	add_new_profile
 			-- Add a new profile
 		local
 			r: EV_GRID_ROW
@@ -816,7 +816,7 @@ feature {NONE} -- Button Actions
 			end
 		end
 
-	duplicate_selected_profile is
+	duplicate_selected_profile
 			-- Duplicate selected profile
 		local
 			r: EV_GRID_ROW
@@ -840,7 +840,7 @@ feature {NONE} -- Button Actions
 			end
 		end
 
-	remove_selected_profile is
+	remove_selected_profile
 			-- Remove selected profile
 		local
 			r: EV_GRID_ROW
@@ -875,7 +875,7 @@ feature {NONE} -- Button Actions
 			end
 		end
 
-	profiles_count: INTEGER is
+	profiles_count: INTEGER
 			-- Number of displayed profiles.
 		local
 			r: INTEGER
@@ -894,7 +894,7 @@ feature {NONE} -- Button Actions
 
 feature {NONE} -- Queries
 
-	description_from_profile (a_profile: like profile_from_row): STRING_32 is
+	description_from_profile (a_profile: like profile_from_row): STRING_32
 			-- String describing `a_profile'.
 		local
 			params: DEBUGGER_EXECUTION_PARAMETERS
@@ -919,7 +919,7 @@ feature {NONE} -- Queries
 
 feature {NONE} -- Profile actions
 
-	added_profile_text_row (a_profile: like profile_from_row; is_selected: BOOLEAN): EV_GRID_ROW is
+	added_profile_text_row (a_profile: like profile_from_row; is_selected: BOOLEAN): EV_GRID_ROW
 			-- Action to take when user chooses to add a new argument.
 			-- if `store_arguments' is true, store_arguments if any change occurred
 		do
@@ -946,7 +946,7 @@ feature {NONE} -- Profile actions
 			end
 		end
 
-	fill_row_from_embedded_profile (a_row: EV_GRID_ROW) is
+	fill_row_from_embedded_profile (a_row: EV_GRID_ROW)
 		require
 			a_row_not_void: a_row /= Void
 			row_has_embedded_profile: profile_from_row (a_row) /= Void
@@ -1085,7 +1085,7 @@ feature {NONE} -- Profile actions
 			end
 		end
 
-	add_title_to_row (p: like profile_from_row; a_row: EV_GRID_ROW) is
+	add_title_to_row (p: like profile_from_row; a_row: EV_GRID_ROW)
 			-- Add title items to `a_row' for profile `p'
 		require
 			a_row /= Void
@@ -1109,7 +1109,7 @@ feature {NONE} -- Profile actions
 			set_changed (p, True)
 		end
 
-	refresh_title_row_text (a_row: EV_GRID_ROW) is
+	refresh_title_row_text (a_row: EV_GRID_ROW)
 			-- Refresh `a_row' by recomputing the title's text related to `a_row'
 		require
 			a_row /= Void
@@ -1131,7 +1131,7 @@ feature {NONE} -- Profile actions
 			l_item.set_text (s)
 		end
 
-	profile_from_row (a_row: EV_GRID_ROW): TUPLE [title:STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS] is
+	profile_from_row (a_row: EV_GRID_ROW): TUPLE [title:STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
 			-- Profile related to `a_row'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1139,7 +1139,7 @@ feature {NONE} -- Profile actions
 			Result ?= a_row.parent_row_root.data
 		end
 
-	grid_row_with_profile (a_profile: like profile_from_row): EV_GRID_ROW is
+	grid_row_with_profile (a_profile: like profile_from_row): EV_GRID_ROW
 			-- Grid's row related to `a_profile'.
 		require
 			a_profile_not_void: a_profile /= Void
@@ -1165,7 +1165,7 @@ feature {NONE} -- Profile actions
 
 feature {NONE} -- Environment queries
 
-	environment_from_row (a_row: EV_GRID_ROW): HASH_TABLE [STRING_32, STRING_32] is
+	environment_from_row (a_row: EV_GRID_ROW): HASH_TABLE [STRING_32, STRING_32]
 			-- Environment bloc related to `a_row'.
 		require
 			a_row /= Void
@@ -1178,7 +1178,7 @@ feature {NONE} -- Environment queries
 			end
 		end
 
-	environment_variable_name_from_row (a_row: EV_GRID_ROW): STRING_32 is
+	environment_variable_name_from_row (a_row: EV_GRID_ROW): STRING_32
 			-- Environment variable name related to `a_row'.
 		require
 			a_row /= Void
@@ -1195,7 +1195,7 @@ feature {NONE} -- Environment queries
 
 feature {NONE} -- Environment actions
 
-	fill_row_with_environment (a_row: EV_GRID_ROW; env: like environment_from_row) is
+	fill_row_with_environment (a_row: EV_GRID_ROW; env: like environment_from_row)
 			-- Fill `a_row' with environment `env'
 		require
 			a_row_not_void: a_row /= Void
@@ -1216,7 +1216,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	add_env_to_row (a_row: EV_GRID_ROW; k,v: STRING_32; editing_ith: INTEGER) is
+	add_env_to_row (a_row: EV_GRID_ROW; k,v: STRING_32; editing_ith: INTEGER)
 			-- Add a new environment variable `k'=`v' to `a_row'
 			-- if `editing_ith' is not 0, edit the `editing_ith'
 		require
@@ -1304,7 +1304,7 @@ feature {NONE} -- Environment actions
 			set_changed (profile_from_row (a_row), True)
 		end
 
-	refresh_environ_row (a_row: EV_GRID_ROW) is
+	refresh_environ_row (a_row: EV_GRID_ROW)
 			-- Refresh environment variabel row `a_row' items
 		require
 			a_row /= Void and then a_row.item(1) /= Void
@@ -1364,7 +1364,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	on_new_environ_event (a_row: EV_GRID_ROW) is
+	on_new_environ_event (a_row: EV_GRID_ROW)
 			-- New environ variable event on a_row
 		require
 			a_row /= Void
@@ -1372,7 +1372,7 @@ feature {NONE} -- Environment actions
 			add_env_to_row (a_row, Void, Void, 1) --"name_" + (a_row.subrow_count + 1).out, "enter value", True)
 		end
 
-	on_environment_variables_row_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32) is
+	on_environment_variables_row_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
 		local
 			m: EV_MENU
 			malpha: EV_MENU
@@ -1414,7 +1414,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	on_environment_variable_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32) is
+	on_environment_variable_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
 			-- Environment variable row is clicked
 		require
 			a_row /= Void
@@ -1468,7 +1468,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	change_environment_entry_from_row (a_row: EV_GRID_ROW; safe_grid_operation: BOOLEAN) is
+	change_environment_entry_from_row (a_row: EV_GRID_ROW; safe_grid_operation: BOOLEAN)
 			-- Change environment related to `a_row'
 		require
 			a_row_parented: a_row /= Void and then a_row.parent /= Void
@@ -1529,7 +1529,7 @@ feature {NONE} -- Environment actions
 			validate_env_row (a_row)
 		end
 
-	safe_remove_env_row (a_row: EV_GRID_ROW) is
+	safe_remove_env_row (a_row: EV_GRID_ROW)
 			--
 		do
 			if a_row /= Void and a_row.parent /= Void then
@@ -1537,7 +1537,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	remove_env_row (a_row: EV_GRID_ROW) is
+	remove_env_row (a_row: EV_GRID_ROW)
 			-- Remove environment variable related to `a_row'
 		require
 			a_row /= Void
@@ -1581,7 +1581,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	validate_env_row (a_row: EV_GRID_ROW) is
+	validate_env_row (a_row: EV_GRID_ROW)
 			-- Set `a_row' has error
 		require
 			a_row /= Void
@@ -1607,7 +1607,7 @@ feature {NONE} -- Environment implementation
 
 	internal_sorted_environment_variables: like sorted_environment_variables
 
-	sorted_environment_variables: DS_LIST [STRING_32] is
+	sorted_environment_variables: DS_LIST [STRING_32]
 		do
 			Result := internal_sorted_environment_variables
 			if Result = Void then
@@ -1618,7 +1618,7 @@ feature {NONE} -- Environment implementation
 
 feature {NONE} -- Implementation
 
-	default_working_directory: STRING is
+	default_working_directory: STRING
 		do
 			Result := Eiffel_system.lace.directory_name
 			if not file_system.directory_exists (Result) then
@@ -1628,35 +1628,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 		once
 			create Result
 		end
 
-	execution_env: EXECUTION_ENVIRONMENT is
+	execution_env: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
 
-	title_font: EV_FONT is
+	title_font: EV_FONT
 		once
 			create Result
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
-	operation_font: EV_FONT is
+	operation_font: EV_FONT
 		once
 			create Result
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	override_color: EV_COLOR is
+	override_color: EV_COLOR
 			-- Background color for values that do override.
 		once
 			create Result.make_with_8_bit_rgb (255, 245, 245)
 		end
 
-	inherit_color: EV_COLOR is
+	inherit_color: EV_COLOR
 			-- Background color for values that are inherited.
 		once
 			create Result.make_with_8_bit_rgb (245, 245, 245)
@@ -1665,7 +1665,7 @@ feature {NONE} -- Implementation
 	inside_row_operation: BOOLEAN
 			-- Is inside a grid row operation processing.
 
-	add_edition_tab_action_to_item (gi: EV_GRID_ITEM; pop: EV_POPUP_WINDOW) is
+	add_edition_tab_action_to_item (gi: EV_GRID_ITEM; pop: EV_POPUP_WINDOW)
 		local
 			acc: EV_ACCELERATOR
 		do
@@ -1684,7 +1684,7 @@ feature {NONE} -- Implementation
 			pop.accelerators.extend (acc)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

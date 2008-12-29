@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window to display results from a query."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Create Current.
 		do
 			default_create
@@ -88,20 +88,20 @@ feature {NONE} -- Initialization
 			resize_actions.extend (agent resize_columns)
 		end
 
-	init_commands is
+	init_commands
 		do
 			create run_query_cmd.make (Current)
 			create save_result_cmd.make (Current)
 		end
 
-	resize_columns (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	resize_columns (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Resize the columns for the active & inactive query lists
 		do
 			active_query_window.set_column_width (active_query_window.width, 1)
 			inactive_subqueries_window.set_column_width (inactive_subqueries_window.width, 1)
 		end
 
-	build_interface is
+	build_interface
 			-- Build the user interfac			-- Initialize the commands
 		local
 			container: EV_VERTICAL_BOX			-- Widget containing all others
@@ -232,7 +232,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler.
 		local
 			l_win: EB_DEVELOPMENT_WINDOW
@@ -245,7 +245,7 @@ feature {NONE} -- Initialization
 
 feature {EB_SAVE_RESULT_CMD} -- Save commands
 
-	save_it (ptf: RAW_FILE) is
+	save_it (ptf: RAW_FILE)
 			-- Save window content in `ptf'.
 		require
 			pft_not_void: ptf /= Void
@@ -272,7 +272,7 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 
 feature -- Status Setting
 
-	set_window_size is
+	set_window_size
 			-- Set window size, according to preferences.
 		do
 --| FIXME ARNAUD: To be fixed (Save window size into preferences and restore it)
@@ -281,7 +281,7 @@ feature -- Status Setting
 		end
 
 	update_window (pq: PROFILER_QUERY;
-				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION) is
+				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION)
 			-- Update User Interface Widgets to reflect the parameters:
 			-- This window will be associated with `pq', will
 			-- use `po' and `profinfo', and display `st'.
@@ -614,8 +614,8 @@ feature -- Status Setting
 
 feature -- Access
 
-	min_column_index: INTEGER is 1
-	max_column_index: INTEGER is 6
+	min_column_index: INTEGER = 1
+	max_column_index: INTEGER = 6
 		-- Various indexes of columns
 
 feature {NONE} -- Implementation
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 		-- Attributes to hold which columns of data are to be displayed. These
 		-- are set from `profiler_options.output_names' so they can be quickly queried.
 
-	fill_grid_row (query_grid_row: EB_PROFILE_QUERY_GRID_ROW; row_index: INTEGER) is
+	fill_grid_row (query_grid_row: EB_PROFILE_QUERY_GRID_ROW; row_index: INTEGER)
 			-- Fill `output_grid' row `row_index' with data from `query_grid_row'.
 		require
 			query_grid_row_not_void: query_grid_row /= Void
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 			query_grid_row.set_row (output_grid.row (row_index))
 		end
 
-	rebuild_grid is
+	rebuild_grid
 			-- Perform a complete rebuild of `output_grid' based on current settings.
 		local
 			i: INTEGER
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_eiffel_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
+	build_eiffel_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW)
 			-- Build all Eiffel functions into `output_grid' as child rows
 			-- of `query_grid_row'.
 		require
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_c_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
+	build_c_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW)
 			-- Build all c functions into `output_grid' as child rows
 			-- of `query_grid_row'.
 		require
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_cyclic_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
+	build_cyclic_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW)
 			-- Build all cyclic functions into `output_grid' as child rows
 			-- of `query_grid_row'.
 		require
@@ -870,7 +870,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_grid_item (drawable: EV_DRAWABLE; query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
+	draw_grid_item (drawable: EV_DRAWABLE; query_grid_row: EB_PROFILE_QUERY_GRID_ROW)
 			-- Draw feature grid item of `query_grid_row' into `drawable'.
 		require
 			drawable_not_void: drawable /= Void
@@ -959,7 +959,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	left_border: INTEGER is 3
+	left_border: INTEGER = 3
 		-- Pixel position from left edge of first item in row
 		-- where the text of the item begins.
 
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 		-- Is `output_grid' to display its contents in
 		-- a nested tree structure?
 
-	tree_node_state_toggled is
+	tree_node_state_toggled
 			-- The tree structured enabled button has been toggled
 			-- so updated display in `output_grid' to reflect this.
 		do
@@ -987,7 +987,7 @@ feature {NONE} -- Implementation
 			sort_column (1)
 		end
 
-	sort_column (column_index: INTEGER) is
+	sort_column (column_index: INTEGER)
 			-- Sort logical column `column_index'.
 		require
 			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
@@ -1031,7 +1031,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_flat_structure (column_index: INTEGER; ascending: BOOLEAN) is
+	sort_flat_structure (column_index: INTEGER; ascending: BOOLEAN)
 			-- Perform sorting within flat structure for column `column_index' with
 			-- direction based on `ascending'.
 		require
@@ -1046,7 +1046,7 @@ feature {NONE} -- Implementation
 			quick_sorter.sort (profile_array)
 		end
 
-	sort_tree_structure (column_index: INTEGER; ascending: BOOLEAN) is
+	sort_tree_structure (column_index: INTEGER; ascending: BOOLEAN)
 			-- Perform sorting within tree structure for column `column_index' with
 			-- direction based on `ascending'.
 		require
@@ -1079,7 +1079,7 @@ feature {NONE} -- Implementation
 			quick_sorter.sort (root_nodes_array)
 		end
 
-	compare_profile_query_grid_rows (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER; ascending: BOOLEAN): BOOLEAN is
+	compare_profile_query_grid_rows (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER; ascending: BOOLEAN): BOOLEAN
 			-- Is `query_grid_row1' less than `query_grid_row2' with search criteria based on logical column `column_index' and direction
 			-- `ascending'.
 		require
@@ -1146,7 +1146,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_column (a_column: INTEGER) is
+	resize_column (a_column: INTEGER)
 			-- Resize column `a_column' in `output_grid' to required width to display
 			-- its contents if the mouse pointer is currently over a column divider.
 		require
@@ -1194,7 +1194,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	profile_equal (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER): BOOLEAN is
+	profile_equal (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER): BOOLEAN
 			-- Are `query_grid_row1' and `query_grid_row2' considered equal for property defined by `column_index'?
 		require
 			profile_data_not_void: query_grid_row1 /= Void and query_grid_row2 /= Void
@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_pebble (an_item: EV_GRID_ITEM): STONE is
+	retrieve_pebble (an_item: EV_GRID_ITEM): STONE
 			-- Retrieve a pebble from `an_item' if it represents
 			-- a pickable object. May return an instance of
 			-- CLUSTER_STONE, CLASS_STONE, FEATURE_STONE or Void.
@@ -1314,7 +1314,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	key_pressed (a_key: EV_KEY) is
+	key_pressed (a_key: EV_KEY)
 			-- Respond to `a_key' being pressed in `output_grid'.
 		require
 			a_key_not_void: a_key /= Void
@@ -1362,13 +1362,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lines_to_move_in_per_page_scrolling: INTEGER is
+	lines_to_move_in_per_page_scrolling: INTEGER
 			-- Number of lines to be moved in per page scrolling mode.
 		do
 			Result := output_grid.last_visible_row.index - output_grid.first_visible_row.index - preferences.editor_data.scrolling_common_line_count
 		end
 
-	mouse_wheel_received (a_delta: INTEGER) is
+	mouse_wheel_received (a_delta: INTEGER)
 			-- Respond to movement of mouse wheel by `delta' on `output_grid'.
 		local
 			lines_to_move: INTEGER
@@ -1384,7 +1384,7 @@ feature {NONE} -- Implementation
 			scroll_output_grid (lines_to_move)
 		end
 
-	scroll_output_grid (line_count: INTEGER) is
+	scroll_output_grid (line_count: INTEGER)
 			-- Scroll `output_grid' by `line_count' lines,
 			-- restricted to maximum positions permitted by grid.
 		do
@@ -1392,7 +1392,7 @@ feature {NONE} -- Implementation
 				(output_grid.virtual_y_position + (output_grid.row_height * line_count)).min (output_grid.maximum_virtual_y_position).max (0))
 		end
 
-	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING) is
+	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING)
 			-- Append output version of `a_row' to `string'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1423,7 +1423,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING is
+	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING
 			-- `Result' is expanded version of the the name a associated
 			-- with `query_grid_row'. For Eiffel features, this is the full cluster,
 			-- class and feature name.
@@ -1477,7 +1477,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	item_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+	item_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			-- Respond to a press of button `a_button' at virtual position `an_x', `a_y'
 			-- within `output_grid'.
 		local
@@ -1508,7 +1508,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	expand_all (a_row: EV_GRID_ROW) is
+	expand_all (a_row: EV_GRID_ROW)
 			-- Expand `a_row' and all subrows recursively.
 		require
 			a_row_not_void: a_row /= Void
@@ -1534,7 +1534,7 @@ feature {NONE} -- Implementation
 			--subrows_expanded_recursively
 		end
 
-	collapse_all (a_row: EV_GRID_ROW) is
+	collapse_all (a_row: EV_GRID_ROW)
 			-- Collapse `a_row' and all subrows recursively.
 		require
 			a_row_not_void: a_row /= Void
@@ -1560,13 +1560,13 @@ feature {NONE} -- Implementation
 			--subrows_not_expanded_recursively
 		end
 
-	drawing_font: EV_FONT is
+	drawing_font: EV_FONT
 			-- Font used for drawing in `output_grid'.
 		once
 			Result := (create {EV_LABEL}).font
 		end
 
-	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: EV_GRID_ITEM) is
+	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: EV_GRID_ITEM)
 			-- Store the last position of the mouse relative to an item.
 		local
 			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
@@ -1589,7 +1589,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_expanded (a_row: EV_GRID_ROW) is
+	row_expanded (a_row: EV_GRID_ROW)
 			-- Row `a_row' has been expanded so update
 			-- the associated `query_grid_row' to reflect this.
 		require
@@ -1604,7 +1604,7 @@ feature {NONE} -- Implementation
 			query_grid_row.set_is_expanded (True)
 		end
 
-	row_collapsed (a_row: EV_GRID_ROW) is
+	row_collapsed (a_row: EV_GRID_ROW)
 			-- Row `a_row' has been collapsed so update
 			-- the associated `query_grid_row' to reflect this.
 		require
@@ -1624,14 +1624,14 @@ feature {NONE} -- Implementation
 
 feature -- Update
 
-	update_graphical_resources is
+	update_graphical_resources
 			-- Update the graphical resources.
 		do
 			output_grid.wipe_out
 			run_query_cmd.execute
 		end
 
-	update_query_frame is
+	update_query_frame
 			-- Refresh active and inactive subquery frames.
 		local
 			i : INTEGER
@@ -1676,7 +1676,7 @@ feature -- Update
 			end
 		end
 
-	update_profiler_query is
+	update_profiler_query
 			-- Refresh `profiler_query' according to changes made on subquery list
 		do
 			profiler_query.set_subqueries (all_subqueries)
@@ -1726,7 +1726,7 @@ feature {EB_RUN_QUERY_CMD} -- Attributes
 
 feature {NONE} -- User Interface
 
-	close is
+	close
 			-- Close Current and update `parent'
 		do
 				-- Remove agents added to preferences for color handling.
@@ -1739,7 +1739,7 @@ feature {NONE} -- User Interface
 
 feature {NONE} -- Access
 
-	subquery: STRING is
+	subquery: STRING
 			-- Text typed in the subquery window
 		do
 			Result := subquery_text.text
@@ -1763,7 +1763,7 @@ feature {NONE} -- Implementation
 	colors_changed_agent: PROCEDURE [ANY, TUPLE []]
 		-- Agent connected to the color change events from EiffelStudio.
 
-	count_active_subqueries is
+	count_active_subqueries
 			-- Number of active subqueries
 		do
 			from
@@ -1779,7 +1779,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	inactivate is
+	inactivate
 			-- Copy all the selected subqueries from `active_query_window'
 			-- into `inactive_subqueries_window', inactivate the corresponding subqueries
 			-- and operators in `all_subqueries' and `all_operators'
@@ -1819,7 +1819,7 @@ feature {NONE} -- Implementation
 			update_query_frame
 		end
 
-	reactivate is
+	reactivate
 			-- Copy all the selected subqueries from `inactive_subqueries_window'
 			-- into `active_query_window', activate the corresponding subqueries
 			-- and operators in `all_subqueries' and `all_operators'
@@ -1869,7 +1869,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- execution
 
-	add_subquery (string_arg: STRING) is
+	add_subquery (string_arg: STRING)
 			-- Add subquery to list of subqueries.
 			-- Subquery operator is given by `string_arg'.
 		local
@@ -1894,7 +1894,7 @@ feature {NONE} -- execution
 			end
 		end
 
-	change_operator (string_arg: STRING) is
+	change_operator (string_arg: STRING)
 			-- Change selected subqueries
 			-- operators according to `string_arg'.
 		local
@@ -1944,7 +1944,7 @@ feature {NONE} -- execution
 
 feature {NONE} -- Implementation
 
-	handle_color_change is
+	handle_color_change
 			-- Respond to a color change occurring from the preferences.
 		do
 			cluster_text_color := preferences.editor_data.cluster_text_color
@@ -1954,31 +1954,31 @@ feature {NONE} -- Implementation
 			output_grid.redraw
 		end
 
-	tab: STRING is "%T"
+	tab: STRING = "%T"
 
-	new_line: STRING is "%N"
+	new_line: STRING = "%N"
 
-	full_stop: STRING is "."
+	full_stop: STRING = "."
 
-	black: EV_COLOR is
+	black: EV_COLOR
 			-- Once access to black EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 
-	gray: EV_COLOR is
+	gray: EV_COLOR
 			-- Once access to gray EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).gray
 		end
 
-	white: EV_COLOR is
+	white: EV_COLOR
 			-- Once access to white EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

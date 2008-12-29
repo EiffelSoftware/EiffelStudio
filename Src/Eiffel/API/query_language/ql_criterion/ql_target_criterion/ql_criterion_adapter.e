@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion adapter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_criterion: like wrapped_criterion) is
+	make (a_criterion: like wrapped_criterion)
 			-- Initialize `wrapped_criterion' with `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -37,14 +37,14 @@ feature -- Access
 	wrapped_criterion: QL_CRITERION
 			-- Criterion to which NOT operation is applied
 
-	intrinsic_domain: QL_DOMAIN is
+	intrinsic_domain: QL_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		deferred
 		end
 
 feature -- Setting
 
-	set_source_domain (a_domain: like source_domain) is
+	set_source_domain (a_domain: like source_domain)
 			-- Set `source_domain' with `a_domain'.
 		do
 			Precursor (a_domain)
@@ -55,7 +55,7 @@ feature -- Setting
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
-	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR) is
+	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR)
 			-- Set `used_in_domain_generator' with
 			-- If `a_domain_generator' is Void, current `used_in_domain_generator' will be removed.
 		do
@@ -67,7 +67,7 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_criterion_adapter (Current)
@@ -76,7 +76,7 @@ feature -- Process
 invariant
 	wrapped_criterion_attached: wrapped_criterion /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

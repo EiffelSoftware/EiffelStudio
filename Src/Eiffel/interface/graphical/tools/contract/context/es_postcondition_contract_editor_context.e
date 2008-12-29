@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A contract editor ({ES_CONTRACT_EDITOR_WIDGET}) context for feature postcondition contracts.
 	]"
@@ -66,7 +66,7 @@ feature {NONE} -- Factory
 			create Result.make (context_feature, l_class_i)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

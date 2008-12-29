@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to access the information associated with a state in the profiler wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Implementation
 
-	information: EB_PROFILER_WIZARD_INFORMATION is
+	information: EB_PROFILER_WIZARD_INFORMATION
 			-- Information entered so far
 		do
 			Result ?= wizard_information
@@ -22,12 +22,12 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	wizard_information: EB_WIZARD_INFORMATION is
+	wizard_information: EB_WIZARD_INFORMATION
 			-- Information entered so far (base class)
 		deferred
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

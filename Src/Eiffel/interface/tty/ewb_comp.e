@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Melt eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Initialization
 
-	init is
+	init
 		do
 			if Eiffel_ace.file_name = Void then
 				select_ace_file;
@@ -49,17 +49,17 @@ feature -- Initialization
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := melt_cmd_name
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := melt_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := melt_abb
 		end;
@@ -69,7 +69,7 @@ feature -- Properties
 
 feature -- Actions
 
-	execute is
+	execute
 		require else
 			can_always_be_compiled: True
 		do
@@ -91,7 +91,7 @@ feature -- Actions
 
 feature -- Setting
 
-	set_is_finish_freezing_called (v: like is_finish_freezing_called) is
+	set_is_finish_freezing_called (v: like is_finish_freezing_called)
 			-- Set `is_finish_freezing_called' with `v'.
 		do
 			is_finish_freezing_called := v
@@ -101,7 +101,7 @@ feature -- Setting
 
 feature {NONE} -- Update
 
-	select_ace_file is
+	select_ace_file
 			-- Select an Ace if it hasn't been specified.
 		require
 			no_lace_file: Eiffel_ace.file_name = Void
@@ -170,7 +170,7 @@ feature {NONE} -- Update
 			end;
 		end;
 
-	compile is
+	compile
 			-- Melt system.
 		require
 			non_void_lace: Eiffel_ace.file_name /= Void
@@ -199,14 +199,14 @@ feature {NONE} -- Update
 			end;
 		end;
 
-	loop_action is
+	loop_action
 		do
 			execute
 		end;
 
 feature {NONE} -- Output
 
-	process_finish_freezing (finalized_dir: BOOLEAN) is
+	process_finish_freezing (finalized_dir: BOOLEAN)
 			-- Perform finish_freezing step if needed or display message.
 		do
 			if is_finish_freezing_called then
@@ -222,13 +222,13 @@ feature {NONE} -- Output
 			end
 		end;
 
-	print_header is
+	print_header
 			-- Print header information of compilation.
 		do
 			Degree_output.put_header (Version_number)
 		end
 
-	print_tail is
+	print_tail
 			-- Print completion message of compilation.
 		do
 			Degree_output.put_system_compiled
@@ -236,13 +236,13 @@ feature {NONE} -- Output
 
 feature {NONE} -- Compilation
 
-	perform_compilation is
+	perform_compilation
 			-- Melt eiffel project.
 		do
 			Eiffel_project.discover_melt
 		end
 
-	save_project_again is
+	save_project_again
 			-- Try to save the project again.
 		require
 			error: Eiffel_project.save_error
@@ -268,7 +268,7 @@ feature {NONE} -- Compilation
 			end
 		end;
 
-	check_ace_file (fn: STRING) is
+	check_ace_file (fn: STRING)
 			-- Check that the Ace file exists and is readable and plain
 		local
 			f: PLAIN_TEXT_FILE
@@ -286,7 +286,7 @@ feature {NONE} -- Compilation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

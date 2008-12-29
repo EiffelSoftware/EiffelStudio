@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile filter the check whether the stored information is equal %
@@ -18,11 +18,11 @@ inherit
 
 feature -- Checking
 
-	copy_value (item: PROFILE_DATA) is
+	copy_value (item: PROFILE_DATA)
 		deferred
 		end
 
-	check_item (item: PROFILE_DATA): BOOLEAN is
+	check_item (item: PROFILE_DATA): BOOLEAN
 		do
 			copy_value (item)
 			if operator.is_equal(">") then
@@ -42,7 +42,7 @@ feature -- Checking
 			end
 		end
 
-	filter (input_set: PROFILE_SET): PROFILE_SET is
+	filter (input_set: PROFILE_SET): PROFILE_SET
 			-- Check all items
 		do
 			from
@@ -59,7 +59,7 @@ feature -- Checking
 			Result.stop_computation;
 		end
 
-	filtering_is_allowed: BOOLEAN is
+	filtering_is_allowed: BOOLEAN
 			-- May `filter' be called?
 		do
 			Result := ((operator /= Void) and then 
@@ -68,63 +68,63 @@ feature -- Checking
 
 feature -- Comparing
 
-	less_than: BOOLEAN is
+	less_than: BOOLEAN
 			-- Is value less than specified value?
 		deferred
 		end
 
-	less_than_or_equal_to: BOOLEAN is
+	less_than_or_equal_to: BOOLEAN
 			-- Is value less than or equal to specified value?
 		do
 			Result := less_than or else equal_to
 		end
 
-	greater_than: BOOLEAN is
+	greater_than: BOOLEAN
 			-- Is value greater than specified value?
 		do
 			Result := not less_than_or_equal_to
 		end
 
-	greater_than_or_equal_to: BOOLEAN is
+	greater_than_or_equal_to: BOOLEAN
 			-- Is value greater than or equal to specified value?
 		do
 			Result := not less_than
 		end
 
-	equal_to: BOOLEAN is
+	equal_to: BOOLEAN
 			-- Is value equal to specified value?
 		deferred
 		end
 
-	not_equal_to: BOOLEAN is
+	not_equal_to: BOOLEAN
 			-- Is value not equal to specified value?
 		do
 			Result := not equal_to
 		end
 
-	avg: BOOLEAN is
+	avg: BOOLEAN
 			-- Is value equal to the average value?
 		deferred
 		end
 
-	min: BOOLEAN is
+	min: BOOLEAN
 			-- Is value equal to the minimum value?
 		deferred
 		end
 
-	max: BOOLEAN is
+	max: BOOLEAN
 			-- Is value equal to the maximum value?
 		deferred
 		end
 
-	in_interval: BOOLEAN is
+	in_interval: BOOLEAN
 			-- Is value in the specified interval ?
 		deferred
 		end;
 
 feature -- Value setting
 
-	set_operator (new_operator: STRING) is
+	set_operator (new_operator: STRING)
 			-- Operator `new_operator' with which the comparisons
 			-- are to be done
 		do
@@ -150,11 +150,11 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Hidden features
 
-	extend (new_filter: PROFILE_FILTER) is
+	extend (new_filter: PROFILE_FILTER)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

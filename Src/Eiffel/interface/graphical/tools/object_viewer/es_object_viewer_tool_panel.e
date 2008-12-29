@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool that displays objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_command (cmd: EB_OBJECT_VIEWER_COMMAND; a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+	make_with_command (cmd: EB_OBJECT_VIEWER_COMMAND; a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
 		require
 			cmd_attached: cmd /= Void
 			a_manager_attached: a_manager /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			make (a_manager, a_tool)
 		end
 
-	on_before_initialize is
+	on_before_initialize
 			-- <Precursor>
 		do
 			Precursor
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			viewers_manager.viewer_changed_actions.extend (agent update_viewers_selector)
 		end
 
-	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		do
 			a_widget.extend (viewers_manager.widget)
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			update_viewers_selector (Void)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 		do
 			Precursor (a_docking_manager)
 			check content_not_void : content /= Void end
@@ -141,7 +141,7 @@ feature -- Properties
 
 feature -- change
 
-	reset_tool is
+	reset_tool
 		do
 			reset_update_on_idle
 			if viewers_manager /= Void then
@@ -154,7 +154,7 @@ feature -- change
 
 feature -- Events
 
-	open_viewer_selector_menu (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+	open_viewer_selector_menu (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 		local
 			m: EV_MENU
 		do
@@ -164,7 +164,7 @@ feature -- Events
 			end
 		end
 
-	update_viewers_selector	(viewer: EB_OBJECT_VIEWER) is
+	update_viewers_selector	(viewer: EB_OBJECT_VIEWER)
 		local
 			v: EB_OBJECT_VIEWER
 		do
@@ -189,7 +189,7 @@ feature -- Events
 			end
 		end
 
-	replace_cell_content (cl: EV_CELL; w: EV_WIDGET) is
+	replace_cell_content (cl: EV_CELL; w: EV_WIDGET)
 			--
 		local
 			p: EV_CONTAINER
@@ -201,14 +201,14 @@ feature -- Events
 			cl.replace (w)
 		end
 
-	is_stone_valid (a_stone: ANY): BOOLEAN is
+	is_stone_valid (a_stone: ANY): BOOLEAN
 			-- Is stone `a_stone' valid ?
 		do
 			Result := viewers_manager /= Void and
 					({ost: OBJECT_STONE} a_stone and then viewers_manager.is_stone_valid (ost))
 		end
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			--	Stone dropped
 		do
 			if {ost: OBJECT_STONE} a_stone then
@@ -216,7 +216,7 @@ feature -- Events
 			end
 		end
 
-	refresh is
+	refresh
 			-- Class has changed in `development_window'.
 		do
 			if viewers_manager /= Void then
@@ -224,7 +224,7 @@ feature -- Events
 			end
 		end
 
-	show is
+	show
 			-- Show tool.
 		local
 			w: EV_WIDGET
@@ -237,13 +237,13 @@ feature -- Events
 			refresh
 		end
 
-	close is
+	close
 		do
 			Precursor
 			viewers_manager.reset
 		end
 
-	close_tool is
+	close_tool
 		do
 			close
 			recycle
@@ -261,18 +261,18 @@ feature -- Events
 
 feature {NONE} -- Update
 
-	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN)
 			-- Update when debugging
 		do
 		end
 
-	on_update_when_application_is_not_executing is
+	on_update_when_application_is_not_executing
 			-- Update when not debugging
 		do
 			viewers_manager.clear
 		end
 
-	real_update (dbg_was_stopped: BOOLEAN) is
+	real_update (dbg_was_stopped: BOOLEAN)
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		do
@@ -281,7 +281,7 @@ feature {NONE} -- Update
 
 feature -- Label management
 
-	new_clickable_label (a_text: STRING_GENERAL): EV_LABEL is
+	new_clickable_label (a_text: STRING_GENERAL): EV_LABEL
 		local
 			default_font, big_font: EV_FONT
 		do
@@ -296,7 +296,7 @@ feature -- Label management
 			Result.set_minimum_width (maximum_label_width (Result.text, default_font, big_font))
 		end
 
-	highlight_label (lab: EV_LABEL; default_font, big_font: EV_FONT) is
+	highlight_label (lab: EV_LABEL; default_font, big_font: EV_FONT)
 			-- Display `lab' with a bold font.
 			-- (export status {NONE})
 		local
@@ -307,14 +307,14 @@ feature -- Label management
 			lab.set_font (a_font)
 		end
 
-	unhighlight_label (lab: EV_LABEL; default_font, big_font: EV_FONT) is
+	unhighlight_label (lab: EV_LABEL; default_font, big_font: EV_FONT)
 			-- Display `lab' with a bold font.
 			-- (export status {NONE})
 		do
 			lab.set_font (default_font)
 		end
 
-	maximum_label_width (a_text: STRING_GENERAL; default_font, big_font: EV_FONT): INTEGER is
+	maximum_label_width (a_text: STRING_GENERAL; default_font, big_font: EV_FONT): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 			-- (export status {NONE})
 		require
@@ -325,12 +325,12 @@ feature -- Label management
 
 feature -- Memory management
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 		do
 			Result := widget = Void or else widget.is_destroyed
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

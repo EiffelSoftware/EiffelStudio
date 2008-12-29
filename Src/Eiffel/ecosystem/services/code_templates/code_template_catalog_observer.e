@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An observer for events implemented on a {CODE_TEMPLATE_CATALOG_S} service interface.
 	]"
@@ -22,7 +22,7 @@ feature {CODE_TEMPLATE_CATALOG_S} -- Event handlers
 		do
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

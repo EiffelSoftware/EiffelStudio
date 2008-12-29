@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with Unknown type value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value)
 			-- 	Set `value' to `v'.
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
@@ -69,13 +69,13 @@ feature -- Access
 	address: DBG_ADDRESS
 			-- Object's address.
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		do
 			Result := debugger_manager.compiler_data.system_object_class_c
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_manifest_string_value ("ERROR: Unknown type", dynamic_class)
@@ -83,7 +83,7 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
 			if {add: like address} address then
@@ -91,7 +91,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -112,13 +112,13 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	is_dummy_value: BOOLEAN is False
+	is_dummy_value: BOOLEAN = False
 			-- Does `Current' represent a object value or for instance an error message
 
-	expandable: BOOLEAN is False
+	expandable: BOOLEAN = False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -127,7 +127,7 @@ feature -- Output
 			Result := Void
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -136,12 +136,12 @@ feature -- Output
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := eifnet_debug_unknown_type_value_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

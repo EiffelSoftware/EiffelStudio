@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Abstract descirption of a topological sorter
@@ -27,7 +27,7 @@ feature -- Attributes
 
 feature -- Initialization
 
-	init (n: INTEGER) is
+	init (n: INTEGER)
 			-- Initialization for `n' items to sort.
 		do
 			order.conservative_resize (1, n);
@@ -40,7 +40,7 @@ feature -- Initialization
 			fill_original;
 		end;
 
-	clear is
+	clear
 			-- Clear the structure
 		do
 			order.clear_all;
@@ -50,12 +50,12 @@ feature -- Initialization
 			outsides.wipe_out;
 		end;
 
-	fill_original is
+	fill_original
 			-- Fill original array
 		deferred
 		end;
 
-	sort is
+	sort
 			-- Perform topological sort
 		do
 				-- Fill the structures
@@ -64,7 +64,7 @@ feature -- Initialization
 			perform_sort;
 		end;
 
-	fill is
+	fill
 			-- Fill `precursor_count' and `outsides'.
 		require
 			good_context: count > 0
@@ -109,7 +109,7 @@ feature -- Initialization
 			end;
 		end;
 
-	perform_sort is
+	perform_sort
 			-- Preform topological sort
 		require
 			good_context: count > 0
@@ -149,7 +149,7 @@ feature -- Initialization
 			end;
 		end;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

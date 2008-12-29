@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base class for all tool-specific pixmap matrix accessor classes.
 	]"
@@ -71,7 +71,7 @@ feature {NONE} -- Internationalization
 
 	w_could_not_load_tool_icons: !STRING = "Cannot read pixmap icon file for $1.%N%NPlease make sure the installation is not corrupted."
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

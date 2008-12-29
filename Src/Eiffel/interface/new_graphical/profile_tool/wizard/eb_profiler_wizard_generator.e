@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ create
 
 feature -- Initialization
 
-	make (an_information: EB_PROFILER_WIZARD_INFORMATION) is
+	make (an_information: EB_PROFILER_WIZARD_INFORMATION)
 			-- Initialize
 		do
 			information := an_information
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	generate_execution_profile is
+	generate_execution_profile
 			-- Create profile according to `options_dialog' specifications
 			--
 			-- Raise an exception if an error occurs.
@@ -103,7 +103,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_query is
+	execute_query
 			-- Execute Current command.
 		local
 			profiler_query: PROFILER_QUERY
@@ -144,7 +144,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	fill_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN is
+	fill_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN
 			-- Fill `shared_values' with value specified
 			-- by the user.
 		require
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_output_switches_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN is
+	fill_output_switches_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN
 			-- Fill `shared_values' with value specified by the user concerning
 			-- the output switches
 		require
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_language_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN is
+	fill_language_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN
 			-- Fill `shared_values' with value specified by the user concerning
 			-- the languages
 		require
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 		end
 
 	show_new_window (pq: PROFILER_QUERY;
-				po: PROFILER_OPTIONS; profinfo: PROFILE_INFORMATION) is
+				po: PROFILER_OPTIONS; profinfo: PROFILE_INFORMATION)
 			-- Create and show a new EB_PROFILE_QUERY_WINDOW.
 			-- This window will be associated with `pq', will
 			-- use `po' and `profinfo', and display `st'.
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			new_window.raise
 		end
 
-	strip_path (a_full_pathname: STRING): STRING is
+	strip_path (a_full_pathname: STRING): STRING
 			-- Return the base filename of a full qualified pathname
 			-- Ex: strip_path ("c:\temp\test.pfi") = "test.pfi"
 		local
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation / Attributes
 	information: EB_PROFILER_WIZARD_INFORMATION;
 			-- Options for generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

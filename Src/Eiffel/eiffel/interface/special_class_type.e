@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class type for SPECIAL class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -34,7 +34,7 @@ create
 
 feature -- Status
 
-	is_any_array: BOOLEAN is
+	is_any_array: BOOLEAN
 			-- Is Current an array of ANY?
 		local
 			any_type: CL_TYPE_A
@@ -45,7 +45,7 @@ feature -- Status
 
 feature -- Access
 
-	first_generic: TYPE_A is
+	first_generic: TYPE_A
 			-- First generic parameter type
 		require
 			has_generics: type.generics /= Void;
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Byte code generation
 
-	make_creation_byte_code (ba: BYTE_ARRAY) is
+	make_creation_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for creation of a special instance.
 		require
 			ba_not_void: ba /= Void
@@ -94,7 +94,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL) is
+	generate_creation (buffer: GENERATION_BUFFER; info: CREATE_INFO; target_register: REGISTRABLE; nb_register: PARAMETER_BL)
 			-- Generate creation of a special instance using `info' to get the exact type
 			-- to create.
 		require
@@ -219,7 +219,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generate feature `feat' in `buffer'.
 		local
 			f_name_id: INTEGER
@@ -269,7 +269,7 @@ feature -- C code generation
 
 feature {NONE} -- C code generation
 
-	generate_put (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_put (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generates built-in feature `put' of class SPECIAL
 		require
 			good_argument: buffer /= Void
@@ -446,7 +446,7 @@ feature {NONE} -- C code generation
 			l_byte_context.clear_feature_data
 		end
 
-	generate_put_default (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_put_default (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generates built-in feature `put_default' of class SPECIAL
 		require
 			good_argument: buffer /= Void
@@ -576,7 +576,7 @@ feature {NONE} -- C code generation
 			l_byte_context.clear_feature_data
 		end
 
-	generate_item (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_item (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generates built-in feature `item' of class SPECIAL
 		require
 			good_argument: buffer /= Void
@@ -755,7 +755,7 @@ feature {NONE} -- C code generation
 			byte_context.clear_feature_data
 		end
 
-	generate_item_address (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_item_address (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generates built-in feature `item_address' of class SPECIAL
 		require
 			good_argument: buffer /= Void;
@@ -866,7 +866,7 @@ feature {NONE} -- C code generation
 			l_byte_context.clear_feature_data
 		end
 
-	generate_base_address (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_base_address (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generates built-in feature `base_address' of class SPECIAL
 		require
 			good_argument: buffer /= Void;
@@ -929,7 +929,7 @@ feature {NONE} -- C code generation
 			byte_context.clear_feature_data
 		end
 
-	generate_clear_all (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+	generate_clear_all (feat: FEATURE_I; buffer: GENERATION_BUFFER)
 			-- Generate `clear_all' from SPECIAL using `memset' for increased efficiency.
 		require
 			good_argument: buffer /= Void;
@@ -956,7 +956,7 @@ feature {NONE} -- C code generation
 			byte_context.clear_feature_data
 		end
 
-	generate_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; arg_name: STRING) is
+	generate_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; arg_name: STRING)
 			-- Generate precondition for `item', `put' and `item_address' where index
 			-- is stored in `arg_name'.
 		require
@@ -1007,7 +1007,7 @@ feature {NONE} -- C code generation
 
 feature -- IL code generation
 
-	prepare_generate_il (name_id: INTEGER; special_type: CL_TYPE_A) is
+	prepare_generate_il (name_id: INTEGER; special_type: CL_TYPE_A)
 			-- Generate call to `name_id' from SPECIAL so that it is
 			-- very efficient.
 		require
@@ -1033,7 +1033,7 @@ feature -- IL code generation
 			Il_generator.generate_attribute (True, special_type, l_native_array.feature_id)
 		end
 
-	generate_il (name_id: INTEGER; special_type, a_context_type: CL_TYPE_A) is
+	generate_il (name_id: INTEGER; special_type, a_context_type: CL_TYPE_A)
 			-- Generate call to `name_id' from SPECIAL so that it is
 			-- very efficient.
 		require
@@ -1108,7 +1108,7 @@ feature -- IL code generation
 			l_native_array_class_type.generate_il (name_id, l_native_array_type, a_context_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

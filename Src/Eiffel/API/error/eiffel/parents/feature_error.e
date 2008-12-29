@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error that occurred within a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Properties
 			-- Class where the code is originally written.
 			-- (Non-void if it differs from `class_c'.)
 
-	file_name: STRING is
+	file_name: STRING
 		do
 			if written_class = Void then
 				Result := class_c.file_name
@@ -40,7 +40,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -49,7 +49,7 @@ feature -- Access
 			is_feature_defined: Result implies is_feature_defined
 		end
 
-	is_feature_defined: BOOLEAN is
+	is_feature_defined: BOOLEAN
 			-- Is the feature defined for error?
 		do
 			Result := True
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Output
 
-	trace (a_text_formatter: TEXT_FORMATTER) is
+	trace (a_text_formatter: TEXT_FORMATTER)
 			-- Output the error message.
 		local
 			l_group: CONF_GROUP
@@ -104,7 +104,7 @@ feature -- Output
 			a_text_formatter.set_context_group (l_group)
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like e_feature} e_feature and then {l_class: !like class_c} class_c then
@@ -116,7 +116,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	set_feature (f: FEATURE_I) is
+	set_feature (f: FEATURE_I)
 			-- Assign `f' to `feature'.
 		require
 			valid_f: f /= Void
@@ -125,7 +125,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			e_feature := f.enclosing_feature.api_feature (class_c.class_id)
 		end
 
-	set_written_class (c: CLASS_C) is
+	set_written_class (c: CLASS_C)
 			-- Set `written_class' to `c'.
 		do
 			written_class := c
@@ -133,7 +133,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			written_class_set: written_class = c
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

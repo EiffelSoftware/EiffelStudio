@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Director of all EB_DEVELOPMENT_WINDOW_BUILDERs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 		end
 
 feature -- Command
 
-	construct is
+	construct
 			-- Create a new development window.
 		local
 			l_x, l_y: INTEGER
@@ -74,7 +74,7 @@ feature -- Command
 			end
 		end
 
-	construct_as_context_tool is
+	construct_as_context_tool
 			-- Create a new development window and expand the context tool.
 		do
 			construct
@@ -84,7 +84,7 @@ feature -- Command
 			develop_window.window.show_actions.extend (agent set_context_mode)
 		end
 
-	set_context_mode is
+	set_context_mode
 			-- Set `current' into context mode, that is the context tool
 			-- maximized, and the non editor panel is hidden.
 		do
@@ -93,7 +93,7 @@ feature -- Command
 			end
 		end
 
-	construct_as_editor is
+	construct_as_editor
 			-- Create a new development window and expand the editor tool.
 		do
 			construct
@@ -103,7 +103,7 @@ feature -- Command
 			-- must be performed after `current' is displayed.
 		end
 
-	construct_with_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	construct_with_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Recreate a previously existing development window using `a_session_data'.
 		local
 			l_conf_class: CONF_CLASS
@@ -230,7 +230,7 @@ feature{NONE} -- Implementation
 	can_lock: BOOLEAN
 			-- Can we lock development window update?
 
-	internal_construct is
+	internal_construct
 			-- Construct a development window.
 		local
 			l_history_manager: EB_HISTORY_MANAGER
@@ -307,7 +307,7 @@ feature{NONE} -- Implementation
 	toolbar_builder: EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER;
 			-- Builder which build toolbars.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

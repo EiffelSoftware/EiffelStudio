@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tables used by all formatters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	flat_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	flat_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format context of the flat form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -32,7 +32,7 @@ feature -- Properties
 			Result := ctxt.error
 		end
 
-	flatshort_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	flatshort_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format context of the flatshort form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -49,7 +49,7 @@ feature -- Properties
 			Result := ctxt.error
 		end
 
-	short_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	short_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format context of the short form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -67,7 +67,7 @@ feature -- Properties
 			Result := ctxt.error
 		end
 
-	clickable_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	clickable_context_text (a_class: CLASS_C; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format context of the clickable form of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -84,7 +84,7 @@ feature -- Properties
 			Result := ctxt.error
 		end
 
-	rout_flat_context_text (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	rout_flat_context_text (a_feature: E_FEATURE; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format context of the flat form of `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -100,7 +100,7 @@ feature -- Properties
 
 feature -- Properties .NET	
 
-	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format .NET consumed type, flat short.
 		require
 			a_consumed_void: a_consumed /= Void
@@ -113,7 +113,7 @@ feature -- Properties .NET
 			Result := dntxt.error
 		end
 
-	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format .NET consumed type, short (no inheritance).
 		require
 			a_consumed_void: a_consumed /= Void
@@ -126,7 +126,7 @@ feature -- Properties .NET
 			Result := dntxt.error
 		end
 
-	rout_flat_dotnet_text (a_feature: E_FEATURE; a_consumed: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER): BOOLEAN is
+	rout_flat_dotnet_text (a_feature: E_FEATURE; a_consumed: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Format .NET feature text, flat short (include inheritance).
 		require
 			a_feature_not_void: a_feature /= Void
@@ -141,7 +141,7 @@ feature -- Properties .NET
 
 feature -- Clearing tables
 
-	clear_format_tables is
+	clear_format_tables
 			-- Clear all the format tables (after a compilation)
 		do
 			flat_table.clear_all
@@ -152,7 +152,7 @@ feature -- Clearing tables
 			history_list.wipe_out
 		end
 
-	clear_class_tables is
+	clear_class_tables
 			-- Clear the cache for class tables except for
 			-- the `clickable_table'.
 		local
@@ -185,7 +185,7 @@ feature -- Clearing tables
 
 feature {NONE} -- Attributes
 
-	History_size: INTEGER is
+	History_size: INTEGER
 		once
 			Result := preferences.context_tool_data.editor_history_size
 			if Result < 1 then
@@ -196,38 +196,38 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	flat_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
+	flat_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C]
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
-	flatshort_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
+	flatshort_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C]
 			-- Table of the last flatshort formats
 		once
 			create Result.make (History_size)
 		end
 
-	short_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
+	short_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C]
 			-- Table of the last short formats
 		once
 			create Result.make (History_size)
 		end
 
-	clickable_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C] is
+	clickable_table: HASH_TABLE [TEXT_FORMATTER, CLASS_C]
 			-- Table of the last clickable formats
 		once
 			create Result.make (History_size)
 		end
 
-	rout_flat_table: HASH_TABLE [TEXT_FORMATTER, EB_FEATURE_ID] is
+	rout_flat_table: HASH_TABLE [TEXT_FORMATTER, EB_FEATURE_ID]
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
 	history_list: LINKED_LIST [CELL2 [HASHABLE,
-						HASH_TABLE [TEXT_FORMATTER, HASHABLE]]] is
+						HASH_TABLE [TEXT_FORMATTER, HASHABLE]]]
 			-- History list. Only `History_size' contexts are kept in memory.
 		once
 			create Result.make
@@ -236,7 +236,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Attributes .NET
 
-	consumed_types: HASH_TABLE [CONSUMED_TYPE, STRING] is
+	consumed_types: HASH_TABLE [CONSUMED_TYPE, STRING]
 			-- Table of .NET types which have been formatted already.
 			-- Used to prevent deserializing consumed type every time we
 			-- wish to format.
@@ -244,7 +244,7 @@ feature {NONE} -- Attributes .NET
 			create Result.make (History_size)
 		end
 
-	consumed_type (a_class: CLASS_I): CONSUMED_TYPE is
+	consumed_type (a_class: CLASS_I): CONSUMED_TYPE
 			-- Fetch associated consumed type in `consumed_types' and compute it if not found.
 		require
 			a_class_not_void: a_class /= Void
@@ -263,19 +263,19 @@ feature {NONE} -- Attributes .NET
 			end
 		end
 
-	flatshort_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING] is
+	flatshort_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING]
 			-- Table of last .NET flat short formats.
 		once
 			create Result.make (History_size)
 		end
 
-	short_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING] is
+	short_dotnet_table: HASH_TABLE [TEXT_FORMATTER, STRING]
 			-- Table of last .NET short formats.
 		once
 			create Result.make (History_size)
 		end
 
-	rout_flat_dotnet_table: HASH_TABLE [TEXT_FORMATTER, E_FEATURE] is
+	rout_flat_dotnet_table: HASH_TABLE [TEXT_FORMATTER, E_FEATURE]
 			-- Table of last .NET flat routine formats.
 		once
 			create Result.make (History_size)
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 
 	record_in_history (an_item: HASHABLE;
 					table: HASH_TABLE [TEXT_FORMATTER, HASHABLE];
-					text: TEXT_FORMATTER) is
+					text: TEXT_FORMATTER)
 			-- Extend the history with `an_item'. Remove the oldest from
 			-- the history list if it is full.
 			-- Add `text' to the memorized texts in `table'.
@@ -320,7 +320,7 @@ invariant
 
 	Cache_big_enough: History_size > 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

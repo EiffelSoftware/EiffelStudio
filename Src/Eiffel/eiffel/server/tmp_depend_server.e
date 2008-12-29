@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server of class dependances for incremental type check%
 			%used during the compilation. The goal is to merge the file Tmp_depend_file%
 			%and Depend_file if the compilation is successful.%
@@ -19,16 +19,16 @@ create
 
 feature
 
-	cache: CACHE [CLASS_DEPENDANCE] is
+	cache: CACHE [CLASS_DEPENDANCE]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER = 500;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

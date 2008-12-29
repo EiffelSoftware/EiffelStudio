@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Fourth state of the profiler wizard (Choose options & query)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature -- Basic Operation
 
-	build is
+	build
 			-- Build entries.
 		local
 			switchbox: EV_VERTICAL_BOX -- Form to display output switches on
@@ -129,7 +129,7 @@ feature -- Basic Operation
 			first_window.set_final_state (Interface_names.b_Finish)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 		local
 			wizard_generator: EB_PROFILER_WIZARD_GENERATOR
 			old_cursor: EV_POINTER_STYLE
@@ -152,7 +152,7 @@ feature -- Basic Operation
 			end
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User Entries
 		local
 			loc_query: STRING
@@ -181,14 +181,14 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text (Interface_names.wt_Switches_and_Query)
 			subtitle.set_text (Interface_names.ws_Switches_and_Query)
 			message_box.hide
 		end
 
-	is_final_state: BOOLEAN is True
+	is_final_state: BOOLEAN = True
 			-- This is the last state of this wizard.
 
 feature {NONE} -- Vision2 controls
@@ -227,7 +227,7 @@ feature {NONE} -- Vision2 controls
 	query_text: EB_WIZARD_SMART_TEXT_FIELD;
 			-- Text field for query input
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

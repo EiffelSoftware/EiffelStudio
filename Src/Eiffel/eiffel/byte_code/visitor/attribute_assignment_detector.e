@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Find whether or not a BYTE_NODE has an assignment to an attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Status report
 
-	has_attribute_assignment (a_node: BYTE_NODE): BOOLEAN is
+	has_attribute_assignment (a_node: BYTE_NODE): BOOLEAN
 			-- Does `a_node' contain an assignment to an attribute?
 		do
 			internal_has_attribute_assignment := False
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation: access
 
 feature -- Node processing
 
-	process_assign_b (a_node: ASSIGN_B) is
+	process_assign_b (a_node: ASSIGN_B)
 			-- <Precursor>
 		do
 			if a_node.target.is_attribute then
@@ -40,7 +40,7 @@ feature -- Node processing
 			end
 		end
 
-	process_reverse_b (a_node: REVERSE_B)  is
+	process_reverse_b (a_node: REVERSE_B)
 			-- <Precursor>
 		do
 			if a_node.target.is_attribute then
@@ -48,7 +48,7 @@ feature -- Node processing
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

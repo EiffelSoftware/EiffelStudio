@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_INITIAL_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -135,7 +135,7 @@ feature {NONE} -- Internationalization
 	b_extraction: STRING = "Create test using current application status"
 	b_generation: STRING = "Automatically generate new tests"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

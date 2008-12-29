@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor for BYTE_NODE objects which generates the Eiffel melted code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ inherit
 
 feature -- Initialize
 
-	generate (a_ba: BYTE_ARRAY; a_node: BYTE_NODE) is
+	generate (a_ba: BYTE_ARRAY; a_node: BYTE_NODE)
 			-- Generate `a_node''s code into `a_ba'.
 		require
 			a_ba_not_void: a_ba /= Void
@@ -58,7 +58,7 @@ feature -- Initialize
 			ba := Void
 		end
 
-	generate_old_expression_initialization (a_ba: BYTE_ARRAY; a_node: UN_OLD_B) is
+	generate_old_expression_initialization (a_ba: BYTE_ARRAY; a_node: UN_OLD_B)
 			-- Generate `a_node''s code into `a_ba'.
 		require
 			a_ba_not_void: a_ba /= Void
@@ -91,20 +91,20 @@ feature {NONE} -- Status report
 
 feature -- Routine visitor
 
-	process_std_byte_code (a_node: STD_BYTE_CODE) is
+	process_std_byte_code (a_node: STD_BYTE_CODE)
 			-- Process current element.
 		do
 		end
 
 feature {NONE} -- Visitors
 
-	process_access_expr_b (a_node: ACCESS_EXPR_B) is
+	process_access_expr_b (a_node: ACCESS_EXPR_B)
 			-- Process `a_node'.
 		do
 			a_node.expr.process (Current)
 		end
 
-	process_address_b (a_node: ADDRESS_B) is
+	process_address_b (a_node: ADDRESS_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_addr)
@@ -112,14 +112,14 @@ feature {NONE} -- Visitors
 				system.address_table.id_of_dollar_feature (a_node.feature_class_id, a_node.feature_id, context.class_type))
 		end
 
-	process_argument_b (a_node: ARGUMENT_B) is
+	process_argument_b (a_node: ARGUMENT_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_arg)
 			ba.append_short_integer (a_node.position)
 		end
 
-	process_array_const_b (a_node: ARRAY_CONST_B) is
+	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- Process `a_node'.
 		local
 			l_real_ty: GEN_TYPE_A
@@ -167,13 +167,13 @@ feature {NONE} -- Visitors
 			ba.append_integer (a_node.expressions.count)
 		end
 
-	process_assert_b (a_node: ASSERT_B) is
+	process_assert_b (a_node: ASSERT_B)
 			-- Process `a_node'.
 		do
 			make_assert_b (a_node, bc_end_assert)
 		end
 
-	process_assign_b (a_node: ASSIGN_B) is
+	process_assign_b (a_node: ASSIGN_B)
 			-- Process `a_node'.
 		local
 			l_target_type: TYPE_A
@@ -221,7 +221,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_attribute_b (a_node: ATTRIBUTE_B) is
+	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
 			l_type: TYPE_A
@@ -267,13 +267,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_and_b (a_node: BIN_AND_B) is
+	process_bin_and_b (a_node: BIN_AND_B)
 			-- Process `a_node'.
 		do
 			process_bin_and_then_b (a_node)
 		end
 
-	process_bin_and_then_b (a_node: B_AND_THEN_B) is
+	process_bin_and_then_b (a_node: B_AND_THEN_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_built_in then
@@ -288,37 +288,37 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_div_b (a_node: BIN_DIV_B) is
+	process_bin_div_b (a_node: BIN_DIV_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_div)
 		end
 
-	process_bin_eq_b (a_node: BIN_EQ_B) is
+	process_bin_eq_b (a_node: BIN_EQ_B)
 			-- Process `a_node'.
 		do
 			make_binary_equal_b (a_node, bc_eq, bc_false_compar)
 		end
 
-	process_bin_free_b (a_node: BIN_FREE_B) is
+	process_bin_free_b (a_node: BIN_FREE_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_bin_ge_b (a_node: BIN_GE_B) is
+	process_bin_ge_b (a_node: BIN_GE_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_ge)
 		end
 
-	process_bin_gt_b (a_node: BIN_GT_B) is
+	process_bin_gt_b (a_node: BIN_GT_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_gt)
 		end
 
-	process_bin_implies_b (a_node: B_IMPLIES_B) is
+	process_bin_implies_b (a_node: B_IMPLIES_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_built_in then
@@ -334,50 +334,50 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_le_b (a_node: BIN_LE_B) is
+	process_bin_le_b (a_node: BIN_LE_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_le)
 		end
 
-	process_bin_lt_b (a_node: BIN_LT_B) is
+	process_bin_lt_b (a_node: BIN_LT_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_lt)
 		end
 
-	process_bin_minus_b (a_node: BIN_MINUS_B) is
+	process_bin_minus_b (a_node: BIN_MINUS_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_minus)
 		end
 
-	process_bin_mod_b (a_node: BIN_MOD_B) is
+	process_bin_mod_b (a_node: BIN_MOD_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_mod)
 		end
 
-	process_bin_ne_b (a_node: BIN_NE_B) is
+	process_bin_ne_b (a_node: BIN_NE_B)
 			-- Process `a_node'.
 		do
 			make_binary_equal_b (a_node, bc_ne, bc_true_compar)
 		end
 
-	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B)
 			-- Process `a_node'.
 		do
 			process_bin_tilde_b (a_node)
 			ba.append (bc_not)
 		end
 
-	process_bin_or_b (a_node: BIN_OR_B) is
+	process_bin_or_b (a_node: BIN_OR_B)
 			-- Process `a_node'.
 		do
 			process_bin_or_else_b (a_node)
 		end
 
-	process_bin_or_else_b (a_node: B_OR_ELSE_B) is
+	process_bin_or_else_b (a_node: B_OR_ELSE_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_built_in then
@@ -392,31 +392,31 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_plus_b (a_node: BIN_PLUS_B) is
+	process_bin_plus_b (a_node: BIN_PLUS_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_plus)
 		end
 
-	process_bin_power_b (a_node: BIN_POWER_B) is
+	process_bin_power_b (a_node: BIN_POWER_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_power)
 		end
 
-	process_bin_slash_b (a_node: BIN_SLASH_B) is
+	process_bin_slash_b (a_node: BIN_SLASH_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_slash)
 		end
 
-	process_bin_star_b (a_node: BIN_STAR_B) is
+	process_bin_star_b (a_node: BIN_STAR_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_star)
 		end
 
-	process_bin_tilde_b (a_node: BIN_TILDE_B) is
+	process_bin_tilde_b (a_node: BIN_TILDE_B)
 			-- Process `a_node'.
 		local
 			l_lt, l_rt: TYPE_A
@@ -461,13 +461,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_xor_b (a_node: BIN_XOR_B) is
+	process_bin_xor_b (a_node: BIN_XOR_B)
 			-- Process `a_node'.
 		do
 			make_binary_b (a_node, bc_xor)
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B) is
+	process_bit_const_b (a_node: BIT_CONST_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_bit)
@@ -475,14 +475,14 @@ feature {NONE} -- Visitors
 			ba.append_bit (a_node.value)
 		end
 
-	process_bool_const_b (a_node: BOOL_CONST_B) is
+	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_bool)
 			ba.append_boolean (a_node.value)
 		end
 
-	process_byte_list (a_node: BYTE_LIST [BYTE_NODE]) is
+	process_byte_list (a_node: BYTE_LIST [BYTE_NODE])
 			-- Process `a_node'.
 		local
 			l_area: SPECIAL [BYTE_NODE]
@@ -499,7 +499,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_case_b (a_node: CASE_B) is
+	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		local
 			i: INTEGER
@@ -520,7 +520,7 @@ feature {NONE} -- Visitors
 			ba.mark_forward
 		end
 
-	process_char_const_b (a_node: CHAR_CONST_B) is
+	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_character_32 then
@@ -532,14 +532,14 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_char_val_b (a_node: CHAR_VAL_B) is
+	process_char_val_b (a_node: CHAR_VAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_wchar)
 			ba.append_character_32 (a_node.value)
 		end
 
-	process_check_b (a_node: CHECK_B) is
+	process_check_b (a_node: CHECK_B)
 			-- Process `a_node'.
 		do
 			if a_node.check_list /= Void then
@@ -557,13 +557,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_constant_b (a_node: CONSTANT_B) is
+	process_constant_b (a_node: CONSTANT_B)
 			-- Process `a_node'.
 		do
 			a_node.access.process (Current)
 		end
 
-	process_creation_expr_b (a_node: CREATION_EXPR_B) is
+	process_creation_expr_b (a_node: CREATION_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_basic_type: BASIC_A
@@ -623,13 +623,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_current_b (a_node: CURRENT_B) is
+	process_current_b (a_node: CURRENT_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_current)
 		end
 
-	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B) is
+	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B)
 			-- Process `a_node'.
 		do
 			check
@@ -637,7 +637,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_debug_b (a_node: DEBUG_B) is
+	process_debug_b (a_node: DEBUG_B)
 			-- Process `a_node'.
 		do
 			if a_node.compound /= Void then
@@ -662,7 +662,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_elsif_b (a_node: ELSIF_B) is
+	process_elsif_b (a_node: ELSIF_B)
 			-- Process `a_node'.
 		do
 				-- Generate hook for the condition test
@@ -684,7 +684,7 @@ feature {NONE} -- Visitors
 			ba.write_forward
 		end
 
-	process_expr_address_b (a_node: EXPR_ADDRESS_B) is
+	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
 			if a_node.expr.type.is_basic then
@@ -696,7 +696,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_external_b (a_node: EXTERNAL_B) is
+	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
 		local
 			i, l_type_id: INTEGER
@@ -800,7 +800,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_feature_b (a_node: FEATURE_B) is
+	process_feature_b (a_node: FEATURE_B)
 			-- Process `a_node'.
 		local
 			i, l_pos, l_nb_expr_address: INTEGER
@@ -912,13 +912,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_agent_call_b (a_node: AGENT_CALL_B) is
+	process_agent_call_b (a_node: AGENT_CALL_B)
 			-- Process `a_node'.
 		do
 			process_feature_b (a_node)
 		end
 
-	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
+	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B)
 			-- Process `a_node'.
 		local
 			l_type, l_expr_type: TYPE_A
@@ -936,7 +936,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_hector_b (a_node: HECTOR_B) is
+	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do
 			if not a_node.is_pointer or else a_node.expr.type.is_basic then
@@ -951,7 +951,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_if_b (a_node: IF_B) is
+	process_if_b (a_node: IF_B)
 			-- Process `a_node'.
 		local
 			l_elsif_clause: ELSIF_B
@@ -1013,7 +1013,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_inspect_b (a_node: INSPECT_B) is
+	process_inspect_b (a_node: INSPECT_B)
 			-- Process `a_node'.
 		local
 			i, l_nb_jump: INTEGER
@@ -1060,46 +1060,46 @@ feature {NONE} -- Visitors
 			ba.append (Bc_inspect)
 		end
 
-	process_instr_call_b (a_node: INSTR_CALL_B) is
+	process_instr_call_b (a_node: INSTR_CALL_B)
 			-- Process `a_node'.
 		do
 			generate_melted_debugger_hook
 			a_node.call.process (Current)
 		end
 
-	process_instr_list_b (a_node: INSTR_LIST_B) is
+	process_instr_list_b (a_node: INSTR_LIST_B)
 			-- Process `a_node'.
 		do
 			a_node.compound.process (Current)
 		end
 
-	process_int64_val_b (a_node: INT64_VAL_B) is
+	process_int64_val_b (a_node: INT64_VAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_int64)
 			ba.append_integer_64 (a_node.value)
 		end
 
-	process_int_val_b (a_node: INT_VAL_B) is
+	process_int_val_b (a_node: INT_VAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_int32)
 			ba.append_integer (a_node.value)
 		end
 
-	process_integer_constant (a_node: INTEGER_CONSTANT) is
+	process_integer_constant (a_node: INTEGER_CONSTANT)
 			-- Process `a_node'.
 		do
 			a_node.make_byte_code (ba)
 		end
 
-	process_inv_assert_b (a_node: INV_ASSERT_B) is
+	process_inv_assert_b (a_node: INV_ASSERT_B)
 			-- Process `a_node'.
 		do
 			make_assert_b (a_node, bc_end_assert)
 		end
 
-	process_invariant_b (a_node: INVARIANT_B) is
+	process_invariant_b (a_node: INVARIANT_B)
 			-- Process `a_node'.
 		local
 			l_local_list: ARRAYED_LIST [TYPE_A]
@@ -1165,14 +1165,14 @@ feature {NONE} -- Visitors
 			l_context.set_assertion_type (0)
 		end
 
-	process_local_b (a_node: LOCAL_B) is
+	process_local_b (a_node: LOCAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_local)
 			ba.append_short_integer (a_node.position)
 		end
 
-	process_loop_b (a_node: LOOP_B) is
+	process_loop_b (a_node: LOOP_B)
 			-- Process `a_node'.
 		local
 			local_list: ARRAYED_LIST [TYPE_A]
@@ -1280,21 +1280,21 @@ feature {NONE} -- Visitors
 			ba.write_forward
 		end
 
-	process_nat64_val_b (a_node: NAT64_VAL_B) is
+	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_uint64)
 			ba.append_natural_64 (a_node.value)
 		end
 
-	process_nat_val_b (a_node: NAT_VAL_B) is
+	process_nat_val_b (a_node: NAT_VAL_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_uint32)
 			ba.append_natural_32 (a_node.value)
 		end
 
-	process_nested_b (a_node: NESTED_B) is
+	process_nested_b (a_node: NESTED_B)
 			-- Process `a_node'.
 		do
 			a_node.target.process (Current)
@@ -1304,7 +1304,7 @@ feature {NONE} -- Visitors
 			a_node.message.process (Current)
 		end
 
-	process_object_test_b (a_node: OBJECT_TEST_B) is
+	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		local
 			l_source_type: TYPE_A
@@ -1362,13 +1362,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
 		do
 			ba.append (bc_local)
 			ba.append_short_integer (context.object_test_local_position (a_node))
 		end
 
-	process_once_string_b (a_node: ONCE_STRING_B) is
+	process_once_string_b (a_node: ONCE_STRING_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_once_string)
@@ -1378,13 +1378,13 @@ feature {NONE} -- Visitors
 			ba.append_raw_string (a_node.value)
 		end
 
-	process_operand_b (a_node: OPERAND_B) is
+	process_operand_b (a_node: OPERAND_B)
 			-- Process `a_node'.
 		do
 			-- Nothing to be done.
 		end
 
-	process_parameter_b (a_node: PARAMETER_B) is
+	process_parameter_b (a_node: PARAMETER_B)
 			-- Process `a_node'.
 		local
 			l_target_type, l_source_type: TYPE_A
@@ -1397,13 +1397,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_paran_b (a_node: PARAN_B) is
+	process_paran_b (a_node: PARAN_B)
 			-- Process `a_node'.
 		do
 			a_node.expr.process (Current)
 		end
 
-	process_real_const_b (a_node: REAL_CONST_B) is
+	process_real_const_b (a_node: REAL_CONST_B)
 			-- Process `a_node'.
 		do
 			if a_node.real_size = 64 then
@@ -1414,18 +1414,18 @@ feature {NONE} -- Visitors
 			ba.append_double (a_node.value.to_double)
 		end
 
-	process_require_b (a_node: REQUIRE_B) is
+	process_require_b (a_node: REQUIRE_B)
 		do
 			make_assert_b (a_node, bc_end_assert)
 		end
 
-	process_result_b (a_node: RESULT_B) is
+	process_result_b (a_node: RESULT_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_result)
 		end
 
-	process_retry_b (a_node: RETRY_B) is
+	process_retry_b (a_node: RETRY_B)
 			-- Process `a_node'.
 		do
 			generate_melted_debugger_hook
@@ -1433,7 +1433,7 @@ feature {NONE} -- Visitors
 			ba.write_retry
 		end
 
-	process_reverse_b (a_node: REVERSE_B) is
+	process_reverse_b (a_node: REVERSE_B)
 			-- Process `a_node'.
 		local
 			l_source_type: TYPE_A
@@ -1482,7 +1482,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_routine_creation_b (a_node: ROUTINE_CREATION_B) is
+	process_routine_creation_b (a_node: ROUTINE_CREATION_B)
 			-- Process `a_node'.
 		local
 			l_type: TYPE_A
@@ -1536,7 +1536,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_string_b (a_node: STRING_B) is
+	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_string)
@@ -1544,7 +1544,7 @@ feature {NONE} -- Visitors
 			ba.append_raw_string (a_node.value)
 		end
 
-	process_strip_b (a_node: STRIP_B) is
+	process_strip_b (a_node: STRIP_B)
 			-- Process `a_node'.
 		local
 			l_attr_names: LINKED_LIST [STRING]
@@ -1564,7 +1564,7 @@ feature {NONE} -- Visitors
 			ba.append_integer (l_attr_names.count)
 		end
 
-	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B)
 			-- Process `a_node'.
 		local
 			l_tuple_type: TYPE_A
@@ -1588,7 +1588,7 @@ feature {NONE} -- Visitors
 			ba.append_uint32_integer (l_tuple_type.sk_value (context.context_class_type.type))
 		end
 
-	process_tuple_const_b (a_node: TUPLE_CONST_B) is
+	process_tuple_const_b (a_node: TUPLE_CONST_B)
 			-- Process `a_node'.
 		local
 			l_real_ty: TUPLE_TYPE_A
@@ -1638,7 +1638,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_type_expr_b (a_node: TYPE_EXPR_B) is
+	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_type_creator: CREATE_INFO
@@ -1656,31 +1656,31 @@ feature {NONE} -- Visitors
 			ba.append (bc_create_inv)
 		end
 
-	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B]) is
+	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])
 			-- Process `a_node'.
 		do
 			-- Nothing to be done.
 		end
 
-	process_un_free_b (a_node: UN_FREE_B) is
+	process_un_free_b (a_node: UN_FREE_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_un_minus_b (a_node: UN_MINUS_B) is
+	process_un_minus_b (a_node: UN_MINUS_B)
 			-- Process `a_node'.
 		do
 			make_unary_b (a_node, bc_uminus)
 		end
 
-	process_un_not_b (a_node: UN_NOT_B) is
+	process_un_not_b (a_node: UN_NOT_B)
 			-- Process `a_node'.
 		do
 			make_unary_b (a_node, bc_not)
 		end
 
-	process_un_old_b (a_node: UN_OLD_B) is
+	process_un_old_b (a_node: UN_OLD_B)
 			-- Process `a_node'.
 		do
 			ba.append (Bc_retrieve_old)
@@ -1688,19 +1688,19 @@ feature {NONE} -- Visitors
 			ba.append_short_integer (a_node.exception_position)
 		end
 
-	process_un_plus_b (a_node: UN_PLUS_B) is
+	process_un_plus_b (a_node: UN_PLUS_B)
 			-- Process `a_node'.
 		do
 			make_unary_b (a_node, bc_uplus)
 		end
 
-	process_variant_b (a_node: VARIANT_B) is
+	process_variant_b (a_node: VARIANT_B)
 			-- Process `a_node'.
 		do
 			make_assert_b (a_node, bc_end_variant)
 		end
 
-	process_void_b (a_node: VOID_B) is
+	process_void_b (a_node: VOID_B)
 			-- Process `a_node'.
 		do
 			ba.append (bc_void)
@@ -1708,7 +1708,7 @@ feature {NONE} -- Visitors
 
 feature {NONE} -- Implementation
 
-	make_expression_byte_code_for_type (an_expr: EXPR_B; a_target_type: TYPE_A) is
+	make_expression_byte_code_for_type (an_expr: EXPR_B; a_target_type: TYPE_A)
 			-- Generate byte code for the expression which is about
 			-- to be assigned or compared to the type `a_target_type'.
 		require
@@ -1750,7 +1750,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_dynamic_clone (expression: EXPR_B; type: TYPE_A) is
+	generate_dynamic_clone (expression: EXPR_B; type: TYPE_A)
 			-- Generate code that clones result of an `expression' depending on
 			-- dynamic type of object of static type `type'.
 		require
@@ -1763,7 +1763,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_assert_b (a_node: ASSERT_B; a_byte_for_end: CHARACTER) is
+	make_assert_b (a_node: ASSERT_B; a_byte_for_end: CHARACTER)
 			-- Generate code for `ASSERT_B' node.
 		require
 			a_node_not_void: a_node /= Void
@@ -1813,7 +1813,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_precondition_byte_code (a_node: ASSERT_B) is
+	make_precondition_byte_code (a_node: ASSERT_B)
 			-- Generate byte code for a precondition.
 		local
 			l_context: like context
@@ -1855,7 +1855,7 @@ feature {NONE} -- Implementation
 			l_ba.mark_forward4
 		end
 
-	make_protected_byte_code (a_node: HECTOR_B; a_pos: INTEGER) is
+	make_protected_byte_code (a_node: HECTOR_B; a_pos: INTEGER)
 			-- Generate byte code for an unprotected external call argument
 		require
 			a_node_not_void: a_node /= Void
@@ -1867,7 +1867,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_binary_b (a_node: BINARY_B; a_node_opcode: CHARACTER) is
+	make_binary_b (a_node: BINARY_B; a_node_opcode: CHARACTER)
 			-- Generate code for `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -1882,7 +1882,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_binary_equal_b (a_node: BIN_EQUAL_B; a_node_opcode, a_node_obvious_opcode: CHARACTER) is
+	make_binary_equal_b (a_node: BIN_EQUAL_B; a_node_opcode, a_node_obvious_opcode: CHARACTER)
 			-- Generate code for `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -1943,7 +1943,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_unary_b (a_node: UNARY_B; a_node_opcode: CHARACTER) is
+	make_unary_b (a_node: UNARY_B; a_node_opcode: CHARACTER)
 			-- Generate code for unary operator
 		require
 			a_node_not_void: a_node /= Void
@@ -1957,7 +1957,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_case_range (a_node: CASE_B) is
+	make_case_range (a_node: CASE_B)
 			-- Generate range byte code
 		require
 			a_node_not_void: a_node /= Void
@@ -1979,7 +1979,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next, precomp_code_first, precomp_code_next: CHARACTER; flag: BOOLEAN) is
+	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next, precomp_code_first, precomp_code_next: CHARACTER; flag: BOOLEAN)
 			-- Generate call to EXTERNAL_B/FEATURE_B.
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
@@ -2080,7 +2080,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_precursor_byte_code (a_node: CALL_ACCESS_B) is
+	make_precursor_byte_code (a_node: CALL_ACCESS_B)
 			-- Generate precursor byte code if needed.
 		local
 			l_cl_type: CL_TYPE_A
@@ -2094,7 +2094,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_melted_debugger_hook is
+	generate_melted_debugger_hook
 			-- Record breakable point (standard)
 		local
 			lnr: INTEGER
@@ -2108,7 +2108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_melted_debugger_hook_nested is
+	generate_melted_debugger_hook_nested
 			-- Record breakable point for nested call
 		local
 			l_line, l_nested: INTEGER
@@ -2125,7 +2125,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

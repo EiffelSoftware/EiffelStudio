@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to save the query and options currently displayed in a PROFILE_QUERY_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_query_window: EB_PROFILE_QUERY_WINDOW) is
+	make (a_query_window: EB_PROFILE_QUERY_WINDOW)
 			-- Create Current and set `query_window' to `a_query_window'.
 		require
 			a_query_window_not_void: a_query_window /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 
-	execute is
+	execute
 			-- Execute Current
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -54,7 +54,7 @@ feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 
 feature -- Access
 
-	save_in (dialog: EB_FILE_SAVE_DIALOG) is
+	save_in (dialog: EB_FILE_SAVE_DIALOG)
 			-- Save options, result, and query
 			-- to file chosen in `dialog'.
 		require
@@ -69,7 +69,7 @@ feature -- Access
 
 feature {EB_FILE_OPENER} -- Callbacks
 
-	save_file (ptf: RAW_FILE) is
+	save_file (ptf: RAW_FILE)
 		do
 			query_window.save_it (ptf)
 		end
@@ -78,7 +78,7 @@ feature {NONE} -- Attributes
 
 	query_window: EB_PROFILE_QUERY_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

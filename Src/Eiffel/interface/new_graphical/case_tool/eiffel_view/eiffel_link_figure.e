@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common functionalities for all links in EIFFEL_WORLD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,13 +32,13 @@ create {EIFFEL_LINK_FIGURE}
 
 feature -- Access
 
-	world: EIFFEL_WORLD is
+	world: EIFFEL_WORLD
 			-- The world `Current' is part of.
 		do
 			Result ?= Precursor {EG_POLYLINE_LINK_FIGURE}
 		end
 
-	edges: LIST [EG_EDGE] is
+	edges: LIST [EG_EDGE]
 			-- Edges of `Current'.
 		do
 			Result := edge_move_handlers.twin
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Element change
 
-	request_update is
+	request_update
 			-- Request an update.
 		local
 			l_cluster: EG_CLUSTER_FIGURE
@@ -60,7 +60,7 @@ feature -- Element change
 			end
 		end
 
-	put_handle_left is
+	put_handle_left
 			-- Move the link to the left half of `source' bubble,
 			-- using one right angle.
 		local
@@ -88,7 +88,7 @@ feature -- Element change
 			end
 		end
 
-	put_handle_right is
+	put_handle_right
 			-- Move the link to the right half of `source' bubble,
 			-- using one right angle.
 		local
@@ -116,7 +116,7 @@ feature -- Element change
 			end
 		end
 
-	put_two_handles_left is
+	put_two_handles_left
 			-- Add two midpoints to the left of `target' bubble, using right angles.
 		local
 			source_x, source_y, target_x, target_y, min_x, min_y, dist_x, dist_y: INTEGER
@@ -158,7 +158,7 @@ feature -- Element change
 			end
 		end
 
-	put_two_handles_right is
+	put_two_handles_right
 			-- Add two midpoints to the right of `target' bubble, using right angles.
 		local
 			source_x, source_y, target_x, target_y, min_x, min_y, dist_x, dist_y: INTEGER
@@ -200,7 +200,7 @@ feature -- Element change
 			end
 		end
 
-	retrieve_edges (retrieved_edges: LIST [EG_EDGE]) is
+	retrieve_edges (retrieved_edges: LIST [EG_EDGE])
 			-- Add lines corresponding to the points in `retrieved_edges'.
 		require
 			retrieved_edges_not_void: retrieved_edges /= Void
@@ -233,7 +233,7 @@ feature -- Element change
 			end
 		end
 
-	apply_right_angles is
+	apply_right_angles
 			-- Make `Current' use right angles.
 		local
 			source_x, source_y, target_x, target_y: INTEGER
@@ -299,7 +299,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	edge_start (an_edge: EG_EDGE) is
+	edge_start (an_edge: EG_EDGE)
 			-- User starts to move `an_edge'.
 		do
 			saved_x := an_edge.point_x
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 	saved_x, saved_y: INTEGER
 			-- Position of edge at move start.
 
-	edge_end (an_edge: EG_EDGE) is
+	edge_end (an_edge: EG_EDGE)
 			-- User ends to move `an_edge'.
 		local
 			i: INTEGER
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 
 	is_history_update_needed: BOOLEAN
 
-	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User pressed on `line'.
 		local
 			i, nb: INTEGER
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

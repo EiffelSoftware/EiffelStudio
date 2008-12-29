@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide code completion possibilities for a code completable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Access
 	code_completable: EB_TAB_CODE_COMPLETABLE
 			-- A code completable.
 
-	class_completion_possibilities: SORTABLE_ARRAY [like name_type] is
+	class_completion_possibilities: SORTABLE_ARRAY [like name_type]
 			-- Completions proposals found by `prepare_auto_complete'
 		require
 			is_prepared : is_prepared
@@ -40,7 +40,7 @@ feature -- Status report
 	provide_classes: BOOLEAN
 			-- Provide `class_completion_possibilities'?
 
-	completion_possible: BOOLEAN is
+	completion_possible: BOOLEAN
 			-- Is completion possible?
 		do
 			if
@@ -51,7 +51,7 @@ feature -- Status report
 			end
 		end
 
-	completing_context: BOOLEAN is
+	completing_context: BOOLEAN
 			-- Is current context suitable to trigger an completion?
 		local
 			l_token: EDITOR_TOKEN
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature {CODE_COMPLETABLE} -- Basic operation
 
-	prepare_completion is
+	prepare_completion
 			-- Prepare completion possibilities.
 		do
 			Precursor {COMPLETION_POSSIBILITIES_PROVIDER}
@@ -118,7 +118,7 @@ feature {CODE_COMPLETABLE} -- Basic operation
 
 feature -- Element Change
 
-	set_provide_features (a_provide: BOOLEAN) is
+	set_provide_features (a_provide: BOOLEAN)
 			-- Set `provide_features' with `a_provide'.
 		do
 			provide_features := a_provide
@@ -127,7 +127,7 @@ feature -- Element Change
 			provide_features_set: provide_features = a_provide
 		end
 
-	set_provide_classes (a_provide: BOOLEAN) is
+	set_provide_classes (a_provide: BOOLEAN)
 			-- Set `provide_classes' with `a_provide'.
 		do
 			provide_classes := a_provide
@@ -138,17 +138,17 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	cursor_token: EDITOR_TOKEN is
+	cursor_token: EDITOR_TOKEN
 			-- Token at cursor position
 		deferred
 		end
 
-	current_pos_in_token: INTEGER is
+	current_pos_in_token: INTEGER
 			-- Pos in token.
 		deferred
 		end
 
-	analyzer: EB_CLASS_INFO_ANALYZER is
+	analyzer: EB_CLASS_INFO_ANALYZER
 			-- Class infor analyzer
 		once
 			create {EB_CLICK_AND_COMPLETE_TOOL} Result
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	is_completable_separator (a_str: STRING): BOOLEAN is
+	is_completable_separator (a_str: STRING): BOOLEAN
 			-- Is `a_str' a completable string separator?
 		local
 			i: INTEGER
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

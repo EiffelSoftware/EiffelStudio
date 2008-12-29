@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display suppliers of `current_class'."
@@ -21,7 +21,7 @@ create
 
 feature -- Output
 
-	work is
+	work
 			-- Execute Current command.	
 		local
 			l_domain: QL_CLASS_DOMAIN
@@ -45,7 +45,7 @@ feature -- Output
 			end
 		end
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
 			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (
@@ -55,7 +55,7 @@ feature -- Output
 			result_attached: Result /= Void
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 			create {QL_CLASS_DOMAIN_GENERATOR}Result
@@ -65,7 +65,7 @@ feature -- Output
 			result_attached: Result /= Void
 		end
 
-	class_name_tester (class_a, class_b: QL_CLASS): BOOLEAN is
+	class_name_tester (class_a, class_b: QL_CLASS): BOOLEAN
 			-- Compare name of `class_a' and `class_b'.
 		require
 			class_a_attached: class_a /= Void
@@ -74,7 +74,7 @@ feature -- Output
 			Result := class_a.name < class_b.name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

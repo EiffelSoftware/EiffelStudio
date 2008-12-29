@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a cluster of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature --Initialization
 
-	make (id: INTEGER; id_ext: INTEGER; c: like group) is
+	make (id: INTEGER; id_ext: INTEGER; c: like group)
 			-- Initialization of `Current'
 			-- assign `c' to `lace_cluster'
 			-- assign `id_ext' to `id_extender'
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_class (c: XMI_CLASS) is
+	add_class (c: XMI_CLASS)
 			-- Adds `c' to `xmi_classes'.
 		require
 			new_class_not_void: c /= Void
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the cluster.	
 		do
 			Result := " <Model_Management.Package xmi.id = 'S."
@@ -91,7 +91,7 @@ feature -- Actions
 			Result.append (" -->%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

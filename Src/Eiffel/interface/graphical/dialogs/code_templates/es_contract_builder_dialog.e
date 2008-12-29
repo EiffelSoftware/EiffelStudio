@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 	]"
@@ -37,7 +37,7 @@ feature -- Access
 	contract_context: !ES_CONTRACT_EDITOR_CONTEXT [CLASSI_STONE]
 			-- The contract editor context used to apply an commited changes
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

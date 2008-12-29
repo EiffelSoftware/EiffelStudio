@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Singleton factory for eweasel managers
 																		]"
@@ -12,19 +12,19 @@ class
 
 feature -- Query
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER is
+	manager: !ES_EWEASEL_EXECUTION_MANAGER
 			-- Execution manger singleton factory method
 		once
 			create Result.make
 		end
 
-	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER is
+	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER
 			-- Result analyzer singleton factory method
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Real data type for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,44 +15,44 @@ inherit
 
 feature -- Access
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			Result := {SHARED_C_LEVEL}.c_pointer
 		end
 
-	tuple_code: NATURAL_8 is
+	tuple_code: NATURAL_8
 			-- Tuple code for class type
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_i
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.sk_pointer
 		end
 
-	c_string: STRING is
+	c_string: STRING
 			-- String generated for the type.
 		do
 			 Result := pointer_string
 		end
 
-	typed_field: STRING is "it_p"
+	typed_field: STRING = "it_p"
 			-- Value field of a C structure corresponding to this type
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.pointer_code
 		end
 
-	new_attribute_description: POINTER_DESC is
+	new_attribute_description: POINTER_DESC
 			-- Type description for skeleton
 		do
 			create Result
@@ -60,12 +60,12 @@ feature -- Access
 
 feature -- Status Report
 
-	is_feature_pointer: BOOLEAN is True
+	is_feature_pointer: BOOLEAN = True
 			-- Is the type a feature pointer type ?
 
 feature -- Byte code generation
 
-	make_default_byte_code (ba: BYTE_ARRAY) is
+	make_default_byte_code (ba: BYTE_ARRAY)
 			-- Generate default value of basic type on stack.
 		do
 			ba.append ({BYTE_CONST}.Bc_null_pointer)
@@ -73,7 +73,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_pointer_string)
@@ -81,7 +81,7 @@ feature -- C code generation
 
 feature -- Comparison
 
-	same_as (other: TYPE_C): BOOLEAN is
+	same_as (other: TYPE_C): BOOLEAN
 			-- Is Current same as other?
 		do
 				-- It really has to be POINTER_I, it cannot be the descendant TYPED_POINTER_I
@@ -92,7 +92,7 @@ feature {NONE} -- Constants
 
 	pointer_string: STRING = "EIF_POINTER";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

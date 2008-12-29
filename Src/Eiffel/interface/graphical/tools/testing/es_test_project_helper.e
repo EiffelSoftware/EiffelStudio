@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Implementation of {TEST_PROJECT_HELPER_I} for EiffelStudio UI.
 	]"
@@ -183,7 +183,7 @@ feature -- Basic operations
 			run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, l_params)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

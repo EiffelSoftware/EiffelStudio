@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Shared access to temporary servers
@@ -7,7 +7,7 @@ class SHARED_TMP_SERVER
 
 feature {NONE}
 
-	Tmp_ast_server: TMP_AST_SERVER is
+	Tmp_ast_server: TMP_AST_SERVER
 			-- Server for recompilation. Will be merge into server
 			-- `Ast_server', `Body_server' and `Inv_ast_server' after a
 			-- successful recompilation.
@@ -17,7 +17,7 @@ feature {NONE}
 			create Result.make;
 		end;
 
-	Tmp_feature_server: TMP_FEATURE_SERVER is
+	Tmp_feature_server: TMP_FEATURE_SERVER
 			-- Server of features during recompilation. Will be
 			-- merge into `Feature_server' after a successful
 			-- recompilation.
@@ -25,14 +25,14 @@ feature {NONE}
 			create Result.make
 		end
 
-	Tmp_byte_server: TMP_BYTE_SERVER is
+	Tmp_byte_server: TMP_BYTE_SERVER
 			-- Server for byte code. Will be useful to update the byte code
 			-- server after a successful recompilation
 		once
 			create Result.make;
 		end;
 
-	Tmp_inv_byte_server: TMP_INV_BYTE_SERVER is
+	Tmp_inv_byte_server: TMP_INV_BYTE_SERVER
 			-- Temporary server for invariant byte code. Will be useful to
 			-- update the invariant byte code server after a successful
 			-- recompilation
@@ -40,7 +40,7 @@ feature {NONE}
 			create Result.make;
 		end;
 
-	Tmp_depend_server: TMP_DEPEND_SERVER is
+	Tmp_depend_server: TMP_DEPEND_SERVER
 			-- Temporary server of class dependances for incremental type
 			-- check. Will be useful to update the system dependance server
 			-- after a successful recompilation
@@ -48,41 +48,41 @@ feature {NONE}
 			create Result.make;
 		end;
 
-	Tmp_m_feat_tbl_server: TMP_M_FEAT_TBL_SERVER is
+	Tmp_m_feat_tbl_server: TMP_M_FEAT_TBL_SERVER
 			-- Temporary server of melted feature table (Useful for
 			-- purging the system melted feature table server).
 		once
 			create Result.make;
 		end;
 
-	Tmp_m_feature_server: TMP_M_FEATURE_SERVER is
+	Tmp_m_feature_server: TMP_M_FEATURE_SERVER
 			-- Temporary server of melted feature byte code (Useful for
 			-- purging the system melted feature byte code server).
 		once
 			create Result.make;
 		end;
 
-	Tmp_opt_byte_server: TMP_OPT_BYTE_SERVER is
+	Tmp_opt_byte_server: TMP_OPT_BYTE_SERVER
 		once
 			create Result.make;
 		end;
 
-	Tmp_poly_server: TMP_POLY_SERVER is
+	Tmp_poly_server: TMP_POLY_SERVER
 		once
 			create Result.make;
 		end;
 
-	Tmp_m_rout_id_server: TMP_M_ROUT_ID_SERVER is
+	Tmp_m_rout_id_server: TMP_M_ROUT_ID_SERVER
 		once
 			create Result.make;
 		end;
 
-	Tmp_m_desc_server: TMP_M_DESC_SERVER is
+	Tmp_m_desc_server: TMP_M_DESC_SERVER
 		once
 			create Result.make;
 		end;
 
-	feature_table_cache: CACHE [COMPUTED_FEATURE_TABLE] is
+	feature_table_cache: CACHE [COMPUTED_FEATURE_TABLE]
 			-- Cache for features
 		once
 			create Result.make
@@ -90,7 +90,7 @@ feature {NONE}
 			cache_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

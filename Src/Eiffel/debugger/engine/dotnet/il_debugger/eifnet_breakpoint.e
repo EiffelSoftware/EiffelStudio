@@ -1,4 +1,4 @@
-indexing
+note
 	description: ".NET breakpoint"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature
 
-	make (a_bp_loc: BREAKPOINT_LOCATION; a_module_key: STRING; a_class, a_feature: NATURAL_32; a_line: INTEGER) is
+	make (a_bp_loc: BREAKPOINT_LOCATION; a_module_key: STRING; a_class, a_feature: NATURAL_32; a_line: INTEGER)
 			-- Initialize BP item data
 		require
 			module_key_lower_case: is_lower_case (a_module_key)
@@ -45,7 +45,7 @@ feature
 
 feature -- Hashable interface
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code used for HASH_TABLE
 		do
 			Result := ([module_key, class_token, feature_token, break_index]).hash_code
@@ -57,7 +57,7 @@ feature -- Hashable interface
 
 feature -- comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
@@ -73,7 +73,7 @@ feature -- comparison
 
 feature -- Access assertion
 
-	is_lower_case (a_string: STRING): BOOLEAN is
+	is_lower_case (a_string: STRING): BOOLEAN
 			-- is `a_string' in lower case
 			-- used in assertion
 		require
@@ -105,7 +105,7 @@ feature -- dotnet properties
 	icor_breakpoint: ICOR_DEBUG_BREAKPOINT
 			-- Corresponding ICorDebugBreakpoint
 
-	set_icor_breakpoint (a_val: like icor_breakpoint) is
+	set_icor_breakpoint (a_val: like icor_breakpoint)
 			-- Set `icor_breakpoint' to `a_val'.
 		do
 			icor_breakpoint := a_val
@@ -121,25 +121,25 @@ feature -- status
 
 feature -- change
 
-	enable is
+	enable
 			-- Enable the Current breakpoint.
 		do
 			enabled := True
 		end
 
-	disable is
+	disable
 			-- Disable the Current breakpoint.
 		do
 			enabled := False
 		end
 
-	activate is
+	activate
 			-- Activate the Current breakpoint.
 		do
 			is_active := True
 		end
 
-	unactivate is
+	unactivate
 			-- UnActivate the Current breakpoint.
 		do
 			is_active := False
@@ -147,7 +147,7 @@ feature -- change
 
 feature -- debug output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Debug output value
 			-- debug purpose only
 		do
@@ -158,7 +158,7 @@ feature -- debug output
 						+ "Module [" + module_key + "] "
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

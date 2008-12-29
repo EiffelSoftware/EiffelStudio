@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu item for a menuable command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_MENUABLE_COMMAND) is
+	make (a_command: EB_MENUABLE_COMMAND)
 		local
 			l_recyclable: EB_RECYCLABLE
 		do
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Cleaning
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			if command.managed_menu_items.has (Current) then
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	command: EB_MENUABLE_COMMAND;
 			-- Command associated with Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

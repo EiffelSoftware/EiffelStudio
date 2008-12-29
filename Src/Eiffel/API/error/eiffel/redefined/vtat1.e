@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Error for unvalid anchored type (an anchored type cannot be evaluated). %
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_type: like type; an_anchor: like anchor_type) is
+	make (a_type: like type; an_anchor: like anchor_type)
 			-- New error occuring in `a_type' for anchor `an_anchor'.
 		require
 			a_type_not_void: a_type /= Void
@@ -46,14 +46,14 @@ feature -- Properties
 	anchor_type: STRING
 			-- Anchor in which error occurs.
 
-	code: STRING is "VTAT";
+	code: STRING = "VTAT";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -69,13 +69,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_type (t: like type) is
+	set_type (t: like type)
 			-- Assign `t' to `type'.
 		do
 			type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

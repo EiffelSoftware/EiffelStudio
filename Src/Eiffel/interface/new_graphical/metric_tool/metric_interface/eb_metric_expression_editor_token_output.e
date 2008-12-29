@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a metric expression in editor token format"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_writer: like writer) is
+	make (a_writer: like writer)
 			-- Initialize Current.
 		do
 			create {LINKED_LIST [EDITOR_TOKEN]} generated_output.make
@@ -39,7 +39,7 @@ feature -- Access
 
 	writer: like token_writer
 
-	string_representation: STRING_GENERAL is
+	string_representation: STRING_GENERAL
 			-- String representation of generated output
 		local
 			l_expr: STRING_32
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Result operations
 
-	wipe_out is
+	wipe_out
 			-- Wipe out all generated output.
 		do
 			generated_output.wipe_out
@@ -69,7 +69,7 @@ feature -- Result operations
 
 feature{EB_METRIC_EXPRESSION_GENERATOR}
 
-	prepare_output is
+	prepare_output
 			-- Prepare output.
 		local
 			l_writer: like writer
@@ -81,7 +81,7 @@ feature{EB_METRIC_EXPRESSION_GENERATOR}
 
 feature -- Setting
 
-	set_writer (a_writer: like writer) is
+	set_writer (a_writer: like writer)
 			-- Set `writer' with `a_writer'.
 		require
 			a_writer_attached: a_writer /= Void
@@ -93,7 +93,7 @@ feature -- Setting
 
 feature -- Metric element output
 
-	put_metric_name (a_metric_name: STRING) is
+	put_metric_name (a_metric_name: STRING)
 			-- Display metric name of `a_metric_name'.
 		do
 			prepare_output
@@ -108,7 +108,7 @@ feature -- Metric element output
 			end
 		end
 
-	put_criterion_name (a_criterion: EB_METRIC_CRITERION) is
+	put_criterion_name (a_criterion: EB_METRIC_CRITERION)
 			-- Display name of `a_criterion'.
 		do
 			prepare_output
@@ -128,7 +128,7 @@ feature -- Metric element output
 			end
 		end
 
-	put_string (a_string: STRING_GENERAL) is
+	put_string (a_string: STRING_GENERAL)
 			-- Display `a_string'.
 		local
 			l_str: STRING_32
@@ -140,48 +140,48 @@ feature -- Metric element output
 			writer.add_string (a_string.as_string_8)
 		end
 
-	put_operator (a_operator: STRING_GENERAL) is
+	put_operator (a_operator: STRING_GENERAL)
 			-- Display `a_operator', such as "+", "-".
 		do
 			prepare_output
 			writer.process_symbol_text (a_operator.as_string_8)
 		end
 
-	put_double (a_double: DOUBLE) is
+	put_double (a_double: DOUBLE)
 			-- Display `a_double'.
 		do
 			prepare_output
 			writer.process_number_text (a_double.out)
 		end
 
-	put_integer (a_integer: INTEGER) is
+	put_integer (a_integer: INTEGER)
 			-- Display `a_integer'.
 		do
 			prepare_output
 			writer.process_number_text (a_integer.out)
 		end
 
-	put_keyword (a_keyword: STRING_GENERAL) is
+	put_keyword (a_keyword: STRING_GENERAL)
 			-- Display `a_keyword'.
 		do
 			prepare_output
 			writer.process_keyword_text (a_keyword.as_string_8, Void)
 		end
 
-	put_error (a_error_msg: STRING_GENERAL) is
+	put_error (a_error_msg: STRING_GENERAL)
 			-- Display error message `a_error_msg'.
 		do
 			writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_error_msg.as_string_8)
 		end
 
-	put_normal_text (a_text: STRING_GENERAL) is
+	put_normal_text (a_text: STRING_GENERAL)
 			-- Display normal text `a_text'.
 		do
 			prepare_output
 			writer.add (a_text.as_string_8)
 		end
 
-	put_domain_item (a_domain_item: EB_METRIC_DOMAIN_ITEM) is
+	put_domain_item (a_domain_item: EB_METRIC_DOMAIN_ITEM)
 			-- Display `a_domain_item'.			
 		require
 			a_domain_item_attached: a_domain_item /= Void
@@ -194,49 +194,49 @@ feature -- Metric element output
 			end
 		end
 
-	put_target_domain_item (a_target_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	put_target_domain_item (a_target_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Display `a_target_item'.
 		do
 			put_domain_item (a_target_item)
 		end
 
-	put_group_domain_item (a_group_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	put_group_domain_item (a_group_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Display `a_group_item'.
 		do
 			put_domain_item (a_group_item)
 		end
 
-	put_folder_domain_item (a_folder_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	put_folder_domain_item (a_folder_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Display `a_folder_item'.
 		do
 			put_domain_item (a_folder_item)
 		end
 
-	put_class_domain_item (a_class_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	put_class_domain_item (a_class_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Display `a_class_item'.
 		do
 			put_domain_item (a_class_item)
 		end
 
-	put_feature_domain_item (a_feature_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	put_feature_domain_item (a_feature_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Display `a_feature_item'.
 		do
 			put_domain_item (a_feature_item)
 		end
 
-	put_delayed_domain_item (a_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	put_delayed_domain_item (a_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Display `a_delayed_item'.
 		do
 			put_domain_item (a_delayed_item)
 		end
 
-	put_modifier (a_modifier: STRING_GENERAL) is
+	put_modifier (a_modifier: STRING_GENERAL)
 			-- Display modifier `a_modifier'.
 		do
 			writer.add_comment (a_modifier)
 		end
 
-	put_warning (a_warning_msg: STRING_GENERAL) is
+	put_warning (a_warning_msg: STRING_GENERAL)
 			-- Display warning message `a_warning_msg'.
 		do
 			writer.process_warning (a_warning_msg.as_string_8, warning_appearance)
@@ -246,7 +246,7 @@ invariant
 	generated_output_attached: generated_output /= Void
 	writer_attached: writer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

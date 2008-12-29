@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Stores and manages jvm classes. each class is uniquly identified by a type id.
 		additionaly each class has a `qualified_name'. This class
@@ -21,13 +21,13 @@ create {SHARED_JVM_CLASS_REPOSITORY} -- This class must be used by SHARED_JVM_CL
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature {ANY} -- Status
 
-	has_by_id (id: INTEGER): BOOLEAN is
+	has_by_id (id: INTEGER): BOOLEAN
 			-- is a class with `id' present in repository?
 		require
 			valid_id: valid_id (id)
@@ -43,7 +43,7 @@ feature {ANY} -- Status
 			end
 		end
 
-	has_by_qualified_name (n: STRING): BOOLEAN is
+	has_by_qualified_name (n: STRING): BOOLEAN
 			-- is a class with name `n' present in repository?
 		require
 			n_not_void: n /= Void
@@ -70,7 +70,7 @@ feature {ANY} -- Status
 			end
 		end
 
-	is_valid_feature_id (type_id, feature_id: INTEGER): BOOLEAN is
+	is_valid_feature_id (type_id, feature_id: INTEGER): BOOLEAN
 			-- is `feature_id' a valid feature id for the class with the
 			-- type id `type_id' ?
 		require
@@ -80,7 +80,7 @@ feature {ANY} -- Status
 			item (type_id).features.item (feature_id) /= Void
 		end
 
-	is_written_feature_by_id (type_id, feature_id: INTEGER): BOOLEAN is
+	is_written_feature_by_id (type_id, feature_id: INTEGER): BOOLEAN
 			-- is the feature with of class `type_id' with feature id
 			-- `feature_id' a written feature?
 		require
@@ -93,13 +93,13 @@ feature {ANY} -- Status
 			Result := wf /= Void
 		end
 
-	valid_id (id: INTEGER): BOOLEAN is
+	valid_id (id: INTEGER): BOOLEAN
 			-- is `id' a valid id?
 		do
 			Result := id > 0
 		end
 
-	item (id: INTEGER): JVM_CLASS is
+	item (id: INTEGER): JVM_CLASS
 			-- access class with type id `id'
 		require
 			valid_id: valid_id (id)
@@ -107,7 +107,7 @@ feature {ANY} -- Status
 			Result := repository.item (id)
 		end
 
-	item_by_qualified_name (n: STRING): JVM_CLASS is
+	item_by_qualified_name (n: STRING): JVM_CLASS
 			-- access class with qualified name `n'
 		require
 			n_not_void: n /= Void
@@ -137,7 +137,7 @@ feature {ANY} -- Status
 
 feature {ANY} -- Element Change
 
-	put (n: STRING; id: INTEGER) is
+	put (n: STRING; id: INTEGER)
 			-- adds a new java class to the repository
 			-- `n' is the fully qualified java class name
 			-- `id' is it's feature id.
@@ -161,7 +161,7 @@ feature {ANY} -- Element Change
 			name_set: item (id).qualified_name.is_equal (n)
 		end
 
-	set_capacity (a: INTEGER) is
+	set_capacity (a: INTEGER)
 		do
 			if
 				repository = Void
@@ -172,7 +172,7 @@ feature {ANY} -- Element Change
 
 feature {ANY} -- Code Generation
 
-	generate_byte_code is
+	generate_byte_code
 			-- generate jvm byte code for each class in the repository
 			-- that needs to be generated (excluding external and basic types)
 		local
@@ -200,11 +200,11 @@ feature {NONE} -- Implementation
 			-- actual class container
 			-- the index of a class must always be it's `type_id'
 
-	initial_repository_size: INTEGER is 100;
+	initial_repository_size: INTEGER = 100;
 			-- constant that defined the intial size of repository
 			-- for performance tweaks only
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Starts the C compilation in W_code or F_code."
@@ -18,17 +18,17 @@ inherit
 
 feature {NONE} -- Implementation
 
-	execute is
+	execute
 			-- Do nothing.
 		do
 		end;
 
-	workbench_mode: BOOLEAN is
+	workbench_mode: BOOLEAN
 		do
 			Result := True
 		end;
 
-	loop_action is
+	loop_action
 			-- Execute Current batch command.
 		do
 			if not workbench_mode and then Eiffel_project.is_read_only then
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

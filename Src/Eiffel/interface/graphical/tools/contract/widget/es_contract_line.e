@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Describes a single contract line - a tag and and Eiffel predicate.
 	]"
@@ -259,7 +259,7 @@ invariant
 	is_tagless: tag.is_empty implies is_tagless
 	not_is_tagless: not tag.is_empty implies not is_tagless
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

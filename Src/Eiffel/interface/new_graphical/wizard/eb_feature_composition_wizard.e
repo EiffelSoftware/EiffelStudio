@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Wizard to create features and insert them in a specific%N%
 		%feature clause."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create wizard.
 		local
 			vb: EV_VERTICAL_BOX
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent set_focus_to_feature_selector)
 		end
 
-	set_default_editor is
+	set_default_editor
 			-- Select the default editor.
 		do
 			create {EB_PROCEDURE_EDITOR} feature_editor
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_selector is
+	build_selector
 			-- Create `feature_select' radio group.
 		local
 			h_box: EV_HORIZONTAL_BOX
@@ -109,13 +109,13 @@ feature -- Access
 	cancel_button: EV_BUTTON
 			-- Button labeled "Cancel".
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		do
 			Result := feature_editor.code
 		end
 
-	clause_export: STRING is
+	clause_export: STRING
 			-- User selected export clause.
 		do
 			Result := feature_editor.feature_clause_selector.export_field.text
@@ -125,19 +125,19 @@ feature -- Access
 			end
 		end
 
-	clause_comment: STRING is
+	clause_comment: STRING
 			-- User selected feature clause.
 		do
 			Result := feature_editor.feature_clause_selector.comment_field.text
 		end
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- User selected name for feature.
 		do
 			Result := feature_editor.feature_name_field.text
 		end
 
-	feature_type: STRING is
+	feature_type: STRING
 			-- Return type if attribute or function.
 		local
 			qe: EB_QUERY_EDITOR
@@ -148,7 +148,7 @@ feature -- Access
 			end
 		end
 
-	generate_setter_procedure: BOOLEAN is
+	generate_setter_procedure: BOOLEAN
 			-- Should a set-procedure be generated?
 		local
 			e: EB_ATTRIBUTE_EDITOR
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end
 
-	precondition: STRING is
+	precondition: STRING
 			-- Precondition selected for set-procedure.
 			-- Void if none.
 		local
@@ -171,7 +171,7 @@ feature -- Access
 			end
 		end
 
-	invariant_part: STRING is
+	invariant_part: STRING
 			-- Invariant for feature. Void if none.
 		local
 			e: EB_ATTRIBUTE_EDITOR
@@ -184,7 +184,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		do
 			Result := feature_editor.valid_content
@@ -196,7 +196,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	on_proc_select is
+	on_proc_select
 			-- User selected "procedure".
 		local
 			fe: like feature_editor
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_func_select is
+	on_func_select
 			-- User selected "function".
 		local
 			fe: like feature_editor
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_attr_select is
+	on_attr_select
 			-- User selected "attribute".
 		local
 			fe: like feature_editor
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- OK button was clicked.
 		do
 			ok_clicked := True
@@ -249,14 +249,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel button was clicked.
 		do
 			ok_clicked := False
 			hide
 		end
 
-	set_focus_to_feature_selector is
+	set_focus_to_feature_selector
 			-- Assign focus to the first enabled radio button selected within
 		do
 			proc_button.selected_peer.set_focus
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 	feature_editor_frame: EV_FRAME;
 			-- Container of `feature_editor'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

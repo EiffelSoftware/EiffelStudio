@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu representing a set of the favorites"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_favorites_manager: EB_FAVORITES_MANAGER) is
+	make (a_favorites_manager: EB_FAVORITES_MANAGER)
 			-- Initialization: build the widget and the menu.
 		do
 			make_with_text (Interface_names.m_Favorites)
@@ -50,18 +50,18 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	refresh is
+	refresh
 			-- Update `Current's contents.
 		do
 			do_all (agent update_menu_item)
 		end
 
-	update_folder_item (m: EV_MENU_ITEM) is
+	update_folder_item (m: EV_MENU_ITEM)
 		do
 			m.set_pixmap (pixmaps.icon_pixmaps.folder_blank_icon)
 		end
 
-	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM) is
+	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM)
 		do
 			if a_class_item.associated_class_i /= Void then
 				m.set_pixmap (pixmap_from_class_i (a_class_item.associated_class_i))
@@ -70,7 +70,7 @@ feature -- Element change
 			end
 		end
 
-	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM) is
+	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM)
 		do
 			if a_feat_item.associated_e_feature /= Void then
 				m.set_pixmap (pixmap_from_e_feature (a_feat_item.associated_e_feature))
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature {NONE} -- Initialization Implementation
 
-	build_menu is
+	build_menu
 			-- build the menu corresponding to `a_favorites'
 		local
 			menu_item: EV_MENU_ITEM
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	build_menu_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EV_MENU is
+	build_menu_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EV_MENU
 			-- build the menu corresponding `a_favorites'
 		local
 			menu_item: EV_MENU_ITEM
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	favorite_to_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM is
+	favorite_to_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM
 		local
 			l_menu_item: EV_MENU_ITEM
 			a_class_item: EB_FAVORITES_CLASS
@@ -169,7 +169,7 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	favorite_to_immediate_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM is
+	favorite_to_immediate_menu_item (an_item: EB_FAVORITES_ITEM): EV_MENU_ITEM
 		local
 			l_menu_item: EV_MENU_ITEM
 			a_folder_item: EB_FAVORITES_FOLDER
@@ -217,7 +217,7 @@ feature {NONE} -- Initialization Implementation
 
 feature -- Observer pattern
 
-	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been added
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -262,7 +262,7 @@ feature -- Observer pattern
 			end
 		end
 
-	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -301,7 +301,7 @@ feature -- Observer pattern
 			end
 		end
 
-	replace_class_menu_item_by (mi1, mi2: EV_MENU_ITEM) is
+	replace_class_menu_item_by (mi1, mi2: EV_MENU_ITEM)
 			-- Replace mi1 by mi2
 		local
 			item_list: EV_ITEM_LIST [EV_ITEM]
@@ -318,7 +318,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -331,7 +331,7 @@ feature {NONE} -- Memory management
 
 feature {NONE} -- Implementation
 
-	update_menu_item (a_item: EV_MENU_ITEM) is
+	update_menu_item (a_item: EV_MENU_ITEM)
 			-- Update `a_item' and sub menu items.
 		local
 			l_class: EB_FAVORITES_CLASS
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_menu_item_from_path (an_item: EV_MENU_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM is
+	get_menu_item_from_path (an_item: EV_MENU_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM
 			-- Get the menu item corresponding to the path `a_path'
 			-- Void if not found.
 		local
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 	favorites_manager: EB_FAVORITES_MANAGER;
 			-- Associated favorites manager
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a fold under a cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_cluster: CONF_CLUSTER; a_path: STRING) is
+	make (a_cluster: CONF_CLUSTER; a_path: STRING)
 			-- Initialize
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialize
 			a_name_not_void: name /= Void
 		end
 
-	make_with_name (a_cluster: CONF_CLUSTER; a_path: STRING; a_name: STRING) is
+	make_with_name (a_cluster: CONF_CLUSTER; a_path: STRING; a_name: STRING)
 			-- Initialize with name
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -76,7 +76,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_cluster (a_cluster: like cluster) is
+	set_cluster (a_cluster: like cluster)
 			-- Set `cluster' with `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -86,7 +86,7 @@ feature -- Element change
 			cluster_not_void: a_cluster = a_cluster
 		end
 
-	set_path (a_path: like path) is
+	set_path (a_path: like path)
 			-- Set `path' with `a_path'.
 		require
 			a_path_valid: a_path /= Void and then not a_path.is_empty
@@ -98,7 +98,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	build_name is
+	build_name
 			-- Build name.
 		local
 			l_string : STRING
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descritpion of an actual generical type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_id: INTEGER; g: like generics) is
+	make (a_class_id: INTEGER; g: like generics)
 			-- Create Current with `g' types as generic parameter.
 		require
 			valid_class_id: a_class_id > 0
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_gen_type_a (Current)
@@ -56,7 +56,7 @@ feature -- Visitor
 
 feature -- Properties
 
-	has_actual (type: CL_TYPE_A): BOOLEAN is
+	has_actual (type: CL_TYPE_A): BOOLEAN
 			-- Is `type' an (possibly nested) actual parameter of this type?
 		local
 			i, nb: INTEGER
@@ -82,7 +82,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		local
 			i, nb: INTEGER
@@ -105,7 +105,7 @@ feature -- Comparison
 			end
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			other_gen_type: like Current
@@ -139,7 +139,7 @@ feature -- Access
 	generics: ARRAY [TYPE_A]
 			-- Actual generical parameter
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		local
 			l_rotate, l_bytes, i: INTEGER
 			l_generics: like generics
@@ -163,7 +163,7 @@ feature -- Access
 			end
 		end
 
-	description: ATTR_DESC is
+	description: ATTR_DESC
 			-- Descritpion of type for skeletons.
 		local
 			gen_desc: GENERIC_DESC
@@ -177,7 +177,7 @@ feature -- Access
 			end
 		end
 
-	instantiated_description: ATTR_DESC is
+	instantiated_description: ATTR_DESC
 		local
 			exp: EXPANDED_DESC
 			l_ref: REFERENCE_DESC
@@ -195,7 +195,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_explicit: BOOLEAN is
+	is_explicit: BOOLEAN
 			-- Is type fixed at compile time without anchors or formals?
 		local
 			i, nb: INTEGER
@@ -218,7 +218,7 @@ feature -- Status Report
 			end
 		end
 
-	is_class_valid: BOOLEAN is
+	is_class_valid: BOOLEAN
 		local
 			i, nb: INTEGER
 			l_generics: like generics
@@ -242,7 +242,7 @@ feature -- Status Report
 			end
 		end
 
-	is_valid_generic_derivation: BOOLEAN is
+	is_valid_generic_derivation: BOOLEAN
 			-- A generic type is a valid derivation if and only if the class type
 			-- being referenced are still expanded.
 			--| This can happen when a generic class which was expanded and used in
@@ -274,7 +274,7 @@ feature -- Status Report
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		local
 			i, count: INTEGER
@@ -302,7 +302,7 @@ feature -- Output
 			end
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		local
 			i, count: INTEGER
 		do
@@ -332,7 +332,7 @@ feature -- Output
 
 feature -- Generic conformance
 
-	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A)
 		local
 			i, nb: INTEGER
 			l_generics: like generics
@@ -350,7 +350,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A)
 		local
 			i, nb: INTEGER
 			l_generics: like generics
@@ -369,7 +369,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 		local
 			i, nb: INTEGER
 			l_generics: like generics
@@ -388,7 +388,7 @@ feature -- Generic conformance
 			end
 		end
 
-	make_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A)
 			-- Put type id's in byte array.
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
@@ -410,7 +410,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN)
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		local
@@ -440,7 +440,7 @@ feature -- Generic conformance
 			il_generator.generate_generic_type_settings (Current)
 		end
 
-	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER)
 			-- Generic runtime instance for Current
 		require
 			il_generator_not_void: il_generator /= Void
@@ -449,7 +449,7 @@ feature -- Generic conformance
 			il_generator.generate_generic_type_instance (n)
 		end
 
-	frozen enumerate_interfaces (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
+	frozen enumerate_interfaces (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]])
 			-- Enumerate all class types for which an object of this type can be attached to.
 			-- FIXME: To be put in GEN_TYPE_A when refactoring complete.
 		require
@@ -466,7 +466,7 @@ feature -- Generic conformance
 
 feature -- CECIL code generation
 
-	generate_cecil_values (buffer: GENERATION_BUFFER; a_context_type: TYPE_A) is
+	generate_cecil_values (buffer: GENERATION_BUFFER; a_context_type: TYPE_A)
 			-- Generate CECIL metatypes for current generic derivation
 		require
 			buffer_not_void: buffer /= Void
@@ -496,7 +496,7 @@ feature -- CECIL code generation
 			end
 		end
 
-	make_cecil_values (ba: BYTE_ARRAY; a_context_type: TYPE_A) is
+	make_cecil_values (ba: BYTE_ARRAY; a_context_type: TYPE_A)
 			-- Make byte code for cecil values
 		require
 			ba_not_void: ba /= Void
@@ -524,7 +524,7 @@ feature -- CECIL code generation
 
 feature -- IL code generation
 
-	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Name of current class
 		local
 			i, count: INTEGER
@@ -569,13 +569,13 @@ feature -- IL code generation
 			end
 		end
 
-	generic_il_type_name (a_context_type: TYPE_A): STRING is
+	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Associated name to for naming in generic derivation.
 		do
 			Result := il_type_name (Void, a_context_type)
 		end
 
-	dispatch_anchors (a_context_class: CLASS_C) is
+	dispatch_anchors (a_context_class: CLASS_C)
 			-- <Original>
 		local
 			i, count: INTEGER
@@ -593,7 +593,7 @@ feature -- IL code generation
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 		local
 			l_class: like associated_class
 			l_generics: like generics
@@ -624,7 +624,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-	enumerate_interfaces_recursively (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]; n: INTEGER) is
+	enumerate_interfaces_recursively (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]; n: INTEGER)
 			-- Enumerate all class types for which an object of this type can be attached to
 			-- using `n' as an upper bound for generic parameters that can be changed.
 		require
@@ -710,7 +710,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-	internal_generic_derivation (a_level: INTEGER): like Current is
+	internal_generic_derivation (a_level: INTEGER): like Current
 			-- Precise generic derivation of current type.
 		local
 			i, count: INTEGER
@@ -761,7 +761,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
 		local
 			i, nb: INTEGER
 			l_generics, l_other_generics: like generics
@@ -821,7 +821,7 @@ feature {TYPE_A} -- Helpers
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS) is
+	generate_error_from_creation_constraint_list (a_context_class: CLASS_C; a_context_feature: FEATURE_I; a_location_as: LOCATION_AS)
 			-- Generated a VTCG7 error if there are any constraint errors.
 			-- Otherwise it does nothing.
 		require
@@ -845,7 +845,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
+	update_dependance (feat_depend: FEATURE_DEPENDANCE)
 			-- Update dependency for Dead Code Removal
 		local
 			i, count: INTEGER
@@ -861,7 +861,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	set_generics (g: like generics) is
+	set_generics (g: like generics)
 			-- Assign `g' to `generics'.
 		require
 			g_not_void: g /= Void
@@ -871,7 +871,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			generics_set: generics = g
 		end
 
-	has_expanded: BOOLEAN is
+	has_expanded: BOOLEAN
 			-- Are some expanded type in the current generic declaration ?
 		local
 			i, count: INTEGER
@@ -888,7 +888,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	is_full_named_type: BOOLEAN is
+	is_full_named_type: BOOLEAN
 			-- Is Current a fully named type?
 		local
 			i, nb: INTEGER
@@ -908,7 +908,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	has_formal_generic: BOOLEAN is
+	has_formal_generic: BOOLEAN
 			-- Has type a formal generic parameter?
 		local
 			i, count: INTEGER
@@ -924,7 +924,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	is_loose: BOOLEAN is
+	is_loose: BOOLEAN
 			-- Does type depend on formal generic parameters and/or anchors?
 		local
 			g: like generics
@@ -941,7 +941,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	deep_actual_type: like Current is
+	deep_actual_type: like Current
 			-- Actual type of Current; recursive version for generics
 		local
 			i: INTEGER
@@ -969,7 +969,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	context_free_type: like Current is
+	context_free_type: like Current
 			-- Actual type of Current; recursive version for generics
 		local
 			i: INTEGER
@@ -997,7 +997,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current is
+	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current
 		local
 			i: INTEGER
 			l_old_generics, l_new_generics: like generics
@@ -1024,7 +1024,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): GEN_TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): GEN_TYPE_A
 			-- TODO: new comment
 		local
 			i: INTEGER
@@ -1055,7 +1055,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A is
+	adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A
 		local
 			i, nb: INTEGER
 			l_generics, l_new_generics: like generics
@@ -1084,7 +1084,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	skeleton_adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A is
+	skeleton_adapted_in (a_class_type: CLASS_TYPE): GEN_TYPE_A
 		local
 			i, nb: INTEGER
 			l_generics, l_new_generics: like generics
@@ -1113,7 +1113,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiated_in (class_type: TYPE_A): GEN_TYPE_A is
+	instantiated_in (class_type: TYPE_A): GEN_TYPE_A
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
@@ -1145,7 +1145,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current
 		local
 			i, nb: INTEGER
 			l_generics, l_new_generics: like generics
@@ -1182,7 +1182,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN
 			-- Check generic parameters
 		local
 			i, count: INTEGER
@@ -1212,13 +1212,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	parent_type (parent: CL_TYPE_A): TYPE_A is
+	parent_type (parent: CL_TYPE_A): TYPE_A
 			-- Parent actual type in the current context
 		do
 			Result := instantiate (parent)
 		end
 
-	instantiate (type: TYPE_A): TYPE_A is
+	instantiate (type: TYPE_A): TYPE_A
 			-- Instantiates `type'. Given that `type' may hold
 			-- some formal generics, instantiate them with the
 			-- generics from Current.	
@@ -1276,7 +1276,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	has_like: BOOLEAN is
+	has_like: BOOLEAN
 			-- Has the type anchored type in its definition ?
 		local
 			i, count: INTEGER
@@ -1292,7 +1292,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	has_like_argument: BOOLEAN is
+	has_like_argument: BOOLEAN
 			-- Has the type like argument in its definition?
 		local
 			i, count: INTEGER
@@ -1308,7 +1308,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	has_like_Current: BOOLEAN is
+	has_like_Current: BOOLEAN
 			-- <Precursor>
 		local
 			i, count: INTEGER
@@ -1324,7 +1324,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Duplication
 		local
 			i, count: INTEGER
@@ -1344,7 +1344,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_generics (duplicate_generics)
 		end
 
-	duplicate_for_instantiation: like Current is
+	duplicate_for_instantiation: like Current
 			-- Duplication for instantiation routines.
 		do
 			Result := twin
@@ -1353,7 +1353,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_generics (generics.twin)
 		end
 
-	good_generics: BOOLEAN is
+	good_generics: BOOLEAN
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations?
 		local
@@ -1375,7 +1375,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS) is
+	check_labels (a_context_class: CLASS_C; a_node: TYPE_AS)
 			-- <Precursor>
 		local
 			i, nb: INTEGER
@@ -1393,7 +1393,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	error_generics: VTUG is
+	error_generics: VTUG
 			-- Returns the first error regarding the number of generic parameters
 			-- compared to the formal generic declarations.
 			--| Recursion is done to find all errors.
@@ -1432,7 +1432,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_constraints (a_type_context: CLASS_C; a_context_feature: FEATURE_I; a_check_creation_readiness: BOOLEAN) is
+	check_constraints (a_type_context: CLASS_C; a_context_feature: FEATURE_I; a_check_creation_readiness: BOOLEAN)
 				-- 	Check the constrained genericity validity rule
 				--| We check for all generic parameters whether they fullfill their constraints:
 				--| * conformance to all the constraining types
@@ -1538,7 +1538,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					end
 			end
 
-	substitute (new_generics: ARRAY [TYPE_A]) is
+	substitute (new_generics: ARRAY [TYPE_A])
 			-- Take the arguments from `new_generics' to create an
 			-- effective representation of the current GEN_TYPE
 		require
@@ -1576,7 +1576,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			constraint_type: TYPE_SET_A
 			formal_dec_as: FORMAL_CONSTRAINT_AS
 			i: INTEGER;
-			formal_type: FORMAL_A) is
+			formal_type: FORMAL_A)
 				-- Check that declaration of generic class is conform to
 				-- defined creation constraint in delayed mode.
 		require
@@ -1599,7 +1599,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			context_class: CLASS_C;
 			to_check: TYPE_A;
 			i: INTEGER;
-			formal_type: FORMAL_A) is
+			formal_type: FORMAL_A)
 				-- Check that declaration of generic class is conform to
 				-- defined creation constraint.
 		require
@@ -1783,7 +1783,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	expanded_deferred: BOOLEAN is
+	expanded_deferred: BOOLEAN
 			-- Are the expanded class types present in the current generic
 			-- type not based on deferred classes ?
 		local
@@ -1805,7 +1805,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	valid_expanded_creation (a_class: CLASS_C): BOOLEAN is
+	valid_expanded_creation (a_class: CLASS_C): BOOLEAN
 			-- Is the expanded type has an associated class with one
 			-- creation routine with no arguments only ?
 		local
@@ -1832,7 +1832,7 @@ invariant
 		-- A generic class always has generic parameters
 	generics_not_void: generics /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

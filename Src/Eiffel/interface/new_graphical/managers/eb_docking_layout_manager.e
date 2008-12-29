@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Docking layout response for opening/saving development	
 					window normal/debug docking layouts
@@ -32,7 +32,7 @@ create
 
 feature -- Normal mode command
 
-	save_tools_docking_layout is
+	save_tools_docking_layout
 			-- Save all tools docking layout.
 		local
 			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
@@ -50,7 +50,7 @@ feature -- Normal mode command
 			end
 		end
 
-	construct_standard_layout_by_code is
+	construct_standard_layout_by_code
 			-- After docking manager have all widgets, set all tools to standard default layout.
 		local
 			l_tool: EB_TOOL
@@ -145,7 +145,7 @@ feature -- Normal mode command
 			end
 		end
 
-	restore_tools_docking_layout is
+	restore_tools_docking_layout
 			-- Restore docking layout information
 		do
 			-- We can't restore tools layout when `window'.`is_minimized' since EV_SPLIT_AREA can't be restored if window minimized
@@ -162,7 +162,7 @@ feature -- Normal mode command
 			end
 		end
 
-	restore_standard_tools_docking_layout is
+	restore_standard_tools_docking_layout
 			-- Restore statndard layout.
 		local
 			l_file_name: STRING
@@ -193,7 +193,7 @@ feature -- Normal mode command
 
 feature -- Debug mode command
 
-	restore_debug_docking_layout is
+	restore_debug_docking_layout
 			-- Restore debug docking layout
 		local
 			l_result: BOOLEAN
@@ -213,7 +213,7 @@ feature -- Debug mode command
 			develop_window.eb_debugger_manager.refresh_breakpoints_tool
 		end
 
-	restore_standard_debug_docking_layout_by_code is
+	restore_standard_debug_docking_layout_by_code
 			-- Restore standard debug docking layout.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -369,7 +369,7 @@ feature -- Debug mode command
 			end
 		end
 
-	save_debug_docking_layout is
+	save_debug_docking_layout
 			-- Save debug docking layout
 		local
 			l_result: BOOLEAN
@@ -382,7 +382,7 @@ feature -- Debug mode command
 			end
 		end
 
-	restore_standard_debug_docking_layout is
+	restore_standard_debug_docking_layout
 			-- Restore standard debug docking layout.
 		local
 			l_result: BOOLEAN
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE [EB_DOCKING_LAYOUT_MANAGER, TUPLE]
 			-- Restore agent recorded for cleanup
 
-	restore_tools_docking_layout_immediately is
+	restore_tools_docking_layout_immediately
 			-- Restore docking layout information immediately
 		local
 			l_result: BOOLEAN
@@ -465,13 +465,13 @@ feature {NONE} -- Implementation
 
 		end
 
-	internal_recycle is
+	internal_recycle
 			-- <Precursor>
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
-	show_last_error is
+	show_last_error
 			-- Show last exception error
 		local
 			l_information: ES_PROMPT_PROVIDER
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

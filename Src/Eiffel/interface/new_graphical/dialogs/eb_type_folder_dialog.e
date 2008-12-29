@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to type the name of a folder."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the dialog
 		do
 			default_create
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			prepare
 		end
 
-	prepare is
+	prepare
 			-- Create the controls and setup the layout
 		local
 			buttons_box: EV_VERTICAL_BOX
@@ -91,7 +91,7 @@ feature -- Access
 
 feature {NONE} -- Vision2 events
 
-	on_ok is
+	on_ok
 			-- Terminate the dialog
 		do
 			folder_name := folder_name_entry.text
@@ -103,7 +103,7 @@ feature {NONE} -- Vision2 events
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Terminate the dialog and clear the selection.
 		do
 			selected := False
@@ -122,7 +122,7 @@ feature {NONE} -- Controls
 	folder_name_entry: EV_TEXT_FIELD;
 			-- Text field where the user can type its folder name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

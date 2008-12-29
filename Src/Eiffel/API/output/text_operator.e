@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface preserved from structured text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Operation
 
-	add (s: STRING_GENERAL) is
+	add (s: STRING_GENERAL)
 			-- Add `s'.
 		require
 			s_not_void: s /= Void
@@ -24,18 +24,18 @@ feature -- Operation
 			add_string (s)
 		end
 
-	add_new_line is
+	add_new_line
 			-- Put a new line aat current position.
 		deferred
 		end
 
-	add_space is
+	add_space
 			-- Put a space at current position.
 		do
 			add (ti_Space)
 		end
 
-	add_string (s: STRING_GENERAL) is
+	add_string (s: STRING_GENERAL)
 			-- Put default string `s' at current position.
 			-- Default string is used for formats.
 		require
@@ -43,7 +43,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_manifest_string (s: STRING_GENERAL) is
+	add_manifest_string (s: STRING_GENERAL)
 			-- Put `s' at current position as a manifest string.
 			-- Break `s' up in multiple tokens, if a link is
 			-- present.
@@ -54,7 +54,7 @@ feature -- Operation
 			add_string (s)
 		end
 
-	add_multiline_string (a_s: STRING_GENERAL; indent: INTEGER) is
+	add_multiline_string (a_s: STRING_GENERAL; indent: INTEGER)
 			-- Put string `s' at current position.
 			-- Break `s' up in multiple lines, if it has new line character(s).
 			-- Indent each line `indent' times in the latter case.
@@ -96,7 +96,7 @@ feature -- Operation
 			end
 		end
 
-	add_indexing_string (s: STRING_GENERAL) is
+	add_indexing_string (s: STRING_GENERAL)
 			-- Put string `s' at current position.
 			-- Break `s' up in multiple processings, see `separate_string'.
 		require
@@ -110,24 +110,24 @@ feature -- Operation
 			end
 		end
 
-	add_char (c: CHARACTER_32) is
+	add_char (c: CHARACTER_32)
 			-- Put `c' at current position.
 		deferred
 		end
 
-	add_int (i: INTEGER) is
+	add_int (i: INTEGER)
 			-- Put `i' at current position.
 		deferred
 		end
 
-	add_local (s: STRING_GENERAL) is
+	add_local (s: STRING_GENERAL)
 			-- Put `s' at current position as local symbol.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL) is
+	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL)
 			-- Put `e_cluster' with strring representation
 			-- `str' at current position.
 		require
@@ -135,21 +135,21 @@ feature -- Operation
 		deferred
 		end
 
-	add_before_class (e_class: CLASS_C) is
+	add_before_class (e_class: CLASS_C)
 			-- Put `e_class' at current position.
 		require
 			valid_e_class: e_class /= Void
 		deferred
 		end
 
-	add_end_class (e_class: CLASS_C) is
+	add_end_class (e_class: CLASS_C)
 			-- Put `e_class' at current position.
 		require
 			valid_e_class: e_class /= Void
 		deferred
 		end
 
-	add_classi (class_i: CLASS_I; str: STRING_GENERAL) is
+	add_classi (class_i: CLASS_I; str: STRING_GENERAL)
 			-- Put `class_i' with string representation
 			-- `str' at current position.
 		require
@@ -157,14 +157,14 @@ feature -- Operation
 		deferred
 		end
 
-	add_class (class_i: CLASS_I) is
+	add_class (class_i: CLASS_I)
 			-- Append class item.
 		require
 			class_i_not_void: class_i /= Void
 		deferred
 		end
 
-	add_error (error: ERROR; str: STRING_GENERAL) is
+	add_error (error: ERROR; str: STRING_GENERAL)
 			-- Put `error' with string representation
 			-- `str' at current position.
 		require
@@ -173,7 +173,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_feature (feat: E_FEATURE; str: STRING_GENERAL) is
+	add_feature (feat: E_FEATURE; str: STRING_GENERAL)
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		require
@@ -182,13 +182,13 @@ feature -- Operation
 		deferred
 		end
 
-	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER; has_cond: BOOLEAN) is
+	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER; has_cond: BOOLEAN)
 			-- Put `index'-th breakpoint of feature `feat' with integer
 			-- representation `index' at current position.
 		deferred
 		end
 
-	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C) is
+	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C)
 			-- Put feature name `f_name' defined in `e_class'.
 		require
 			f_name_not_void: f_name /= Void
@@ -196,28 +196,28 @@ feature -- Operation
 		deferred
 		end
 
-	add_sectioned_feature_name (e_feature: E_FEATURE) is
+	add_sectioned_feature_name (e_feature: E_FEATURE)
 			-- Put feature name of `e_feature', taking reserved words into consideration.
 		require
 			e_feature_attached: e_feature /= Void
 		deferred
 		end
 
-	add_quoted_text (s: STRING_GENERAL) is
+	add_quoted_text (s: STRING_GENERAL)
 			-- Put `s' at current position.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_comment (s: STRING_GENERAL) is
+	add_comment (s: STRING_GENERAL)
 			-- Add simple comment `s'.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_comment_text (s: STRING_GENERAL) is
+	add_comment_text (s: STRING_GENERAL)
 			-- Put `s' at current position.
 			-- Break `s' up in multiple processings, if a link is
 			-- present.
@@ -228,24 +228,24 @@ feature -- Operation
 			separate_string (s, True)
 		end
 
-	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C) is
+	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C)
 			-- Put `address' for `e_class'.
 		require
 			valid_address: address /= Void
 		deferred
 		end
 
-	add_indent is
+	add_indent
 			-- Add an indentation.
 		deferred
 		end
 
-	add_indents (nr: INTEGER) is
+	add_indents (nr: INTEGER)
 			-- Add `nr' indentations.
 		deferred
 		end
 
-	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL) is
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL)
 			-- Put `syn' for `e_class'.
 		require
 			valid_syn: syn /= Void
@@ -253,14 +253,14 @@ feature -- Operation
 		deferred
 		end
 
-	add_column_number (column_num: INTEGER) is
+	add_column_number (column_num: INTEGER)
 			-- Add column number `i' to structure text.
 		require
 			positive_ints: column_num > 0
 		deferred
 		end
 
-	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER) is
+	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER)
 			-- Put `address' for `e_class'.
 		require
 			valid_str: str /= Void
@@ -270,26 +270,26 @@ feature -- Operation
 
 feature -- Status report
 
-	has_new_line (a_s: STRING_GENERAL): BOOLEAN is
+	has_new_line (a_s: STRING_GENERAL): BOOLEAN
 		do
 			Result := a_s.as_string_32.has ('%N')
 		end
 
 feature {NONE} -- Implementation
 
-	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN) is
+	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN)
 			-- Separate `s' into parts and add them to `Current'.
 		deferred
 		end
 
-	process_character_text (text: STRING_GENERAL) is
+	process_character_text (text: STRING_GENERAL)
 			-- Add a char.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

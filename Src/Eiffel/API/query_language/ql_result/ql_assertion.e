@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an assertion used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_ast: like ast; a_written_in_ast: like written_in_ast; a_written_class: like written_class; a_assertion_type: like assertion_type; a_parent: like parent) is
+	make (a_ast: like ast; a_written_in_ast: like written_in_ast; a_written_class: like written_class; a_assertion_type: like assertion_type; a_parent: like parent)
 			-- Initialize `ast' with `a_ast', `written_class' with `a_written_class' and
 			-- `parent' with `a_parent'.
 		require
@@ -56,7 +56,7 @@ feature{NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 			-- `name' can be empty for an assertion that has no tag attached to it.
 		do
@@ -70,7 +70,7 @@ feature -- Access
 						 (ast.tag /= Void implies Result.is_equal (ast.tag.name))
 		end
 
-	path_name: STRING is
+	path_name: STRING
 			-- Name used in `path'.
 			-- For an assertion, `path_name' is "assertion "`name', e.g., is "assertion a_arg" for example.
 			-- If an assertion doesn't has a tag attached to it, it's path name will be
@@ -98,7 +98,7 @@ feature -- Access
 			end
 		end
 
-	wrapped_domain: QL_ASSERTION_DOMAIN is
+	wrapped_domain: QL_ASSERTION_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
@@ -114,7 +114,7 @@ feature -- Access
 	written_in_ast: AST_EIFFEL
 			-- AST node in which `ast' is written
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := assertion_scope
@@ -126,7 +126,7 @@ feature -- Access
 			-- Type of current assertion
 			-- For more information about assertion type, see {QL_SHARED_ASSERTION_TYPES}.
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := assertion_path_marker
@@ -136,7 +136,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_immediate: BOOLEAN is
+	is_immediate: BOOLEAN
 			-- Is current invariant immediate?
 		do
 			Result := class_c.class_id = written_class.class_id
@@ -144,7 +144,7 @@ feature -- Status report
 			good_result: Result implies (class_c.class_id = written_class.class_id)
 		end
 
-	is_precondition: BOOLEAN is
+	is_precondition: BOOLEAN
 			-- Is current assertion a precondition?
 		do
 			Result := assertion_type = require_type or
@@ -153,7 +153,7 @@ feature -- Status report
 			good_result: Result implies (assertion_type = require_type or assertion_type = require_else_type)
 		end
 
-	is_postcondition: BOOLEAN is
+	is_postcondition: BOOLEAN
 			-- Is current assertion a postcondition?
 		do
 			Result := assertion_type = ensure_type or
@@ -162,7 +162,7 @@ feature -- Status report
 			good_result: Result implies (assertion_type = ensure_type or assertion_type = require_else_type)
 		end
 
-	is_invariant: BOOLEAN is
+	is_invariant: BOOLEAN
 			-- Is current assertion an invariant?
 		do
 			Result := assertion_type = invariant_type
@@ -170,7 +170,7 @@ feature -- Status report
 			good_result: Result implies assertion_type = invariant_type
 		end
 
-	is_require: BOOLEAN is
+	is_require: BOOLEAN
 			-- Is current a require assertion?
 		do
 			Result := assertion_type = require_type
@@ -178,7 +178,7 @@ feature -- Status report
 			good_result: Result implies assertion_type = require_type
 		end
 
-	is_require_else: BOOLEAN is
+	is_require_else: BOOLEAN
 			-- Is current a require else assertion?
 		do
 			Result := assertion_type = require_else_type
@@ -186,7 +186,7 @@ feature -- Status report
 			good_result: Result implies assertion_type = require_else_type
 		end
 
-	is_ensure: BOOLEAN is
+	is_ensure: BOOLEAN
 			-- Is current a ensure assertion?
 		do
 			Result := assertion_type = ensure_type
@@ -194,7 +194,7 @@ feature -- Status report
 			good_result: Result implies assertion_type = ensure_type
 		end
 
-	is_ensure_then: BOOLEAN is
+	is_ensure_then: BOOLEAN
 			-- Is current a ensure then assertion?
 		do
 			Result := assertion_type = ensure_then_type
@@ -202,7 +202,7 @@ feature -- Status report
 			good_result: Result implies assertion_type = ensure_then_type
 		end
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
 		local
 			l_feature: QL_FEATURE
@@ -214,7 +214,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_assertion (Current)
@@ -222,7 +222,7 @@ feature -- Visit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -241,7 +241,7 @@ invariant
 	written_in_ast_attached: written_in_ast /= Void
 	assertion_type_attached: assertion_type /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that is responsable for launching an external command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			set_buffer_size (initial_buffer_size)
 			set_time_interval (initial_time_interval)
@@ -49,7 +49,7 @@ feature -- Status reporting
 
 feature -- Status setting
 
-	set_launch_session_over (b: BOOLEAN) is
+	set_launch_session_over (b: BOOLEAN)
 			-- Set `is_launch_session_over' with `b'.
 		do
 			is_launch_session_over := b
@@ -57,7 +57,7 @@ feature -- Status setting
 			is_launch_session_over_set: is_launch_session_over = b
 		end
 
-	set_original_command_name (name: STRING) is
+	set_original_command_name (name: STRING)
 			-- Set `original_command_name' with `name'.
 		require
 			name_not_void: name /= Void
@@ -70,7 +70,7 @@ feature -- Status setting
 
 feature -- External commands status setting
 
-	set_external_commands_status (b: BOOLEAN) is
+	set_external_commands_status (b: BOOLEAN)
 			-- Enable or disable sensitive of all external commands according to `b' (True for enable, False for disable).
 		local
 			i, cnt: INTEGER
@@ -96,7 +96,7 @@ feature -- External commands status setting
 
 feature{NONE} -- Synchronization
 
-	synchronize_on_external_start is
+	synchronize_on_external_start
 			-- Synchronize when external command starts.
 		local
 			dev_win: EB_DEVELOPMENT_WINDOW
@@ -113,7 +113,7 @@ feature{NONE} -- Synchronization
 			idle_printing_manager.add_printer ({EB_IDLE_PRINTING_MANAGER}.external_printer)
 		end
 
-	synchronize_on_external_exit is
+	synchronize_on_external_exit
 			-- Synchronize when external command exits.
 		do
 			external_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
@@ -121,7 +121,7 @@ feature{NONE} -- Synchronization
 
 feature	-- Actions
 
-	on_ouput_print_session_over is
+	on_ouput_print_session_over
 			-- Agent called when an external command output printing session over
 			-- to synchronize status.
 		do
@@ -132,14 +132,14 @@ feature	-- Actions
 
 feature{NONE} -- Actions
 
-	on_start is
+	on_start
 
 		do
 			synchronize_on_external_start
 			start_actions.call (Void)
 		end
 
-	on_exit is
+	on_exit
 		do
 			external_output_manager.display_state (l_command_has_exited_with_code (external_launcher.exit_code), False)
 			synchronize_on_external_exit
@@ -147,7 +147,7 @@ feature{NONE} -- Actions
 			finished_actions.call (Void)
 		end
 
-	on_terminate is
+	on_terminate
 		do
 			external_storage.wipe_out
 			external_output_manager.display_state (l_command_has_been_terminated, False)
@@ -156,7 +156,7 @@ feature{NONE} -- Actions
 			finished_actions.call (Void)
 		end
 
-	on_launch_failed is
+	on_launch_failed
 		do
 			external_storage.wipe_out
 			external_output_manager.display_state (l_launch_failed, True)
@@ -165,7 +165,7 @@ feature{NONE} -- Actions
 			finished_actions.call (Void)
 		end
 
-	on_launch_successed is
+	on_launch_successed
 		do
 			external_output_manager.display_state (l_command_is_running, False)
 			launched_actions.call (Void)
@@ -176,13 +176,13 @@ feature{NONE} -- Implementation
 	original_command_name: STRING
 			-- Original external name
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND] is
+	commands: ARRAY [EB_EXTERNAL_COMMAND]
 			-- Abstract representation of external commands.
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
 		end
 
-	output_dispatch_handler (s: STRING) is
+	output_dispatch_handler (s: STRING)
 			-- Agent called when output from process arrives.
 		local
 			sb: EB_PROCESS_IO_STRING_BLOCK
@@ -191,7 +191,7 @@ feature{NONE} -- Implementation
 			external_storage.extend_block (sb)
 		end
 
-	error_dispatch_handler (s: STRING) is
+	error_dispatch_handler (s: STRING)
 			-- Agent called when error from process arrives.
 		local
 			sb: EB_PROCESS_IO_STRING_BLOCK
@@ -202,12 +202,12 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Process data storage
 
-	data_storage: EB_PROCESS_IO_STORAGE is
+	data_storage: EB_PROCESS_IO_STORAGE
 			-- Data storage used to store output and error that come from the launched process
 		do
 			Result := external_storage
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

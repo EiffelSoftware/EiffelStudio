@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base class for all EiffelStudio pixmap matrix accessor classes.
 	]"
@@ -369,7 +369,7 @@ invariant
 	matrix_buffer_width_big_enough: matrix_buffer.width.to_natural_32 >= matrix_pixel_width
 	matrix_buffer_height_big_enough: matrix_buffer.height.to_natural_32 >= matrix_pixel_height
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Anchor name: ")
 			a_text_formatter.add (argument_name)
@@ -30,13 +30,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_argument_name (s: STRING) is
+	set_argument_name (s: STRING)
 			-- Assign `s' to `argument_name'.
 		do
 			argument_name := s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

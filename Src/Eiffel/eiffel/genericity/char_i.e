@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C type for characters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (w: BOOLEAN) is
+	make (w: BOOLEAN)
 			-- Create instance of CHAR_I. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			if is_character_32 then
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end
 
-	tuple_code: NATURAL_8 is
+	tuple_code: NATURAL_8
 			-- Code for TUPLE type
 		do
 			if is_character_32 then
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			if is_character_32 then
 				Result := {MD_SIGNATURE_CONSTANTS}.element_type_u4
@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			if is_character_32 then
 				Result := {SK_CONST}.sk_wchar
@@ -64,7 +64,7 @@ feature -- Access
 			end
 		end
 
-	c_string: STRING is
+	c_string: STRING
 			-- String generated for the type.
 		do
 			if is_character_32 then
@@ -74,7 +74,7 @@ feature -- Access
 			end
 		end
 
-	typed_field: STRING is
+	typed_field: STRING
 			-- Value field of a C structure corresponding to this type
 		do
 			if is_character_32 then
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			if is_character_32 then
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	new_attribute_description: CHAR_DESC is
+	new_attribute_description: CHAR_DESC
 			-- Type description for skeleton
 		do
 			create Result.make (is_character_32)
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Byte code generation
 
-	make_default_byte_code (ba: BYTE_ARRAY) is
+	make_default_byte_code (ba: BYTE_ARRAY)
 			-- Generate default value of basic type on stack.
 		do
 			if is_character_32 then
@@ -121,7 +121,7 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			if is_character_32 then
@@ -133,10 +133,10 @@ feature -- C code generation
 
 feature {NONE} -- Constants
 
-	Character_string: STRING is "EIF_CHARACTER"
-	Wide_char_string: STRING is "EIF_WIDE_CHAR";
+	Character_string: STRING = "EIF_CHARACTER"
+	Wide_char_string: STRING = "EIF_WIDE_CHAR";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

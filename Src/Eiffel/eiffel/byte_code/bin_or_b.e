@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- The "or" is optimized as an "or else"
@@ -13,7 +13,7 @@ inherit
 		
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_or_b (Current)
@@ -21,10 +21,10 @@ feature -- Visitor
 	
 feature -- Status report
 
-	is_or: BOOLEAN is True;
+	is_or: BOOLEAN = True;
 			-- Current is a plain `or' expression.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

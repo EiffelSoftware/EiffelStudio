@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Shared instance of an eiffel project."
@@ -11,12 +11,12 @@ class SHARED_EIFFEL_PROJECT
 
 feature -- Access
 
-	Eiffel_project: E_PROJECT is
+	Eiffel_project: E_PROJECT
 		once
 			create Result
 		end	
 
-	Eiffel_ace: E_ACE is
+	Eiffel_ace: E_ACE
 			-- Eiffel system
 		require
 			initialized: Eiffel_project.initialized
@@ -27,7 +27,7 @@ feature -- Access
 			result_is_not_void: Result /= Void
 		end;
 	
-	Eiffel_dynamic_lib: E_DYNAMIC_LIB is
+	Eiffel_dynamic_lib: E_DYNAMIC_LIB
 		require
 			initialized: Eiffel_project.initialized
 		do
@@ -36,7 +36,7 @@ feature -- Access
 			result_is_set: Result = Eiffel_project.dynamic_lib
 		end;
 
-	Eiffel_system: E_SYSTEM is
+	Eiffel_system: E_SYSTEM
 			-- Eiffel system
 		require
 			initialized: Eiffel_project.initialized
@@ -48,7 +48,7 @@ feature -- Access
 			result_is_not_void: Result /= Void
 		end;
 
-	Eiffel_universe: UNIVERSE_I is
+	Eiffel_universe: UNIVERSE_I
 			-- Eiffel project universe
 		require
 			initialized: Eiffel_project.initialized
@@ -61,13 +61,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Degree_output: DEGREE_OUTPUT is
+	Degree_output: DEGREE_OUTPUT
 			-- Degree output for Eiffel project
 		do
 			Result := Eiffel_project.degree_output
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

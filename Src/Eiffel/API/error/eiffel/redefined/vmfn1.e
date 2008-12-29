@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Name clash of features: there is one inherited %
@@ -24,7 +24,7 @@ feature -- Property
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -57,14 +57,14 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_parent (p: CLASS_C) is
+	set_parent (p: CLASS_C)
 		require
 			valid_p: p /= Void
 		do
 			parent := p
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

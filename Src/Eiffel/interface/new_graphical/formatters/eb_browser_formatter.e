@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter that uses a browser to display results"
 	author: ""
 	date: "$Date$"
@@ -23,7 +23,7 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Browser where information gets displayed
 
-	new_browser (a_development_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like browser is
+	new_browser (a_development_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like browser
 			-- New browser
 		require
 			a_development_window_attached: a_development_window /= Void
@@ -33,7 +33,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Possible area to display a tool bar
 		do
 			if browser /= Void then
@@ -44,12 +44,12 @@ feature -- Access
 	displayer: EB_FORMATTER_BROWSER_DISPLAYER
 			-- Displayer to display result of Current formatter
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		deferred
 		end
 
-	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING] is
+	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
 			-- Getter to retrieve sorting order status
 		do
 			if sorting_status_preference /= Void then
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]] is
+	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
 			-- Setter to set sorting order given as the only argument
 		do
 			if sorting_status_preference /= Void then
@@ -65,12 +65,12 @@ feature -- Access
 			end
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text in current formatter
 		do
 		end
 
-	selection: STRING is
+	selection: STRING
 			-- Selection in `text'
 			-- An empty string if no selection is found.
 		do
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- status report
 
-	is_browser_formatter: BOOLEAN is
+	is_browser_formatter: BOOLEAN
 			-- Is Current formatter based on a browser?
 		do
 			Result := True
@@ -86,7 +86,7 @@ feature -- status report
 
 feature -- Setting
 
-	set_browser_displayer (a_displayer: like displayer) is
+	set_browser_displayer (a_displayer: like displayer)
 			-- Set `a_displayer' with `a_displayer'.
 		do
 			displayer := a_displayer
@@ -96,7 +96,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	retrieve_sorting_order is
+	retrieve_sorting_order
 			-- Retrieve last recored sorting order.
 		local
 			l_sorting_status: LINKED_LIST [TUPLE [INTEGER, INTEGER]]

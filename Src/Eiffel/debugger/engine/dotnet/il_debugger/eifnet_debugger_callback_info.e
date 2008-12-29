@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects that represents the debuggeur information 
 					regarding callbacks status
@@ -22,7 +22,7 @@ create {EIFNET_DEBUGGER_INFO_ACCESSOR}
 
 feature {NONE}-- initialisation
 
-	make is
+	make
 		do
 			create managed_callback_status_info.make (50)
 			initialize_managed_callback_status
@@ -30,14 +30,14 @@ feature {NONE}-- initialisation
 
 feature {EIFNET_EXPORTER} -- Reset data
 
-	reset is
+	reset
 			-- Reset attribute
 		do
 		end
 
 feature {NONE} -- callbacks initialisation
 
-	initialize_managed_callback_status is
+	initialize_managed_callback_status
 			-- Initialize default callback to process
 		do
 			enable_managed_callback (Cst_managed_cb_breakpoint)
@@ -74,7 +74,7 @@ feature -- Callback ids
 
 	last_unmanaged_callback: INTEGER
 
-	last_managed_callback_name: STRING is
+	last_managed_callback_name: STRING
 			-- 	
 		do
 			Result := managed_callback_name (last_managed_callback)
@@ -82,43 +82,43 @@ feature -- Callback ids
 
 feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 
-	managed_callback_name (cb_id: INTEGER): STRING is
+	managed_callback_name (cb_id: INTEGER): STRING
 			-- 	
 		do
 			Result := value_of_cst_managed_cb (cb_id)
 		end
 
-	managed_callback_is_breakpoint (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_breakpoint (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_breakpoint
 		end
 
-	managed_callback_is_step_complete (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_step_complete (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_step_complete
 		end
 
-	managed_callback_is_eval_complete (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_eval_complete (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_eval_complete
 		end
 
-	managed_callback_is_eval_exception (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_eval_exception (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_eval_exception
 		end
 
-	managed_callback_is_exception (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_exception (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_exception
 		end
 
-	managed_callback_is_exit_process (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_exit_process (cb_id: INTEGER): BOOLEAN
 		do
 			Result := cb_id = Cst_managed_cb_exit_process
 		end
 
-	managed_callback_is_an_end_of_eval (cb_id: INTEGER): BOOLEAN is
+	managed_callback_is_an_end_of_eval (cb_id: INTEGER): BOOLEAN
 		do
 			inspect
 				cb_id
@@ -138,13 +138,13 @@ feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 
 feature {EIFNET_EXPORTER} -- Change Callbacks
 
-	set_last_managed_callback (cst: INTEGER) is
+	set_last_managed_callback (cst: INTEGER)
 			-- Set `last_managed_callback' value to `cst'.
 		do
 			last_managed_callback := cst
 		end
 
-	set_last_unmanaged_callback (cst: INTEGER) is
+	set_last_unmanaged_callback (cst: INTEGER)
 			-- Set `last_unmanaged_callback' value to `cst'.
 		do
 			last_unmanaged_callback := cst
@@ -152,13 +152,13 @@ feature {EIFNET_EXPORTER} -- Change Callbacks
 
 feature {EIFNET_EXPORTER} -- Callback status
 
-	callback_enabled (cb_id: INTEGER): BOOLEAN is
+	callback_enabled (cb_id: INTEGER): BOOLEAN
 			-- Do we process callback `cb_id' ?
 		do
 			Result := managed_callback_status_info.item (cb_id) --| = True
 		end
 
-	callback_disabled (cb_id: INTEGER): BOOLEAN is
+	callback_disabled (cb_id: INTEGER): BOOLEAN
 			-- Do we ignore callback `cb_id' ?
 		do
 			Result := not callback_enabled (cb_id)
@@ -166,18 +166,18 @@ feature {EIFNET_EXPORTER} -- Callback status
 
 feature {NONE} -- Callback status change
 
-	set_managed_callback_status (cb_id: INTEGER; a_status: BOOLEAN) is
+	set_managed_callback_status (cb_id: INTEGER; a_status: BOOLEAN)
 		do
 			managed_callback_status_info.force (a_status, cb_id)
 		end
 
-	enable_managed_callback (cb_id: INTEGER) is
+	enable_managed_callback (cb_id: INTEGER)
 			-- Tell debugger to process  `cb_id' callback.
 		do
 			set_managed_callback_status (cb_id, True);
 		end
 
-	disable_managed_callback (cb_id: INTEGER) is
+	disable_managed_callback (cb_id: INTEGER)
 			-- Tell debugger to skip  `cb_id' callback.
 		do
 			set_managed_callback_status (cb_id, False);
@@ -188,7 +188,7 @@ feature {EIFNET_EXPORTER} -- Callback status
 	managed_callback_status_info: HASH_TABLE [BOOLEAN, INTEGER];
 			-- Callback information table
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Design pattern componentization helper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	eif_gen_typecode_str (obj: POINTER): STRING is
+	eif_gen_typecode_str (obj: POINTER): STRING
 			-- Code name for generic parameter `pos' in `obj'.
 		external
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

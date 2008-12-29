@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Customized formatter description file loader"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current.
 		do
 			make_null
@@ -37,13 +37,13 @@ feature -- Access
 
 feature{NONE} -- Node processors
 
-	on_formatters_start is
+	on_formatters_start
 			-- Action to be performed when start tag of "formatters" finishes.
 		do
 			formatter_receiver.extend (agent formatters.extend)
 		end
 
-	on_formatter_start is
+	on_formatter_start
 			-- Action to be performed when start tag of "formatter" finishes.
 		do
 			check not formatter_receiver.is_empty end
@@ -51,28 +51,28 @@ feature{NONE} -- Node processors
 			formatter_receiver.item.call ([create{EB_CUSTOMIZED_FORMATTER_DESP}.make (last_tested_attribute)])
 		end
 
-	on_tooltip_start is
+	on_tooltip_start
 			-- Action to be performed when start tag of "tooltip" finishes.
 		do
 			check not formatters.is_empty end
 			content_receiver.extend (agent (formatters.last).set_tooltip ({STRING}?))
 		end
 
-	on_header_start is
+	on_header_start
 			-- Action to be performed when start tag of "header" finishes.
 		do
 			check not formatters.is_empty end
 			content_receiver.extend (agent (formatters.last).set_header ({STRING}?))
 		end
 
-	on_temp_header_start is
+	on_temp_header_start
 			-- Action to be performed when start tag of "temp_header" finishes.
 		do
 			check not formatters.is_empty end
 			content_receiver.extend (agent (formatters.last).set_temp_header ({STRING}?))
 		end
 
-	on_pixmap_start is
+	on_pixmap_start
 			-- Action to be performed when start tag of "pixmap" finishes.
 		do
 			retrieve_attribute_value (at_location)
@@ -80,14 +80,14 @@ feature{NONE} -- Node processors
 			formatters.last.set_pixmap_location (last_tested_attribute)
 		end
 
-	on_tools_start is
+	on_tools_start
 			-- Action to be performed when start tag of "tools" finishes.
 		do
 			check not formatters.is_empty end
 			tool_receiver.extend (agent (formatters.last).extend_tool)
 		end
 
-	on_tool_start is
+	on_tool_start
 			-- Action to be performed when start tag of "tool" finishes.
 		local
 			l_name: STRING
@@ -107,7 +107,7 @@ feature{NONE} -- Node processors
 			tool_receiver.item.call ([l_name, l_viewer, l_order])
 		end
 
-	on_metric_start is
+	on_metric_start
 			-- Action to be performed when start tag of "metric" finishes.
 		do
 			check not formatters.is_empty end
@@ -119,7 +119,7 @@ feature{NONE} -- Node processors
 			formatters.last.set_is_filter_enabled (last_tested_boolean)
 		end
 
-	on_formatters_finish is
+	on_formatters_finish
 			-- Action to be performed when tag of "formatters" finishes.
 		do
 			formatter_receiver.remove
@@ -127,28 +127,28 @@ feature{NONE} -- Node processors
 			formatter_receiver.is_empty
 		end
 
-	on_tooltip_finish is
+	on_tooltip_finish
 			-- Action to be performed when tag of "tooltip" finishes.
 		do
 			record_content
 			content_receiver.remove
 		end
 
-	on_header_finish is
+	on_header_finish
 			-- Action to be performed when tag of "header" finishes.
 		do
 			record_content
 			content_receiver.remove
 		end
 
-	on_temp_header_finish is
+	on_temp_header_finish
 			-- Action to be performed when tag of "temp_header" finishes.
 		do
 			record_content
 			content_receiver.remove
 		end
 
-	on_tools_finish is
+	on_tools_finish
 			-- Action to be performed when tag of "tools" finishes.
 		do
 			tool_receiver.remove
@@ -156,7 +156,7 @@ feature{NONE} -- Node processors
 
 feature{NONE} -- Implementation
 
-	record_content is
+	record_content
 			-- Record content in `current_content' in last content receiver.
 		local
 			l_content: like current_content
@@ -181,7 +181,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	initialize_state_transitions_tag is
+	initialize_state_transitions_tag
 			-- Initialize `state_transitions_tag'.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -217,7 +217,7 @@ feature{NONE} -- Implementation
 			state_transitions_tag := l_states
 		end
 
-	initialize_tag_attributes is
+	initialize_tag_attributes
 			-- Initialize `tag_attributes'.
 		local
 			l_tag_attrs: like tag_attributes
@@ -256,7 +256,7 @@ feature{NONE} -- Implementation
 			tag_attributes := l_tag_attrs
 		end
 
-	initialize_processors is
+	initialize_processors
 			-- Initialize processors for analysing nodes.
 		local
 			l_start_prc: like tag_start_processors
@@ -290,7 +290,7 @@ invariant
 	content_receiver_attached: content_receiver /= Void
 	tool_receiver_attached: tool_receiver /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Test related event list items
 																		]"
@@ -16,13 +16,13 @@ inherit
 
 feature -- Redefine
 
-	type: NATURAL_8 is
+	type: NATURAL_8
 			-- Redefine
 		do
 			Result := {EVENT_LIST_ITEM_TYPES}.testing
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

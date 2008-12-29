@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an eiffel function."
@@ -22,7 +22,7 @@ create
 
 feature -- Properties
 
-	is_function: BOOLEAN is True
+	is_function: BOOLEAN = True
 			-- Is current a function
 
 	type: TYPE_A
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_type (t: like type; a: like assigner_name) is
+	set_type (t: like type; a: like assigner_name)
 			-- Set `type' to `t' and `assigner_name' to `a'.
 		require
 			valid_t: t /= Void
@@ -47,7 +47,7 @@ feature -- Setting
 			assigner_name_set: assigner_name = a
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator to generate editro token lists"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create last_line.make_empty_line
 			seperate_comment := True
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	comment_context_class : CLASS_C is
+	comment_context_class : CLASS_C
 			-- Current class for comment context.
 		do
 			if comment_content_class_internal = Void then
@@ -41,7 +41,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	lines: LIST [like last_line] is
+	lines: LIST [like last_line]
 			-- All process lines since last `wipe_out_lines'.
 		require
 			is_multiline_mode: is_multiline_mode
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- New line
 
-	new_line is
+	new_line
 			-- Create new `last_line'
 		do
 			if is_multiline_mode then
@@ -140,7 +140,7 @@ feature -- New line
 
 feature -- Setting
 
-	set_comment_context_class (a_class_c: CLASS_C) is
+	set_comment_context_class (a_class_c: CLASS_C)
 			-- Set `comment_content_class' with `a_class_c'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -150,7 +150,7 @@ feature -- Setting
 			comment_content_class_internal_set: comment_content_class_internal = a_class_c
 		end
 
-	enable_multiline is
+	enable_multiline
 			-- Enable multi-line mode.
 		do
 			is_multiline_mode := True
@@ -158,7 +158,7 @@ feature -- Setting
 			multiline_node_enabled: is_multiline_mode
 		end
 
-	disable_multiline is
+	disable_multiline
 			-- Disable multi-line mode.
 		do
 			is_multiline_mode := False
@@ -166,7 +166,7 @@ feature -- Setting
 			multiline_node_disabled: not is_multiline_mode
 		end
 
-	wipe_out_lines is
+	wipe_out_lines
 			-- Wipe out `lines'.
 		do
 			if lines_internal /= Void then
@@ -180,7 +180,7 @@ feature -- Setting
 
 feature -- Process
 
-	add_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]) is
+	add_editor_tokens (a_tokens: LIST [EDITOR_TOKEN])
 			-- Add `a_tokens' into `last_line'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -201,7 +201,7 @@ feature{NONE} -- Implementation
 	lines_internal: like lines;
 			-- Implementation of `lines'
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

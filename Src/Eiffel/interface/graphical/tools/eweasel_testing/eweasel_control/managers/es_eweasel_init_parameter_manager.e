@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Manager to set eweasel command line parameters.
 																					]"
@@ -18,7 +18,7 @@ create
 
 feature -- Command
 
-	append_init_parameter (a_list: LIST [STRING]) is
+	append_init_parameter (a_list: LIST [STRING])
 			-- Append eweasel process command line parameters.
 		require
 			not_void: a_list /= Void
@@ -61,7 +61,7 @@ feature -- Command
 			added_two: old a_list.count < a_list.count
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

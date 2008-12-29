@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manages register allocation for a given C type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,13 +13,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize array
 		do
 			create registers.make (1, 10)
 		end
 
-	make_from_existing (other: like Current) is
+	make_from_existing (other: like Current)
 			-- Duplicate `other' in Current
 		require
 			other_not_void: other /= Void
@@ -40,7 +40,7 @@ feature -- Access
 	needed_registers: INTEGER
 			-- Maximum register number used
 
-	get_register: INTEGER is
+	get_register: INTEGER
 			-- First available register number
 		local
 			count: INTEGER
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Duplication
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Duplicate of current instance
 		do
 			create Result.make_from_existing (Current)
@@ -73,14 +73,14 @@ feature -- Duplication
 
 feature -- Element change
 
-	clear_all is
+	clear_all
 			-- Reset data structure
 		do
 			registers.clear_all
 			needed_registers := 0
 		end
 
-	free_register (n: INTEGER) is
+	free_register (n: INTEGER)
 			-- Free register number `n'
 		require
 			register_used: registers.item (n)
@@ -91,7 +91,7 @@ feature -- Element change
 invariant
 	registers_not_void: registers /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

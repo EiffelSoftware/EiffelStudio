@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a built_in external."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: like is_static) is
+	make (v: like is_static)
 			-- Initialize `Current'.
 		do
 			is_static := v
@@ -35,12 +35,12 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Is current builtin statically callable?
 
-	is_built_in: BOOLEAN is True
+	is_built_in: BOOLEAN = True
 			-- Current is a builtin.
 
 feature -- Code generation
 
-	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 		local
 			l_ret_type: TYPE_A
 			l_buffer: GENERATION_BUFFER
@@ -62,7 +62,7 @@ feature -- Code generation
 			l_buffer.put_character (';')
 		end
 
-	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
+	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
 			-- Generate inline call to C++ external.
 		require
 			external_name_not_void: external_name /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	internal_generate_access (
 			external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B];
 			nb: INTEGER; a_ret_type: TYPE_A)
-		is
+		
 			-- Generate inline C external call.
 		require
 			external_name_not_void: external_name /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			operator_table_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about where to generate the documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Document processing
 
-	document_file_name (system_name: STRING): FILE_NAME is
+	document_file_name (system_name: STRING): FILE_NAME
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		local
@@ -26,7 +26,7 @@ feature -- Document processing
 			end
 		end;
 
-	document_path: DIRECTORY_NAME is
+	document_path: DIRECTORY_NAME
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
 		local
@@ -40,7 +40,7 @@ feature -- Document processing
 			end;
 		end
 
-	set_document_path (a_path: like document_path) is
+	set_document_path (a_path: like document_path)
 			-- Set `document_path' to `a_path'
 		do
 			private_document_path := a_path
@@ -50,14 +50,14 @@ feature -- Document processing
 
 feature -- Access
 
-	No_word: STRING is "no";
+	No_word: STRING = "no";
 
 feature {NONE} -- Document processing
 
 	private_document_path: STRING;
 			-- Path specified in Ace for the documents directory
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

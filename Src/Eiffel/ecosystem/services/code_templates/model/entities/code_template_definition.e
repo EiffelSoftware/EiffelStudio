@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a full code template model definition file.
 	]"
@@ -154,7 +154,7 @@ invariant
 	declarations_parent_set: is_initialized implies declarations.parent = Current
 	templates_parent_set: is_initialized implies templates.parent = Current
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

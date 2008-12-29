@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Input/output operation for batch command line processing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Status report
 
 feature -- Input/output
 
-	termination_requested: BOOLEAN is
+	termination_requested: BOOLEAN
 		local
 			str: STRING
 		do
@@ -42,7 +42,7 @@ feature -- Input/output
 			end
 		end
 
-	confirmed (message: STRING_GENERAL): BOOLEAN is
+	confirmed (message: STRING_GENERAL): BOOLEAN
 		local
 			c: CHARACTER
 		do
@@ -56,7 +56,7 @@ feature -- Input/output
 			Result := ((c = 'Y') or (c = 'y'))
 		end
 
-	wait_for_return is
+	wait_for_return
 			-- Wait for an input. Set `has_failure' if nothing can be read.
 		local
 			retried: BOOLEAN
@@ -72,19 +72,19 @@ feature -- Input/output
 			retry
 		end
 
-	get_last_input is
+	get_last_input
 			-- Get the last input entered by the user
 		do
 			last_input := command_arguments.current_item
 		end
 
-	more_arguments: BOOLEAN is
+	more_arguments: BOOLEAN
 			-- Are there more arguments?
 		do
 			Result := command_arguments.more_arguments
 		end
 
-	get_name is
+	get_name
 			-- Get the name of the last entered text
 		local
 			i, j: INTEGER
@@ -121,7 +121,7 @@ feature -- Input/output
 			end
 		end
 
-	get_class_name is
+	get_class_name
 		do
 			if not more_arguments then
 				localized_print (ewb_names.arrow_class_name)
@@ -134,7 +134,7 @@ feature -- Input/output
 			end
 		end
 
-	get_feature_name is
+	get_feature_name
 		do
 			if not more_arguments then
 				localized_print (ewb_names.arrow_feature_name)
@@ -147,7 +147,7 @@ feature -- Input/output
 			end
 		end
 
-	get_filter_name is
+	get_filter_name
 		do
 			if not more_arguments then
 				localized_print (ewb_names.arrow_filter_name)
@@ -156,7 +156,7 @@ feature -- Input/output
 			get_last_input
 		end
 
-	get_option_value (an_option: STRING_GENERAL; value: BOOLEAN) is
+	get_option_value (an_option: STRING_GENERAL; value: BOOLEAN)
 			-- Get a valid from `an_option' of either
 			-- true or false.
 			-- Set `last_input' to "False" or "True"
@@ -192,7 +192,7 @@ feature -- Input/output
 			last_input_is_boolean: last_input.is_boolean
 		end
 
-	get_prof_file_name is
+	get_prof_file_name
 		do
 			if not more_arguments then
 				localized_print (ewb_names.arrow_profile_infomation_file_name)
@@ -201,7 +201,7 @@ feature -- Input/output
 			get_last_input
 		end
 
-	get_compile_type is
+	get_compile_type
 		do
 			if not more_arguments then
 				from
@@ -221,7 +221,7 @@ feature -- Input/output
 			end
 		end
 
-	get_profiler is
+	get_profiler
 		do
 			if not more_arguments then
 				localized_print (ewb_names.arrow_used_profiler)
@@ -230,14 +230,14 @@ feature -- Input/output
 			get_last_input
 		end
 
-	reset_abort is
+	reset_abort
 		do
 			abort := False
 		ensure
 			not_abort: not abort
 		end
 
-	print_too_many_arguments is
+	print_too_many_arguments
 		require
 			more_arguments: more_arguments
 		local
@@ -260,19 +260,19 @@ feature -- Input/output
 
 feature -- Setting
 
-	set_output_window (display: OUTPUT_WINDOW) is
+	set_output_window (display: OUTPUT_WINDOW)
 		do
 			output_window := display
 		end
 
 feature {EWB_CMD} -- Implementation
 
-	command_arguments: EWB_ARGUMENTS is
+	command_arguments: EWB_ARGUMENTS
 		once
 			create Result.make (1, 2)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

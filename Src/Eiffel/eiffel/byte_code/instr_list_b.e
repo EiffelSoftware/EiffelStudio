@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of instructions that can be used as an instruction.%
 		%Only used when optimizing code."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: like compound) is
+	make (l: like compound)
 			-- Create current with `l' as new compound.
 		require
 			l_not_void: l /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_instr_list_b (Current)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Code analyzis
 
-	analyze is
+	analyze
 			-- Loop over `list' and analyze each item
 		do
 			compound.analyze
@@ -56,7 +56,7 @@ feature -- Code analyzis
 
 feature -- C generation
 
-	generate is
+	generate
 			-- Loop over `list' and generate each item
 		do
 			compound.generate
@@ -64,7 +64,7 @@ feature -- C generation
 
 feature -- Tree enlargment
 
-	enlarge_tree is
+	enlarge_tree
 			-- Loop ovet `list' and enlarges each item
 		do
 			compound.enlarge_tree
@@ -72,39 +72,39 @@ feature -- Tree enlargment
 
 feature -- Array optimization
 
-	assigns_to (n: INTEGER): BOOLEAN is
+	assigns_to (n: INTEGER): BOOLEAN
 		do
 			Result := compound.assigns_to (n)
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := compound.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := compound.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			create Result.make (compound.optimized_byte_node)
 		end
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := compound.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			create Result.make (compound.pre_inlined_code)
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			create Result.make (compound.inlined_byte_code)
 		end
@@ -113,7 +113,7 @@ invariant
 	compound_not_void: compound /= Void
 	in_final_mode: context.final_mode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

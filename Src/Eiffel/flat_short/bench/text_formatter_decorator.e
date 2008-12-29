@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Formatting decorator for class ast (flat, flat/short , clickable format & documentation).
 				Works as a mediator between output strategy and text formatter.
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: CLASS_C; a_text_formatter: like text_formatter) is
+	make (c: CLASS_C; a_text_formatter: like text_formatter)
 			-- Initialize Current for bench.
 		require
 			valid_c: c /= Void
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			do_flat: not is_short
 		end
 
-	make_for_case (a_text_formatter: like text_formatter) is
+	make_for_case (a_text_formatter: like text_formatter)
 			-- Initialize current for simple
 			-- format for eiffelcase (to get
 			-- image of precondition and postcondition).
@@ -80,14 +80,14 @@ feature {NONE} -- Initialization
 			initialize (a_text_formatter)
 		end
 
-	make_for_appending (a_text_formatter: like text_formatter) is
+	make_for_appending (a_text_formatter: like text_formatter)
 			-- Create context for appending an AST item to `a_text'.
 		do
 			reset_format_booleans
 			initialize (a_text_formatter)
 		end
 
-	initialize (a_formatter: TEXT_FORMATTER) is
+	initialize (a_formatter: TEXT_FORMATTER)
 			-- Initialize structures for Current.
 		do
 			create format_stack.make
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	init_uncompiled_feature_context (a_source_class: CLASS_C; a_feature_as: FEATURE_AS) is
+	init_uncompiled_feature_context (a_source_class: CLASS_C; a_feature_as: FEATURE_AS)
 			-- Initialize Current context to analyze
 			-- uncompiled feature ast `a_feature_as'.
 			-- This ast is not in the feature table (ie has
@@ -116,7 +116,7 @@ feature -- Initialization
 		end
 
 	init_feature_context (source, target: FEATURE_I;
-				feature_as: FEATURE_AS) is
+				feature_as: FEATURE_AS)
 			-- Initialize Current context to analyze
 			-- `source' and `target' features.
 			-- Use `feature_as' to set up locals.
@@ -131,7 +131,7 @@ feature -- Initialization
 			setup_output_strategy
 		end
 
-	init_variant_context is
+	init_variant_context
 			-- Initialize context as processing in variant.
 		do
 			source_feature := Void
@@ -152,25 +152,25 @@ feature -- Status report
 	is_for_case: BOOLEAN
 			-- Is Current format done for EiffelCase?
 
-	is_clickable_format: BOOLEAN is
+	is_clickable_format: BOOLEAN
 			-- Is the generated format the "clickable" format?
 		do
 			Result := current_class_only and not is_short
 		end
 
-	is_flat_short: BOOLEAN is
+	is_flat_short: BOOLEAN
 			-- Is the Current format doing a flat-short?
 		do
 			Result := is_short and then not current_class_only
 		end
 
-	is_feature_short: BOOLEAN is
+	is_feature_short: BOOLEAN
 			-- Is the Current format doing a flat-short?
 		do
 			Result := is_short
 		end
 
-	is_feature_visible: BOOLEAN  is
+	is_feature_visible: BOOLEAN
 			-- should the feature be visible
 		do
 			Result := client = Void
@@ -192,13 +192,13 @@ feature -- Status report
 
 feature -- Properties
 
-	dot_needed: BOOLEAN is
+	dot_needed: BOOLEAN
 			-- Will next processing need dot at beginning?
 		do
 			Result := format.dot_needed
 		end
 
-	match_list: LEAF_AS_LIST is
+	match_list: LEAF_AS_LIST
 			-- Match list for roundtrip parser.
 		local
 			l_id: INTEGER
@@ -248,7 +248,7 @@ feature -- Properties
 	special_nl_symbol: STRING
 			-- When set, we process `special_nl_symbol' within `put_new_line'.
 
-	context_group: CONF_GROUP is
+	context_group: CONF_GROUP
 			-- Context group
 		do
 			Result := text_formatter.context_group
@@ -256,7 +256,7 @@ feature -- Properties
 
 feature -- Indentation
 
-	indent_depth: INTEGER is
+	indent_depth: INTEGER
 			-- Number of tabs leading the next line.
 		do
 			Result := format.indent_depth
@@ -265,7 +265,7 @@ feature -- Indentation
 	tabs_emitted: BOOLEAN
 			-- Have leading tabs already been emitted?
 
-	emit_tabs is
+	emit_tabs
 			-- Emit tabs according to indent depth of current `format'.
 		require
 			not_tabs_emitted: not tabs_emitted
@@ -281,7 +281,7 @@ feature -- Indentation
 
 feature -- Access
 
-	chained_assertion: CHAINED_ASSERTIONS is
+	chained_assertion: CHAINED_ASSERTIONS
 			-- Chained assertion for current analyzed feature.
 		do
 			if target_feature /= Void then
@@ -289,7 +289,7 @@ feature -- Access
 			end
 		end
 
-	formal_name (pos: INTEGER): STRING is
+	formal_name (pos: INTEGER): STRING
 			-- Formal name of class_c generics at position `pos.
 		do
 			Result := current_class.generics.i_th (pos).name.name.as_upper
@@ -303,7 +303,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_indent_depth (d: INTEGER) is
+	set_indent_depth (d: INTEGER)
 			-- Assign `d' to `indent_depth'.
 		do
 			format.set_indent_depth (d)
@@ -311,7 +311,7 @@ feature -- Setting
 			assigned: d = indent_depth
 		end
 
-	set_separator (s: STRING) is
+	set_separator (s: STRING)
 			-- Set current separator to `s'.
 		do
 			format.set_separator (s)
@@ -319,7 +319,7 @@ feature -- Setting
 			format.separator = s
 		end
 
-	set_new_line_between_tokens is
+	set_new_line_between_tokens
 			-- Use a new line between tokens.
 		do
 			format.set_new_line_between_tokens (True)
@@ -329,7 +329,7 @@ feature -- Setting
 			not format.space_between_tokens
 		end
 
-	set_no_new_line_between_tokens is
+	set_no_new_line_between_tokens
 			-- Neither new line nor space between tokens.
 		do
 			format.set_new_line_between_tokens (False)
@@ -339,7 +339,7 @@ feature -- Setting
 			not format.space_between_tokens
 		end
 
-	set_space_between_tokens is
+	set_space_between_tokens
 			-- Add a space character after the separator.
 		do
 			format.set_new_line_between_tokens (False)
@@ -349,7 +349,7 @@ feature -- Setting
 			format.space_between_tokens
 		end
 
-	set_feature_clause_order (fco: like feature_clause_order) is
+	set_feature_clause_order (fco: like feature_clause_order)
 			-- Set `feature_clause_order' to `fco'
 		require
 			valid_fco: fco /= Void
@@ -359,7 +359,7 @@ feature -- Setting
 			set: feature_clause_order = fco
 		end
 
-	set_current_class_only is
+	set_current_class_only
 			-- Set current_class_only to True.
 		do
 			current_class_only := True;
@@ -367,7 +367,7 @@ feature -- Setting
 			current_class_only: current_class_only
 		end
 
-	set_first_assertion (b: BOOLEAN) is
+	set_first_assertion (b: BOOLEAN)
 			-- Set first_assertion `b'.
 		do
 			first_assertion := b
@@ -375,7 +375,7 @@ feature -- Setting
 			first_assertion = b
 		end
 
-	set_source_class (c: CLASS_C) is
+	set_source_class (c: CLASS_C)
 			-- Set `source_class' to `c'.
 		require
 			good_class: c /= Void
@@ -384,20 +384,20 @@ feature -- Setting
 			source_class := c
 		end
 
-	set_without_tabs is
+	set_without_tabs
 			-- Set next insertion without tabs.
 		do
 			without_tabs := true
 		end
 
-	set_for_documentation (a_doc: DOCUMENTATION_ROUTINES) is
+	set_for_documentation (a_doc: DOCUMENTATION_ROUTINES)
 			-- Set `is_for_documentation'
 		do
 			create {AST_DOCUMENTATION_OUTPUT_STRATEGY}ast_output_strategy.make (Current, a_doc)
 			setup_output_strategy
 		end
 
-	set_context_group (a_group: like context_group) is
+	set_context_group (a_group: like context_group)
 			-- Set `context_group' with `a_group'.
 		do
 			text_formatter.set_context_group (a_group)
@@ -406,7 +406,7 @@ feature -- Setting
 	restore_attributes (a_feature_comments: EIFFEL_COMMENTS; a_arguments: AST_EIFFEL;
 						a_target_feature: FEATURE_I; a_source_feature: FEATURE_I;
 						a_ast_output_strategy: like ast_output_strategy;
-						a_breakpoint_index: INTEGER; a_e_feature: E_FEATURE) is
+						a_breakpoint_index: INTEGER; a_e_feature: E_FEATURE)
 		do
 			feature_comments := a_feature_comments
 			arguments := a_arguments
@@ -419,13 +419,13 @@ feature -- Setting
 
 feature -- Setting local format details
 
-	indent is
+	indent
 			-- Indent next output line by one tab.
 		do
 			format.indent
 		end
 
-	exdent is
+	exdent
 			-- Remove one leading tab for next line.
 		require
 			valid_indent: format.indent_depth > 0
@@ -433,7 +433,7 @@ feature -- Setting local format details
 			format.exdent
 		end
 
-	need_dot is
+	need_dot
 			-- Formatting needs dot.
 		do
 			format.set_dot_needed (True)
@@ -441,7 +441,7 @@ feature -- Setting local format details
 			format.dot_needed
 		end
 
-	set_in_indexing_clause (b: BOOLEAN) is
+	set_in_indexing_clause (b: BOOLEAN)
 			-- Should manifest strings be formatted over multiple
 			-- lines if encountered? For details, see STRING_AS.simple_format.
 		do
@@ -456,7 +456,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 				-- Execute the flat or flat_short.
 		local
 			prev_class: CLASS_C
@@ -509,7 +509,7 @@ feature -- Execution
 
 feature -- Setting
 
-	set_feature_comments (c: like feature_comments) is
+	set_feature_comments (c: like feature_comments)
 			-- Set feature_comment to `c'
 		do
 			feature_comments := c
@@ -519,7 +519,7 @@ feature -- Setting
 
 feature -- Update
 
-	begin is
+	begin
 			-- Save current format before a change.
 			-- (To keep track of indent depth, separator etc.)
 		local
@@ -530,7 +530,7 @@ feature -- Update
 			format := new_format
 		end
 
-	commit is
+	commit
 			-- Go back to previous format.
 			--| Keep text modifications.
 		do
@@ -540,7 +540,7 @@ feature -- Update
 
 feature -- Element change
 
-	put_classi (c: CLASS_I) is
+	put_classi (c: CLASS_I)
 			-- Append class name to `text_formatter'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -550,7 +550,7 @@ feature -- Element change
 			text_formatter.add_class (c)
 		end
 
-	put_origin_comment is
+	put_origin_comment
 			-- Put original comment.
 		do
 			if source_class /= current_class then
@@ -564,7 +564,7 @@ feature -- Element change
 			end
 		end
 
-	new_expression is
+	new_expression
 			-- Prepare for a new expression.
 		do
 			format.set_dot_needed (False)
@@ -572,20 +572,20 @@ feature -- Element change
 
 feature -- Output
 
-	register_invariants is
+	register_invariants
 			-- Register the invariants for target class.
 		do
 			create format_registration.make (current_class, client)
 			format_registration.register_invariants
 		end
 
-	format_categories is
+	format_categories
 			-- Format the categories for `current_class'.
 		do
 			format_registration.format_categories (Current)
 		end
 
-	format_invariants is
+	format_invariants
 			-- Format the invariants for `current_class'.
 		local
 			old_is_with_breakable: BOOLEAN
@@ -598,7 +598,7 @@ feature -- Output
 			end
 		end
 
-	format_indexing_with_no_keyword (an_indexing_clause: INDEXING_CLAUSE_AS) is
+	format_indexing_with_no_keyword (an_indexing_clause: INDEXING_CLAUSE_AS)
 			-- Format `an_indexing_clause' without putting the `indexing' keyword
 			-- nor doing any indentation.
 		require
@@ -607,7 +607,7 @@ feature -- Output
 			ast_output_strategy.format_indexing_with_no_keyword (an_indexing_clause)
 		end
 
-	format_ast (ast: AST_EIFFEL) is
+	format_ast (ast: AST_EIFFEL)
 			-- Call simple_for on `ast'.
 		require
 			ast_not_void: ast /= Void
@@ -615,7 +615,7 @@ feature -- Output
 			ast_output_strategy.format (ast)
 		end
 
-	put_separator is
+	put_separator
 			-- Append the current separator to `text_formatter'.
 		local
 			l_sep: STRING
@@ -637,13 +637,13 @@ feature -- Output
 			end
 		end
 
-	put_space is
+	put_space
 			-- Append space.
 		do
 			text_formatter.add_space
 		end
 
-	put_manifest_string (s: STRING_GENERAL) is
+	put_manifest_string (s: STRING_GENERAL)
 			-- Append `s' to `text_formatter'.
 		require
 			s_exists: s /= Void
@@ -654,13 +654,13 @@ feature -- Output
 			text_formatter.add_manifest_string (s)
 		end
 
-	put_breakable is
+	put_breakable
 			-- Put breakable point.
 			--| Do nothing - convenience routine.
 		do
 		end
 
-	put_quoted_string_item (s: STRING_32) is
+	put_quoted_string_item (s: STRING_32)
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
 		require
 			s_not_void: s /= Void
@@ -673,7 +673,7 @@ feature -- Output
 			put_string_item (new)
 		end
 
-	put_string_item (s: STRING_32) is
+	put_string_item (s: STRING_32)
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
 			-- If `in_indexing_clause', we seperate string.
 		require
@@ -689,7 +689,7 @@ feature -- Output
 			end
 		end
 
-	put_new_line is
+	put_new_line
 			-- Put a new line, following `special_nl_symbol'.
 		do
 			text_formatter.add_new_line
@@ -699,7 +699,7 @@ feature -- Output
 			tabs_emitted := False
 		end
 
-	put_comments (comments: EIFFEL_COMMENTS) is
+	put_comments (comments: EIFFEL_COMMENTS)
 			-- Put `comments' in `text_formatter'.
 		require
 			valid_comments: comments /= Void
@@ -721,7 +721,7 @@ feature -- Output
 			end
 		end
 
-	put_comment_text (c: STRING_GENERAL) is
+	put_comment_text (c: STRING_GENERAL)
 			-- Separate `c'
 			-- and append it to `text_formatter'.
 			-- We do not use it if not necessary, as it slow.
@@ -739,7 +739,7 @@ feature -- Output
 
 feature -- Text formatter decorator
 
-	process_basic_text (text: STRING_GENERAL) is
+	process_basic_text (text: STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -749,7 +749,7 @@ feature -- Text formatter decorator
 			text_formatter.process_basic_text (text)
 		end
 
-	process_character_text (text: STRING_GENERAL) is
+	process_character_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -759,7 +759,7 @@ feature -- Text formatter decorator
 			text_formatter.process_character_text (text)
 		end
 
-	process_generic_text (text: STRING_GENERAL) is
+	process_generic_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -769,7 +769,7 @@ feature -- Text formatter decorator
 			text_formatter.process_generic_text (text)
 		end
 
-	process_indexing_tag_text (text: STRING_GENERAL) is
+	process_indexing_tag_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -779,7 +779,7 @@ feature -- Text formatter decorator
 			text_formatter.process_indexing_tag_text (text)
 		end
 
-	process_local_text (text: STRING_GENERAL) is
+	process_local_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -789,7 +789,7 @@ feature -- Text formatter decorator
 			text_formatter.process_local_text (text)
 		end
 
-	process_number_text (text: STRING_GENERAL) is
+	process_number_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -799,7 +799,7 @@ feature -- Text formatter decorator
 			text_formatter.process_number_text (text)
 		end
 
-	process_quoted_text (text: STRING_GENERAL) is
+	process_quoted_text (text: STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 			if not tabs_emitted then
@@ -808,7 +808,7 @@ feature -- Text formatter decorator
 			text_formatter.process_quoted_text (text)
 		end
 
-	process_assertion_tag_text (text: STRING_GENERAL) is
+	process_assertion_tag_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -818,7 +818,7 @@ feature -- Text formatter decorator
 			text_formatter.process_assertion_tag_text (text)
 		end
 
-	process_string_text (text, link: STRING_GENERAL) is
+	process_string_text (text, link: STRING_GENERAL)
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		do
@@ -829,7 +829,7 @@ feature -- Text formatter decorator
 			text_formatter.process_string_text (text, link)
 		end
 
-	process_reserved_word_text (text: STRING_GENERAL) is
+	process_reserved_word_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -839,7 +839,7 @@ feature -- Text formatter decorator
 			text_formatter.process_reserved_word_text (text)
 		end
 
-	process_comment_text (text, url: STRING_GENERAL) is
+	process_comment_text (text, url: STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
@@ -850,7 +850,7 @@ feature -- Text formatter decorator
 			text_formatter.process_comment_text (text, url)
 		end
 
-	process_difference_text_item (text: STRING_GENERAL) is
+	process_difference_text_item (text: STRING_GENERAL)
 			-- Process difference text text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -860,7 +860,7 @@ feature -- Text formatter decorator
 			text_formatter.process_difference_text_item (text)
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -870,7 +870,7 @@ feature -- Text formatter decorator
 			text_formatter.process_class_name_text (text, a_class, a_quote)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -880,7 +880,7 @@ feature -- Text formatter decorator
 			text_formatter.process_cluster_name_text (text, a_cluster, a_quote)
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -890,7 +890,7 @@ feature -- Text formatter decorator
 			text_formatter.process_target_name_text (text, a_target)
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -900,7 +900,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_name_text (text, a_class)
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER) is
+	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error feature text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -910,7 +910,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_error (text, a_feature, a_line)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -920,7 +920,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_text (text, a_feature, a_quote)
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- Process breakpoint index `a_index'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -930,7 +930,7 @@ feature -- Text formatter decorator
 			text_formatter.process_breakpoint_index (a_feature, a_index, a_cond)
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -940,7 +940,7 @@ feature -- Text formatter decorator
 			text_formatter.process_breakpoint (a_feature, a_index)
 		end
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -950,7 +950,7 @@ feature -- Text formatter decorator
 			text_formatter.process_padded
 		end
 
-	process_new_line is
+	process_new_line
 			-- Process new line.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -960,7 +960,7 @@ feature -- Text formatter decorator
 			text_formatter.process_new_line
 		end
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 			-- Process indentation `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -970,7 +970,7 @@ feature -- Text formatter decorator
 			text_formatter.process_indentation (a_indent_depth)
 		end
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 			-- Process after class `a_class'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -980,7 +980,7 @@ feature -- Text formatter decorator
 			text_formatter.process_after_class (a_class)
 		end
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `a_class'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -990,7 +990,7 @@ feature -- Text formatter decorator
 			text_formatter.process_before_class (a_class)
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1000,7 +1000,7 @@ feature -- Text formatter decorator
 			text_formatter.process_filter_item (text, is_before)
 		end
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN) is
+	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process tooltip text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1010,7 +1010,7 @@ feature -- Text formatter decorator
 			text_formatter.process_tooltip_item (a_tooltip, is_before)
 		end
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN) is
+	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process feature dec.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1020,7 +1020,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_dec_item (a_feature_name, is_before)
 		end
 
-	process_symbol_text (text: STRING_GENERAL) is
+	process_symbol_text (text: STRING_GENERAL)
 			-- Process symbol text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1030,7 +1030,7 @@ feature -- Text formatter decorator
 			text_formatter.process_symbol_text (text)
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
@@ -1041,7 +1041,7 @@ feature -- Text formatter decorator
 			text_formatter.process_keyword_text (text, a_feature)
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
@@ -1052,7 +1052,7 @@ feature -- Text formatter decorator
 			text_formatter.process_operator_text (text, a_feature)
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1062,7 +1062,7 @@ feature -- Text formatter decorator
 			text_formatter.process_address_text (a_address, a_name, a_class)
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1072,7 +1072,7 @@ feature -- Text formatter decorator
 			text_formatter.process_error_text (text, a_error)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1082,7 +1082,7 @@ feature -- Text formatter decorator
 			text_formatter.process_cl_syntax (text, a_syntax_message, a_class)
 		end
 
-	process_column_text (a_column_number: INTEGER) is
+	process_column_text (a_column_number: INTEGER)
 			-- Process `a_column_number'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1092,7 +1092,7 @@ feature -- Text formatter decorator
 			text_formatter.process_column_text (a_column_number)
 		end
 
-	process_call_stack_item (level_number: INTEGER; display: BOOLEAN) is
+	process_call_stack_item (level_number: INTEGER; display: BOOLEAN)
 			-- Process the current callstack text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1102,7 +1102,7 @@ feature -- Text formatter decorator
 			text_formatter.process_call_stack_item (level_number, display)
 		end
 
-	process_menu_text (text, link: STRING_GENERAL) is
+	process_menu_text (text, link: STRING_GENERAL)
 			-- Process menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
@@ -1113,7 +1113,7 @@ feature -- Text formatter decorator
 			text_formatter.process_menu_text (text, link)
 		end
 
-	process_class_menu_text (text, link: STRING_GENERAL) is
+	process_class_menu_text (text, link: STRING_GENERAL)
 			-- Process class menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
@@ -1135,7 +1135,7 @@ feature {NONE} -- Implementation
 	text_formatter: TEXT_FORMATTER;
 			-- Text formatter
 
-	setup_output_strategy is
+	setup_output_strategy
 			-- Setup attributes in `ast_output_strategy'.
 		do
 			ast_output_strategy.set_source_class (source_class)
@@ -1145,7 +1145,7 @@ feature {NONE} -- Implementation
 			ast_output_strategy.wipe_out_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

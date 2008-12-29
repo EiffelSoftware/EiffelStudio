@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This allows undoable modification of a class text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_I) is
+	make (a_class: CLASS_I)
 			-- Create modification associated with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -67,7 +67,7 @@ feature -- Status
 	is_parse_error: BOOLEAN
 			-- Was there a parse error?
 
-	is_parsed: BOOLEAN is
+	is_parsed: BOOLEAN
 			-- Is the AST available?
 		do
 			Result := ast /= Void and match_list /= Void
@@ -75,13 +75,13 @@ feature -- Status
 
 feature -- Status change
 
-	enable_parsing is
+	enable_parsing
 			-- Enable parsing of non compiled classes.
 		do
 			is_parsing := True
 		end
 
-	disable_parsing is
+	disable_parsing
 			-- Disable parsing of non compiled classes.
 		do
 			is_parsing := False
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Highlevel element change
 
-	execute_visitor (a_visitor: AST_REFACTORING_VISITOR; process_leading: BOOLEAN) is
+	execute_visitor (a_visitor: AST_REFACTORING_VISITOR; process_leading: BOOLEAN)
 			-- Execute `a_visitor' on this class, if we `process_leading' we process all nodes and process the `BREAK_AS' directly,
 			-- otherwise we process the `BREAK_AS' at the end.
 		require
@@ -122,7 +122,7 @@ feature -- Highlevel element change
 			end
 		end
 
-	get_feature_named (a_name: STRING) is
+	get_feature_named (a_name: STRING)
 			-- Get the code of the feature with `a_name'.
 			-- The clients will be in `last_export', the feature clause comment in `last_comment' and the code in `last_code'.
 		require
@@ -165,7 +165,7 @@ feature -- Highlevel element change
 			no_error_implies_result: not is_parse_error implies (last_code /= Void and last_export /= Void and last_comment /= Void)
 		end
 
-	remove_feature_named (a_name: STRING) is
+	remove_feature_named (a_name: STRING)
 			-- Remove the feature with the name `a_name'.
 		require
 			text_managed: text_managed
@@ -201,7 +201,7 @@ feature -- Highlevel element change
 			end
 		end
 
-	add_feature_code (a_feature_code, a_export_clause, a_comment: STRING) is
+	add_feature_code (a_feature_code, a_export_clause, a_comment: STRING)
 			-- Add `a_feature_code' to the class.
 		require
 			text_managed: text_managed
@@ -226,7 +226,7 @@ feature -- Highlevel element change
 			end
 		end
 
-	add_redefine (a_class_name, a_feature_name: STRING) is
+	add_redefine (a_class_name, a_feature_name: STRING)
 			-- Add a redefine clause for `a_feature_name'. May use a renamed name.
 			-- Doesn't add it if it's already there or if it is undefined.
 		require
@@ -312,7 +312,7 @@ feature -- Highlevel element change
 			end
 		end
 
-	redefine_into_undefine (a_feature_name, a_implements: STRING) is
+	redefine_into_undefine (a_feature_name, a_implements: STRING)
 			-- Change redefines of `a_feature_name' into undefines, except for the parent `a_implements'.
 		require
 			text_managed: text_managed
@@ -369,7 +369,7 @@ feature -- Highlevel element change
 
 feature -- Load/Save file
 
-	load_text is
+	load_text
 			-- Load the text.
 		do
 				-- We use `actual_class' because we want the class on which the user
@@ -377,7 +377,7 @@ feature -- Load/Save file
 			text := class_i.actual_class.text
 		end
 
-	save_text is
+	save_text
 			-- Save the text.
 		local
 			l_encoding: ENCODING
@@ -388,7 +388,7 @@ feature -- Load/Save file
 			save (class_i.actual_class.file_name, text, l_encoding)
 		end
 
-	discard_text is
+	discard_text
 			-- Discard the text.
 		do
 			Precursor
@@ -398,7 +398,7 @@ feature -- Load/Save file
 
 feature {NONE} -- Implementation
 
-	compute_ast is
+	compute_ast
 			-- Compute or retrieve the ast. The result will be available in ast and match_list.
 		require
 			text_managed: text_managed
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			no_error_implies_set: not is_parse_error implies is_parsed
 		end
 
-	recompute_ast is
+	recompute_ast
 			-- Compute the ast even if we have a compiled version.
 		require
 			text_managed: text_managed
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	rebuild_text is
+	rebuild_text
 			-- Rebuild the text from the ast.
 		require
 			text_managed: text_managed
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 invariant
 	associated_to_class: class_i /= void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

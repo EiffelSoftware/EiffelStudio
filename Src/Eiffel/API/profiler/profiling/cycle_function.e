@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information about a call cycle."
@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make (new_number: INTEGER) is
+	make (new_number: INTEGER)
 			-- Create a cycle with number `new_number'.
 		do
 			cycle_num := new_number
@@ -25,7 +25,7 @@ feature -- Creation
 
 feature -- Output
 
-	name: STRING is
+	name: STRING
 			-- The name of the cycle.
 		do
 			create Result.make (0);
@@ -34,7 +34,7 @@ feature -- Output
 			Result.append_string (">")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

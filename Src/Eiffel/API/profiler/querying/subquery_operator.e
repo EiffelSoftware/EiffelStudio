@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Operator between two sub queries."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (op: STRING) is
+	make (op: STRING)
 			-- Create an active operator 'op'.
 		do
 			int_operator := op;
@@ -29,14 +29,14 @@ feature -- Initialization
 
 feature -- Properties
 
-	actual_operator: STRING is
+	actual_operator: STRING
 		do
 			Result := int_operator;
 		end;
 
 feature -- Setting
 
-	change_operator (new_op: STRING) is
+	change_operator (new_op: STRING)
 		require
 			new_op_is_and_or_or: new_op.is_equal("and") or else
 								 new_op.is_equal("or");
@@ -50,7 +50,7 @@ feature {NONE} -- Attributes
 
 	int_operator: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

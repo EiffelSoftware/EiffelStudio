@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a criteiron in which an intrinsic domain is provided which may be
 					used in query optimization.
@@ -23,7 +23,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_domain: like criterion_domain) is
+	make (a_domain: like criterion_domain)
 			-- Initialize `criterion_domain' with `a_feature'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	intrinsic_domain: QL_DOMAIN is
+	intrinsic_domain: QL_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		deferred
 		ensure then
@@ -44,10 +44,10 @@ feature -- Access
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is True
+	require_compiled: BOOLEAN = True
 			-- Does current criterion require a compiled item?
 
-	has_inclusive_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has a domain by default?
 		do
 			Result := not criterion_domain.is_delayed
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_intrinsic_domain_criterion (Current)
@@ -72,7 +72,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	find_result is
+	find_result
 			-- Find possible result (maybe classes or features) of current criterion.
 		deferred
 		ensure
@@ -80,12 +80,12 @@ feature{NONE} -- Implementation
 				not is_intrinsic_domain_cached_in_domain_generator
 		end
 
-	reset is
+	reset
 			-- Reset internal structure
 		deferred
 		end
 
-	initialize_domain is
+	initialize_domain
 			-- Initialize for `criterion_domain'.
 		do
 			reset
@@ -93,7 +93,7 @@ feature{NONE} -- Implementation
 			is_criterion_domain_evaluated := True
 		end
 
-	cache_intrinsic_domain is
+	cache_intrinsic_domain
 			-- Cache `intrinsic_domain' in `used_in_domain_generator'.
 		do
 			check used_in_domain_generator.is_temp_domain_used end
@@ -103,7 +103,7 @@ feature{NONE} -- Implementation
 			candidate_cached: is_intrinsic_domain_cached_in_domain_generator
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

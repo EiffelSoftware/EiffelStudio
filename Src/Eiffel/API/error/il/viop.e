@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Warning when user selected to use ompitimized version of a precompiled library,
 		but precompiled library has not been optimized.
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING) is
+	make (a_path: STRING)
 			-- create warning with path to directory `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -33,20 +33,20 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	code: STRING is "VIOP"
+	code: STRING = "VIOP"
 		-- Error code
 
 	precompiled_path: STRING
 		-- Path to precompiled library
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- No need for an error message.
 		do
 			a_text_formatter.add ("Precompiled Library: ")
@@ -58,7 +58,7 @@ invariant
 	non_void_precompiled_path: precompiled_path /= Void
 	valid_precompiled_path: not precompiled_path.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

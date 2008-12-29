@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error in creation instruction."
@@ -21,7 +21,7 @@ feature -- Properties
 	type: TYPE_A;
 			-- Creation type involved
 
-	code: STRING is "VGCC";
+	code: STRING = "VGCC";
 			-- Error code
 
 	target_name: STRING
@@ -30,7 +30,7 @@ feature -- Properties
 
 feature -- Output
 
-	print_name (a_text_formatter: TEXT_FORMATTER) is
+	print_name (a_text_formatter: TEXT_FORMATTER)
 		do
 			if target_name /= Void then
 				a_text_formatter.add ("Creation of: ");
@@ -42,25 +42,25 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			print_name (a_text_formatter)
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_target_name (s: STRING) is
+	set_target_name (s: STRING)
 		do
 			target_name := s
 		end;
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		do
 			type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

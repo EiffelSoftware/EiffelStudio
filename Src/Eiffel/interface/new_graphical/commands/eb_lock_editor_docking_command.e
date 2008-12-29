@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command that lock editors docking mechanism."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
@@ -33,7 +33,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	execute is
+	execute
 			-- Redefine
 		local
 			l_manager: SD_DOCKING_MANAGER
@@ -49,19 +49,19 @@ feature -- Command
 
 feature -- Query
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_lock_docking_editor
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Redefine
 		do
 			Result := develop_window.docking_manager.is_editor_locked
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Redefine
 		do
 			Result := "lock_docking_editor"
@@ -79,7 +79,7 @@ feature -- Query
 	tooltip: STRING_GENERAL;
 			-- Redefine
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

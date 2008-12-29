@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for conditional alternative."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_elsif_b (Current)
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 			-- Set `line_number' to `lnr'.
 		do
 			line_number := lnr
@@ -52,13 +52,13 @@ feature -- Status setting
 			line_number_set: line_number = lnr
 		end
 
-	set_expr (e: EXPR_B) is
+	set_expr (e: EXPR_B)
 			-- Assign `e' to `expr'.
 		do
 			expr := e
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature -- Basic Operations
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the elsif construct
 		do
 			expr := expr.enlarged
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			end
 		end
 
-	find_assign_result is
+	find_assign_result
 			-- Find all terminal assignments made to Result
 		do
 			if compound /= Void then
@@ -84,7 +84,7 @@ feature -- Basic Operations
 			end
 		end
 
-	last_all_in_result: BOOLEAN is
+	last_all_in_result: BOOLEAN
 			-- Are all the exit points in the function assignments
 			-- in a Result entity ?
 		do
@@ -94,7 +94,7 @@ feature -- Basic Operations
 			end
 		end
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		do
 			context.init_propagation
@@ -106,7 +106,7 @@ feature -- Basic Operations
 			end
 		end
 
-	generate is
+	generate
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
@@ -133,25 +133,25 @@ feature -- Basic Operations
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := compound /= Void and then compound.assigns_to (i)
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then
 							compound.calls_special_features (array_desc))
 				or else expr.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := (compound /= Void and then compound.is_unsafe)
 				or else expr.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current;
 			if compound /= Void then
@@ -162,7 +162,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := expr.size + 1
 			if compound /= Void then
@@ -170,7 +170,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			expr := expr.pre_inlined_code
@@ -179,7 +179,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
@@ -188,7 +188,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

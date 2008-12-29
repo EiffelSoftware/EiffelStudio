@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Show the flat form of a class."
@@ -27,7 +27,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_feature_clause_order (fco: like feature_clause_order) is
+	set_feature_clause_order (fco: like feature_clause_order)
 			-- Set `feature_clause_order' to `fco'.
 		do
 			feature_clause_order := fco
@@ -37,7 +37,7 @@ feature -- Status setting
 
 feature -- Output
 
-	execute is
+	execute
 			-- Execute Current command.
 		local
 			ctxt: CLASS_TEXT_FORMATTER
@@ -47,7 +47,7 @@ feature -- Output
 			ctxt.format (current_class, text_formatter)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

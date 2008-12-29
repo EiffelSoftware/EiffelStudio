@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Place where all the onces of the compiler that needs to be set differently depending
 		on the version of the compiler being compiled. 
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	command_executor: COMMAND_EXECUTOR is
+	command_executor: COMMAND_EXECUTOR
 			-- Objects that launches commands.
 		do
 			Result := command_executor_cell.item
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_command_executor (c: like command_executor) is
+	set_command_executor (c: like command_executor)
 			-- Set `command_executor' with `c'.
 		require
 			c_not_void: c /= Void
@@ -44,7 +44,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	command_executor_cell: CELL [COMMAND_EXECUTOR] is
+	command_executor_cell: CELL [COMMAND_EXECUTOR]
 			-- Storage for `command_executor'.
 		once
 			create Result.put (create {COMMAND_EXECUTOR})
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			command_executor_not_void: Result.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that helps managing the errors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	error_messages: LINKED_LIST [STRING_GENERAL] is
+	error_messages: LINKED_LIST [STRING_GENERAL]
 			-- Current error messages.
 		once
 			create Result.make
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_error_message, set_error_message (an_error_message: STRING_GENERAL) is
+	add_error_message, set_error_message (an_error_message: STRING_GENERAL)
 			-- Add `an_error_message' to the list of error messages.
 		do
 			error_messages.extend (an_error_message)
@@ -27,13 +27,13 @@ feature -- Element change
 
 feature -- Removal
 
-	clear_error_messages is
+	clear_error_messages
 			-- Clear the list of error messages
 		do
 			error_messages.wipe_out
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

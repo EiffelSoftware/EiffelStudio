@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Context for instantiation
@@ -10,13 +10,13 @@ feature
 	group: CONF_GROUP
 			-- Group where to find a class by its name
 
-	set_group (a_group: CONF_GROUP) is
+	set_group (a_group: CONF_GROUP)
 			-- Assign `a_group' to `CONF_GROUP'.
 		do
 			group := a_group
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

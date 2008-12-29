@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						This class maps new feature names onto old feature names.
 						It does this not by using strings but by using the `name_id' of each
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_renamings: EIFFEL_LIST [RENAME_AS]; a_constraint: CLASS_C) is
+	make (a_renamings: EIFFEL_LIST [RENAME_AS]; a_constraint: CLASS_C)
 			-- Create current
 		require
 			a_renamings_not_void: a_renamings /= Void
@@ -213,13 +213,13 @@ feature -- Access
 
 feature -- Status
 
-	is_feature_renamed_by_name_id (a_feature_name_id: INTEGER): BOOLEAN is
+	is_feature_renamed_by_name_id (a_feature_name_id: INTEGER): BOOLEAN
 			-- Is `a_feature' renamed under renaming of `Current'?
 		do
 			Result := has_item (a_feature_name_id)
 		end
 
-	is_feature_renamed (a_feature: ID_AS): BOOLEAN is
+	is_feature_renamed (a_feature: ID_AS): BOOLEAN
 			-- Is `a_feature' renamed under renaming of `Current'?
 		do
 			Result := is_feature_renamed_by_name_id (a_feature.name_id)
@@ -251,7 +251,7 @@ feature -- Output
 			append_to_impl (a_text_formatter, a_class_c)
 		end
 
-	append_to (a_text_formatter: TEXT_FORMATTER) is
+	append_to (a_text_formatter: TEXT_FORMATTER)
 			-- Append `Current' renaming.
 			--
 			-- `a_text_formatter' is the object where the current renaming is appended to.
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 	removed_alias: ARRAYED_LIST [INTEGER]
 			-- List of removed aliases from the original class.
 
-	process_alias (a_name: FEATURE_NAME; a_old_feature: FEATURE_I) is
+	process_alias (a_name: FEATURE_NAME; a_old_feature: FEATURE_I)
 			-- Check if `a_rename' is a valid infix/prefix/alias.
 		require
 			a_name_not_void: a_name /= Void
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_to_impl (a_text_formatter: TEXT_FORMATTER; a_class_c: CLASS_C) is
+	append_to_impl (a_text_formatter: TEXT_FORMATTER; a_class_c: CLASS_C)
 			-- Append `Current' renaming.
 			--
 			-- `a_text_formatter' is the object where the current renaming is appended to.			

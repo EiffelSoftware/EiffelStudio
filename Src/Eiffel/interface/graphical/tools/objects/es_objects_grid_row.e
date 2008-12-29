@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a row for ES_OBJECTS_GRID_ROW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,18 +17,18 @@ create
 
 feature -- Parent objects grid
 
-	parent_objects_grid: ES_OBJECTS_GRID is
+	parent_objects_grid: ES_OBJECTS_GRID
 		do
 			Result ?= parent
 		end
 
-	associated_line: ES_OBJECTS_GRID_LINE is
+	associated_line: ES_OBJECTS_GRID_LINE
 			-- Associated line if exists.
 		do
 			Result ?= data
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

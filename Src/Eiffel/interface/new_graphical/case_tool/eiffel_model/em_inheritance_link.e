@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a model vor an inheritance link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_INHERITANCE_LINK.
 		do
 			Precursor {EG_LINK}
 		end
 
-	make_with_classes (a_descendant, an_ancestor: EM_CLASS) is
+	make_with_classes (a_descendant, an_ancestor: EM_CLASS)
 			-- Create an EIFFEL_INHERITANCE_LINK connecting `a_descendant' with `an_ancestor'.
 		require
 			a_descendant_not_void: a_descendant /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			set: descendant = a_descendant and ancestor = an_ancestor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

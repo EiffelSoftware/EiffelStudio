@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Observer for events in {ACTIVE_COLLECTION_I}
 	]"
@@ -13,7 +13,7 @@ inherit
 
 feature {ACTIVE_COLLECTION_I} -- Events
 
-	on_item_added (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: !G) is
+	on_item_added (a_collection: !ACTIVE_COLLECTION_I [G]; a_item: !G)
 			-- Called when `a_item' is added to items in `a_collection'.
 		require
 			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable
@@ -43,7 +43,7 @@ feature {ACTIVE_COLLECTION_I} -- Events
 		do
 		end
 
-	on_items_reset (a_collection: !ACTIVE_COLLECTION_I [G]) is
+	on_items_reset (a_collection: !ACTIVE_COLLECTION_I [G])
 			-- Called when items of `a_collection' have been wiped out and may or may not be available.
 		require
 			is_interface_usable: {l_usable: USABLE_I} Current implies l_usable.is_interface_usable

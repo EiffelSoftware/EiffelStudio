@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a inline external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature  -- Initialization
 
-	initialize (v: like is_static) is
+	initialize (v: like is_static)
 			-- Create INLINE_EXTENSION_AS node.
 		do
 			is_static := v
@@ -30,13 +30,13 @@ feature -- Properties
 
 feature -- Get inline extension
 
-	extension_i: BUILT_IN_EXTENSION_I is
+	extension_i: BUILT_IN_EXTENSION_I
 			-- BUILT_IN_EXTENSION_I corresponding to current extension
 		do
 			create Result.make (is_static)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

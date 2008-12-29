@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Platform specific implementation for DEBUGGER_EVENTS_HANDLER_IMP"
 	author: "$Author$"
 	date: "$Date$"
@@ -9,11 +9,11 @@ class
 
 feature -- Access
 
-	windows_handle_from (dw: EB_DEVELOPMENT_WINDOW): POINTER is
+	windows_handle_from (dw: EB_DEVELOPMENT_WINDOW): POINTER
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

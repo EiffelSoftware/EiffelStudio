@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator of attribute offset tables"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Initialzation
 
-	init_file (file: INDENT_FILE) is
+	init_file (file: INDENT_FILE)
 			-- Initialization of new file
 		do
 				-- Let's finish C code generation of current block.
@@ -25,7 +25,7 @@ feature -- Initialzation
 			file.put_string ("#include %"../E1/eoffsets.h%"%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Real data type for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,42 +12,42 @@ inherit
 
 feature -- Access
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			Result := {SHARED_C_LEVEL}.C_real32
 		end
 
-	tuple_code: NATURAL_8 is
+	tuple_code: NATURAL_8
 			-- Tuple code for class type
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.real_32_tuple_code
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 			-- Pointer element type
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_r4
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.sk_real32
 		end
 
-	c_string: STRING is "EIF_REAL_32"
+	c_string: STRING = "EIF_REAL_32"
 			-- String generated for the type.
 
-	typed_field: STRING is "it_r4"
+	typed_field: STRING = "it_r4"
 			-- Value field of a C structure corresponding to this type
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.real_32_code
 		end
 
-	new_attribute_description: REAL_32_DESC is
+	new_attribute_description: REAL_32_DESC
 			-- Type description for skeleton
 		do
 			create Result
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Byte code generation
 
-	make_default_byte_code (ba: BYTE_ARRAY) is
+	make_default_byte_code (ba: BYTE_ARRAY)
 			-- Generate default value of basic type on stack.
 		do
 			ba.append ({BYTE_CONST}.Bc_real32)
@@ -64,13 +64,13 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_real32_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

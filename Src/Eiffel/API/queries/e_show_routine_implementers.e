@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Display the implementers of a `current_feature'."
@@ -22,12 +22,12 @@ create
 
 feature -- Status report
 
-	is_written_class_displayed: BOOLEAN is False
+	is_written_class_displayed: BOOLEAN = False
 			-- Is current a command to display feature implementors?
 
 feature{NONE} -- Implemetation
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
 			create {QL_FEATURE_IMPLEMENTORS_OF_CRI}Result.make (
@@ -36,7 +36,7 @@ feature{NONE} -- Implemetation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

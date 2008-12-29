@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for invalid expanded type."
@@ -20,7 +20,7 @@ inherit
 	
 feature -- Properties
 
-	code: STRING is "VTEC"
+	code: STRING = "VTEC"
 			-- Error code
 
 	entity_name: STRING
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if entity_name /= Void then
 				a_text_formatter.add ("Entity name: ")
@@ -39,12 +39,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_entity_name (s: STRING) is
+	set_entity_name (s: STRING)
 		do
 			entity_name := s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

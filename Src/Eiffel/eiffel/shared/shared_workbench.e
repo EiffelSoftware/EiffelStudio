@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	Workbench: WORKBENCH_I is
+	Workbench: WORKBENCH_I
 			-- Shared access to the workbench
 		once
 			create Result
@@ -19,7 +19,7 @@ feature -- Access
 			workbench_not_void: Result /= Void
 		end
 
-	System: SYSTEM_I is
+	System: SYSTEM_I
 			-- Shared access to the current system
 		require
 			system_defined: Workbench.system_defined
@@ -29,7 +29,7 @@ feature -- Access
 			system_not_void: Result /= Void
 		end
 
-	Universe: UNIVERSE_I is
+	Universe: UNIVERSE_I
 			-- Shared access to the current universe
 		require
 			universe_defined: workbench.universe_defined
@@ -39,13 +39,13 @@ feature -- Access
 			universe_not_void: Result /= Void
 		end
 
-	Lace: LACE_I is
+	Lace: LACE_I
 			-- Access to the lace controller
 		once
 			Result := Workbench.lace
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

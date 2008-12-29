@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a feature local variable used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature -- Access
 
-	wrapped_domain: QL_ARGUMENT_DOMAIN is
+	wrapped_domain: QL_ARGUMENT_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
 			Result.content.extend (current)
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := argument_scope
@@ -36,7 +36,7 @@ feature -- Access
 			good_result: Result = argument_scope
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := argument_path_marker
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
 		local
 			l_feature: QL_FEATURE
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_argument (Current)
@@ -66,7 +66,7 @@ feature -- Visit
 
 feature{NONE} -- Implementation
 
-	retrieve_ast is
+	retrieve_ast
 			-- Retrieve `ast'.
 		local
 			l_argus: EIFFEL_LIST [TYPE_DEC_AS]
@@ -78,7 +78,7 @@ feature{NONE} -- Implementation
 			internal_ast := type_dec_ast_with_name (name, l_argus)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

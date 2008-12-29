@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a TUPLE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_tuple_type_a (Current)
@@ -29,9 +29,9 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_tuple: BOOLEAN is True
+	is_tuple: BOOLEAN = True
 
-	is_basic_uniform: BOOLEAN is
+	is_basic_uniform: BOOLEAN
 			-- Are all types in Current basic?
 		local
 			i, nb: INTEGER
@@ -56,7 +56,7 @@ feature -- Properties
 
 feature -- Access
 
-	generic_derivation: TUPLE_TYPE_A is
+	generic_derivation: TUPLE_TYPE_A
 		do
 				-- Since the generic derivation for a TUPLE does not has actual generic parameter
 				-- we simply create a copy of current without actuals.
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_generic_derivation_as (current_type, other: TYPE_A): BOOLEAN is
+	same_generic_derivation_as (current_type, other: TYPE_A): BOOLEAN
 		do
 				-- For TUPLE, it is just enough that they are
 				-- either both reference or both expanded.
@@ -77,7 +77,7 @@ feature -- Comparison
 
 feature -- Generic conformance
 
-	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER) is
+	generate_gen_type_instance (il_generator: IL_CODE_GENERATOR; n: INTEGER)
 			-- Generic runtime instance for Current
 		do
 			il_generator.generate_tuple_type_instance (n)
@@ -85,7 +85,7 @@ feature -- Generic conformance
 
 feature {NONE} -- Generic conformance
 
-	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER) is
+	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER)
 			-- <Precursor>
 		local
 			l_dummy: INTEGER
@@ -105,7 +105,7 @@ feature {NONE} -- Generic conformance
 			end
 		end
 
-	make_type_prefix_byte_code (ba: BYTE_ARRAY) is
+	make_type_prefix_byte_code (ba: BYTE_ARRAY)
 			-- <Precursor>
 		do
 			Precursor (ba)
@@ -115,7 +115,7 @@ feature {NONE} -- Generic conformance
 
 feature -- IL code generation
 
-	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING is
+	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Class name of current type.
 		local
 			l_class_c: like associated_class
@@ -138,7 +138,7 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN is
+	valid_generic (a_context_class: CLASS_C; type: CL_TYPE_A): BOOLEAN
 			-- Check generic parameters
 		local
 			i, nb: INTEGER
@@ -163,7 +163,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			tuple_type: TUPLE_TYPE_A
@@ -193,7 +193,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	good_generics: BOOLEAN is
+	good_generics: BOOLEAN
 
 		local
 			i, count: INTEGER
@@ -212,7 +212,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	error_generics: VTUG is
+	error_generics: VTUG
 
 		local
 			i, count: INTEGER
@@ -232,7 +232,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_constraints (context_class: CLASS_C; a_context_feature: FEATURE_I;  a_check_creation_readiness: BOOLEAN) is
+	check_constraints (context_class: CLASS_C; a_context_feature: FEATURE_I;  a_check_creation_readiness: BOOLEAN)
 			-- Check the constrained genericity validity rule
 		local
 			i, count: INTEGER
@@ -255,7 +255,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

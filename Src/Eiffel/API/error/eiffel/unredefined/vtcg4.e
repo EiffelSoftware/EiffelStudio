@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for violation of the constrained genericity %
 				%rule by a parent type."
 	legal: "See notice at end of class."
@@ -23,12 +23,12 @@ feature -- Properties
 	error_list: LINKED_LIST [CONSTRAINT_INFO]
 			-- Error description list
 
-	code: STRING is "VTCG"
+	code: STRING = "VTCG"
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -47,19 +47,19 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_error_list (e: like error_list) is
+	set_error_list (e: like error_list)
 			-- Assign `e' to `error_list'.
 		do
 			error_list := e
 		end
 
-	set_parent_type (p: CL_TYPE_A) is
+	set_parent_type (p: CL_TYPE_A)
 			-- Assign `p' to `parent_type'.
 		do
 			parent_type := p
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

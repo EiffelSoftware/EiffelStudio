@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents action sequences for metric tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature{NONE} -- Agent mantainning
 
-	install_agents (a_action_sequences: EB_METRIC_ACTION_SEQUENCES) is
+	install_agents (a_action_sequences: EB_METRIC_ACTION_SEQUENCES)
 			-- Install agents into `a_action_sequences'.
 		require
 			a_action_sequences_attached: a_action_sequences /= Void
@@ -54,7 +54,7 @@ feature{NONE} -- Agent mantainning
 			end
 		end
 
-	uninstall_agents (a_action_sequences: EB_METRIC_ACTION_SEQUENCES) is
+	uninstall_agents (a_action_sequences: EB_METRIC_ACTION_SEQUENCES)
 			-- Uninstall agents from `a_action_sequences'.
 		require
 			a_action_sequences_attached: a_action_sequences /= Void
@@ -99,75 +99,75 @@ feature{NONE} -- Agent mantainning
 
 feature{NONE} -- Actions
 
-	on_project_loaded is
+	on_project_loaded
 			-- Action to be performed when project loaded
 		deferred
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Action to be performed when project unloaded
 		deferred
 		end
 
-	on_compile_start is
+	on_compile_start
 			-- Action to be performed when Eiffel compilation starts
 		deferred
 		end
 
-	on_compile_stop is
+	on_compile_stop
 			-- Action to be performed when Eiffel compilation stops
 		deferred
 		end
 
-	on_metric_evaluation_start (a_data: ANY) is
+	on_metric_evaluation_start (a_data: ANY)
 			-- Action to be performed when metric evaluation starts
 			-- `a_data' can be the metric tool panel from which metric evaluation starts.
 		deferred
 		end
 
-	on_metric_evaluation_stop (a_data: ANY) is
+	on_metric_evaluation_stop (a_data: ANY)
 			-- Action to be performed when metric evaluation stops
 			-- `a_data' can be the metric tool panel from which metric evaluation stops.
 		deferred
 		end
 
-	on_archive_calculation_start (a_data: ANY) is
+	on_archive_calculation_start (a_data: ANY)
 			-- Action to be performed when metric archive calculation starts
 			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
 		deferred
 		end
 
-	on_archive_calculation_stop (a_data: ANY) is
+	on_archive_calculation_stop (a_data: ANY)
 			-- Action to be performed when metric archive calculation stops
 			-- `a_data' can be the metric tool panel from which metric archive calculation stops.
 		deferred
 		end
 
-	on_metric_loaded is
+	on_metric_loaded
 			-- Action to be performed when metrics loaded in `metric_manager'
 		deferred
 		end
 
-	on_history_recalculation_start (a_data: ANY) is
+	on_history_recalculation_start (a_data: ANY)
 			-- Action to be performed when history recalculation starts
 			-- `a_data' can be the metric tool panel from which history recalculation starts.
 		deferred
 		end
 
-	on_history_recalculation_stop (a_data: ANY) is
+	on_history_recalculation_stop (a_data: ANY)
 			-- Action to be performed when history recalculation stops
 			-- `a_data' can be the metric tool panel from which history recalculation stops.
 		deferred
 		end
 
-	on_metric_renamed (a_old_name, a_new_name: STRING) is
+	on_metric_renamed (a_old_name, a_new_name: STRING)
 			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
 		deferred
 		end
 
 feature{NONE} -- Agents
 
-	on_project_loaded_agent: PROCEDURE [ANY, TUPLE] is
+	on_project_loaded_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_project_loaded'.
 		do
 			if on_project_loaded_agent_internal = Void then
@@ -176,7 +176,7 @@ feature{NONE} -- Agents
 			Result := on_project_loaded_agent_internal
 		end
 
-	on_project_unloaded_agent: PROCEDURE [ANY, TUPLE] is
+	on_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_project_unloaded'.
 		do
 			if on_project_unloaded_agent_internal = Void then
@@ -185,7 +185,7 @@ feature{NONE} -- Agents
 			Result := on_project_unloaded_agent_internal
 		end
 
-	on_compile_start_agent: PROCEDURE [ANY, TUPLE] is
+	on_compile_start_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_compile_start'
 		do
 			if on_compile_start_agent_internal = Void then
@@ -194,7 +194,7 @@ feature{NONE} -- Agents
 			Result := on_compile_start_agent_internal
 		end
 
-	on_compile_stop_agent: PROCEDURE [ANY, TUPLE] is
+	on_compile_stop_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_compile_stop'
 		do
 			if on_compile_stop_agent_internal = Void then
@@ -203,7 +203,7 @@ feature{NONE} -- Agents
 			Result := on_compile_stop_agent_internal
 		end
 
-	on_metric_evaluation_start_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_metric_evaluation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_metric_evaluation_start'
 		do
 			if on_metric_evaluation_start_agent_internal = Void then
@@ -212,7 +212,7 @@ feature{NONE} -- Agents
 			Result := on_metric_evaluation_start_agent_internal
 		end
 
-	on_metric_evaluation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_metric_evaluation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_metric_evaluation_stop'
 		do
 			if on_metric_evaluation_stop_agent_internal = Void then
@@ -221,7 +221,7 @@ feature{NONE} -- Agents
 			Result := on_metric_evaluation_stop_agent_internal
 		end
 
-	on_archive_calculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_archive_calculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_archive_calculation_start'
 		do
 			if on_archive_calculation_start_agent_internal = Void then
@@ -230,7 +230,7 @@ feature{NONE} -- Agents
 			Result := on_archive_calculation_start_agent_internal
 		end
 
-	on_archive_calculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_archive_calculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_archive_calculation_stop'
 		do
 			if on_archive_calculation_stop_agent_internal = Void then
@@ -239,7 +239,7 @@ feature{NONE} -- Agents
 			Result := on_archive_calculation_stop_agent_internal
 		end
 
-	on_history_recalculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_history_recalculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_history_recalculation_stop'
 		do
 			if on_history_recalculation_stop_agent_internal = Void then
@@ -248,7 +248,7 @@ feature{NONE} -- Agents
 			Result := on_history_recalculation_stop_agent_internal
 		end
 
-	on_history_recalculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+	on_history_recalculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
 			-- Agent of `on_history_recalculation_start'
 		do
 			if on_history_recalculation_start_agent_internal = Void then
@@ -257,7 +257,7 @@ feature{NONE} -- Agents
 			Result := on_history_recalculation_start_agent_internal
 		end
 
-	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE] is
+	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_metric_loaded'
 		do
 			if on_metric_loaded_agent_internal = Void then
@@ -266,7 +266,7 @@ feature{NONE} -- Agents
 			Result := on_metric_loaded_agent_internal
 		end
 
-	on_metric_renamed_agent: PROCEDURE [ANY, TUPLE [a_old_name: STRING; a_new_name: STRING]] is
+	on_metric_renamed_agent: PROCEDURE [ANY, TUPLE [a_old_name: STRING; a_new_name: STRING]]
 			-- Agent of `on_metric_renamed'
 		do
 			if on_metric_rename_agent_internal = Void then
@@ -313,7 +313,7 @@ feature{NONE} -- Implementation
 	on_metric_rename_agent_internal: like on_metric_renamed_agent;
 			-- Implementation of `on_metric_rename_agent_internal'			
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

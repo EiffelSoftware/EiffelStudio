@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree items in a cluster tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,13 +39,13 @@ inherit
 
 feature -- Access
 
-	parent_tree: EB_CLASSES_TREE is
+	parent_tree: EB_CLASSES_TREE
 			-- Tree of clusters containing `Current'.
 		do
 			Result ?= Precursor
 		end
 
-	set_associated_textable (textable: EV_TEXT_COMPONENT) is
+	set_associated_textable (textable: EV_TEXT_COMPONENT)
 			-- Associate `Current' with `textable' and change event handling.
 		require
 			textable /= Void
@@ -55,10 +55,10 @@ feature -- Access
 			select_actions.extend (agent print_name)
 		end
 
-	dummy_string: STRING is "DUMMY"
+	dummy_string: STRING = "DUMMY"
 			-- Dummy string used by `fake_load'
 
-	stone: STONE is
+	stone: STONE
 			-- Class stone representing `Current'.
 		deferred
 		end
@@ -77,7 +77,7 @@ feature -- Status Setting
 
 feature -- Interactivity
 
-	associate_with_window (a_window: like associated_window) is
+	associate_with_window (a_window: like associated_window)
 			-- Associate recursively with `a_window' so that we can call `set_stone' on `a_window'.
 		do
 			if pointer_press_action_agent = Void then
@@ -89,7 +89,7 @@ feature -- Interactivity
 
 feature {NONE} -- Context menu
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu
 		local
 			l_factory: EB_CONTEXT_MENU_FACTORY
@@ -102,7 +102,7 @@ feature {NONE} -- Context menu
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		local
 			l_item: EB_CLASSES_TREE_ITEM
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 	associated_textable: EV_TEXT_COMPONENT
 			-- Text component in which `Current' writes its name when clicked on.
 
-	print_name is
+	print_name
 			-- Print class name in textable, the associated text component.
 		do
 			if associated_textable /= Void then
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			-- Is `Current' already associated to a window?
 
 	pointer_press_action (a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64;
-						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; action: PROCEDURE [ANY, TUPLE]) is
+						 a_screen_x: INTEGER_32; a_screen_y: INTEGER_32; action: PROCEDURE [ANY, TUPLE])
 			-- Send a stone corresponding to `Current' to `associated_window'.
 		local
 			l_stone: STONE
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 	pointer_press_action_agent: PROCEDURE [ANY, TUPLE [x: INTEGER_32; y: INTEGER_32; button: INTEGER_32; x_tilt: REAL_64; y_tilt: REAL_64; pressure: REAL_64; screen_x: INTEGER_32; screen_y: INTEGER_32]];
 			-- `pointer_press_action' handler
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

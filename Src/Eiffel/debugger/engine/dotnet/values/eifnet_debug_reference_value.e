@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with Reference value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value)
 			-- 	Set `value' to `v'.
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
@@ -70,12 +70,12 @@ feature {NONE} -- Initialization
 
 feature -- Get
 
-	has_object_value: BOOLEAN is
+	has_object_value: BOOLEAN
 		do
 			Result := object_value /= Void
 		end
 
-	get_object_value is
+	get_object_value
 			-- Get `object_value' value
 		require
 			object_value_void: not has_object_value
@@ -83,7 +83,7 @@ feature -- Get
 			object_value := icd_value_info.new_interface_debug_object_value
 		end
 
-	release_object_value is
+	release_object_value
 			-- Release `object_value'
 		require
 			has_object_value: has_object_value
@@ -103,7 +103,7 @@ feature -- Access
 	value_module_file_name: STRING
 			-- ICorDebugModule filename related to `object_value'
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		local
 			l_class_type: CLASS_TYPE
@@ -118,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	dynamic_class_type: CLASS_TYPE is
+	dynamic_class_type: CLASS_TYPE
 			-- Corresponding CLASS_TYPE represented by `value'.
 		do
 			Result := internal_dynamic_class_type
@@ -142,7 +142,7 @@ feature -- Access
 			end
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_for_dotnet_value (Current)
@@ -150,14 +150,14 @@ feature -- Access
 
 feature -- Change
 
-	reset_children is
+	reset_children
 		do
 			attributes := Void
 		end
 
 feature {NONE} -- Output
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -185,7 +185,7 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -206,7 +206,7 @@ feature -- Output
 
 feature {APPLICATION_EXECUTION} -- Query
 
-	attribute_value_for (att_name: STRING): ABSTRACT_DEBUG_VALUE is
+	attribute_value_for (att_name: STRING): ABSTRACT_DEBUG_VALUE
 			-- Attribute value named `att_name'.
 		local
 			l_icd_class: ICOR_DEBUG_CLASS
@@ -236,7 +236,7 @@ feature {APPLICATION_EXECUTION} -- Query
 
 feature {NONE} -- Children implementation
 
-	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -283,7 +283,7 @@ feature {NONE} -- Children implementation
 			end
 		end
 
-	attribute_value (a_obj_value: ICOR_DEBUG_OBJECT_VALUE; a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+	attribute_value (a_obj_value: ICOR_DEBUG_OBJECT_VALUE; a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE
 			-- Attribute's value in the context of Current related to `f'
 		require
 			object_value_not_void: a_obj_value /= Void
@@ -332,7 +332,7 @@ feature {NONE} -- Children implementation
 
 feature -- Status
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -357,7 +357,7 @@ feature -- Status
 
 feature -- Once request
 
-	once_function_value (a_feat: E_FEATURE): ABSTRACT_DEBUG_VALUE is
+	once_function_value (a_feat: E_FEATURE): ABSTRACT_DEBUG_VALUE
 			-- If Result = Void, this mean the once has not been already called !
 		require
 			object_value_not_void: object_value /= Void
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 
 	internal_dynamic_class_type: like dynamic_class_type;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

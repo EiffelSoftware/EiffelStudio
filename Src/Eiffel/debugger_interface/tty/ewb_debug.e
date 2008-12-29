@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to run an eiffel application."
@@ -30,13 +30,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	loop_action is
+	loop_action
 			-- Execute the generated application
 		do
 			execute
 		end
 
-	dbg_main_menu: EWB_TTY_MENU is
+	dbg_main_menu: EWB_TTY_MENU
 		once
 			create Result.make (debugger_names.t_debugger_main_menu)
 			Result.enter_actions.extend_kamikaze (agent Result.request_menu_display)
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	param_working_directory: STRING
 	param_env_variables: HASH_TABLE [STRING_32, STRING_32]
 
-	execute is
+	execute
 			-- This command is available only for the `loop' mode
 		local
 			dbg: TTY_DEBUGGER_MANAGER
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			dbg_main_menu.execute (False)
 		end
 
-	display_params is
+	display_params
 		do
 			localized_print (debugger_names.m_parameters);
 			localized_print (debugger_names.m_arguments);
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			io.put_new_line
 		end
 
-	get_arguments is
+	get_arguments
 		do
 			localized_print (debugger_names.m_arguments);
 			if param_args /= Void and then not param_args.is_empty then
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_environment_variables is
+	get_environment_variables
 		local
 			vn: STRING
 			vv: STRING
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_working_directory is
+	get_working_directory
 		local
 			d: like param_working_directory
 		do
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	start_debugger (a_exec_mode: INTEGER; ign_bp: BOOLEAN) is
+	start_debugger (a_exec_mode: INTEGER; ign_bp: BOOLEAN)
 		require
 			debugger_manager /= Void
 		local
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			ctlr.debug_application (param, a_exec_mode)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

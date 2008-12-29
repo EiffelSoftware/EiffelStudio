@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a metric archive"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create {LINKED_LIST [EB_METRIC_ARCHIVE_NODE]} archive_internal.make
@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	archive: LIST [EB_METRIC_ARCHIVE_NODE] is
+	archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			-- List of archives
 			-- Every time, a new list if archiv nodes are returned.
 		do
@@ -38,7 +38,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	filtered_archive (a_filter_agent: FUNCTION [ANY, TUPLE [a_archive_node: EB_METRIC_ARCHIVE_NODE], BOOLEAN]): like Current is
+	filtered_archive (a_filter_agent: FUNCTION [ANY, TUPLE [a_archive_node: EB_METRIC_ARCHIVE_NODE], BOOLEAN]): like Current
 			-- Archive that satisfies predicate given by `a_filter_agent'.
 		require
 			a_filter_agent_attached: a_filter_agent /= Void
@@ -50,7 +50,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	archive_by_metric_name (a_metric_name: STRING): like archive is
+	archive_by_metric_name (a_metric_name: STRING): like archive
 			-- List of archive nodes calculated over metric named `a_metric_name'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -79,7 +79,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	archive_by_uuid (a_uuid: UUID): EB_METRIC_ARCHIVE_NODE is
+	archive_by_uuid (a_uuid: UUID): EB_METRIC_ARCHIVE_NODE
 			-- Archive with UUID `a_uuid'		
 			-- Void if no metric archive whose UUID is `a_uuid' exists.
 		require
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	equivalent_archives (a_archive: EB_METRIC_ARCHIVE_NODE): LIST [EB_METRIC_ARCHIVE_NODE] is
+	equivalent_archives (a_archive: EB_METRIC_ARCHIVE_NODE): LIST [EB_METRIC_ARCHIVE_NODE]
 			-- List of archives which are equivalent with `a_archive'
 		require
 			a_archive_attached: a_archive /= Void
@@ -113,7 +113,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of archive nodes
 		do
 			Result := archive_internal.count
@@ -124,13 +124,13 @@ feature -- Error handling
 	last_error: EB_METRIC_ERROR
 			-- Last occurred error
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has error?
 		do
 			Result := last_error /= Void
 		end
 
-	clear_last_error is
+	clear_last_error
 			-- Clear `last_error' and ensure `has_error' return False.
 		do
 			last_error := Void
@@ -138,7 +138,7 @@ feature -- Error handling
 			not_has_error: not has_error
 		end
 
-	create_last_error (a_error_message: STRING_GENERAL) is
+	create_last_error (a_error_message: STRING_GENERAL)
 			-- Create `last_error' to contain `a_error_message'.
 		do
 			create last_error.make (a_error_message)
@@ -148,7 +148,7 @@ feature -- Error handling
 
 feature -- Status report
 
-	has_archive_by_metric_name (a_metric_name: STRING): BOOLEAN is
+	has_archive_by_metric_name (a_metric_name: STRING): BOOLEAN
 			-- Does archive calculated over metric given by name `a_metric_name' exist?
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -157,7 +157,7 @@ feature -- Status report
 			Result := not archive_by_metric_name (a_metric_name).is_empty
 		end
 
-	has_archive_by_uuid (a_uuid: UUID): BOOLEAN is
+	has_archive_by_uuid (a_uuid: UUID): BOOLEAN
 			-- Does archive whose UUID is `a_uuid' exist?
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -165,7 +165,7 @@ feature -- Status report
 			Result := archive_by_uuid (a_uuid) /= Void
 		end
 
-	is_archive_equivalent (a_archive, b_archive: EB_METRIC_ARCHIVE_NODE): BOOLEAN is
+	is_archive_equivalent (a_archive, b_archive: EB_METRIC_ARCHIVE_NODE): BOOLEAN
 			-- Is `a_archive' equivalent to `b_archive'?
 		require
 			a_archive_attached: a_archive /= Void
@@ -176,7 +176,7 @@ feature -- Status report
 
 feature -- Archive manipulation
 
-	load_archive (a_file_name: STRING) is
+	load_archive (a_file_name: STRING)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -204,7 +204,7 @@ feature -- Archive manipulation
 			end
 		end
 
-	store_archive (a_file_name: STRING; a_error_agent: PROCEDURE [ANY, TUPLE]) is
+	store_archive (a_file_name: STRING; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Write `archive' into file `a_file_name'.
 			-- Clear content of `a_file_name' if file already exists.
 			-- `a_error_agent' will be invoked when error occurs.
@@ -218,7 +218,7 @@ feature -- Archive manipulation
 			store_xml (xml_document_for_items (n_metric_archive, archive, agent l_xml_generator.xml_element ({EB_METRIC_ARCHIVE_NODE}?, ?)), a_file_name, a_error_agent)
 		end
 
-	remove_archive_node (a_uuid: UUID) is
+	remove_archive_node (a_uuid: UUID)
 			-- Remove archive node whose UUID is `a_uuid' from `archive'.
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -246,7 +246,7 @@ feature -- Archive manipulation
 			end
 		end
 
-	insert_archive_node (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	insert_archive_node (a_archive_node: EB_METRIC_ARCHIVE_NODE)
 			-- Insert `a_archive_node' into `archive'.
 		require
 			a_archive_node_attached: a_archive_node /= Void
@@ -257,7 +257,7 @@ feature -- Archive manipulation
 			archive_noded_inserted: has_archive_by_uuid (a_archive_node.uuid) and then archive_by_uuid (a_archive_node.uuid) = a_archive_node
 		end
 
-	wipe_out_archive is
+	wipe_out_archive
 			-- Wipe out all archive nodes in `archive'.
 		do
 			archive_internal.wipe_out
@@ -265,7 +265,7 @@ feature -- Archive manipulation
 			archive_is_empty: archive.is_empty
 		end
 
-	merge_archive_node (a_new_archive_node, a_old_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	merge_archive_node (a_new_archive_node, a_old_archive_node: EB_METRIC_ARCHIVE_NODE)
 			-- Try to merge information from `a_new_archive_node' into `a_old_archive_node'.
 		require
 			a_new_archive_node_attached: a_new_archive_node /= Void
@@ -278,19 +278,19 @@ feature -- Archive manipulation
 			a_old_archive_node.merge (a_new_archive_node)
 		end
 
-	mark_archive_as_up_to_date is
+	mark_archive_as_up_to_date
 			-- Mark every archive node as up-to-date.
 		do
 			archive_internal.do_all (agent change_archive_node_status (?, True))
 		end
 
-	mark_archive_as_old is
+	mark_archive_as_old
 			-- Mark every archive node as old.
 		do
 			archive_internal.do_all (agent change_archive_node_status (?, False))
 		end
 
-	rename_metric (a_old_name, a_new_name: STRING) is
+	rename_metric (a_old_name, a_new_name: STRING)
 			-- Rename metric names in archive nodes from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_valid: metric_manager.is_metric_name_valid (a_old_name)
@@ -301,7 +301,7 @@ feature -- Archive manipulation
 
 feature{NONE} -- Implementation
 
-	change_archive_node_status (a_archive_node: EB_METRIC_ARCHIVE_NODE; b: BOOLEAN) is
+	change_archive_node_status (a_archive_node: EB_METRIC_ARCHIVE_NODE; b: BOOLEAN)
 			-- Change the status of `a_archive_node' to `b'.
 		require
 			a_archive_node_attached: a_archive_node /= Void
@@ -311,7 +311,7 @@ feature{NONE} -- Implementation
 			status_changed: a_archive_node.is_up_to_date = b
 		end
 
-	change_metric_name (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_old_name, a_new_name: STRING) is
+	change_metric_name (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_old_name, a_new_name: STRING)
 			-- If metric name in `a_archive_node' is equal to `a_old_name', then change it to `a_new_name', otherwise, do nothing.
 		require
 			a_archive_node_attached: a_archive_node /= Void
@@ -330,7 +330,7 @@ invariant
 	archive_internal_attached: archive_internal /= Void
 	archive_attached: archive /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

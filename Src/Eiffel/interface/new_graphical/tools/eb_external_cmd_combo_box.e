@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Completable text field
 				]"
@@ -49,7 +49,7 @@ create
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize current.
 		do
 			Precursor
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_can_complete_agent (a_agent: like can_complete_agent) is
+	set_can_complete_agent (a_agent: like can_complete_agent)
 			-- Set `can_complete_agent' with `a_agent'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -78,10 +78,10 @@ feature -- Setting
 
 feature -- Status report
 
-	completing_word: BOOLEAN is true
+	completing_word: BOOLEAN = true
 			-- Has user requested to complete a word.
 
-	is_key_matched_with_shortcut (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN; a_shortcut: SHORTCUT_PREFERENCE): BOOLEAN is
+	is_key_matched_with_shortcut (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN; a_shortcut: SHORTCUT_PREFERENCE): BOOLEAN
 			-- Does key combination `a_key', `a_ctrl', `a_alt' and `a_shift' match `a_shortcut'?
 		require
 			a_key_attached: a_key /= Void
@@ -94,7 +94,7 @@ feature -- Status report
 				a_shift = a_shortcut.is_shift
 		end
 
-	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
+	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN
 			-- `a_key' can activate text completion?
 		local
 			l_shortcut_pref: SHORTCUT_PREFERENCE
@@ -123,7 +123,7 @@ feature -- Status report
 			end
 		end
 
-	is_focus_back_needed: BOOLEAN is
+	is_focus_back_needed: BOOLEAN
 			-- Should focus be set back after code completion?
 		do
 			if is_destroyed then
@@ -135,12 +135,12 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	place_post_cursor is
+	place_post_cursor
 			-- Place cursor after completion
 		do
 		end
 
-	back_delete_char is
+	back_delete_char
 			-- Back delete character.
 		do
 			if text_length > 0 and caret_position > 1 then
@@ -149,7 +149,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	delete_char is
+	delete_char
 			-- Delete character.
 		do
 			if text_length > 0 and caret_position <= text_length then
@@ -158,52 +158,52 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	insert_string (a_str: STRING_32) is
+	insert_string (a_str: STRING_32)
 			-- Insert `a_str' at cursor position.
 		do
 			insert_text (a_str)
 			set_caret_position (caret_position + a_str.count)
 		end
 
-	insert_char (a_char: CHARACTER_32) is
+	insert_char (a_char: CHARACTER_32)
 			-- Insert `a_char' at cursor position.
 		do
 			insert_text (create {STRING_32}.make_filled (a_char, 1))
 			set_caret_position (caret_position + 1)
 		end
 
-	replace_char (a_char: CHARACTER_32) is
+	replace_char (a_char: CHARACTER_32)
 			-- Replace current char with `a_char'.
 		do
 			delete_char
 			insert_text (a_char.out)
 		end
 
-	block_focus_in_actions is
+	block_focus_in_actions
 			-- Block focus in actions
 		do
 			focus_in_actions.block
 		end
 
-	resume_focus_in_actions is
+	resume_focus_in_actions
 			-- Resume focus in actions
 		do
 			focus_in_actions.resume
 		end
 
-	block_focus_out_actions is
+	block_focus_out_actions
 			-- Block focus out actions.
 		do
 			focus_out_actions.block
 		end
 
-	resume_focus_out_actions is
+	resume_focus_out_actions
 			-- Resume focus out actions.
 		do
 			focus_out_actions.resume
 		end
 
-	handle_character (a_char: CHARACTER_32) is
+	handle_character (a_char: CHARACTER_32)
 			-- Handle `a_char'
 		do
 			if not unwanted_characters.item (a_char.code) then
@@ -211,12 +211,12 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
  		do
  		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
  		do
 			if ev_key.code = 40 then -- Backspace
@@ -226,7 +226,7 @@ feature{NONE} -- Implementation
 			end
  		end
 
-	remove_keyed_character (a_key: EV_KEY) is
+	remove_keyed_character (a_key: EV_KEY)
 			-- We remove the 'key' character on windows platform.
 			-- On linux the key has not been inserted.
 			-- Fix needed.
@@ -242,7 +242,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN is
+	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN
 			-- Is `a_key' a `a_char_code' character?
 		require
 			a_key_not_void: a_key /= Void
@@ -269,7 +269,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Position calculation
 
-	calculate_completion_list_x_position: INTEGER is
+	calculate_completion_list_x_position: INTEGER
 			-- Determine the x position to display the completion list
 		local
 			screen: EB_STUDIO_SCREEN
@@ -297,7 +297,7 @@ feature{NONE} -- Position calculation
 			Result := Result.max (0)
 		end
 
-	calculate_completion_list_y_position: INTEGER is
+	calculate_completion_list_y_position: INTEGER
 			-- Determine the y position to display the completion list
 		local
 			screen: EB_STUDIO_SCREEN
@@ -347,7 +347,7 @@ feature{NONE} -- Position calculation
 			end
 		end
 
-	calculate_completion_list_height: INTEGER is
+	calculate_completion_list_height: INTEGER
 			-- Determine the height the completion should list should have
 		local
 			upper_space,
@@ -392,13 +392,13 @@ feature{NONE} -- Position calculation
 			end
 		end
 
-	calculate_completion_list_width: INTEGER is
+	calculate_completion_list_width: INTEGER
 			-- Determine the width the completion list should have			
 		do
 			Result := preferences.metric_tool_data.criterion_completion_list_width
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

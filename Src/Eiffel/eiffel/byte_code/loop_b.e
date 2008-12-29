@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for Eiffel loop."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_loop_b (Current)
@@ -51,37 +51,37 @@ feature -- Access
 
 feature -- Setting
 
-	set_from_part (f: like from_part) is
+	set_from_part (f: like from_part)
 			-- Assign `f' to `from_part'.
 		do
 			from_part := f
 		end
 
-	set_invariant_part (i: like invariant_part) is
+	set_invariant_part (i: like invariant_part)
 			-- Assign `i' to `invariant_part'.
 		do
 			invariant_part := i
 		end
 
-	set_stop (s: like stop) is
+	set_stop (s: like stop)
 			-- Assign `s' to `stop'.
 		do
 			stop := s
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
 		end
 
-	set_variant_part (v: like variant_part) is
+	set_variant_part (v: like variant_part)
 			-- Assign `v' to `variant_part'.
 		do
 			variant_part := v
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Set `end_location' with `e'.
 		require
 			e_not_void: e /= Void
@@ -91,10 +91,10 @@ feature -- Setting
 			end_location_set: end_location = e
 		end
 
-	need_enlarging: BOOLEAN is True
+	need_enlarging: BOOLEAN = True
 			-- This node needs enlarging
 
-	enlarged: LOOP_BL is
+	enlarged: LOOP_BL
 			-- Enlarge current node
 		do
 			create Result
@@ -103,19 +103,19 @@ feature -- Setting
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := (from_part /= Void and then from_part.assigns_to (i))
 				or else (compound /= Void and then compound.assigns_to (i))
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (from_part /= Void and then from_part.calls_special_features (array_desc))
 				or else loop_calls_special_features (array_desc)
 		end;
 
-	loop_calls_special_features (array_desc: INTEGER): BOOLEAN is
+	loop_calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then compound.calls_special_features (array_desc))
 				or else (invariant_part /= Void and then invariant_part.calls_special_features (array_desc))
@@ -123,13 +123,13 @@ feature -- Array optimization
 				or else stop.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := (from_part /= Void and then from_part.is_unsafe)
 				or else loop_is_unsafe
 		end
 
-	loop_is_unsafe: BOOLEAN is
+	loop_is_unsafe: BOOLEAN
 		do
 			Result := (compound /= Void and then compound.is_unsafe)
 				or else (invariant_part /= Void and then invariant_part.is_unsafe)
@@ -137,7 +137,7 @@ feature -- Array optimization
 				or else stop.is_unsafe
 		end
 
-	new_optimization_context: OPTIMIZATION_CONTEXT is
+	new_optimization_context: OPTIMIZATION_CONTEXT
 		local
 			old_context: OPTIMIZATION_CONTEXT;
 			array_desc: TWO_WAY_SORTED_SET [INTEGER]
@@ -178,7 +178,7 @@ feature -- Array optimization
 			Result.set_generated_offsets (old_context.generated_offsets.deep_twin)
 		end
 
-	optimized_byte_node: LOOP_B is
+	optimized_byte_node: LOOP_B
 		local
 			opt_loop: OPT_LOOP_B
 			opt_context: OPTIMIZATION_CONTEXT
@@ -277,14 +277,14 @@ feature -- Array optimization
 
 feature {NONE} -- Array optimization
 
-	optimizer: ARRAY_OPTIMIZER is
+	optimizer: ARRAY_OPTIMIZER
 		do
 			Result := System.remover.array_optimizer
 		end
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1 + stop.size;
 			if from_part /= Void then
@@ -301,7 +301,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if from_part /= Void then
@@ -319,7 +319,7 @@ feature -- Inlining
 			stop := stop.pre_inlined_code
 		end;
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if from_part /= Void then
@@ -337,7 +337,7 @@ feature -- Inlining
 			stop := stop.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

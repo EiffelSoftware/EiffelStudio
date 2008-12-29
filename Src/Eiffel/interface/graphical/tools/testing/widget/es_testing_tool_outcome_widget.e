@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget showing detailed information about testing outcomes for a given test.
 	]"
@@ -145,7 +145,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	add_outcome (a_outcome: !EQA_TEST_OUTCOME; a_expanded: BOOLEAN) is
+	add_outcome (a_outcome: !EQA_TEST_OUTCOME; a_expanded: BOOLEAN)
 			-- Add outcome to grid
 			--
 			-- `a_outcome': Outcome for which information should be added.
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_invocation (a_parent: EV_GRID_ROW; a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: !STRING; a_expanded: BOOLEAN) is
+	add_invocation (a_parent: EV_GRID_ROW; a_invocation: EQA_TEST_INVOCATION_RESPONSE; a_name: !STRING; a_expanded: BOOLEAN)
 			-- Add invocation information to grid
 			--
 			-- `a_parent': Parent row for new rows.
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			l_row.set_item (2, l_label)
 		end
 
-	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !EQA_TEST_INVOCATION_EXCEPTION) is
+	add_exception_details (a_parent: EV_GRID_ROW; a_exception: !EQA_TEST_INVOCATION_EXCEPTION)
 			-- Add rows with exception details
 			--
 			-- `a_parent': Parent row for all new rows.
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			grid.row (l_pos + 2).set_item (2, l_label)
 		end
 
-	show_text (a_text: !STRING) is
+	show_text (a_text: !STRING)
 			-- Display text in a separate window.
 		local
 			l_dialog: ES_BASIC_EDITOR_DIALOG
@@ -365,7 +365,7 @@ feature {NONE} -- Internationalization
 
 	t_title: !STRING = "Outcomes"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

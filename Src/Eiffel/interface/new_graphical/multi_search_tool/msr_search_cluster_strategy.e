@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Use to search in a CLUSTER_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (a_keyword: like keyword;
 			a_range: like surrounding_text_range;
 			a_cluster: like cluster_i;
-			only_compiled_class: like only_compiled_class_searched) is
+			only_compiled_class: like only_compiled_class_searched)
 			-- Initialization with a cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_cluster_set: BOOLEAN is
+	is_cluster_set: BOOLEAN
 			-- Is `cluster_i' set?
 		do
 			Result := (cluster_i /= Void)
 		end
 
-	is_subcluster_searched: BOOLEAN is
+	is_subcluster_searched: BOOLEAN
 			-- Are subclusters in `cluster_i' searched?
 		do
 			Result := is_subcluster_searched_internal
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result := Precursor and is_cluster_set
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_subcluster_searched (a_bool: BOOLEAN) is
+	set_subcluster_searched (a_bool: BOOLEAN)
 			-- If set subclusters in `cluster_i' are searched.
 		do
 			is_subcluster_searched_internal := a_bool
@@ -69,7 +69,7 @@ feature -- Element change
 
 feature -- Basic operatioin
 
-	launch is
+	launch
 			-- Launch searching.
 		local
 			subcluster: ARRAYED_LIST [CLUSTER_I]
@@ -141,7 +141,7 @@ feature -- Basic operatioin
 			end
 		end
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -154,7 +154,7 @@ feature -- Basic operatioin
 
 feature -- Element change
 
-	set_cluster (a_cluster: CLUSTER_I) is
+	set_cluster (a_cluster: CLUSTER_I)
 			-- Set `cluster_i' to a_cluster.
 		do
 			cluster_i := a_cluster
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

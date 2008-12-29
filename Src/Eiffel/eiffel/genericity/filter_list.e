@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Filter all available types in system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,21 +27,21 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			table_make (2)
 		end
 
 feature -- Comparison
 
-	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN is
+	same_keys (a_search_key, a_key: CL_TYPE_A): BOOLEAN
 		do
 			Result := a_search_key.same_as (a_key)
 		end
 
 feature -- Cleaning
 
-	clean is
+	clean
 			-- Clean the list of all the removed classes
 		local
 			i, nb: INTEGER
@@ -71,7 +71,7 @@ feature -- Cleaning
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

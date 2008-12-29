@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Display list of the classes in the universe,%
@@ -21,13 +21,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_SHOW_CLASSES is
+	associated_cmd: E_SHOW_CLASSES
 			-- Associated system command to be executed
 		do
 			create Result.make (output_window)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

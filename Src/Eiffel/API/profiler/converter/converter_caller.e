@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Initialized the PROFILE_CONVERTER and does extra checks."
@@ -18,7 +18,7 @@ create
 
 feature {EWB_GENERATE} -- Initialization
 
-	make (arguments: ARRAY [STRING]; shared_prof_config: SHARED_PROF_CONFIG) is
+	make (arguments: ARRAY [STRING]; shared_prof_config: SHARED_PROF_CONFIG)
 			-- Initialize the converter with the `arguments'. The first argument
 			-- should be the profiler's output file, the second the compile type used.
 		do
@@ -66,7 +66,7 @@ feature {EWB_GENERATE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	check_profile_file (profile_name: STRING; comp_type: STRING) is
+	check_profile_file (profile_name: STRING; comp_type: STRING)
 			-- Checks if the file exists.
 		local
 			file: PLAIN_TEXT_FILE
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			exists := file.exists
 		end -- check_profile_file
 
-	check_project_directory (comp_type: STRING) is
+	check_project_directory (comp_type: STRING)
 			-- Checks wether the project directory exists.
 		local
 			file: PLAIN_TEXT_FILE;
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			exists := file.exists
 		end -- check_project_directory
 
-	do_conversion is
+	do_conversion
 			-- Creates both files and initiates conversion.
 		do
 			create profile_converter.make (profile_out_file, translat_file, config, is_finalized_profile);
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			is_last_conversion_ok := profile_converter.is_conversion_ok
 		end;
 
-	help is
+	help
 			-- Generate output for command line arguments.
 		do
 			io.error.put_string("Usage: ");
@@ -149,7 +149,7 @@ feature {NONE} -- attributes
 	config: SHARED_PROF_CONFIG;
 			-- Object to hold the configuration values.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

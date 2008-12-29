@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Hash table that provide a fast way to retrieve key by item.
 					This is implemented by two hash table. We build the internal hash table until
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate hash table for at least `n' items.
 			-- The table will be resized automatically
 			-- if more than `n' items are inserted.
@@ -44,7 +44,7 @@ feature -- Initialization
 			internal_table.make (0)
 		end
 
-	make_with_table (other: HASH_TABLE [G, H]) is
+	make_with_table (other: HASH_TABLE [G, H])
 			-- Initialize with a hash table.
 		require
 			a_table_not_void: other /= Void
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Access
 
-	key (a_item: G): ?H is
+	key (a_item: G): ?H
 			-- Key associated with `item', if present;
 		do
 			if internal_table_built then
@@ -67,7 +67,7 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	has_item (v: ?G): BOOLEAN is
+	has_item (v: ?G): BOOLEAN
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -81,7 +81,7 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	valid_item (a_item: ?G): BOOLEAN is
+	valid_item (a_item: ?G): BOOLEAN
 			-- Valid `a_item'
 		do
 			Result := internal_table.valid_key (a_item)
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (new: ?G; a_key: ?H) is
+	put (new: ?G; a_key: ?H)
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Make `inserted' true if and only if an insertion has
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 		end
 
-	replace (new: ?G; a_key: ?H) is
+	replace (new: ?G; a_key: ?H)
 			-- Replace item at `a_key', if present,
 			-- with `new'; do not change associated key.
 			-- Make `replaced' true if and only if a replacement has
@@ -122,7 +122,7 @@ feature -- Element change
 			end
 		end
 
-	force (new: ?G; a_key: ?H) is
+	force (new: ?G; a_key: ?H)
 			-- If `a_key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `a_key'.
 			-- Make `inserted' true.
@@ -136,7 +136,7 @@ feature -- Element change
 			end
 		end
 
-	replace_key (new_key: ?H; old_key: ?H) is
+	replace_key (new_key: ?H; old_key: ?H)
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
 			-- Make `replaced' true if and only if a replacement has
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 		end
 
-	replace_item (new_item: ?G; old_item: ?G) is
+	replace_item (new_item: ?G; old_item: ?G)
 			-- If table contains `old_item',
 			-- replace its key by `new_item'.
 			-- Make `item_replaced' true if and only if a replacement has
@@ -178,7 +178,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (a_key: H) is
+	remove (a_key: H)
 			-- Remove item associated with `key', if present.
 			-- Make `removed' true if and only if an item has been
 			-- removed (i.e. `key' was not present).
@@ -195,7 +195,7 @@ feature -- Removal
 			Precursor {HASH_TABLE} (a_key)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Reset all items to default values.
 		do
 			Precursor
@@ -203,7 +203,7 @@ feature -- Removal
 			internal_table_built := False
 		end
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values.
 		do
 			wipe_out
@@ -211,7 +211,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Re-initialize from `other'.
 		do
 			Precursor {HASH_TABLE} (other)
@@ -221,13 +221,13 @@ feature -- Duplication
 
 feature {CONVERSABLE_HASH_TABLE}-- Implementation
 
-	set_internal_table (t: like internal_table) is
+	set_internal_table (t: like internal_table)
 			-- Set `internal_table' with `t'.
 		do
 			internal_table := t
 		end
 
-	set_internal_table_buildt (b: like internal_table_built) is
+	set_internal_table_buildt (b: like internal_table_built)
 			-- Set `internal_table_built' with `b'.
 		do
 			internal_table_built := b
@@ -243,7 +243,7 @@ feature {CONVERSABLE_HASH_TABLE} -- Internal access
 
 feature {NONE} -- Implementation
 
-	build_internal_table is
+	build_internal_table
 			-- Build `internal_table' filling with element of current.
 		do
 			create internal_table.make (count)
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_table_is_not_void: internal_table /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

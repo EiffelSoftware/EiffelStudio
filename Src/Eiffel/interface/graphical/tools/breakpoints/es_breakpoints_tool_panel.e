@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool that displays breakpoints"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- Builds the tools user interface elements.
 			-- Note: This function is called prior to showing the tool for the first time.
 			--
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			a_widget.extend (box)
 		end
 
-	create_filter_bar (a_widget: EV_BOX) is
+	create_filter_bar (a_widget: EV_BOX)
 			-- Create filter bar
 		local
 			tags_tf: EVS_TAGS_FIELD
@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 			end
         end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 		do
 			Precursor {ES_DOCKABLE_TOOL_PANEL} (a_docking_manager)
 			check content_not_void : content /= Void end
@@ -198,7 +198,7 @@ feature {NONE} -- Initialization
 			update
 		end
 
-	load_preferences is
+	load_preferences
 			-- Load preferences
 		require
 			grid_attached: grid /= Void
@@ -289,7 +289,7 @@ feature -- Widgets
 
 feature {NONE} -- Sort handling
 
-	enable_sorting is
+	enable_sorting
 			-- Enables sorting on `grid' for specific columns
 		require
 			not_is_recycled: not is_recycled
@@ -327,7 +327,7 @@ feature {NONE} -- Sort handling
 			l_wrapper.set_sort_info (l_column.index, l_sort2_info)
 		end
 
-	disable_sorting is
+	disable_sorting
 			-- Disable sorting
 		local
 			l_wrapper: like grid_wrapper
@@ -341,7 +341,7 @@ feature {NONE} -- Sort handling
 			end
 		end
 
-	sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+	sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -362,7 +362,7 @@ feature {NONE} -- Sort handling
 
 feature -- Events
 
-	on_filter_clicked is
+	on_filter_clicked
 		do
 			if filter_enabled then
 				filter_enabled := False
@@ -375,7 +375,7 @@ feature -- Events
 			end
 		end
 
-	on_stone_dropped (a_stone: STONE) is
+	on_stone_dropped (a_stone: STONE)
 			--	Stone dropped
 		local
 			fs: FEATURE_STONE
@@ -398,7 +398,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_function (gi: EV_GRID_ITEM): STONE is
+	on_item_pebble_function (gi: EV_GRID_ITEM): STONE
 			-- Handle item pebble function
 		do
 			if gi /= Void then
@@ -410,7 +410,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
+	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Handle item pebble accpet cursor
 		local
 			st: STONE
@@ -421,7 +421,7 @@ feature -- Events
 			end
 		end
 
-	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
+	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Handle item pebble deny cursor
 		local
 			st: STONE
@@ -434,14 +434,14 @@ feature -- Events
 
 feature -- Updating
 
-	update is
+	update
 			-- Refresh `Current's display.
 		do
 			grid.request_delayed_clean
 			refresh_breakpoints_info
 		end
 
-	refresh is
+	refresh
 			-- Class has changed in `development_window'.
 		local
 			r: INTEGER
@@ -468,7 +468,7 @@ feature -- Updating
 			end
 		end
 
-	synchronize	is
+	synchronize
 			-- Synchronize
 		do
 			if is_initialized then
@@ -476,7 +476,7 @@ feature -- Updating
 			end
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- Handle project loaded actions
 		do
 			if is_initialized then
@@ -500,7 +500,7 @@ feature {NONE} -- Action handlers
 
 feature -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -519,7 +519,7 @@ feature {NONE} -- Grid layout Implementation
 	grid_layout_manager: ES_GRID_LAYOUT_MANAGER
 			-- Grid layout manager
 
-	record_grid_layout is
+	record_grid_layout
 			-- Record grid layout
 		do
 			if grid_layout_manager = Void then
@@ -528,7 +528,7 @@ feature {NONE} -- Grid layout Implementation
 			grid_layout_manager.record
 		end
 
-	restore_grid_layout is
+	restore_grid_layout
 			-- Restore grid layout
 		do
 			if grid_layout_manager /= Void then
@@ -538,14 +538,14 @@ feature {NONE} -- Grid layout Implementation
 
 feature {NONE} -- Implementation
 
-	clean_breakpoints_info is
+	clean_breakpoints_info
 			-- Clean the breakpoints's grid
 		do
 			record_grid_layout
 			grid.default_clean
 		end
 
-	refresh_breakpoints_info is
+	refresh_breakpoints_info
 			-- Refresh and recomputed breakpoints's grid when shown
 		do
 			if shown then -- Tool exists in layout and is displayed
@@ -560,7 +560,7 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 	agent_refresh_breakpoints_info_now: PROCEDURE [ANY, TUPLE]
 			-- agent on `refresh_breakpoints_info_now'.
 
-	request_refresh_breakpoints_info_now is
+	request_refresh_breakpoints_info_now
 			-- Request `refresh_breakpoints_info_now'
 		require
 			tool_visible: content /= Void
@@ -573,7 +573,7 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 			end
 		end
 
-	cancel_refresh_breakpoints_info_now is
+	cancel_refresh_breakpoints_info_now
 			-- Request `refresh_breakpoints_info_now'
 		do
 			if agent_refresh_breakpoints_info_now /= Void then
@@ -584,7 +584,7 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 			end
 		end
 
-	refresh_breakpoints_info_now is
+	refresh_breakpoints_info_now
 			-- Refresh and recomputed breakpoints's grid
 		require
 			content_widget_visible: content /= Void and then content.user_widget /= Void and then content.user_widget.is_show_requested
@@ -600,7 +600,7 @@ feature {NONE} -- Refresh breakpoints info Now implementation
 
 feature {NONE} -- Impl filling
 
-	populate_grid is
+	populate_grid
 			-- Fetch data and Populate breakpoints's grid.
 		local
 			col: EV_COLOR
@@ -726,7 +726,7 @@ feature {NONE} -- Impl filling
 			restore_grid_layout
 		end
 
-	insert_bp_list (bps: DS_LIST [BREAKPOINT]) is
+	insert_bp_list (bps: DS_LIST [BREAKPOINT])
 		require
 			not grid.is_tree_enabled
 		local
@@ -747,7 +747,7 @@ feature {NONE} -- Impl filling
 			end
 		end
 
-	insert_bp_features_list (routine_list: LIST [E_FEATURE]) is
+	insert_bp_features_list (routine_list: LIST [E_FEATURE])
 			-- Insert `routine_list' into `a_row'
 		require
 			routine_list /= Void
@@ -839,7 +839,7 @@ feature {NONE} -- Impl filling
 			end
 		end
 
-	insert_feature_bp_detail (f: E_FEATURE; a_row: EV_GRID_ROW) is
+	insert_feature_bp_detail (f: E_FEATURE; a_row: EV_GRID_ROW)
 			-- Insert features breakpoints details.
 		require
 			f_not_void: f /= Void
@@ -934,7 +934,7 @@ feature {NONE} -- Impl filling
 			end
 		end
 
-	insert_metrics is
+	insert_metrics
 		local
 			bpm: BREAKPOINTS_MANAGER
 			t: TUPLE [total: INTEGER; not_set: INTEGER; enabled: INTEGER; hidden_enabled: INTEGER; disabled: INTEGER; hidden_disabled: INTEGER]
@@ -994,7 +994,7 @@ feature {NONE} -- Impl filling
 
 feature {NONE} -- Dynamic item filling
 
-	computed_grid_item (c, r: INTEGER): EV_GRID_ITEM is
+	computed_grid_item (c, r: INTEGER): EV_GRID_ITEM
 			-- Computed grid item corresponding to `c,r'.
 		local
 			row: EV_GRID_ROW
@@ -1020,7 +1020,7 @@ feature {NONE} -- Dynamic item filling
 			Result := row.item (c)
 		end
 
-	compute_bp_row (a_row: EV_GRID_ROW) is
+	compute_bp_row (a_row: EV_GRID_ROW)
 			-- Compute `a_row' 's grid items
 		require
 			a_row_not_void: a_row /= Void
@@ -1150,7 +1150,7 @@ feature {NONE} -- Dynamic item filling
 
 feature {NONE} -- Events on grid
 
-	on_breakpoint_cell_double_left_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
+	on_breakpoint_cell_double_left_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER)
 			-- Handle a cell right click actions.
 		require
 			f /= Void
@@ -1167,7 +1167,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
+	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER)
 			-- Handle a cell right click actions.
 		require
 			f /= Void
@@ -1184,7 +1184,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_class_item_right_clicked	(c: CLASS_C; r: EV_GRID_ROW; x, y, button: INTEGER) is
+	on_class_item_right_clicked	(c: CLASS_C; r: EV_GRID_ROW; x, y, button: INTEGER)
 		require
 			c /= Void
 			r /= Void
@@ -1218,7 +1218,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_feature_item_right_clicked	(f: E_FEATURE; r: EV_GRID_ROW; x, y, button: INTEGER) is
+	on_feature_item_right_clicked	(f: E_FEATURE; r: EV_GRID_ROW; x, y, button: INTEGER)
 		require
 			f /= Void
 			r /= Void
@@ -1253,7 +1253,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	key_pressed_on_grid (a_key: EV_KEY) is
+	key_pressed_on_grid (a_key: EV_KEY)
 			-- Key events on grid's handler
 		local
 			g: like grid
@@ -1371,16 +1371,16 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation, cosmetic
 
-	Disabled_bp_symbol: STRING is "-"
+	Disabled_bp_symbol: STRING = "-"
 			-- Disable breakpoint symbol.
 
-	Conditional_bp_symbol: STRING is "*"
+	Conditional_bp_symbol: STRING = "*"
 			-- Conditional breakpoint symbol.
 
-	Disabled_conditional_bp_symbol: STRING is "*-"
+	Disabled_conditional_bp_symbol: STRING = "*-"
 			-- Disable conditional breakpoint symbol.
 
-	Breakable_icons: ES_PIXMAPS_12X12 is
+	Breakable_icons: ES_PIXMAPS_12X12
 			-- Breakable icons.
 		local
 			l_shared: EB_SHARED_PIXMAPS
@@ -1391,7 +1391,7 @@ feature {NONE} -- Implementation, cosmetic
 			result_attached: Result /= Void
 		end
 
-	bg_separator_color: EV_COLOR is
+	bg_separator_color: EV_COLOR
 			-- Background separator color.
 		once
 			create Result.make_with_8_bit_rgb (220, 220, 240)
@@ -1403,7 +1403,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Feature color
 	condition_color: EV_COLOR
 			-- Condition color
-	condition_font: EV_FONT is
+	condition_font: EV_FONT
 			-- Condition font
 		once
 			create Result
@@ -1413,7 +1413,7 @@ feature {NONE} -- Implementation, cosmetic
 	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
 			-- Set row highlight background color agent.
 
-	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
+	set_row_highlight_bg_color (v: COLOR_PREFERENCE)
 			-- Set row highlight background color.
 		do
 			row_highlight_bg_color := v.value
@@ -1422,7 +1422,7 @@ feature {NONE} -- Implementation, cosmetic
 	row_highlight_bg_color: EV_COLOR;
 			-- Row highlight background color.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

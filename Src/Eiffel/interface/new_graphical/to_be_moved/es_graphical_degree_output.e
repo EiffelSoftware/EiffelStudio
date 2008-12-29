@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_output_manager (a_output_manager: EB_OUTPUT_MANAGER) is
+	make_with_output_manager (a_output_manager: EB_OUTPUT_MANAGER)
 			-- Initialize degree output with `a_output_manager'.
 		require
 			a_output_manager_not_void: a_output_manager /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	output_manager: EB_OUTPUT_MANAGER
 			-- Output manager used to display messages of `Current'.
 
-	flush_output is
+	flush_output
 			-- Flush any pending messages to the display.
 		do
 			if not ev_application.is_destroyed and then ev_application.is_launched then
@@ -66,13 +66,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_new_compilation is
+	put_new_compilation
 			-- A new compilation has begun.
 		do
 			window_manager.display_percentage (0)
 		end
 
-	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
+	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING)
 			-- Display degree `deg_nbr' with entity `a_class'.
 		local
 			l_desc: STRING
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			flush_output
 		end
 
-	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER)
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			Precursor (deg_nbr, to_go, total)
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			flush_output
 		end
 
-	put_dead_code_removal_message (a_processed, to_go: INTEGER) is
+	put_dead_code_removal_message (a_processed, to_go: INTEGER)
 			-- Put message progress the start of dead code removal.
 		local
 			l_processed: INTEGER
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			flush_output
 		end
 
-	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
+	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER)
 			-- Put message indicating the start of a degree
 			-- with `total_nbr' passes to be done.
 		do
@@ -130,20 +130,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_end_degree is
+	put_end_degree
 			-- Put message indicating the end of a degree.
 		do
 			window_manager.display_percentage (100)
 		end
 
-	finish_degree_output is
+	finish_degree_output
 			-- Procedd end degree output.
 		do
 			Precursor
 			window_manager.display_percentage (0)
 		end
 
-	display_message (a_message: STRING) is
+	display_message (a_message: STRING)
 			-- Display `a_message' to output.
 		do
 			output_manager.start_processing (true)
@@ -151,13 +151,13 @@ feature {NONE} -- Implementation
 			output_manager.end_processing
 		end
 
-	display_new_line is
+	display_new_line
 			-- Display a new line on output.
 		do
 			output_manager.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

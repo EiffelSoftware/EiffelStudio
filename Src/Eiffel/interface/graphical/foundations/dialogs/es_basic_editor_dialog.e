@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A basic dialog for displaying text in a basic Eiffel studio editor.
 	]"
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `text'.
 			-- Note: Do not use!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

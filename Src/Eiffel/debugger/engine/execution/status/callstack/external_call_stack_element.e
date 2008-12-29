@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Change
 
-	set_info (a_oa: DBG_ADDRESS; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING) is
+	set_info (a_oa: DBG_ADDRESS; a_cn, a_fn: STRING; a_bi: INTEGER; a_info: STRING)
 		require
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
@@ -42,14 +42,14 @@ feature -- Properties
 
 feature -- Output
 
-	object_address_to_string: STRING is
+	object_address_to_string: STRING
 		do
 			if object_address /= Void then
 				Result := object_address.output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

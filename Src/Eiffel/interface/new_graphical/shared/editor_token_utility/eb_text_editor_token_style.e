@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Style to generate editor tokens for a given string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Setting
 
-	set_source_text, st_normal_text (a_source_text: STRING_32) is
+	set_source_text, st_normal_text (a_source_text: STRING_32)
 			-- Set `source_text' to be generated in `text' as normal text.
 		require
 			a_source_text_attached: a_source_text /= Void
@@ -22,7 +22,7 @@ feature -- Setting
 			set_editor_token_function (agent normal_text_agent (a_source_text))
 		end
 
-	set_symbol_text (a_symbol: STRING_32) is
+	set_symbol_text (a_symbol: STRING_32)
 			-- Set `source_text' to be generated in `text' as symbol text.
 		require
 			a_symbol_attached: a_symbol /= Void
@@ -30,7 +30,7 @@ feature -- Setting
 			set_editor_token_function (agent symbol_text_agent (a_symbol))
 		end
 
-	set_number_text (a_number: STRING_32) is
+	set_number_text (a_number: STRING_32)
 			-- Set `source_text' to be generated in `text' as number text.
 		require
 			a_number_attached: a_number /= Void
@@ -38,7 +38,7 @@ feature -- Setting
 			set_editor_token_function (agent number_text_agent (a_number))
 		end
 
-	set_folder_text (a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP) is
+	set_folder_text (a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP)
 			-- Set `source_text' to be genericed in `text' as folder text.
 			-- `a_folder_name' is the name of the folder,
 			-- `a_path' is the path in which `a_folder_name' exist, so for example,
@@ -54,7 +54,7 @@ feature -- Setting
 
 feature{NONE} -- Agents
 
-	generated_editor_token (a_text_processor_function: FUNCTION [ANY, TUPLE [like token_writer], PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]; a_text: STRING_GENERAL): LIST [EDITOR_TOKEN] is
+	generated_editor_token (a_text_processor_function: FUNCTION [ANY, TUPLE [like token_writer], PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]; a_text: STRING_GENERAL): LIST [EDITOR_TOKEN]
 			-- Process `a_text' using agent returned from `a_text_processor_function' and returned generated editor tokens.
 		require
 			a_text_processor_function_attached: a_text_processor_function /= Void
@@ -70,7 +70,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	normal_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN] is
+	normal_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_text' in normal text style
 		require
 			a_text_attached: a_text /= Void
@@ -83,7 +83,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	symbol_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN] is
+	symbol_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_text' in symbol style
 		require
 			a_text_attached: a_text /= Void
@@ -96,7 +96,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	number_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN] is
+	number_text_agent (a_text: STRING_32): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_text' in number style
 		require
 			a_text_attached: a_text /= Void
@@ -109,7 +109,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	folder_text_agent (a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): LIST [EDITOR_TOKEN] is
+	folder_text_agent (a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_text' in folder style
 			-- `a_folder_name' is the name of the folder,
 			-- `a_path' is the path in which `a_folder_name' exist, so for example,
@@ -127,7 +127,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	process_folder_text (a_writer: like token_writer; a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): PROCEDURE [ANY, TUPLE [STRING_GENERAL]] is
+	process_folder_text (a_writer: like token_writer; a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): PROCEDURE [ANY, TUPLE [STRING_GENERAL]]
 			-- `a_folder_name' is the name of the folder,
 			-- `a_path' is the path in which `a_folder_name' exist, so for example,
 			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.
@@ -141,7 +141,7 @@ feature{NONE} -- Agents
 			Result := agent a_writer.process_folder_text (?, a_path, a_group)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

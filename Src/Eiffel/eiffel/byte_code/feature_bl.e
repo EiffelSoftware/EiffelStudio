@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged access to an Eiffel feature
@@ -30,7 +30,7 @@ create
 
 feature {NONE} --Initialisation
 
-	make is
+	make
 		do
 			need_invariant := True;
 		end;
@@ -45,22 +45,22 @@ feature
 	basic_register: REGISTRABLE
 			-- Register used to store the metamorphosed simple type
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
 			register := r
 		end
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Assign `p' to `parent'
 		do
 			parent := p
 		end
 
-	is_feature_call: BOOLEAN is True
+	is_feature_call: BOOLEAN = True
 			-- Access is a feature call
 
-	free_register is
+	free_register
 			-- Free registers
 		do
 			Precursor {FEATURE_B}
@@ -72,13 +72,13 @@ feature
 	need_invariant: BOOLEAN;
 			-- Does the call need an invariant check ?
 
-	set_need_invariant (b: BOOLEAN) is
+	set_need_invariant (b: BOOLEAN)
 			-- Assign `b' to `need_invariant'.
 		do
 			need_invariant := b
 		end;
 
-	analyze is
+	analyze
 			-- Build a proper context for code generation.
 		do
 debug
@@ -92,7 +92,7 @@ io.error.put_string ("Out feature_bl%N")
 end
 		end
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze feature call on `reg'
 		local
 			tmp_register: REGISTER
@@ -175,19 +175,19 @@ io.error.put_new_line
 end
 		end
 
-	generate_access is
+	generate_access
 			-- Generate access call of feature in current on `current_register'
 		do
 			do_generate (Current_register)
 		end
 
-	generate_on (reg: REGISTRABLE) is
+	generate_on (reg: REGISTRABLE)
 			-- Generate access call of feature in current on `current_register'
 		do
 			do_generate (reg)
 		end
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
@@ -219,7 +219,7 @@ end
 			end
 		end
 
-	is_polymorphic: BOOLEAN is
+	is_polymorphic: BOOLEAN
 			-- Is access polymorphic ?
 		local
 			class_type: CL_TYPE_A
@@ -232,13 +232,13 @@ end
 			end
 		end
 
-	has_one_signature: BOOLEAN is
+	has_one_signature: BOOLEAN
 			-- <Precursor>
 		do
 			Result := Eiffel_table.poly_table (routine_id).has_one_signature
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
 		local
 			buf: GENERATION_BUFFER
@@ -298,7 +298,7 @@ end
 			end
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate feature call in a `typ' context
 		local
 			internal_name		: STRING
@@ -441,7 +441,7 @@ end
 			end
 		end
 
-	generate_parameters_list is
+	generate_parameters_list
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B
@@ -470,7 +470,7 @@ end
 			end
 		end
 
-	fill_from (f: FEATURE_B) is
+	fill_from (f: FEATURE_B)
 			-- Fill in node with feature `f'
 		do
 			feature_name_id := f.feature_name_id
@@ -486,7 +486,7 @@ end
 			enlarge_parameters
 		end
 
-	enlarge_parameters is
+	enlarge_parameters
 		local
 			i, nb: INTEGER
 			l_area: SPECIAL [EXPR_B]
@@ -507,14 +507,14 @@ end
 			end
 		end
 
-	has_call: BOOLEAN is True
+	has_call: BOOLEAN = True
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 
 feature {NONE} -- Implementation
 
-	is_deferred: CELL [BOOLEAN] is
+	is_deferred: CELL [BOOLEAN]
 			-- Is current feature call a deferred feature without implementation?
 		once
 			create Result.put (False)
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			is_deferred_not_void: Result /= Void
 		end
 
-	is_direct_once: CELL [BOOLEAN] is
+	is_direct_once: CELL [BOOLEAN]
 			-- Is current call done on a once which value can be accessed directly?
 		once
 			create Result.put (False)
@@ -530,7 +530,7 @@ feature {NONE} -- Implementation
 			is_direct_once_not_void: Result /= Void
 		end
 
-	is_right_parenthesis_needed: CELL [BOOLEAN] is
+	is_right_parenthesis_needed: CELL [BOOLEAN]
 			-- Does current call require to close a parenthesis?
 			-- Case when one use `nstcall' or `eif_optimize_return'.
 		once
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			is_right_parenthesis_needed_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

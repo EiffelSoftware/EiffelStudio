@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric to calculate line"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current.
 		do
 			unit := line_unit
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_criterion (a_criterion: QL_CRITERION) is
+	set_criterion (a_criterion: QL_CRITERION)
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
@@ -55,7 +55,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	basic_scope_table: HASH_TABLE [QL_METRIC_BASIC_SCOPE_INFO, QL_SCOPE] is
+	basic_scope_table: HASH_TABLE [QL_METRIC_BASIC_SCOPE_INFO, QL_SCOPE]
 			-- Table of domain generators per scope
 		do
 			if is_fill_domain_enabled or else criterion /= Void then
@@ -70,7 +70,7 @@ feature{NONE} -- Implementation
 	fast_generator_table: like basic_scope_table
 			-- Generator table used in fast calculation mode
 
-	setup_generator_table is
+	setup_generator_table
 			-- Setup both `normal_generator_table' and `fast_generator_table'.
 		local
 			l_scopes: like scopes
@@ -124,7 +124,7 @@ feature{NONE} -- Implementation
 			normal_generator_table_attached: normal_generator_table /= Void
 		end
 
-	number_of_lines_in_code_structure (a_item: QL_CODE_STRUCTURE_ITEM): DOUBLE is
+	number_of_lines_in_code_structure (a_item: QL_CODE_STRUCTURE_ITEM): DOUBLE
 			-- Number of lines in `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -146,7 +146,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	number_of_lines_in_feature (a_item: QL_FEATURE): DOUBLE is
+	number_of_lines_in_feature (a_item: QL_FEATURE): DOUBLE
 			-- Number of lines in `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -171,7 +171,7 @@ invariant
 	fast_generator_table_attached: fast_generator_table /= Void
 	normal_generator_table_attached: normal_generator_table /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

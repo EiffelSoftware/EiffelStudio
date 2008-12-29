@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for instruction inside a check/postcondition/[in]variant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_assert_b (Current)
@@ -41,37 +41,37 @@ feature -- Access
 
 feature -- Line number setting
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 		do
 			line_number := lnr
 		ensure then
 			line_number_set: line_number = lnr
 		end
 
-	set_tag (s: STRING) is
+	set_tag (s: STRING)
 			-- Assign `s' to `tag'.
 		do
 			tag := s
 		end
 
-	set_expr (e: EXPR_B) is
+	set_expr (e: EXPR_B)
 			-- Assign `e' to `expr'.
 		do
 			expr := e
 		end
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type
 		do
 			Result := expr.type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- False
 		do
 		end
 
-	analyze is
+	analyze
 			-- Analyze assertion
 		local
 			l_expr: like expr
@@ -83,7 +83,7 @@ feature -- Line number setting
 			l_expr.free_register
 		end
 
-	generate is
+	generate
 			-- Generate assertion C code.
 		local
 			buf: GENERATION_BUFFER
@@ -122,7 +122,7 @@ feature -- Line number setting
 			buf.put_character ('}')
 		end
 
-	generate_success (buf: like buffer) is
+	generate_success (buf: like buffer)
 			-- Generate a success in assertion
 		do
 			buf.indent
@@ -131,7 +131,7 @@ feature -- Line number setting
 			buf.exdent
 		end
 
-	generate_failure (buf: like buffer) is
+	generate_failure (buf: like buffer)
 			-- Generate a failure in assertion
 		do
 			buf.indent
@@ -140,13 +140,13 @@ feature -- Line number setting
 			buf.exdent
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		do
 			expr.unanalyze
 		end
 
-	enlarged: ASSERT_B is
+	enlarged: ASSERT_B
 			-- Tree enlarging
 		local
 			inv_assert: INV_ASSERT_B
@@ -172,17 +172,17 @@ feature -- Line number setting
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := expr.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := expr.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			expr := expr.optimized_byte_node
@@ -190,25 +190,25 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 			-- Size of the assertion.
 		do
 			Result := expr.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current;
 			expr := expr.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of an inspect value of a particular type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (v: H) is
+	make (v: H)
 			-- Initialize `value' with `v'.
 		do
 			value := v
@@ -26,19 +26,19 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current?
 		do
 			Result := value = other.value
 		end
 
-	is_next (other: like Current): BOOLEAN is
+	is_next (other: like Current): BOOLEAN
 			-- Is `other' next to Current?
 		do
 			Result := other.value = next_value (value)
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than Current?
 		do
 			Result := value < other.value
@@ -51,7 +51,7 @@ feature {TYPED_INTERVAL_B, TYPED_INTERVAL_VAL_B, BYTE_NODE_VISITOR} -- Data
 
 feature {TYPED_INTERVAL_B} -- C code generation
 
-	generate_interval (other: like Current) is
+	generate_interval (other: like Current)
 			-- Generate interval Current..`other'.
 		local
 			lo, up: H
@@ -81,14 +81,14 @@ feature {TYPED_INTERVAL_B} -- C code generation
 
 feature {NONE} -- Implementation: C code generation
 
-	generate_value (v: like value) is
+	generate_value (v: like value)
 			-- Generate single value `v'.
 		require
 			value_not_void: value /= Void
 		deferred
 		end
 
-	next_value (v: like value): like value is
+	next_value (v: like value): like value
 			-- Value after given value `v'
 		require
 			value_not_void: value /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation: C code generation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

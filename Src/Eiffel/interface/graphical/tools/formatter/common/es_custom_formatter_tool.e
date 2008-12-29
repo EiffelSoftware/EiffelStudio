@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for EiffelStudio's custom formatter code browsing tool.
 	]"
@@ -147,7 +147,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	not_icon_file_path_is_empty: icon_file_path /= Void not icon_file_path.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

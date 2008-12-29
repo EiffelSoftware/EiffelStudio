@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion related to name (use a STRING and two BOOLEAN as arguments)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion
 		do
 			check text /= Void end
@@ -50,7 +50,7 @@ feature -- Access
 	is_case_sensitive: BOOLEAN
 			-- Is `text' case-sensitive?
 
-	is_parameter_valid: BOOLEAN is
+	is_parameter_valid: BOOLEAN
 			-- Is parameters of current criterion valid?
 		do
 			Result := True
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_matching_strategy (a_strategy: INTEGER): BOOLEAN is
+	is_valid_matching_strategy (a_strategy: INTEGER): BOOLEAN
 			-- Is `a_strategy' a valid matching strategy?
 		do
 			Result := a_strategy = {QL_NAME_CRITERION}.identity_matching_strategy or else
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text (a_name_text: STRING) is
+	set_text (a_name_text: STRING)
 			-- Set `text' with `a_name_text'.
 		require
 			a_name_text_attached: a_name_text /= Void
@@ -87,7 +87,7 @@ feature -- Setting
 			name_text_set: text /= Void and then text.is_equal (a_name_text)
 		end
 
-	enable_case_sensitive is
+	enable_case_sensitive
 			-- Enable case sensitive.
 		do
 			is_case_sensitive := True
@@ -95,7 +95,7 @@ feature -- Setting
 			case_sensitive_enabled: is_case_sensitive
 		end
 
-	disable_case_sensitive is
+	disable_case_sensitive
 			-- disable case sensitive.
 		do
 			is_case_sensitive := False
@@ -103,7 +103,7 @@ feature -- Setting
 			case_sensitive_disabled: not is_case_sensitive
 		end
 
-	set_matching_strategy (a_strategy: INTEGER) is
+	set_matching_strategy (a_strategy: INTEGER)
 			-- Set `matching_strategy' with `a_strategy'.
 		require
 			a_strategy_valid: is_valid_matching_strategy (a_strategy)
@@ -115,7 +115,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_text_criterion (Current)
@@ -123,13 +123,13 @@ feature -- Process
 
 feature -- Status report
 
-	is_text_criterion: BOOLEAN is True
+	is_text_criterion: BOOLEAN = True
 			-- Is current a text criterion?
 
 invariant
 	name_text_attached: text /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

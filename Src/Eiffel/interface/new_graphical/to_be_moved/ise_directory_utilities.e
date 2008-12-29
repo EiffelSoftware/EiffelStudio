@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Features to create/manipulate directories and directory names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	validate_directory_name (a_directory_name: STRING): DIRECTORY_NAME is
+	validate_directory_name (a_directory_name: STRING): DIRECTORY_NAME
 			-- Check the validy of `a_directory_name'. If it is valid or almost
 			-- valid, returns the valid name of `a_directory_name', otherwise
 			-- returns Void.
@@ -59,7 +59,7 @@ feature -- Basic operations
 			Result_is_void_or_a_valid_directory: Result = Void or else (Result.is_valid and not Result.is_empty)
 		end
 
-	recursive_create_directory (a_directory_name: DIRECTORY_NAME) is
+	recursive_create_directory (a_directory_name: DIRECTORY_NAME)
 			-- Create the directory `a_directory_name' recursively.
 			-- 
 			-- Ex: if /temp/ exists but not /temp/test, calling 
@@ -122,7 +122,7 @@ feature -- Basic operations
 			Result_exists: (create {DIRECTORY}.make (a_directory_name)).exists
 		end
 
-	path_ellipsis (a_path: STRING; a_max_length: INTEGER): STRING is
+	path_ellipsis (a_path: STRING; a_max_length: INTEGER): STRING
 			-- Create the displayed string of `a_path', with a maximum
 			-- length of `a_max_length' characters. If `a_path' is
 			-- longer than `a_max_length', we only keep the beginning
@@ -176,7 +176,7 @@ feature -- Basic operations
 
 feature {NONE} -- Validation
 
-	make_for_test is
+	make_for_test
 			-- Test the features of this class.
 		local
 			dir: DIRECTORY_NAME
@@ -209,7 +209,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	test_validate_directory_name (a_dir: STRING; a_dir_valid: BOOLEAN) is
+	test_validate_directory_name (a_dir: STRING; a_dir_valid: BOOLEAN)
 		local
 			dir: DIRECTORY_NAME
 		do
@@ -220,7 +220,7 @@ feature {NONE} -- Validation
 			dir := validate_directory_name (dir)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

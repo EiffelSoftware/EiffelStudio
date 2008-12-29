@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that build the list of local variables and arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,31 +11,31 @@ deferred class
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING_32] is
+	found_names: LINKED_LIST [STRING_32]
 			-- List of found entity names.
 		deferred
 		ensure
 			found_names_not_void: Result /= Void
 		end
 
-	found_locals_list: EIFFEL_LIST [TYPE_DEC_AS] is
+	found_locals_list: EIFFEL_LIST [TYPE_DEC_AS]
 			-- List of found locals for current routine
 		deferred
 		end
 
-	has_return_type: BOOLEAN is
+	has_return_type: BOOLEAN
 			-- Does feature have a return type?
 		deferred
 		end
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

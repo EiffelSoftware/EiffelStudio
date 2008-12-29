@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for bits."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: like bit_count) is
+	make (c: like bit_count)
 			-- Initialize new instance of BITS_A with `c' bits.
 		do
 			bit_count := c
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_bits_a (Current)
@@ -48,15 +48,15 @@ feature -- Visitor
 
 feature -- Status Report
 
-	is_bit: BOOLEAN is True
+	is_bit: BOOLEAN = True
 			-- Is the current actual type a bits type?
 
-	is_class_valid: BOOLEAN is
+	is_class_valid: BOOLEAN
 		do
 			Result := bit_count > 0
 		end
 
-	is_external: BOOLEAN is False
+	is_external: BOOLEAN = False
 			-- <Precursor>
 
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
@@ -66,7 +66,7 @@ feature -- Status Report
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		do
 			Result := bit_count = other.bit_count
@@ -74,19 +74,19 @@ feature -- Comparison
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is `other' the same as Current?
 		do
 			Result := {b: BITS_A} other and then  bit_count = b.bit_count
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		once
 			Result := System.bit_class.compiled_class
 		end
 
-	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
+	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE
 			-- Associated class type
 		do
 				-- Return class type for BIT_REF.
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_bit_count (a_count: INTEGER) is
+	set_bit_count (a_count: INTEGER)
 			-- Set `bit_count' with `a_count'.
 		require
 			a_count_positive: a_count > 0
@@ -110,14 +110,14 @@ feature -- Settings
 
 feature -- Generic conformance
 
-	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A) is
+	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN; a_context_type: TYPE_A)
 		do
 			Precursor (buffer, final_mode, use_info, a_context_type)
 			buffer.put_integer (bit_count)
 			buffer.put_character (',')
 		end
 
-	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A)
 		local
 			dummy: INTEGER
 		do
@@ -128,7 +128,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 		local
 			dummy: INTEGER
 		do
@@ -136,7 +136,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	make_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN; a_context_type: TYPE_A)
 		do
 			Precursor (ba, use_info, a_context_type)
 				-- FIXME: Manu 08/06/2003: There is no limitation about the size
@@ -148,7 +148,7 @@ feature -- Generic conformance
 
 feature -- C code generation
 
-	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
+	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER)
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
@@ -160,7 +160,7 @@ feature -- C code generation
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		do
 			create Result.make (10)
@@ -168,7 +168,7 @@ feature -- Output
 			Result.append_integer (bit_count)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_bit_class, Void)
 			st.add_space
@@ -177,7 +177,7 @@ feature -- Output
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is current type valid?
 		do
 			Result := bit_count > 0
@@ -185,13 +185,13 @@ feature {TYPE_A} -- Helpers
 
 feature {COMPILER_EXPORTER}
 
-	reference_type: BITS_A is
+	reference_type: BITS_A
 			-- We can use Current as `reference type' since they share the same code.
 		do
 			Result := Current
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			other_bits: BITS_A
@@ -204,7 +204,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	c_type: BIT_I is
+	c_type: BIT_I
 			-- C type
 		do
 			create Result.make (bit_count)
@@ -213,7 +213,7 @@ feature {COMPILER_EXPORTER}
 invariant
 	bit_count_positive: is_valid implies bit_count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

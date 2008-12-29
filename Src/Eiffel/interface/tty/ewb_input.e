@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Specification of the inputfile for the query"
@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make_loop is
+	make_loop
 		do
 			first_run := true;
 			filenames.force ("*.pfi", filenames.count + 1);
@@ -33,7 +33,7 @@ feature -- Creation
 
 feature {NONE} -- Help message
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		local
 			i: INTEGER
 			l_str: STRING_32
@@ -62,7 +62,7 @@ feature {NONE} -- Help message
 
 feature {NONE} -- Execute
 
-	loop_action is
+	loop_action
 		local
 			command_arguments: EWB_ARGUMENTS;
 			i: INTEGER;
@@ -99,7 +99,7 @@ feature {NONE} -- Execute
 
 	-- don't know exactly how, but that comes.
 	-- IDEA: wipe_out current and replace with user's.
-	execute is
+	execute
 		do
 			first_run := false;
 		end;
@@ -108,7 +108,7 @@ feature {NONE} -- Attributes
 
 	first_run: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

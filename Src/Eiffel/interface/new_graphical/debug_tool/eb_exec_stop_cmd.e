@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to pause the execution of the debugged application."
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	execute is
+	execute
 			-- Pause the execution.
 		do
 			if
@@ -61,46 +61,46 @@ feature {NONE} -- Attributes
 	debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.	
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_stop
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_stop
 		end
 
-	name: STRING is "Exec_stop"
+	name: STRING = "Exec_stop"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Debug_interrupt_new
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			Result := pixmaps.icon_pixmaps.debug_pause_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_pause_icon_buffer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

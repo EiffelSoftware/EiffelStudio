@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display invariants of `current_class'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Execution
 
-	work is
+	work
 		local
 			class_f: CLASS_TEXT_FORMATTER
 		do
@@ -24,7 +24,7 @@ feature -- Execution
 			class_f.format_invariants (current_class, text_formatter)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

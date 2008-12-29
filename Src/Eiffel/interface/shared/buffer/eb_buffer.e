@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Buffer: A chunk of text"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_content: like content; a_temp_file_name: like temp_file_name) is
+	make (a_content: like content; a_temp_file_name: like temp_file_name)
 			-- Initialize `content' with `a_content' and `temp_file_name' with `a_temp_file_name'.
 		do
 			set_temp_file_name (a_temp_file_name)
@@ -21,7 +21,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	content: STRING is
+	content: STRING
 			-- Content of Current buffer
 		require
 			initialized: is_initialized
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_temp_file_name (a_name: like temp_file_name) is
+	set_temp_file_name (a_name: like temp_file_name)
 			-- Set `temp_file_name' with `a_name'.
 		require
 			not_initialized: not is_initialized
@@ -74,7 +74,7 @@ feature -- Setting
 			temp_file_name_set: temp_file_name /= Void and then temp_file_name.is_equal (a_name)
 		end
 
-	initialize is
+	initialize
 			-- Initialize current buffer.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -88,7 +88,7 @@ feature -- Setting
 			initialized: is_initialized
 		end
 
-	dispose is
+	dispose
 			-- Dispose current buffer (remove temp file).
 			-- After disposal, current buffer become not `is_initialized'.
 		local
@@ -111,7 +111,7 @@ feature{NONE} -- Implementation
 	temp_content: like content
 			-- Temporary content
 
-	set_is_initialized (b: BOOLEAN) is
+	set_is_initialized (b: BOOLEAN)
 			-- Set `is_initialized' with `b'.
 		do
 			is_initialized := b
@@ -119,7 +119,7 @@ feature{NONE} -- Implementation
 			is_initialized_set: is_initialized = b
 		end
 
-	set_temp_content (a_content: like temp_content) is
+	set_temp_content (a_content: like temp_content)
 			-- Set `temp_content' with `a_content'.
 		require
 			a_content_attached: a_content /= Void
@@ -129,7 +129,7 @@ feature{NONE} -- Implementation
 			temp_content_set: temp_content /= Void and then temp_content.is_equal (a_content)
 		end
 
-	set_last_change_date (a_date: INTEGER) is
+	set_last_change_date (a_date: INTEGER)
 			-- Set `last_change_date' with `a_date'.
 		do
 			last_change_date := a_date

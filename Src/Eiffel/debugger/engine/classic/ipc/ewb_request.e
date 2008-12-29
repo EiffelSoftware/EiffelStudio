@@ -1,4 +1,4 @@
-indexing
+note
 	description : "[
 			General request from workbench to ised.
 		]"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (code: INTEGER) is
+	make (code: INTEGER)
 			-- create a new request of type `code'
 		do
 			request_code := code
@@ -30,14 +30,14 @@ feature -- Initialization
 
 feature -- Update		
 
-	send is
+	send
 			-- Send Current request to ised, which may
 			-- relay it to the application.
 		do
 			send_rqst_0 (request_code)
 		end
 
-	send_integer (v: INTEGER) is
+	send_integer (v: INTEGER)
 			-- Send Current request to ised, which may
 			-- relay it to the application.
 		do
@@ -49,7 +49,7 @@ feature -- Update
 
 feature {APPLICATION_EXECUTION} -- Breakpoints update
 
-	send_breakpoints_for_stepping (app: APPLICATION_EXECUTION; a_execution_mode: INTEGER) is
+	send_breakpoints_for_stepping (app: APPLICATION_EXECUTION; a_execution_mode: INTEGER)
 			-- Send breakpoints for step operation
 			-- called by `{APPLICATION_EXECUTION_CLASSIC}.send_breakpoints'
 			-- DO NOT CALL DIRECTLY
@@ -86,7 +86,7 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 			end
 		end
 
-	set_classic_breakpoint (loc: BREAKPOINT_LOCATION; a_state: BOOLEAN) is
+	set_classic_breakpoint (loc: BREAKPOINT_LOCATION; a_state: BOOLEAN)
 			-- set breakpoint at `loc' if `a_state' is `True'
 			-- otherwise unset it
 		require
@@ -127,7 +127,7 @@ feature {APPLICATION_EXECUTION} -- Breakpoints update
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

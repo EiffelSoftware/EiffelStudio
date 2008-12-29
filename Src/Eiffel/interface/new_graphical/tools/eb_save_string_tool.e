@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that saves a string to a .txt file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (win: EV_WINDOW) is
+	make (win: EV_WINDOW)
 			-- Display warning dialog in `win' if necessary.
 		require
 			win_not_void: win /= Void
@@ -36,7 +36,7 @@ feature{NONE} -- Initialization
 			owner_window_set: owner_window = win
 		end
 
-	make_and_save (str: STRING; win: EV_WINDOW) is
+	make_and_save (str: STRING; win: EV_WINDOW)
 			-- Save `str' to a file.
 			-- Display warning dialog in `win' if necessary.
 		require
@@ -52,13 +52,13 @@ feature{NONE} -- Initialization
 
 feature -- Change
 
-	set_text (t: like text) is
+	set_text (t: like text)
 			-- Set `text' to `t'
 		do
 			text := t
 		end
 
-	set_title (t: like title) is
+	set_title (t: like title)
 			-- Set `title' to `t'
 		do
 			title := t
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 
 feature -- Save
 
-	save  is
+	save
 			-- Save `text' to file.
 		do
 			if text.is_empty then
@@ -90,7 +90,7 @@ feature -- Save
 			end
 		end
 
-	select_file_and_save is
+	select_file_and_save
 			-- Called when user press Save output button.
 		do
 			create save_file_dlg.make_with_title (title)
@@ -101,7 +101,7 @@ feature -- Save
 			save_file_dlg.destroy
 		end
 
-	on_save_file_selected is
+	on_save_file_selected
 			-- Called when user chosed a file to store process output.
 		local
 			f: PLAIN_TEXT_FILE
@@ -147,7 +147,7 @@ feature -- Save
 			retry
 		end
 
-	on_overwrite_file (file_name: STRING) is
+	on_overwrite_file (file_name: STRING)
 			-- Agent called when save text from `console' to an existing file
 		local
 			f: PLAIN_TEXT_FILE
@@ -164,7 +164,7 @@ feature -- Save
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

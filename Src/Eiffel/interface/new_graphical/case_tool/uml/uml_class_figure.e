@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a UML view for an Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -70,7 +70,7 @@ create {UML_CLASS_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an UML_CLASS_FIGURE.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			retrieve_preferences
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' with model.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 			model.properties_changed_actions.extend (agent set_properties)
 		end
 
-	make_with_model (a_model: ES_CLASS) is
+	make_with_model (a_model: ES_CLASS)
 			-- Create a UML_CLASS_FIGURE using the `model' `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -128,55 +128,55 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links starting.
 		do
 			Result := point_x--rectangle.x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links starting.
 		do
 			Result := point_y--rectangle.y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		do
 			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- height of `Current'.
 		do
 			Result := rectangle.height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- width of `Current'.
 		do
 			Result := rectangle.width
 		end
 
-	left: INTEGER is
+	left: INTEGER
 			-- Left most position.
 		do
 			Result := rectangle.point_a_x
 		end
 
-	top: INTEGER is
+	top: INTEGER
 			-- Top most position
 		do
 			Result := rectangle.point_a_y
 		end
 
-	right: INTEGER is
+	right: INTEGER
 			-- Right most position.
 		do
 			Result := rectangle.point_b_x
 		end
 
-	bottom: INTEGER is
+	bottom: INTEGER
 			-- Bottom most position.
 		do
 			Result := rectangle.point_b_y
@@ -184,7 +184,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
@@ -195,7 +195,7 @@ feature -- Element change
 			end
 		end
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		local
 			m: DOUBLE
@@ -250,7 +250,7 @@ feature -- Element change
 			p.set_precise (new_x, new_y)
 		end
 
-	fade_in is
+	fade_in
 			-- Fade out `Current'.
 		do
 			if uml_class_fill_color /= Void then
@@ -259,7 +259,7 @@ feature -- Element change
 			is_faded := False
 		end
 
-	fade_out is
+	fade_out
 			-- Fade in `Current'.
 		do
 			if uml_class_fill_color /= Void then
@@ -270,13 +270,13 @@ feature -- Element change
 
 feature -- Store/Retrive
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := "UML_CLASS_FIGURE"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			xqueries, xcommands, xsection: XM_ELEMENT
@@ -336,7 +336,7 @@ feature -- Store/Retrive
 			end
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			xqueries, xcommands, l_item: XM_ELEMENT
@@ -391,7 +391,7 @@ feature -- Store/Retrive
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -403,7 +403,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		do
 			is_update_required := False
@@ -411,7 +411,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 
-	update_size (fsv: FEATURE_SECTION_VIEW) is
+	update_size (fsv: FEATURE_SECTION_VIEW)
 			-- `fsv' was expanded or collabsed.
 		require
 			fsv_not_Void: fsv /= Void
@@ -469,7 +469,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			end
 		end
 
-	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN is
+	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN
 			-- Is `fsv' a section of the class?
 		require
 			fsv_not_Void: fsv /= Void
@@ -479,7 +479,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 
 feature {NONE} -- Implementation
 
-	border: INTEGER is
+	border: INTEGER
 			-- Border for `rectangle'.
 		do
 			Result := real_border.truncated_to_integer.max (0)
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 	real_border: REAL
 			-- Real border for `rectangle'
 
-	number_of_figures: INTEGER is 3
+	number_of_figures: INTEGER = 3
 			-- `rectangle', `queries_line', `commands_line'.
 
 	rectangle: EV_MODEL_RECTANGLE
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 	expanded_sections: ARRAYED_LIST [FEATURE_SECTION]
 			-- Expanded sections.
 
-	query_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW is
+	query_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW
 			-- Return feature section view with first feature name `a_name' if any.
 		local
 			l_item: FEATURE_SECTION_VIEW
@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	command_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW is
+	command_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW
 			-- Return feature section view with name `a_name' if any.
 		local
 			l_item: FEATURE_SECTION_VIEW
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_queries_commands is
+	set_queries_commands
 			-- Set `queries' and `commands' according to `model'.`feature_clause_list'.
 		local
 			l_item: FEATURE_SECTION_VIEW
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 			update_positions
 		end
 
-	set_queries is
+	set_queries
 			-- Set names in `queries' according to `queries_list'.
 		require
 			model_not_void: model /= Void
@@ -604,7 +604,7 @@ feature {NONE} -- Implementation
 			fill_group_with_features (queries, queries_list)
 		end
 
-	set_commands is
+	set_commands
 			-- Set names `commands' according to `model'.`queries'.
 		require
 			model_not_void: model /= Void
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 			fill_group_with_features (commands, commands_list)
 		end
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -627,7 +627,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_group_with_features (a_group: EV_MODEL_GROUP; feature_sections: LIST [FEATURE_SECTION]) is
+	fill_group_with_features (a_group: EV_MODEL_GROUP; feature_sections: LIST [FEATURE_SECTION])
 			-- Fill `a_group' with features in `feature_sections'.
 		require
 			group_not_Void: a_group /= Void
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 	commands_list: ARRAYED_LIST [FEATURE_SECTION]
 			-- List of features sections for commands.
 
-	build_queries_commands_list is
+	build_queries_commands_list
 			-- Build `queries_list' and `features_list'.
 		require
 			model_not_void: model /= Void
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	features_list (compiled_class: CLASS_C): LIST [FEATURE_SECTION] is
+	features_list (compiled_class: CLASS_C): LIST [FEATURE_SECTION]
 			-- List of features ordered by section name and export status corresponding to `compiled_class'.
 		require
 			compiled_class_not_Void: compiled_class /= Void
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	set_generics is
+	set_generics
 			-- Extend class name with `model'.`generics' if any.
 		require
 			model_not_void: model /= Void
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation
 			update_positions
 		end
 
-	set_properties is
+	set_properties
 			-- Set porperties of class according to `model'.
 		require
 			model_not_Void: model /= Void
@@ -882,7 +882,7 @@ feature {NONE} -- Implementation
 			update_positions
 		end
 
-	set_properties_text_properties (a_text: EV_MODEL_TEXT) is
+	set_properties_text_properties (a_text: EV_MODEL_TEXT)
 			-- Set properties of `a_text'
 		do
 			a_text.set_identified_font (uml_class_properties_font)
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_positions is
+	update_positions
 			-- Set positions for `root_text', `properties_text', `queries', `commands' such that port position is the center.
 		local
 			h, cur_y, f_pos, r_pos: INTEGER
@@ -965,7 +965,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	update_border is
+	update_border
 			-- Update border position (required because text is not scaled smoothley)
 		local
 			l_right: INTEGER
@@ -985,7 +985,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve properties from preference.
 		do
 			if uml_class_fill_color /= Void then
@@ -1014,7 +1014,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -1031,7 +1031,7 @@ invariant
 	generics_not_void: generics /= Void
 	border_positive: border >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

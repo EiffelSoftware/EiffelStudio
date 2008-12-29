@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make_with_pos (a_text: like wide_image; a_start_pos, a_end_pos: INTEGER) is
+	make_with_pos (a_text: like wide_image; a_start_pos, a_end_pos: INTEGER)
 			-- Create a new token for feature starting at `a_start_pos'.
 		require
 			a_text_not_void: a_text /= Void
@@ -50,11 +50,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_feature_start: BOOLEAN is True
+	is_feature_start: BOOLEAN = True
 
 feature -- Color
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			if text_color_id_internal = 0 then
 				Result := normal_text_color_id
@@ -65,30 +65,30 @@ feature -- Color
 
 feature -- Element change
 
-	set_feature_index_in_table (index: INTEGER) is
+	set_feature_index_in_table (index: INTEGER)
 		do
 			feature_index_in_table := index
 		end
 
-	set_text_color_feature is
+	set_text_color_feature
 			-- Set text color with normal color.
 		do
 			text_color_id_internal := feature_text_color_id
 		end
 
-	set_text_color_normal is
+	set_text_color_normal
 			-- Set text color with feature text color
 		do
 			text_color_id_internal := normal_text_color_id
 		end
 
-	set_text_color_operator is
+	set_text_color_operator
 			-- Set text color with operator color
 		do
 			text_color_id_internal := operator_text_color_id
 		end
 
-	set_text_color_string is
+	set_text_color_string
 			-- Set text color with string color
 		do
 			text_color_id_internal := string_text_color_id
@@ -96,7 +96,7 @@ feature -- Element change
 
 feature -- Visitor
 
-	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+	process (a_visitor: EIFFEL_TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_feature_start (Current)
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	text_color_id_internal: INTEGER;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

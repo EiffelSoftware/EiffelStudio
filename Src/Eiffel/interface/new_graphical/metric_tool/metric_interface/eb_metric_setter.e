@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A widget which provides a text field and a menu for setting a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Mark `Current' as initialized.
 		local
 			l_hor: EV_HORIZONTAL_BOX
@@ -76,7 +76,7 @@ feature -- Access
 	drop_button: EV_BUTTON
 			-- Button to popup a metric menu
 
-	metric_name: STRING is
+	metric_name: STRING
 			-- Metric name
 		do
 			Result := metric_text_field.text
@@ -84,7 +84,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_uuid: UUID is
+	metric_uuid: UUID
 			-- Metric UUID
 		do
 			Result ?= metric_text_field.data
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_is_read_only (b: BOOLEAN) is
+	set_is_read_only (b: BOOLEAN)
 			-- Set `is_read_only' with `b'.
 		do
 			is_read_only := b
@@ -119,7 +119,7 @@ feature -- Setting
 			is_read_only_set: is_read_only = b
 		end
 
-	load_metric_data (a_name: STRING) is
+	load_metric_data (a_name: STRING)
 			-- Load metric name `a_name' in Current.
 		require
 			a_name_attached: a_name /= Void
@@ -132,7 +132,7 @@ feature -- Setting
 
 feature{NONE}	-- Acitons
 
-	on_text_change_in_text_field (a_text: STRING) is
+	on_text_change_in_text_field (a_text: STRING)
 			-- Action to be performed when text in `metric_text_field' changes to `a_text'.			
 		require
 			a_text_attached: a_text /= Void
@@ -151,20 +151,20 @@ feature{NONE}	-- Acitons
 			end
 		end
 
-	on_metric_name_text_change_confirmed is
+	on_metric_name_text_change_confirmed
 			-- Action to be performed when text change in `metric_text_field' is confirmed
 		do
 			on_text_change_in_text_field (metric_text_field.text)
 			call_change_actions
 		end
 
-	on_metric_name_text_change is
+	on_metric_name_text_change
 			-- Action to be performed when text changes in `metric_text_field'
 		do
 			delayed_timer.request_call
 		end
 
-	on_drop (a_pebble: ANY) is
+	on_drop (a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped on `metric_name_text'.
 		local
 			l_metric: EB_METRIC
@@ -183,7 +183,7 @@ feature{NONE}	-- Acitons
 			end
 		end
 
-	on_open_metric_menu is
+	on_open_metric_menu
 			-- Action to be performed when open `metric_menu' at position related to `metric_text_field'.
 		do
 			if button_metric_menu /= Void then
@@ -194,7 +194,7 @@ feature{NONE}	-- Acitons
 			button_metric_menu.show_at (metric_text_field, metric_text_field.width - approximate_width_of_menu (button_metric_menu) - 30, metric_text_field.height)
 		end
 
-	on_key_pressed_in_open_metric_btn (a_key: EV_KEY) is
+	on_key_pressed_in_open_metric_btn (a_key: EV_KEY)
 			-- Action to be performed when button pressed to open a metric menu
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
@@ -210,7 +210,7 @@ feature{NONE}	-- Implementation
 	button_metric_menu: EV_MENU
 			-- Menu to display all registered metrics				
 
-	call_change_actions is
+	call_change_actions
 			-- Invoke agents in `change_actions'.
 		require
 			not_is_read_only: not is_read_only
@@ -220,7 +220,7 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	setup_menu (a_menu: EV_MENU) is
+	setup_menu (a_menu: EV_MENU)
 			-- Setup menu selection actions for `metric_text_field'.
 		require
 			a_menu_attached: a_menu /= Void
@@ -255,7 +255,7 @@ invariant
 	change_actions_attached: change_actions /= Void
 	delayed_timer_attached: delayed_timer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

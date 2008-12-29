@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preferences for external commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -34,73 +34,73 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Access
 
-	external_command_0: STRING is
+	external_command_0: STRING
 			--
 		do
 			Result := external_commands.item (1).value
 		end
 
-	external_command_1: STRING is
+	external_command_1: STRING
 			--
 		do
 			Result := external_commands.item (2).value
 		end
 
-	external_command_2: STRING is
+	external_command_2: STRING
 			--
 		do
 			Result := external_commands.item (3).value
 		end
 
-	external_command_3: STRING is
+	external_command_3: STRING
 			--
 		do
 			Result := external_commands.item (4).value
 		end
 
-	external_command_4: STRING is
+	external_command_4: STRING
 			--
 		do
 			Result := external_commands.item (5).value
 		end
 
-	external_command_5: STRING is
+	external_command_5: STRING
 			--
 		do
 			Result := external_commands.item (6).value
 		end
 
-	external_command_6: STRING is
+	external_command_6: STRING
 			--
 		do
 			Result := external_commands.item (7).value
 		end
 
-	external_command_7: STRING is
+	external_command_7: STRING
 			--
 		do
 			Result := external_commands.item (8).value
 		end
 
-	external_command_8: STRING is
+	external_command_8: STRING
 			--
 		do
 			Result := external_commands.item (9).value
 		end
 
-	external_command_9: STRING is
+	external_command_9: STRING
 			--
 		do
 			Result := external_commands.item (10).value
 		end
 
-	i_th_external_preference_value (i: INTEGER): STRING is
+	i_th_external_preference_value (i: INTEGER): STRING
 			--
 		do
 			Result := i_th_external_preference (i).value
 		end
 
-	i_th_external_preference_string (i: INTEGER): STRING is
+	i_th_external_preference_string (i: INTEGER): STRING
 			--
 		do
 			Result := i_th_external_preference (i).name
@@ -108,7 +108,7 @@ feature -- Access
 
 feature {EB_SHARED_PREFERENCES} -- Access
 
-	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING] is
+	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
 			-- Shortcuts
 		once
 			create Result.make (default_shortcut_actions.count)
@@ -125,13 +125,13 @@ feature {EB_SHARED_PREFERENCES} -- Access
 	external_command_8_preference: STRING_PREFERENCE
 	external_command_9_preference: STRING_PREFERENCE
 
-	external_commands: ARRAY [STRING_PREFERENCE] is
+	external_commands: ARRAY [STRING_PREFERENCE]
 			--
 		once
 			create Result.make (0, 9)
 		end
 
-	i_th_external_preference (i: INTEGER): STRING_PREFERENCE is
+	i_th_external_preference (i: INTEGER): STRING_PREFERENCE
 			--
 		do
 			Result := external_commands.item (i)
@@ -139,18 +139,18 @@ feature {EB_SHARED_PREFERENCES} -- Access
 
 feature {NONE} -- Preference Strings
 
-	external_command_0_string: STRING is "general.external_commands.external_command_0"
-	external_command_1_string: STRING is "general.external_commands.external_command_1"
-	external_command_2_string: STRING is "general.external_commands.external_command_2"
-	external_command_3_string: STRING is "general.external_commands.external_command_3"
-	external_command_4_string: STRING is "general.external_commands.external_command_4"
-	external_command_5_string: STRING is "general.external_commands.external_command_5"
-	external_command_6_string: STRING is "general.external_commands.external_command_6"
-	external_command_7_string: STRING is "general.external_commands.external_command_7"
-	external_command_8_string: STRING is "general.external_commands.external_command_8"
-	external_command_9_string: STRING is "general.external_commands.external_command_9"
+	external_command_0_string: STRING = "general.external_commands.external_command_0"
+	external_command_1_string: STRING = "general.external_commands.external_command_1"
+	external_command_2_string: STRING = "general.external_commands.external_command_2"
+	external_command_3_string: STRING = "general.external_commands.external_command_3"
+	external_command_4_string: STRING = "general.external_commands.external_command_4"
+	external_command_5_string: STRING = "general.external_commands.external_command_5"
+	external_command_6_string: STRING = "general.external_commands.external_command_6"
+	external_command_7_string: STRING = "general.external_commands.external_command_7"
+	external_command_8_string: STRING = "general.external_commands.external_command_8"
+	external_command_9_string: STRING = "general.external_commands.external_command_9"
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -187,7 +187,7 @@ feature {NONE} -- Preference Strings
 
 feature {NONE} -- Shortcuts
 
-	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]; group: MANAGED_SHORTCUT_GROUP]] is
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]; group: MANAGED_SHORTCUT_GROUP]]
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -220,7 +220,7 @@ invariant
 	external_command_8_preference_not_void: external_command_8_preference /= Void
 	external_command_9_preference_not_void: external_command_9_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

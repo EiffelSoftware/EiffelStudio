@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Warning generated when private key cannot be read."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,22 +13,22 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VIIK"
+	code: STRING = "VIIK"
 		-- Error code
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- No need for an error message.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

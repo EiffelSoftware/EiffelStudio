@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Result of applying `$' on an Eiffel routine"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (cl_id: INTEGER; f: FEATURE_I) is
+	make (cl_id: INTEGER; f: FEATURE_I)
 			-- Initialization.
 		require
 			valid_class_id: cl_id > 0
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_address_b (Current)
@@ -77,7 +77,7 @@ feature -- Access
 	feature_class_id: INTEGER
 			-- Class id of feature.
 
-	routine_id: INTEGER is
+	routine_id: INTEGER
 			-- Routine ID of feature.
 		require
 			not_il_generation: not System.il_generation
@@ -87,7 +87,7 @@ feature -- Access
 			valid_id: Result > 0
 		end
 
-	class_id: INTEGER is
+	class_id: INTEGER
 			-- Class ID of feature.
 		require
 			il_generation: System.il_generation
@@ -103,20 +103,20 @@ feature -- Access
 
 feature -- Status report
 
-	type: POINTER_A is
+	type: POINTER_A
 			-- Expression type of $ operator.
 		do
 			Result := pointer_type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- False
 		do
 		end
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Generate feature address
 		local
 			internal_name: STRING
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Address table
 
-	record_feature (cl_id: INTEGER; f_id: INTEGER) is
+	record_feature (cl_id: INTEGER; f_id: INTEGER)
 			-- Record the feature in the address table if it is not there.
 			-- A refreezing will occur.
 		local
@@ -192,7 +192,7 @@ feature {NONE} -- Address table
 			address_table.record_dollar_op (cl_id, f_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

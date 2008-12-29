@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared path marker"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Path marker
 
-	target_path_marker: QL_PATH_MARKER is
+	target_path_marker: QL_PATH_MARKER
 			-- Path marker for target item
 		once
 			create Result.make (query_language_names.ql_target_path_opener, query_language_names.ql_target_path_closer)
@@ -24,7 +24,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	group_path_marker: QL_PATH_MARKER is
+	group_path_marker: QL_PATH_MARKER
 			-- Path marker for group item
 		once
 			create Result.make (query_language_names.ql_group_path_opener, query_language_names.ql_group_path_closer)
@@ -32,7 +32,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	class_path_marker: QL_PATH_MARKER is
+	class_path_marker: QL_PATH_MARKER
 			-- Path marker for class item
 		once
 			create Result.make (query_language_names.ql_class_path_opener, query_language_names.ql_class_path_closer)
@@ -40,7 +40,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	generic_path_marker: QL_PATH_MARKER is
+	generic_path_marker: QL_PATH_MARKER
 			-- Path marker for generic item
 		once
 			create Result.make (query_language_names.ql_generic_path_opener, query_language_names.ql_generic_path_closer)
@@ -48,7 +48,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	feature_path_marker: QL_PATH_MARKER is
+	feature_path_marker: QL_PATH_MARKER
 			-- Path marker for feature item
 		once
 			create Result.make (query_language_names.ql_feature_path_opener, query_language_names.ql_feature_path_closer)
@@ -56,7 +56,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	argument_path_marker: QL_PATH_MARKER is
+	argument_path_marker: QL_PATH_MARKER
 			-- Path marker for argument item
 		once
 			create Result.make (query_language_names.ql_argument_path_opener, query_language_names.ql_argument_path_closer)
@@ -64,7 +64,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	local_path_marker: QL_PATH_MARKER is
+	local_path_marker: QL_PATH_MARKER
 			-- Path marker for local item
 		once
 			create Result.make (query_language_names.ql_local_path_opener, query_language_names.ql_local_path_closer)
@@ -72,7 +72,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	line_path_marker: QL_PATH_MARKER is
+	line_path_marker: QL_PATH_MARKER
 			-- Path marker for line item
 		once
 			create Result.make (query_language_names.ql_line_path_opener, query_language_names.ql_line_path_closer)
@@ -80,7 +80,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	quantity_path_marker: QL_PATH_MARKER is
+	quantity_path_marker: QL_PATH_MARKER
 			-- Path marker for quantity item
 		once
 			create Result.make (query_language_names.ql_quantity_path_opener, query_language_names.ql_quantity_path_closer)
@@ -88,7 +88,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	assertion_path_marker: QL_ASSERTION_PATH_MARKER is
+	assertion_path_marker: QL_ASSERTION_PATH_MARKER
 			-- Path marker for assertion item
 		once
 			create Result.make (query_language_names.ql_assertion_path_opener, query_language_names.ql_assertion_path_closer)
@@ -96,7 +96,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-	path_markers: HASH_TABLE [QL_PATH_MARKER, QL_SCOPE] is
+	path_markers: HASH_TABLE [QL_PATH_MARKER, QL_SCOPE]
 			--  Path marker for every scope
 		once
 			create Result.make (10)
@@ -114,7 +114,7 @@ feature -- Path marker
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

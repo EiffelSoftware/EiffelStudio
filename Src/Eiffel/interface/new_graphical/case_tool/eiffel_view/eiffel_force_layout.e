@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a force directed physics for Eiffel graphs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_FORCE_LAYOU
 		do
 			Precursor {EG_FORCE_DIRECTED_LAYOUT}
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_inheritance_stiffness (a_value: INTEGER) is
+	set_inheritance_stiffness (a_value: INTEGER)
 			-- Set `inheritance_stiffness' to `a_value'.
 		require
 			percent: a_value >= 0 and a_value <= 100
@@ -50,7 +50,7 @@ feature -- Element change
 			set: inheritance_stiffness = a_value
 		end
 
-	set_client_supplier_stiffness (a_value: INTEGER) is
+	set_client_supplier_stiffness (a_value: INTEGER)
 			-- Set `client_supplier_stiffness' to `a_value'.
 		require
 			percent: a_value >= 0 and a_value <= 100
@@ -62,7 +62,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_PARTICLE is
+	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_PARTICLE
 			-- Create a new spring particle solver for `particles' and initialize it.
 		local
 			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			Result.set_client_stiffness ((client_supplier_stiffness / 10) + 0.001)
 		end
 
-	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_ENERGY is
+	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_ENERGY
 			-- Create a new spring energy solver for `particles' and initialize it.
 		local
 			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			Result.set_client_stiffness ((client_supplier_stiffness / 10) + 0.001)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

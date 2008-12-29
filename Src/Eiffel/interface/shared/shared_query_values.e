@@ -1,65 +1,65 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_QUERY_VALUES
 
 feature -- Access
 
-	output_names : ARRAY [STRING] is
+	output_names : ARRAY [STRING]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	filenames : ARRAY [STRING] is	
+	filenames : ARRAY [STRING]	
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	language_names: ARRAY [STRING] is
+	language_names: ARRAY [STRING]
 		once
 			create Result.make (1, 0)
 			Result.compare_objects
 		end
 
-	column_names : ARRAY [STRING] is
+	column_names : ARRAY [STRING]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	binary_operators : ARRAY [STRING] is
+	binary_operators : ARRAY [STRING]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	values : ARRAY [STRING] is
+	values : ARRAY [STRING]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	boolean_operators : ARRAY [STRING] is
+	boolean_operators : ARRAY [STRING]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
 		end
 
-	subqueries: LINKED_LIST [SUBQUERY] is
+	subqueries: LINKED_LIST [SUBQUERY]
 		once
 			create Result.make
 		end
 
-	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR] is
+	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR]
 		once
 			create Result.make
 		end
 
 feature -- Element change
 
-	clear_values is
+	clear_values
 			-- Remove all old values, to be able to
 			-- reset values to their defaults.
 		local
@@ -77,7 +77,7 @@ feature -- Element change
 			subqueries.wipe_out
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

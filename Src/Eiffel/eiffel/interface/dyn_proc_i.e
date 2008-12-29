@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_DYN_PROC_I
@@ -27,14 +27,14 @@ feature
 			Result := rep;
 		end;
 
-	selected: DYN_PROC_I is
+	selected: DYN_PROC_I
 			-- <Precursor>
 		do
 			create Result
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_DYN_PROC_I
@@ -45,9 +45,9 @@ feature
 			Result := unselect;
 		end;
 
-	is_do: BOOLEAN is true;
+	is_do: BOOLEAN = true;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

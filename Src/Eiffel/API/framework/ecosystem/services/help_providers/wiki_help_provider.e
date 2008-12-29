@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A Wiki-base help provider for navigating to help documentation found on the Eiffel public Wiki (dev.eiffel.com)
 	]"
@@ -59,7 +59,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

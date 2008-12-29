@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Performs the creation of a blank project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING) is
+	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING)
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Basic operations.
 
-	create_blank_project is
+	create_blank_project
 			-- Create the default ace file and the default root class
 		local
 			ace_file_content: STRING
@@ -89,7 +89,7 @@ feature -- Basic operations.
 
 feature {NONE} -- Implementation
 
-	process_ace_file_content (contents: STRING) is
+	process_ace_file_content (contents: STRING)
 			-- Process `contents': Fill in the blank with `system_name' and `project_directory'.
 		require
 			valid_contents: contents /= Void and then not contents.is_empty
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$root_cluster_location", project_directory)
 		end
 
-	save_ace_file_content (contents: STRING) is
+	save_ace_file_content (contents: STRING)
 			-- Save the ace file `content' in the filename `ace_filename'.
 		require
 			valid_contents: contents /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 				%Check your write permissions in this directory")
 		end
 
-	default_config_file_contents: STRING is
+	default_config_file_contents: STRING
 			-- Contents of the default ace file
 		local
 			a_file: RAW_FILE
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 				%Check that the file exists and that you are allowed to read it.")
 		end
 
-	create_root_class is
+	create_root_class
 			-- Create the file named `root_class_filename' and flush the content
 			-- of the default root class in it.
 		local
@@ -212,7 +212,7 @@ feature {NONE} -- Private attributes
 	project_directory: STRING;
 			-- Location of the project to build.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

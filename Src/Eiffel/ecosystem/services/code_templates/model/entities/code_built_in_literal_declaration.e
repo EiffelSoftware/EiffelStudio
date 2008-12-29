@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A built-in literal declaration for non-editable replacement in a selected template.
 	]"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 invariant
 	not_is_editable: not is_editable
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

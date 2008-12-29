@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Stop current test run command
 																]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		do
 			manager := a_manager
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on the toolbar button.
 		do
 			Result := interface_names.b_cancel
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Command
 
-	execute is
+	execute
 			-- <Precursor>
 		do
 			manager.stop_eweasel
@@ -52,38 +52,38 @@ feature -- Command
 
 feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := "Test"
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_stop_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_stop_icon_buffer
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "Stop_test_run"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_Stop_test_run
@@ -92,7 +92,7 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 	manager: !ES_EWEASEL_EXECUTION_MANAGER
 			-- eweasel execution manager
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

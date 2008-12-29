@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Parameter expression
@@ -19,7 +19,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_parameter_b (Current)
@@ -35,7 +35,7 @@ feature -- Access
 	expression: EXPR_B;
 			-- Expression
 
-	attachment_type: TYPE_A is
+	attachment_type: TYPE_A
 			-- Type to which the expression is attached
 		do
 			if
@@ -62,26 +62,26 @@ feature -- Access
 
 feature -- Modification
 
-	set_expression (e: EXPR_B) is
+	set_expression (e: EXPR_B)
 			-- Assign `e' to `expression'.
 		do
 			expression := e
 		end
 
-	set_attachment_type (t: TYPE_A) is
+	set_attachment_type (t: TYPE_A)
 			-- Assign `t' to `attachment_type'.
 		do
 			internal_attachment_type := t
 		end
 
-	set_is_formal (v: BOOLEAN) is
+	set_is_formal (v: BOOLEAN)
 			-- Specify whether the associated formal argument
 			-- of the routine seed is formal.
 		do
 			is_formal := v
 		end
 
-	set_parent (p: ACCESS_B) is
+	set_parent (p: ACCESS_B)
 			-- Set parent of this parameter to `p'.
 		do
 			parent := p
@@ -97,61 +97,61 @@ feature -- Modification
 
 feature -- Status report
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type
 		do
 			Result := expression.type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' used in the expression ?
 		do
 			Result := expression.used (r)
 		end
 
-	is_hector: BOOLEAN is
+	is_hector: BOOLEAN
 			-- Is the expression a non-protected one ?
 		do
 			Result := expression.is_hector
 		end
 
-	is_simple_expr: BOOLEAN is
+	is_simple_expr: BOOLEAN
 			-- Is the current expression a simple one ?
 		do
 			Result := expression.is_simple_expr;
 		end;
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Does the expression have a GCable variable ?
 		do
 			Result := expression.has_gcable_variable;
 		end;
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Does the expression have a call ?
 		do
 			Result := expression.has_call;
 		end;
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 		do
 			Result := expression.allocates_memory or else expression.allocates_memory_for_type (attachment_type)
 		end
 
-	stored_register: REGISTRABLE is
+	stored_register: REGISTRABLE
 			-- The register in which the expression is stored
 		do
 			Result := expression.stored_register;
 		end;
 
-	enlarged:  PARAMETER_BL is
+	enlarged:  PARAMETER_BL
 			-- Enlarge the expression
 		do
 			create Result;
 			Result.fill_from (Current);
 		end;
 
-	target_type_name: STRING is
+	target_type_name: STRING
 			-- Name of the target C type
 		do
 			if is_compound then
@@ -163,17 +163,17 @@ feature -- Status report
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := expression.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := expression.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			expression := expression.optimized_byte_node
@@ -181,12 +181,12 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := expression.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 				-- Adapt type in current context for better results. We have to remove
@@ -195,7 +195,7 @@ feature -- Inlining
 			expression := expression.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			internal_attachment_type := context.real_type (internal_attachment_type)
@@ -204,13 +204,13 @@ feature -- Inlining
 
 feature {NONE} -- Status report
 
-	is_compound: BOOLEAN is
+	is_compound: BOOLEAN
 			-- Shall a structure be used to pass the argument value?
 		do
 			Result := context.workbench_mode and not is_for_tuple_access
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

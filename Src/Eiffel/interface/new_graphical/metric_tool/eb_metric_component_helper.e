@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric tool helper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Status report
 
-	component_has_real_delayed_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN is
+	component_has_real_delayed_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN
 			-- Does `a_item' contain real delayed domain item?
 		require
 			a_item_attached: a_item /= Void
@@ -20,7 +20,7 @@ feature -- Status report
 			Result := has_real_delayed_input_domain_internal
 		end
 
-	component_has_delayed_input_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN is
+	component_has_delayed_input_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN
 			-- Does `a_item' contain delayed input domain item?
 		require
 			a_item_attached: a_item /= Void
@@ -29,7 +29,7 @@ feature -- Status report
 			Result := has_delayed_input_domain_internal
 		end
 
-	component_has_delayed_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN is
+	component_has_delayed_domain_item (a_item: EB_METRIC_VISITABLE): BOOLEAN
 			-- Does `a_item' contain delayed domain item (delayed input domain item or real delayed domain item)?
 		require
 			a_item_attached: a_item /= Void
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	replace_delayed_input_domain (a_item: EB_METRIC_VISITABLE; a_domain: EB_METRIC_DOMAIN) is
+	replace_delayed_input_domain (a_item: EB_METRIC_VISITABLE; a_domain: EB_METRIC_DOMAIN)
 			-- Replace delayed input domain in `a_item' with `a_domain'.
 		require
 			a_item_attached: a_item /= Void
@@ -54,7 +54,7 @@ feature -- Element Change
 			delayed_input_domain_internal := Void
 		end
 
-	replace_real_delayed_domain_item (a_item: EB_METRIC_VISITABLE; a_ql_domain: QL_DOMAIN) is
+	replace_real_delayed_domain_item (a_item: EB_METRIC_VISITABLE; a_ql_domain: QL_DOMAIN)
 			-- Replace every real delayed domain item cantained in `a_item' with `a_ql_domain'.
 		require
 			a_item_attached: a_item /= Void
@@ -68,7 +68,7 @@ feature -- Element Change
 			ql_domain_internal := Void
 		end
 
-	prepare_for_calculation (a_metric: EB_METRIC) is
+	prepare_for_calculation (a_metric: EB_METRIC)
 			-- Parpare for calculation of `a_metric'.
 			-- Note: Clean some flags which may indicate undesirable results from former calculation.
 		require
@@ -81,7 +81,7 @@ feature -- Element Change
 			a_metric.process (l_visitor)
 		end
 
-	on_clean_value_criterion (a_item: EB_METRIC_VALUE_CRITERION) is
+	on_clean_value_criterion (a_item: EB_METRIC_VALUE_CRITERION)
 			-- Action to be performed to clean legacy data in `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -89,7 +89,7 @@ feature -- Element Change
 			a_item.set_has_metric_status_checked (False)
 		end
 
-	on_clean_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	on_clean_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Action to be performed to clean legacy data in `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -105,7 +105,7 @@ feature{NONE} -- Implementation
 	delayed_input_domain_internal: EB_METRIC_DOMAIN
 	ql_domain_internal: QL_DOMAIN
 
-	on_delayed_domain_item_process (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	on_delayed_domain_item_process (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Action to be performed when `a_item' is processed
 		require
 			a_item_attached: a_item /= Void
@@ -118,7 +118,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	check_component_status (a_item: EB_METRIC_VISITABLE) is
+	check_component_status (a_item: EB_METRIC_VISITABLE)
 			-- Check status of `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -133,7 +133,7 @@ feature{NONE} -- Implementation
 			a_item.process (l_visitor)
 		end
 
-	replace_delayed_input_domain_internal (a_domain: EB_METRIC_DOMAIN) is
+	replace_delayed_input_domain_internal (a_domain: EB_METRIC_DOMAIN)
 			-- If `a_domain' contains delayed input domain item, replace `a_doamin' with `delayed_input_domain_internal'.
 		do
 			if a_domain.has_delayed_input_domain_item then
@@ -141,7 +141,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	replace_real_delayed_domain_item_internal (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	replace_real_delayed_domain_item_internal (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Replace `a_item' with `ql_domain_internal'.
 		require
 			a_item_attached: a_item /= Void
@@ -149,7 +149,7 @@ feature{NONE} -- Implementation
 			a_item.set_external_ql_domain (ql_domain_internal)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

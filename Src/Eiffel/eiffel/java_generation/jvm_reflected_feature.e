@@ -1,4 +1,4 @@
-indexing
+note
 	description: "objects that represent reflected features. a reflected %
                 %feature is only a placeholder for a inherited %
                 %feature that has not changed. it does not contain a lot of %
@@ -20,7 +20,7 @@ inherit
 			
 feature {ANY} -- Initialisation
 			
-	make is
+	make
 		do
 		end
 			
@@ -31,7 +31,7 @@ feature {ANY} -- Access
 			-- use `written_type_id' and `routine_id' to locate the
 			-- the written counterpart this feature referes to.
 	
-	written_class: JVM_CLASS is
+	written_class: JVM_CLASS
 			-- class object with type id `written_type_id'
 		do
 			Result := repository.item (written_type_id)
@@ -39,7 +39,7 @@ feature {ANY} -- Access
 			result_not_void: Result /= Void
 		end
 			
-	written_feature: JVM_WRITTEN_FEATURE is
+	written_feature: JVM_WRITTEN_FEATURE
 			-- retrieves the written feature
 		do
 			Result ?= written_class.feature_by_routine_id (routine_id)
@@ -47,14 +47,14 @@ feature {ANY} -- Access
 
 feature {ANY} -- Access
 			
-	set_written_type_id (i: INTEGER) is
+	set_written_type_id (i: INTEGER)
 			-- set the `writen_type_id'
 		do
 			written_type_id := i
 		ensure
 			written_type_id_set: written_type_id = i
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

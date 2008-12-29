@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a target item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Initialize `target' with `a_target'.
 		require
 			a_target_attached: a_target /= Void
@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 			target_set: target = a_target
 		end
 
-	make_with_parent (a_target: like target; a_parent: like parent) is
+	make_with_parent (a_target: like target; a_parent: like parent)
 			-- Initialize `target' with `a_target' and `parent' with `a_parent'.
 		require
 			a_target_attached: a_target /= Void
@@ -50,7 +50,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			Result := target.name.as_lower
@@ -58,7 +58,7 @@ feature -- Access
 			good_result: Result.is_equal (target.name.as_lower)
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := target.description
@@ -73,14 +73,14 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target associated with current
 
-	wrapped_domain: QL_TARGET_DOMAIN is
+	wrapped_domain: QL_TARGET_DOMAIN
 			-- A target domain which has current as the only item
 		do
 			create Result.make
 			Result.content.extend (Current)
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := target_path_marker
@@ -88,7 +88,7 @@ feature -- Access
 			good_result: Result = target_path_marker
 		end
 
-	nearest_parent_with_scope (a_scope: QL_SCOPE): QL_ITEM is
+	nearest_parent_with_scope (a_scope: QL_SCOPE): QL_ITEM
 			-- Nearest parent or indirect parent whose `scope' is `a_scope'.
 			-- For example, for a QL_FEATURE item, its nearest parent with CLASS_SCOPE
 			-- is its direct parent, which is a QL_CLASS item.
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	groups_in_target: QL_GROUP_DOMAIN is
+	groups_in_target: QL_GROUP_DOMAIN
 			-- Groups in `target'
 		local
 			l_group_domain_generator: QL_GROUP_DOMAIN_GENERATOR
@@ -114,7 +114,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
@@ -122,7 +122,7 @@ feature -- Access
 
 feature -- Status report
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of current
 		do
 			if internal_hash_code = 0 then
@@ -133,10 +133,10 @@ feature -- Status report
 			good_result: Result = internal_hash_code and internal_hash_code = target.name.hash_code
 		end
 
-	is_compiled: BOOLEAN is True
+	is_compiled: BOOLEAN = True
 			-- Is Current item compiled?
 
-	is_valid_domain_item: BOOLEAN is
+	is_valid_domain_item: BOOLEAN
 			-- Is current a valid item that is fully attached in a domain?
 			-- True as return value means every ancestors of current item is a valid domain item.
 		do
@@ -150,7 +150,7 @@ feature -- Status report
 						 (parent /= Void implies (Result = parent.is_valid_domain_item))
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := target_scope
@@ -160,7 +160,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_target (Current)
@@ -168,7 +168,7 @@ feature -- Visit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -180,7 +180,7 @@ feature -- Comparison
 invariant
 	target_attached: target /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

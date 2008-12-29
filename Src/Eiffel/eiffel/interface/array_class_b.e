@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 --- Compiled class ARRAY
@@ -19,7 +19,7 @@ create
 
 feature
 
-	check_validity is
+	check_validity
 			-- Check validity of class ARRAY
 		local
 			error: BOOLEAN;
@@ -83,7 +83,7 @@ feature
 
 feature {NONE}
 
-	make_signature: DYN_PROC_I is
+	make_signature: DYN_PROC_I
 			-- Required signature for feature `make' of class STRING
 		local
 			args: FEAT_ARG;
@@ -96,7 +96,7 @@ feature {NONE}
 			Result.set_feature_name_id (names_heap.make_name_id, 0)
 		end;
 
-	area_type: GEN_TYPE_A is
+	area_type: GEN_TYPE_A
 			-- Type SPECIAL [T]
 		local
 			f: FORMAL_A
@@ -108,7 +108,7 @@ feature {NONE}
 			create Result.make (System.special_id, gen)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

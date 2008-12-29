@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Controls execution of debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_debugger (dbg: like debugger_manager) is
+	make_with_debugger (dbg: like debugger_manager)
 		do
 			debugger_manager := dbg
 			current_execution_stack_number := 1
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Recylcing
 
-	recycle is
+	recycle
 			-- Clean debugging session data
 		do
 			debugger_manager.object_manager.reset
@@ -61,49 +61,49 @@ feature -- Recylcing
 
 feature -- Execution event callbacks
 
-	frozen on_application_before_resuming is
+	frozen on_application_before_resuming
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_before_resuming
 		end
 
-	frozen on_application_resumed is
+	frozen on_application_resumed
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_resumed
 		end
 
-	frozen on_application_before_paused is
+	frozen on_application_before_paused
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_before_paused
 		end
 
-	frozen on_application_paused is
+	frozen on_application_paused
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_paused
 		end
 
-	frozen on_application_just_stopped is
+	frozen on_application_just_stopped
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_just_stopped
 		end
 
-	frozen on_application_quit is
+	frozen on_application_quit
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
 			Debugger_manager.on_application_quit
 		end
 
-	frozen on_application_debugger_update is
+	frozen on_application_debugger_update
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
@@ -126,7 +126,7 @@ feature -- Properties
 
 feature -- Status
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 			-- Is the application running?
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
@@ -136,7 +136,7 @@ feature -- Status
 			yes_implies_non_void_status: Result implies status /= Void
 		end
 
-	is_stopped: BOOLEAN is
+	is_stopped: BOOLEAN
 			-- Is the application stopped in its execution?
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
@@ -147,7 +147,7 @@ feature -- Status
 			yes_implies_status_is_stop: Result implies status.is_stopped
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the application file exists?
 		local
 			f: PLAIN_TEXT_FILE
@@ -156,7 +156,7 @@ feature -- Status
 			Result := f.exists
 		end
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		require
@@ -168,13 +168,13 @@ feature -- Status
 
 feature -- Access
 
-	can_not_launch_system_message: STRING is
+	can_not_launch_system_message: STRING
 			-- Message displayed when estudio is unable to launch the system
 		do
 			Result := debugger_names.w_Cannot_launch_system.as_string_8
 		end
 
-	number_of_stack_elements: INTEGER is
+	number_of_stack_elements: INTEGER
 			-- Total number of the call stack elements in
 			-- exception stack
 		require
@@ -186,7 +186,7 @@ feature -- Access
 			end
 		end
 
-	current_call_stack_depth: INTEGER is
+	current_call_stack_depth: INTEGER
 			-- Current call stack's depth
 		require
 			is_running: is_running
@@ -197,7 +197,7 @@ feature -- Access
 			end
 		end
 
-	current_call_stack_is_empty: BOOLEAN is
+	current_call_stack_is_empty: BOOLEAN
 			-- Is Class stack empty ?
 		do
 			Result := number_of_stack_elements = 0
@@ -205,7 +205,7 @@ feature -- Access
 
 feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Implemenation
 
-	process_termination is
+	process_termination
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		require
@@ -230,7 +230,7 @@ end
 
 feature -- Execution
 
-	run (params: DEBUGGER_EXECUTION_PARAMETERS) is
+	run (params: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -262,7 +262,7 @@ feature -- Execution
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
 
-	release_all_but_kept_object is
+	release_all_but_kept_object
 			-- keep the objects addresses in `kept_objects'.
 			-- Objects that are not in `kept_objects' will be removed
 			-- and will be not under the control of bench.
@@ -277,7 +277,7 @@ feature -- Execution
 			keep_only_objects (status.kept_objects)
 		end
 
-	continue is
+	continue
 			-- Continue the running of the application and keep the
 			-- objects addresses in `kept_objects'. Objects that are not in
 			-- `kept_objects' will be removed and will be not under the
@@ -295,7 +295,7 @@ feature -- Execution
 			continue_ignoring_kept_objects
 		end
 
-	continue_ignoring_kept_objects is
+	continue_ignoring_kept_objects
 			-- Continue the running of the application
 			-- before any debugger's operation occurred
 			-- so basically, we are sure we have the same `kept_objects'
@@ -306,7 +306,7 @@ feature -- Execution
 		deferred
 		end
 
-	send_breakpoints is
+	send_breakpoints
 			-- Send breakpoints according to the context
 		local
 			bpm: BREAKPOINTS_MANAGER
@@ -341,7 +341,7 @@ feature -- Execution
 			bpm.reset_breakpoints_changed
 		end
 
-	interrupt is
+	interrupt
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 		require
@@ -350,14 +350,14 @@ feature -- Execution
 		deferred
 		end
 
-	request_debugger_data_update is
+	request_debugger_data_update
 			-- Request the application to pause, in order to update debugger data
 			-- such as new breakpoints, or other catcall detection,...
 			-- mainly for classic debugging
 		do
 		end
 
-	notify_breakpoints_change is
+	notify_breakpoints_change
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 			-- in order to record the new breakpoint(s) before
@@ -368,7 +368,7 @@ feature -- Execution
 		deferred
 		end
 
-	kill is
+	kill
 			-- Ask the application to terminate itself.
 		require
 			app_is_running: is_running
@@ -377,12 +377,12 @@ feature -- Execution
 
 feature -- Remote access to RT_
 
-	remote_rt_object: ABSTRACT_DEBUG_VALUE is
+	remote_rt_object: ABSTRACT_DEBUG_VALUE
 			-- Return the remote rt_object
 		deferred
 		end
 
-	remote_rt_execution_recorder_value: DUMP_VALUE is
+	remote_rt_execution_recorder_value: DUMP_VALUE
 			-- Return the remote rt_object.execution_recorder
 		do
 			if {rto: ABSTRACT_REFERENCE_VALUE} remote_rt_object then
@@ -390,7 +390,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN is
+	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN
 			-- Activate Execution replay recording on debuggee depending of `b'
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
@@ -451,7 +451,7 @@ feature -- Remote access to RT_
 			execution_replay_recording: status.replay_recording = b
 		end
 
-	activate_execution_replay_mode (b: BOOLEAN) is
+	activate_execution_replay_mode (b: BOOLEAN)
 			-- Activate or Deactivate execution replay mode
 		require
 			turned_on_when_stopped: b implies status.is_stopped
@@ -491,7 +491,7 @@ feature -- Remote access to RT_
 			replay_depth_is_valid: (not b and status.replayed_depth = 0) or (b and status.replayed_depth = current_call_stack_depth)
 		end
 
-	remote_activate_replay (b: BOOLEAN) is
+	remote_activate_replay (b: BOOLEAN)
 			-- Remotely Activate replay
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
@@ -513,7 +513,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	replay (direction: INTEGER): BOOLEAN is
+	replay (direction: INTEGER): BOOLEAN
 			-- Replay execution in `direction'
 			-- and return True if operation succeed.
 		require
@@ -563,7 +563,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	replay_to_point (a_id: STRING): BOOLEAN is
+	replay_to_point (a_id: STRING): BOOLEAN
 			-- Replay to point identified by `a_id'
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
@@ -610,7 +610,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	query_replay_status (direction: INTEGER): INTEGER is
+	query_replay_status (direction: INTEGER): INTEGER
 			-- Query exec replay status for direction `direction'
 			-- Return the number of available steps.
 		local
@@ -635,7 +635,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT is
+	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT
 		local
 			dv_fact: DUMP_VALUE_FACTORY
 			dv: DUMP_VALUE
@@ -653,7 +653,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	replay_callstack_details (a_id: STRING; nb: INTEGER): REPLAYED_CALL_STACK_ELEMENT is
+	replay_callstack_details (a_id: STRING; nb: INTEGER): REPLAYED_CALL_STACK_ELEMENT
 			-- Details related to replayed callstack identified by `a_id'
 			-- get the information for `nb' levels
 		local
@@ -677,7 +677,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN is
+	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -700,7 +700,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE is
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
@@ -730,7 +730,7 @@ feature -- Remote access to RT_
 
 feature -- Remote access to Exceptions
 
-	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE
 			-- `{EXCEPTION_MANAGER}.last_exception' value.
 		require
 			exception_occurred: status.exception_occurred
@@ -741,7 +741,7 @@ feature -- Remote access to Exceptions
 
 feature -- Expression evaluation
 
-	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): STRING_32 is
+	string_field_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING): STRING_32
 			-- String representation of `{cl}.fname' evaluated on `edv'.
 		require
 			edv_not_void: edv /= Void
@@ -755,7 +755,7 @@ feature -- Expression evaluation
 			end
 		end
 
-	query_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): DUMP_VALUE is
+	query_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): DUMP_VALUE
 			-- command `{cl}.fname' evaluation on `edv'
 			-- using `params' as argument if any
 		require
@@ -782,7 +782,7 @@ feature -- Expression evaluation
 			end
 		end
 
-	command_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): BOOLEAN is
+	command_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; edv: DUMP_VALUE; cl: CLASS_C; fname: STRING; params: LIST [DUMP_VALUE]): BOOLEAN
 			-- method `{cl}.fname' evaluation on `edv'
 			-- using `params' as argument if any
 		require
@@ -807,7 +807,7 @@ feature -- Expression evaluation
 			end
 		end
 
-	function_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): DUMP_VALUE is
+	function_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): DUMP_VALUE
 			-- Evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
@@ -842,7 +842,7 @@ feature -- Expression evaluation
 			end
 		end
 
-	routine_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): BOOLEAN is
+	routine_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]): BOOLEAN
 			-- Evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
@@ -882,7 +882,7 @@ feature -- Expression evaluation
 			retry
 		end
 
-	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE is
+	attribute_evaluation_on (e: ABSTRACT_REFERENCE_VALUE; obj: DUMP_VALUE; f: FEATURE_I; cl: CLASS_C): DUMP_VALUE
 			-- Evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
@@ -908,7 +908,7 @@ feature -- Expression evaluation
 
 feature {NONE} -- Breakpoints implementation
 
-	update_breakpoints is
+	update_breakpoints
 			-- Synchronize breakpoints status between application and $EiffelGraphicalCompiler$.
 		local
 			lst: HASH_TABLE [INTEGER_32, BREAKPOINT_LOCATION] -- {BP_LOC => status}
@@ -929,7 +929,7 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
 			-- Send breakpoints for step operation
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
@@ -946,7 +946,7 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	send_no_breakpoints is
+	send_no_breakpoints
 			-- Application execution without any breakpoint	
 			-- Remove BreakPoints from the application ones in execution
 			-- to perform a NoStopPoint operation
@@ -975,7 +975,7 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	update_breakpoint (loc: BREAKPOINT_LOCATION; bp_mode: INTEGER) is
+	update_breakpoint (loc: BREAKPOINT_LOCATION; bp_mode: INTEGER)
 			-- send a breakpoint to the application, and update the
 			-- status of the sent breakpoint
 		do
@@ -1001,13 +1001,13 @@ feature {NONE} -- Breakpoints implementation
 			end
 		end
 
-	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION)
 			-- enable breakpoint at `loc'
 			-- if no breakpoint already exists at `loc' a breakpoint is created
 		deferred
 		end
 
-	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION)
 			-- remove breakpoint at `loc'
 		deferred
 		end
@@ -1022,7 +1022,7 @@ feature -- RT_EXTENSION constants (note: maybe this should be in a RTDBG_CONSTAN
 
 feature -- Breakpoints control change
 
-	ignore_breakpoints (b: BOOLEAN) is
+	ignore_breakpoints (b: BOOLEAN)
 			-- If `b' then ignore breakpoints during execution
 		do
 			if ignoring_breakpoints /= b then
@@ -1035,7 +1035,7 @@ feature -- Breakpoints control change
 
 feature -- Catcall detection change
 
-	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
 			-- Send a message to the application to set catcall detection mode
 		require
 			is_stopped: is_stopped
@@ -1044,7 +1044,7 @@ feature -- Catcall detection change
 
 feature -- Assertion change
 
-	disable_assertion_check is
+	disable_assertion_check
 			-- Send a message to the application to disable assertion checking
 		local
 			b: BOOLEAN
@@ -1053,7 +1053,7 @@ feature -- Assertion change
 			last_assertion_check_stack.extend (b)
 		end
 
-	restore_assertion_check is
+	restore_assertion_check
 			-- Send a message to the application to restore the previous assertion check status
 		require
 			restore_assertion_check_available: restore_assertion_check_available
@@ -1065,7 +1065,7 @@ feature -- Assertion change
 			b := impl_check_assert (b)
 		end
 
-	restore_assertion_check_available: BOOLEAN is
+	restore_assertion_check_available: BOOLEAN
 			-- Is `restore_assertion_check' available ?
 		do
 			Result := not last_assertion_check_stack.is_empty
@@ -1076,32 +1076,32 @@ feature -- Assertion change
 
 feature {NONE} -- Assertion change Implementation
 
-	impl_check_assert (b: BOOLEAN): BOOLEAN is
+	impl_check_assert (b: BOOLEAN): BOOLEAN
 			-- `check_assert (b)' on debuggee
 		deferred
 		end
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
 		require
 			flist_not_empty: flist /= Void and then not flist.is_empty
 		deferred
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE
 		require
 			a_addr /= Void
 		deferred
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE
 		require
 			a_addr /= Void
 		deferred
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER)
 			-- Code, Tag, Message from `val'.
 		require
 			e_not_void: e /= Void
@@ -1109,7 +1109,7 @@ feature -- Query
 		deferred
 		end
 
-	internal_info (a_value: DUMP_VALUE): ARRAY [TUPLE [name: STRING; value: DUMP_VALUE]] is
+	internal_info (a_value: DUMP_VALUE): ARRAY [TUPLE [name: STRING; value: DUMP_VALUE]]
 			-- Internal info for `a_addr'
 		require
 			is_stopped: is_stopped
@@ -1167,7 +1167,7 @@ feature -- Query
 			end
 		end
 
-	internal_type_name_of_type (a_type_id: INTEGER): STRING is
+	internal_type_name_of_type (a_type_id: INTEGER): STRING
 			-- Internal type_name_of_type for `a_type_id'
 			--| note: a_type_id is the runtime type_id (so don't forget to -1 from eiffel type id)
 		require
@@ -1217,7 +1217,7 @@ feature -- Parameters
 
 feature -- Setting
 
-	frozen set_execution_mode (exec_mode: like execution_mode) is
+	frozen set_execution_mode (exec_mode: like execution_mode)
 			-- Set `exec_mode' the new execution mode.
 		require
 			valid_exec_mode: (create {EXEC_MODES}).is_valid_mode (exec_mode)
@@ -1227,7 +1227,7 @@ feature -- Setting
 			set: execution_mode = exec_mode
 		end
 
-	set_current_execution_stack_number (i: INTEGER) is
+	set_current_execution_stack_number (i: INTEGER)
 			-- Set the `current_execution_stack_number' to `i'.
 			--| If `current_execution_stack_number' is greater than
 			--| the number of stack elements then
@@ -1243,7 +1243,7 @@ feature -- Setting
 			set: current_execution_stack_number = i
 		end
 
-	update_critical_stack_depth (d: INTEGER) is
+	update_critical_stack_depth (d: INTEGER)
 			-- Call stack depth at which we warn the user against a possible stack overflow.
 			-- -1 never warns the user.
 		require
@@ -1253,7 +1253,7 @@ feature -- Setting
 
 feature -- Environment related
 
-	environment_variables_to_string (env: HASH_TABLE [STRING_32, STRING_32]): STRING_32 is
+	environment_variables_to_string (env: HASH_TABLE [STRING_32, STRING_32]): STRING_32
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
@@ -1286,7 +1286,7 @@ feature -- Environment related
 
 feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 
-	build_status is
+	build_status
 			-- Build associated `status'
 			-- (ie: the application is running)
 		require
@@ -1296,7 +1296,7 @@ feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 			is_running: is_running
 		end
 
-	destroy_status is
+	destroy_status
 		require
 			is_running: is_running
 		do
@@ -1307,7 +1307,7 @@ feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 
 feature {NONE} -- fake
 
-	clean_on_process_termination is
+	clean_on_process_termination
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		require
@@ -1316,7 +1316,7 @@ feature {NONE} -- fake
 			last_assertion_check_stack.wipe_out
 		end
 
-	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL)
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -1334,12 +1334,12 @@ feature {NONE} -- fake
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
 
-	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) is
+	keep_only_objects (kept_objects: LIST [DBG_ADDRESS])
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command used to launch ISE Assembly Manager (Windows implementation)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ class
 
 feature -- Basic operations
 
-	launch_and_refresh (a_command_line, a_working_directory: STRING; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
+	launch_and_refresh (a_command_line, a_working_directory: STRING; a_refresh_handler: ROUTINE [ANY, TUPLE])
 			-- Display `ISE.AssemblyManager' and refresh EiffelStudio development window.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -21,7 +21,7 @@ feature -- Basic operations
 			process_launcher.launch_and_refresh (a_command_line, a_working_directory, a_refresh_handler)
 		end
 				
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

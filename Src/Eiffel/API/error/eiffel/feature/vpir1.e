@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a a local variable or argument name from an enclosing feature is reused."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,17 +23,17 @@ feature -- Properties
 	entity_name: STRING
 			--Variable name in conflict
 
-	code: STRING is "VPIR"
+	code: STRING = "VPIR"
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Entity name: ")
 			a_text_formatter.add (entity_name)
@@ -42,7 +42,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_entity_name (s_id: INTEGER) is
+	set_entity_name (s_id: INTEGER)
 			-- Assign name extracted from name ID `s_id' to `local_name'.
 		require
 			valid_s_id: s_id >= 1
@@ -50,7 +50,7 @@ feature {COMPILER_EXPORTER}
 			entity_name := Names_heap.item (s_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to open system configuration tool window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,14 +40,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize default_values.
 		do
 		end
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
 			-- Redefine
 		do
 			create Result.make (Current)
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Open the Project configuration window.
 		local
 			rescued: BOOLEAN
@@ -137,7 +137,7 @@ feature -- Basic operations
 
 feature {NONE} -- Actions
 
-	on_drop (a_stone: STONE) is
+	on_drop (a_stone: STONE)
 			-- If we have a group stone for an editable library, edit this library.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	dropable (a_stone: STONE): BOOLEAN is
+	dropable (a_stone: STONE): BOOLEAN
 			-- Can `st' be dropped on `Current'?
 		local
 			l_stone: CLUSTER_STONE
@@ -201,45 +201,45 @@ feature {NONE} -- Implementation
 	configuration_window: CONFIGURATION_WINDOW
 			-- Configuration window, as a class attribute in order for it to not get collecte by the gc.
 
-	name: STRING is "System_tool"
+	name: STRING = "System_tool"
 			-- Name of command. Used to store command in preferences
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing command.
 		do
 			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.tool_config_icon_buffer
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for command
 		do
 			Result := Interface_names.e_Project_settings
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for toolbar button
 		do
 			Result := Interface_names.e_Project_settings
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Tooltip for toolbar button
 		do
 			Result := Interface_names.b_Project_settings
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 		do
 			Result := Interface_names.m_System_new
 		end
 
-	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Show the ace file in editor.
 		local
 			cmd_exec: COMMAND_EXECUTOR
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_hide_window (a_window: CONFIGURATION_WINDOW) is
+	on_hide_window (a_window: CONFIGURATION_WINDOW)
 			-- A configuration window was hidden, store layout values of `a_window' into the preferences, set changed if user pressed ok.
 		require
 			a_window_not_void: a_window /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drop_down_menu: EV_MENU is
+	drop_down_menu: EV_MENU
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
 			l_item: EV_MENU_ITEM
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

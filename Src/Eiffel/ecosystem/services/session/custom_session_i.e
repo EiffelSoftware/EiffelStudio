@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A specialized session interface ({SESSION_I}) for custom session, not specifically attached to a environment, project or window.
 	]"
@@ -31,7 +31,7 @@ feature -- Access
 invariant
 	not_file_name_is_empty: not file_name.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

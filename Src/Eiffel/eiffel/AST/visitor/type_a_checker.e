@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check validity of a TYPE_A object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ inherit
 
 feature -- Status report
 
-	has_error_reporting: BOOLEAN is
+	has_error_reporting: BOOLEAN
 			-- Can current report error?
 		do
 			Result := error_handler /= Void
 		end
 
-	solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A is
+	solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A
 			-- Check that validity of `a_unevaluated_type' in current context
 			-- as initialized by `init' or `init_with_feature_table'.
 		require
@@ -54,7 +54,7 @@ feature -- Status report
 			associated_type_ast := Void
 		end
 
-	check_and_solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A is
+	check_and_solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A
 			-- Check that validity of `a_unevaluated_type' in current context
 			-- as initialized by `init' or `init_with_feature_table'.
 		require
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Settings
 
-	init_for_checking (a_feature: FEATURE_I; a_class: CLASS_C; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER) is
+	init_for_checking (a_feature: FEATURE_I; a_class: CLASS_C; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER)
 			-- Initialize Current with `a_feature', `a_class' and `suppliers'.
 			-- `suppliers' will be updated if not Void.
 		require
@@ -91,7 +91,7 @@ feature -- Settings
 			error_handler_set: error_handler = a_error_handler
 		end
 
-	init_with_feature_table (a_feature: FEATURE_I; a_feat_tbl: FEATURE_TABLE; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER) is
+	init_with_feature_table (a_feature: FEATURE_I; a_feat_tbl: FEATURE_TABLE; a_suppliers: FEATURE_DEPENDANCE; a_error_handler: ERROR_HANDLER)
 			-- Initialize Current with `a_feature', `a_feat_tbl' and `suppliers'.
 			-- `suppliers' will be updated if not Void.
 		require
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation: Access
 			-- Medium used to report error. If not set, no errors are reported
 			-- and `last_type' will be set to Void.
 
-	like_control: LIKE_CONTROLER is
+	like_control: LIKE_CONTROLER
 			-- Controler of anchors. A once to avoid object creation.
 		once
 			create Result.make
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation: Access
 
 feature -- Special checking
 
-	check_type_validity (a_type: TYPE_A; a_type_node: TYPE_AS) is
+	check_type_validity (a_type: TYPE_A; a_type_node: TYPE_AS)
 			-- Check validity of `a_type' linked to `a_type_node'.
 		require
 			has_error_reporting: has_error_reporting
@@ -221,7 +221,7 @@ feature -- Special checking
 			end
 		end
 
-	check_constraint_type (a_context_class: CLASS_C; a_type: TYPE_AS; a_error_handler: ERROR_HANDLER) is
+	check_constraint_type (a_context_class: CLASS_C; a_type: TYPE_AS; a_error_handler: ERROR_HANDLER)
 			-- Is `a_type' a valid constraint for `a_context_class'?
 			--| We check whether the `a_type' exists in the very same group as `a_context_class'.
 			--| In case `a_type' is generic, we check that all actual generic parameters meet their constraints.
@@ -383,7 +383,7 @@ feature -- Special checking
 
 feature {TYPE_A} -- Visitors
 
-	process_bits_a (a_type: BITS_A) is
+	process_bits_a (a_type: BITS_A)
 			-- Process `a_type'.
 		local
 			l_vtbt: VTBT
@@ -405,7 +405,7 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A) is
+	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
 			-- Process `a_type'.
 		local
 			l_anchor_feature: FEATURE_I
@@ -461,19 +461,19 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_boolean_a (a_type: BOOLEAN_A) is
+	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_character_a (a_type: CHARACTER_A) is
+	process_character_a (a_type: CHARACTER_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_cl_type_a (a_type: CL_TYPE_A) is
+	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
@@ -485,20 +485,20 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A]) is
+	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
 			-- Process `a_type'.
 		do
 			a_type.type.process (Current)
 			last_type := a_type
 		end
 
-	process_formal_a (a_type: FORMAL_A) is
+	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_gen_type_a (a_type: GEN_TYPE_A) is
+	process_gen_type_a (a_type: GEN_TYPE_A)
 			-- Process `a_type'.
 		local
 			l_generics: ARRAY [TYPE_A]
@@ -530,26 +530,26 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_integer_a (a_type: INTEGER_A) is
+	process_integer_a (a_type: INTEGER_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_like_argument (a_type: LIKE_ARGUMENT) is
+	process_like_argument (a_type: LIKE_ARGUMENT)
 			-- Process `a_type'.
 		do
 			update_like_argument (current_feature, a_type)
 		end
 
-	process_like_current (a_type: LIKE_CURRENT) is
+	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 			a_type.set_actual_type (current_class.actual_type)
 		end
 
-	process_like_feature (a_type: LIKE_FEATURE) is
+	process_like_feature (a_type: LIKE_FEATURE)
 			-- Process `a_type'.
 		local
 			l_anchor_feature, l_orig_feat: FEATURE_I
@@ -584,79 +584,79 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A) is
+	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_manifest_natural_64_a (a_type: MANIFEST_NATURAL_64_A) is
+	process_manifest_natural_64_a (a_type: MANIFEST_NATURAL_64_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A) is
+	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_native_array_type_a (a_type: NATIVE_ARRAY_TYPE_A) is
+	process_native_array_type_a (a_type: NATIVE_ARRAY_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_natural_a (a_type: NATURAL_A) is
+	process_natural_a (a_type: NATURAL_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_none_a (a_type: NONE_A) is
+	process_none_a (a_type: NONE_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A) is
+	process_open_type_a (a_type: OPEN_TYPE_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_pointer_a (a_type: POINTER_A) is
+	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_real_32_A (a_type: REAL_32_A) is
+	process_real_32_A (a_type: REAL_32_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_real_64_a (a_type: REAL_64_A) is
+	process_real_64_a (a_type: REAL_64_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
 		end
 
-	process_tuple_type_a (a_type: TUPLE_TYPE_A) is
+	process_tuple_type_a (a_type: TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_typed_pointer_a (a_type: TYPED_POINTER_A) is
+	process_typed_pointer_a (a_type: TYPED_POINTER_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A) is
+	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
 			-- Process `a_type'.
 		local
 			l_vtbt: VTBT
@@ -717,7 +717,7 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE) is
+	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		local
 			l_anchor_feature: FEATURE_I
@@ -763,7 +763,7 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_void_a (a_type: VOID_A) is
+	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do
 			last_type := a_type
@@ -771,7 +771,7 @@ feature {TYPE_A} -- Visitors
 
 feature {NONE} -- Implementation
 
-	update_like_argument (a_feature: FEATURE_I; a_type: LIKE_ARGUMENT) is
+	update_like_argument (a_feature: FEATURE_I; a_type: LIKE_ARGUMENT)
 			-- Given `a_feature' to which `a_type' anchors to, verify that
 			-- `a_type' is valid, and update `a_type' accordingly.
 		require
@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_like_feature (a_feature: FEATURE_I; a_type: LIKE_FEATURE) is
+	update_like_feature (a_feature: FEATURE_I; a_type: LIKE_FEATURE)
 			-- Given `a_feature' to which `a_type' anchors to, verify that
 			-- `a_type' is valid, and update `a_type' accordingly.
 		require
@@ -890,7 +890,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	record_exp_dependance (a_class: CLASS_C) is
+	record_exp_dependance (a_class: CLASS_C)
 		local
 			d: DEPEND_UNIT
 			f: FEATURE_I
@@ -911,7 +911,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Session persistance manager, for retrieving an storing sessions from a user's home profile.
 	]"
@@ -606,7 +606,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `logger_service'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

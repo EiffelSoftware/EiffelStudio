@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Dialog that submit exception as bug report to http://supprt.eiffel.com
 	]"
@@ -612,7 +612,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_focus_in is
+	on_focus_in
 			-- When the `description_text' has the focus, we disable the default push button.
 		local
 			l_dialog: EV_DIALOG
@@ -624,7 +624,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_focus_out is
+	on_focus_out
 			-- When the `description_text' lost focus, we enable the default push button.
 		local
 			l_dialog: EV_DIALOG
@@ -691,7 +691,7 @@ feature {NONE} -- User interface manipulation
 			end
 		end
 
-	disable_report_frame_widgets is
+	disable_report_frame_widgets
 			-- We want all widgets looks like disabled, so users can copy the title in the `synopsis_text' without login
 			-- See bug#15066
 		do
@@ -710,7 +710,7 @@ feature {NONE} -- User interface manipulation
 			severity_non_critical_radio.disable_sensitive
 		end
 
-	enable_report_frame_widgets is
+	enable_report_frame_widgets
 			-- Correspond to `disable_report_frame_widgets'
 			-- We retore widgets' "sensitive" here
 		local
@@ -942,7 +942,7 @@ invariant
 	shrink_widget_attached: (is_initialized and not is_recycled) implies shrink_widget /= Void
 	shrink_interval_positive: shrink_interval > 0
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

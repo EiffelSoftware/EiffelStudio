@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Error caused by declaration of a property with several arguments.
@@ -20,7 +20,7 @@ create {COMPILER_EXPORTER}
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; f: FEATURE_I) is
+	make (c: CLASS_C; f: FEATURE_I)
 			-- Create an error object for the given class `c' and feature `f'.
 		require
 			c_attached: c /= Void
@@ -32,14 +32,14 @@ feature {NONE} -- Creation
 
 feature -- Properties
 
-	code: STRING is "VIPS"
+	code: STRING = "VIPS"
 			-- Error code
 
 invariant
 	class_c_attached: class_c /= Void
 	e_feature_attached: e_feature /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

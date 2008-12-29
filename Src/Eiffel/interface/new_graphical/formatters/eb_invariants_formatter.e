@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display the invariants of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -28,7 +28,7 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.class_features_invariant_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.class_features_invariant_icon_buffer
@@ -37,7 +37,7 @@ feature -- Properties
 	class_cmd: E_SHOW_INVARIANTS
 			-- Class command that can generate the information.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_show_invariants
@@ -45,16 +45,16 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_invariants
 		end
 
-	post_fix: STRING is "anc"
+	post_fix: STRING = "anc"
 			-- String symbol of the command, used as an extension when saving.
 
-	is_dotnet_formatter: BOOLEAN is
+	is_dotnet_formatter: BOOLEAN
 			-- Is Current able to format .NET XML types?
 		do
 			Result := True
@@ -70,7 +70,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	create_class_cmd is
+	create_class_cmd
 			-- Create `class_cmd'.
 		require else
 			associated_class_non_void: associated_class /= Void
@@ -78,13 +78,13 @@ feature {NONE} -- Implementation
 			create class_cmd.make (editor.text_displayed, associated_class)
 		end
 
-	has_breakpoints: BOOLEAN is False
+	has_breakpoints: BOOLEAN = False
 		-- Should `Current' display breakpoints?
 
-	line_numbers_allowed: BOOLEAN is False;
+	line_numbers_allowed: BOOLEAN = False;
 		-- Does it make sense to show line numbers in Current?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

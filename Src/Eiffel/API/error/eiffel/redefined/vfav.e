@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Alias name error."
 	legal: "See notice at end of class."
@@ -26,12 +26,12 @@ feature -- Properties
 	inherited_feature: E_FEATURE
 			-- Inherited feature
 
-	code: STRING is "VFAV"
+	code: STRING = "VFAV"
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -62,7 +62,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_a_feature (f: FEATURE_I) is
+	set_a_feature (f: FEATURE_I)
 			-- Assign `f' to `a_feature'.
 		require
 			valid_f: f /= Void
@@ -70,7 +70,7 @@ feature {COMPILER_EXPORTER}
 			a_feature := f.api_feature (f.written_in)
 		end
 
-	set_inherited_feature (f: FEATURE_I) is
+	set_inherited_feature (f: FEATURE_I)
 			-- Assign `f' to `inherited_feature'.
 		require
 			valid_f: f /= Void
@@ -85,7 +85,7 @@ feature {COMPILER_EXPORTER}
 			inherited_feature := f.api_feature (class_c.class_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

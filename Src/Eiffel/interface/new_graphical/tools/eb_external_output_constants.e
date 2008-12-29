@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String constants used in external output tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,21 +14,21 @@ inherit
 
 feature -- Access
 
-	State_bar_height: INTEGER is 20
+	State_bar_height: INTEGER = 20
 
-	Red_color: EV_COLOR is
+	Red_color: EV_COLOR
 			-- Red color
 		once
 			create Result.make_with_8_bit_rgb (255, 0, 0)
 		end
 
-	Black_color: EV_COLOR is
+	Black_color: EV_COLOR
 			-- Black color
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

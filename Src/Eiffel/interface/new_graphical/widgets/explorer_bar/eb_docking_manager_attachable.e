@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Ancestor which can attach to docking manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Attachement
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to `a_docking_manager'.
 		require
 			not_void: a_docking_manager /= Void
@@ -28,7 +28,7 @@ feature -- Attachement
 			added: a_docking_manager.has_content (content)
 		end
 
-	attach_to_docking_manager_with (a_docking_manager: SD_DOCKING_MANAGER; a_attachable: EB_DOCKING_MANAGER_ATTACHABLE) is
+	attach_to_docking_manager_with (a_docking_manager: SD_DOCKING_MANAGER; a_attachable: EB_DOCKING_MANAGER_ATTACHABLE)
 			-- Attach to `a_docking_manager' with `a_attachable'.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -45,13 +45,13 @@ feature -- Access
 	content: SD_CONTENT
 			-- Content assiociate with Current.
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := title_for_pre.hash_code
 		end
 
-	title_for_pre: STRING is
+	title_for_pre: STRING
 			-- Title of the tool
 		deferred
 		ensure then
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {NONE} -- Build implementation
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build the associated widget and
 			-- Add it to `explorer_bar'
 		require
@@ -70,7 +70,7 @@ feature {NONE} -- Build implementation
 			created: content /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

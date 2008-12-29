@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observers on changes of EIS storage"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,18 +10,18 @@ deferred class
 
 feature -- Callbacks
 
-	on_tag_added (a_tag: !STRING_32) is
+	on_tag_added (a_tag: !STRING_32)
 			-- `a_tag' was added.
 		deferred
 		end
 
-	on_tag_removed (a_tag: !STRING_32) is
+	on_tag_removed (a_tag: !STRING_32)
 			-- `a_tab' was removed.
 		deferred
 		end
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

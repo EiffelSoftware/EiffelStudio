@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when a feature name is twice in a redefine clause."
@@ -24,20 +24,20 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature name node
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		once
 			Result := "VDRS";
 		end;
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 3;
 		end;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Duplicate name: ");
 			a_text_formatter.add (feature_name);
@@ -49,18 +49,18 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_parent_name (p: STRING) is
+	set_parent_name (p: STRING)
 		do
 			parent_name := p;
 		end;
 
-	set_feature_name (f: STRING) is
+	set_feature_name (f: STRING)
 			-- Assign `f' to `feature_name'.
 		do
 			feature_name := f;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree row in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_browser: like browser; a_class: like class_item; collapsed: BOOLEAN) is
+	make (a_browser: like browser; a_class: like class_item; collapsed: BOOLEAN)
 			-- Initialize `class_item' with `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER; a_path: BOOLEAN) is
+	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER; a_path: BOOLEAN)
 			-- Bind current as a subrow of `a_row' in `a_grid'. if `a_row' is Void, insert a new
 			-- row in `a_grid' directly.
 			-- Set backgroud color of inserted row with `a_background_color',
@@ -78,7 +78,7 @@ feature -- Grid binding
 
 feature -- Element change
 
-	add_child (a_child: like Current) is
+	add_child (a_child: like Current)
 			-- Add `a_child' into `children'.
 		require
 			a_child_attached: a_child /= Void
@@ -93,7 +93,7 @@ feature -- Access
 	class_item: QL_CLASS
 			-- Class assoicated with current row
 
-	children: DS_ARRAYED_LIST [like Current] is
+	children: DS_ARRAYED_LIST [like Current]
 			-- Children rows of current row
 		do
 			if children_internal = Void then
@@ -104,7 +104,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Class item
 		local
 			l_complete_generic_class_style: like complete_generic_class_no_star_style
@@ -133,7 +133,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	path_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	path_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Path item
 		local
 			l_path_style: like location_style
@@ -172,7 +172,7 @@ feature{NONE} -- Implementation
 	path_grid_item_internal: like path_grid_item
 			-- Implementation of `path_grid_item'
 
-	complete_generic_class_no_star_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+	complete_generic_class_no_star_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate class information in complete generic form without star.
 			-- e.g., HASH_TABLE [G, H -> HASHABLE].
 		once
@@ -186,7 +186,7 @@ feature{NONE} -- Implementation
 
 feature -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' with `a_parent'.
 		require
 			a_parent_attached: a_parent /= Void
@@ -197,7 +197,7 @@ feature -- Setting
 			parent_set: parent = a_parent
 		end
 
-	path_item_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	path_item_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate path information for a query language item.		
 		once
 			create Result
@@ -210,7 +210,7 @@ feature -- Setting
 			result_attached: Result /= Void
 		end
 
-	location_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	location_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate path information for a query language item.		
 		once
 			create Result
@@ -227,7 +227,7 @@ invariant
 	class_item_attached: class_item /= Void
 	class_item_valid: class_item.is_valid_domain_item
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

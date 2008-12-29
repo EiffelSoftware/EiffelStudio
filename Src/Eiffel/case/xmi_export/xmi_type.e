@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a type of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature --Initialization
 
-	make_type (id: INTEGER; n: STRING) is
+	make_type (id: INTEGER; n: STRING)
 			-- Initialization of `Current'.
 		do
 			create associations.make
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same name as `Current'?
 		do
 			Result := name.is_equal (other.name)
@@ -45,7 +45,7 @@ feature -- Comparison
 
 feature -- Status Setting
 
-	add_association (a_association: XMI_ASSOCIATION) is
+	add_association (a_association: XMI_ASSOCIATION)
 			-- Add 'a_association' to associations
 		require
 			a_association /= Void
@@ -57,7 +57,7 @@ feature -- Status Setting
 
 feature -- Action 
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the code.
 		do
 			Result := "<Foundation.Core.DataType xmi.id = 'G."
@@ -73,7 +73,7 @@ feature -- Action
 				%        </Foundation.Core.DataType>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

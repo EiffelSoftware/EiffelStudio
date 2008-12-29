@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Same as {EB_EDITOR_FONT_ZOOM_RESET_COMMAND}, except using different shortcut"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	init_accelerator is
+	init_accelerator
 			-- <Precursor>
 		local
 			l_preference: EB_SHARED_PREFERENCES
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			set_referred_shortcut (l_shortcut)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

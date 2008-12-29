@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EWB_SHOW_SUBQUERIES
@@ -8,7 +8,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 		do
 			show_all_subqueries;
 			show_active_total_query;
@@ -16,7 +16,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	show_all_subqueries is
+	show_all_subqueries
 		local
 			i: INTEGER;
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	show_active_total_query is
+	show_active_total_query
 		do
 			from
 				localized_print (ewb_names.the_total_active_query);
@@ -69,22 +69,22 @@ feature {NONE} -- Implementation
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		once
 			Result := show_subqueries_cmd_name;
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		once
 			Result := show_subqueries_help;
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		once
 			Result := show_subqueries_abb;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

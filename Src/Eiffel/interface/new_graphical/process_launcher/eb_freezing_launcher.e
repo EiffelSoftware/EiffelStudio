@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that is responsible for launching c compiler in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Actions
 
-	on_start is
+	on_start
 			-- Handler called before c compiler starts
 		do
 			Precursor
@@ -29,14 +29,14 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Data storage
 
-	data_storage: EB_PROCESS_IO_STORAGE is
+	data_storage: EB_PROCESS_IO_STORAGE
 		do
 			Result := freezing_storage
 		end
 
 feature{NONE} -- Generation path
 
-	generation_path: STRING is
+	generation_path: STRING
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		do
@@ -45,31 +45,31 @@ feature{NONE} -- Generation path
 
 feature -- Message
 
-	c_compilation_launched_msg: STRING is
+	c_compilation_launched_msg: STRING
 			-- Message to indicate c compilation launched successfully
 		do
 			Result := interface_names.ee_freezing_launched
 		end
 
-	c_compilation_launch_failed_msg: STRING is
+	c_compilation_launch_failed_msg: STRING
 			-- Message to indicate c compilation launch failed
 		do
 			Result := interface_names.ee_freezing_launch_failed
 		end
 
-	c_compilation_succeeded_msg: STRING is
+	c_compilation_succeeded_msg: STRING
 			-- Message to indicate c compilation exited successfully
 		do
 			Result := interface_names.ee_freezing_succeeded
 		end
 
-	c_compilation_failed_msg: STRING is
+	c_compilation_failed_msg: STRING
 			-- Message to indicate c compilation failed
 		do
 			Result := interface_names.ee_freezing_failed
 		end
 
-	c_compilation_terminated_msg: STRING is
+	c_compilation_terminated_msg: STRING
 			-- Message to indicate c compilation has been terminated
 		do
 			Result := interface_names.ee_freezing_terminated
@@ -77,7 +77,7 @@ feature -- Message
 
 feature -- Setting
 
-	set_c_compilation_type is
+	set_c_compilation_type
 			-- Set c compilation type, either freezing or finalizing.
 		do
 			set_is_last_c_compilation_freezing (True)
@@ -85,7 +85,7 @@ feature -- Setting
 			compilation_type_set: is_last_c_compilation_freezing
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

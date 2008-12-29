@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when all unique constants involved in an inspect %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 6;
+	subcode: INTEGER = 6;
 
 	unique_feature: E_FEATURE;
 			-- Unique feature name
@@ -29,7 +29,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			wclass: CLASS_C
 		do
@@ -60,7 +60,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTEr}
 
-	set_unique_feature (f: FEATURE_I) is
+	set_unique_feature (f: FEATURE_I)
 			-- Assign `s' to `unique_name'.
 		require
 			valid_f: f /= Void
@@ -68,7 +68,7 @@ feature {COMPILER_EXPORTEr}
 			unique_feature := f.api_feature (f.written_in);
 		end;
 
-	set_original_class (c: CLASS_C) is
+	set_original_class (c: CLASS_C)
 			-- Assign `c' to `original_class'.
 		require
 			valid_c: c /= Void
@@ -76,7 +76,7 @@ feature {COMPILER_EXPORTEr}
 			original_class := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

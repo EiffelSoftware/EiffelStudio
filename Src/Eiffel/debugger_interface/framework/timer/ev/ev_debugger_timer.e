@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "TIMER for debugger on mswin"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create Current debugger timer
 		do
 			Precursor
@@ -23,12 +23,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	interval: INTEGER is
+	interval: INTEGER
 		do
 			Result := ev_timer.interval
 		end
 
-	actions: ACTION_SEQUENCE [TUPLE] is
+	actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed at a regular interval.
 			-- Only called when interval is greater than 0.	
 		do
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Change
 
-	set_interval (i: like interval) is
+	set_interval (i: like interval)
 		do
 			ev_timer.set_interval (i)
 		end
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 invariant
 	ev_timer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

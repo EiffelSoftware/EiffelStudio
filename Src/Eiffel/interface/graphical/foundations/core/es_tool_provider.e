@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Default implementation for accessing a tool. This uses the last focused development window to query for a tool.
 		
@@ -50,7 +50,7 @@ feature -- Status report
 			window_is_interface_usable: window.is_interface_usable
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Controls execution of dotnet debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -67,7 +67,7 @@ create {DEBUGGER_MANAGER}
 
 feature {APPLICATION_EXECUTION} -- Initialization
 
-	make_with_debugger (dbg: like debugger_manager) is
+	make_with_debugger (dbg: like debugger_manager)
 			-- Create Current
 		do
 			Precursor {APPLICATION_EXECUTION} (dbg)
@@ -78,7 +78,7 @@ feature {APPLICATION_EXECUTION} -- Initialization
 			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
 		end
 
-	update_keep_stepping_into_dotnet_feature is
+	update_keep_stepping_into_dotnet_feature
 			-- Update the `{EIFNET_DEBUGGER}.keep_stepping_into_dotnet_feature_enabled' information
 		do
 			if Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature then
@@ -90,7 +90,7 @@ feature {APPLICATION_EXECUTION} -- Initialization
 
 feature -- recycling data
 
-	recycle is
+	recycle
 		do
 			Eifnet_debugger.recycle_debug_value_keeper
 			Precursor
@@ -98,7 +98,7 @@ feature -- recycling data
 
 feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 
-	estudio_callback_notify is
+	estudio_callback_notify
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		require
@@ -157,7 +157,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 
 feature {DEBUGGER_EXPORTER, EIFNET_EXPORTER}  -- Trigger eStudio status
 
-	callback_notification_processing: BOOLEAN is
+	callback_notification_processing: BOOLEAN
 			-- Is inside callback notification processing ?
 		do
 			Result := Eifnet_debugger.callback_notification_processing
@@ -181,7 +181,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 --			end
 --		end
 
-	reload_dotnet_debug_info_if_needed is
+	reload_dotnet_debug_info_if_needed
 			-- Reload debug information if last mode was finalized
 			-- since for debugging we need the workbench info
 			-- we force the reload
@@ -200,7 +200,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 
 feature {NONE} -- Status
 
-	build_status is
+	build_status
 			-- Build associated `status'
 			-- (ie: the application is running)
 		do
@@ -212,7 +212,7 @@ feature -- Properties
 	status: APPLICATION_STATUS_DOTNET
 			-- Status of the running dotnet application
 
-	is_inside_callback_notification_processing: BOOLEAN is
+	is_inside_callback_notification_processing: BOOLEAN
 			-- Is inside callback notification processing?
 			-- (to distinguish before normal execution, and evaluation)
 		do
@@ -221,7 +221,7 @@ feature -- Properties
 
 feature {APPLICATION_EXECUTION} -- Properties
 
-	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN is
+	is_valid_object_address (addr: DBG_ADDRESS): BOOLEAN
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
@@ -230,7 +230,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Bridge to Debugger
 
-	exit_process_occurred: BOOLEAN is
+	exit_process_occurred: BOOLEAN
 			-- Did the exit_process occurred ?
 		require
 			eifnet_debugger_exists: eifnet_debugger_initialized
@@ -240,7 +240,7 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run_with_env_string (app: STRING; args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (app: STRING; args, cwd: STRING; env: STRING_GENERAL)
 			-- Run application `app' with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -276,7 +276,7 @@ feature -- Execution
 			end
 		end
 
-	continue_ignoring_kept_objects is
+	continue_ignoring_kept_objects
 			-- Continue the running of the application
 			-- before any debugger's operation occurred
 			-- so basically, we are sure we have the same `kept_objects'
@@ -297,7 +297,7 @@ feature -- Execution
 			end
 		end
 
-	interrupt is
+	interrupt
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
 		do
@@ -329,13 +329,13 @@ feature -- Execution
 			end
 		end
 
-	notify_breakpoints_change is
+	notify_breakpoints_change
 			-- Send bp update operation request to the application
 		do
 			update_breakpoints
 		end
 
-	kill is
+	kill
 			-- Ask the application to terminate itself.
 		do
 			if Eifnet_debugger.is_debugging then
@@ -345,7 +345,7 @@ feature -- Execution
 			process_termination
 		end
 
-	clean_on_process_termination is
+	clean_on_process_termination
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
@@ -368,7 +368,7 @@ feature -- Execution
 
 feature -- Remote access to RT_
 
-	remote_rt_object_icd_value: ICOR_DEBUG_VALUE is
+	remote_rt_object_icd_value: ICOR_DEBUG_VALUE
 			-- Return the remote rt_object
 		local
 			m: ICOR_DEBUG_MODULE
@@ -391,7 +391,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remote_rt_object: EIFNET_ABSTRACT_DEBUG_VALUE is
+	remote_rt_object: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Return the remote rt_object
 		local
 			icdv: ICOR_DEBUG_VALUE
@@ -403,7 +403,7 @@ feature -- Remote access to RT_
 
 		end
 
-	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN is
+	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -434,7 +434,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE is
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
@@ -468,7 +468,7 @@ feature -- Remote access to RT_
 
 feature -- Remote access to Exceptions
 
-	remote_exception_manager_icd_value: ICOR_DEBUG_VALUE is
+	remote_exception_manager_icd_value: ICOR_DEBUG_VALUE
 			-- Return the remote `{ISE_RUNTIME}.exception_manager' object.
 		local
 			m: ICOR_DEBUG_MODULE
@@ -505,7 +505,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	remote_exception_manager: EIFNET_ABSTRACT_DEBUG_VALUE is
+	remote_exception_manager: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Return the remote rt_object
 		local
 			icdv: ICOR_DEBUG_VALUE
@@ -516,7 +516,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE
 			-- `{EXCEPTION_MANAGER}.last_exception' aka `{ISE_RUNTIME}.last_exception' value
 		local
 			icdv: ICOR_DEBUG_VALUE
@@ -555,7 +555,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	eiffel_wrapper_exception (e: ICOR_DEBUG_VALUE): ABSTRACT_DEBUG_VALUE is
+	eiffel_wrapper_exception (e: ICOR_DEBUG_VALUE): ABSTRACT_DEBUG_VALUE
 			-- Wrapped .NET exception
 		require
 			e_not_void: e /= Void
@@ -577,7 +577,7 @@ feature -- Remote access to Exceptions
 			end
 		end
 
-	associated_dotnet_exception (e: EXCEPTION_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE is
+	associated_dotnet_exception (e: EXCEPTION_DEBUG_VALUE): ABSTRACT_REFERENCE_VALUE
 			-- Wrapped .NET exception icor debug value.
 		require
 			e_not_void: e /= Void
@@ -592,7 +592,7 @@ feature -- Remote access to Exceptions
 
 feature -- Catcall detection change
 
-	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
 			-- <Precursor>
 		do
 			fixme ("Eiffel runtime catcall detection not available for dotnet")
@@ -600,7 +600,7 @@ feature -- Catcall detection change
 
 feature {NONE} -- Assertion change Implementation
 
-	impl_check_assert (b: BOOLEAN): BOOLEAN is
+	impl_check_assert (b: BOOLEAN): BOOLEAN
 			-- `check_assert (b)' on debuggee
 		do
 			Result := eifnet_debugger.check_assert_on_debuggee (b)
@@ -608,7 +608,7 @@ feature {NONE} -- Assertion change Implementation
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
-	can_not_launch_system_message: STRING is
+	can_not_launch_system_message: STRING
 			-- Message displayed when estudio is unable to launch the system
 		do
 			if il_debug_info_recorder /= Void and then il_debug_info_recorder.entry_point_feature_i = Void then
@@ -620,7 +620,7 @@ feature {APPLICATION_EXECUTION} -- Launching status
 
 feature -- Query
 
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE]
 		local
 			l_class: CLASS_C
 			l_feat: FEATURE_I
@@ -706,7 +706,7 @@ feature -- Query
 			end
 		end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE
 		local
 			l_dv: ABSTRACT_DEBUG_VALUE
 		do
@@ -716,14 +716,14 @@ feature -- Query
 			end
 		end
 
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE
 		do
 			if know_about_kept_object (a_addr) then
 				Result := kept_object_item (a_addr)
 			end
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is
+	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER)
 			-- Get Exception details
 		local
 			tn: STRING
@@ -816,7 +816,7 @@ feature -- Query
 
 feature -- Control execution
 
-	process_before_resuming is
+	process_before_resuming
 			-- Operation to process before resuming execution
 		do
 			check il_debug_info_recorder.last_loading_is_workbench end
@@ -840,7 +840,7 @@ feature -- Control execution
 			Eifnet_debugger.set_last_control_mode_is_nothing
 		end
 
-	debug_display_threads is
+	debug_display_threads
 			-- Display threads information for debugging purpose
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
@@ -881,7 +881,7 @@ feature -- Control execution
 
 feature {NONE} -- Stepping
 
-	step_out is
+	step_out
 			-- Stepping out of the routine
 		do
 			debug ("debugger_trace_stepping")
@@ -892,7 +892,7 @@ feature {NONE} -- Stepping
 			raw_step_out
 		end
 
-	step_into is
+	step_into
 			-- Stepping into next routine
 		do
 			debug ("debugger_trace_stepping")
@@ -904,7 +904,7 @@ feature {NONE} -- Stepping
 			raw_step_range (True)
 		end
 
-	step_next is
+	step_next
 			-- Stepping to next step point
 		local
 			l_status: APPLICATION_STATUS_DOTNET
@@ -931,7 +931,7 @@ feature {NONE} -- Stepping
 
 feature {NONE} -- Stepping
 
-	raw_step_out is
+	raw_step_out
 			-- Effective call to step out
 			-- without calling `process_before_running'
 		do
@@ -943,7 +943,7 @@ feature {NONE} -- Stepping
 			end
 		end
 
-	raw_step_range (a_bstep_in: BOOLEAN) is
+	raw_step_range (a_bstep_in: BOOLEAN)
 			-- Step over the next range
 			-- faster than stepping next for each dotnet step.
 		local
@@ -1001,7 +1001,7 @@ feature {NONE} -- Stepping
 
 feature -- Breakpoints controller
 
-	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
+	send_breakpoints_for_stepping (a_execution_mode: INTEGER; ign_bp: BOOLEAN)
 			-- Send breakpoints for step operation
 			-- called by `send_breakpoints'
 			-- DO NOT CALL DIRECTLY
@@ -1029,7 +1029,7 @@ feature -- Breakpoints controller
 
 feature {NONE} -- BreakPoints
 
-	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION)
 			-- enable breakpoint at `loc'
 			-- if no breakpoint already exists at `loc' a breakpoint is created
 		do
@@ -1037,14 +1037,14 @@ feature {NONE} -- BreakPoints
 			loc.set_application_set
 		end
 
-	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION)
 			-- remove breakpoint at `loc'
 		do
 			set_dotnet_breakpoint (loc, False)
 			loc.set_application_not_set
 		end
 
-	set_dotnet_breakpoint (loc: BREAKPOINT_LOCATION; a_state: BOOLEAN) is
+	set_dotnet_breakpoint (loc: BREAKPOINT_LOCATION; a_state: BOOLEAN)
 			-- set breakpoint at `loc' if `a_state' is `True'
 			-- otherwise unset it
 		require
@@ -1114,7 +1114,7 @@ feature {NONE} -- BreakPoints
 
 feature {NONE} -- Implementation
 
-	display_feature_info (f: E_FEATURE) is
+	display_feature_info (f: E_FEATURE)
 			-- Display info related to feature `f'
 			-- debug purpose only
 		require
@@ -1177,7 +1177,7 @@ feature {NONE} -- Implementation
 
 feature -- Evaluation
 
-	notify_evaluation_done is
+	notify_evaluation_done
 			-- Notify that an evaluation is done.
 		do
 			debug ("debugger_trace")
@@ -1187,7 +1187,7 @@ feature -- Evaluation
 
 feature {NONE} -- Events on notification
 
-	notify_execution_on_exit_process is
+	notify_execution_on_exit_process
 			-- Notify the system is exiting
 		do
 			--| We need to stop
@@ -1198,7 +1198,7 @@ feature {NONE} -- Events on notification
 			Eifnet_debugger.notify_exit_process_occurred
 		end
 
-	notify_execution_on_debugger_error is
+	notify_execution_on_debugger_error
 			-- Notify the system is exiting on debugger error
 		local
 			l_err_msg: STRING
@@ -1217,7 +1217,7 @@ feature {NONE} -- Events on notification
 			Eifnet_debugger.terminate_debugging
 		end
 
-	notify_execution_on_stopped (cb_id: INTEGER) is
+	notify_execution_on_stopped (cb_id: INTEGER)
 		local
 			need_to_continue: BOOLEAN
 			l_status: APPLICATION_STATUS_DOTNET
@@ -1299,7 +1299,7 @@ feature {NONE} -- Events on notification
 			end
 		end
 
-	do_stop_on_breakpoint: BOOLEAN is
+	do_stop_on_breakpoint: BOOLEAN
 			-- In case of conditional breakpoint, do we really stop on it ?
 		local
 			bps: LIST [BREAKPOINT]
@@ -1333,7 +1333,7 @@ feature {NONE} -- Events on notification
 			end
 		end
 
-	display_breakpoint_info (icd_bp: ICOR_DEBUG_BREAKPOINT) is
+	display_breakpoint_info (icd_bp: ICOR_DEBUG_BREAKPOINT)
 			-- display information related to `icd_bp'
 			-- debug purpose only
 		local
@@ -1356,7 +1356,7 @@ feature -- update processing
 	agent_update_notify_on_after_stopped: PROCEDURE [ANY, TUPLE]
 			-- Procedure used as agent for `update_notify_on_after_stopped'
 
-	update_notify_on_after_stopped is
+	update_notify_on_after_stopped
 			-- Ask to notify studio right after the execution is stopped
 			-- but in the studio graphical loop
 		do
@@ -1365,7 +1365,7 @@ feature -- update processing
 			debugger_manager.add_idle_action (agent_update_notify_on_after_stopped)
 		end
 
-	real_update_notify_on_after_stopped is
+	real_update_notify_on_after_stopped
 			-- Proceed effective notification to studio
 			-- make sure we are outside the callback notification
 		local
@@ -1399,7 +1399,7 @@ feature -- update processing
 
 feature -- Call stack related
 
-	frame_callstack_info (a_frame: ICOR_DEBUG_FRAME): STRING is
+	frame_callstack_info (a_frame: ICOR_DEBUG_FRAME): STRING
 			-- obsolete "To remove soon or later, this is just a debug use for now"
 			-- Called by `select_actions' of `but_callstack_update'.
 		local
@@ -1492,7 +1492,7 @@ feature -- Call stack related
 			Result := l_output
 		end
 
-	display_full_callstack_info is
+	display_full_callstack_info
 			-- obsolete "To remove soon or later, this is just a debug use for now"
 			-- Called by `select_actions' of `but_callstack_update'.
 		local
@@ -1554,13 +1554,13 @@ feature -- Call stack related
 
 feature -- Object Keeper
 
-	keep_only_objects (a_addresses: LIST [DBG_ADDRESS]) is
+	keep_only_objects (a_addresses: LIST [DBG_ADDRESS])
 			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
 		do
 			Eifnet_debugger.keep_only_objects (a_addresses)
 		end
 
-	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
+	kept_object_item (a_address: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 			-- Keep this object addressed by `a_address'
 		require
 			know_about_object: know_about_kept_object (a_address)
@@ -1568,7 +1568,7 @@ feature -- Object Keeper
 			Result := Eifnet_debugger.kept_object_item (a_address)
 		end
 
-	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN is
+	know_about_kept_object (a_address: DBG_ADDRESS): BOOLEAN
 			-- Do we have a reference for the object addressed by `a_address' ?
 		do
 			Result := Eifnet_debugger.know_about_kept_object (a_address)
@@ -1582,7 +1582,7 @@ feature {NONE} -- Constants for dotnet interactions
 	Exception_manager_wrapped_exception_function_name: STRING = "wrapped_exception"
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

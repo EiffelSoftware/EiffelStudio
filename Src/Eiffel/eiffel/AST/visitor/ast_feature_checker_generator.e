@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Perform type checking as well as generation of BYTE_NODE tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -100,7 +100,7 @@ inherit
 
 feature -- Initialization
 
-	init (a_context: AST_CONTEXT) is
+	init (a_context: AST_CONTEXT)
 		do
 			if type_a_checker = Void then
 				create type_a_checker
@@ -119,7 +119,7 @@ feature -- Initialization
 
 feature -- Type checking
 
-	type_check_only (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_code_inherited, a_replicated_in_current_class: BOOLEAN) is
+	type_check_only (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_code_inherited, a_replicated_in_current_class: BOOLEAN)
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -154,7 +154,7 @@ feature -- Type checking
 			check_vevi
 		end
 
-	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_replicated_in_current_class: BOOLEAN) is
+	type_check_and_code (a_feature: FEATURE_I; a_is_safe_to_check_inherited, a_replicated_in_current_class: BOOLEAN)
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -206,7 +206,7 @@ feature -- Type checking
 			check_vevi
 		end
 
-	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN) is
+	invariant_type_check (a_feature: FEATURE_I; a_clause: INVARIANT_AS; a_generate_code: BOOLEAN)
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -233,7 +233,7 @@ feature -- Type checking
 			end
 		end
 
-	custom_attributes_type_check_and_code (a_feature: FEATURE_I; a_cas: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]) is
+	custom_attributes_type_check_and_code (a_feature: FEATURE_I; a_cas: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS])
 			-- Type check `a_cas' for `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -247,7 +247,7 @@ feature -- Type checking
 			a_cas.process (Current)
 		end
 
-	check_local_names (a_procedure: PROCEDURE_I; a_node: BODY_AS) is
+	check_local_names (a_procedure: PROCEDURE_I; a_node: BODY_AS)
 			-- Check validity of the names of the locals of `a_procedure'.
 			-- Useful when a feature has been added, we need to make sure that
 			-- locals of existing features have a different name.
@@ -304,7 +304,7 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 
-	check_body (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited, a_is_for_inline_agent: BOOLEAN) is
+	check_body (a_feature: FEATURE_I; a_body: BODY_AS; a_is_byte_node_enabled, a_is_inherited, a_is_for_inline_agent: BOOLEAN)
 			-- Type check `a_feature' which represents an inline agent `a_body'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -388,7 +388,7 @@ feature {NONE} -- Internal type checking
 
 feature -- Status report
 
-	byte_code: BYTE_CODE is
+	byte_code: BYTE_CODE
 			-- Last computed BYTE_CODE instance if any.
 		do
 			Result ?= last_byte_node
@@ -397,7 +397,7 @@ feature -- Status report
 	inline_agent_byte_codes: LINKED_LIST [BYTE_CODE]
 			-- List of computed inline agent byte nodes if any.
 
-	invariant_byte_code: INVARIANT_B is
+	invariant_byte_code: INVARIANT_B
 			-- Last computed invariant byte node if any.
 		do
 			Result ?= last_byte_node
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation: State
 	context: AST_CONTEXT
 			-- Context in which current checking is done
 
-	is_checking_postcondition: BOOLEAN is
+	is_checking_postcondition: BOOLEAN
 			-- Are we currently checking a postcondition.
 			-- Needed to ensure that old expression only appears in
 			-- postconditions
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation: State
 				{DEPEND_UNIT}.is_in_ensure_flag
 		end
 
-	is_checking_invariant: BOOLEAN is
+	is_checking_invariant: BOOLEAN
 			-- Level of analysis for access, When analyzing an access id,
 			-- (instance of ACCESS_ID_AS), locals, arguments
 			-- are not taken into account if set to True.
@@ -499,21 +499,21 @@ feature {NONE} -- Implementation: State
 				{DEPEND_UNIT}.is_in_invariant_flag
 		end
 
-	is_checking_precondition: BOOLEAN is
+	is_checking_precondition: BOOLEAN
 			-- Level for analysis of precondition
 		do
 			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_require_flag) =
 				{DEPEND_UNIT}.is_in_require_flag
 		end
 
-	is_checking_check: BOOLEAN is
+	is_checking_check: BOOLEAN
 			-- Level for analyzis of check clauses
 		do
 			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_check_flag) =
 				{DEPEND_UNIT}.is_in_check_flag
 		end
 
-	is_in_assignment: BOOLEAN is
+	is_in_assignment: BOOLEAN
 			-- Level for analysis of target of an assignment
 		do
 			Result := (depend_unit_level & {DEPEND_UNIT}.is_in_assignment_flag) =
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation: State
 	is_checking_cas: BOOLEAN
 			-- Is a custom attribute being processed?
 
-	error_level: NATURAL_32 is
+	error_level: NATURAL_32
 			-- Convenience feature for compactness.
 		do
 			Result := error_handler.error_level
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation: Access
 
 feature -- Settings
 
-	reset is
+	reset
 			-- Reset all attributes to their default value
 		do
 			old_expressions := Void
@@ -651,7 +651,7 @@ feature -- Settings
 			inline_agent_byte_codes := Void
 		end
 
-	reset_types is
+	reset_types
 			-- Reset attributes storing types to Void
 		do
 			last_tuple_type := Void
@@ -661,12 +661,12 @@ feature -- Settings
 			current_target_type := Void
 		end
 
-	reset_for_unqualified_call_checking is
+	reset_for_unqualified_call_checking
 		do
 			last_type := context.current_class_type
 		end
 
-	set_is_checking_postcondition (b: BOOLEAN) is
+	set_is_checking_postcondition (b: BOOLEAN)
 			-- Assign `b' to `is_checking_postcondition'.
 		do
 			if b then
@@ -679,7 +679,7 @@ feature -- Settings
 			is_checking_postcondition_set: is_checking_postcondition = b
 		end
 
-	set_is_checking_invariant (b: BOOLEAN) is
+	set_is_checking_invariant (b: BOOLEAN)
 			-- Assign `b' to `is_checking_invariant'.
 		do
 			if b then
@@ -692,7 +692,7 @@ feature -- Settings
 			is_checking_invariant_set: is_checking_invariant = b
 		end
 
-	set_is_checking_precondition (b: BOOLEAN) is
+	set_is_checking_precondition (b: BOOLEAN)
 			-- Assign `b' to `is_checking_precondition'.
 			-- Also set `b' to check_for_vape.
 		do
@@ -706,7 +706,7 @@ feature -- Settings
 			is_checking_precondition_set: is_checking_precondition = b
 		end
 
-	set_is_checking_check (b: BOOLEAN) is
+	set_is_checking_check (b: BOOLEAN)
 			-- Assign `b' to `is_checking_check'.
 		do
 			if b then
@@ -719,7 +719,7 @@ feature -- Settings
 			is_checking_check_set: is_checking_check = b
 		end
 
-	set_is_in_assignment (b: BOOLEAN) is
+	set_is_in_assignment (b: BOOLEAN)
 			-- Assign `b' to `is_in_assignment'.
 		do
 			if b then
@@ -732,7 +732,7 @@ feature -- Settings
 			is_in_assignment_set: is_in_assignment = b
 		end
 
-	set_current_feature (a_feature: FEATURE_I) is
+	set_current_feature (a_feature: FEATURE_I)
 			-- Assign `a_feature' to `current_feature'.
 		do
 			current_feature := a_feature
@@ -742,55 +742,55 @@ feature -- Settings
 
 feature -- Roundtrip
 
-	process_keyword_as (l_as: KEYWORD_AS) is
+	process_keyword_as (l_as: KEYWORD_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_symbol_as (l_as: SYMBOL_AS) is
+	process_symbol_as (l_as: SYMBOL_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_break_as (l_as: BREAK_AS) is
+	process_break_as (l_as: BREAK_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_leaf_stub_as (l_as: LEAF_STUB_AS) is
+	process_leaf_stub_as (l_as: LEAF_STUB_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_symbol_stub_as (l_as: SYMBOL_STUB_AS) is
+	process_symbol_stub_as (l_as: SYMBOL_STUB_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_keyword_stub_as (l_as: KEYWORD_STUB_AS) is
+	process_keyword_stub_as (l_as: KEYWORD_STUB_AS)
 			-- Process `l_as'.
 		do
 		end
 
-	process_none_id_as (l_as: NONE_ID_AS) is
+	process_none_id_as (l_as: NONE_ID_AS)
 			-- Process `l_as'.
 		do
 			process_id_as (l_as)
 		end
 
-	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+	process_typed_char_as (l_as: TYPED_CHAR_AS)
 			-- Process `l_as'.
 		do
 			process_char_as (l_as)
 		end
 
-	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
 			-- Process `l_as'.
 		do
 			process_routine_creation_as (l_as)
 		end
 
-	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
 			-- Process `l_as'.
 		local
 			l_feature_name: ID_AS
@@ -955,25 +955,25 @@ feature -- Roundtrip
 			end
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+	process_create_creation_as (l_as: CREATE_CREATION_AS)
 			-- Process `l_as'.
 		do
 			process_creation_as (l_as)
 		end
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+	process_bang_creation_as (l_as: BANG_CREATION_AS)
 			-- Process `l_as'.
 		do
 			process_creation_as (l_as)
 		end
 
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
 			-- Process `l_as'.
 		do
 			process_creation_expr_as (l_as)
 		end
 
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
 			-- Process `l_as'.
 		do
 			process_creation_expr_as (l_as)
@@ -981,7 +981,7 @@ feature -- Roundtrip
 
 feature -- Implementation
 
-	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
+	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		local
 			l_creation: CREATION_EXPR_B
 			l_creation_type: CL_TYPE_A
@@ -1017,12 +1017,12 @@ feature -- Implementation
 			is_checking_cas := False
 		end
 
-	process_id_as (l_as: ID_AS) is
+	process_id_as (l_as: ID_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_integer_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_CONSTANT)
 		do
 			last_type := l_as.manifest_type
 			if is_byte_node_enabled then
@@ -1030,7 +1030,7 @@ feature -- Implementation
 			end
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		local
 			l_type: TYPE_A
 			l_needs_byte_node: BOOLEAN
@@ -1067,7 +1067,7 @@ feature -- Implementation
 	process_call (
 			a_type, a_precursor_type: TYPE_A; a_name: ID_AS; a_feature: FEATURE_I;
 			a_params: EIFFEL_LIST [EXPR_AS]; is_static, is_agent, is_qualified, is_precursor: BOOLEAN)
-		is
+		
 			-- Process call to `a_name' in context of `a_type' with `a_params' if ANY.
 			-- If `is_static' it is a static call.
 			--
@@ -1828,17 +1828,17 @@ feature -- Implementation
 			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access) implies last_calls_target_type /= Void
 		end
 
-	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_unique_as (l_as: UNIQUE_AS) is
+	process_unique_as (l_as: UNIQUE_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_tuple_as (l_as: TUPLE_AS) is
+	process_tuple_as (l_as: TUPLE_AS)
 		local
 			l_tuple_type: TUPLE_TYPE_A
 			l_list: BYTE_LIST [EXPR_B]
@@ -1876,7 +1876,7 @@ feature -- Implementation
 				(error_level = old error_level) implies last_tuple_type /= Void
 		end
 
-	process_real_as (l_as: REAL_AS) is
+	process_real_as (l_as: REAL_AS)
 		do
 			if l_as.constant_type = Void then
 				last_type := Real_64_type
@@ -1890,7 +1890,7 @@ feature -- Implementation
 			end
 		end
 
-	process_bool_as (l_as: BOOL_AS) is
+	process_bool_as (l_as: BOOL_AS)
 		do
 			last_type := Boolean_type
 			if is_byte_node_enabled then
@@ -1898,7 +1898,7 @@ feature -- Implementation
 			end
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS) is
+	process_bit_const_as (l_as: BIT_CONST_AS)
 		do
 			create {BITS_A} last_type.make (l_as.value.name.count)
 			if is_byte_node_enabled then
@@ -1906,7 +1906,7 @@ feature -- Implementation
 			end
 		end
 
-	process_array_as (l_as: COMPILER_ARRAY_AS) is
+	process_array_as (l_as: COMPILER_ARRAY_AS)
 		local
 			i, nb: INTEGER
 			l_array_type: GEN_TYPE_A
@@ -2128,7 +2128,7 @@ feature -- Implementation
 			end
 		end
 
-	process_char_as (l_as: CHAR_AS) is
+	process_char_as (l_as: CHAR_AS)
 		do
 			if l_as.type = Void then
 				if l_as.value.is_character_8 then
@@ -2144,7 +2144,7 @@ feature -- Implementation
 			end
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 		local
 			t: like last_type
 		do
@@ -2168,17 +2168,17 @@ feature -- Implementation
 			end
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 			process_string_as (l_as)
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 		do
 			safe_process (l_as.content)
 		end
 
-	process_built_in_as (l_as: BUILT_IN_AS) is
+	process_built_in_as (l_as: BUILT_IN_AS)
 			-- Process `l_as'.
 		local
 			l_external: EXTERNAL_I
@@ -2209,7 +2209,7 @@ feature -- Implementation
 			end
 		end
 
-	process_result_as (l_as: RESULT_AS) is
+	process_result_as (l_as: RESULT_AS)
 		local
 			l_feat_type: TYPE_A
 			l_vrle3: VRLE3
@@ -2281,7 +2281,7 @@ feature -- Implementation
 			end
 		end
 
-	process_current_as (l_as: CURRENT_AS) is
+	process_current_as (l_as: CURRENT_AS)
 		do
 			last_type := context.current_class_type
 			if is_byte_node_enabled then
@@ -2289,7 +2289,7 @@ feature -- Implementation
 			end
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		local
 			l_type_a, l_last_type, l_last_constrained, l_feature_type, l_last_feature_type: TYPE_A
 			l_last_class_id: INTEGER
@@ -2438,7 +2438,7 @@ feature -- Implementation
 			end
 		end
 
-	process_access_inv_as (l_as: ACCESS_INV_AS) is
+	process_access_inv_as (l_as: ACCESS_INV_AS)
 		local
 			l_class_id: INTEGER
 			l_type: TYPE_A
@@ -2487,7 +2487,7 @@ feature -- Implementation
 			end
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 		local
 			l_arg_pos: INTEGER
 			l_last_id: INTEGER
@@ -2664,7 +2664,7 @@ feature -- Implementation
 			end
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 		local
 			l_arg_pos: INTEGER
 			l_local_info: LOCAL_INFO
@@ -2783,7 +2783,7 @@ feature -- Implementation
 			end
 		end
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 		local
 			l_vupr1: VUPR1
 			l_vupr2: VUPR2
@@ -2917,7 +2917,7 @@ feature -- Implementation
 			end
 		end
 
-	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
+	process_nested_expr_as (l_as: NESTED_EXPR_AS)
 		local
 			l_target_type: TYPE_A
 			l_target_expr: EXPR_B
@@ -2966,7 +2966,7 @@ feature -- Implementation
 			end
 		end
 
-	process_nested_as (l_as: NESTED_AS) is
+	process_nested_as (l_as: NESTED_AS)
 		local
 			l_target_access: ACCESS_B
 			l_call: CALL_B
@@ -3014,7 +3014,7 @@ feature -- Implementation
 			end
 		end
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 		local
 			l_vxrc: VXRC
 			l_byte_code: BYTE_CODE
@@ -3187,7 +3187,7 @@ feature -- Implementation
 			end
 		end
 
-	process_constant_as (l_as: CONSTANT_AS) is
+	process_constant_as (l_as: CONSTANT_AS)
 		do
 			-- Nothing to be done
 		end
@@ -3204,12 +3204,12 @@ feature -- Implementation
 			context.set_scope (s)
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		do
 			process_eiffel_list_with_matcher (l_as, Void, Void)
 		end
 
-	process_eiffel_list_with_matcher (l_as: EIFFEL_LIST [AST_EIFFEL]; m: AST_SCOPE_MATCHER; b: BYTE_LIST [BYTE_NODE]) is
+	process_eiffel_list_with_matcher (l_as: EIFFEL_LIST [AST_EIFFEL]; m: AST_SCOPE_MATCHER; b: BYTE_LIST [BYTE_NODE])
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -3250,12 +3250,12 @@ feature -- Implementation
 			l_as.go_i_th (l_cursor)
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_operand_as (l_as: OPERAND_AS) is
+	process_operand_as (l_as: OPERAND_AS)
 		local
 			l_class_type: TYPE_A
 		do
@@ -3281,7 +3281,7 @@ feature -- Implementation
 			end
 		end
 
-	process_tagged_as (l_as: TAGGED_AS) is
+	process_tagged_as (l_as: TAGGED_AS)
 		local
 			l_vwbe3: VWBE3
 			l_assert: ASSERT_B
@@ -3321,7 +3321,7 @@ feature -- Implementation
 			end
 		end
 
-	process_variant_as (l_as: VARIANT_AS) is
+	process_variant_as (l_as: VARIANT_AS)
 		local
 			l_vave: VAVE
 			l_assert: VARIANT_B
@@ -3358,7 +3358,7 @@ feature -- Implementation
 			end
 		end
 
-	process_un_strip_as (l_as: UN_STRIP_AS) is
+	process_un_strip_as (l_as: UN_STRIP_AS)
 		local
 			l_id: INTEGER
 			l_index: INTEGER
@@ -3425,7 +3425,7 @@ feature -- Implementation
 			end
 		end
 
-	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS)
 		local
 			l_feat: FEATURE_I
 			l_feat_name: ID_AS
@@ -3466,7 +3466,7 @@ feature -- Implementation
 			end
 		end
 
-	process_paran_as (l_as: PARAN_AS) is
+	process_paran_as (l_as: PARAN_AS)
 		local
 			l_expr: EXPR_B
 		do
@@ -3479,7 +3479,7 @@ feature -- Implementation
 			end
 		end
 
-	process_expr_call_as (l_as: EXPR_CALL_AS) is
+	process_expr_call_as (l_as: EXPR_CALL_AS)
 		local
 			l_vkcn3: VKCN3
 			l_list: LEAF_AS_LIST
@@ -3502,7 +3502,7 @@ feature -- Implementation
 			-- `l_as.call.process'.
 		end
 
-	process_expr_address_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
 		local
 			l_expr: EXPR_B
 		do
@@ -3516,7 +3516,7 @@ feature -- Implementation
 			end
 		end
 
-	process_address_result_as (l_as: ADDRESS_RESULT_AS) is
+	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 		local
 			l_vrle3: VRLE3
 			l_veen2a: VEEN2A
@@ -3545,7 +3545,7 @@ feature -- Implementation
 			end
 		end
 
-	process_address_current_as (l_as: ADDRESS_CURRENT_AS) is
+	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		local
 			l_like_current: LIKE_CURRENT
 		do
@@ -3556,7 +3556,7 @@ feature -- Implementation
 			end
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 		local
 			l_access: ACCESS_B
 			l_argument: ARGUMENT_B
@@ -3719,7 +3719,7 @@ feature -- Implementation
 			end
 		end
 
-	process_type_expr_as (l_as: TYPE_EXPR_AS) is
+	process_type_expr_as (l_as: TYPE_EXPR_AS)
  		local
 			l_type: TYPE_A
 			l_type_type: GEN_TYPE_A
@@ -3744,7 +3744,7 @@ feature -- Implementation
 			end
 		end
 
-	process_routine_creation_as_ext (l_as: ROUTINE_CREATION_AS; a_feature: FEATURE_I) is
+	process_routine_creation_as_ext (l_as: ROUTINE_CREATION_AS; a_feature: FEATURE_I)
 		local
 			l_class: CLASS_C
 			l_feature: FEATURE_I
@@ -3901,12 +3901,12 @@ feature -- Implementation
 			end
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		do
 			process_routine_creation_as_ext (l_as, Void)
 		end
 
-	process_unary_as (l_as: UNARY_AS) is
+	process_unary_as (l_as: UNARY_AS)
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -4093,22 +4093,22 @@ feature -- Implementation
 			end
 		end
 
-	process_un_free_as (l_as: UN_FREE_AS) is
+	process_un_free_as (l_as: UN_FREE_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_minus_as (l_as: UN_MINUS_AS) is
+	process_un_minus_as (l_as: UN_MINUS_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS) is
+	process_un_not_as (l_as: UN_NOT_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 		local
 			l_vaol1: VAOL1
 			l_vaol2: VAOL2
@@ -4163,12 +4163,12 @@ feature -- Implementation
 			end
 		end
 
-	process_un_plus_as (l_as: UN_PLUS_AS) is
+	process_un_plus_as (l_as: UN_PLUS_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_binary_as (l_as: BINARY_AS; scope_matcher: AST_SCOPE_MATCHER) is
+	process_binary_as (l_as: BINARY_AS; scope_matcher: AST_SCOPE_MATCHER)
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -4396,17 +4396,17 @@ feature -- Implementation
 			last_infix_argument_conversion_info := Void
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
+	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
 			process_binary_as (l_as, create {AST_SCOPE_CONJUNCTIVE_EXPRESSION}.make (context))
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS) is
+	process_bin_free_as (l_as: BIN_FREE_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
+	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
 		local
 			l_implies: B_IMPLIES_B
 			l_bool_val: VALUE_I
@@ -4441,82 +4441,82 @@ feature -- Implementation
 			end
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS) is
+	process_bin_or_as (l_as: BIN_OR_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
+	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
 			process_binary_as (l_as, create {AST_SCOPE_DISJUNCTIVE_EXPRESSION}.make (context))
 		end
 
-	process_bin_xor_as (l_as: BIN_XOR_AS) is
+	process_bin_xor_as (l_as: BIN_XOR_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_ge_as (l_as: BIN_GE_AS) is
+	process_bin_ge_as (l_as: BIN_GE_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_gt_as (l_as: BIN_GT_AS) is
+	process_bin_gt_as (l_as: BIN_GT_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_le_as (l_as: BIN_LE_AS) is
+	process_bin_le_as (l_as: BIN_LE_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_lt_as (l_as: BIN_LT_AS) is
+	process_bin_lt_as (l_as: BIN_LT_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_div_as (l_as: BIN_DIV_AS) is
+	process_bin_div_as (l_as: BIN_DIV_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_minus_as (l_as: BIN_MINUS_AS) is
+	process_bin_minus_as (l_as: BIN_MINUS_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_mod_as (l_as: BIN_MOD_AS) is
+	process_bin_mod_as (l_as: BIN_MOD_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_plus_as (l_as: BIN_PLUS_AS) is
+	process_bin_plus_as (l_as: BIN_PLUS_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_power_as (l_as: BIN_POWER_AS) is
+	process_bin_power_as (l_as: BIN_POWER_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_slash_as (l_as: BIN_SLASH_AS) is
+	process_bin_slash_as (l_as: BIN_SLASH_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_star_as (l_as: BIN_STAR_AS) is
+	process_bin_star_as (l_as: BIN_STAR_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_and_as (l_as: BIN_AND_AS) is
+	process_bin_and_as (l_as: BIN_AND_AS)
 		do
 			process_binary_as (l_as, Void)
 		end
 
-	process_bin_eq_as (l_as: BIN_EQ_AS) is
+	process_bin_eq_as (l_as: BIN_EQ_AS)
 		local
 			l_left_type, l_right_type: TYPE_A
 			l_left_expr, l_right_expr: EXPR_B
@@ -4621,22 +4621,22 @@ feature -- Implementation
 			last_type := boolean_type
 		end
 
-	process_bin_ne_as (l_as: BIN_NE_AS) is
+	process_bin_ne_as (l_as: BIN_NE_AS)
 		do
 			process_bin_eq_as (l_as)
 		end
 
-	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+	process_bin_tilde_as (l_as: BIN_TILDE_AS)
 		do
 			process_bin_eq_as (l_as)
 		end
 
-	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS)
 		do
 			process_bin_tilde_as (l_as)
 		end
 
-	process_bracket_as (l_as: BRACKET_AS) is
+	process_bracket_as (l_as: BRACKET_AS)
 		local
 			was_assigner_call: BOOLEAN
 			target_type: TYPE_A
@@ -4786,7 +4786,7 @@ feature -- Implementation
 			end
 		end
 
-	process_object_test_as (l_as: OBJECT_TEST_AS) is
+	process_object_test_as (l_as: OBJECT_TEST_AS)
 		local
 			l_needs_byte_node: BOOLEAN
 			local_name_id: INTEGER
@@ -4866,12 +4866,12 @@ feature -- Implementation
 			last_type := boolean_type
 		end
 
-	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
+	process_external_lang_as (l_as: EXTERNAL_LANG_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 		local
 			l_byte_code: BYTE_CODE
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -4944,32 +4944,32 @@ feature -- Implementation
 			end
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS) is
+	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS) is
+	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
 		do
 			-- Nothing to be done.
 		end
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+	process_feature_list_as (l_as: FEATURE_LIST_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_all_as (l_as: ALL_AS) is
+	process_all_as (l_as: ALL_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_assign_as (l_as: ASSIGN_AS) is
+	process_assign_as (l_as: ASSIGN_AS)
 		local
 			l_target_node: ACCESS_B
 			l_source_expr: EXPR_B
@@ -5100,7 +5100,7 @@ feature -- Implementation
 			end
 		end
 
-	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
 		local
 			target_byte_node: like last_byte_node
 			target_type: like last_type
@@ -5292,7 +5292,7 @@ feature -- Implementation
 			end
 		end
 
-	process_reverse_as (l_as: REVERSE_AS) is
+	process_reverse_as (l_as: REVERSE_AS)
 		local
 			l_target_node: ACCESS_B
 			l_source_expr: EXPR_B
@@ -5415,7 +5415,7 @@ feature -- Implementation
 			end
 		end
 
-	process_check_as (l_as: CHECK_AS) is
+	process_check_as (l_as: CHECK_AS)
 		local
 			l_check: CHECK_B
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -5445,7 +5445,7 @@ feature -- Implementation
 			end
 		end
 
-	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_INV_AS; a_name: STRING; a_location: LOCATION_AS) is
+	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_INV_AS; a_name: STRING; a_location: LOCATION_AS)
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_location_not_void: a_location /= Void
@@ -5895,7 +5895,7 @@ feature -- Implementation
 			last_byte_node := l_assign
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	process_creation_as (l_as: CREATION_AS)
 		local
 			l_access: ACCESS_B
 			l_assign: ASSIGN_B
@@ -6037,7 +6037,7 @@ feature -- Implementation
 			reset_types
 		end
 
-	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		local
 			l_call_access: CALL_ACCESS_B
 			l_creation_expr: CREATION_EXPR_B
@@ -6100,7 +6100,7 @@ feature -- Implementation
 			end
 		end
 
-	process_debug_as (l_as: DEBUG_AS) is
+	process_debug_as (l_as: DEBUG_AS)
 		local
 			l_debug: DEBUG_B
 			l_list: BYTE_LIST [BYTE_NODE]
@@ -6139,7 +6139,7 @@ feature -- Implementation
 			end
 		end
 
-	process_if_as (l_as: IF_AS) is
+	process_if_as (l_as: IF_AS)
 		local
 			l_vwbe1: VWBE1
 			l_needs_byte_node: BOOLEAN
@@ -6225,7 +6225,7 @@ feature -- Implementation
 			end
 		end
 
-	process_inspect_as (l_as: INSPECT_AS) is
+	process_inspect_as (l_as: INSPECT_AS)
 		local
 			l_vomb1: VOMB1
 			l_controler: INSPECT_CONTROL
@@ -6307,7 +6307,7 @@ feature -- Implementation
 			end
 		end
 
-	process_instr_call_as (l_as: INSTR_CALL_AS) is
+	process_instr_call_as (l_as: INSTR_CALL_AS)
 		local
 			l_vkcn1: VKCN1
 			l_call: CALL_B
@@ -6337,7 +6337,7 @@ feature -- Implementation
 			end
 		end
 
-	process_loop_as (l_as: LOOP_AS) is
+	process_loop_as (l_as: LOOP_AS)
 		local
 			l_vwbe4: VWBE4
 			l_needs_byte_node: BOOLEAN
@@ -6435,7 +6435,7 @@ feature -- Implementation
 			end
 		end
 
-	process_retry_as (l_as: RETRY_AS) is
+	process_retry_as (l_as: RETRY_AS)
 		local
 			l_vxrt: VXRT
 			l_retry_b: RETRY_B
@@ -6455,7 +6455,7 @@ feature -- Implementation
 			end
 		end
 
-	process_external_as (l_as: EXTERNAL_AS) is
+	process_external_as (l_as: EXTERNAL_AS)
 		local
 			l_external: EXTERNAL_I
 			l_lang: COMPILER_EXTERNAL_LANG_AS
@@ -6475,14 +6475,14 @@ feature -- Implementation
 			end
 		end
 
-	process_deferred_as (l_as: DEFERRED_AS) is
+	process_deferred_as (l_as: DEFERRED_AS)
 		do
 			if is_byte_node_enabled then
 				create {DEF_BYTE_CODE} last_byte_node
 			end
 		end
 
-	process_attribute_as (l_as: ATTRIBUTE_AS) is
+	process_attribute_as (l_as: ATTRIBUTE_AS)
 		local
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_std_byte_code: STD_BYTE_CODE
@@ -6505,7 +6505,7 @@ feature -- Implementation
 			break_point_slot_count := break_point_slot_count + 1
 		end
 
-	process_do_as (l_as: DO_AS) is
+	process_do_as (l_as: DO_AS)
 		local
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_std_byte_code: STD_BYTE_CODE
@@ -6528,7 +6528,7 @@ feature -- Implementation
 			break_point_slot_count := break_point_slot_count + 1
 		end
 
-	process_once_as (l_as: ONCE_AS) is
+	process_once_as (l_as: ONCE_AS)
 		local
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_once_byte_code: ONCE_BYTE_CODE
@@ -6561,83 +6561,83 @@ feature -- Implementation
 			break_point_slot_count := break_point_slot_count + 1
 		end
 
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
+	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			check_type (l_as.type)
 			fixme ("what do we do about the identifiers?")
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
+	process_like_cur_as (l_as: LIKE_CUR_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_formal_as (l_as: FORMAL_AS) is
+	process_formal_as (l_as: FORMAL_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
+	process_formal_dec_as (l_as: FORMAL_DEC_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS) is
+	process_constraining_type_as (l_as: CONSTRAINING_TYPE_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_none_type_as (l_as: NONE_TYPE_AS) is
+	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_bits_as (l_as: BITS_AS) is
+	process_bits_as (l_as: BITS_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			check_type (l_as)
 		end
 
-	process_rename_as (l_as: RENAME_AS) is
+	process_rename_as (l_as: RENAME_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_invariant_as (l_as: INVARIANT_AS) is
+	process_invariant_as (l_as: INVARIANT_AS)
 		do
 			break_point_slot_count := 0
 			context.inline_agent_counter.reset
@@ -6652,7 +6652,7 @@ feature -- Implementation
 			end
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 		do
 			inspect_control.process_interval (l_as, is_inherited)
 			if is_byte_node_enabled then
@@ -6660,18 +6660,18 @@ feature -- Implementation
 			end
 		end
 
-	process_index_as (l_as: INDEX_AS) is
+	process_index_as (l_as: INDEX_AS)
 		do
 			l_as.index_list.process (Current)
 			fixme ("is this really needed here?")
 		end
 
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+	process_export_item_as (l_as: EXPORT_ITEM_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_elseif_as (l_as: ELSIF_AS) is
+	process_elseif_as (l_as: ELSIF_AS)
 		local
 			l_vwbe2: VWBE2
 			l_needs_byte_node: BOOLEAN
@@ -6731,17 +6731,17 @@ feature -- Implementation
 			end
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_case_as (l_as: CASE_AS) is
+	process_case_as (l_as: CASE_AS)
 		local
 			l_intervals: SORTABLE_ARRAY [INTERVAL_B]
 			l_interval: INTERVAL_B
@@ -6842,7 +6842,7 @@ feature -- Implementation
 			end
 		end
 
-	process_ensure_as (l_as: ENSURE_AS) is
+	process_ensure_as (l_as: ENSURE_AS)
 		local
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
@@ -6866,7 +6866,7 @@ feature -- Implementation
 			end
 		end
 
-	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+	process_ensure_then_as (l_as: ENSURE_THEN_AS)
 		local
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
@@ -6890,7 +6890,7 @@ feature -- Implementation
 			end
 		end
 
-	process_require_as (l_as: REQUIRE_AS) is
+	process_require_as (l_as: REQUIRE_AS)
 		local
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
@@ -6917,7 +6917,7 @@ feature -- Implementation
 			end
 		end
 
-	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+	process_require_else_as (l_as: REQUIRE_ELSE_AS)
 		local
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
@@ -6941,12 +6941,12 @@ feature -- Implementation
 			end
 		end
 
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
 		do
 			-- Nothing to be done
 		end
 
-	process_void_as (l_as: VOID_AS) is
+	process_void_as (l_as: VOID_AS)
 		local
 			l_class: CLASS_C
 			l_vica2: VICA2
@@ -6967,97 +6967,97 @@ feature -- Implementation
 			end
 		end
 
-	process_type_list_as (l_as: TYPE_LIST_AS) is
+	process_type_list_as (l_as: TYPE_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
+	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_class_list_as (l_as: CLASS_LIST_AS) is
+	process_class_list_as (l_as: CLASS_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_parent_list_as (l_as: PARENT_LIST_AS) is
+	process_parent_list_as (l_as: PARENT_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.locals.process (Current)
 		end
 
-	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.arguments.process (Current)
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.keys.process (Current)
 		end
 
-	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.operands.process (Current)
 		end
 
-	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS)
 			-- Process `l_as'.
 		do
 			l_as.parameters.process (Current)
 		end
 
-	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.content)
 		end
 
-	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.meaningful_content)
 		end
 
-	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.meaningful_content)
 		end
 
-	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.meaningful_content)
 		end
 
-	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.meaningful_content)
 		end
 
-	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS)
 			-- Process `l_as'.
 		do
 			process_eiffel_list (l_as)
@@ -7065,13 +7065,13 @@ feature -- Implementation
 
 feature {NONE} -- Predefined types
 
-	string_type: CL_TYPE_A is
+	string_type: CL_TYPE_A
 			-- Actual string type
 		once
 			Result := system.string_8_class.compiled_class.actual_type
 		end
 
-	strip_type: GEN_TYPE_A is
+	strip_type: GEN_TYPE_A
 			-- Type of strip expression (ARRAY [ANY])
 		require
 			any_compiled: system.any_class.is_compiled
@@ -7089,7 +7089,7 @@ feature {NONE} -- Predefined types
 
 feature {NONE} -- Implementation
 
-	process_inherited_assertions (a_feature: FEATURE_I; process_preconditions: BOOLEAN) is
+	process_inherited_assertions (a_feature: FEATURE_I; process_preconditions: BOOLEAN)
 			-- Process assertions inherited by `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -7163,7 +7163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_expressions_list (l_as: EIFFEL_LIST [EXPR_AS]) is
+	process_expressions_list (l_as: EIFFEL_LIST [EXPR_AS])
 			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.
 			-- Use `current_target_type' for proper evaluation of manifest arrays.
 		require
@@ -7230,7 +7230,7 @@ feature {NONE} -- Implementation
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
 
-	process_expressions_list_for_tuple (l_as: EIFFEL_LIST [EXPR_AS]) is
+	process_expressions_list_for_tuple (l_as: EIFFEL_LIST [EXPR_AS])
 			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.
 			-- Use `current_target_type' for proper evaluation of manifest arrays.
 		require
@@ -7309,7 +7309,7 @@ feature {NONE} -- Implementation
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
 
-	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS; a_ca_b: CUSTOM_ATTRIBUTE_B) is
+	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS; a_ca_b: CUSTOM_ATTRIBUTE_B)
 			-- Check validity of `a_tuple' in context of Current.
 			-- i.e. it should be a tuple of tuple whose elements are
 			-- a name and a value. For each name, a feature `f'
@@ -7436,7 +7436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	valid_feature_for_ca (a_feat: FEATURE_I; a_name: STRING_AS): BOOLEAN is
+	valid_feature_for_ca (a_feat: FEATURE_I; a_name: STRING_AS): BOOLEAN
 			-- Is `a_feat' valid to be used as a named argument in custom attribute?
 		require
 			a_feat_not_void: a_feat /= Void
@@ -7466,7 +7466,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING): BOOLEAN is
+	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING): BOOLEAN
 			-- Does infix routine `a_name' exists in `a_left_type' and if so is
 			-- it valid for `a_right_type'?
 		require
@@ -7609,7 +7609,7 @@ feature {NONE} -- Implementation
 	last_infix_argument_conversion_info: CONVERSION_INFO
 			-- Helpers to perform type check and byte_node generation.
 
-	insert_vuar2_error (a_feature: FEATURE_I; a_params: EIFFEL_LIST [EXPR_AS]; a_in_class_id, a_pos: INTEGER; a_actual_type, a_formal_type: TYPE_A) is
+	insert_vuar2_error (a_feature: FEATURE_I; a_params: EIFFEL_LIST [EXPR_AS]; a_in_class_id, a_pos: INTEGER; a_actual_type, a_formal_type: TYPE_A)
 			-- Insert a VUAR2 error in call to `a_feature' from `a_in_class_id' class for argument
 			-- at position `a_pos'.
 		require
@@ -7635,7 +7635,7 @@ feature {NONE} -- Implementation
 			error_handler.insert_error (l_vuar2)
 		end
 
-	process_type_compatibility (l_target_type: like last_type) is
+	process_type_compatibility (l_target_type: like last_type)
 			-- Test if `last_type' is compatible with `l_target_type' and
 			-- make the result available in `is_type_compatible'.
 			-- Adjust `last_byte_node' to reflect conversion if required.
@@ -7691,7 +7691,7 @@ feature {NONE} -- Implementation
 			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
 		end
 
-	process_assigner_command (target_class_id: INTEGER; target_query: FEATURE_I) is
+	process_assigner_command (target_class_id: INTEGER; target_query: FEATURE_I)
 			-- Attempt to calculate an assigner call associated with `target_query'
 			-- called on type of `target_class_id'. Make the result available in
 			-- `last_assigner_command'. Register client dependance on the target
@@ -7724,7 +7724,7 @@ feature {NONE} -- Implementation: overloading
 	overloaded_feature (
 			a_type: TYPE_A; a_last_class: CLASS_C; a_arg_types: ARRAY [TYPE_A];
 			a_feature_name: ID_AS; is_static_access: BOOLEAN): FEATURE_I
-		is
+		
 			-- Find overloaded feature that could match Current. The rules are taken from
 			-- C# ECMA specification "14.4.2 Overload Resolution".
 		require
@@ -7786,7 +7786,7 @@ feature {NONE} -- Implementation: overloading
 	applicable_overloaded_features
 			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER;
 			is_static_access: BOOLEAN): LIST [FEATURE_I]
-		is
+		
 			-- Use C# ECMA specification 14.4.2.1 to find list of matching features in
 			-- `a_features' that matches given arguments.
 			-- That is to say it keeps features that have the same number of parameters,
@@ -7884,7 +7884,7 @@ feature {NONE} -- Implementation: overloading
 	best_overloaded_features
 			(a_features: LIST [FEATURE_I]; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
 			last_id: INTEGER): LIST [FEATURE_I]
-		is
+		
 			-- Use C# ECMA specification 14.4.2.2 and 14.4.2.3 to find list of best matching
 			-- features in `a_features' that matches given arguments.
 		require
@@ -7964,7 +7964,7 @@ feature {NONE} -- Implementation: overloading
 	better_feature (
 			a_feat1, a_feat2: FEATURE_I; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A];
 			last_id: INTEGER): FEATURE_I
-		is
+		
 			-- If `a_feat1' is better for overloading that `a_feat2', returns `a_feat1',
 			-- if `a_feat2' is better for overloading than `a_feat1', returns `a_feat2',
 			-- otherwise returns Void.
@@ -8038,7 +8038,7 @@ feature {NONE} -- Implementation: overloading
 			better_function_valid: Result = Void or Result = a_feat1 or Result = a_feat2
 		end
 
-	better_conversion (source_type, target1, target2: TYPE_A): TYPE_A is
+	better_conversion (source_type, target1, target2: TYPE_A): TYPE_A
 			-- Using C# ECMA 14.4.2.3 terminology, given `source_type' find which of `target1'
 			-- or `target2' is a better conversion.
 			-- Return type is either `target1' or `target2' if there is a better conversion,
@@ -8087,7 +8087,7 @@ feature {NONE} -- Implementation: overloading
 
 	feature_arg_type
 			(a_feature: FEATURE_I; a_pos: INTEGER; a_type: TYPE_A; a_arg_types: ARRAY [TYPE_A]; last_id: INTEGER): TYPE_A
-		is
+		
 			-- Find type of argument at position `a_pos' of feature `a_feature' in context
 			-- of `a_type', `last_id'.
 		require
@@ -8122,7 +8122,7 @@ feature {NONE} -- Agents
 	compute_routine (
 			a_table: FEATURE_TABLE; a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
 			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: BYTE_NODE)
-		is
+		
 			-- Type of routine object.
 		require
 			valid_table: a_table /= Void
@@ -8424,7 +8424,7 @@ feature {NONE} -- Agents
 			exists: last_type /= Void
 		end
 
-	integer_array_type : GEN_TYPE_A is
+	integer_array_type : GEN_TYPE_A
 			-- Representation of an array of INTEGER
 		local
 			generics : ARRAY [TYPE_A]
@@ -8458,7 +8458,7 @@ feature {NONE} -- Agents
 			a_target_type: TYPE_A
 			a_agent_type: TYPE_A
 			a_for_feature: FEATURE_I)
-		is
+		
 			-- Creates an inline agent bytenode that is semanticaly equivalent to the agent on the target byte node
 			-- It further creates the proper routine creation
 			-- agent T.a becomes:
@@ -8600,13 +8600,13 @@ feature {NONE} -- Agents
 			last_byte_node := l_rout_creation
 		end
 
-	open_target_omap: ARRAYED_LIST [INTEGER_32] is
+	open_target_omap: ARRAYED_LIST [INTEGER_32]
 		do
 			create Result.make (1)
 			Result.extend (2)
 		end
 
-	open_target_omap_bc: ARRAY_CONST_B is
+	open_target_omap_bc: ARRAY_CONST_B
 		local
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 		do
@@ -8615,7 +8615,7 @@ feature {NONE} -- Agents
 			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
 		end
 
-	empty_omap_bc: ARRAY_CONST_B is
+	empty_omap_bc: ARRAY_CONST_B
 		local
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 		do
@@ -8623,7 +8623,7 @@ feature {NONE} -- Agents
 			create Result.make (l_byte_list, integer_array_type, integer_array_type.create_info)
 		end
 
-	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I): FEATURE_I is
+	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I): FEATURE_I
 			-- a_feat may just be a fake wrapper to a_real_feat (for agents on attributes).
 		require
 			a_feat /= Void
@@ -8717,7 +8717,7 @@ feature {NONE} -- Agents
 			Result := l_enclosing_feature
 		end
 
-	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE) is
+	init_inline_agent_dep (a_feat: FEATURE_I; a_new_feat_dep: FEATURE_DEPENDANCE)
 			-- When an inline agent X of an enclosing feature f is a client of
 			-- feature g, we make the enclosing feature f a client of g.
 		local
@@ -8744,7 +8744,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 
 feature {NONE} -- Precursor handling
 
-	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]] is
+	precursor_table (l_as: PRECURSOR_AS; a_current_class: CLASS_C; a_rout_id_set: ROUT_ID_SET): LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
 				-- Table of parent types which have an effective
 				-- precursor of current feature. Indexed by
 				-- routine ids.
@@ -8880,7 +8880,7 @@ feature {NONE} -- Implementation
 			Result := l_class_id
 		end
 
-	special_has (l: LINKED_LIST [PAIR [INTEGER, INTEGER]]; p: PAIR [INTEGER, INTEGER]): BOOLEAN is
+	special_has (l: LINKED_LIST [PAIR [INTEGER, INTEGER]]; p: PAIR [INTEGER, INTEGER]): BOOLEAN
 			-- Does `l' contain `p'?
 		require
 			valid_pair: p /= Void
@@ -8917,7 +8917,7 @@ feature {NONE} -- Implementation: Add type informations
 
 feature {NONE} -- Implementation: type validation
 
-	check_type (a_type: TYPE_AS) is
+	check_type (a_type: TYPE_AS)
 			-- Evaluate `a_type' into a TYPE_A instance if valid.
 			-- If not valid, raise a compiler error and return Void.
 		require
@@ -8958,7 +8958,7 @@ feature {NONE} -- Implementation: type validation
 				(last_type /= Void implies (error_level = old error_level))
 		end
 
-	adapted_type (a_type, a_last_type, a_last_constrained: TYPE_A): TYPE_A is
+	adapted_type (a_type, a_last_type, a_last_constrained: TYPE_A): TYPE_A
 			-- If `a_type' is formal or like, it adapts it to the context given by `a_last_type'
 			-- and `a_constrainted_type'.
 		require
@@ -9023,7 +9023,7 @@ feature {NONE} -- Implementation: type validation
 
 feature {NONE} -- Implementation: checking locals
 
-	check_locals (l_as: ROUTINE_AS) is
+	check_locals (l_as: ROUTINE_AS)
 			-- Check validity of local declarations: a local variable
 			-- name cannot be a final name of the current feature table or
 			-- an argument name of the current analyzed feature.
@@ -9133,7 +9133,7 @@ feature {NONE} -- Implementation: checking locals
 			end
 		end
 
-	check_unused_locals (a_locals: HASH_TABLE [LOCAL_INFO, INTEGER]) is
+	check_unused_locals (a_locals: HASH_TABLE [LOCAL_INFO, INTEGER])
 			-- Check that all locals are used in Current. If not raise
 			-- a warning.
 		require
@@ -9208,7 +9208,7 @@ feature {NONE} -- Variable initialization
 
 feature {NONE} -- Implementation: Error handling
 
-	insert_vtmc_error (a_problematic_feature: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C) is
+	insert_vtmc_error (a_problematic_feature: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C)
 			-- Computes everything needed to report a proper VTMC error, inserts and raises an error.
 			--
 			-- `a_type_set' for which we produce the error.
@@ -9247,7 +9247,7 @@ feature {NONE} -- Implementation: Error handling
 
 feature {NONE} -- Implementation: catcall check
 
-	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS]) is
+	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAY [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS])
 			-- Check if a call can potentially be a cat call.
 			--
 			-- `a_callee_type': Type on which the call happens
@@ -9386,7 +9386,7 @@ feature {NONE} -- Implementation: catcall check
 			end
 		end
 
-	conforming_descendants (a_feature: FEATURE_I; a_type: TYPE_A): ARRAYED_LIST [TYPE_A] is
+	conforming_descendants (a_feature: FEATURE_I; a_type: TYPE_A): ARRAYED_LIST [TYPE_A]
 			-- List of all descendants of the type `a_type' that are covariantly redefining
 			-- `a_feature'.
 		require
@@ -9580,7 +9580,7 @@ feature {NONE} -- Implementation: catcall check
 			end
 		end
 
-	safe_check_constraints (a_parent_type, a_type: TYPE_A) is
+	safe_check_constraints (a_parent_type, a_type: TYPE_A)
 			--
 		require
 			a_parent_type_not_void: a_parent_type /= Void
@@ -9600,7 +9600,7 @@ feature {NONE} -- Implementation: catcall check
 			retry
 		end
 
-	safe_conform_to (a_context: CLASS_C; a_descendant, a_parent: TYPE_A): BOOLEAN is
+	safe_conform_to (a_context: CLASS_C; a_descendant, a_parent: TYPE_A): BOOLEAN
 			--
 		require
 			a_context_not_void: a_context /= Void
@@ -9620,7 +9620,7 @@ feature {NONE} -- Implementation: catcall check
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

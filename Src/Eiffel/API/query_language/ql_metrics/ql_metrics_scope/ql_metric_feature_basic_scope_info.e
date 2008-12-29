@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of feature basic scope of a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_calculate_func: like calculate_function) is
+	make (a_calculate_func: like calculate_function)
 			-- Initialize `calculate_function' with `a_calculate_func'.
 		do
 			create domain_generator
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope
 		do
 			Result := feature_scope
@@ -51,7 +51,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	evaluate_item (a_item: QL_FEATURE) is
+	evaluate_item (a_item: QL_FEATURE)
 			-- Call `calculate_function' to evaluate `a_item'.
 		do
 			if calculate_function /= Void then
@@ -65,7 +65,7 @@ feature{NONE} -- Implementation
 invariant
 	scope_valid: scope.is_equal (feature_scope)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

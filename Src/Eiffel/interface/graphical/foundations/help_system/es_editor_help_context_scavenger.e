@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A help context scavenger used to probe the Eiffel editor {EB_SMART_EDITOR} for help context information.
 		For more information on help context scavengers see {ES_HELP_CONTEXT_SCAVENGER}
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature {NONE} -- Basic operations
 
-	probe_object (a_object: !EB_SMART_EDITOR): !DS_ARRAYED_LIST [!HELP_CONTEXT_I] is
+	probe_object (a_object: !EB_SMART_EDITOR): !DS_ARRAYED_LIST [!HELP_CONTEXT_I]
 			-- Probes an object to locate and scavenge any help context information to be used with a help provider.
 			--
 			-- `a_object': Object to probe to scavenge help contexts
@@ -60,7 +60,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

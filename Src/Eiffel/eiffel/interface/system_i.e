@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of a system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -82,7 +82,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the system.
 		do
 			set_compilation_id (1)
@@ -169,7 +169,7 @@ feature -- Counters
 	feature_as_counter: COMPILER_COUNTER
 			-- Counter of instances of FEATURE_AS
 
-	init_counters is
+	init_counters
 			-- Initialize various counters when using a precompiled library.
 		do
 				-- Current compilation_id is just the one retrieved from the
@@ -233,7 +233,7 @@ feature -- Properties
 	has_compilation_started: BOOLEAN
 			-- Has compilation part after processing configuration started?
 
-	freeze: BOOLEAN is
+	freeze: BOOLEAN
 			-- Has the system to be frozen again ?
 		do
 			Result := (not Lace.compile_all_classes or else il_generation)
@@ -298,7 +298,7 @@ feature -- Properties
 			-- Table indexed by missing classnames where elements are
 			-- classes referencing the missing classname.
 
-	unref_classes_snapshot: like unref_classes is
+	unref_classes_snapshot: like unref_classes
 			-- Snapshot of `unref_classes'
 		do
 			Result := unref_classes.twin
@@ -320,7 +320,7 @@ feature -- Properties
 	max_class_id: INTEGER
 			-- Greater class id: computed by class CLASS_SORTER
 
-	min_type_id: INTEGER is 1
+	min_type_id: INTEGER = 1
 			-- Value from which to start the dynamic type_id numbering
 			-- for newly created class types
 
@@ -379,7 +379,7 @@ feature -- Properties
 			-- consists of saving the name the very first time it
 			-- is computed.
 
-	set_array_make_name (a_name: STRING) is
+	set_array_make_name (a_name: STRING)
 			-- Set `name' to `array_make_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -401,7 +401,7 @@ feature -- Properties
 	is_precompile_finalized: BOOLEAN
 			-- has precompiled library compilation been finalized?
 
-	init is
+	init
 			-- System initialization
 		require
 			new_target: universe.new_target /= Void
@@ -479,7 +479,7 @@ feature -- Properties
 					end (?, local_workbench))
 		end
 
-	mark_only_used_precompiled_classes is
+	mark_only_used_precompiled_classes
 			-- Mark `is_in_system' flag of all 18 basic classes which
 			-- are part of a precompiled library of EiffelBase.
 		require
@@ -546,7 +546,7 @@ feature -- Properties
 					end)
 		end
 
-	add_unref_class (a_class: CLASS_I) is
+	add_unref_class (a_class: CLASS_I)
 			-- Add `a_class' to list of non-referenced classes
 			-- that needs to be compiled.
 			-- Force a recompilation of `a_class' for next
@@ -562,7 +562,7 @@ feature -- Properties
 			melt_forced: private_melt
 		end
 
-	remove_unref_class (a_class: CLASS_I) is
+	remove_unref_class (a_class: CLASS_I)
 			-- Remove `a_class' from list of non-referenced classes.
 			-- Force a recompilation for next compilation of system
 			-- to take into account the change.
@@ -583,7 +583,7 @@ feature -- Properties
 			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING,
 			-- TUPLE, ROUTINE, PROCEDURE, FUNCTION
 
-	insert_new_class (a_class: CLASS_C) is
+	insert_new_class (a_class: CLASS_C)
 			-- Add new class `c' to the system.
 		require
 			good_argument: a_class /= Void
@@ -620,7 +620,7 @@ end
 			class_id_set: a_class.class_id /= 0
 		end
 
-	record_new_class_i (a_class: CLASS_I) is
+	record_new_class_i (a_class: CLASS_I)
 			-- Record a new CLASS_I
 			-- Used during the time check and the genericity check after pass1
 		do
@@ -628,7 +628,7 @@ end
 			new_classes.put_front (a_class)
 		end
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove class `a_class' from the system even if
 			-- it has syntactical_clients.
 		require
@@ -643,7 +643,7 @@ end
 			end
 		end
 
-	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING) is
+	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING)
 			-- Record missing class name `a_name' in `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -664,7 +664,7 @@ end
 			l_table.put (a_class)
 		end
 
-	record_potential_vtcm_warning (a_class: CLASS_C; a_name: STRING) is
+	record_potential_vtcm_warning (a_class: CLASS_C; a_name: STRING)
 			-- Record missing class name `a_name' in `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -685,7 +685,7 @@ end
 			l_table.put (a_class)
 		end
 
-	report_vtct_errors is
+	report_vtct_errors
 			-- Report any remaining VTCT errors at the end of degree 5
 		local
 			l_vtct: VTCT
@@ -762,7 +762,7 @@ end
 			end
 		end
 
-	report_vtcm_warnings is
+	report_vtcm_warnings
 			-- Report any remaining VTCM warnings at the end of degree 5
 		local
 			l_vtcm: VTCM
@@ -833,7 +833,7 @@ end
 			end
 		end
 
-	class_of_id (id: INTEGER): CLASS_C is
+	class_of_id (id: INTEGER): CLASS_C
 			-- Class of id `id'
 		require
 			id_not_void: id /= 0
@@ -850,7 +850,7 @@ io.error.put_new_line
 end
 		end
 
-	class_type_of_id (type_id: INTEGER): CLASS_TYPE is
+	class_type_of_id (type_id: INTEGER): CLASS_TYPE
 			-- Class type of type id `type_id'.
 		require
 			index_small_enough: class_types.valid_index (type_id)
@@ -860,7 +860,7 @@ end
 			valid_class_type: Result /= Void implies Result.type_id = type_id
 		end
 
-	class_type_of_static_type_id (id: INTEGER): CLASS_TYPE is
+	class_type_of_static_type_id (id: INTEGER): CLASS_TYPE
 			-- Class type of static type id `id'.
 		local
 			cts: ARRAY [CLASS_TYPE]
@@ -880,7 +880,7 @@ end
 			end
 		end
 
-	insert_class_type (class_type: CLASS_TYPE) is
+	insert_class_type (class_type: CLASS_TYPE)
 			-- Insert `class_type' in `class_types'.
 		require
 			good_argument: class_type /= Void
@@ -897,7 +897,7 @@ end
 			class_types.put (class_type, type_id)
 		end
 
-	remove_class_type (class_type: CLASS_TYPE) is
+	remove_class_type (class_type: CLASS_TYPE)
 			-- Remove `class_type' from `class_types' and associated
 			-- generated files if any.
 		require
@@ -908,7 +908,7 @@ end
 			class_type.remove_c_generated_files
 		end
 
-	rebuild_configuration is
+	rebuild_configuration
 			-- Build or rebuild the configuration information
 		local
 			l_vis_build: CONF_BUILD_VISITOR
@@ -1127,13 +1127,13 @@ end
 			is_force_rebuild := True
 		end
 
-	rebuild_configuration_actions: !ACTION_SEQUENCE [TUPLE[]] is
+	rebuild_configuration_actions: !ACTION_SEQUENCE [TUPLE[]]
 			-- Rebuild configuration actions hooks.
 		once
 			create Result
 		end
 
-	check_unique_class_names is
+	check_unique_class_names
 			-- Check if all the classes in the system have unique names.
 		local
 			l_table: HASH_TABLE [CLASS_I, STRING]
@@ -1165,7 +1165,7 @@ end
 			end
 		end
 
-	recheck_partly_removed (a_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]] ) is
+	recheck_partly_removed (a_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]] )
 			-- Recheck clients of classes that have been removed from one place but still exists in another.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -1203,7 +1203,7 @@ end
 
 		end
 
-	init_recompilation is
+	init_recompilation
 			-- Initialization before a recompilation.
 		local
 			l_vis_modified: CONF_MODIFIED_VISITOR
@@ -1332,7 +1332,7 @@ end
 			end
 		end
 
-	add_eifgens_cluster (a_target: CONF_TARGET; a_factory: CONF_PARSE_FACTORY) is
+	add_eifgens_cluster (a_target: CONF_TARGET; a_factory: CONF_PARSE_FACTORY)
 			-- Add cluster for classes created in EIFGENs directory
 			--
 			-- Note: Cluster is only added if `eifgens_cluster_path' in {PROJECT_DIRECTORY} exists. The
@@ -1375,7 +1375,7 @@ end
 
 feature -- ANY.default_rescue routine id
 
-	default_rescue_rout_id: INTEGER is
+	default_rescue_rout_id: INTEGER
 			-- Routine id of default rescue from ANY.
 			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_rescue'.
@@ -1399,7 +1399,7 @@ feature -- ANY.default_rescue routine id
 
 feature -- ANY.default_create routine id
 
-	default_create_rout_id: INTEGER is
+	default_create_rout_id: INTEGER
 			-- Routine id of default create from ANY.
 			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_create'.
@@ -1422,7 +1422,7 @@ feature -- ANY.default_create routine id
 
 feature -- ANY.is_equal_rout_id routine id
 
-	is_equal_rout_id: INTEGER is
+	is_equal_rout_id: INTEGER
 			-- Routine id of is_equal create from ANY.
 			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_create'.
@@ -1444,7 +1444,7 @@ feature -- ANY.is_equal_rout_id routine id
 
 feature -- SPECIAL.make routine id
 
-	special_make_rout_id: INTEGER is
+	special_make_rout_id: INTEGER
 			-- Routine id of `make' from SPECIAL.
 			-- Return 0 if SPECIAL has not been compiled or
 			-- does not have a feature named `make'.
@@ -1468,7 +1468,7 @@ feature -- SPECIAL.make routine id
 
 feature -- Routine IDS update
 
-	reset_routine_ids is
+	reset_routine_ids
 			-- Reset internal data that needs to be recomputed
 			-- at each recompilation in case it might changed during
 			-- a recompilation. It happens if at the first compilation
@@ -1497,7 +1497,7 @@ feature {NONE} -- Implementation: predefined routine IDs
 
 feature -- Feature declaration
 
-	seed_of_routine_id (routine_id: INTEGER): FEATURE_I is
+	seed_of_routine_id (routine_id: INTEGER): FEATURE_I
 			-- Seed with the given `routine_id'
 		require
 			valid_routine_id: routine_id > 0 and then routine_id_counter.is_feature_routine_id (routine_id) -- and `routine_id' is used
@@ -1509,7 +1509,7 @@ feature -- Feature declaration
 
 feature -- Recompilation
 
-	set_rebuild (b: BOOLEAN) is
+	set_rebuild (b: BOOLEAN)
 			-- Set `is_rebuild'.
 		do
 			is_rebuild := b
@@ -1517,25 +1517,25 @@ feature -- Recompilation
 			is_rebuild_set: is_rebuild = b
 		end
 
-	force_rebuild is
+	force_rebuild
 			-- Force a rebuild
 		do
 			is_force_rebuild := True
 		end
 
-	set_config_changed (b: BOOLEAN) is
+	set_config_changed (b: BOOLEAN)
 			-- Set `is_config_changed'.
 		do
 			is_config_changed := b
 		end
 
-	reset_has_compilation_started is
+	reset_has_compilation_started
 			-- Reset `has_compilation_started'.
 		do
 			has_compilation_started := False
 		end
 
-	reset_has_potential_class_name_mismatch is
+	reset_has_potential_class_name_mismatch
 			-- Reset `has_potential_class_name_mismatch'
 		do
 			has_potential_class_name_mismatch := False
@@ -1543,7 +1543,7 @@ feature -- Recompilation
 			has_potential_class_name_mismatch_set: not has_potential_class_name_mismatch
 		end
 
-	recompile is
+	recompile
 			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error
@@ -1568,7 +1568,7 @@ feature -- Recompilation
 			end
 		end
 
-	revive_moved_classes is
+	revive_moved_classes
 			-- Try to revive classes that have been removed and added (= moved).
 		local
 			l_cli: CLASS_I
@@ -1605,7 +1605,7 @@ feature -- Recompilation
 			end
 		end
 
-	recheck_missing_classes is
+	recheck_missing_classes
 			-- Recheck the classes that produced a missing class error and wipe out the list of missing classes.
 		local
 			l_classes: SEARCH_TABLE [CLASS_C]
@@ -1638,7 +1638,7 @@ feature -- Recompilation
 			missing_classes_void: missing_classes = Void
 		end
 
-	do_recompilation is
+	do_recompilation
 			-- Incremental recompilation of the system.
 		local
 			l_root_c: CLASS_C
@@ -1992,7 +1992,7 @@ end
 			end
 		end
 
-	process_degree_5 is
+	process_degree_5
 			-- Process Degree 5.
 			-- Syntax analysis: This may add new classes to system.
 			-- Unref classes analyzis: This may add new classes to system.
@@ -2030,7 +2030,7 @@ end
 			Degree_5.execute
 		end
 
-	process_post_degree_5 is
+	process_post_degree_5
 			-- Processing done after main degree 5.
 			-- Check and updates parent structure. It has to be done after
 			-- reporting all VTCT errors.
@@ -2038,7 +2038,7 @@ end
 			degree_5.post_degree_5_execute
 		end
 
-	process_degree_4 is
+	process_degree_4
 			-- Process Degree 4.
 			-- Inheritance analysis: `Degree_4' is sorted by class
 			-- topological ids so parents come first heirs after.
@@ -2046,7 +2046,7 @@ end
 			Degree_4.execute
 		end
 
-	process_degree_3 is
+	process_degree_3
 			-- Process Degree 3.
 			-- Byte code production and type checking.
 		do
@@ -2057,14 +2057,14 @@ end
 			in_pass3 := False
 		end
 
-	process_degree_2 is
+	process_degree_2
 			-- Process Degree 2.
 			-- Melt features (write feature byte code on disk).
 		do
 			Degree_2.execute
 		end
 
-	process_degree_1 is
+	process_degree_1
 			-- Process Degree 1.
 			-- Melt the feature tables.
 			-- Open first the file for writing on disk melted feature
@@ -2073,14 +2073,14 @@ end
 			Degree_1.execute
 		end
 
-	process_degree_minus_1 is
+	process_degree_minus_1
 			-- Process Degree -1.
 			-- Freeze system: generate C files.
 		do
 			Degree_minus_1.execute
 		end
 
-	check_generics is
+	check_generics
 			-- Check generic validity on old classes
 			-- generic parameters cannot be new classes
 		local
@@ -2114,7 +2114,7 @@ end
 			Error_handler.checksum
 		end
 
-	process_removed_classes is
+	process_removed_classes
 			-- Remove classes that disappeared after a recompilation.
 		do
 			if removed_classes /= Void then
@@ -2132,7 +2132,7 @@ end
 			end
 		end
 
-	remove_useless_classes is
+	remove_useless_classes
 			-- Add useless classes to `removed_classes'.
 		local
 			a_class: CLASS_C
@@ -2255,7 +2255,7 @@ end
 			Error_handler.checksum
 		end
 
-	reset_conformance_table is
+	reset_conformance_table
 			-- Reset all conformance tables.
 		local
 			a_class: CLASS_C
@@ -2273,7 +2273,7 @@ end
 			end
 		end
 
-	build_conformance_table is
+	build_conformance_table
 			-- Build the conformance table
 		local
 			a_class: CLASS_C
@@ -2291,7 +2291,7 @@ end
 			end
 		end
 
-	process_type_system is
+	process_type_system
 			-- Compute the type system
 		do
 				-- ANY needs to be processed first so that it has static type
@@ -2315,7 +2315,7 @@ end
 			instantiator.process
 		end
 
-	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
+	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]])
 			-- Build the conformance table
 		require
 			set_or_reset_action_not_void: set_or_reset_action /= Void
@@ -2340,7 +2340,7 @@ end
 			end
 		end
 
-	process_skeleton is
+	process_skeleton
 			-- Type skeleton processing: If skeleton of a class type changed,
 			-- it must be re-processed and marked `is_changed'.
 		do
@@ -2351,7 +2351,7 @@ end
 			Error_handler.checksum
 		end
 
-	check_vtec is
+	check_vtec
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
@@ -2374,13 +2374,13 @@ end
 			end
 		end
 
-	check_expanded is
+	check_expanded
 			-- Check expanded client relation
 		do
 			Degree_2.check_expanded (has_expanded)
 		end
 
-	melt is
+	melt
 			-- Melt the changed features and feature and
 			-- descriptor tables in the system.
 		require
@@ -2410,7 +2410,7 @@ end
 			Degree_1.transfer_to (Degree_minus_1)
 		end
 
-	make_update (empty: BOOLEAN) is
+	make_update (empty: BOOLEAN)
 			-- Produce the update file resulting of the consecutive
 			-- melting process. It can be `empty' (if the system has
 			-- been frozen.
@@ -2539,7 +2539,7 @@ end
 			melted_file.close
 		end
 
-	make_update_feature_tables (file: RAW_FILE) is
+	make_update_feature_tables (file: RAW_FILE)
 			-- Write the byte code for feature tables to be updated
 			-- into `file'.
 		require
@@ -2549,7 +2549,7 @@ end
 			Degree_minus_1.make_update_feature_tables (file)
 		end
 
-	make_update_rout_id_arrays (file: RAW_FILE) is
+	make_update_rout_id_arrays (file: RAW_FILE)
 			-- Write the melted routine id arrays into `file'.
 		require
 			file_not_void: file /= Void
@@ -2598,7 +2598,7 @@ end
 			write_int (file_pointer, -1)
 		end
 
-	make_update_descriptors (file: RAW_FILE) is
+	make_update_descriptors (file: RAW_FILE)
 			-- Write melted descriptors into `file'.
 		require
 			file_not_void: file /= Void
@@ -2617,7 +2617,7 @@ end
 			end
 		end
 
-	reset_melted_conformance_table is
+	reset_melted_conformance_table
 			-- Forget the `melted_conformance_table', i.e. a new
 			-- class or class type has been added to the system.
 		do
@@ -2628,7 +2628,7 @@ end
 			melted_parent_table := Void
 		end
 
-	make_parent_table_byte_code (file: RAW_FILE) is
+	make_parent_table_byte_code (file: RAW_FILE)
 			-- Generates parent tables byte code in `file'.
 		local
 			i, nb: INTEGER;
@@ -2673,7 +2673,7 @@ end
 			to_append.store (file)
 		end;
 
-	make_option_table (file: RAW_FILE) is
+	make_option_table (file: RAW_FILE)
 			-- Generate byte code for the option table.
 		require
 			file_not_void: file /= Void
@@ -2718,14 +2718,14 @@ end
 			Byte_array.character_array.store (file)
 		end
 
-	make_rout_info_table (file: RAW_FILE) is
+	make_rout_info_table (file: RAW_FILE)
 			-- Generate byte code for the routine info table
 			-- and store it in `file'.
 		do
 			Rout_info_table.melted.store (file)
 		end
 
-	finish_compilation is
+	finish_compilation
 			-- Finish a successful recompilation and update the
 			-- compilation files.
 		local
@@ -2788,7 +2788,7 @@ end
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL code
 		require
 			il_generation: il_generation
@@ -2824,7 +2824,7 @@ feature -- IL code generation
 
 feature {NONE} -- IL generation
 
-	check_full_class_name_unicity is
+	check_full_class_name_unicity
 			-- Ensure that two classes or more in system do not have
 			-- same IL full name, i.e. namespace + class name.
 		require
@@ -2921,7 +2921,7 @@ feature {NONE} -- IL generation
 
 feature -- Freeezing
 
-	freeze_system is
+	freeze_system
 			-- Worrkbench C code generation
 		require
 			root_types_compiled: are_root_classes_compiled
@@ -2961,7 +2961,7 @@ end
 			generate_main_eiffel_files
 		end
 
-	generate_main_eiffel_files is
+	generate_main_eiffel_files
 			-- Generate the "e*.c" files.
 		local
 			deg_output: DEGREE_OUTPUT
@@ -3015,7 +3015,7 @@ end
 			make_update (True)
 		end
 
-	shake is
+	shake
 		local
 			exec_table: EXECUTION_TABLE
 		do
@@ -3036,13 +3036,13 @@ end
 
 feature -- Final mode generation
 
-	in_final_mode: BOOLEAN is
+	in_final_mode: BOOLEAN
 			-- Generation of Final code ?
 		do
 			Result := byte_context.final_mode
 		end
 
-	finalize_system (keep_assert: BOOLEAN) is
+	finalize_system (keep_assert: BOOLEAN)
 			-- Finalized generation.
 		require
 			root_classes_compiled: are_root_classes_compiled
@@ -3269,7 +3269,7 @@ feature -- Final mode generation
 
 feature {NONE} -- Implementation
 
-	internal_remove_class (a_class: CLASS_C; a_depth: INTEGER) is
+	internal_remove_class (a_class: CLASS_C; a_depth: INTEGER)
 			-- Remove class `a_class' from the system even if
 			-- it has syntactical_clients.
 		require
@@ -3433,7 +3433,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Finalization implementation
 
-	is_finalization_needed: BOOLEAN is
+	is_finalization_needed: BOOLEAN
 			-- Has system not yet be finalized or has system
 			-- changed since last finalization.
 		local
@@ -3462,7 +3462,7 @@ feature {NONE} -- Finalization implementation
 			end
 		end
 
-	clean_finalization_tag is
+	clean_finalization_tag
 			-- Reset all CLASS_C.finalization_needed to False.
 		local
 			a_class: CLASS_C
@@ -3490,7 +3490,7 @@ feature {NONE} -- Finalization implementation
 			end
 		end
 
-	process_degree_minus_2 is
+	process_degree_minus_2
 			-- Process Degree -2.
 		local
 			a_class: CLASS_C
@@ -3527,7 +3527,7 @@ feature {NONE} -- Finalization implementation
 			deg_output.put_end_degree
 		end
 
-	process_degree_minus_3 is
+	process_degree_minus_3
 			-- Process Degree -3.
 			-- Generation of C files associated to the classes of
 			-- the system.
@@ -3572,7 +3572,7 @@ feature {NONE} -- Finalization implementation
 
 feature -- Dead code removal
 
-	remove_dead_code is
+	remove_dead_code
 			-- Dead code removal
 		local
 			class_array: ARRAY [CLASS_C]
@@ -3761,7 +3761,7 @@ debug ("DEAD_CODE")
 end
 		end
 
-	is_used (f: FEATURE_I): BOOLEAN is
+	is_used (f: FEATURE_I): BOOLEAN
 			-- Is feature `f' used in the system ?
 		require
 			good_argument: f /= Void
@@ -3771,7 +3771,7 @@ end
 
 feature -- Generation
 
-	generate_main_finalized_eiffel_files is
+	generate_main_finalized_eiffel_files
 			-- Generation of all the tables needed by the finalized
 			-- Eiffel executable.
 		local
@@ -3837,7 +3837,7 @@ feature -- Generation
 			t.generate_make_file
 		end
 
-	store_finalized_type_mapping (a_backup: ARRAY [INTEGER]) is
+	store_finalized_type_mapping (a_backup: ARRAY [INTEGER])
 			-- Store the mapping between workbench `type_id' and the finalized one.
 			-- This mapping is needed for the profiler wizard when displaying finalized result.
 		require
@@ -3891,7 +3891,7 @@ feature -- Generation
 	internal_retrieved_finalized_type_mapping: like retrieved_finalized_type_mapping
 			-- Storage for `retrieved_finalized_type_mapping'.
 
-	retrieved_finalized_type_mapping: ARRAY [INTEGER] is
+	retrieved_finalized_type_mapping: ARRAY [INTEGER]
 			-- Mapping between finalized type IDs and the workbench one if present. Void otherwise.
 		local
 			l_file: RAW_FILE
@@ -3922,7 +3922,7 @@ feature -- Generation
 			retry
 		end
 
-	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]) is
+	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER])
 			-- Processing of the dynamic types.
 			-- This is only needed when finalizing because this is where it is important
 			-- to have `type_id' sorted in topological order. This solves eweasel test#exec256.
@@ -4019,7 +4019,7 @@ feature -- Generation
 			end
 		end
 
-	process_optimized_single_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]) is
+	process_optimized_single_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER])
 			-- Modifies the implementation ids of all class marked as now being single genereation types.
 			--
 			-- The purpose of this routine is to temporarly set an applicable type's implementation id to
@@ -4067,7 +4067,7 @@ feature -- Generation
 			end
 		end
 
-	reset_type_id (class_type: CLASS_TYPE; an_id: INTEGER) is
+	reset_type_id (class_type: CLASS_TYPE; an_id: INTEGER)
 			-- Assign a new dynamic type id to `class_type'.
 		require
 			class_type_not_void: class_type /= Void
@@ -4078,7 +4078,7 @@ feature -- Generation
 			insert_class_type (class_type)
 		end
 
-	generate_routine_table is
+	generate_routine_table
 			-- Generate routine and attribute tables.
 		require
 			in_final_mode: byte_context.final_mode
@@ -4232,7 +4232,7 @@ feature -- Generation
 			l_poly_file.close
 		end
 
-	extend_skeleton_table (a_macro_name, a_macro_definition: STRING) is
+	extend_skeleton_table (a_macro_name, a_macro_definition: STRING)
 			-- Add `a_macro_name' and `a_macro_definition' into `skeleton_table'.
 		require
 			in_final_mode: in_final_mode
@@ -4245,7 +4245,7 @@ feature -- Generation
 			inserted: skeleton_table.has (a_macro_definition) and then skeleton_table.item (a_macro_definition).is_equal (a_macro_name)
 		end
 
-	generate_size_table is
+	generate_size_table
 			-- Generate the size table.
 		require
 			final_mode: in_final_mode
@@ -4307,7 +4307,7 @@ feature -- Generation
 			size_file.close
 		end
 
-	generate_reference_table is
+	generate_reference_table
 			-- Generate the table of reference number per type.
 		local
 			i, nb, nb_ref, nb_exp: INTEGER
@@ -4348,7 +4348,7 @@ feature -- Generation
 			reference_file.close
 		end
 
-	generate_parent_tables is
+	generate_parent_tables
 			-- Generates parent tables.
 		local
 			i, nb, cid: INTEGER;
@@ -4417,7 +4417,7 @@ feature -- Generation
 			parents_file.close;
 		end;
 
-	generate_skeletons is
+	generate_skeletons
 			-- Generate skeletons of class types
 		local
 			class_array: ARRAY [CLASS_C]
@@ -4606,7 +4606,7 @@ feature -- Generation
 			skeleton_file.close
 		end
 
-	generate_expanded_structures is
+	generate_expanded_structures
 			-- Generate structures for expanded class types
 		local
 			i, nb: INTEGER
@@ -4665,7 +4665,7 @@ feature -- Generation
 			structure_file.close
 		end
 
-	generate_cecil is
+	generate_cecil
 			-- Generate Cecil structures
 		local
 			class_array: ARRAY [CLASS_C]
@@ -4772,7 +4772,7 @@ feature -- Generation
 			cecil_file.close
 		end
 
-	create_cecil_tables is
+	create_cecil_tables
 			-- Prepare cecil tables
 		local
 			class_array: ARRAY [CLASS_C]
@@ -4795,7 +4795,7 @@ feature -- Generation
 			end
 		end
 
-	generate_initialization_table is
+	generate_initialization_table
 			-- Generate table of initialization routines for composite objects
 		local
 			rout_table: ROUT_TABLE
@@ -4841,7 +4841,7 @@ feature -- Generation
 				header_generation_buffer)
 		end
 
-	generate_expanded_creation_table is
+	generate_expanded_creation_table
 			-- Generate table of creation procedures for all expanded objects.
 		local
 			rout_table: ROUT_TABLE
@@ -4887,7 +4887,7 @@ feature -- Generation
 
 feature -- Dispose routine
 
-	disposable_dispose_id: INTEGER is
+	disposable_dispose_id: INTEGER
 			-- Dispose routine id from class DISPOSABLE.
 			-- Return 0 if the DISPOSABLE class has not been compiled.
 			--! (Assumed DISPOSABLE must have a dispose routine
@@ -4903,7 +4903,7 @@ feature -- Dispose routine
 			end
 		end
 
-	object_finalize_id: INTEGER is
+	object_finalize_id: INTEGER
 			-- System.Object `Finalize routine id from class SYSTEM_OBJECT.
 		local
 			feature_i: FEATURE_I
@@ -4916,13 +4916,13 @@ feature -- Dispose routine
 			end
 		end
 
-	disposable_descendants: SEARCH_TABLE [CLASS_C] is
+	disposable_descendants: SEARCH_TABLE [CLASS_C]
 			-- DISPOSABLE descendants.
 		once
 			create Result.make (50)
 		end
 
-	reset_disposable_descendants is
+	reset_disposable_descendants
 			-- Recompute `disposable_descendants' since some classes
 			-- may not inherit from DISPOSABLE anymore.
 		do
@@ -4935,7 +4935,7 @@ feature -- Dispose routine
 			end
 		end
 
-	formulate_mem_descendants (c: CLASS_C; desc: SEARCH_TABLE [CLASS_C]) is
+	formulate_mem_descendants (c: CLASS_C; desc: SEARCH_TABLE [CLASS_C])
 			-- Formulate descendants of class DISPOSABLE.
 		local
 			descendants: ARRAYED_LIST [CLASS_C]
@@ -4954,7 +4954,7 @@ feature -- Dispose routine
 			end
 		end
 
-	generate_dispose_table is
+	generate_dispose_table
 			-- Generate dispose table
 		local
 			entry: ROUT_TABLE
@@ -5067,13 +5067,13 @@ feature -- Copy routine
 
 feature -- Pattern table generation
 
-	generate_pattern_table is
+	generate_pattern_table
 			-- Generate pattern table.
 		do
 			pattern_table.generate
 		end
 
-	generate_init_file is
+	generate_init_file
 			-- Generation of the main file
 		local
 			final_mode: BOOLEAN
@@ -5377,7 +5377,7 @@ feature -- Pattern table generation
 
 feature -- Workbench routine info table file generation
 
-	generate_rout_info_table is
+	generate_rout_info_table
 		local
 			buffer: GENERATION_BUFFER
 			rout_info_file: INDENT_FILE
@@ -5396,7 +5396,7 @@ feature -- Workbench routine info table file generation
 
 feature --option file generation
 
-	generate_option_file (is_workbench_mode: BOOLEAN) is
+	generate_option_file (is_workbench_mode: BOOLEAN)
 			-- Generate compialtion option file
 		local
 			class_array: ARRAY [CLASS_C]
@@ -5468,7 +5468,7 @@ feature --option file generation
 
 feature
 
-	set_current_class (a_class: CLASS_C) is
+	set_current_class (a_class: CLASS_C)
 		do
 			current_class := a_class
 		end
@@ -5476,18 +5476,18 @@ feature
 	in_pass3: BOOLEAN
 			-- Is Degree 3 the current Degree?
 
-	System_chunk: INTEGER is 500
+	System_chunk: INTEGER = 500
 
 feature -- Conveniences
 
-	reset_external_clause is
+	reset_external_clause
 			-- Reset the external clause
 			-- Incrementality of the generated makefile
 		do
 			c_file_names := Void
 		end
 
-	reset_loaded_precompiled_properties is
+	reset_loaded_precompiled_properties
 			-- Resets all loaded precompiled properties that interfer
 			-- with a projects properties
 		do
@@ -5498,25 +5498,25 @@ feature -- Conveniences
 			internal_msil_classes_per_module := 0
 		end
 
-	set_executable_directory (d: STRING) is
+	set_executable_directory (d: STRING)
 			-- Assign `d' to `executable_directory'.
 		do
 			executable_directory := d
 		end
 
-	set_c_directory (d: STRING) is
+	set_c_directory (d: STRING)
 			-- Assign `d' to `c_directory'.
 		do
 			c_directory := d
 		end
 
-	set_object_directory (d: STRING) is
+	set_object_directory (d: STRING)
 			-- Assign `d' to `object_directory'.
 		do
 			object_directory := d
 		end
 
-	reset_generate_clause is
+	reset_generate_clause
 			-- Reset the generate clause
 			-- Incrementality of the generated makefile
 		do
@@ -5525,19 +5525,19 @@ feature -- Conveniences
 			object_directory := Void
 		end
 
-	set_update_sort (b: BOOLEAN) is
+	set_update_sort (b: BOOLEAN)
 			-- Assign `b' to `update_sort'.
 		do
 			update_sort := b
 		end
 
-	set_max_class_id (i: INTEGER) is
+	set_max_class_id (i: INTEGER)
 			-- Assign `i' to `max_class_id'.
 		do
 			max_class_id := i
 		end
 
-	set_is_precompile_finalized (b: like is_precompile_finalized) is
+	set_is_precompile_finalized (b: like is_precompile_finalized)
 			-- Assign `b' to `is_finalized'
 		do
 			is_precompile_finalized := b
@@ -5555,13 +5555,13 @@ feature -- Access: Root creators
 			--       existing code relying on a single root will continue to work.
 			--       Additional root creation procedures can be added through `add_explicit_root'.
 
-	root_type: CL_TYPE_A is
+	root_type: CL_TYPE_A
 			--
 		do
 			Result := root_creators.first.class_type
 		end
 
-	root_creation_name: STRING is
+	root_creation_name: STRING
 		do
 			Result := root_creators.first.procedure_name
 		ensure
@@ -5596,7 +5596,7 @@ feature -- Status report: Root creators
 
 feature -- Query: Root creators
 
-	root_class_type (a_root_type: CL_TYPE_A): CLASS_TYPE is
+	root_class_type (a_root_type: CL_TYPE_A): CLASS_TYPE
 			-- CLASS_TYPE of root type
 		require
 			root_type_exists: root_creators.there_exists (
@@ -5625,7 +5625,7 @@ feature -- Query: Root creators
 					end (?, a_class))
 		end
 
-	is_compiled_root_class (a_class: CLASS_C): BOOLEAN is
+	is_compiled_root_class (a_class: CLASS_C): BOOLEAN
 			-- Is compiled class used as root class?
 			--
 			-- `a_class': Class for which we want to determine whether it is a root class.
@@ -5648,7 +5648,7 @@ feature -- Query: Root creators
 
 feature -- Element change: Root creators
 
-	add_explicit_root (a_cluster_name, a_class_name, a_feature_name: STRING) is
+	add_explicit_root (a_cluster_name, a_class_name, a_feature_name: STRING)
 			-- Add an explicit root class
 		require
 			a_class_name_not_empty: a_class_name /= Void and then not a_class_name.is_empty
@@ -5661,7 +5661,7 @@ feature -- Element change: Root creators
 			added: is_explicit_root (a_class_name, a_feature_name)
 		end
 
-	remove_explicit_root (a_class_name, a_feature_name: STRING) is
+	remove_explicit_root (a_class_name, a_feature_name: STRING)
 			-- Remove an explicit root class
 		require
 			added: is_explicit_root (a_class_name, a_feature_name)
@@ -5687,7 +5687,7 @@ feature -- Element change: Root creators
 
 feature {NONE} -- Element change: Root creators
 
-	update_root_class is
+	update_root_class
 			-- Refill root creator list.
 		require
 			universe_not_void: universe /= Void
@@ -5724,7 +5724,7 @@ feature {NONE} -- Element change: Root creators
 			root_creators_added: not root_creators.is_empty
 		end
 
-	add_root_feature (a_cluster_name, a_class_name, a_feature_name: STRING) is
+	add_root_feature (a_cluster_name, a_class_name, a_feature_name: STRING)
 			-- Add root creation procedure for given class and feature name.
 			--
 			-- `a_cluster_name': Name of cluster in which class is located (can be Void).
@@ -5820,7 +5820,7 @@ feature {NONE} -- Element change: Root creators
 			end
 		end
 
-	compute_root_type is
+	compute_root_type
 			-- Computes the root type
 		local
 			l_type: CL_TYPE_A
@@ -5875,7 +5875,7 @@ feature {NONE} -- Element change: Root creators
 
 feature -- Precompilation
 
-	save_precompilation_info is
+	save_precompilation_info
 			-- Save usefull values for inclusion of
 			-- precompiled code.
 		do
@@ -5893,7 +5893,7 @@ feature -- Log files
 	removed_log_file: REMOVED_FEAT_LOG_FILE
 		-- File where the names of the removed features are generated
 
-	open_log_files is
+	open_log_files
 		local
 			f_name: FILE_NAME
 		do
@@ -5921,7 +5921,7 @@ feature -- Log files
 			end
 		end
 
-	close_log_files is
+	close_log_files
 		do
 			used_features_log_file.close
 			used_features_log_file := Void
@@ -5933,7 +5933,7 @@ feature -- Log files
 
 feature -- Debug purpose
 
-	trace is
+	trace
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
@@ -5963,13 +5963,13 @@ feature -- Statistics
 		is_equal_feat: INTEGER;
 		any_features: INTEGER;
 		like_current_feature: INTEGER;
-		other: INTEGER] is
+		other: INTEGER]
 			-- Statistics of catcalls in system
 		once
 			Result := [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		end
 
-	update_statistics (a_cat_call: CAT_CALL_WARNING) is
+	update_statistics (a_cat_call: CAT_CALL_WARNING)
 			-- Update statistics with catcall of current warning
 		local
 			l_feature_name: INTEGER
@@ -6023,7 +6023,7 @@ feature -- Statistics
 			end
 		end
 
-	display_catcall_statistics is
+	display_catcall_statistics
 		local
 			l_str: STRING
 			l_cat_call_summary: CAT_CALL_SUMMARY_WARNING
@@ -6046,13 +6046,13 @@ feature -- Statistics
 			end
 		end
 
-	conformance_checks: TUPLE [nb, like_target, same: INTEGER] is
+	conformance_checks: TUPLE [nb, like_target, same: INTEGER]
 			--
 		once
 			create Result
 		end
 
-	print_memory_statistics is
+	print_memory_statistics
 			-- Print memory statistics on standard output.
 		local
 			l_mem: MEMORY
@@ -6088,19 +6088,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	write_int (f: POINTER; v: INTEGER) is
+	write_int (f: POINTER; v: INTEGER)
 		external
 			"C"
 		end
 
-	current_time: INTEGER is
+	current_time: INTEGER
 			-- Elapsed time since the Epoch (00:00:00 UTC, January 1, 1970),
 			-- measured in seconds.
 		do
 			Result := c_time (default_pointer)
 		end
 
-	c_time (p: POINTER): INTEGER is
+	c_time (p: POINTER): INTEGER
 			-- Elapsed time since the Epoch (00:00:00 UTC, January 1, 1970),
 			-- measured in seconds.
 			-- If `p /= default_pointer' result will be stored in memory pointed
@@ -6111,7 +6111,7 @@ feature {NONE} -- External features
 			"time"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

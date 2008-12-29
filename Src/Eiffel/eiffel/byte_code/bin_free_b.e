@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class BIN_FREE_B
@@ -8,7 +8,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_free_b (Current)
@@ -16,13 +16,13 @@ feature -- Visitor
 
 feature -- Status
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one ?
 		do
 			-- Do nothing
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

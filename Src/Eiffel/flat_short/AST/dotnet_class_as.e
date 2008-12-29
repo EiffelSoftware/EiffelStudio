@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an .NET class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_consumed: CONSUMED_TYPE; a_local_features_only: BOOLEAN; a_class: CLASS_I) is
+	make (a_consumed: CONSUMED_TYPE; a_local_features_only: BOOLEAN; a_class: CLASS_I)
 		require
 			a_consumed_not_void: a_consumed /= Void
 			a_classi_not_void: a_class /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			deferred_set: is_deferred implies (a_consumed.is_deferred or a_consumed.is_interface)
 		end
 
-	initialize (a_consumed: CONSUMED_TYPE) is
+	initialize (a_consumed: CONSUMED_TYPE)
 			-- Initialize information for Current pertaining to 'a_consumed'.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			initialize_feature_categories
 		end
 
-	initialize_feature_categories is
+	initialize_feature_categories
 			-- Initialize the features by category for formatting.
 		local
 			l_entity: CONSUMED_ENTITY
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	initialize_property_or_event (a_entity: CONSUMED_ENTITY) is
+	initialize_property_or_event (a_entity: CONSUMED_ENTITY)
 			-- Initialize 'a_entity' for inclusion in corresponding entity list.
 		require
 			entity_not_void: a_entity /= Void
@@ -191,7 +191,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	set_constructors (a_consumed: CONSUMED_TYPE) is
+	set_constructors (a_consumed: CONSUMED_TYPE)
 			-- Set all constrcutor for the .NET class.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Initialization
 			constructors_set: constructors /= Void
 		end
 
-	set_ancestors (a_consumed: CONSUMED_TYPE) is
+	set_ancestors (a_consumed: CONSUMED_TYPE)
 			-- Set all ancestors for the .NET class.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Access
 
 feature -- Status Setting
 
-	set_current_class_only (a_flag: BOOLEAN) is
+	set_current_class_only (a_flag: BOOLEAN)
 			-- Set format type to include inherited features.
 		do
 			is_current_class_only := a_flag
@@ -304,7 +304,7 @@ feature -- Status Setting
 
 feature -- Formatting
 
-	format (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Perform formatting of current using `a_ctxt'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -320,7 +320,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	format_indexes (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_indexes (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format indexes, i.e. class description.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -368,7 +368,7 @@ feature {NONE} -- Formatting
 			a_ctxt.put_new_line
 		end
 
-	format_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format header, ie classname and generics.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- Formatting
 			a_ctxt.put_new_line
 		end
 
-	format_footer (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_footer (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format footer, ie classname and end keyword.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -413,7 +413,7 @@ feature {NONE} -- Formatting
 			a_ctxt.put_new_line
 		end
 
-	format_ancestors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_ancestors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format class ancestors, if short.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -437,7 +437,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_generics (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_generics (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format class formal generic parameters, if any.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -453,7 +453,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_constructors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_constructors (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format constructors.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -483,7 +483,7 @@ feature {NONE} -- Formatting
 			a_ctxt.process_filter_item (f_creators, false)
 		end
 
-	format_features (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR) is
+	format_features (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR)
 			-- Format all features.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -515,7 +515,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-	format_feature_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR; a_header: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
+	format_feature_header (a_ctxt: DOTNET_CLASS_TEXT_FORMATTER_DECORATOR; a_header: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY])
 			-- Format feature with category 'a_header'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -538,7 +538,7 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Implementation
 
-	should_display (a_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]): BOOLEAN is
+	should_display (a_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]): BOOLEAN
 			-- Should any of the items in 'a_list' be displayed in current context?
 		do
 			if is_current_class_only then
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_add (a_entity: CONSUMED_ENTITY): BOOLEAN is
+	should_add (a_entity: CONSUMED_ENTITY): BOOLEAN
 			-- Should 'a_entity' be added to the features?
 		require
 			a_entity_not_void: a_entity /= Void
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_features_list (a_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]) is
+	add_to_features_list (a_list: DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY])
 			-- Add 'a_list' to list of known features.
 		require
 			a_list_not_void: a_list /= Void
@@ -603,7 +603,7 @@ invariant
 	entities_not_void: entities /= Void
 	ancestors_not_void: ancestors /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

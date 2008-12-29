@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for the debugger's breakpoint management tool.
 	]"
@@ -18,7 +18,7 @@ create {NONE}
 
 feature -- Status
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is Current instantiated and shown on the screen?
 		do
 			if is_tool_instantiated then
@@ -26,7 +26,7 @@ feature -- Status
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh breakpoints display if shown.
 		do
 			if shown then
@@ -65,7 +65,7 @@ feature {NONE} -- Factory
 			create Result.make (window, Current)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

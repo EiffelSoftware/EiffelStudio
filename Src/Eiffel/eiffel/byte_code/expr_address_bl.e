@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EXPR_ADDRESS_BL
@@ -19,7 +19,7 @@ feature
 	register: REGISTER;
 			-- Register used to store expression value
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
 			if r = No_register or not used (r) then
@@ -29,7 +29,7 @@ feature
 			end;
 		end;
 
-	free_register is
+	free_register
 			-- Free register used by expression
 		do
 			expr.free_register;
@@ -38,7 +38,7 @@ feature
 			end
 		end;
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			context.init_propagation;
@@ -55,13 +55,13 @@ feature
 			end
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze;
 		end;
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			buf: GENERATION_BUFFER
@@ -77,7 +77,7 @@ feature
 			end
 		end;
 
-	print_register is
+	print_register
 			-- Print expression value
 		local
 			r: REGISTRABLE
@@ -98,7 +98,7 @@ feature
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

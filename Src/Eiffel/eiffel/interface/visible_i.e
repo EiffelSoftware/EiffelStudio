@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Feature external visibility controler
@@ -18,7 +18,7 @@ feature
 	renamings: HASH_TABLE [STRING, STRING];
 			-- Renaming table
 
-	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		do
@@ -27,7 +27,7 @@ feature
 
 feature
 
-	real_name (feat: FEATURE_I; class_id: INTEGER): STRING is
+	real_name (feat: FEATURE_I; class_id: INTEGER): STRING
 			-- Real external name for `feat' in context
 			-- of `class_id'.
 		require
@@ -41,25 +41,25 @@ feature
 			end;
 		end;
 
-	set_renamings (t: like renamings) is
+	set_renamings (t: like renamings)
 			-- Assign `t' to `renamings'.
 		do
 			renamings := t;
 		end;
 
-	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
+	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
 			-- Mark visible features from `feat_table'.
 		do
 			-- Do nothing
 		end;
 
-	has_visible: BOOLEAN is
+	has_visible: BOOLEAN
 			-- Has the current object some visible features ?
 		do
 			-- Do nothing
 		end;
 
-	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING_8]) is
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING_8])
 			-- Generate cecil table
 		require
 			has_visible;
@@ -67,12 +67,12 @@ feature
 		do
 		end;
 
-	trace is
+	trace
 		do
 			io.error.put_string (generator);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

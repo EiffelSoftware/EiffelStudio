@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to create a new feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Pop up class wizard.
 		local
 			dial: EB_CREATE_CLASS_DIALOG
@@ -40,7 +40,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_stone (a_stone: CLUSTER_STONE) is
+	execute_stone (a_stone: CLUSTER_STONE)
 			-- Pop up class wizard with location of `a_stone'.
 		local
 			dial: EB_CREATE_CLASS_DIALOG
@@ -56,13 +56,13 @@ feature -- Basic operations
 
 feature -- Access
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Pixmap representing the command for mini toolbars.
 		once
 			Result := pixmaps.mini_pixmaps.new_class_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command for mini toolbars.
 		once
 			Result := pixmaps.mini_pixmaps.new_class_icon_buffer
@@ -70,47 +70,47 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_create_new_class
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_class_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_class_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_create_new_class
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_create_new_class
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.f_create_new_class
 		end
 
-	name: STRING is "New_class";
+	name: STRING = "New_class";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

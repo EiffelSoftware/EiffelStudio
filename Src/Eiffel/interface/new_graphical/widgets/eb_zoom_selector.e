@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that lets the user select a zoom level"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_default is
+	make_default
 			-- Initialize with "100%" as zoom level.
 		do
 			make_with_strings (Initial_strings)
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	show_as_text (i: INTEGER) is
+	show_as_text (i: INTEGER)
 			-- Replace and show `i' %.
 		require
 			i_in_range: i > 0
@@ -43,7 +43,7 @@ feature -- Element change
 			set_text (l_text)
 		end
 
-	add_and_show (i: INTEGER) is
+	add_and_show (i: INTEGER)
 			-- Add and show `i' %.
 		require
 			i_in_range: i > 0
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature {NONE} -- Events
 
-	on_zoom_level_typed is
+	on_zoom_level_typed
 			-- A view name was typed in `Current' text field.
 		local
 			l_text: like text
@@ -84,7 +84,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	initial_strings: ARRAY [STRING_8] is
+	initial_strings: ARRAY [STRING_8]
 			-- Initial list items.
 		once
 			create Result.make (1, 9)
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			Result.put ("10%%", 9)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

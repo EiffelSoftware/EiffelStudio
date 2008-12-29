@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of routine assertions defined in precursor features. See end of class for more info."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Output
 
-	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format precondition to `ctxt'. Detect
 			-- if the assertion in the origin precursor
 			-- feature is defined. If not, generate
@@ -100,7 +100,7 @@ feature -- Output
 			ctxt.set_source_class (l_source_class)
 		end
 
-	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format format_postcondition to `ctxt'.
 		local
 			inherited_body: BOOLEAN
@@ -136,7 +136,7 @@ feature -- Output
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			from
 				start
@@ -148,7 +148,7 @@ feature -- Debug
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

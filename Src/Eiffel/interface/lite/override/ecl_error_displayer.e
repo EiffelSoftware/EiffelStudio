@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A specialized version of {ERROR_DISPLAYER} to display errors in a format readable by external tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like application_name; a_window: like output_window) is
+	make (a_name: like application_name; a_window: like output_window)
 			-- Initialize error displayer using an output window `a_window' and a application name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_application_name (a_name: like application_name) is
+	set_application_name (a_name: like application_name)
 			-- Set `application_name' with `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -62,7 +62,7 @@ feature -- Element change
 
 feature -- Output
 
-	trace_warnings (a_handler: ERROR_HANDLER) is
+	trace_warnings (a_handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		local
 			l_warnings: LIST [ERROR]
@@ -79,7 +79,7 @@ feature -- Output
 			end
 		end
 
-	trace_errors (a_handler: ERROR_HANDLER) is
+	trace_errors (a_handler: ERROR_HANDLER)
 			-- Display error messages from `handler'.
 		do
 			if a_handler.has_error then
@@ -88,7 +88,7 @@ feature -- Output
 			end
 		end
 
-	force_display is
+	force_display
 			-- Make sure the user can see the messages we send.
 		do
 			output_window.display
@@ -96,7 +96,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	display_warning (a_warning: WARNING; a_window: like output_window) is
+	display_warning (a_warning: WARNING; a_window: like output_window)
 			-- Display warning `a_warning' using output window `a_window'
 		require
 			a_warning_attached: a_warning /= Void
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			display_error (a_warning, a_window)
 		end
 
-	display_error (a_error: ERROR; a_window: like output_window) is
+	display_error (a_error: ERROR; a_window: like output_window)
 			-- Display error `a_error' using output window `a_window'
 		require
 			a_error_attached: a_error /= Void
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			tracer.trace (a_window, a_error, {ERROR_TRACER}.context)
 		end
 
-	short_help_file_name (a_error: ERROR): STRING is
+	short_help_file_name (a_error: ERROR): STRING
 			-- Retrieve's short help file name from `a_error'
 		local
 			l_fn: FILE_NAME
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	relative_file_path (a_path: STRING): STRING is
+	relative_file_path (a_path: STRING): STRING
 			-- Retrieve relative file path to project ECF.
 		local
 			l_project: E_PROJECT
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	shared_project: SHARED_EIFFEL_PROJECT is
+	shared_project: SHARED_EIFFEL_PROJECT
 			-- Access to shared Eiffel project
 		once
 			create Result
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	eiffel_layout: EIFFEL_ENV is
+	eiffel_layout: EIFFEL_ENV
 			-- Access to shared Eiffel project
 		once
 			Result := (create {EIFFEL_LAYOUT}).eiffel_layout
@@ -248,7 +248,7 @@ invariant
 	application_name_attached: application_name /= Void
 	not_application_name_is_empty: not application_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

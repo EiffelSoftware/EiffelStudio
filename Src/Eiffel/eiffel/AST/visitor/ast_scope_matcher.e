@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Detector of local scopes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (c: like context) is
+	make (c: like context)
 			-- Initialize Current
 		require
 			c_attached: c /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Status
 invariant
 	context_attached: context /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

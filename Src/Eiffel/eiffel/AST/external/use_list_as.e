@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of dependencies of external clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {USE_LIST_AS}
 
 feature -- Array representaion
 
-	array_representation: ARRAY [INTEGER] is
+	array_representation: ARRAY [INTEGER]
 			-- Array representation of list of files required by external.
 		local
 			i: INTEGER
@@ -38,7 +38,7 @@ feature -- Array representaion
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

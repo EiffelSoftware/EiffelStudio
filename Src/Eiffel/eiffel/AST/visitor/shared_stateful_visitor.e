@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collection of stateful visitors"
 	author: ""
 	date: "$Date$"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contains information about position shown in Eiffel Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,26 +10,26 @@ class
 	
 feature -- Access
 
-	position: like position_internal is
+	position: like position_internal
 			-- Position in current object.
 			-- Usually character position in text.
 		do
 			Result := position_internal
 		end
 	
-	pos_container: like pos_container_internal is		
+	pos_container: like pos_container_internal		
 			-- Where current object is shown. i.e an editor
 		do
 			Result := pos_container_internal
 		end
 		
-	previous_position: like position_internal is
+	previous_position: like position_internal
 			-- Possible previous position
 		do
 			Result := previous_position_internal
 		end
 			
-	previous_pos_container: like pos_container_internal is
+	previous_pos_container: like pos_container_internal
 			-- Possible previous container
 		do
 			Result := previous_pos_container_internal
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_position (p: like position_internal) is
+	set_position (p: like position_internal)
 			-- Set `previous_position' with `p'.
 		require
 			p_larger_than_zero: p >= 0
@@ -47,7 +47,7 @@ feature -- Element Change
 			position_set: position_internal = p
 		end
 		
-	set_pos_container (a_container: like pos_container_internal) is
+	set_pos_container (a_container: like pos_container_internal)
 			-- Set `container' with `a_container'.
 		do
 			pos_container_internal := a_container
@@ -55,7 +55,7 @@ feature -- Element Change
 			container_set: pos_container_internal = a_container
 		end
 		
-	set_previous_position (p: like previous_position_internal) is
+	set_previous_position (p: like previous_position_internal)
 			-- Set `previous_position' with `p'.
 		require
 			p_larger_than_zero: p >= 0
@@ -65,7 +65,7 @@ feature -- Element Change
 			position_set: previous_position_internal = p
 		end
 		
-	set_previous_pos_container (a_container: like previous_pos_container_internal) is
+	set_previous_pos_container (a_container: like previous_pos_container_internal)
 			-- Set `container' with `a_container'.
 		do
 			previous_pos_container_internal := a_container
@@ -83,7 +83,7 @@ feature {NONE}
 	
 	previous_pos_container_internal : like pos_container_internal;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

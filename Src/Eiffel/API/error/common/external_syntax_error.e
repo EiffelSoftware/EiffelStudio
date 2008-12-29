@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Syntax error for invalid external declaration."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Property
 
 feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 
-	set_external_error_message (message: STRING) is
+	set_external_error_message (message: STRING)
 			-- Assign `external_error_message' with `message'.
 		require
 			message_not_void: message /= Void
@@ -36,13 +36,13 @@ feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 			external_error_message := message.twin
 		end
 
-	set_file_name (new_filename: FILE_NAME) is
+	set_file_name (new_filename: FILE_NAME)
 			-- Assign `new_filename' to `file_name'.
 		do
 			file_name := new_filename
 		end
 
-	set_line (i: INTEGER) is
+	set_line (i: INTEGER)
 			-- Assign `i' to `line'.
 		do
 			line := i
@@ -50,7 +50,7 @@ feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 			line_set: line = i
 		end
 
-	set_column (i: INTEGER) is
+	set_column (i: INTEGER)
 			-- Assign `i' to `column'.
 		do
 			column := i
@@ -58,7 +58,7 @@ feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 			column_set: column = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

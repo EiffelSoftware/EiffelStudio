@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error if root type does involve classes which are not in the scope of the root cluster."
@@ -18,10 +18,10 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VSRT";
+	code: STRING = "VSRT";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 			-- Sub code of error
 
 	root_type_name: STRING;
@@ -32,7 +32,7 @@ feature -- Properties
 
 feature	-- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Root type: " + root_type_name)
 			a_text_formatter.add_new_line
@@ -44,7 +44,7 @@ feature	-- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_root_type_name (a_root_type_name: like root_type_name) is
+	set_root_type_name (a_root_type_name: like root_type_name)
 			-- Assign `a_root_type' to `root_type'.
 		require
 			a_valid_root_type_name: a_root_type_name /= Void
@@ -52,7 +52,7 @@ feature {COMPILER_EXPORTER}
 			root_type_name := a_root_type_name;
 		end;
 
-	set_group_name (a_group_name: like group_name) is
+	set_group_name (a_group_name: like group_name)
 			-- Assign `a_root_type' to `root_type'.
 		require
 			a_valid_group_name: a_group_name /= Void
@@ -60,7 +60,7 @@ feature {COMPILER_EXPORTER}
 			group_name := a_group_name;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

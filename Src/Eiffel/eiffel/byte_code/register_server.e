@@ -1,4 +1,4 @@
-indexing
+note
 	descrption: "Register server that distributes register numbers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create {BYTE_CONTEXT}
 
 feature {NONE} -- Creation
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create a new instance to manage `n' different register types.
 		require
 			n_positive: n > 0
@@ -48,13 +48,13 @@ feature {NONE} -- Creation
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of register types
 		do
 			Result := managers.count
 		end
 
-	needed_registers_by_clevel (clevel: INTEGER): INTEGER is
+	needed_registers_by_clevel (clevel: INTEGER): INTEGER
 			-- Number of needed registers for C type level `clevel'
 		require
 			valid_clevel: 0 < clevel and clevel <= count
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Duplication
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Duplicate of the current instance
 		local
 			m: like managers
@@ -85,7 +85,7 @@ feature -- Duplication
 
 feature -- Modification
 
-	clear_all is
+	clear_all
 			-- Clear current data structure
 		local
 			i: INTEGER
@@ -100,13 +100,13 @@ feature -- Modification
 			end
 		end
 
-	get_register (ctype: INTEGER): INTEGER is
+	get_register (ctype: INTEGER): INTEGER
 			-- First free register of type `ctype'
 		do
 			Result := managers.item (ctype).get_register
 		end
 
-	free_register (ctype: INTEGER; n: INTEGER) is
+	free_register (ctype: INTEGER; n: INTEGER)
 			-- Free register number `n' of type `ctype'
 		do
 			managers.item (ctype).free_register (n)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature {REGISTER_SERVER} -- Modification
 
-	set_registers (r: like managers) is
+	set_registers (r: like managers)
 			-- Assign `r' to `registers'.
 		require
 			r_attached: r /= Void
@@ -132,7 +132,7 @@ feature {REGISTER_SERVER} -- Modification
 invariant
 	managers_attached: managers /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

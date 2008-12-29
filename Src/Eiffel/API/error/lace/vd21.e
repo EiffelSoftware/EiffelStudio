@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for unreadable file."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if cluster /= Void then
 				put_cluster_name (a_text_formatter);
@@ -26,7 +26,7 @@ feature -- Output
 			put_file_name (a_text_formatter)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities to handle breakpoints adding in flat/short formats"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feat: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is
+	make (a_feat: E_FEATURE; a_text_formatter: TEXT_FORMATTER)
 			-- Initialize current with `a_class'.
 		require
 			valid_feat: a_feat /= Void
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Element change
 
-	formal_name (pos: INTEGER): STRING is
+	formal_name (pos: INTEGER): STRING
 			-- Formal name of class_c generics at position `pos.
 		do
 			Result := e_class.generics.i_th (pos).name.name.as_upper
@@ -70,14 +70,14 @@ feature {NONE} -- Implementation
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
 
-	put_breakable is
+	put_breakable
 		do
 			breakpoint_index := breakpoint_index + 1
 			added_breakpoint := True
 			text_formatter.process_breakpoint (e_feature, breakpoint_index)
 		end
 
-	emit_tabs is
+	emit_tabs
 		do
 			if added_breakpoint then
 				added_breakpoint := false
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			old_emit_tabs
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

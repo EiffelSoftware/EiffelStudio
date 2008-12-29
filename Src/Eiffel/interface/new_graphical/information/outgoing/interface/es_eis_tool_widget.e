@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information tool GUI widget"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -59,7 +59,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_panel: ES_INFORMATION_TOOL_PANEL) is
+	make (a_panel: ES_INFORMATION_TOOL_PANEL)
 			-- Initialization
 		require
 			a_panel_not_void: a_panel /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			panel_set: panel /= Void
 		end
 
-	build_interface is
+	build_interface
 			--
 		local
 			l_frame: EV_FRAME
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			build_list
 		end
 
-	build_search_box: EV_HORIZONTAL_BOX is
+	build_search_box: EV_HORIZONTAL_BOX
 			-- Build search box
 		local
 			l_search_label: EV_LABEL
@@ -169,7 +169,7 @@ feature {NONE} -- Initialization
 			build_search_box_not_void: build_search_box /= Void
 		end
 
-	build_tree is
+	build_tree
 			-- Build left tree of the panel.
 		local
 			l_tree: like tree
@@ -223,7 +223,7 @@ feature {NONE} -- Initialization
 --			l_vbox.disable_item_expand (l_hbox)
 		end
 
-	build_list is
+	build_list
 			-- EIS item detail panel.
 		local
 			l_vbox: EV_VERTICAL_BOX
@@ -291,7 +291,7 @@ feature -- Access
 
 feature -- Callbacks
 
-	on_show_editing_item is
+	on_show_editing_item
 			-- On show editing item selected.
 		local
 			l_conv_class: CLASSI_STONE
@@ -325,13 +325,13 @@ feature -- Callbacks
 			retry
 		end
 
-	on_clean_up_affected_item is
+	on_clean_up_affected_item
 			-- On clean up affected items.
 		do
 
 		end
 
-	on_entry_delete is
+	on_entry_delete
 			-- On delete button selected.
 		local
 			l_view: ES_EIS_COMPONENT_VIEW [ANY]
@@ -344,26 +344,26 @@ feature -- Callbacks
 
 feature -- Progress notification
 
-	on_progress_start is
+	on_progress_start
 			-- On starting visiting the system
 		do
 			background_sweeping_progress_bar.set_proportion (0)
 		end
 
-	on_progress_progress (a_value: REAL) is
+	on_progress_progress (a_value: REAL)
 			-- On progress has been made
 		do
 			background_sweeping_progress_bar.set_proportion (1 - a_value)
 		end
 
-	on_progress_finish is
+	on_progress_finish
 			-- On finishing progress
 		do
 			background_sweeping_progress_bar.set_proportion (0)
 			refresh_list
 		end
 
-	on_progress_stop is
+	on_progress_stop
 			-- On stop visiting the system
 		do
 			background_sweeping_progress_bar.set_proportion (0)
@@ -372,7 +372,7 @@ feature -- Progress notification
 
 feature {NONE} -- Implementation
 
-	internal_recycle is
+	internal_recycle
 			-- <precursor>
 		do
 			grid_support.desynchronize_scroll_behavior_with_editor
@@ -384,7 +384,7 @@ invariant
 	context_menu_factory_not_void: context_menu_factory /= Void
 	panel_not_void: panel /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

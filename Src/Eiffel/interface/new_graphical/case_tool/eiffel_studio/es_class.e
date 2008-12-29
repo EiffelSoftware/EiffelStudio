@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects is a model for a class in Eiffel Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_I) is
+	make (a_class: CLASS_I)
 			-- Create an ES_CLASS with `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			synchronize
 		end
 
-	make_with_id (a_class: CLASS_I; a_id: like es_class_id) is
+	make_with_id (a_class: CLASS_I; a_id: like es_class_id)
 			-- Create an ES_CLASS with `a_class' and `identifier'
 		require
 			a_class_not_void: a_class /= Void
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_supplier (a_class: ES_CLASS): BOOLEAN is
+	has_supplier (a_class: ES_CLASS): BOOLEAN
 			-- Does `Current' have `a_class' as supplier?
 			-- | independend of if there is a link to it or not.
 		do
@@ -98,7 +98,7 @@ feature -- Status report
 	is_queries_changed: BOOLEAN
 			-- Has `queries' changed at last synchronization?
 
-	has_only_suppliers: BOOLEAN is
+	has_only_suppliers: BOOLEAN
 			-- Has `Current' only links to suppliers?
 		local
 			l_links: like internal_links
@@ -126,7 +126,7 @@ feature -- Status report
 			end
 		end
 
-	has_only_clients: BOOLEAN is
+	has_only_clients: BOOLEAN
 			-- Has `Current' only links to clients?
 		local
 			l_links: like internal_links
@@ -154,7 +154,7 @@ feature -- Status report
 			end
 		end
 
-	has_only_ancestors: BOOLEAN is
+	has_only_ancestors: BOOLEAN
 			-- Has `Current' only links to ancestors?
 		local
 			l_links: like internal_links
@@ -182,7 +182,7 @@ feature -- Status report
 			end
 		end
 
-	has_only_descendants: BOOLEAN is
+	has_only_descendants: BOOLEAN
 			-- Has `Current' only links to ancestors?
 		local
 			l_links: like internal_links
@@ -212,7 +212,7 @@ feature -- Status report
 
 feature -- Access
 
-	code_generator: CLASS_TEXT_MODIFIER is
+	code_generator: CLASS_TEXT_MODIFIER
 			-- Code generator for `Current'.
 		do
 			if internal_code_generator = Void then
@@ -232,7 +232,7 @@ feature -- Access
 	class_i: CLASS_I
 			-- Class `Current' is a model for.
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- Compiled class.
 		do
 			Result := class_i.compiled_class
@@ -243,7 +243,7 @@ feature -- Access
 	es_class_id: STRING
 			-- Identifier
 
-	group_id: STRING is
+	group_id: STRING
 			-- Group id
 		do
 			Result := id_of_group (class_i.group)
@@ -254,7 +254,7 @@ feature -- Access
 	queries: LIST [FEATURE_AS]
 			-- All written queries in `Current'.
 
-	suppliers_with_class (a_class: ES_CLASS): LIST [FEATURE_AS] is
+	suppliers_with_class (a_class: ES_CLASS): LIST [FEATURE_AS]
 			-- Sublist of `queries' that have type `a_class'.
 		local
 			l_feature: FEATURE_AS
@@ -273,7 +273,7 @@ feature -- Access
 			end
 		end
 
-	needed_links: LIST [ES_ITEM] is
+	needed_links: LIST [ES_ITEM]
 			-- `links' that are EIFFEL_ITEMS and are needed_on_diagram.
 		local
 			l_links: like internal_links
@@ -303,7 +303,7 @@ feature -- Access
 	feature_clause_list_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `feature_clause_list' changed.
 
-	link_name : STRING is
+	link_name : STRING
 			-- Name for link
 		do
 			Result := es_class_id
@@ -311,7 +311,7 @@ feature -- Access
 
 feature -- Element change
 
-	remove_queries (a_queries: LIST [FEATURE_AS]) is
+	remove_queries (a_queries: LIST [FEATURE_AS])
 			-- Remove `a_queries' in `queries' do not change class text.
 		local
 			ef: FEATURE_AS
@@ -341,7 +341,7 @@ feature -- Element change
 			is_queries_changed := True
 		end
 
-	add_queries (a_queries: LIST [FEATURE_AS]) is
+	add_queries (a_queries: LIST [FEATURE_AS])
 			-- Add `a_queries' to `queries' do not change class text.
 		require
 			a_queries_not_void: a_queries /= Void
@@ -357,7 +357,7 @@ feature -- Element change
 			is_queries_changed := True
 		end
 
-	add_query (a_query: FEATURE_AS) is
+	add_query (a_query: FEATURE_AS)
 			-- Add `a_query' to `queries'.
 		require
 			a_query_not_void: a_query /= Void
@@ -374,7 +374,7 @@ feature -- Element change
 			add: queries.has (a_query)
 		end
 
-	remove_query (a_query: FEATURE_AS) is
+	remove_query (a_query: FEATURE_AS)
 			-- Remove `a_query' from `queries'.
 		require
 			a_query_not_void: a_query /= Void
@@ -387,7 +387,7 @@ feature -- Element change
 			is_queries_changed := True
 		end
 
-	synchronize is
+	synchronize
 			-- Synchronize with `class_i' and `class_c' properties, build_queries, put into right cluster.
 		local
 			c, st: like class_c
@@ -552,7 +552,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	storable_class: CLASS_C is
+	storable_class: CLASS_C
 			-- Compiled class STORABLE.
 		local
 			cl: LIST [CLASS_I]
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_queries is
+	build_queries
 			-- Fill `queries' with all written features of the class
 			-- that have a return type.
 		local
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 	suppliers: HASH_TABLE [CLASS_I, STRING]
 			-- All suppliers of `Current'.
 
-	add_suppliers (a_type: TYPE_AS) is
+	add_suppliers (a_type: TYPE_AS)
 			-- Add suppliers of `a_type' to `suppliers'.
 		local
 			ct: CLASS_TYPE_AS
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_feature_supplier (a_feature: FEATURE_AS; a_class: CLASS_I): BOOLEAN is
+	has_feature_supplier (a_feature: FEATURE_AS; a_class: CLASS_I): BOOLEAN
 			-- Does `a_feature' have supplier `a_class'?
 		local
 			l_body: BODY_AS
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_suppliers (a_type: TYPE_AS; a_class: CLASS_I): BOOLEAN is
+	has_suppliers (a_type: TYPE_AS; a_class: CLASS_I): BOOLEAN
 			-- Does `a_type' have `a_class' as supplier?
 		local
 			ct: CLASS_TYPE_AS
@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 	internal_code_generator: CLASS_TEXT_MODIFIER
 			-- Code generator returned by `code_generator'.
 
-	class_i_by_name (a_name: STRING): CLASS_I is
+	class_i_by_name (a_name: STRING): CLASS_I
 			-- Return class with `a_name'.
 			-- `Void' if not in system.
 		local
@@ -720,7 +720,7 @@ invariant
 	feature_clause_list_not_Void: feature_clause_list /= Void
 	feature_clause_list_changed_actions_not_Void: feature_clause_list_changed_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

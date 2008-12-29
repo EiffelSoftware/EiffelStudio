@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Error with bracket expression"
 	legal: "See notice at end of class."
@@ -23,12 +23,12 @@ feature -- Properties
 			-- Target type for which bracket expression is applied
 			--| Can be a type set!
 
-	code: STRING is "VWBR"
+	code: STRING = "VWBR"
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		local
@@ -65,7 +65,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_target_type (t: TYPE_A) is
+	set_target_type (t: TYPE_A)
 			-- Assign `t' to `target_class'.
 		require
 			t_not_void: t /= Void
@@ -74,7 +74,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			target_type := t
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

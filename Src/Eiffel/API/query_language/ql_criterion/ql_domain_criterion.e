@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion which requires a domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_criterion_domain (a_domain: QL_DOMAIN) is
+	set_criterion_domain (a_domain: QL_DOMAIN)
 			-- Set `criterion_domain' with `a_domain'
 		require
 			a_domain_attached: a_domain /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_domain_criterion (Current)
@@ -68,14 +68,14 @@ feature -- Process
 
 feature{NONE} -- Initialization
 
-	initialize_domain is
+	initialize_domain
 			-- Initialize for `criterion_domain'.
 		deferred
 		ensure
 			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
-	initialize_agent: PROCEDURE [ANY, TUPLE] is
+	initialize_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `initialize_domain'
 		do
 			if initialize_agent_internal = Void then
@@ -92,7 +92,7 @@ feature{NONE} -- Initialization
 invariant
 	criterion_domain_attached: criterion_domain /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

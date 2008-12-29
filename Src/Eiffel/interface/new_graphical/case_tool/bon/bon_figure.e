@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a common base class for bon figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	enable_high_quality is
+	enable_high_quality
 			-- Enable high quality.
 		do
 			set_is_high_quality (True)
@@ -27,7 +27,7 @@ feature -- Status settings
 			high_quality: is_high_quality
 		end
 		
-	disable_high_quality is
+	disable_high_quality
 			-- Disable high quality.
 		do
 			set_is_high_quality (False)
@@ -37,27 +37,27 @@ feature -- Status settings
 		
 feature {NONE} -- Implementation
 
-	is_storable: BOOLEAN is
+	is_storable: BOOLEAN
 			-- 
 		do
 			Result := model.is_needed_on_diagram
 		end
 
-	model: ES_ITEM is
+	model: ES_ITEM
 			-- Model for `Current'.
 		deferred
 		end
 
-	is_needed_on_diagram_string: STRING is "IS_NEEDED_ON_DIAGRAM"
+	is_needed_on_diagram_string: STRING = "IS_NEEDED_ON_DIAGRAM"
 
-	set_is_high_quality (a_high_quality: like is_high_quality) is
+	set_is_high_quality (a_high_quality: like is_high_quality)
 			-- Set `is_high_quality' to `a_high_quality'.
 		deferred
 		ensure
 			is_high_quality_assigned: is_high_quality = a_high_quality
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

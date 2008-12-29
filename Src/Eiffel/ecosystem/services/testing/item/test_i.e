@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of a test that can be executed and contains a list of outcomes resulting from passed
 		executions.
@@ -122,7 +122,7 @@ feature {TEST_PROJECT_I} -- Status setting
 
 feature {TEST_SUITE_S} -- Status setting
 
-	set_queued (a_executor: like executor) is
+	set_queued (a_executor: like executor)
 			-- Set `Current' to be queued by an executor
 			--
 			-- `a_executor': Executor set to run `Current'.

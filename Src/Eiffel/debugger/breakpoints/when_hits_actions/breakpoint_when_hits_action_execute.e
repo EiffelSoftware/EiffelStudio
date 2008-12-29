@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When breakpoint hits execute `execution_action' ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action: like execute_action) is
+	make (a_action: like execute_action)
 		do
 			set_execute_action (a_action)
 		end
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Change
 
-	set_execute_action (a_action: like execute_action) is
+	set_execute_action (a_action: like execute_action)
 			-- Set `execute_action' with `a_action'
 		do
 			execute_action := a_action
@@ -37,14 +37,14 @@ feature -- Change
 
 feature -- Execute
 
-	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		do
 			if execute_action /= Void then
 				execute_action.call ([a_bp, a_dm])
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

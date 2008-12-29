@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory of queries that can be used to validate stones to avoid code duplication."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ class
 
 feature -- Various thing you can allow.
 
-	can_drop_debuggable_feature_or_class (a_stone: ANY): BOOLEAN is
+	can_drop_debuggable_feature_or_class (a_stone: ANY): BOOLEAN
 			-- Can `a_stone' be dropped into current command?
 		local
 			l_fst: FEATURE_STONE

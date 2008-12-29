@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about feature recently added to system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; associated_class: CLASS_C) is
+	make (f: FEATURE_I; associated_class: CLASS_C)
 			-- Initialization
 		require
 			feature_not_void: f /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	update_execution_unit (class_type: CLASS_TYPE) is
+	update_execution_unit (class_type: CLASS_TYPE)
 			-- Update execution unit.
 		local
 			exec_unit: EXECUTION_UNIT
@@ -53,7 +53,7 @@ feature -- Update
 			exec_unit := execution_unit (class_type)
 		end
 
-	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE) is
+	melt (class_type: CLASS_TYPE; feat_tbl: FEATURE_TABLE)
 			-- Melt the feature
 		do
 			associated_feature (class_type.associated_class, feat_tbl).melt (execution_unit (class_type))
@@ -73,7 +73,7 @@ feature -- Access
 	result_type: TYPE_A
 			-- Return type of current feature to melt.
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current ?
 		do
 			Result := body_index = other.body_index
@@ -81,7 +81,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
+	execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT
 			-- Execution unit for Current.
 		require
 			class_type_not_void: class_type /= Void
@@ -96,14 +96,14 @@ feature {NONE} -- Implementation
 			Result := Execution_table.last_unit
 		end
 
-	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
+	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT
 			-- Create new EXECUTION_UNIT corresponding to Current type.
 		require
 			class_type_not_void: class_type /= Void
 		deferred
 		end
 
-	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
 			-- Associated feature
 		require
 			class_c_not_void: class_c /= Void
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

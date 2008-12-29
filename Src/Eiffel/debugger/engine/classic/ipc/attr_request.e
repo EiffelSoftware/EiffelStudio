@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Request for attributes' value of an object
@@ -53,7 +53,7 @@ create
 
 feature -- Initialization
 
-	make (addr: like object_address) is
+	make (addr: like object_address)
 		require
 			valid_addr: addr /= Void and then not addr.is_void
 		do
@@ -75,7 +75,7 @@ feature -- Properites
 
 feature -- Update
 
-	send is
+	send
 			-- Send inpect request to application.
 		local
 			address: POINTER
@@ -161,7 +161,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C; container_is_special: BOOLEAN) is
+	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C; container_is_special: BOOLEAN)
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
@@ -318,7 +318,7 @@ feature -- Special object properties
 			-- A negative value for `sp_upper' stands for the
 			-- upper bound of the inspected special object
 
-	set_sp_bounds (l, u: INTEGER) is
+	set_sp_bounds (l, u: INTEGER)
 			-- Set the bounds for special object inspection.
 		do
 			sp_lower := l;
@@ -341,7 +341,7 @@ feature -- Special object properties
 invariant
 	object_address_attached: object_address /= Void and then not object_address.is_void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

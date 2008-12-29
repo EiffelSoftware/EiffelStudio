@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compiled class TUPLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,12 +21,12 @@ create
 
 feature -- Status report
 
-	is_tuple: BOOLEAN is True
+	is_tuple: BOOLEAN = True
 			-- Current class is TUPLE.
 
 feature -- Actual class type
 
-	actual_type: TUPLE_TYPE_A is
+	actual_type: TUPLE_TYPE_A
 			-- Actual type of the class
 		local
 			i, count: INTEGER
@@ -58,7 +58,7 @@ feature -- Actual class type
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -84,7 +84,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

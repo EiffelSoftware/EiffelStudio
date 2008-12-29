@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Access to all common button groups used in EiffelStudio dialogs.
 		Note: Use {ES_SHARED_DIALOG_BUTTONS} to access a shared instance. If you are using {ES_DIALOG} as a base
@@ -175,7 +175,7 @@ feature -- Result id's
 			Result := 0b1111
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Shared attributes specific to the flat/short form."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 
 feature -- Value
 
-	feature_clause_order: ARRAY [STRING] is
+	feature_clause_order: ARRAY [STRING]
 		do
 			Result := feature_clause_order_preference.value
 		end
 
-	excluded_indexing_items: ARRAY [STRING] is
+	excluded_indexing_items: ARRAY [STRING]
 		do
 			Result := excluded_indexing_items_preference.value
 		end
@@ -43,12 +43,12 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	feature_clause_order_string: STRING is "interface.development_window.feature_clause_order"
-	excluded_indexing_items_string: STRING is "tools.context_tool.excluded_indexing_items"
+	feature_clause_order_string: STRING = "interface.development_window.feature_clause_order"
+	excluded_indexing_items_string: STRING = "tools.context_tool.excluded_indexing_items"
 
 feature {NONE} -- Defaults
 
-	default_feature_clause_order: ARRAY [STRING] is
+	default_feature_clause_order: ARRAY [STRING]
 			--
 		once
 			Result := <<"Initialization","Access","Measurement","Comparison","Status report","Status setting","Cursor movement","Element change","Removal","Resizing","Transformation","Conversion","Duplication","Miscellaneous","Basic operations","Obsolete","Inapplicable","Implementation","*">>
@@ -56,7 +56,7 @@ feature {NONE} -- Defaults
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
@@ -75,7 +75,7 @@ invariant
 	feature_clause_order_preference_not: feature_clause_order_preference /= Void
 	excluded_indexing_items_preferencenot_void: excluded_indexing_items_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

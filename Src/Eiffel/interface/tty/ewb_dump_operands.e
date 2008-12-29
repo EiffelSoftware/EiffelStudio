@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dumps operands of a feature to stdout."
@@ -28,13 +28,13 @@ create
 
 feature {NONE} -- Properties
 
-	associated_cmd: E_FEATURE_CMD is
+	associated_cmd: E_FEATURE_CMD
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
 		end
 
-	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
+	process_feature (e_feature: E_FEATURE; e_class: CLASS_C)
 			-- Process `e_feature' defined in `e_class'.
 		local
 			gs: EIFFEL_LIST [FORMAL_DEC_AS]
@@ -95,7 +95,7 @@ feature {NONE} -- Properties
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

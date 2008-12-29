@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_creation_expr_b (Current)
@@ -35,7 +35,7 @@ feature -- Register
 	register: REGISTRABLE
 			-- Where the temporary result is stored
 
-	get_register is
+	get_register
 			-- Get a register
 		do
 			create {REGISTER} register.make (Reference_c_type)
@@ -46,7 +46,7 @@ feature -- Register
 
 feature -- C code generation
 
-	enlarged: CREATION_EXPR_B is
+	enlarged: CREATION_EXPR_B
 			-- Enlarge current_node
 		local
 			l_type: CL_TYPE_A
@@ -81,7 +81,7 @@ feature -- C code generation
 
 feature -- Analyze
 
-	analyze is
+	analyze
 			-- Analyze creation node
 		local
 			l_call: like call
@@ -111,7 +111,7 @@ feature -- Analyze
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Unanalyze creation code
 		local
 			l_call: like call
@@ -134,30 +134,30 @@ feature -- Analyze
 
 feature -- Status report
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Does current node include a call?
 		do
 			Result := call /= Void
 		end
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 			-- Current always allocates memory.
 
-	is_single: BOOLEAN is
+	is_single: BOOLEAN
 			-- True if no call after inline object creation or if call
 			-- `is_single'.
 		do
 			Result := call = Void or else call.is_single
 		end
 
-	is_simple_expr: BOOLEAN is
+	is_simple_expr: BOOLEAN
 			-- True if no call after inline object creation or if call
 			-- `is_simple_expr'.
 		do
 			Result := call = Void or else call.is_simple_expr
 		end
 
-	is_type_fixed: BOOLEAN is
+	is_type_fixed: BOOLEAN
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 		do
@@ -178,7 +178,7 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number where construct begins in the Eiffel source.
 
-	nested_b: NESTED_BL is
+	nested_b: NESTED_BL
 			-- Create a fake nested so that `call.is_first' is False.
 		do
 			create Result
@@ -188,7 +188,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_info (i: like info) is
+	set_info (i: like info)
 			-- Assign `i' to `info'.
 		require
 			i_not_void: i /= Void
@@ -198,7 +198,7 @@ feature -- Settings
 			info_set: info = i
 		end
 
-	set_call (c: like call) is
+	set_call (c: like call)
 			-- Assign `c' to `call'. `c' maybe Void in case of call
 			-- to `default_create' from ANY.
 		do
@@ -207,7 +207,7 @@ feature -- Settings
 			call_set: call = c
 		end
 
-	set_creation_instruction (v: BOOLEAN) is
+	set_creation_instruction (v: BOOLEAN)
 			-- Set `is_creation_instruction' to `v'.
 		do
 			is_creation_instruction := v
@@ -215,7 +215,7 @@ feature -- Settings
 			is_creation_instruction_set: is_creation_instruction = v
 		end
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 			-- Assign `lnr' to `line_number'.
 		do
 			line_number := lnr
@@ -223,7 +223,7 @@ feature -- Settings
 			line_number_set: line_number = lnr
 		end
 
-	set_type (t: like type) is
+	set_type (t: like type)
 			-- Assign `t' to `type'.
 		require
 			t_not_void: t /= Void
@@ -235,7 +235,7 @@ feature -- Settings
 
 feature -- Comparisons
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			creation_expr_b: CREATION_EXPR_B
@@ -251,7 +251,7 @@ feature -- Type info
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate C code for creation expression
 		local
 			buf: GENERATION_BUFFER
@@ -325,7 +325,7 @@ feature -- Generation
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 				-- Inlining will not be done if the feature
 				-- has a creation instruction
@@ -334,7 +334,7 @@ feature -- Inlining
 
 feature {BYTE_NODE_VISITOR} -- Assertion support
 
-	is_special_call_valid: BOOLEAN is
+	is_special_call_valid: BOOLEAN
 			-- Is current creation call a call to SPECIAL.make?
 		do
 			Result := call /= Void and then call.parameters /= Void and then
@@ -345,7 +345,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 				call.parameters.count = 1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

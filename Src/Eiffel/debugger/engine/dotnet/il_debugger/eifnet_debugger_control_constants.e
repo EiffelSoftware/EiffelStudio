@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used in stepping contexte"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,17 +14,17 @@ feature {NONE} -- Value
 --	Cst_step_range_next: INTEGER is 1
 --	Cst_step_range_into: INTEGER is 2
 	
-	Cst_control_continue: INTEGER is 1
-	Cst_control_stop: INTEGER is 2
-	Cst_control_kill: INTEGER is 3
-	Cst_control_step_next: INTEGER is 5
-	Cst_control_step_into: INTEGER is 6
-	Cst_control_step_out: INTEGER is 7
-	Cst_control_nothing: INTEGER is 9
+	Cst_control_continue: INTEGER = 1
+	Cst_control_stop: INTEGER = 2
+	Cst_control_kill: INTEGER = 3
+	Cst_control_step_next: INTEGER = 5
+	Cst_control_step_into: INTEGER = 6
+	Cst_control_step_out: INTEGER = 7
+	Cst_control_nothing: INTEGER = 9
 
 feature {NONE} -- stepping name
 
-	control_mode_to_string (a_mode: INTEGER): STRING is
+	control_mode_to_string (a_mode: INTEGER): STRING
 		do
 			inspect a_mode 
 --			when Cst_step_range_next then Result := "RangeNext"
@@ -41,7 +41,7 @@ feature {NONE} -- stepping name
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

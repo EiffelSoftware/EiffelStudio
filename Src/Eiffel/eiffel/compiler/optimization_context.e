@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- keep track of the optimization context for the current loop
@@ -10,7 +10,7 @@ create
 
 feature
 
-	make (a, s: like array_desc) is
+	make (a, s: like array_desc)
 		do
 			array_desc := a;
 			safe_array_desc := s
@@ -24,17 +24,17 @@ feature
 
 	generated_offsets: like array_desc
 
-	set_generated_array_desc (g: like array_desc) is
+	set_generated_array_desc (g: like array_desc)
 		do
 			generated_array_desc := g
 		end;
 
-	set_generated_offsets (g: like array_desc) is
+	set_generated_offsets (g: like array_desc)
 		do
 			generated_offsets := g
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

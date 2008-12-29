@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction of a dependance between a feature and Current"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,14 +39,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c_id: INTEGER; f: FEATURE_I) is
+	make (c_id: INTEGER; f: FEATURE_I)
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences.
 		do
 			make_with_level (c_id, f, 0)
 		end
 
-	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16) is
+	make_with_level (c_id: INTEGER; f: FEATURE_I; a_context: NATURAL_16)
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences in a given context.
 		do
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_no_dead_code (c_id: INTEGER; r_id: INTEGER) is
+	make_no_dead_code (c_id: INTEGER; r_id: INTEGER)
 			-- Creation of a depend unit with just a `routine_id'
 			-- cannot be used during dead code removal
 		do
@@ -81,14 +81,14 @@ feature {NONE} -- Initialization
 			internal_flags := 0
 		end
 
-	make_expanded_unit (c_id: INTEGER) is
+	make_expanded_unit (c_id: INTEGER)
 			-- Creation for special depend unit for expanded in local clause.
 		do
 			class_id := c_id
 			internal_flags := is_special_flag
 		end
 
-	make_creation_unit (c_id: INTEGER) is
+	make_creation_unit (c_id: INTEGER)
 			-- Creation for special depend unit for creation instruction with implicit creation routine
 			-- in case of expanded classes.
 		do
@@ -113,20 +113,20 @@ feature -- Access
 	internal_flags: NATURAL_16
 			-- Flags to store some info about current unit.
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is Current an external feature?
 		do
 			Result := internal_flags & is_external_flag = is_external_flag
 		end
 
-	is_special: BOOLEAN is
+	is_special: BOOLEAN
 			-- Is `Current' a special depend_unit, i.e. used
 			-- for propagations
 		do
 			Result := internal_flags & is_special_flag = is_special_flag
 		end
 
-	is_needed_for_dead_code_removal: BOOLEAN is
+	is_needed_for_dead_code_removal: BOOLEAN
 			-- Is `Current' needed for dead code removal?
 			-- True if not used in assertions (and no assertions
 			-- are kept) and not marked as special.
@@ -146,7 +146,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: DEPEND_UNIT): BOOLEAN is
+	is_less alias "<" (other: DEPEND_UNIT): BOOLEAN
 			-- Is `other' greater than Current ?
 		local
 			l_id, l_oid: INTEGER
@@ -168,14 +168,14 @@ feature -- Comparison
 			end
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `other' and `Current' equal?
 		do
 			Result := class_id = other.class_id and rout_id = other.rout_id and
 				internal_flags = other.internal_flags
 		end
 
-	same_as (other: DEPEND_UNIT): BOOLEAN is
+	same_as (other: DEPEND_UNIT): BOOLEAN
 			-- Does `other' and `Current' correspond to the same routine?
 			-- Used to find callers of a routine.
 		do
@@ -184,25 +184,25 @@ feature -- Comparison
 
 feature {NONE} -- Implementation: flags
 
-	is_external_flag: NATURAL_16 is 0x0001
-	is_special_flag: NATURAL_16 is 0x0002
+	is_external_flag: NATURAL_16 = 0x0001
+	is_special_flag: NATURAL_16 = 0x0002
 
-	is_in_assertion_mask: NATURAL_16 is 0x003C
+	is_in_assertion_mask: NATURAL_16 = 0x003C
 
 feature -- Flags
 
-	is_in_require_flag: NATURAL_16 is 0x0004
-	is_in_check_flag: NATURAL_16 is 0x0008
-	is_in_ensure_flag: NATURAL_16 is 0x0010
-	is_in_invariant_flag: NATURAL_16 is 0x0020
+	is_in_require_flag: NATURAL_16 = 0x0004
+	is_in_check_flag: NATURAL_16 = 0x0008
+	is_in_ensure_flag: NATURAL_16 = 0x0010
+	is_in_invariant_flag: NATURAL_16 = 0x0020
 
-	is_in_assignment_flag: NATURAL_16 is 0x0040
-	is_in_creation_flag: NATURAL_16 is 0x0080
+	is_in_assignment_flag: NATURAL_16 = 0x0040
+	is_in_creation_flag: NATURAL_16 = 0x0080
 			-- Mask used for internal property.
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("Class id: ")
 			io.error.put_integer (class_id)
@@ -213,7 +213,7 @@ feature -- Debug
 
 feature {NONE} -- Debug
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Display info about current routine.
 		local
 			l_class: CLASS_C
@@ -235,7 +235,7 @@ feature {NONE} -- Debug
 invariant
 	valid_class_id: class_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

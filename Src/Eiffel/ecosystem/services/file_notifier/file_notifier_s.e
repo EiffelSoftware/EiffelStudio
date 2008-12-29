@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Service interface for working with files and recieving notification regarding changes to those files.
 		
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `file_notifier_connection'.
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

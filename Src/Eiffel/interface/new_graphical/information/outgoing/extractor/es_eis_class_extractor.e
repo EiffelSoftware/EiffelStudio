@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS entries extractor from a class."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like class_i) is
+	make (a_class: like class_i)
 			-- Initialize with `a_class'.
 			-- The extractor returns all EIS enties in the given class.
 		do
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			extract
 		end
 
-	make_with_location (a_location: like location; a_class: like class_i) is
+	make_with_location (a_location: like location; a_class: like class_i)
 			-- Initialize with `a_class' and `a_location'.
 			-- `a_location' indicates the extractor only return EIS entries containing
 			-- `a_location'.
@@ -69,7 +69,7 @@ feature -- Querry
 
 feature {NONE} -- Implementation
 
-	extract is
+	extract
 			-- Perform extracting
 			-- If the information is up-to-date, read cached info from storage.
 		local
@@ -126,7 +126,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	real_extract (a_computed_id: !STRING) is
+	real_extract (a_computed_id: !STRING)
 			-- Perform real extract from the class text.
 			-- Register result into storage.
 		local
@@ -148,7 +148,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	probe_ast (a_ast: !CLASS_AS) is
+	probe_ast (a_ast: !CLASS_AS)
 			-- Probes an AST root node to locate and scavenge any help context information.
 		local
 			l_indexing_clauses: !DS_ARRAYED_LIST [INDEXING_CLAUSE_AS]
@@ -230,7 +230,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Formatting
 
-	extract_enties_from_index_clause (a_clause: !INDEXING_CLAUSE_AS; a_for_feature: BOOLEAN) is
+	extract_enties_from_index_clause (a_clause: !INDEXING_CLAUSE_AS; a_for_feature: BOOLEAN)
 			-- Extract entries from indexing clause into `eis_entries'.
 		local
 			l_id: like eis_class_id
@@ -254,7 +254,7 @@ feature {NONE} -- Formatting
 			end
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

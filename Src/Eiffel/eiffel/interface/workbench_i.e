@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of the workbench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -72,7 +72,7 @@ feature -- Attributes
 	backup_counter: INTEGER
 			-- Number of recompilations using backups
 
-	universe_defined: BOOLEAN is
+	universe_defined: BOOLEAN
 			-- Has the universe been defined?
 		do
 			Result := universe /= Void
@@ -80,7 +80,7 @@ feature -- Attributes
 			defined: Result implies universe /= Void
 		end
 
-	system_defined: BOOLEAN is
+	system_defined: BOOLEAN
 			-- Has the system been defined?
 			-- (Yes, if the Ace file has been
 			-- parsed).
@@ -90,7 +90,7 @@ feature -- Attributes
 			defined: Result implies system /= Void
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Is the last compilation successful?
 		do
 			if system_defined then
@@ -100,7 +100,7 @@ feature -- Attributes
 
 feature -- Update
 
-	set_lace (a_lace: like lace) is
+	set_lace (a_lace: like lace)
 			-- Set `lace' to `a_lace'.
 		require
 			a_lace_not_void: a_lace /= Void
@@ -110,7 +110,7 @@ feature -- Update
 			lace_set: lace = a_lace
 		end
 
-	set_changed is
+	set_changed
 			-- Set `is_changed' to true.
 		do
 			is_changed := True
@@ -118,7 +118,7 @@ feature -- Update
 			is_changed: is_changed
 		end
 
-	unset_changed is
+	unset_changed
 			-- Set `is_changed' to false.
 		do
 			is_changed := False
@@ -128,7 +128,7 @@ feature -- Update
 
 feature -- Update from retrieved object.
 
-	update_from_retrieved_project (other: like Current) is
+	update_from_retrieved_project (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		require
@@ -149,7 +149,7 @@ feature -- Update from retrieved object.
 
 feature -- Additional properties
 
-	is_already_compiled: BOOLEAN is
+	is_already_compiled: BOOLEAN
 			-- Has project already been compiled at least once?
 		do
 			Result := compilation_counter > 1
@@ -162,7 +162,7 @@ feature -- Additional properties
 	is_compiling: BOOLEAN
 			-- Is the project being compiled?
 
-	is_in_stable_state: BOOLEAN is
+	is_in_stable_state: BOOLEAN
 			-- Is project in such a state that one can manipulate the project settings,
 			-- add new classes, search for classes,...
 		do
@@ -171,13 +171,13 @@ feature -- Additional properties
 			is_in_stable_state_implies_ready: Result implies is_universe_ready
 		end
 
-	is_universe_ready: BOOLEAN is
+	is_universe_ready: BOOLEAN
 			-- Is project in such a state that one can search for classes/clusters/libraries.
 		do
 			Result := system_defined and then last_reached_degree <= 5
 		end
 
-	last_reached_degree: INTEGER is
+	last_reached_degree: INTEGER
 			-- What is the lowest degree that was reached during last compilation?
 			-- Or what is the current degree if `is_compiling'?
 			-- Warning: it might not have been completed!
@@ -191,7 +191,7 @@ feature -- Additional properties
 
 feature -- Conveniences
 
-	set_system (s: like system) is
+	set_system (s: like system)
 			-- Assign `s' to `system'.
 		require
 			valid_s: s /= Void
@@ -205,7 +205,7 @@ feature -- Conveniences
 			names_heap_set: names_heap = system.names
 		end
 
-	set_compilation_started is
+	set_compilation_started
 			-- Assign `True' to `has_compilation_started'.
 		do
 			has_compilation_started := True
@@ -213,7 +213,7 @@ feature -- Conveniences
 			has_compilation_started_set: has_compilation_started
 		end
 
-	set_precompiled_directories (directories: like precompiled_directories) is
+	set_precompiled_directories (directories: like precompiled_directories)
 			-- Set `precompiled_directories' to `directories'.
 		require
 			directories_not_void: directories /= Void
@@ -223,7 +223,7 @@ feature -- Conveniences
 			assigned: precompiled_directories = directories
 		end
 
-	set_precompiled_driver (pd: like precompiled_driver) is
+	set_precompiled_driver (pd: like precompiled_driver)
 			-- Set `precompiled_driver' to `pd'.
 		do
 			precompiled_driver := pd
@@ -231,7 +231,7 @@ feature -- Conveniences
 			assigned: precompiled_driver = pd
 		end
 
-	set_melted_file_name (update_file_name: like melted_file_name) is
+	set_melted_file_name (update_file_name: like melted_file_name)
 			-- Set `melted_file_name' to `upate_file_name'.
 		do
 			if update_file_name /= Void and then not update_file_name.is_empty then
@@ -244,7 +244,7 @@ feature -- Conveniences
 			reset: melted_file_name = Void implies (update_file_name = Void or else update_file_name.is_empty)
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- A project has just been loaded.
 			-- Initialize `Current' accordingly.
 		do
@@ -254,7 +254,7 @@ feature -- Conveniences
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize the workbench.
 			-- (Do not create system until the
 			-- first compilation).
@@ -276,7 +276,7 @@ feature -- Initialization
 
 feature -- Commands
 
-	process_actions (an_actions: ARRAYED_LIST [CONF_ACTION]) is
+	process_actions (an_actions: ARRAYED_LIST [CONF_ACTION])
 			-- Process pre/post compilation actions.
 		require
 			an_actions_not_void: an_actions /= Void
@@ -333,7 +333,7 @@ feature -- Commands
 			end
 		end
 
-	recompile is
+	recompile
 			-- Incremental recompilation
 		local
 			retried: INTEGER
@@ -470,7 +470,7 @@ feature -- Commands
 			end
 		end
 
-	save_project (was_precompiling: BOOLEAN) is
+	save_project (was_precompiling: BOOLEAN)
 			-- Save project after a successful compilation.
 		do
 				-- FIXME: We don't purge the system when precompiling, because of a
@@ -494,7 +494,7 @@ feature -- Commands
 			end
 		end
 
-	change_class (cl: CLASS_I) is
+	change_class (cl: CLASS_I)
 			-- Change a class of the system.
 		require
 			good_argument: cl /= Void
@@ -509,7 +509,7 @@ feature -- Commands
 			Degree_5.insert_new_class (cl.compiled_class)
 		end
 
-	change_all_new_classes is
+	change_all_new_classes
 			-- Record all the classes in the universe as
 			-- changed (for compilation using `ANY' as root class)
 		local
@@ -530,7 +530,7 @@ feature -- Commands
 			end
 		end
 
-	add_class_to_recompile (cl: CLASS_I) is
+	add_class_to_recompile (cl: CLASS_I)
 			-- Recompile the class but do not do the parsing
 		require
 			good_argument: cl /= Void
@@ -555,7 +555,7 @@ feature -- Commands
 
 feature -- Directory creation
 
-	create_data_directory is
+	create_data_directory
 			-- Create the subdirectory for data storage.
 		local
 			d: DIRECTORY
@@ -570,7 +570,7 @@ feature -- Directory creation
 
 feature -- Automatic backup
 
-	create_backup_directory is
+	create_backup_directory
 			-- Create the subdirectory for backup `backup_counter'
 		local
 			d: DIRECTORY
@@ -588,7 +588,7 @@ feature -- Automatic backup
 			end
 		end
 
-	backup_subdirectory: DIRECTORY_NAME is
+	backup_subdirectory: DIRECTORY_NAME
 			-- Current backup subdirectory
 		local
 			temp: STRING
@@ -600,14 +600,14 @@ feature -- Automatic backup
 			Result.extend (temp)
 		end
 
-	backup_info_file_name: FILE_NAME is
+	backup_info_file_name: FILE_NAME
 			-- File where info about the compilation is saved
 		do
 			create Result.make_from_string (backup_subdirectory)
 			Result.set_file_name (Backup_info)
 		end
 
-	save_starting_backup_info is
+	save_starting_backup_info
 			-- Save the information about this compilation
 		local
 			file: PLAIN_TEXT_FILE
@@ -636,7 +636,7 @@ feature -- Automatic backup
 			new_session := False
 		end
 
-	save_ending_backup_info is
+	save_ending_backup_info
 			-- Save the information about the status of this compilation
 		local
 			file: PLAIN_TEXT_FILE
@@ -658,7 +658,7 @@ feature -- Automatic backup
 
 feature {E_PROJECT} -- Status update
 
-	start_compilation is
+	start_compilation
 			-- Warn the interface that a new compilation is beginning.
 		do
 			is_compiling := True
@@ -666,7 +666,7 @@ feature {E_PROJECT} -- Status update
 			Eiffel_project.Manager.on_project_compiles
 		end
 
-	stop_compilation is
+	stop_compilation
 			-- Warn the interface that a compilation is over.
 		do
 			is_compiling := False
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 	not_actions_successful: BOOLEAN;
 			-- Was there a problem during running the pre and post compile actions?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

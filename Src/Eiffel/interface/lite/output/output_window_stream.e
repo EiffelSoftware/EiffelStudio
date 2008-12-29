@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output windows for use within compiler for redirecting to a stream"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file_stream) is
+	make (a_file: like file_stream)
 			-- Initialize output window with file `a_file'
 		require
 			a_file_attached: a_file /= Void
@@ -29,17 +29,17 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 		do
 			file_stream.put_string (s)
 		end
 
-	put_new_line is
+	put_new_line
 		do
 			file_stream.put_new_line
 		end
 
-	put_char (c: CHARACTER) is
+	put_char (c: CHARACTER)
 		do
 			file_stream.put_character (c)
 		end
@@ -53,7 +53,7 @@ invariant
 	file_stream_attached: file_stream /= Void
 	file_stream_is_open_write: file_stream.is_open_write
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

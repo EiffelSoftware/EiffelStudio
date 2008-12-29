@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SELECTION_LIST
@@ -41,7 +41,7 @@ create
 
 feature -- Selection
 
-	process_selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
+	process_selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE)
 			-- Process Feature selected in the list.
 		require
 			not is_empty
@@ -141,13 +141,13 @@ end;
 			end
 		end;
 
-	Routine_id_counter: ROUTINE_COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER
 			-- Routine id counter
 		once
 			Result := System.routine_id_counter;
 		end;
 
-	parent_selection (parents: PARENT_LIST): FEATURE_I is
+	parent_selection (parents: PARENT_LIST): FEATURE_I
 			-- Return selected feature of `Current'.
 		require
 			has_multiple_features: count > 1
@@ -212,7 +212,7 @@ end;
 			end
 		end
 
-	one_body_only: BOOLEAN is
+	one_body_only: BOOLEAN
 			-- Is only one body id involved in the selection list?
 		require
 			not is_empty
@@ -236,7 +236,7 @@ end;
 			end
 		end;
 
-	same_parent_type: BOOLEAN is
+	same_parent_type: BOOLEAN
 			-- Are all the features coming from the same written type?
 		require
 			not is_empty;
@@ -284,7 +284,7 @@ end;
 
 		end;
 
-	unselect (a_info: INHERIT_INFO; new_t, old_t: FEATURE_TABLE; a_selected_rout_id_set: ROUT_ID_SET) is
+	unselect (a_info: INHERIT_INFO; new_t, old_t: FEATURE_TABLE; a_selected_rout_id_set: ROUT_ID_SET)
 			-- Process first unselected feature
 		require
 			good_arguments: a_info /= Void and new_t /= Void and old_t /= Void
@@ -374,7 +374,7 @@ end;
 
 feature -- Conceptual Replication
 
-	process_replication (old_t, new_t: FEATURE_TABLE) is
+	process_replication (old_t, new_t: FEATURE_TABLE)
 			-- Process conceptual replication. The only routines left under the
 			-- same routine_id will have different feature names. Hence, all
 			-- these features will be replicated.
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 
 feature -- Trace
 
-	trace is
+	trace
 			-- Debug purpose
 		do
 			from
@@ -469,7 +469,7 @@ end;
 				forth;
 			end;
 		end;
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

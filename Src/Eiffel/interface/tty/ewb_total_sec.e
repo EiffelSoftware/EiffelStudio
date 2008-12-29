@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Disables or Enables output of total amount of time in %
@@ -20,29 +20,29 @@ inherit
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING_32 is
+	real_help_message: STRING_32
 		once
 			Result := total_sec_help;
 		end;
 
-	tabs: STRING is
+	tabs: STRING
 		once
 			Result := "%T";
 		end;
 
-	column_name: STRING is
+	column_name: STRING
 		once
 			Result := "total";
 		end;
 
 feature -- Output string
 
-	abbrev_cmd_name: STRING is
+	abbrev_cmd_name: STRING
 		once
 			Result := "Total";
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

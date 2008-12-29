@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper class to manage metric loading and metric validity checking for tools"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	show_error_message (a_error_agent: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
+	show_error_message (a_error_agent: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
 			-- Show error message retrieved from `a_error_agent' if any in `a_window'.
 			-- And then clear error by calling `a_clear_error_agent'.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE [ANY, TUPLE]; a_window: EB_DEVELOPMENT_WINDOW) is
+	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE [ANY, TUPLE]; a_window: EB_DEVELOPMENT_WINDOW)
 			-- Display `a_msg' in status bar of `a_window'
 			-- And then call `a_agent'.
 		require
@@ -59,7 +59,7 @@ feature -- Access
 			a_window.status_bar.display_message ("")
 		end
 
-	metric_order_tester (a_metric, b_metric: EB_METRIC; a_sorting_order: INTEGER): BOOLEAN is
+	metric_order_tester (a_metric, b_metric: EB_METRIC; a_sorting_order: INTEGER): BOOLEAN
 			-- Tester to decide the order of `a_metric' and `b_metric' according to `a_sorting_order'
 		require
 			a_metric_attached: a_metric /= Void
@@ -88,7 +88,7 @@ feature -- Access
 			end
 		end
 
-	pixmap_from_metric (a_metric: EB_METRIC): EV_PIXMAP is
+	pixmap_from_metric (a_metric: EB_METRIC): EV_PIXMAP
 			-- Pixmap of `a_metric'
 		require
 			a_metric_attached: a_metric /= Void
@@ -114,7 +114,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	pixmap_from_unit (a_unit: QL_METRIC_UNIT): EV_PIXMAP is
+	pixmap_from_unit (a_unit: QL_METRIC_UNIT): EV_PIXMAP
 			-- Pixmap for metric unit `a_unit'
 		require
 			a_unit_attached: a_unit /= Void
@@ -125,7 +125,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_menu: EV_MENU is
+	metric_menu: EV_MENU
 			-- Menu cantaining all metrics
 		local
 			l_metric_table: HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
@@ -163,7 +163,7 @@ feature -- Access
 			end
 		end
 
-	unit_pixmap_table: HASH_TABLE [EV_PIXMAP, QL_METRIC_UNIT] is
+	unit_pixmap_table: HASH_TABLE [EV_PIXMAP, QL_METRIC_UNIT]
 			-- Table of pixmap for metric unit
 			-- Key is unit, value is pixmap for that unit.
 		once
@@ -183,7 +183,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]] is
+	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]]
 			-- List of units
 			-- The first argument in tuple is unit's name, the second is its pixmap.
 			-- If `a_all' is True, include compilation and ratio unit.
@@ -212,7 +212,7 @@ feature -- Access
 
 feature -- Domain item
 
-	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
+	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM
 			-- Metric domain item from `a_stone'
 		require
 			a_stone_attached: a_stone /= Void
@@ -245,7 +245,7 @@ feature -- Domain item
 			end
 		end
 
-	unit_name_table: HASH_TABLE [STRING_GENERAL, QL_METRIC_UNIT] is
+	unit_name_table: HASH_TABLE [STRING_GENERAL, QL_METRIC_UNIT]
 			-- Interface names for metric unit
 		once
 			create Result.make (12)
@@ -267,7 +267,7 @@ feature -- Domain item
 
 feature -- Status report
 
-	is_metric_validation_checked: CELL [BOOLEAN] is
+	is_metric_validation_checked: CELL [BOOLEAN]
 			-- Is validation of metrica checked?
 		once
 			create Result.put (False)
@@ -277,7 +277,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	load_metrics (a_force: BOOLEAN; a_msg: STRING_GENERAL; a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	load_metrics (a_force: BOOLEAN; a_msg: STRING_GENERAL; a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Load metrics is they are not already loaded.
 			-- If `a_force' is True, load metrics even thought they are already loaded.
 			-- When loading metrics, `a_msg' will be displayed in a dialog in `a_develop_window'.			
@@ -294,7 +294,7 @@ feature -- Basic Operations
 			end
 		end
 
-	check_metric_validation (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	check_metric_validation (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Check metric validation and display status message in `a_develop_window'.
 		require
 			a_develop_window_attached: a_develop_window /= Void
@@ -307,7 +307,7 @@ feature -- Basic Operations
 
 feature{NONE} -- Implementation
 
-	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG) is
+	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG)
 			-- Call `a_agent' and then hide `a_dialog'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -318,7 +318,7 @@ feature{NONE} -- Implementation
 			a_dialog.hide
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

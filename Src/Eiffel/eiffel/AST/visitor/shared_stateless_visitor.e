@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collection of stateless visitors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	clickable_info: AST_CLICKABLE_INFO_VISITOR is
+	clickable_info: AST_CLICKABLE_INFO_VISITOR
 			-- Visitor to get CLASS_I and feature names for CLICKABLE_AST nodes
 		once
 			create Result
@@ -18,7 +18,7 @@ feature -- Access
 			clickable_info_not_void: Result /= Void
 		end
 
-	clickable_generator: AST_CLICKABLE_VISITOR is
+	clickable_generator: AST_CLICKABLE_VISITOR
 			-- Visitor to generate a CLICK_LIST
 		once
 			create Result
@@ -26,7 +26,7 @@ feature -- Access
 			clickable_generator_not_void: Result /= Void
 		end
 
-	export_status_generator: AST_EXPORT_STATUS_GENERATOR is
+	export_status_generator: AST_EXPORT_STATUS_GENERATOR
 			-- Visitor to generate EXPORT_I instance from CLIENT_AS
 		once
 			create Result
@@ -34,7 +34,7 @@ feature -- Access
 			export_status_generator_not_void: Result /= Void
 		end
 
-	feature_i_generator: AST_FEATURE_I_GENERATOR is
+	feature_i_generator: AST_FEATURE_I_GENERATOR
 			-- Visitor to create FEATURE_I instance from FEATURE_AS
 		once
 			create Result
@@ -42,7 +42,7 @@ feature -- Access
 			feature_i_generator_not_void: Result /= Void
 		end
 
-	feature_checker: AST_FEATURE_CHECKER_GENERATOR is
+	feature_checker: AST_FEATURE_CHECKER_GENERATOR
 			-- Visitor to check code of a routine
 		once
 			create Result
@@ -50,7 +50,7 @@ feature -- Access
 			feature_checker_not_void: Result /= Void
 		end
 
-	locals_builder: AST_LOCALS_INFO is
+	locals_builder: AST_LOCALS_INFO
 			-- Visitor to build table of locals
 		once
 			create Result
@@ -58,7 +58,7 @@ feature -- Access
 			locals_builder_not_void: Result /= Void
 		end
 
-	type_a_checker: TYPE_A_CHECKER is
+	type_a_checker: TYPE_A_CHECKER
 			-- Visitor to check TYPE_A types.
 		once
 			create Result
@@ -66,7 +66,7 @@ feature -- Access
 			type_a_checker_not_void: Result /= Void
 		end
 
-	type_a_generator: AST_TYPE_A_GENERATOR is
+	type_a_generator: AST_TYPE_A_GENERATOR
 			-- Visitor to generate potentially unevaluated types.
 		once
 			create Result
@@ -74,13 +74,13 @@ feature -- Access
 			type_a_generator_not_void: Result /= Void
 		end
 
-	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY is
+	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY
 			-- Visitor for type output.
 		once
 			create Result
 		end
 
-	value_i_generator: AST_VALUE_I_GENERATOR is
+	value_i_generator: AST_VALUE_I_GENERATOR
 			-- Visitor to check types.
 		once
 			create Result
@@ -88,7 +88,7 @@ feature -- Access
 			value_i_generator_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

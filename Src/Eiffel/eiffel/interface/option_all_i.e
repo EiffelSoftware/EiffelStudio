@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,19 +12,19 @@ inherit
 
 feature -- Property
 
-	is_yes: BOOLEAN is True
+	is_yes: BOOLEAN = True
 
-	byte_code: CHARACTER is 'y'
+	byte_code: CHARACTER = 'y'
 
 feature -- Output
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate assertion value in `buffer'.
 		do
 			buffer.put_string ("(int16) 1")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

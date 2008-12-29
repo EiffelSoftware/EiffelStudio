@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Terminal window that redirects output to `io.error'."
@@ -17,22 +17,22 @@ inherit
 
 feature -- Output
 
-	put_string (s: STRING_GENERAL) is
+	put_string (s: STRING_GENERAL)
 		do
 			localized_print_error (s)
 		end;
 
-	put_new_line is
+	put_new_line
 		do
 			io.error.put_new_line
 		end;
 
-	put_char (c: CHARACTER_32) is
+	put_char (c: CHARACTER_32)
 		do
 			localized_print_error (create {STRING_32}.make_filled (c, 1))
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

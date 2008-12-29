@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Internal representation of class INTEGER
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: like original_class; n: INTEGER) is
+	make (l: like original_class; n: INTEGER)
 			-- Creation of basic class
 		require
 			good_argument: l /= Void
@@ -37,7 +37,7 @@ feature -- Property
 
 feature -- Access
 
-	actual_type: INTEGER_A is
+	actual_type: INTEGER_A
 			-- Actual integer type
 		do
 			inspect size
@@ -51,7 +51,7 @@ feature -- Access
 invariant
 	correct_size: size = 8 or size = 16 or size = 32 or size = 64
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

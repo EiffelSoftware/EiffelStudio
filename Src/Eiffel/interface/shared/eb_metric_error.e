@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric error class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_message: like message) is
+	make (a_message: like message)
 			-- Initialize `message' with `a_message'.
 		require
 			a_message_attached: a_message /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	file_location: STRING_GENERAL
 			-- File location if Current error occurs in a file
 
-	message_with_location: STRING_GENERAL is
+	message_with_location: STRING_GENERAL
 			-- `message' with `location' (if any)
 		local
 			l_str: STRING_32
@@ -68,7 +68,7 @@ feature -- Access
 	xml_location: TUPLE [column: INTEGER; row: INTEGER]
 			-- Location in xml file where Current error happened
 
-	xml_row: INTEGER is
+	xml_row: INTEGER
 			-- 	Row in `xml_location'.
 		require
 			xml_location_set: is_xml_location_set
@@ -76,7 +76,7 @@ feature -- Access
 			Result := xml_location.row
 		end
 
-	xml_column: INTEGER is
+	xml_column: INTEGER
 			-- 	Row in `xml_location'.
 		require
 			xml_location_set: is_xml_location_set
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_xml_location_set: BOOLEAN is
+	is_xml_location_set: BOOLEAN
 			-- Is `xml_location' set?
 			-- Not set if Current error is not related to xml file.
 		do
@@ -95,7 +95,7 @@ feature -- Status report
 			good_result: Result implies xml_location /= Void and then (not Result implies xml_location = Void)
 		end
 
-	is_file_location_set: BOOLEAN is
+	is_file_location_set: BOOLEAN
 			-- Is `file_location' set?
 		do
 			Result := file_location /= Void
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_message (a_message: like message) is
+	set_message (a_message: like message)
 			-- Set `message 'with `a_message'.
 		require
 			a_message_attached: a_message /= Void
@@ -113,7 +113,7 @@ feature -- Setting
 			message_set: message /= Void
 		end
 
-	set_location (a_location: like location) is
+	set_location (a_location: like location)
 			-- Set `location 'with `a_location'.
 		do
 			if a_location /= Void then
@@ -126,7 +126,7 @@ feature -- Setting
 						  (a_location = Void) implies location = Void
 		end
 
-	set_to_do (a_to_do: like to_do) is
+	set_to_do (a_to_do: like to_do)
 			-- Set `to_do' with `a_to_do'.
 		do
 			if a_to_do /= Void then
@@ -138,7 +138,7 @@ feature -- Setting
 			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies to_do /= Void)
 		end
 
-	set_file_location (a_file_location: like file_location) is
+	set_file_location (a_file_location: like file_location)
 			-- Set `file_location' with `a_file_location'.
 		do
 			if a_file_location = Void then
@@ -152,7 +152,7 @@ feature -- Setting
 				(a_file_location /= Void implies (file_location /= Void and then file_location.is_equal (a_file_location)))
 		end
 
-	set_xml_location (a_location: like xml_location) is
+	set_xml_location (a_location: like xml_location)
 			-- Set `xml_location' with `a_location'.
 		do
 			xml_location := a_location
@@ -163,7 +163,7 @@ feature -- Setting
 invariant
 	message_attached: message /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

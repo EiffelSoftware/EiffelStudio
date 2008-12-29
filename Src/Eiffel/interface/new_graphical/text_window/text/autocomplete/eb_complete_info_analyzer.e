@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code completion info analyzer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature -- Completion access
 			-- strings to be partially completed : the first one is the dot or tilda if there is one
 			-- the second one is the feature name to be completed
 
-	insertion_count: INTEGER is
+	insertion_count: INTEGER
 			-- length of the feature name to be completed
 		require
 			insertion_not_void: insertion /= Void
@@ -56,13 +56,13 @@ feature -- Completion access
 
 feature -- Basic operations
 
-	reset_completion_list is
+	reset_completion_list
 			-- Reset completion possibilities
 		do
 			completion_possibilities := Void
 		end
 
-	build_completion_list (a_current_token: EDITOR_TOKEN; a_pos_in_cursor: INTEGER) is
+	build_completion_list (a_current_token: EDITOR_TOKEN; a_pos_in_cursor: INTEGER)
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
 		require
@@ -251,19 +251,19 @@ feature -- Internal access
 
 	cp_index: INTEGER
 
-	Any_name: STRING is "ANY";
+	Any_name: STRING = "ANY";
 
-	current_pos_in_token: INTEGER is
+	current_pos_in_token: INTEGER
 			--
 		deferred
 		end
 
-	save_cursor_position is
+	save_cursor_position
 			--
 		deferred
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor_position
 			--
 		deferred
 		end
@@ -281,7 +281,7 @@ feature {NONE} -- Private Status
 
 	build_overload_list: BOOLEAN
 
-	extend_types_has_renaming (a_type_set: TYPE_SET_A): BOOLEAN is
+	extend_types_has_renaming (a_type_set: TYPE_SET_A): BOOLEAN
 			-- Do renamings exist in `a_type_set'?
 		local
 			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
@@ -301,7 +301,7 @@ feature {NONE} -- Private Status
 			end
 		end
 
-	search_renamed_features_from_generics (a_type_set: TYPE_SET_A): HASH_TABLE [INTEGER, INTEGER] is
+	search_renamed_features_from_generics (a_type_set: TYPE_SET_A): HASH_TABLE [INTEGER, INTEGER]
 			-- Search renamed features from generics.
 		require
 			current_class_c_not_void: current_class_c /= Void
@@ -346,7 +346,7 @@ feature {NONE} -- Private Status
 
 feature -- Class names completion
 
-	build_class_completion_list (a_token: EDITOR_TOKEN) is
+	build_class_completion_list (a_token: EDITOR_TOKEN)
 			-- create the list of completion possibilities for the position
 			-- associated with `cursor'
 		require
@@ -442,17 +442,17 @@ feature -- Class names completion
 
 feature {NONE} -- Implementation
 
-	go_to_left_position is
+	go_to_left_position
 			--
 		deferred
 		end
 
-	cursor_token: EDITOR_TOKEN is
+	cursor_token: EDITOR_TOKEN
 			-- Token at cursor position
 		deferred
 		end
 
-	class_c_to_complete_from (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_pos_in_text: INTEGER; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): LIST[CLASS_C] is
+	class_c_to_complete_from (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_pos_in_text: INTEGER; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): LIST[CLASS_C]
 			-- Class type to complete on from `token'
 		local
 			prev_token: EDITOR_TOKEN
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_feature_to_completion_possibilities (feat: E_FEATURE) is
+	add_feature_to_completion_possibilities (feat: E_FEATURE)
 			-- add the signature of `feat' to `completion_possibilities'
 		require
 			completion_possibilities_not_void: completion_possibilities /= Void
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_add_feature (feat: E_FEATURE) is
+	internal_add_feature (feat: E_FEATURE)
 			-- Internal add feat to `completion_possibilities'
 		require
 			feat_not_void: feat /= Void
@@ -815,7 +815,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_upper_required (a_feat: E_FEATURE): BOOLEAN is
+	is_upper_required (a_feat: E_FEATURE): BOOLEAN
 			-- Did user configured his system to have once and constants with an upper case?
 		require
 			a_feat_not_void: a_feat /= Void
@@ -823,7 +823,7 @@ feature {NONE} -- Implementation
 			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
-	matches (str, pat: STRING): BOOLEAN is
+	matches (str, pat: STRING): BOOLEAN
 			-- Is `pat' the beginning of `str'?
 		require
 			valid_strings: str /= Void and pat /= Void
@@ -849,7 +849,7 @@ feature {NONE} -- Implementation
 			Result = str.substring (1, pat.count).is_equal (pat)
 		end
 
-	external_features (cl: CLASS_C): ARRAYED_LIST [E_FEATURE] is
+	external_features (cl: CLASS_C): ARRAYED_LIST [E_FEATURE]
 			-- List of the external features of `cl'.
 		require
 			valid_class: cl /= Void
@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_in_overload_feature (a_class: CLASS_C) is
+	build_in_overload_feature (a_class: CLASS_C)
 			-- Build overload features in possibilities.
 		require
 			a_class_not_void: a_class /= Void
@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_in_completion_possibilities (name: EB_NAME_FOR_COMPLETION) is
+	insert_in_completion_possibilities (name: EB_NAME_FOR_COMPLETION)
 			--
 		require
 			name /= Void
@@ -956,7 +956,7 @@ feature {NONE} -- Implementation
 			cp_index := cp_index + 1
 		end
 
-	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME] is
+	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
 			a_token_not_void: a_token /= Void
@@ -1028,7 +1028,7 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void implies (Result.feat_as /= Void and Result.name /= Void)
 		end
 
-	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
+	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN
 			-- Is "feature" preceeding current position ?
 		local
 			line: EDITOR_LINE
@@ -1079,7 +1079,7 @@ feature {NONE} -- Implementation
 			current_line := line
 		end
 
-	parenthesized_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
+	parenthesized_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN
 			-- Is feature call made on parenthesized expression?  If so determine type of parenthesized expression and put in
 			-- `found_class'.  If cannot evaluate expression `found_class' will be Void.
 		local
@@ -1144,7 +1144,7 @@ feature {NONE} -- Implementation
             end
 		end
 
-	add_precursor_possibilities (a_class: CLASS_AS; a_feature: FEATURE_AS) is
+	add_precursor_possibilities (a_class: CLASS_AS; a_feature: FEATURE_AS)
 			-- Extend completion possiblities with appliable Precursors.
 		require
 			a_class_attached: a_class /= Void
@@ -1281,7 +1281,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_named_tuple_generics (a_type: NAMED_TUPLE_TYPE_A) is
+	add_named_tuple_generics (a_type: NAMED_TUPLE_TYPE_A)
 			-- Add named tuple generics to completion possibilities.
 		require
 			a_type_not_void: a_type /= Void
@@ -1307,7 +1307,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_generics_creation_list (a_class_c: CLASS_C) is
+	add_generics_creation_list (a_class_c: CLASS_C)
 			-- Add constrained generics creation to completion possiblities.
 		local
 			l_generics: EIFFEL_LIST [FORMAL_DEC_AS]
@@ -1343,7 +1343,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_insertion (token: EDITOR_TOKEN) is
+	calculate_insertion (token: EDITOR_TOKEN)
 			--
 		local
 			prev_token: EDITOR_TOKEN
@@ -1450,7 +1450,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tokens_of_type_a (a_type: TYPE_A; a_feature: FEATURE_I): LIST [EDITOR_TOKEN] is
+	tokens_of_type_a (a_type: TYPE_A; a_feature: FEATURE_I): LIST [EDITOR_TOKEN]
 			-- Tokens of type a
 		require
 			a_type_not_void: a_type /= Void
@@ -1463,7 +1463,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	class_token_of_name (a_name: STRING): EDITOR_TOKEN_CLASS is
+	class_token_of_name (a_name: STRING): EDITOR_TOKEN_CLASS
 			-- Class token of `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -1489,7 +1489,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	add_renaming_to_completion_possibilities (a_feat: E_FEATURE; a_type_set: TYPE_SET_A; a_extended_class: CLASS_C) is
+	add_renaming_to_completion_possibilities (a_feat: E_FEATURE; a_type_set: TYPE_SET_A; a_extended_class: CLASS_C)
 			-- Renamed feature from feature.
 			-- a_type_set is flattened.
 		require
@@ -1556,7 +1556,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

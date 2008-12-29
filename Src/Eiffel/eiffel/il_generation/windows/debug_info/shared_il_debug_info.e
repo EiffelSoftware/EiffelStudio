@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Info shared by all IL_DEBUG_INFO_XYZ objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	Il_debug_info: IL_DEBUG_INFO is
+	Il_debug_info: IL_DEBUG_INFO
 			-- Common information about System used by IL_DEBUG_INFO_XYZ objects
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

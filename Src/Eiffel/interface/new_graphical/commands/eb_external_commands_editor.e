@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command that lets the user add new external commands to the tools menus"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		local
 			i: INTEGER
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			enable_displayed
 		end
 
-	loaded: CELL [BOOLEAN] is
+	loaded: CELL [BOOLEAN]
 			-- Has `Current' already loaded the preferences?
 		once
 			create Result.put (False)
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	menus: LIST [EB_COMMAND_MENU_ITEM] is
+	menus: LIST [EB_COMMAND_MENU_ITEM]
 			-- Create a list of menu items that represent the list of external commands.
 		local
 			i: INTEGER
@@ -86,13 +86,13 @@ feature -- Status report
 			end
 		end
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND] is
+	commands: ARRAY [EB_EXTERNAL_COMMAND]
 			-- Array of external commands.
 		once
 			create Result.make (0, 9)
 		end
 
-	accelerators: ARRAY [EV_ACCELERATOR] is
+	accelerators: ARRAY [EV_ACCELERATOR]
 			-- Accelerators for `commands'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -114,42 +114,42 @@ feature -- Status report
 			Result_attached: Result /= Void
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.tool_external_commands_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.tool_external_commands_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
 		end
 
-	name: STRING is "External commands"
+	name: STRING = "External commands"
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Pop up help on the toolbar button.
 		do
 			Result := Interface_names.l_manage_external_commands
 		end
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is Current command executable?
 			-- (True by default)
 		do
 			Result := is_sensitive
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -158,7 +158,7 @@ feature -- Status report
 			Result.set_tooltip (tooltip)
 		end
 
-	list_exists: BOOLEAN is
+	list_exists: BOOLEAN
 			-- Does `list' exist?
 		do
 			Result := list /= Void
@@ -166,7 +166,7 @@ feature -- Status report
 
 feature -- Actions
 
-	on_shortcut_change (i: INTEGER) is
+	on_shortcut_change (i: INTEGER)
 			-- Action to be performed when shortcut for an external command changes
 		require
 			i_valid: i >= 0 and i <= 9
@@ -180,7 +180,7 @@ feature -- Actions
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Pop up a dialog that lets the user customize external commands.
 		do
 			if dialog = Void then
@@ -192,7 +192,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_command_at_position (a_pos: INTEGER) is
+	execute_command_at_position (a_pos: INTEGER)
 			-- Execute command at position `a_pos'.
 		require
 			a_pos_valid: a_pos >=0 and a_pos <= 9
@@ -202,7 +202,7 @@ feature -- Basic operations
 			end
 		end
 
-	refresh_list is
+	refresh_list
 			-- Rebuild the list of available commands.
 		require
 			list_exists: list_exists
@@ -227,14 +227,14 @@ feature -- Basic operations
 
 feature{ES_CONSOLE_TOOL_PANEL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
 
-	refresh_list_from_outside is
+	refresh_list_from_outside
 			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL
 		do
 			if list /= Void then
 				refresh_list
 			end
 		end
-	update_menus_from_outside is
+	update_menus_from_outside
 			-- Update external menu items from EB_EXTERNAL_OUTPUT_TOOL
 		do
 			update_menus
@@ -262,7 +262,7 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	create_dialog is
+	create_dialog
 			-- Initialize all widgets and build `dialog'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy_dialog is
+	destroy_dialog
 			-- Free all widgets.
 		local
 			i: INTEGER
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_edit_buttons is
+	update_edit_buttons
 			-- Update the sensitivity of the buttons that alter the list.
 		require
 			initialized: list /= Void
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_command is
+	add_command
 			-- Create a new command.
 		require
 			dialog_exists: dialog /= Void and then not dialog.is_destroyed
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			shortcut_manager.update_external_commands
 		end
 
-	edit_command is
+	edit_command
 			-- Edit an existing command.
 		require
 			dialog_exists: list /= Void and dialog /= Void and not dialog.is_destroyed
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			dialog.set_focus
 		end
 
-	delete_command is
+	delete_command
 			-- Delete an existing command.
 		require
 			dialog_exists: list /= Void and dialog /= Void and not dialog.is_destroyed
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			external_output_manager.synchronize_command_list (Void)
 		end
 
-	on_key (k: EV_KEY) is
+	on_key (k: EV_KEY)
 			-- A key was pressed in the list. Process it.
 		do
 			if k.code = {EV_KEY_CONSTANTS}.Key_delete then
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_menus is
+	update_menus
 			-- Refresh the 'tools' menus of all development windows.
 		local
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name of `Current' as it appears in menus.
 		do
 			Result := interface_names.m_Edit_external_commands
@@ -482,7 +482,7 @@ feature {NONE} -- Properties
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

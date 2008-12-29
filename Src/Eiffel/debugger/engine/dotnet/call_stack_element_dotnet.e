@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about a call in the calling stack."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,7 @@ create {EIFFEL_CALL_STACK}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id) is
+	make (level: INTEGER; tid: like thread_id)
 		do
 			Precursor (level, tid)
 			private_body_index := -1
@@ -79,7 +79,7 @@ feature -- Filling
 			melted: BOOLEAN; a_address: DBG_ADDRESS;
 			a_dyn_type: CLASS_TYPE;
 			a_feature: FEATURE_I;
-			a_il_offset: INTEGER; a_line_number: INTEGER) is
+			a_il_offset: INTEGER; a_line_number: INTEGER)
 		local
 			l_routine: E_FEATURE
 		do
@@ -131,7 +131,7 @@ feature -- Filling
 
 feature -- Cleaning
 
-	clean is
+	clean
 			-- Clean stored data
 		do
 -- FIXME jfiat 2004-07-07 : seems to cause issue regarding ref
@@ -158,13 +158,13 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 			-- Chain and Frame index used to be able to refresh
 			-- the icd_chain and icd_frame values
 
-	set_chain_frame_indexes (vc, vf: INTEGER) is
+	set_chain_frame_indexes (vc, vf: INTEGER)
 		do
 			chain_index := vc
 			frame_index := vf
 		end
 
-	refresh_icd_data is
+	refresh_icd_data
 			-- Refresh the icd_chain and icd_frame values
 		local
 			l_active_thread: ICOR_DEBUG_THREAD
@@ -213,7 +213,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 			end
 		end
 
-	fresh_icd_il_frame: ICOR_DEBUG_IL_FRAME is
+	fresh_icd_il_frame: ICOR_DEBUG_IL_FRAME
 			-- Fresh ICorDebugILFrame value.
 		do
 			Result := icd_frame.query_interface_icor_debug_il_frame
@@ -240,7 +240,7 @@ feature -- Properties
 
 feature -- Current object
 
-	current_object: EIFNET_ABSTRACT_DEBUG_VALUE is
+	current_object: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Current object value
 		do
 			Result := private_current_object
@@ -250,7 +250,7 @@ feature -- Current object
 			end
 		end
 
-	set_private_current_object (c: like private_current_object) is
+	set_private_current_object (c: like private_current_object)
 			-- Set current object value
 			-- without initializing the full stack...
 		do
@@ -259,7 +259,7 @@ feature -- Current object
 
 feature -- Dotnet Properties
 
-	dotnet_class_token: NATURAL_32 is
+	dotnet_class_token: NATURAL_32
 			--
 		do
 			if not dotnet_initialized then
@@ -268,7 +268,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_class_token
 		end
 
-	dotnet_feature_token: NATURAL_32 is
+	dotnet_feature_token: NATURAL_32
 			--
 		do
 			if not dotnet_initialized then
@@ -277,7 +277,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_feature_token
 		end
 
-	dotnet_module_name: STRING is
+	dotnet_module_name: STRING
 			--
 		do
 			if not dotnet_initialized then
@@ -286,7 +286,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_module_name
 		end
 
-	dotnet_module_filename: STRING is
+	dotnet_module_filename: STRING
 			--
 		do
 			if not dotnet_initialized then
@@ -297,7 +297,7 @@ feature -- Dotnet Properties
 
 feature -- Stack reset
 
-	reset_stack is
+	reset_stack
 			-- <Precursor>
 		do
 			Precursor
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation Properties
 
 feature {NONE} -- Implementation
 
-	initialize_dotnet_info is
+	initialize_dotnet_info
 			--
 		local
 			l_function: ICOR_DEBUG_FUNCTION
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	initialize_stack_for_current_object is
+	initialize_stack_for_current_object
 		local
 			cobj: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_stack_for_arguments is
+	initialize_stack_for_arguments
 		local
 			l_count			: INTEGER
 			value			: ABSTRACT_DEBUG_VALUE
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_stack_for_locals is
+	initialize_stack_for_locals
 		require
 			initialized_current_object
 		local
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_stack is
+	initialize_stack
 		do
 			initialize_stack_for_current_object
 			initialize_stack_for_arguments
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 						and initialized_locals
 		end
 
-	internal_current_object: EIFNET_ABSTRACT_DEBUG_VALUE  is
+	internal_current_object: EIFNET_ABSTRACT_DEBUG_VALUE
 		require
 			icd_frame /= Void
 		local
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
+	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 		require
 			icd_frame /= Void
 		local
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_local_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
+	internal_local_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			-- Return list of Value for local var,
 			-- including the Result if there is one, in this case
 			-- this will be the first value
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM; a_enum_elts: INTEGER): LIST [EIFNET_ABSTRACT_DEBUG_VALUE] is
+	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM; a_enum_elts: INTEGER): LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 		require
 			a_enum /= Void
 		local
@@ -802,7 +802,7 @@ invariant
 --				not private_locals.is_empty
 --	valid_level: level_in_stack >= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

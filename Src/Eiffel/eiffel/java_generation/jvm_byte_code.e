@@ -1,4 +1,4 @@
-indexing
+note
 	description: "a chunk of java byte code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,12 +30,12 @@ feature {ANY}
 
 feature {ANY}
 			
-	set_constant_pool (cp: CONSTANT_POOL) is
+	set_constant_pool (cp: CONSTANT_POOL)
 		do
 			constant_pool := cp
 		end
 			
-	put_class (cpi: INTEGER pos: INTEGER) is
+	put_class (cpi: INTEGER pos: INTEGER)
 			-- put class identified with constant pool index `cpi' at
 			-- position `pos'
 		require
@@ -46,14 +46,14 @@ feature {ANY}
 			put_uint_16_from_int (cpi, pos)
 		end
 			
-	append_class (cpi: INTEGER) is
+	append_class (cpi: INTEGER)
 		require
 			valid_cpi: cpi > 0
 		do
 			append_uint_16_from_int (cpi)
 		end
 	
-	append_class_by_type_id (a_type_id: INTEGER) is
+	append_class_by_type_id (a_type_id: INTEGER)
 		require
 			constant_pool_not_void: constant_pool /= Void
 			constant_pool_open: constant_pool.is_open
@@ -73,7 +73,7 @@ feature {ANY}
 			append_class (constant_pool.class_type_id_to_cpe.item (a_type_id))
 		end
 			
-	append_class_by_name (name: STRING) is
+	append_class_by_name (name: STRING)
 			-- appends an cpe index in the byte code pointing to a class 
 			-- named `name'. CPE Entry will be created if not yet existant.
 		require
@@ -85,14 +85,14 @@ feature {ANY}
 			append_class (constant_pool.last_cpe_index)
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		require
 			constant_pool_closed: constant_pool /= Void implies constant_pool.is_closed
 		do
 			ca_store ($area, position - 1, file.file_pointer)
 		end
 			
-	append_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER) is
+	append_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER)
 		require
 			constant_pool_not_void: constant_pool /= Void
 			constant_pool_open: constant_pool.is_open
@@ -103,7 +103,7 @@ feature {ANY}
 			append_feature (constant_pool.last_cpe_index)
 		end
 			
-	append_feature_by_object (f: JVM_WRITTEN_FEATURE) is
+	append_feature_by_object (f: JVM_WRITTEN_FEATURE)
 		require
 			constant_pool_not_void: constant_pool /= Void
 			constant_pool_open: constant_pool.is_open
@@ -113,14 +113,14 @@ feature {ANY}
 			append_feature (constant_pool.last_cpe_index)
 		end
 									
-	append_feature (cpi: INTEGER) is
+	append_feature (cpi: INTEGER)
 		require
 			valid_cpi: cpi > 0
 		do
 			append_uint_16_from_int (cpi)
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Match list server for a class indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Access
 
-	item (an_id: INTEGER): LEAF_AS_LIST is
+	item (an_id: INTEGER): LEAF_AS_LIST
 			-- Retrieve object.
 		local
 			l_class: CLASS_C
@@ -86,13 +86,13 @@ feature -- Access
 			retry
 		end
 
-	cache: CACHE [LEAF_AS_LIST] is
+	cache: CACHE [LEAF_AS_LIST]
 			-- Cache to speedup
 		once
 			create Result.make
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Does the server have the matchlist for `an_id'?
 		do
 			Result := stored_has (an_id)
@@ -104,10 +104,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER = 500;
 			-- Size of a HASH_TABLE' block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for precompiled systems that are not compatible."
@@ -23,7 +23,7 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Precompiled path: ");
 			a_text_formatter.add (path);
@@ -32,13 +32,13 @@ feature -- Output
 
 feature {PRECOMP_R} -- Setting
 
-	set_path (s: STRING) is
+	set_path (s: STRING)
 			-- Assign `s' to `path'.
 		do
 			path := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric validity visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_manager: EB_METRIC_MANAGER) is
+	make (a_manager: EB_METRIC_MANAGER)
 			-- Initialize `metric_manager' with `a_manager'.
 		do
 			metric_manager := a_manager
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_delayed_validity_function (a_function: like delayed_validity_function) is
+	set_delayed_validity_function (a_function: like delayed_validity_function)
 			-- Set `delayed_validity_function' with `a_function'.
 		do
 			delayed_validity_function := a_function
@@ -58,7 +58,7 @@ feature -- Setting
 			delayed_validity_function_set: delayed_validity_function = a_function
 		end
 
-	remove_error is
+	remove_error
 			-- Set `has_error' to False, set `last_error' to Void.
 		do
 			set_last_error (Void)
@@ -67,7 +67,7 @@ feature -- Setting
 			last_error_set: last_error = Void
 		end
 
-	reset is
+	reset
 			-- Reset current validator to default status
 		do
 			remove_error
@@ -79,7 +79,7 @@ feature -- Setting
 
 feature -- Validate
 
-	check_metric_validity (a_metric: EB_METRIC; a_force: BOOLEAN) is
+	check_metric_validity (a_metric: EB_METRIC; a_force: BOOLEAN)
 			-- Process `a_metric' to see if it is valid.
 			-- If `a_force' is True, recheck validity for `a_metric' even if it has been checked.
 		require
@@ -96,7 +96,7 @@ feature -- Validate
 			end
 		end
 
-	check_validity (a_item: EB_METRIC_VISITABLE) is
+	check_validity (a_item: EB_METRIC_VISITABLE)
 			-- Check validity for `a_item' and store result in `last_error'.
 			-- `last_error' is Void means `a_item' is valid, or it contains detailed error information.
 		require
@@ -111,7 +111,7 @@ feature -- Validate
 
 feature{NONE} -- Process
 
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
+	process_basic_metric (a_basic_metric: EB_METRIC_BASIC)
 			-- Process `a_basic_metric'.
 			-- A basic metric is valid if and only if:
 			-- 		* scope of all criteria must be the same as the metric's unit
@@ -151,7 +151,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 			-- A linear metric is valid if and only if:
 			--		* there must be at least one sub metric
@@ -226,7 +226,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 			-- A ratio metric is valid if and only if:
 			--		* numerator and denomerator metric are valid
@@ -296,7 +296,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
+	process_criterion (a_criterion: EB_METRIC_CRITERION)
 			-- Process `a_criterion'.
 			-- A criterion is valid if it is registered.
 		local
@@ -322,7 +322,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 			-- A domain criterion is valid if and only if:
 			--		* it is a registered criterion
@@ -340,7 +340,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.
 			-- A caller/callee criterion is valid if and only if:
 			--		* it is a registered criterion
@@ -350,7 +350,7 @@ feature{NONE} -- Process
 			process_domain_criterion (a_criterion)
 		end
 
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 			-- A supplier/client criterion is valid if and only if:
 			--		* it is a registered criterion
@@ -360,7 +360,7 @@ feature{NONE} -- Process
 			process_domain_criterion (a_criterion)
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 			-- A text criterion is valid if and only if
 			--		* it's a registered criterion
@@ -374,7 +374,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 			-- A path criterion is valid if and only if:
 			--		* it's a registered criterion
@@ -385,7 +385,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
+	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION)
 			-- Process `a_criterion'.
 			-- A normal criterion is valid if and only if:
 			--		* it's a registered criterion
@@ -395,7 +395,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION)
 			-- Process `a_criterion'.
 		do
 			if not has_error then
@@ -405,7 +405,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 			-- A value criterion is valid if and only if:
 			--		* metric name is specified and that metric is valid.
@@ -451,7 +451,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION)
 			-- Process `a_criterion'.
 		do
 			if not has_error then
@@ -462,19 +462,19 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
+	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
 		end
 
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
+	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
 		end
 
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
+	process_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		do
 			if not has_error then
@@ -484,7 +484,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
+	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			check last_domain_item_error_retriever /= Void end
@@ -498,13 +498,13 @@ feature{NONE} -- Process
 			location_stack.remove
 		end
 
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			-- Nothing to be done here.
 		end
 
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Process `a_item'.
 			-- A group domain item is valid if and only if:
 			--		* the group it represents exists in current system
@@ -516,7 +516,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Process `a_item'.
 			-- A folder domain item is valid if and only if:
 			--		* the folder it represents exists in current system
@@ -528,7 +528,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Process `a_item'.
 			-- A class domain item is valid if and only if:
 			--		* the class it represents exists in current system		
@@ -540,7 +540,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Process `a_item'.
 			-- A feature domain item is valid if and only if:
 			--		* the feature it represents exists in current system
@@ -552,7 +552,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Process `a_item'.
 		local
 			l_error: EB_METRIC_ERROR
@@ -565,17 +565,17 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		do
 		end
 
-	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 		end
 
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER)
 			-- Process `a_item'.
 		local
 			l_item: TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator_name: INTEGER]
@@ -600,12 +600,12 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 			if not has_error then
@@ -618,7 +618,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER)
 			-- Process `a_item'.
 			-- An external command tester is valid if and only if:
 			-- 	* If input is redirected to file, a file is specified
@@ -685,7 +685,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has error?
 		do
 			Result := last_error /= Void
@@ -693,7 +693,7 @@ feature -- Status report
 
 feature{NONE} -- Status report
 
-	is_metric_validity_checked (a_metric_name: STRING): BOOLEAN is
+	is_metric_validity_checked (a_metric_name: STRING): BOOLEAN
 			-- Is validity of metric named `a_metric_name' checked?
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -712,7 +712,7 @@ feature{NONE} -- Status report
 
 feature{NONE} -- Implementation
 
-	detect_recursive (a_metric: EB_METRIC) is
+	detect_recursive (a_metric: EB_METRIC)
 			-- Detect recursive difinitoin of `current_metric'.
 		require
 			a_metric_attached: a_metric /= Void
@@ -747,7 +747,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	create_last_error (a_msg: STRING_GENERAL) is
+	create_last_error (a_msg: STRING_GENERAL)
 			-- Create `last_error' with message `a_msg' and set `has_error' with True.
 		require
 			a_msg_attached: a_msg /= Void
@@ -759,7 +759,7 @@ feature{NONE} -- Implementation
 			last_error_created: last_error /= Void
 		end
 
-	create_last_error_with_to_do (a_msg: STRING_GENERAL; a_to_do: STRING_GENERAL) is
+	create_last_error_with_to_do (a_msg: STRING_GENERAL; a_to_do: STRING_GENERAL)
 			-- Create `last_error' with message `a_msg', `a_location', `a_to_do'.
 		require
 			a_msg_attached: a_msg /= Void
@@ -769,7 +769,7 @@ feature{NONE} -- Implementation
 			last_error.set_to_do (a_to_do)
 		end
 
-	last_metric: EB_METRIC is
+	last_metric: EB_METRIC
 			-- Last metric been checked
 		require
 			metric_stack_not_empty: not metric_stack.is_empty
@@ -782,7 +782,7 @@ feature{NONE} -- Implementation
 	last_criterion: EB_METRIC_CRITERION
 			-- Last analyzed criterion
 
-	check_metric_name (a_name: STRING) is
+	check_metric_name (a_name: STRING)
 			-- Check if `a_name' is a valid metric name.
 		do
 			if a_name = Void or else a_name.is_empty then
@@ -799,7 +799,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	test_metric (a_metric_name: STRING) is
+	test_metric (a_metric_name: STRING)
 			-- Test validity of metric named `a_metric_name'.
 			-- tests include existance, recursive definition.
 			-- If `a_metric_name' represents a valid metric, make that metric in `last_tested_metric'.
@@ -845,13 +845,13 @@ feature{NONE} -- Implementation
 	original_location_stack: like location_stack
 			-- Original location stack use to store `location_stack' when an error occurs.
 
-	store_location_stack is
+	store_location_stack
 			-- Store `location_stack' into `original_location_stack'.
 		do
 			original_location_stack := location_stack.duplicate (location_stack.count)
 		end
 
-	location: STRING_GENERAL is
+	location: STRING_GENERAL
 			-- Location of current error
 		require
 			has_error: has_error
@@ -899,7 +899,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	error_for_current_level: EB_METRIC_ERROR is
+	error_for_current_level: EB_METRIC_ERROR
 			-- Error for current level
 		require
 			has_error: has_error
@@ -911,7 +911,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	register_error_for_current_metric is
+	register_error_for_current_metric
 			-- Register `last_error' for top metric in `metric_stack'.
 		do
 			if has_error then
@@ -924,7 +924,7 @@ feature{NONE} -- Implementation
 	last_domain_item_error_retriever: FUNCTION [ANY, TUPLE [STRING_GENERAL, STRING_GENERAL], STRING_GENERAL]
 			-- Last error message retriever
 
-	set_last_domain_item_error_retriever (a_retriever: like last_domain_item_error_retriever) is
+	set_last_domain_item_error_retriever (a_retriever: like last_domain_item_error_retriever)
 			-- Set `last_domain_item_error_retriever' with `a_retriever'.
 		do
 			last_domain_item_error_retriever := a_retriever
@@ -932,7 +932,7 @@ feature{NONE} -- Implementation
 			last_domain_item_error_retriever_set: last_domain_item_error_retriever = a_retriever
 		end
 
-	raise_error_of_metric (a_metric_name: STRING) is
+	raise_error_of_metric (a_metric_name: STRING)
 			-- Raise error of metric named `a_metric_name' if any.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -953,7 +953,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	set_last_error (a_error: like last_error) is
+	set_last_error (a_error: like last_error)
 			-- Set `last_error' with `a_error'.
 		do
 			last_error := a_error
@@ -968,7 +968,7 @@ invariant
 	metric_stack_attached: metric_stack /= Void
 	error_table_attached: error_table /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

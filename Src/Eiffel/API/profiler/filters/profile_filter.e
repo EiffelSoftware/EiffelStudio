@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of a profile filter."
@@ -11,14 +11,14 @@ deferred class PROFILE_FILTER
 
 feature -- Checking
 
-	check_item (item: PROFILE_DATA): BOOLEAN is
+	check_item (item: PROFILE_DATA): BOOLEAN
 			-- Check if `item' matches values
 		require
 			no_ghosts: item /= Void
 		deferred
 		end
 
-	filter (input_set: PROFILE_SET): PROFILE_SET is
+	filter (input_set: PROFILE_SET): PROFILE_SET
 			-- Filter all input
 		require
 			filtering_is_allowed: filtering_is_allowed
@@ -26,36 +26,36 @@ feature -- Checking
 		deferred
 		end
 
-	filtering_is_allowed: BOOLEAN is
+	filtering_is_allowed: BOOLEAN
 			-- May `filter' be called?
 		deferred
 		end
 
 feature -- Adding
 
-	extend (new_filter: PROFILE_FILTER) is
+	extend (new_filter: PROFILE_FILTER)
 		deferred
 		end
 
 feature -- Value setting
 
-	set_operator (new_operator: STRING) is
+	set_operator (new_operator: STRING)
 		require
 			no_ghost_operator: new_operator /= Void
 		deferred
 		end
 
-	set_value (new_value: COMPARABLE) is
+	set_value (new_value: COMPARABLE)
 		deferred
 		end
 
-	set_value_range (lower, upper: COMPARABLE) is
+	set_value_range (lower, upper: COMPARABLE)
 		require
 			valid_interval: lower < upper;
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

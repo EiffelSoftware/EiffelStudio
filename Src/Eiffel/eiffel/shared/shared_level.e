@@ -1,49 +1,49 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_LEVEL 
 	
 feature {NONE}
 
-	Reference_level: INTEGER is 1
+	Reference_level: INTEGER = 1
 
-	Character_level: INTEGER is 2
+	Character_level: INTEGER = 2
 
-	Boolean_level: INTEGER is 3
+	Boolean_level: INTEGER = 3
 
-	natural_8_level: INTEGER is 4
+	natural_8_level: INTEGER = 4
 
-	Integer_8_level: INTEGER is 5
+	Integer_8_level: INTEGER = 5
 
-	natural_16_level: INTEGER is 6
+	natural_16_level: INTEGER = 6
 
-	Integer_16_level: INTEGER is 7
+	Integer_16_level: INTEGER = 7
 
-	Wide_char_level: INTEGER is 8
+	Wide_char_level: INTEGER = 8
 
-	natural_32_level: INTEGER is 9
+	natural_32_level: INTEGER = 9
 
-	Integer_32_level: INTEGER is 10
+	Integer_32_level: INTEGER = 10
 		
-	Real_32_level: INTEGER is 11
+	Real_32_level: INTEGER = 11
 
-	Pointer_level: INTEGER is 12
+	Pointer_level: INTEGER = 12
 
-	natural_64_level: INTEGER is 13
+	natural_64_level: INTEGER = 13
 
-	Integer_64_level: INTEGER is 14
+	Integer_64_level: INTEGER = 14
 
-	Real_64_level: INTEGER is 15
+	Real_64_level: INTEGER = 15
 
-	Bits_level: INTEGER is 16
+	Bits_level: INTEGER = 16
 
-	Expanded_level: INTEGER is 17
+	Expanded_level: INTEGER = 17
 
-	Formal_level: INTEGER is 18
+	Formal_level: INTEGER = 18
 
-	Level_count: INTEGER is 18;
+	Level_count: INTEGER = 18;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

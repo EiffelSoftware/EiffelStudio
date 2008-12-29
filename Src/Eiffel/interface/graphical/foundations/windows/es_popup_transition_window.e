@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A transitional popup window, to display something when switching between view states.
 	]"
@@ -315,7 +315,7 @@ feature {NONE} -- Internationalization
 
 	l_please_wait: STRING = "Please wait..."
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

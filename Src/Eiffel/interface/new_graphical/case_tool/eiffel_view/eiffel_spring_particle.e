@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an EG_SPRING_PARTICLE with seperate stiffnesses for inheritance and client links."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 create
 	make_with_particles
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

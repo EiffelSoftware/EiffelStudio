@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Dialog to handle exception handling ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ convert
 
 feature {NONE} -- User interface initialization
 
-	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -166,7 +166,7 @@ feature -- Widgets
 
 feature -- Change
 
-	set_handler (eh: DBG_EXCEPTION_HANDLER) is
+	set_handler (eh: DBG_EXCEPTION_HANDLER)
 			-- Set Associated exception handler	
 		require
 			eh_not_void: eh /= Void
@@ -175,7 +175,7 @@ feature -- Change
 			update
 		end
 
-	update is
+	update
 			-- Update grid
 		require
 			exception_handler_not_void: exception_handler /= Void
@@ -250,7 +250,7 @@ feature -- Change
 			end
 		end
 
-	add_row_from_data (elt: TUPLE [role: INTEGER; name: STRING]) is
+	add_row_from_data (elt: TUPLE [role: INTEGER; name: STRING])
 			-- Row associated to `elt'.
 		require
 			elt /= Void
@@ -299,7 +299,7 @@ feature -- Change
 			refresh_row (row, elt)
 		end
 
-	set_role_on_row (r: INTEGER; a_row: EV_GRID_ROW) is
+	set_role_on_row (r: INTEGER; a_row: EV_GRID_ROW)
 			-- Set role `r' on row `a_row'
 		local
 			lab: EV_GRID_LABEL_ITEM
@@ -313,7 +313,7 @@ feature -- Change
 			end
 		end
 
-	refresh_row	(a_row: EV_GRID_ROW; a_details: like role_pattern_from_row) is
+	refresh_row	(a_row: EV_GRID_ROW; a_details: like role_pattern_from_row)
 			-- Refresh `a_row'
 		local
 			t: like role_pattern_from_row
@@ -337,7 +337,7 @@ feature -- Change
 			end
 		end
 
-	activate_combo (ci: EV_GRID_COMBO_ITEM; a_dlg: EV_POPUP_WINDOW) is
+	activate_combo (ci: EV_GRID_COMBO_ITEM; a_dlg: EV_POPUP_WINDOW)
 			-- Activate combo grid item `ci'
 		local
 			t: STRING
@@ -362,7 +362,7 @@ feature -- Change
 			end
 		end
 
-	Status_id: ARRAY [STRING] is
+	Status_id: ARRAY [STRING]
 			-- Potential status ids
 		once
 			create Result.make ({DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
@@ -371,7 +371,7 @@ feature -- Change
 			Result.put ("Catch", {DBG_EXCEPTION_HANDLER}.Role_stop)
 		end
 
-	Status_pixmaps: ARRAY [EV_PIXMAP] is
+	Status_pixmaps: ARRAY [EV_PIXMAP]
 			-- Potential status ids pixmap
 		once
 			create Result.make ({DBG_EXCEPTION_HANDLER}.Role_disabled, {DBG_EXCEPTION_HANDLER}.Role_stop)
@@ -382,14 +382,14 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	row_selected (r: EV_GRID_ROW) is
+	row_selected (r: EV_GRID_ROW)
 		do
 			selected_row := r
 			selected_data ?= r.data
 			tf_pattern.set_text (selected_data)
 		end
 
-	row_deselected (r: EV_GRID_ROW) is
+	row_deselected (r: EV_GRID_ROW)
 		do
 			selected_row := Void
 			selected_data := Void
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 
 	selected_data: STRING
 
-	apply_changes is
+	apply_changes
 		local
 			r: INTEGER
 			t: like role_pattern_from_row
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			debugger_manager.set_catcall_detection_mode (not disable_catcall_console_warning_checkbox.is_selected, not disable_catcall_debugger_warning_checkbox.is_selected)
 		end
 
-	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING] is
+	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING]
 			-- Role,Pattern contained by `a_row' if any
 		require
 			a_row_not_void: a_row /= Void
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			Result := [r, l_pat]
 		end
 
-	row_for_pattern (s: STRING): EV_GRID_ROW is
+	row_for_pattern (s: STRING): EV_GRID_ROW
 			-- Grid row associated with `s'
 		local
 		do
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- events
 
-	ignore_external_exception is
+	ignore_external_exception
 			-- Ignore external exceptions
 		local
 			lst: DS_LIST [STRING]
@@ -500,13 +500,13 @@ feature {NONE} -- events
 			end
 		end
 
-	reset_filters is
+	reset_filters
 		do
 			exception_handler.wipe_out
 			update
 		end
 
-	on_del is
+	on_del
 		local
 			r: INTEGER
 		do
@@ -525,12 +525,12 @@ feature {NONE} -- events
 			end
 		end
 
-	on_add is
+	on_add
 		do
 			add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_disabled, tf_pattern.text.to_string_8])
 		end
 
-	on_reset is
+	on_reset
 			-- Called by `select_actions' of `reset_button'.	
 		do
 			reset_filters
@@ -538,7 +538,7 @@ feature {NONE} -- events
 			veto_close
 		end
 
-	on_apply is
+	on_apply
 			-- Called by `select_actions' of `ok_button'.
 		do
 			apply_changes
@@ -546,12 +546,12 @@ feature {NONE} -- events
 			veto_close
 		end
 
-	on_close is
+	on_close
 			-- Called by `select_actions' of `cancel_button'.
 		do
 		end
 
-	on_handling_changed is
+	on_handling_changed
 			-- Handling data changed
 		do
 			if handling_checkbox.is_selected then
@@ -570,19 +570,19 @@ feature {NONE} -- events
 
 feature {NONE} -- Helpers
 
-	extend_non_expandable_to (b: EV_BOX; w: EV_WIDGET) is
+	extend_non_expandable_to (b: EV_BOX; w: EV_WIDGET)
 			-- Extend `w' to `b', and disable expand
 		do
 			extend_to (b, w, False)
 		end
 
-	extend_expandable_to (b: EV_BOX; w: EV_WIDGET) is
+	extend_expandable_to (b: EV_BOX; w: EV_WIDGET)
 			-- Extend `w' to `b', and disable expand
 		do
 			extend_to (b, w, True)
 		end
 
-	extend_to (b: EV_BOX; w: EV_WIDGET; is_expandable: BOOLEAN) is
+	extend_to (b: EV_BOX; w: EV_WIDGET; is_expandable: BOOLEAN)
 			-- Extend `w' to `b', and keep expand enabled (default)
 		do
 			b.extend (w)
@@ -605,32 +605,32 @@ feature -- Access
 			Result := "Exceptions handler"
 		end
 
-	buttons: DS_SET [INTEGER] is
+	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			Result := dialog_buttons.reset_ok_cancel_buttons
 		end
 
-	default_button: INTEGER is
+	default_button: INTEGER
 			-- The dialog's default action button
 		once
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_cancel_button: INTEGER is
+	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		once
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_confirm_button: INTEGER is
+	default_confirm_button: INTEGER
 			-- The dialog's default confirm button
 		once
 			Result := dialog_buttons.reset_button
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

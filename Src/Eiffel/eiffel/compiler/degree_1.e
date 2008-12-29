@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degree 1 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -19,12 +19,12 @@ create
 
 feature -- Access
 
-	Degree_number: INTEGER is 1
+	Degree_number: INTEGER = 1
 			-- Degree number
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process Degree 1.
 			-- Melt the feature tables.
 			-- Open first the file for writing on disk melted feature
@@ -62,7 +62,7 @@ feature -- Processing
 
 feature -- Status report
 
-	has_class (a_class: CLASS_C): BOOLEAN is
+	has_class (a_class: CLASS_C): BOOLEAN
 			-- Does `a_class' need to be processed in Degree 1?
 		require
 			a_class_not_void: a_class /= Void
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		do
 			if not a_class.is_true_external and not a_class.degree_1_needed then
@@ -83,7 +83,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		do
 			if a_class.degree_1_needed then
@@ -92,7 +92,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
@@ -115,7 +115,7 @@ feature -- Removal
 			count := 0
 		end
 
-	transfer_to (a_degree: DEGREE) is
+	transfer_to (a_degree: DEGREE)
 			-- Transfer classes to `a_degree'.
 		require
 			a_degree_not_void: a_degree /= Void
@@ -144,7 +144,7 @@ feature -- Removal
 			wiped_out: is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

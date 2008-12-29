@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface of encoding converter with encoding detection."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Conversion
 
-	utf32_string (a_stream: STRING): STRING_32 is
+	utf32_string (a_stream: STRING): STRING_32
 			-- Detect encoding of `a_stream' and convert it into utf32.
 		require
 			a_stream_attached: a_stream /= Void
@@ -27,7 +27,7 @@ feature -- Detection
 		deferred
 		end
 
-	detect_encoding (a_str: ?STRING_GENERAL) is
+	detect_encoding (a_str: ?STRING_GENERAL)
 			-- Detect encoding of `a_str'
 		require
 			a_str_not_void: a_str /= Void
@@ -36,7 +36,7 @@ feature -- Detection
 			detected_encoding_attached: detected_encoding /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

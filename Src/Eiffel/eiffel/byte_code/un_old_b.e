@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class UN_OLD_B
@@ -14,7 +14,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_un_old_b (Current)
@@ -31,7 +31,7 @@ feature
 			--! will be interpretered, the interpreter will retrieve
 			--| the value from the local register.
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to position
 		do
 			position := i
@@ -40,13 +40,13 @@ feature
 	exception_position: INTEGER
 			-- Position of saved exception object in local declaration.
 
-	set_exception_position (i: INTEGER) is
+	set_exception_position (i: INTEGER)
 			-- Assign `i' to `exception_position'
 		do
 			exception_position := i
 		end
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Type of the expression
 		do
 			Result := expr.type;
@@ -62,7 +62,7 @@ feature
 			end
 		end
 
-	enlarged: UN_OLD_BL is
+	enlarged: UN_OLD_BL
 		require else
 			valid_old_exprs: Context.byte_code.old_expressions /= Void
 		local
@@ -76,12 +76,12 @@ feature
 
 feature -- Array optimization
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := expr.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			expr := expr.optimized_byte_node
@@ -89,19 +89,19 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			expr ?= expr.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

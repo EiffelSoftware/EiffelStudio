@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When breakpoint hits pause `delay' milliseconds ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_delay: INTEGER) is
+	make (a_delay: INTEGER)
 		do
 			delay := a_delay
 		end
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Change
 
-	set_delay (a_delay: like delay) is
+	set_delay (a_delay: like delay)
 			-- Set `delay' to `a_delay'
 		do
 			delay := a_delay
@@ -39,7 +39,7 @@ feature -- Change
 
 feature -- Execute
 
-	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		local
 			delay_ns: INTEGER_64
 		do
@@ -51,7 +51,7 @@ feature -- Execute
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

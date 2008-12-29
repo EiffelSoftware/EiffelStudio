@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a relation of inheritance for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature --Initialization
 
-	make (id: INTEGER; sub, super: XMI_CLASS) is
+	make (id: INTEGER; sub, super: XMI_CLASS)
 			-- Initialization of `Current'
 			-- assign `id' to `xmi_id'
 			-- adds `Current' in `generalizations` field of the two classes involved.
@@ -36,7 +36,7 @@ feature -- Access
 	supertype: XMI_CLASS
 			-- Class from which inherits `subtype'.
 
-	enclosing_group: CONF_GROUP is
+	enclosing_group: CONF_GROUP
 			-- If exists, common cluster of `subtype' and `supertype'
 			-- Void otherwise.
 		local
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Action
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the generalization.
 		do
 			Result := "<Foundation.Core.Generalization xmi.id = 'G."
@@ -79,7 +79,7 @@ feature -- Action
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

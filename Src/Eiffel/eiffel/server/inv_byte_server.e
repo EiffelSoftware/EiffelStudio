@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for invariants byte code indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	cache: CACHE [INVARIANT_B] is
+	cache: CACHE [INVARIANT_B]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	item (an_id: INTEGER): INVARIANT_B is
+	item (an_id: INTEGER): INVARIANT_B
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -37,7 +37,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	disk_item (an_id: INTEGER): INVARIANT_B is
+	disk_item (an_id: INTEGER): INVARIANT_B
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -47,14 +47,14 @@ feature -- Access
 			end
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is the id `an_id' present in `Tmp_inv_byte_server' or
 			-- Current ?
 		do
 			Result := Precursor (an_id) or else Tmp_inv_byte_server.has (an_id);
 		end;
 
-	remove (an_id: INTEGER_32) is
+	remove (an_id: INTEGER_32)
 			-- <Precursor>
 		do
 			tmp_inv_byte_server.remove (an_id)
@@ -63,13 +63,13 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

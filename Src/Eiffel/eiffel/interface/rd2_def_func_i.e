@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an replicated unselected deferred function"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,24 +15,24 @@ inherit
 
 feature
 
-	transfer_to (f: like Current) is
+	transfer_to (f: like Current)
 			-- Data transfer
 		do
 			Precursor {R_DEF_FUNC_I} (f);
 			f.set_access_in (access_in);
 		end;
 
-	transfer_from (f: like Current) is
+	transfer_from (f: like Current)
 			-- Data transfer
 		do
 			Precursor {R_DEF_FUNC_I} (f);
 			set_access_in (f.access_in);
 		end;
 
-	is_unselected: BOOLEAN is True;
+	is_unselected: BOOLEAN = True;
 			-- Is the feature a non-selected one ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

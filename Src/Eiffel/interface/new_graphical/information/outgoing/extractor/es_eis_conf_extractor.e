@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Extract possible information from a NOTE attributes in configuration file."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_notable: !CONF_NOTABLE) is
+	make (a_notable: !CONF_NOTABLE)
 			-- Initialize with `a_notable'.
 		do
 			notable := a_notable
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	extract is
+	extract
 			-- Perform extracting
 		local
 			l_notable: like notable
@@ -109,7 +109,7 @@ feature {NONE} -- Access
 	internal_eis_full_entries: like eis_full_entries;
 			-- Cached full entries
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

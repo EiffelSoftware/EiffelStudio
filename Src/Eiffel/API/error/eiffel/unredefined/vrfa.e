@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when argument name is also a feature name."
@@ -21,12 +21,12 @@ feature -- Properties
 	other_feature: E_FEATURE;
 			-- Argument name violating the VRFA rule
 
-	code: STRING is "VRFA";
+	code: STRING = "VRFA";
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Formal argument name: ");
 			a_text_formatter.add (other_feature.name);
@@ -49,14 +49,14 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_other_feature (f: FEATURE_I) is
+	set_other_feature (f: FEATURE_I)
 		require
 			valid_f: f /= Void
 		do
 			other_feature := f.api_feature (f.written_in)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,19 +21,19 @@ create
 
 feature -- Access
 
-	breakpoints_data_from_storage: BREAK_LIST is
+	breakpoints_data_from_storage: BREAK_LIST
 			-- Exceptions handler data from storage
 		do
 			Result ?= data_from_storage (breakpoints_data_filename)
 		end
 
-	exceptions_handler_data_from_storage: DBG_EXCEPTION_HANDLER is
+	exceptions_handler_data_from_storage: DBG_EXCEPTION_HANDLER
 			-- Exceptions handler data from storage
 		do
 			Result ?= data_from_storage (exceptions_handler_data_filename)
 		end
 
-	profiles_data_from_storage: DEBUGGER_PROFILES is
+	profiles_data_from_storage: DEBUGGER_PROFILES
 			-- Profiles data from storage
 		do
 			Result ?= data_from_storage (profiles_data_filename)
@@ -41,36 +41,36 @@ feature -- Access
 
 feature -- Filename
 
-	breakpoints_data_filename: STRING is
+	breakpoints_data_filename: STRING
 		do
 			Result := debugger_data_filename ("dbg-breakpoints")
 		end
 
-	exceptions_handler_data_filename: STRING is
+	exceptions_handler_data_filename: STRING
 		do
 			Result := debugger_data_filename ("dbg-exceptions-handler")
 		end
 
-	profiles_data_filename: STRING is
+	profiles_data_filename: STRING
 		do
 			Result := debugger_data_filename ("dbg-profiles")
 		end
 
 feature -- Write
 
-	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage) is
+	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage)
 			-- Breakpoints data to storage
 		do
 			data_to_storage (a_data, breakpoints_data_filename)
 		end
 
-	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage) is
+	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage)
 			-- Exceptions handler data to storage
 		do
 			data_to_storage (a_data, exceptions_handler_data_filename)
 		end
 
-	profiles_data_to_storage (a_data: like profiles_data_from_storage) is
+	profiles_data_to_storage (a_data: like profiles_data_from_storage)
 			-- Profiles data to storage
 		do
 			data_to_storage (a_data, profiles_data_filename)
@@ -78,7 +78,7 @@ feature -- Write
 
 feature {NONE} -- Implementation
 
-	debugger_data_filename (a_name: STRING): STRING is
+	debugger_data_filename (a_name: STRING): STRING
 		local
 			fn: FILE_NAME
 		do
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	base_debugger_data_filename: FILE_NAME is
+	base_debugger_data_filename: FILE_NAME
 		local
 			fn: FILE_NAME
 			l_ver: STRING_8
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	data_from_storage (a_fn: STRING): ANY is
+	data_from_storage (a_fn: STRING): ANY
 		local
 			l_file: RAW_FILE
 			l_sed_rw: SED_MEDIUM_READER_WRITER
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	data_to_storage (a_data: ANY; a_fn: STRING) is
+	data_to_storage (a_data: ANY; a_fn: STRING)
 			--
 		local
 			l_file: RAW_FILE
@@ -148,12 +148,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Sed_facilities: SED_STORABLE_FACILITIES is
+	Sed_facilities: SED_STORABLE_FACILITIES
 		once
 			create Result
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

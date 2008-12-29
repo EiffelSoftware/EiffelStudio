@@ -1,29 +1,29 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class OPTIMIZE_I 
 	
 feature 
 
-	is_yes: BOOLEAN is
+	is_yes: BOOLEAN
 			-- Is the option `yes' ?
 		do
 			-- Do nothing
 		end;
 
-	is_no: BOOLEAN is
+	is_no: BOOLEAN
 			-- Is the option `no' ?
 		do
 			-- Do nothing
 		end;
 
-	is_all: BOOLEAN is
+	is_all: BOOLEAN
 			-- Is the option `all' ?
 		do
 			-- Do nothing
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

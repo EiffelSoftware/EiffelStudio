@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when an expanded class has a creation clause %
@@ -19,16 +19,16 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER = 4;
 	
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Nothing to be done.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

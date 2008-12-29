@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface defining configuration options for AutoTest.
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Procedure call used as expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ feature -- Access
 
 	data_type_string: STRING = "Instruction used as expression: ";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

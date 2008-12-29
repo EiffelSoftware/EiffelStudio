@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of the invariant of a class which is internally stored%
 		%as a procedure"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature
 
-	make (a_class: CLASS_C) is
+	make (a_class: CLASS_C)
 		do
 			set_feature_name_id (Names_heap.internal_invariant_name_id, 0)
 			create rout_id_set.make
@@ -41,7 +41,7 @@ feature
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL code for current feature.
 		local
 			byte_code: INVARIANT_B
@@ -55,7 +55,7 @@ feature -- IL code generation
 
 feature -- Byte Code generation
 
-	melt (exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT)
 			-- Generate byte code for the current feature
 		local
 			byte_code: INVARIANT_B
@@ -77,19 +77,19 @@ feature -- Byte Code generation
 
 feature -- Access
 
-	is_invariant: BOOLEAN is True ;
+	is_invariant: BOOLEAN = True ;
 			-- This is the invariant feature of its class
 
 feature {NONE} -- Implementation
 
-	update_api (f: E_ROUTINE) is
+	update_api (f: E_ROUTINE)
 			-- <Precursor>
 		do
 			Precursor (f)
 			f.set_is_invariant (is_invariant)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

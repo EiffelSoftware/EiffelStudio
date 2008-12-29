@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a cluster in the cluster tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature -- Initialization
 
-	make (a_cluster: EB_SORTED_CLUSTER) is
+	make (a_cluster: EB_SORTED_CLUSTER)
 			-- Create a tree item representing `a_cluster'.
 		require
 			a_cluster_ok: a_cluster /= Void
@@ -49,7 +49,7 @@ feature -- Initialization
 			make_sub (a_cluster, "")
 		end
 
-	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING) is
+	make_sub (a_cluster: EB_SORTED_CLUSTER; a_path: STRING)
 			-- Create a tree item representing a subfolder of `a_cluster'.
 		require
 			a_path_ok: a_path /= Void
@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Access
 
-	stone: CLUSTER_STONE is
+	stone: CLUSTER_STONE
 			-- Cluster stone representing `data'.
 		local
 			l_group: CONF_GROUP
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_data (a_cluster: EB_SORTED_CLUSTER) is
+	set_data (a_cluster: EB_SORTED_CLUSTER)
 			-- Affect `a_cluster' to `data'.
 		local
 			l_group: CONF_GROUP
@@ -166,7 +166,7 @@ feature -- Status setting
 			name_set: name /= Void
 		end
 
-	add_class (a_class: CLASS_I) is
+	add_class (a_class: CLASS_I)
 			-- Add `a_class' to `Current' at its right place.
 		local
 			conv_class_item: EB_CLASSES_TREE_CLASS_ITEM
@@ -435,10 +435,10 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			expand_actions.wipe_out
 		end
 
-	cluster_separator: STRING is "/"
+	cluster_separator: STRING = "/"
 			-- Cluster sub path separator
 
-	on_class_drop (cstone: CLASSI_STONE) is
+	on_class_drop (cstone: CLASSI_STONE)
 			-- A class was dropped in `Current'.
 			-- Add corresponding class to `Current' via the cluster manager.
 		require
@@ -450,7 +450,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 			parent_tree.manager.move_class (actual.config_class, actual.group, data.actual_cluster, path)
 		end
 
-	on_cluster_drop (cluster: CLUSTER_STONE) is
+	on_cluster_drop (cluster: CLUSTER_STONE)
 			-- A cluster was dropped in `Current'.
 			-- Add `cluster' to `Current' via the cluster manager.
 		do
@@ -461,7 +461,7 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 
 feature -- Interactivity
 
-	associate_textable_with_classes (textable: EV_TEXT_COMPONENT) is
+	associate_textable_with_classes (textable: EV_TEXT_COMPONENT)
 			-- Recursively associate `textable' with sub-classes so they can write their names in `textable'.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -485,7 +485,7 @@ feature -- Interactivity
 			end
 		end
 
-	associate_with_window (a_window: EB_STONABLE) is
+	associate_with_window (a_window: EB_STONABLE)
 			-- Recursively associate `a_window' with sub-classes so they can call `set_stone' on `a_window'.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -508,7 +508,7 @@ feature -- Interactivity
 			end
 		end
 
-	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
 			-- Add `p' recursively to the list of actions associated with a double click in child classes.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -534,7 +534,7 @@ feature -- Interactivity
 			end
 		end
 
-	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]) is
+	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
 			-- Add `p' recursively to the list of actions associated with a double click in child clusters.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -565,7 +565,7 @@ feature -- Interactivity
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			Precursor {EB_CLASSES_TREE_ITEM}
@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 
 feature {EB_CLASSES_TREE} -- Implementation
 
-	fake_load is
+	fake_load
 			-- Load only one child, preferably a class (quicker to create).
 			-- This is needed to have allow for expansion if we have children.
 		local
@@ -637,7 +637,7 @@ feature {EB_CLASSES_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	physical_assembly_tooltip_text (a_assembly: CONF_PHYSICAL_ASSEMBLY): STRING is
+	physical_assembly_tooltip_text (a_assembly: CONF_PHYSICAL_ASSEMBLY): STRING
 			-- Generate tooltip text for `a_assembly'.
 		local
 			l_tmp: STRING
@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	tooltip_text: STRING is
+	tooltip_text: STRING
 			-- Generate tooltip text for `data' and `path'.
 		local
 			l_as: CONF_ASSEMBLY
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	droppable (a_pebble: ANY): BOOLEAN is
+	droppable (a_pebble: ANY): BOOLEAN
 			-- Can user drop `a_pebble' on `Current'?
 		local
 			cs: CLASSI_STONE
@@ -728,7 +728,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_groups (a_groups: DS_LIST [EB_SORTED_CLUSTER]) is
+	show_groups (a_groups: DS_LIST [EB_SORTED_CLUSTER])
 			-- Show `a_groups'.
 		require
 			a_groups_not_void: a_groups /= Void
@@ -762,7 +762,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	print_name is
+	print_name
 			-- Print class name in textable, the associated text component.
 		local
 			l_tmp: STRING
@@ -820,7 +820,7 @@ invariant
 	path_not_void: path /= Void
 	sub_elements_imply_initialized: not path.is_empty implies data.is_initialized
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

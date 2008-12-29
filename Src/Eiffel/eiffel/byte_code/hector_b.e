@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for an hector operator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: like expr) is
+	make (a: like expr)
 			-- Initialization
 		require
 			a_not_void: a /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			expr_set: expr = a
 		end
 
-	make_with_type (a: like expr; t: like type) is
+	make_with_type (a: like expr; t: like type)
 			-- Initialization
 		require
 			a_not_void: a /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_hector_b (Current)
@@ -60,7 +60,7 @@ feature -- Visitor
 
 feature -- Access
 
-	is_pointer: BOOLEAN is True
+	is_pointer: BOOLEAN = True
 			-- Does Current represent a dollar expression of type POINTER?
 			-- Always True in 5.4. In 5.5 it will be only True for converted
 			-- expression $x to POINTER. If of type TYPED_POINTER, then it
@@ -69,7 +69,7 @@ feature -- Access
 	expr: ACCESS_B
 			-- Access on which we do `$'.
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression's type
 		do
 			if is_pointer then
@@ -85,19 +85,19 @@ feature -- Access
 			type_not_void: type /= Void
 		end
 
-	enlarged: like Current is
+	enlarged: like Current
 			-- Enlarge the expression
 		do
 			expr := expr.enlarged
 			Result := Current
 		end
 
-	is_hector: BOOLEAN is True
+	is_hector: BOOLEAN = True
 			-- The expression is an hector one.
 
 feature -- Settings
 
-	set_is_pointer is
+	set_is_pointer
 			-- Set `is_pointer' to True.
 		do
 			 -- FIXME: Manu 09/20/2003: To remove when `is_pointer' is made
@@ -109,7 +109,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			context.init_propagation
@@ -122,7 +122,7 @@ feature -- Code generation
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Print expression value
 		local
 			buf: GENERATION_BUFFER
@@ -143,7 +143,7 @@ feature -- C code generation
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		do
 			if
@@ -160,22 +160,22 @@ feature -- C code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 		end
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 				-- We now return Current even if usually byte code contains an
 				-- HECTOR_B node cannot be inlined. This is to make the manual
@@ -184,13 +184,13 @@ feature -- Inlining
 			Result := Current
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
 		end
 
-	size: INTEGER is
+	size: INTEGER
 		do
 				-- We cannot inline a feature that contains an address
 				-- computation.
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 invariant
 	expr_not_void: expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

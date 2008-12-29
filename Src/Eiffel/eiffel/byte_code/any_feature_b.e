@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special calls to features of ANY for .NET code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,10 +19,10 @@ create
 
 feature {NONE} -- IL code generation
 
-	is_any_feature: BOOLEAN is True;
+	is_any_feature: BOOLEAN = True;
 			-- Is Current an instance of ANY_FEATURE_B?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared error handler for Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	error_handler: QL_ERROR_HANDLER is
+	error_handler: QL_ERROR_HANDLER
 			-- Shared Error handler
 		once
 			create Result.make
@@ -19,7 +19,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

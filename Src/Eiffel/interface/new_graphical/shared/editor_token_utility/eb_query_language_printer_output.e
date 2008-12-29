@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -14,14 +14,14 @@ inherit
 
 feature -- Status report
 
-	is_output_empty: BOOLEAN is
+	is_output_empty: BOOLEAN
 			-- Is output empty?
 		deferred
 		end
 
 feature -- Basic operations
 
-	initialize_last_output is
+	initialize_last_output
 			-- Initialize `last_output'.
 		deferred
 		ensure
@@ -30,7 +30,7 @@ feature -- Basic operations
 
 feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
-	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP) is
+	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP)
 			-- Process folder.
 			-- `a_name' is name of that folder, `a_path' is related path of that folder, such as "/abc/def".
 			-- `a_group' is the group where that folder is located.
@@ -41,7 +41,7 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 		deferred
 		end
 
-	process_dot_separator is
+	process_dot_separator
 			-- Process dot separator, i.e, put a dot in output.
 		deferred
 		end

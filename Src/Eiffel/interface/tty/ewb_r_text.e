@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays routine text in output_window."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_FEATURE_CMD is
+	associated_cmd: E_FEATURE_CMD
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 			-- (No associated cmd)
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
+	process_feature (e_feature: E_FEATURE; e_class: CLASS_C)
 			-- Process feature `e_feature' defined in `e_class'.
 		local
 			filter: TEXT_FILTER
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

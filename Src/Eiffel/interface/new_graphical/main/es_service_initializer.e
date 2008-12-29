@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An initialization provider to initialize all services used by the EiffelStudio and the Eiffel Compiler.
 	]"
@@ -78,7 +78,7 @@ feature {NONE} -- Code template cataloging
 
 feature {NONE} -- Test suite extension
 
-	register_test_suite_processors (a_service: !TEST_SUITE_S) is
+	register_test_suite_processors (a_service: !TEST_SUITE_S)
 			-- Register standard test processors for test suite service.
 			--
 			-- `a_service': Service in which test processors are registered.
@@ -148,7 +148,7 @@ feature {NONE} -- Factory
 			result_not_void_implies_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

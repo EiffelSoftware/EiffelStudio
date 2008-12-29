@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone that represents an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_class_c: like e_class; a_ast: like ast) is
+	make (a_class_c: like e_class; a_ast: like ast)
 			-- Initialize `e_class' with `a_class_c' and `ast' with `a_ast'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	ast: AST_EIFFEL
 			-- AST node associated with Current stone
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
@@ -51,7 +51,7 @@ feature -- Access
 			good_result: Result = stone_cursor_internal
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
@@ -62,19 +62,19 @@ feature -- Access
 
 feature -- Measurement
 
-	line_position: INTEGER is
+	line_position: INTEGER
 			-- Line number
 		do
 			Result := ast.first_token (match_list_server.item (e_class.class_id)).line
 		end
 
-	character_position: INTEGER is
+	character_position: INTEGER
 			-- Character position
 		do
 			Result := ast.first_token (match_list_server.item (e_class.class_id)).position
 		end
 
-	column_position: INTEGER is
+	column_position: INTEGER
 			-- Column position
 		do
 			Result := ast.first_token (match_list_server.item (e_class.class_id)).column
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_ast (a_ast: like ast) is
+	set_ast (a_ast: like ast)
 			-- Set `ast' with `a_ast'.
 		require
 			a_ast_attached: a_ast /= Void
@@ -97,7 +97,7 @@ feature -- Setting
 			ast_set: ast = a_ast
 		end
 
-	set_is_for_feature_invocation (b: BOOLEAN) is
+	set_is_for_feature_invocation (b: BOOLEAN)
 			-- Set `is_for_feature_invocation' with `b'.
 		do
 			is_for_feature_invocation := b
@@ -105,7 +105,7 @@ feature -- Setting
 			is_for_feature_invocation_set: is_for_feature_invocation = b
 		end
 
-	set_stone_cursor (a_cursor: like stone_cursor) is
+	set_stone_cursor (a_cursor: like stone_cursor)
 			-- Set `stone_cursor' with `a_cursor'.
 		require
 			a_cursor_attached: a_cursor /= Void
@@ -115,7 +115,7 @@ feature -- Setting
 			stone_cursor_set: stone_cursor = a_cursor
 		end
 
-	set_x_stone_cursor (a_cursor: like x_stone_cursor) is
+	set_x_stone_cursor (a_cursor: like x_stone_cursor)
 			-- Set `x_stone_cursor' with `a_cursor'.
 		require
 			a_cursor_attached: a_cursor /= Void
@@ -137,7 +137,7 @@ invariant
 	stone_cursor_attached: stone_cursor /= Void
 	x_stone_cursor_attached: x_stone_cursor /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

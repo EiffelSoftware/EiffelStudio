@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about a call in the calling stack."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,7 +63,7 @@ create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC, APPLICATION_STATUS_CLASSIC}
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id) is
+	make (level: INTEGER; tid: like thread_id)
 		local
 			retried: BOOLEAN
 		do
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 		end
 
 	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: DBG_ADDRESS;
-				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class) is
+				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class)
 			-- Initialize `Current' with no calls to the run-time.
 		require
 			addr_attached: addr /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	routine: E_FEATURE is
+	routine: E_FEATURE
 			-- Routine being called
 			-- Note: computation is deferred for optimization purpose
 		do
@@ -168,7 +168,7 @@ feature -- Properties
 			--| Initialially it is the physical address but is then
 			--| protected in the `set_hector_addr_for_current_object' routine.
 
-	current_object_value: ABSTRACT_DEBUG_VALUE is
+	current_object_value: ABSTRACT_DEBUG_VALUE
 			-- Current object's value.
 		local
 			dobj: DEBUGGED_OBJECT
@@ -192,7 +192,7 @@ feature -- Properties
 
 feature {EIFFEL_CALL_STACK} -- Implementation
 
-	set_hector_addr (lst: ARRAY [ABSTRACT_DEBUG_VALUE]) is
+	set_hector_addr (lst: ARRAY [ABSTRACT_DEBUG_VALUE])
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -213,7 +213,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 			end
 		end
 
-	set_hector_addr_for_current_object is
+	set_hector_addr_for_current_object
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -228,7 +228,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 
 feature {NONE} -- Implementation
 
-	retrieved_locals_and_arguments: TUPLE [args: ARRAY [ABSTRACT_DEBUG_VALUE]; locals: ARRAY [ABSTRACT_DEBUG_VALUE]] is
+	retrieved_locals_and_arguments: TUPLE [args: ARRAY [ABSTRACT_DEBUG_VALUE]; locals: ARRAY [ABSTRACT_DEBUG_VALUE]]
 		local
 			l_values: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			l_args, l_locals: ARRAY [ABSTRACT_DEBUG_VALUE]
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			Result := [l_args, l_locals]
 		end
 
-	initialize_stack is
+	initialize_stack
 		local
 			local_decl_grps: like local_decl_grps_from
 			l_ot_locals: like object_test_locals_from
@@ -552,13 +552,13 @@ feature {NONE} -- Implementation Properties
 
 feature	{NONE} -- Initialization of the C/Eiffel interface
 
-	init_rout_c is
+	init_rout_c
 			-- Pass routine address to C.
 		once
 			c_pass_set_rout ($set_rout)
 		end
 
-	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; line_number: INTEGER) is
+	set_rout (melted, exhausted: BOOLEAN; object: STRING; origin: INTEGER; type: INTEGER; r_name: STRING; line_number: INTEGER)
 			-- See: C/ipc/ewb/ewb_dumper.c: c_recv_rout_info (..)
 		local
 			dt: like dynamic_type
@@ -591,12 +591,12 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 
 feature {NONE} -- externals
 
-	c_recv_rout_info (c: like Current) is
+	c_recv_rout_info (c: like Current)
 		external
 			"C"
 		end
 
-	c_pass_set_rout (d_rout: POINTER) is
+	c_pass_set_rout (d_rout: POINTER)
 		external
 			"C"
 		end
@@ -609,7 +609,7 @@ invariant
 				not private_locals.is_empty
 	valid_level: level_in_stack >= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

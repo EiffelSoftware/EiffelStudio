@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of a cluster"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,13 +47,13 @@ feature -- Attributes
 
 feature -- Access
 
-	name_in_upper: STRING is
+	name_in_upper: STRING
 			-- Cluster name in upper case
 		do
 			Result := cluster_name.as_upper
 		end
 
-	actual_namespace: STRING is
+	actual_namespace: STRING
 			-- Associated full namespace of current cluster.
 		local
 			l_local_namespace: STRING
@@ -109,7 +109,7 @@ feature {NONE} -- Internal implementation cache
 	internal_actual_namespace: like actual_namespace
 			-- Cached version of `actual_namespace'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

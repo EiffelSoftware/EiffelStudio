@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A shim for EiffelStudio debugger tools, providing access to information required without having to actually initialize the tool.
 		
@@ -44,7 +44,7 @@ feature -- Access
 			debugger_manager_not_void: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

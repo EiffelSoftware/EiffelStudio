@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		List that collects all generic derivation of a generic class
 		in current system.
@@ -35,7 +35,7 @@ create {TYPE_LIST}
 
 feature -- Search
 
-	has_type (context_type, t: TYPE_A): BOOLEAN is
+	has_type (context_type, t: TYPE_A): BOOLEAN
 			-- Is the type `t' present in instances of CLASS_TYPE in the
 			-- list ?
 		require
@@ -65,7 +65,7 @@ feature -- Search
 			cursor_not_changed: index = old index
 		end
 
-	search_item (context_type, t: TYPE_A): CLASS_TYPE is
+	search_item (context_type, t: TYPE_A): CLASS_TYPE
 			-- Is the type `t' resolved in `context_type' present in instances of CLASS_TYPE
 			-- in the list? If not, return the last item found in the list.
 		require
@@ -85,7 +85,7 @@ feature -- Access
 	found_item: CLASS_TYPE
 			-- Last item found during a search.
 
-	nb_modifiable_types: INTEGER is
+	nb_modifiable_types: INTEGER
 			-- Number of modifiable types (i.e. precompiled or static)
 			-- derived from the current class
 		local
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Traversals
 
-	pass4 is
+	pass4
 			-- Proceed to the `pass4' on the items of the list.
 		local
 			l_area: like area
@@ -128,7 +128,7 @@ feature -- Traversals
 			cursor_not_changed: index = old index
 		end
 
-	melt is
+	melt
 			-- Proceed to the `melt' on the items of the list
 		local
 			l_area: like area
@@ -151,7 +151,7 @@ feature -- Traversals
 			cursor_not_changed: index = old index
 		end
 
-	update_execution_table is
+	update_execution_table
 			-- Proceed to the `update_execution_table' on the items of the list
 		local
 			l_area: like area
@@ -174,7 +174,7 @@ feature -- Traversals
 			cursor_not_changed: index = old index
 		end
 
-	melt_feature_table is
+	melt_feature_table
 			-- Proceed to the `melt_feature_table' on the items of the list
 		local
 			l_area: like area
@@ -199,7 +199,7 @@ feature -- Traversals
 
 feature -- Sorting
 
-	sort is
+	sort
 			-- Sort current by topological conformance. This is a crucial step
 			-- for finalization where all the computed dynamic types ensure
 			-- that A conforms to B implies type_id_of_A > type_id_of_B. This
@@ -259,7 +259,7 @@ feature -- Sorting
 
 feature -- Cleanup
 
-	clean is
+	clean
 			-- Remove types that are not valid anymore.
 		local
 			l_class_type: CLASS_TYPE
@@ -282,7 +282,7 @@ feature -- Cleanup
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

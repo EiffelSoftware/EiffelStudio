@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -39,7 +39,7 @@ create
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (l: like language_name) is
+	initialize (l: like language_name)
 			-- Create a new EXTERNAL_LANGUAGE AST node.
 		do
 			Precursor {EXTERNAL_LANG_AS} (l)
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is current a `built_in' one?
 		local
 			l_built_in: BUILT_IN_EXTENSION_AS
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Properties
 
-	extension_i: EXTERNAL_EXT_I is
+	extension_i: EXTERNAL_EXT_I
 			-- EXTERNAL_EXT_I corresponding to current extension
 		do
 			Result := extension.extension_i
@@ -77,7 +77,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	parse is
+	parse
 			-- Parse external declaration
 		local
 			parser: like external_parser
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			extension_set: error_handler.error_level = old error_handler.error_level implies extension /= Void
 		end
 
-	old_parse is
+	old_parse
 			-- Parse external declaration
 		require
 			extension_not_yet_set: extension = Void
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_external_warning is
+	insert_external_warning
 			-- Raises warning when parsing an old external syntax.
 		local
 			l_warning: SYNTAX_WARNING
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_external_error (msg: STRING; start_p: INTEGER) is
+	insert_external_error (msg: STRING; start_p: INTEGER)
 			-- Raises error occurred while parsing
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
@@ -390,7 +390,7 @@ invariant
 	language_name_not_void: language_name /= Void
 	extension_not_void: extension /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

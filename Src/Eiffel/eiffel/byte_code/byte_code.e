@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for a routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			-- Do nothing as BYTE_CODE is not really a BYTE_NODE.
@@ -66,7 +66,7 @@ feature -- Access
 	end_location: LOCATION_AS
 			-- Position where `end' keyword is located.
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- Final name of the feature
 		require
 			feature_name_id_set: feature_name_id > 0
@@ -118,7 +118,7 @@ feature -- Access
 	property_name_id: INTEGER
 			-- Name ID of an associated property (if any)
 
-	property_name: STRING is
+	property_name: STRING
 			-- Name of an associated property (if any)
 		do
 			if property_name_id > 0 then
@@ -132,7 +132,7 @@ feature -- Access
 			Result_empty: property_name_id < 0 implies Result.is_empty
 		end
 
-	clear_old_expressions is
+	clear_old_expressions
 			-- Clear old_expressions
 		require
 			valid_old_exp: old_expressions /= Void
@@ -140,7 +140,7 @@ feature -- Access
 			old_expressions.wipe_out
 		end
 
-	compound: BYTE_LIST [BYTE_NODE] is
+	compound: BYTE_LIST [BYTE_NODE]
 			-- Compound byte code
 		do
 			-- Do nothing: to be redefined in STD_BYTE_CODE
@@ -158,19 +158,19 @@ feature -- Access
 	property_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Property custom attributes (if any)
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is the current byte code relative to an external feature ?
 		do
 			-- Do nothing
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is the current byte code relative to a deferred feature ?
 		do
 			-- Do nothing
 		end
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 			-- Is the current byte code relative to a once feature ?
 		do
 			-- Do nothing
@@ -182,7 +182,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_feature_name_id (id: INTEGER) is
+	set_feature_name_id (id: INTEGER)
 			-- Assign `id' to `feature_name_id'.
 		require
 			valid_id: id > 0
@@ -192,7 +192,7 @@ feature -- Settings
 			feature_name_id_set: feature_name_id = id
 		end
 
-	set_property_name (n: STRING) is
+	set_property_name (n: STRING)
 			-- Set `property_name' to `n'.
 		require
 			n_attached: n /= Void
@@ -207,13 +207,13 @@ feature -- Settings
 			property_name_set: equal (property_name, n)
 		end
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: INTEGER)
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i
 		end
 
-	set_start_line_number (l: like start_line_number) is
+	set_start_line_number (l: like start_line_number)
 			-- Assign `l' to `start_line_number'.
 		do
 			start_line_number := l
@@ -221,7 +221,7 @@ feature -- Settings
 			start_line_number_set: start_line_number = l
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Assign `e' to `end_location'.
 		require
 			e_not_void: e /= Void
@@ -231,13 +231,13 @@ feature -- Settings
 			end_location_set: end_location = e
 		end
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: INTEGER)
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i
 		end
 
-	set_written_class_id (i: like written_class_id) is
+	set_written_class_id (i: like written_class_id)
 			-- Assign `i' to `rout_id'.
 		do
 			written_class_id := i
@@ -245,31 +245,31 @@ feature -- Settings
 			written_class_id_set: written_class_id = i
 		end
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: INTEGER)
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i
 		end
 
-	set_result_type (t: TYPE_A) is
+	set_result_type (t: TYPE_A)
 			-- Assign `t' to `result_type'.
 		do
 			result_type := t
 		end
 
-	set_precondition (var: like precondition) is
+	set_precondition (var: like precondition)
 			-- Assign `var' to `precondition'.
 		do
 			precondition := var
 		end
 
-	set_postcondition (var: like postcondition) is
+	set_postcondition (var: like postcondition)
 			-- Assign `var' to `postcondition'.
 		do
 			postcondition := var
 		end
 
-	set_old_expressions (var: like old_expressions) is
+	set_old_expressions (var: like old_expressions)
 			-- Assign `var' to old_expressions.
 		require
 			exp_not_empty: (var /= Void) implies not var.is_empty
@@ -277,7 +277,7 @@ feature -- Settings
 			old_expressions := var
 		end
 
-	set_custom_attributes (cas: like custom_attributes) is
+	set_custom_attributes (cas: like custom_attributes)
 			-- Assign `cas' to `custom_attributes'.
 		do
 			custom_attributes := cas
@@ -285,7 +285,7 @@ feature -- Settings
 			custom_attributes_set: custom_attributes = cas
 		end
 
-	set_class_custom_attributes (cas: like class_custom_attributes) is
+	set_class_custom_attributes (cas: like class_custom_attributes)
 			-- Assign `cas' to `class_custom_attributes'.
 		do
 			class_custom_attributes := cas
@@ -293,7 +293,7 @@ feature -- Settings
 			class_custom_attributes_set: class_custom_attributes = cas
 		end
 
-	set_interface_custom_attributes (cas: like interface_custom_attributes) is
+	set_interface_custom_attributes (cas: like interface_custom_attributes)
 			-- Assign `cas' to `interface_custom_attributes'.
 		do
 			interface_custom_attributes := cas
@@ -301,7 +301,7 @@ feature -- Settings
 			interface_custom_attributes_set: interface_custom_attributes = cas
 		end
 
-	set_property_custom_attributes (cas: like property_custom_attributes) is
+	set_property_custom_attributes (cas: like property_custom_attributes)
 			-- Assign `cas' to `property_custom_attributes'.
 		do
 			property_custom_attributes := cas
@@ -309,13 +309,13 @@ feature -- Settings
 			property_custom_attributes_set: property_custom_attributes = cas
 		end
 
-	set_rescue_clause (var: like rescue_clause) is
+	set_rescue_clause (var: like rescue_clause)
 			-- Assign `var' to `rescue_clause'.
 		do
 			rescue_clause := var
 		end
 
-	set_arguments (a: like arguments) is
+	set_arguments (a: like arguments)
 			-- Assing `a' to `arguments'.
 		do
 			arguments := a
@@ -335,7 +335,7 @@ feature -- Settings
 			local_count_set: local_count = n
 		end
 
-	set_once_manifest_string_count (oms_count: like once_manifest_string_count) is
+	set_once_manifest_string_count (oms_count: like once_manifest_string_count)
 			-- Set `once_manifest_string_count' to `oms_count'.
 		require
 			valid_oms_count: oms_count >= 0
@@ -345,13 +345,13 @@ feature -- Settings
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarges byte code tree for C code generation
 		do
 			enlarge_body_tree (True, True)
 		end
 
-	enlarge_body_tree (a_has_precond, a_has_postcond: BOOLEAN) is
+	enlarge_body_tree (a_has_precond, a_has_postcond: BOOLEAN)
 			-- Enlarges byte code tree for C code generation
 		local
 			inh_assert: INHERITED_ASSERTION
@@ -393,7 +393,7 @@ feature -- Settings
 			end
 		end
 
-	feature_origin (buf: GENERATION_BUFFER) is
+	feature_origin (buf: GENERATION_BUFFER)
 			-- Value of the dynamic type where the feature is written
 		do
 			if Context.workbench_mode then
@@ -403,7 +403,7 @@ feature -- Settings
 			end
 		end
 
-	argument_names: ARRAY [STRING] is
+	argument_names: ARRAY [STRING]
 			-- Names of the arguments
 		local
 			i, j, count: INTEGER
@@ -441,10 +441,10 @@ feature -- Settings
 			end
 		end
 
-	generate_current: BOOLEAN is True
+	generate_current: BOOLEAN = True
 			-- Is Current included in argument generation?
 
-	argument_types: ARRAY [STRING] is
+	argument_types: ARRAY [STRING]
 			-- Declare C parameters, if any, as part of the definition.
 		local
 			type_name: STRING
@@ -484,13 +484,13 @@ feature -- Settings
 			argument_types_not_void: Result /= Void
 		end
 
-	finish_compound is
+	finish_compound
 			-- Generate the end of the compound
 		do
 			-- Do nothing
 		end
 
-	generate_old_variables is
+	generate_old_variables
 			-- Generate value for old variables
 		local
 			inh_assert: INHERITED_ASSERTION
@@ -535,7 +535,7 @@ feature -- Settings
 
 feature -- Inherited Assertions
 
-	formulate_inherited_assertions (assert_id_set: ASSERT_ID_SET) is
+	formulate_inherited_assertions (assert_id_set: ASSERT_ID_SET)
 			-- Formulate inherited post and pre conditions
 			-- from the precursor definition of feature `feat'
 			-- and save the details in inherited_assertion.
@@ -589,7 +589,7 @@ feature -- Inherited Assertions
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL byte code.
 		do
 			cil_node_generator.generate_il (il_generator, Current)
@@ -829,7 +829,7 @@ debug ("DEBBUGGER_HOOK")
 end
 		end
 
-	make_catcall_check (ba: BYTE_ARRAY) is
+	make_catcall_check (ba: BYTE_ARRAY)
 			-- Add a check for catcall at runtime.
 		require
 			ba_not_void: ba /= Void
@@ -902,7 +902,7 @@ end
 	once_mark_attribute: CHARACTER = '%/4/'
 			-- Byte code mark for attribute
 
-	append_once_mark (ba: BYTE_ARRAY) is
+	append_once_mark (ba: BYTE_ARRAY)
 			-- Append byte code indicating a kind of a once routine
 			-- (not once, thread-relative once, process-relative once, etc.)
 			-- and associated information (if required)
@@ -969,7 +969,7 @@ end
 			end
 		end
 
-	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
 			-- Generate compound byte code
 		require
 			good_argument: ba /= Void
@@ -977,7 +977,7 @@ end
 		deferred
 		end
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of formal arguments
 		do
 			if arguments /= Void then
@@ -985,7 +985,7 @@ end
 			end
 		end
 
-	Temp_byte_code_array: BYTE_ARRAY is
+	Temp_byte_code_array: BYTE_ARRAY
 			-- Temporary byte code array
 		once
 			create Result.make
@@ -997,7 +997,7 @@ feature -- Array optimization
 			-- Does the current byte code has a loop construct?
 			--| Set during the creation of the byte code at degree 3.
 
-	set_has_loop (v: BOOLEAN) is
+	set_has_loop (v: BOOLEAN)
 			-- Assign `v' to `has_loop'.
 		do
 			has_loop := v
@@ -1005,19 +1005,19 @@ feature -- Array optimization
 			has_loop_set: has_loop = v
 		end
 
-	has_array_as_argument: BOOLEAN is
+	has_array_as_argument: BOOLEAN
 			-- Is ARRAY or one of its descendants used as an argument
 		do
 			Result := has_array_as_item (arguments)
 		end
 
-	has_array_as_local: BOOLEAN is
+	has_array_as_local: BOOLEAN
 			-- Is ARRAY or one of its descendants used as an local
 		do
 			Result := has_array_as_item (locals)
 		end
 
-	has_array_as_result: BOOLEAN is
+	has_array_as_result: BOOLEAN
 			-- Is ARRAY or one of its descendants used as result
 		do
 			Result := result_type /= Void and then
@@ -1026,7 +1026,7 @@ feature -- Array optimization
 
 feature {NONE} -- Array optimization
 
-	has_array_as_item (a: ARRAY [TYPE_A]): BOOLEAN is
+	has_array_as_item (a: ARRAY [TYPE_A]): BOOLEAN
 		local
 			i, n: INTEGER
 		do
@@ -1045,7 +1045,7 @@ feature {NONE} -- Array optimization
 
 feature -- Inlining
 
-	has_inlined_code: BOOLEAN is
+	has_inlined_code: BOOLEAN
 			-- Does the current byte code inline some of the calls ?
 		do
 		end
@@ -1054,7 +1054,7 @@ invariant
 
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			--
 		do
 			create idle_actions
@@ -26,33 +26,33 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	start_events_handling is
+	start_events_handling
 		do
 			leave_requested := False
 			wait_until_application_is_dead
 		end
 
-	stop_events_handling is
+	stop_events_handling
 		do
 			leave_requested := True
 		end
 
 feature -- Access
 
-	new_timer: TTY_DEBUGGER_TIMER is
+	new_timer: TTY_DEBUGGER_TIMER
 			--
 		do
 			create Result.make (implementation)
 		end
 
-	timer_win32_handle: POINTER is
+	timer_win32_handle: POINTER
 		do
 			Result := implementation.timer_win32_handle
 		end
 
 feature -- Change
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (v: PROCEDURE [ANY, TUPLE])
 			-- Extend `idle_actions' with `v'.
 		do
 			if not idle_actions.has (v) then
@@ -60,7 +60,7 @@ feature -- Change
 			end
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
 			-- Remove `v' from `idle_actions'
 		local
 			l_cursor: CURSOR
@@ -74,7 +74,7 @@ feature -- Change
 			end
 		end
 
-	recycle	is
+	recycle
 			--
 		do
 			stop_events_handling
@@ -85,7 +85,7 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	wait_until_application_is_dead is
+	wait_until_application_is_dead
 			-- Wait until application is dead
 		local
 			stop_process_loop_on_events: BOOLEAN
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 
 	implementation: TTY_DEBUGGER_EVENTS_HANDLER_IMP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

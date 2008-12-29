@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for invalid precompiled systems used for a project"
@@ -27,7 +27,7 @@ feature -- Access
 	precompiled_date: STRING;
 			-- Precompile date
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 		do
 			Result := path /= Void and then
 				expected_date /= Void and then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Precompiled path: ");
 			a_text_formatter.add (path);
@@ -51,27 +51,27 @@ feature -- Output
 
 feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 
-	set_path (s: STRING) is
+	set_path (s: STRING)
 			-- Assign `s' to `path'.
 		do
 			path := s;
 		end;
 
-	set_precompiled_date (i: like precompiled_date) is
+	set_precompiled_date (i: like precompiled_date)
 			-- Assign `i' to `precompiled_date'.
 		do
 			i.replace_substring_all ("%N", ""); -- Hack to remove %N
 			precompiled_date := i;
 		end;
 
-	set_expected_date (i: like expected_date) is
+	set_expected_date (i: like expected_date)
 			-- Assign `i' to `expected_date'.
 		do
 			i.replace_substring_all ("%N", ""); -- Hack to remove %N
 			expected_date := i
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unevaluated BIT x type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: like dump) is
+	make (a_string: like dump)
 			-- Initialize `symbol' to `a_string'
 		require
 			non_void_string: a_string /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_unevaluated_bits_symbol_a (Current)
@@ -48,18 +48,18 @@ feature -- Access
 	symbol_name_id: INTEGER
 			-- Id of `symbol' in `names_heap'.
 
-	symbol: STRING is
+	symbol: STRING
 			-- Anchor name
 		do
 			Result := names_heap.item (symbol_name_id)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := {SHARED_HASH_CODE}.bit_code
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		once
 			Result := System.bit_class.compiled_class
@@ -71,7 +71,7 @@ feature -- Status Report
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := symbol_name_id = other.symbol_name_id
@@ -79,7 +79,7 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER;  c: CLASS_C) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER;  c: CLASS_C)
 			-- Append Current type to `st'.
 		do
 			a_text_formatter.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Bit_class, Void)
@@ -87,7 +87,7 @@ feature -- Output
 			a_text_formatter.add_string (symbol)
 		end
 
-	dump: STRING is
+	dump: STRING
 		do
 			create Result.make (9)
 			Result.append ("BIT ")
@@ -96,14 +96,14 @@ feature -- Output
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- An unevaluated type is never valid.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			l_other: like Current
@@ -114,18 +114,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Not applicable
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 		do
 		end
 
-	create_info: CREATE_INFO is
+	create_info: CREATE_INFO
 		do
 		end
 
 invariant
 	non_void_symbol: symbol /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

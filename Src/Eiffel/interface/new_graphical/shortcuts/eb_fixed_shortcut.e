@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects represent shortcut that can not be changed by the user."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialize
 
-	make (a_name: STRING_GENERAL; a_key: EV_KEY; a_alt, a_ctrl, a_shift: BOOLEAN) is
+	make (a_name: STRING_GENERAL; a_key: EV_KEY; a_alt, a_ctrl, a_shift: BOOLEAN)
 			-- Initialize.
 		require
 			a_name_not_void: a_name /= Void
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Implemetation
 
-	set_values (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN) is
+	set_values (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN)
 			-- Do nothing.
 		do
 		end
@@ -63,7 +63,7 @@ invariant
 	name_set: name /= Void
 	key_set: key /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

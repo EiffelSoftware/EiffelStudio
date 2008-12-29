@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter that displays information about a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_feature_stone: FEATURE_STONE
@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	element_name: STRING is
+	element_name: STRING
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 		do
@@ -51,13 +51,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	temp_header: STRING_GENERAL is
+	temp_header: STRING_GENERAL
 			-- Temporary header displayed during the format processing.
 		do
 			Result := Interface_names.l_working_formatter (command_name, associated_feature.name, False)
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_feature /= Void and then associated_feature.associated_class /= Void then
@@ -67,10 +67,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	line_numbers_allowed: BOOLEAN is False;
+	line_numbers_allowed: BOOLEAN = False;
 		-- Does it make sense to show line numbers in Current?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

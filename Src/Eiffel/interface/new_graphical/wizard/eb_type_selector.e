@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Combobox that lets the user select a type%N%
 		%If that type has generics, displays more type selectors."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Fill for test purposes.
 		do
 			Precursor
@@ -53,7 +53,7 @@ feature -- Access
 	generic_type_selectors: LINKED_LIST [EB_TYPE_SELECTOR]
 			-- All type selectors in `generic_box'.
 
-	code: STRING is
+	code: STRING
 			-- Type currently selected by user.
 			-- Including generics.
 		local
@@ -101,7 +101,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		local
 			t: STRING
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature {EB_QUERY_EDITOR} -- Status setting
 
-	enable_expanded_needed is
+	enable_expanded_needed
 			-- Set `expanded_needed' to `True'.
 		do
 			expanded_needed := True
@@ -125,7 +125,7 @@ feature {EB_QUERY_EDITOR} -- Status setting
 
 feature -- Element change
 
-	set_from_other (other: like Current) is
+	set_from_other (other: like Current)
 			-- Set with same type as `other'.
 		local
 			gts: LINKED_LIST [EB_TYPE_SELECTOR]
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 	add_generic_button: EV_BUTTON
 			-- Visible when `is_tuple'.
 
-	on_selection_change is
+	on_selection_change
 			-- User selected something in `selector'.
 		local
 			gen_count: INTEGER
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_generic_box is
+	fill_generic_box
 			-- Fill `generic_box' with `generic_count' type selectors.
 		local
 			i: INTEGER
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generics_count (a_class_name: STRING): INTEGER is
+	generics_count (a_class_name: STRING): INTEGER
 			-- Number of generics for `a_class_name'.
 		require
 			a_class_name_valid: a_class_name /= Void
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_add_generic is
+	on_add_generic
 			-- Type is TUPLE and user clicked on "*".
 		local
 			ts: EB_TYPE_SELECTOR
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initial_strings: ARRAY [STRING] is
+	initial_strings: ARRAY [STRING]
 			-- Initial list items.
 			--| FIXME Get favorites, previously entered names, etc.
 		once
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := (
@@ -310,7 +310,7 @@ feature {EV_ANY} -- Contract support
 			)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

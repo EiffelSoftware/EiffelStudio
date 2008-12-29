@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (dm: like debugger_manager; expr: like expression) is
+	make (dm: like debugger_manager; expr: like expression)
 			-- Create Current from `expr'.
 		require
 			dm_not_void: dm /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			dbg_error_handler_attached: dbg_error_handler /= Void
 		end
 
-	get_dbg_evaluator is
+	get_dbg_evaluator
 			-- Get non void dbg_evaluator
 		do
 			if dbg_evaluator = Void then
@@ -81,13 +81,13 @@ feature -- Status report
 			Result := dbg_error_handler.error_occurred
 		end
 
-	expression_has_syntax_error: BOOLEAN is
+	expression_has_syntax_error: BOOLEAN
 			-- has `expression' syntax error?
 		do
 			Result := expression.has_syntax_error
 		end
 
-	is_boolean_expression (f: FEATURE_I): BOOLEAN is
+	is_boolean_expression (f: FEATURE_I): BOOLEAN
 			-- is feature `f' a boolean expression?
 		require
 			valid_f: f /= Void
@@ -133,43 +133,43 @@ feature -- Settings
 
 feature -- Change
 
-	set_on_class (v: like on_class) is
+	set_on_class (v: like on_class)
 			-- set value of `on_class' with `v'
 		do
 			on_class := v
 		end
 
-	set_on_object (v: like on_object) is
+	set_on_object (v: like on_object)
 			-- set value of `on_object' with `v'	
 		do
 			on_object := v
 		end
 
-	set_on_context (v: like on_context) is
+	set_on_context (v: like on_context)
 			-- set value of `on_context' with `v'	
 		do
 			on_context := v
 		end
 
-	set_context_class (c: like context_class) is
+	set_context_class (c: like context_class)
 			-- set value of `context_class' with `c'
 		do
 			context_class := c
 		end
 
-	set_context_address (c: like context_address) is
+	set_context_address (c: like context_address)
 			-- set value of `context_address' with `c'
 		do
 			context_address := c
 		end
 
-	reset_error is
+	reset_error
 			-- Reset error related data
 		do
 			dbg_error_handler.reset
 		end
 
-	set_side_effect_forbidden (b: like side_effect_forbidden) is
+	set_side_effect_forbidden (b: like side_effect_forbidden)
 			-- Set `side_effect_forbidden' with `b'
 		do
 			side_effect_forbidden := b
@@ -213,7 +213,7 @@ feature {DBG_EXPRESSION_EVALUATION} -- Implementation
 			Result := debugger_manager.safe_application_is_stopped
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
 			-- DUNP_VALUE object associated with object address `addr'
 		require
 			addr_attached: addr /= Void and then not addr.is_void
@@ -233,7 +233,7 @@ invariant
 	debugger_manager_attached: debugger_manager /= Void
 	error_handler_initialized: dbg_error_handler /= Void and then dbg_error_handler.initialized
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface representing a host's IDE shell window, used to host tools.
 	]"
@@ -20,7 +20,7 @@ feature -- Access
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

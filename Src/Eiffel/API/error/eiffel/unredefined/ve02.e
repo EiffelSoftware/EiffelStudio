@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a redeclaration has an expanded type and its precursor not, or %
 				%when a redeclaration has a not an expanded type but the precursor does. %
 				%Note that expanded type doen't refer to the simple types..."
@@ -21,9 +21,9 @@ inherit
 	
 feature -- Properties
 
-	subcode: INTEGER is 8;
+	subcode: INTEGER = 8;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

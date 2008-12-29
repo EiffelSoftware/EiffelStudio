@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Handler which remove first two lines of eweasel output.
 						The two lines are `signature' and `signature_2'	
@@ -21,13 +21,13 @@ inherit
 
 feature -- Redefine
 
-	handle_output (a_eweasel_output: STRING): ES_EWEASEL_TEST_RESULT_ITEM is
+	handle_output (a_eweasel_output: STRING): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
 			process (a_eweasel_output)
 		end
 
-	handle_output_on_exit (a_eweasel_output: STRING): ES_EWEASEL_TEST_RESULT_ITEM is
+	handle_output_on_exit (a_eweasel_output: STRING): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
 			process (a_eweasel_output)
@@ -35,7 +35,7 @@ feature -- Redefine
 
 feature {NONE} -- Implementation
 
-	process (a_string: STRING) is
+	process (a_string: STRING)
 			-- This feature only remove strings from `a_string'
 		local
 			l_index, l_end_index: INTEGER
@@ -49,12 +49,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM is
+	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		do
 		end
 
-	signature: STRING is
+	signature: STRING
 			-- eweasel first line of output
 		local
 			l_platform: PLATFORM
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	signature_2: STRING is
+	signature_2: STRING
 			-- eweasel second line of output
 			-- FIXIT: This value have to be changed if eweasel version changed.
 		local
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

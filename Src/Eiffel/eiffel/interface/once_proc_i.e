@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a once procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	is_once: BOOLEAN is True
+	is_once: BOOLEAN = True
 			-- Is the current feature a once one?
 
 	is_process_relative: BOOLEAN
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_is_process_relative (value: BOOLEAN) is
+	set_is_process_relative (value: BOOLEAN)
 			-- Set `is_process_relative' to `value'.
 		do
 			is_process_relative := value
@@ -40,21 +40,21 @@ feature -- Status setting
 
 feature -- Adaptation
 
-	transfer_to (other: ONCE_PROC_I) is
+	transfer_to (other: ONCE_PROC_I)
 			-- Transfer data from Current into `other'.
 		do
 			Precursor (other)
 			other.set_is_process_relative (is_process_relative)
 		end
 
-	transfer_from (other: ONCE_PROC_I) is
+	transfer_from (other: ONCE_PROC_I)
 			-- Transfer data from Current into `other'.
 		do
 			Precursor (other)
 			set_is_process_relative (other.is_process_relative)
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_ONCE_PROC_I
@@ -73,7 +73,7 @@ feature -- Adaptation
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_ONCE_PROC_I
@@ -86,14 +86,14 @@ feature -- Adaptation
 
 feature {NONE} -- Implementation
 
-	update_api (f: E_ROUTINE) is
+	update_api (f: E_ROUTINE)
 			-- Update api feature `f' attribute features.
 		do
 			Precursor {DYN_PROC_I} (f)
 			f.set_once (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

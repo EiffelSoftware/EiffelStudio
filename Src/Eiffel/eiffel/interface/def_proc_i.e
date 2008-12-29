@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a deferred procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,17 +17,17 @@ inherit
 
 feature -- Status Report
 
-	has_entry: BOOLEAN is False;
+	has_entry: BOOLEAN = False;
 			-- No polymorphic unit for deferred features
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 		do
 			Result := True
 		end;
 
 feature -- Access
 
-	access_for_feature (access_type, static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type, static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Conversion
 
-	to_generate_in (a_class: CLASS_C): BOOLEAN is
+	to_generate_in (a_class: CLASS_C): BOOLEAN
 			-- Has the current feature to be generated in class `a_class' ?
 			-- (Deferred routines with pre or post conditions are
 			-- not generated)
@@ -67,14 +67,14 @@ feature -- Conversion
 
 feature -- Basic Operation
 
-	transfer_to (other: DEF_PROC_I) is
+	transfer_to (other: DEF_PROC_I)
 			-- Transfer datas form `other' into Current.
 		do
 			Precursor {PROCEDURE_I} (other)
 			extension := other.extension
 		end
 
-	transfer_from (other: DEF_PROC_I) is
+	transfer_from (other: DEF_PROC_I)
 			-- Transfer datas form `other' into Current.
 		do
 			Precursor {PROCEDURE_I} (other)
@@ -83,7 +83,7 @@ feature -- Basic Operation
 
 feature -- Access
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_DEF_PROC_I
@@ -95,14 +95,14 @@ feature -- Access
 			Result := rep;
 		end;
 
-	selected: DEF_PROC_I is
+	selected: DEF_PROC_I
 			-- Selected attribute
 		do
 			create Result
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_DEF_PROC_I
@@ -118,7 +118,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_extension (an_extension: like extension) is
+	set_extension (an_extension: like extension)
 			-- Set `extension' with `an_extension'.
 		require
 			an_extension_not_void: an_extension /= Void
@@ -130,13 +130,13 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	update_api (f: E_ROUTINE) is
+	update_api (f: E_ROUTINE)
 		do
 			Precursor {PROCEDURE_I} (f);
 			f.set_deferred (True);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

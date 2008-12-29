@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that analyze a feature text to make it clickable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	initialize (feat: E_FEATURE) is
+	initialize (feat: E_FEATURE)
 			-- initialize the tool before analyzing a class called `a_classname' located in cluster called `a_cluster_name'
 			-- `a_content' is text of this class
 		require
@@ -53,7 +53,7 @@ feature -- Initialization
 			end
 		end
 
-	set_content (a_content: CLICKABLE_TEXT) is
+	set_content (a_content: CLICKABLE_TEXT)
 		require
 			content_is_not_void: a_content /= Void
 			can_analyze: can_analyze_current_class
@@ -63,7 +63,7 @@ feature -- Initialization
 
 feature -- Basic operation
 
-	stone_at_position (cursor: TEXT_CURSOR): STONE is
+	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 		local
 			ft		: FEATURE_AS
@@ -107,7 +107,7 @@ feature -- Basic operation
 
 feature -- Analysis preparation
 
-	prepare_on_click_analysis is
+	prepare_on_click_analysis
 			-- gather information necessary to analysis
 		do
 			reset_positions
@@ -115,11 +115,11 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-	update is
+	update
 		do
 		end
 
-	reset_positions is
+	reset_positions
 			-- look for position of subsection of class text (inherit, invariant, creation..)
 			-- and set the `pos_in_text' attribute of interesting tokens.
 		require
@@ -241,7 +241,7 @@ feature -- Implementation
 
 	current_feature_name: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

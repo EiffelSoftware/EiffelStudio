@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract List of Item for EB_FAVORITES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,17 +25,17 @@ inherit
 
 feature -- Access
 
-	parent: EB_FAVORITES_ITEM_LIST is
+	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for Current
 		deferred
 		end
 	
-	name: STRING is
+	name: STRING
 			-- Name for Current.
 		deferred
 		end
 
-	initialize_with_string (a_string: STRING): STRING is
+	initialize_with_string (a_string: STRING): STRING
 			-- [Re]Initialize the favorites from `a_string'.
 		local
 			analyzed_string: STRING
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- List operations
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
@@ -118,7 +118,7 @@ feature -- List operations
 			on_item_removed (removed_item, create {ARRAYED_LIST [EB_FAVORITES_FOLDER]}.make (3))
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
@@ -141,7 +141,7 @@ feature -- List operations
 			compare_references
 		end
 
-   	put_right (v: like item) is
+   	put_right (v: like item)
    			-- Add `v' to the right of the cursor.
    			-- Do not move cursor.
 		local
@@ -165,7 +165,7 @@ feature -- List operations
 			end
 		end
 
-   	prune (v: like item) is
+   	prune (v: like item)
    			-- Remove first occurrence of `v', if any,
    			-- after cursor position.
    			-- Move cursor to right neighbor
@@ -177,7 +177,7 @@ feature -- List operations
 			on_item_removed (v, create {ARRAYED_LIST  [EB_FAVORITES_FOLDER]}.make (3))
 		end
 
-   	prune_all (v: like item) is
+   	prune_all (v: like item)
    			-- Remove all occurrences of `v'.
    			-- (Reference or object equality,
    			-- based on `object_comparison'.)
@@ -189,7 +189,7 @@ feature -- List operations
 			on_item_removed (v, create {ARRAYED_LIST  [EB_FAVORITES_FOLDER]}.make (3))
 		end
 
-   	wipe_out is
+   	wipe_out
    			-- Remove all items.
 		do
 				-- Notify everybody that we will wipe_out the list.
@@ -208,7 +208,7 @@ feature -- List operations
 			in_operation := False
 		end
 
-   	put_front (v: like item) is
+   	put_front (v: like item)
    			-- Add `v' to the beginning.
    			-- Do not move cursor.
 		local
@@ -233,7 +233,7 @@ feature -- List operations
 
 feature -- Element change
 
-	add_item_after (an_item: EB_FAVORITES_ITEM; insert_point: EB_FAVORITES_ITEM) is
+	add_item_after (an_item: EB_FAVORITES_ITEM; insert_point: EB_FAVORITES_ITEM)
 			-- Insert `an_item' after `insert_point'.
 		require
 			has_insert_point: has (insert_point)
@@ -241,7 +241,7 @@ feature -- Element change
 			extend (an_item)
 		end
 
-	add_stone_after (a_stone: CLASSI_STONE; insert_point: EB_FAVORITES_ITEM) is
+	add_stone_after (a_stone: CLASSI_STONE; insert_point: EB_FAVORITES_ITEM)
 			-- Insert `a_stone' after `insert_point'.
 		require
 			has_insert_point: has (insert_point)
@@ -258,7 +258,7 @@ feature -- Element change
 			end
 		end
 
-	add_class_stone (a_stone: CLASSI_STONE) is
+	add_class_stone (a_stone: CLASSI_STONE)
 			-- Append a favorite class defined by `a_stone'.
 		local
 			l_fav_class_stone: EB_FAVORITES_CLASS_STONE
@@ -286,7 +286,7 @@ feature -- Element change
 			end
 		end
 		
-	add_feature_stone (a_stone: FEATURE_STONE) is
+	add_feature_stone (a_stone: FEATURE_STONE)
 			-- Append a favorite feature defined by `a_stone'.
 		local
 			l_fav_current: EB_FAVORITES_ITEM
@@ -317,34 +317,34 @@ feature -- Element change
 			end
 		end		
 
-	add_favorite_folder (a_folder: EB_FAVORITES_FOLDER) is
+	add_favorite_folder (a_folder: EB_FAVORITES_FOLDER)
 			-- Append a favorite folder defined by `a_folder'.
 		do
 			extend (a_folder)
 		end
 
-	add_feature (a_feature_name: STRING) is
+	add_feature (a_feature_name: STRING)
 			-- Add the class named `a_feature_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_feature_name, False, False, True)
 		end
 		
-	add_class (a_class_name: STRING) is
+	add_class (a_class_name: STRING)
 			-- Add the class named `a_class_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_class_name, False, True, False)
 		end
 
-	add_folder (a_folder_name: STRING) is
+	add_folder (a_folder_name: STRING)
 			-- Add the folder named `a_folder_name' into this folder if no
 			-- item with the same name is already present.
 		do
 			add_item (a_folder_name, True, False, False)
 		end
 	
-	add_class_to_folder (a_class_name: STRING; a_path: ARRAYED_LIST [STRING]) is
+	add_class_to_folder (a_class_name: STRING; a_path: ARRAYED_LIST [STRING])
 			-- Add the class named `class_name' to this favorites if no
 			-- class with the same name is already present.
 			--
@@ -354,7 +354,7 @@ feature -- Element change
 			add_item_to_folder (a_class_name, a_path, False, True, False)
 		end
 	
-	add_folder_to_folder (a_folder_name: STRING; a_path: ARRAYED_LIST [STRING]) is
+	add_folder_to_folder (a_folder_name: STRING; a_path: ARRAYED_LIST [STRING])
 			-- Add the folder named `folder_name' to this favorites if no
 			-- class with the same name is already present.
 			--
@@ -364,7 +364,7 @@ feature -- Element change
 			add_item_to_folder (a_folder_name, a_path, True, False, False)
 		end
 	
-	remove_feature, remove_class, remove_folder (a_item_name: STRING) is
+	remove_feature, remove_class, remove_folder (a_item_name: STRING)
 			-- Remove the class/folder named `a_item_name' into this folder if it
 			-- exists.
 		local
@@ -397,7 +397,7 @@ feature -- Element change
 
 feature {EB_FAVORITES_ITEM_LIST} -- Observer pattern
 
-	on_item_added (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- Notify the root parent of a change
 		require
 			valig_args: an_item /= Void and a_item_list /= Void
@@ -413,7 +413,7 @@ feature {EB_FAVORITES_ITEM_LIST} -- Observer pattern
 			end
 		end
 
-	on_item_removed (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (an_item: EB_FAVORITES_ITEM; a_item_list: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- Notify the root parent of a change
 		require
 			valig_args: an_item /= Void and a_item_list /= Void
@@ -431,14 +431,14 @@ feature {EB_FAVORITES_ITEM_LIST} -- Observer pattern
 
 feature -- Query
 
-	contains_name (a_name: STRING): BOOLEAN is
+	contains_name (a_name: STRING): BOOLEAN
 			-- Does Current contains an item with name `a_name'.
 			-- The name comparison is not case-sensitive.
 		do
 			Result := favorite_by_name (a_name) /= Void
 		end
 
-	favorite_by_name (a_name: STRING): EB_FAVORITES_ITEM is
+	favorite_by_name (a_name: STRING): EB_FAVORITES_ITEM
 			-- Favorite item for name `a_name'.
 		local
 			item_name: STRING
@@ -461,7 +461,7 @@ feature -- Query
 		
 feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 
-	add_item_to_folder (a_item_name: STRING; a_path: ARRAYED_LIST [STRING]; is_folder, is_class, is_feature: BOOLEAN) is
+	add_item_to_folder (a_item_name: STRING; a_path: ARRAYED_LIST [STRING]; is_folder, is_class, is_feature: BOOLEAN)
 			-- Add the item named `item_name' to this favorites if no
 			-- item with the same name is already present.
 			-- The item is a folder is `is_folder' is set, a class otherwise.
@@ -501,7 +501,7 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 			end
 		end
 	
-	add_item (a_name: STRING; is_folder, is_class, is_feature: BOOLEAN) is
+	add_item (a_name: STRING; is_folder, is_class, is_feature: BOOLEAN)
 			-- Add a new item to the class. A favorites class if
 			-- `is_folder' is False, a new folder is `is_folder' is
 			-- set to True.
@@ -540,7 +540,7 @@ feature {NONE} -- Attributes
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation for Current.
 		do
 			Result := name+"("
@@ -558,7 +558,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 			Result := Result + ")"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

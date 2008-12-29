@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a double on the constant pool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,17 +23,17 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (d: DOUBLE) is
+	make (d: DOUBLE)
 		do
 			double := d
 		end
 			
 feature -- Access
 
-	tag_id: INTEGER is 6
+	tag_id: INTEGER = 6
 	double: DOUBLE
 
-	close is
+	close
 		do
 			create bc.make_size (Int_16_size + Double_size)
 			append_tag_info (bc)
@@ -41,19 +41,19 @@ feature -- Access
 			Precursor
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			bc.emit (file)
 		end
 			
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := same_type (other) and then double = other.double
 		end
 			
-	out: STRING is
+	out: STRING
 		do
 			Result := "Double:" + double.out + "%N"
 		end
@@ -66,7 +66,7 @@ invariant
 			
 	closed_implies_bc_exists: is_closed implies bc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

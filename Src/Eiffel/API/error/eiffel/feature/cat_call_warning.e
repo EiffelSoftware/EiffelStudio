@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Warning for potential cat-calls."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location: LOCATION_AS) is
+	make (a_location: LOCATION_AS)
 			-- Initialize warning
 		do
 			if a_location /= Void then
@@ -48,7 +48,7 @@ feature -- Access
 	source_type: TYPE_A;
 			-- Source type of the assignment (right part)
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		do
 			if export_status_violations /= Void and then not export_status_violations.is_empty then
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	help_file_name: STRING is
+	help_file_name: STRING
 			-- Error code
 		do
 			Result := "catcall";
@@ -66,19 +66,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_source_type (s: TYPE_A) is
+	set_source_type (s: TYPE_A)
 			-- Assign `s' to `source_type'.
 		do
 			source_type := s;
 		end;
 
-	set_target_type (t: TYPE_A) is
+	set_target_type (t: TYPE_A)
 			-- Assign `t' to `target_type'.
 		do
 			target_type := t;
 		end;
 
-	set_called_feature (a_feature: FEATURE_I) is
+	set_called_feature (a_feature: FEATURE_I)
 			-- Set `called_feature' to `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			--called_feature_set: called_feature.associated_feature_i = a_feature
 		end
 
-	add_export_status_violation (a_descendant_class: CLASS_C; a_descendant_feature: FEATURE_I) is
+	add_export_status_violation (a_descendant_class: CLASS_C; a_descendant_feature: FEATURE_I)
 			-- Add an export status violation of `a_descendant_feature' in `a_descendant_class'.
 		require
 			a_descendant_class_not_void: a_descendant_class /= Void
@@ -97,7 +97,7 @@ feature -- Element change
 			export_status_violations.extend ([a_descendant_class, a_descendant_feature.api_feature (a_descendant_feature.written_in)])
 		end
 
-	add_covariant_argument_violation (a_descendant_type: TYPE_A; a_descendant_feature: FEATURE_I; a_type: TYPE_A; a_index: INTEGER) is
+	add_covariant_argument_violation (a_descendant_type: TYPE_A; a_descendant_feature: FEATURE_I; a_type: TYPE_A; a_index: INTEGER)
 			-- Add a covariant argument violation of `a_descendant_feature' in `a_descendant_class' where
 			-- the actual type of the call is `a_type' at the argument position `a_index'.
 		require
@@ -109,13 +109,13 @@ feature -- Element change
 			covariant_argument_violations.extend ([a_descendant_type, a_descendant_feature.api_feature (a_descendant_feature.written_in), a_type, a_index])
 		end
 
-	add_covariant_generic_violation is
+	add_covariant_generic_violation
 			-- Add a covariant call through presence of formals.
 		do
 			has_covariant_generic := True
 		end
 
-	add_compiler_limitation (a_parent_type: TYPE_A) is
+	add_compiler_limitation (a_parent_type: TYPE_A)
 		require
 			a_parent_type_not_void: a_parent_type /= Void
 		do
@@ -126,7 +126,7 @@ feature -- Element change
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			item: TUPLE [descendant_type: TYPE_A; descendant_feature: E_FEATURE; actual_type: TYPE_A; argument_index: INTEGER]
 			l_target_type: CL_TYPE_A
@@ -254,7 +254,7 @@ feature -- Output
 			end
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_class: CLASS_C} associated_class and then {l_feature: !like called_feature} called_feature and then {l_formatter: TEXT_FORMATTER} a_text_formatter then
@@ -282,7 +282,7 @@ invariant
 	export_status_violations_not_void: export_status_violations /= Void
 	covariant_argument_violations_not_void: covariant_argument_violations /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

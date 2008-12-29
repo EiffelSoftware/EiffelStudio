@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a .NET formatting decorator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_consumed: CONSUMED_TYPE) is
+	make (a_consumed: CONSUMED_TYPE)
 			-- Initialize Current with 'a_consumed'
 		require
 			consumed_not_void: a_consumed /= Void
@@ -51,7 +51,7 @@ feature -- Access
 	assembly_name: STRING
 			-- Assembly name for comments retrieval.
 
-	cached_xml: HASH_TABLE [ASSEMBLY_INFORMATION, STRING] is
+	cached_xml: HASH_TABLE [ASSEMBLY_INFORMATION, STRING]
 			-- Table of cached XML Assembly files.
 		once
 			create Result.make (5)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_assembly_name is
+	set_assembly_name
 			-- Set the assembly from which the consumed_type was generated.
 		do
 			assembly_name := class_i.assembly.assembly_name
@@ -67,7 +67,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	strip_down (a_string: STRING) is
+	strip_down (a_string: STRING)
 			-- Strip string of all unwanted white space
 		require
 			a_string_not_void: a_string /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 invariant
 	has_dotnet_type: consumed_t /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

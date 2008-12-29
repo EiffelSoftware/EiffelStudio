@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared Eiffel parser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ class SHARED_EIFFEL_PARSER
 
 feature -- Access
 
-	Eiffel_parser: EIFFEL_PARSER is
+	Eiffel_parser: EIFFEL_PARSER
 			-- Eiffel parser
 		do
 			if il_parsing then
@@ -19,7 +19,7 @@ feature -- Access
 			end
 		end
 
-	Heavy_eiffel_parser: EIFFEL_PARSER is
+	Heavy_eiffel_parser: EIFFEL_PARSER
 			-- Heavy eiffel parser
 		do
 			if il_parsing then
@@ -29,7 +29,7 @@ feature -- Access
 			end
 		end
 
-	Eiffel_validating_parser: EIFFEL_PARSER is
+	Eiffel_validating_parser: EIFFEL_PARSER
 		do
 			if il_parsing then
 				Result := il_eiffel_validating_parser
@@ -38,34 +38,34 @@ feature -- Access
 			end
 		end
 
-	il_parsing: BOOLEAN is
+	il_parsing: BOOLEAN
 			-- Do we need to perform a IL parsing?
 		do
 			Result := il_parsing_cell.item
 		end
 
-	entity_declaration_parser: EIFFEL_PARSER is
+	entity_declaration_parser: EIFFEL_PARSER
 			-- Entity declaration parser.
 		once
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
 			Result.set_entity_declaration_parser
 		end
 
-	Type_parser: EIFFEL_PARSER is
+	Type_parser: EIFFEL_PARSER
 			-- Type parser.
 		once
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
 			Result.set_type_parser
 		end
 
-	Expression_parser: EIFFEL_PARSER is
+	Expression_parser: EIFFEL_PARSER
 			-- Type parser.
 		once
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
 			Result.set_expression_parser
 		end
 
-	entity_feature_parser: EIFFEL_PARSER is
+	entity_feature_parser: EIFFEL_PARSER
 			-- Entity declaration parser.
 		once
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_il_parsing (v: BOOLEAN) is
+	set_il_parsing (v: BOOLEAN)
 			-- Assign `v' to `il_parsing' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -89,7 +89,7 @@ feature -- Setting
 
 feature {NONE} -- Usage
 
-	il_parsing_cell: CELL [BOOLEAN] is
+	il_parsing_cell: CELL [BOOLEAN]
 			-- Keep state of which parser will be used in
 			-- `Eiffel_parser'.
 		once
@@ -100,7 +100,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Internal parsers
 
-	pure_eiffel_parser: EIFFEL_PARSER is
+	pure_eiffel_parser: EIFFEL_PARSER
 			-- Pure Eiffel parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_LIGHT_FACTORY})
@@ -109,7 +109,7 @@ feature {NONE} -- Internal parsers
 			pure_parser: not Result.il_parser
 		end
 
-	il_eiffel_parser: EIFFEL_PARSER is
+	il_eiffel_parser: EIFFEL_PARSER
 			-- IL Eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_LIGHT_FACTORY})
@@ -119,7 +119,7 @@ feature {NONE} -- Internal parsers
 			il_parser: Result.il_parser
 		end
 
-	pure_eiffel_validating_parser: EIFFEL_PARSER is
+	pure_eiffel_validating_parser: EIFFEL_PARSER
 			-- Pure Eiffel validating parser
 		once
 			create Result.make_with_factory (create {AST_NULL_FACTORY})
@@ -128,7 +128,7 @@ feature {NONE} -- Internal parsers
 			pure_parser: not Result.il_parser
 		end
 
-	il_eiffel_validating_parser: EIFFEL_PARSER is
+	il_eiffel_validating_parser: EIFFEL_PARSER
 			-- IL Eiffel validating parser.
 		once
 			create Result.make_with_factory (create {AST_NULL_FACTORY})
@@ -138,7 +138,7 @@ feature {NONE} -- Internal parsers
 			il_parser: Result.il_parser
 		end
 
-	External_parser: EXTERNAL_PARSER is
+	External_parser: EXTERNAL_PARSER
 			-- Parser for external clauses
 		once
 			create Result.make
@@ -146,7 +146,7 @@ feature {NONE} -- Internal parsers
 			external_parser_not_void: Result /= Void
 		end
 
-	Matchlist_scanner: EIFFEL_ROUNDTRIP_SCANNER is
+	Matchlist_scanner: EIFFEL_ROUNDTRIP_SCANNER
 			-- Scanner for generating a matchlist.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_SCANNER_FACTORY})
@@ -154,7 +154,7 @@ feature {NONE} -- Internal parsers
 			Result_not_void: Result /= Void
 		end
 
-	Heavy_roundtrip_parser: EIFFEL_PARSER is
+	Heavy_roundtrip_parser: EIFFEL_PARSER
 			-- Heavy pure eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
@@ -163,7 +163,7 @@ feature {NONE} -- Internal parsers
 			pure_parser: not Result.il_parser
 		end
 
-	Heavy_il_roundtrip_parser: EIFFEL_PARSER is
+	Heavy_il_roundtrip_parser: EIFFEL_PARSER
 			-- Heavy IL Eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
@@ -173,7 +173,7 @@ feature {NONE} -- Internal parsers
 			il_parser: Result.il_parser
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

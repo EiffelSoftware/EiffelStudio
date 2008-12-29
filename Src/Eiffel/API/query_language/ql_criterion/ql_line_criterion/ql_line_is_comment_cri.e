@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Line criterion to decide whether or not a line contains some kind of comments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_LINE): BOOLEAN is
+	is_satisfied_by (a_item: QL_LINE): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_text: STRING
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_is_for_implementation_comment (b: BOOLEAN) is
+	set_is_for_implementation_comment (b: BOOLEAN)
 			-- Set `is_for_implementation_comment' with `b'.
 		do
 			is_for_implementation_comment := b
@@ -67,7 +67,7 @@ feature -- Setting
 			is_for_implementation_comment_set: is_for_implementation_comment = b
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display the ancestors of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -29,13 +29,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.class_ancestors_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.class_ancestors_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showancestors
@@ -44,13 +44,13 @@ feature -- Properties
 	browser: EB_CLASS_BROWSER_TREE_VIEW
 			-- Browser
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_class_tree_displayer, displayer_generators.class_tree_displayer]
 		end
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := preferences.class_browser_data.class_tree_view_sorting_order_preference
@@ -65,26 +65,26 @@ feature -- Access
 
 feature -- Status report
 
-	is_tree_node_highlight_enabled: BOOLEAN is True
+	is_tree_node_highlight_enabled: BOOLEAN = True
 			-- Is tree node highlight enabled?
 
-	is_inheritance_formatter: BOOLEAN is True
+	is_inheritance_formatter: BOOLEAN = True
 			-- Is current a class inheritance (ancestor/descendant) formatter?
 
 feature {NONE} -- Properties
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Ancestors
 		end
 
-	post_fix: STRING is "anc"
+	post_fix: STRING = "anc"
 			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	start_class: QL_CLASS is
+	start_class: QL_CLASS
 			-- Start class
 		do
 			check associated_class /= Void end
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		local
 			l_class: QL_CLASS
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			create {QL_CLASS_ANCESTOR_RELATION_CRI}Result.make (l_class.wrapped_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.ancestor_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

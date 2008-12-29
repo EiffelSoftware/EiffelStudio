@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for class information indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,25 +17,25 @@ inherit
 
 feature
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is an item of id `an_id' present in the current server ?
 		do
 			Result := Tmp_ast_server.has (an_id) or else Ast_server.has (an_id)
 		end
 
-	server_has (an_id: INTEGER): BOOLEAN is
+	server_has (an_id: INTEGER): BOOLEAN
 			-- Is an item of id `an_id' present in the current server ?
 		do
 			Result := Ast_server.has (an_id)
 		end
 
-	id (t: CLASS_INFO): INTEGER is
+	id (t: CLASS_INFO): INTEGER
 			-- Id associated with `t'
 		do
 			Result := t.class_id
 		end
 
-	item, disk_item (an_id: INTEGER): CLASS_INFO is
+	item, disk_item (an_id: INTEGER): CLASS_INFO
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
 		local
@@ -51,7 +51,7 @@ feature
 			end
 		end;
 
-	server_item (an_id: INTEGER): CLASS_INFO is
+	server_item (an_id: INTEGER): CLASS_INFO
 			-- Feature table of id `an_id'.
 			-- Temporary feature server is not used.
 		local
@@ -67,15 +67,15 @@ feature
 
 feature -- Server size configuration
 
-	Size_limit: INTEGER is 200
+	Size_limit: INTEGER = 200
 			-- Size of the CLASS_INFO_SERVER file (200 Ko)
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 invariant
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

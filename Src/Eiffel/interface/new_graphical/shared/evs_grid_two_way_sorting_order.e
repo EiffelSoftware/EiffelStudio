@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Two way sorting orders"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,34 +14,34 @@ inherit
 
 feature -- Sorting order
 
-	ascending_order: INTEGER is 1
+	ascending_order: INTEGER = 1
 			-- Ascending order
 
-	descending_order: INTEGER is 2
+	descending_order: INTEGER = 2
 			-- Descending order
 
-	topology_order: INTEGER is 3
+	topology_order: INTEGER = 3
 			-- Topology order
 
-	topology_indicator_pixmap: EV_PIXMAP is
+	topology_indicator_pixmap: EV_PIXMAP
 			-- Indicator for `topology_order'
 		do
 			Result := pixmaps.icon_pixmaps.sort_grouped_icon
 		end
 
-	ascending_indicator_pixmap: EV_PIXMAP is
+	ascending_indicator_pixmap: EV_PIXMAP
 			-- Indicator for `ascending_order'
 		do
 			Result := pixmaps.icon_pixmaps.sort_acending_icon
 		end
 
-	descending_indicator_pixmap: EV_PIXMAP is
+	descending_indicator_pixmap: EV_PIXMAP
 			-- Indicator for `descending_order'
 		do
 			Result := pixmaps.icon_pixmaps.sort_descending_icon
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

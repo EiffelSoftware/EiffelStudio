@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of a feature used to represent the type of either a
 		formal generic parameter or an anchored type from the point of view of
@@ -40,16 +40,16 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current still valid?
 		do
 			Result := type.is_valid
 		end
 
-	is_type_feature: BOOLEAN is True
+	is_type_feature: BOOLEAN = True
 			-- Current represents a type feature.
 
-	is_formal: BOOLEAN is
+	is_formal: BOOLEAN
 			-- Is `type' a formal generic parameter?
 		local
 			l_formal: FORMAL_A
@@ -58,7 +58,7 @@ feature -- Status report
 			Result := l_formal /= Void
 		end
 
-	is_function: BOOLEAN is
+	is_function: BOOLEAN
 			-- <Precursor>
 		do
 			Result := True
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Checking
 
-	check_expanded (class_c: CLASS_C) is
+	check_expanded (class_c: CLASS_C)
 			-- Check expanded validity rules
 		local
 			solved_type: TYPE_A
@@ -133,7 +133,7 @@ feature -- Settings
 			type_set: type = t
 		end
 
-	set_position (a_pos: like position) is
+	set_position (a_pos: like position)
 			-- Set `a_pos' to `position'.
 		require
 			valid_pos: a_pos > 0
@@ -145,7 +145,7 @@ feature -- Settings
 
 feature -- Polymorphism
 
-	new_rout_entry: FORMAL_ENTRY is
+	new_rout_entry: FORMAL_ENTRY
 			-- New type feature unit.
 		do
 			create Result
@@ -165,7 +165,7 @@ feature -- Polymorphism
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_FEATURE is
+	new_api_feature: E_FEATURE
 			-- API feature.
 			-- Cannot be called in Current context.
 		do
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Replication
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replicated feature.
 			-- Cannot be called in Current context.
 		do
@@ -192,7 +192,7 @@ feature {NONE} -- Replication
 			end
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature.
 			-- Cannot be called in Current context.
 		do
@@ -201,7 +201,7 @@ feature {NONE} -- Replication
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

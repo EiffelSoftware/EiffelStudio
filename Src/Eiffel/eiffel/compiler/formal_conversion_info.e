@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about converting a formal to its constraint type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_formal: like formal_type; a_target_type: like target_type) is
+	make (a_formal: like formal_type; a_target_type: like target_type)
 		require
 			a_formal_not_void: a_formal /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Byte code generation
 
-	byte_node (an_expr: EXPR_B): EXPR_B is
+	byte_node (an_expr: EXPR_B): EXPR_B
 			-- Generate byte node needed to convert `an_expr' to `target_type'
 		do
 			create {FORMAL_CONVERSION_B} Result.make (an_expr, target_type, False)
@@ -49,7 +49,7 @@ feature -- Byte code generation
 invariant
 	formal_type_not_void: formal_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

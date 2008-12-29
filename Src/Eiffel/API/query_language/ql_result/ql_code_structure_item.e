@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a code-related item like class, feature, contract, local, argument, generic"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	ast: AST_EIFFEL is
+	ast: AST_EIFFEL
 			-- AST node associated with current item
 		require
 			class_compiled: is_compiled
@@ -28,14 +28,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- CLASS_I object associated with current item
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- CLASS_C object associated with current item
 		require
 			class_compiled: is_compiled
@@ -44,7 +44,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	written_class: like class_c is
+	written_class: like class_c
 			-- CLASS_C in which current is written
 		require
 			class_compiled: is_compiled
@@ -53,7 +53,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text of `ast'
 		local
 			l_list: LEAF_AS_LIST
@@ -69,7 +69,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	first_line: INTEGER is
+	first_line: INTEGER
 			-- Line number of the first line of current item in file
 		local
 			l_list: LEAF_AS_LIST
@@ -79,14 +79,14 @@ feature -- Access
 			Result := ast.first_token (l_list).line
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
 			Result := query_class_item_from_class_i (class_i)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

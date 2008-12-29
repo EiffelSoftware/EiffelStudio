@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature stone containing the favorite item it stems from"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_favorite (an_item: EB_FAVORITES_FEATURE) is
+	make_from_favorite (an_item: EB_FAVORITES_FEATURE)
 			-- Create a feature stone and save the attached favorite item
 		require
 			feature_exists_in_universe: an_item.associated_e_feature /= Void
@@ -31,7 +31,7 @@ feature -- Access
 
 	origin: EB_FAVORITES_FEATURE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

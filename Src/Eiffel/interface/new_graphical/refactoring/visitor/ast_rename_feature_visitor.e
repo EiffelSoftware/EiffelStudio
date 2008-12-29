@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that changes all occurrences of a feature name to a new name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: FEATURE_I; a_new_feature_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN; a_context_class: CLASS_C; a_recursive_descendants: SEARCH_TABLE [INTEGER]) is
+	make (a_feature: FEATURE_I; a_new_feature_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN; a_context_class: CLASS_C; a_recursive_descendants: SEARCH_TABLE [INTEGER])
 			-- Create a visitor that renames the feature `a_feature' into `a_new_feature_name'.
 			-- `a_change_comments' specifies if the occurance of the name in comments should be changed.
 			-- `a_change_strings' specifies if the occurance of the name in strings should be changed.
@@ -71,7 +71,7 @@ feature -- Status
 
 feature {NONE} -- Visitor implementation
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.target)
@@ -89,13 +89,13 @@ feature {NONE} -- Visitor implementation
 			safe_process (l_as.internal_operands)
 		end
 
-	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
 			-- Process `l_as'.
 		do
 			process_routine_creation_as (l_as)
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 			-- Process interval clause nodes.
 		local
 			l_atom: ATOMIC_AS
@@ -114,7 +114,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 			-- Process the inherit clause node
 		local
 			l_id: INTEGER
@@ -228,7 +228,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 			-- Process create statement.
 		do
 				-- handle only if we are a descendant and didn't rename
@@ -238,7 +238,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 			-- Process like statements.
 		do
 			if is_descendant and then not is_renaming then
@@ -249,7 +249,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS) is
+	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 			-- Process feature name.
 		do
 			if old_feature_name.is_case_insensitive_equal (l_as.feature_name.name) then
@@ -258,7 +258,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 			-- Process feature clauses.
 		do
 				-- handle feature names only if we didn't rename
@@ -270,7 +270,7 @@ feature {NONE} -- Visitor implementation
 			safe_process (l_as.body)
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 			-- Process body part.
 		local
 			c_as: CONSTANT_AS
@@ -298,7 +298,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.parameters)
@@ -315,31 +315,31 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- Process `l_as'.
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 			-- Process `l_as'.
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_access_inv_as (l_as: ACCESS_INV_AS) is
+	process_access_inv_as (l_as: ACCESS_INV_AS)
 			-- Process `l_as'.
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 			-- Process `l_as'.
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 			-- Process `l_as'.
 		do
 			if recursive_descendants.has (l_as.class_id) then
@@ -355,7 +355,7 @@ feature {NONE} -- Visitor implementation
 			end
 		end
 
-	process_break_as (l_as: BREAK_AS) is
+	process_break_as (l_as: BREAK_AS)
 			-- Process breaks which could be comments.
 		do
 			if change_comments then
@@ -365,7 +365,7 @@ feature {NONE} -- Visitor implementation
 			Precursor (l_as)
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 		do
 			if change_strings then
 				l_as.replace_subtext ("`"+old_feature_name+"'", "`"+new_feature_name+"'", False, match_list)
@@ -374,7 +374,7 @@ feature {NONE} -- Visitor implementation
 			Precursor (l_as)
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 			if change_strings then
 				l_as.replace_subtext ("`"+old_feature_name+"'", "`"+new_feature_name+"'", False, match_list)
@@ -425,7 +425,7 @@ invariant
 	recursive_descendants_not_void: recursive_descendants /= Void
 	type_a_generator_not_void: type_a_generator /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

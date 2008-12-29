@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Widgets used by EB_FAKE_SMART_EDITOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Stone
 	stone: STONE
 			-- Stone associated.
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			-- Set `stone' with `a_stone'
 		do
 			stone := a_stone
@@ -24,7 +24,7 @@ feature -- Stone
 			set: stone = a_stone
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

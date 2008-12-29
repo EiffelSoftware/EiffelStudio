@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when the compiler cannot find a final name for a selection."
@@ -18,10 +18,10 @@ inherit
 	
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 			-- Error code
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

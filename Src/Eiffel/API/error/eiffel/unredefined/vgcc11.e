@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error in creation instruction when applied to a formal generic parameter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 8
+	subcode: INTEGER = 8
 
 	creation_feature: E_FEATURE;
 			-- Creation feature involved
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build the error message
 		do
 			if target_name /= Void then
@@ -41,7 +41,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_creation_feature (f: FEATURE_I) is
+	set_creation_feature (f: FEATURE_I)
 			-- Assign `f' to `creation_feature'.
 		do
 			if f /= Void then
@@ -49,7 +49,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

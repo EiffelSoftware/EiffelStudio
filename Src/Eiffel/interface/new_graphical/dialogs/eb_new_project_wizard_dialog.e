@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to create a new project using a Wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,14 +61,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is	
+	make	
 			-- Initialize the dialog
 		do
 			load_available_wizards
 			build_interface
 		end
 
-	build_interface is
+	build_interface
 			-- Build the interface
 		local
 			vbox: EV_VERTICAL_BOX
@@ -154,7 +154,7 @@ feature -- Access
 	ok_selected: BOOLEAN
 			-- Has the user choosen "Ok"?
 
-	cancel_selected: BOOLEAN is
+	cancel_selected: BOOLEAN
 			-- Has the user choosen "Cancel"?
 		do
 			Result := not ok_selected
@@ -162,7 +162,7 @@ feature -- Access
 
 feature {NONE} -- Execution
 
-	on_ok is
+	on_ok
 			-- User has clicked "Ok"
 		local
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
@@ -174,7 +174,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- User has clicked "Cancel"
 		do
 			ok_selected := False
@@ -182,7 +182,7 @@ feature {NONE} -- Execution
 			destroy
 		end
 
-	start_wizard (a_wizard: EB_NEW_PROJECT_WIZARD) is
+	start_wizard (a_wizard: EB_NEW_PROJECT_WIZARD)
 			-- Start the selected wizard, wait for the wizard to
 			-- terminate and load the generated wizard.
 		local
@@ -233,7 +233,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	fill_list_with_available_wizards is
+	fill_list_with_available_wizards
 			-- Fill in `wizard_list' with the available wizards
 		local
 			list_item: EV_LIST_ITEM
@@ -256,7 +256,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	load_available_wizards is
+	load_available_wizards
 			-- Enumerate the available wizards.
 		local
 			new_project_directory: DIRECTORY
@@ -299,7 +299,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	create_project (directory_name: STRING; ace_file_name: STRING) is
+	create_project (directory_name: STRING; ace_file_name: STRING)
 			-- Create a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
 		local
@@ -341,7 +341,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	update_ok_button is
+	update_ok_button
 			-- Update the sensitiveness of the Ok button
 		local
 			has_selected_item: BOOLEAN
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_description is
+	update_description
 			-- Update the description for the currently selected wizard
 			-- and the state of the "ok" button.
 		local
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			description_label.set_text (new_description)
 		end
 
-	selected_wizard: EB_NEW_PROJECT_WIZARD is
+	selected_wizard: EB_NEW_PROJECT_WIZARD
 			-- Currently selected wizard.
 		local
 			selected_item: EV_LIST_ITEM
@@ -417,16 +417,16 @@ feature {NONE} -- Vision2 architechture
 
 feature {NONE} -- Constants
 
-	No_wizard_installed: STRING is "No wizard is currently installed for this platform."
+	No_wizard_installed: STRING = "No wizard is currently installed for this platform."
 			-- List item text when no wizard is installed for the platform.
 
-	No_item_selected_description: STRING is "Select an item to view its description."
+	No_item_selected_description: STRING = "Select an item to view its description."
 			-- Description when no wizard is currently selected.
 
-	No_description: STRING is "No description is available for this wizard";
+	No_description: STRING = "No description is available for this wizard";
 			-- Description when no description is available.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

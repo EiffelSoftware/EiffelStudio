@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to delete diagram views."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Display confirmation and remove current view if OK pressed.
 		do
 			if is_sensitive then
@@ -42,37 +42,37 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_delete_view
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name for the menu entry.
 		do
 			Result := Interface_names.m_diagram_delete_view
 		end
 
-	name: STRING is "Delete_view"
+	name: STRING = "Delete_view"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
 feature {NONE} -- Events
 
-	ok_pressed is
+	ok_pressed
 			-- The user really wants to delete current view.
 		local
 			ew: EIFFEL_WORLD
@@ -83,7 +83,7 @@ feature {NONE} -- Events
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

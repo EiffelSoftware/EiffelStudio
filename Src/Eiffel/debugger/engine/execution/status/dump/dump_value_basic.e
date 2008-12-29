@@ -1,5 +1,5 @@
 
-indexing
+note
 	description : "Objects that ..."
 	author      : "$Author$"
 	date        : "$Date$"
@@ -24,7 +24,7 @@ create {DUMP_VALUE_FACTORY}
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
-	set_boolean_value  (value: BOOLEAN; dtype: CLASS_C) is
+	set_boolean_value  (value: BOOLEAN; dtype: CLASS_C)
 			-- make a boolean item initialized to `value'
 		do
 			value_boolean := value
@@ -34,7 +34,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_character_8_value (value: CHARACTER; dtype: CLASS_C) is
+	set_character_8_value (value: CHARACTER; dtype: CLASS_C)
 			-- make a character item initialized to `value'
 		do
 			value_character_8 := value
@@ -44,7 +44,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_character_32_value (value: WIDE_CHARACTER; dtype: CLASS_C) is
+	set_character_32_value (value: WIDE_CHARACTER; dtype: CLASS_C)
 			-- make a wide_character item initialized to `value'
 		do
 			value_character_32 := value
@@ -54,7 +54,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_integer_8_value  (value: INTEGER_8; dtype: CLASS_C) is
+	set_integer_8_value  (value: INTEGER_8; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_integer_32 := value
@@ -65,7 +65,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_integer_16_value  (value: INTEGER_16; dtype: CLASS_C) is
+	set_integer_16_value  (value: INTEGER_16; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_integer_32 := value
@@ -76,7 +76,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_integer_32_value  (value: INTEGER_32; dtype: CLASS_C) is
+	set_integer_32_value  (value: INTEGER_32; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_integer_32 := value
@@ -87,7 +87,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_integer_64_value  (value: INTEGER_64; dtype: CLASS_C) is
+	set_integer_64_value  (value: INTEGER_64; dtype: CLASS_C)
 			-- make a integer_64 item initialized to `value'
 		do
 			value_integer_64 := value
@@ -98,7 +98,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_natural_8_value  (value: NATURAL_8; dtype: CLASS_C) is
+	set_natural_8_value  (value: NATURAL_8; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_natural_32 := value
@@ -109,7 +109,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_natural_16_value  (value: NATURAL_16; dtype: CLASS_C) is
+	set_natural_16_value  (value: NATURAL_16; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_natural_32 := value
@@ -120,7 +120,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_natural_32_value  (value: NATURAL_32; dtype: CLASS_C) is
+	set_natural_32_value  (value: NATURAL_32; dtype: CLASS_C)
 			-- make a integer item initialized to `value'
 		do
 			value_natural_32 := value
@@ -131,7 +131,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_natural_64_value  (value: NATURAL_64; dtype: CLASS_C) is
+	set_natural_64_value  (value: NATURAL_64; dtype: CLASS_C)
 			-- make a integer_64 item initialized to `value'
 		do
 			value_natural_64 := value
@@ -142,7 +142,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_real_32_value (value: REAL_32; dtype: CLASS_C) is
+	set_real_32_value (value: REAL_32; dtype: CLASS_C)
 			-- make a real item initialized to `value'
 		do
 			value_real_32 := value
@@ -152,7 +152,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_real_64_value (value: REAL_64; dtype: CLASS_C) is
+	set_real_64_value (value: REAL_64; dtype: CLASS_C)
 			-- make a double item initialized to `value'
 		do
 			value_real_64 := value
@@ -162,7 +162,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_pointer_value (value: POINTER; dtype: CLASS_C) is
+	set_pointer_value (value: POINTER; dtype: CLASS_C)
 			-- make a pointer item initialized to `value'
 		do
 			value_pointer := value
@@ -172,7 +172,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_bits_value  (a_value, a_type: STRING; dtype: CLASS_C) is
+	set_bits_value  (a_value, a_type: STRING; dtype: CLASS_C)
 			-- Make bit item of type `a_type' and class `dtype'
 			-- initialized with `value'.
 		require
@@ -196,21 +196,21 @@ feature {DUMP_VALUE, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, DBG_EV
 	value_boolean	: BOOLEAN
 	value_character_8 : CHARACTER
 	value_character_32: CHARACTER_32
-	value_integer_8: INTEGER_8 is
+	value_integer_8: INTEGER_8
 		do
 			Result := value_integer_32.as_integer_8
 		end
-	value_integer_16: INTEGER_16 is
+	value_integer_16: INTEGER_16
 		do
 			Result := value_integer_32.as_integer_16
 		end
 	value_integer_32: INTEGER_32
 	value_integer_64: INTEGER_64
-	value_natural_8: NATURAL_8 is
+	value_natural_8: NATURAL_8
 		do
 			Result := value_natural_32.as_natural_8
 		end
-	value_natural_16: NATURAL_16 is
+	value_natural_16: NATURAL_16
 		do
 			Result := value_natural_32.as_natural_16
 		end
@@ -225,7 +225,7 @@ feature {DUMP_VALUE, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, DBG_EV
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Specific access
 
-	replace_integer_32_value (i: like value_integer_32) is
+	replace_integer_32_value (i: like value_integer_32)
 			-- Replace `value_integer_32' by `i'
 			--| This is mainly used by debugger's evaluator for optimisation.
 		require
@@ -236,7 +236,7 @@ feature {DBG_EXPRESSION_EVALUATOR} -- Specific access
 
 feature -- Action
 
-	classic_send_value is
+	classic_send_value
 			-- send the value the application
 		do
 			inspect (type)
@@ -282,23 +282,23 @@ feature -- Action
 
 feature -- Access
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN
 			-- Is `Current' of a basic type?
 		do
 			Result := True
 		end
 
-	is_type_boolean: BOOLEAN is
+	is_type_boolean: BOOLEAN
 		do
 			Result := type = Type_boolean
 		end
 
-	is_type_integer_32: BOOLEAN is
+	is_type_integer_32: BOOLEAN
 		do
 			Result := type = Type_integer_32
 		end
 
-	output_value (format_result: BOOLEAN): STRING_32 is
+	output_value (format_result: BOOLEAN): STRING_32
 			-- String representation of the value of `Current'.
 			-- If `format_result' is True, add the " and other if needed
 			--   otherwise return the raw value's output
@@ -354,7 +354,7 @@ feature -- Access
 			end
 		end
 
-	hexa_output_value: STRING_32 is
+	hexa_output_value: STRING_32
 			-- String representation of the value of `Current'.
 			--| True
 			--| 0x61 'a'
@@ -401,12 +401,12 @@ feature -- Access
 
 feature -- Status report		
 
-	to_basic: DUMP_VALUE is
+	to_basic: DUMP_VALUE
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

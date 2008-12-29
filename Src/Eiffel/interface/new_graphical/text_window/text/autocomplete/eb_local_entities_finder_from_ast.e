@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is used to find local entities form a feature as."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- initialize `Current'.
 		do
 			create found_entities.make (2)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	build_entities_list (a_feature_as: FEATURE_AS) is
+	build_entities_list (a_feature_as: FEATURE_AS)
 			-- Build list of locals and argument types (`found_entities') corresponding to a position
 			-- in a text defined by `line' and `token'.
 		require
@@ -45,7 +45,7 @@ feature -- Basic Operations
 			found_entities.append (found_arguments_list)
 		end
 
-	reset is
+	reset
 			-- Wipe lists out .
 		do
 			has_return_type := False
@@ -60,7 +60,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING_32] is
+	found_names: LINKED_LIST [STRING_32]
 			-- List of found entity names.
 		local
 			id_list: IDENTIFIER_LIST
@@ -94,7 +94,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	build_lists is
+	build_lists
 			-- Build list of local types.
 			-- Resulting local nodes will be put in `found_locals_list'.
 			-- Build list of argument types.
@@ -134,7 +134,7 @@ invariant
 	found_entities_not_void: found_entities /= Void
 	found_arguments_list_not_void: found_arguments_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

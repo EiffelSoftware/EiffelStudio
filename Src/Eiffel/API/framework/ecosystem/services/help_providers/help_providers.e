@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A help provider service {HELP_PROVIDERS_S} implementation used in querying help service providers based on available providers described in {HELP_PROVIDER_KINDS}.
 	]"
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `help_providers'
 			-- Note: Never use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

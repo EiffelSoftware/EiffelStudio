@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Exception debug value, named"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,21 +24,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_value (a_value: like debug_value) is
+	make_with_value (a_value: like debug_value)
 			-- Create Current with `a_value' as `debug_value'
 		do
 			name := "Exception occurred"
 			set_exception_value (a_value)
 		end
 
-	make_without_any_value is
+	make_without_any_value
 			-- Create Current without any value
 		do
 			make_with_value (Void)
 			set_user_meaning ("Exception occurred (no information)")
 		end
 
-	make_fake (t: like user_meaning) is
+	make_fake (t: like user_meaning)
 		do
 			make_with_value (Void)
 			set_user_meaning (t)
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Report
 
-	short_description: STRING_32 is
+	short_description: STRING_32
 			-- Description for Current exception
 		local
 			l_mesg, l_meaning: STRING_32
@@ -78,7 +78,7 @@ feature -- Report
 			Result_not_void: Result /= Void
 		end
 
-	description: STRING_32 is
+	description: STRING_32
 			-- Computed information message to display
 		local
 			s: STRING_32
@@ -103,7 +103,7 @@ feature -- Report
 			Result_not_void: Result /= Void
 		end
 
-	long_description: STRING_32 is
+	long_description: STRING_32
 			-- Computed full information message to display
 		local
 			k: STRING_8
@@ -133,7 +133,7 @@ feature -- Report
 
 feature -- Access		
 
-	type_name: STRING_8 is
+	type_name: STRING_8
 			-- Type name.	
 		do
 			Result := exception_type_name
@@ -143,7 +143,7 @@ feature -- Access
 			end
 		end
 
-	code: INTEGER is
+	code: INTEGER
 			-- Code
 		do
 			Result := exception_code
@@ -153,7 +153,7 @@ feature -- Access
 			end
 		end
 
-	meaning: STRING_32 is
+	meaning: STRING_32
 			-- Tag
 		do
 			Result := user_meaning
@@ -166,7 +166,7 @@ feature -- Access
 			end
 		end
 
-	message: STRING_32 is
+	message: STRING_32
 			-- Message
 		do
 			Result := exception_message
@@ -176,7 +176,7 @@ feature -- Access
 			end
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Message
 		do
 			Result := user_text
@@ -189,7 +189,7 @@ feature -- Access
 			end
 		end
 
-	other_info (k: STRING): STRING_32 is
+	other_info (k: STRING): STRING_32
 			-- Other info named `k'.
 		require
 			k_not_void: k /= Void
@@ -208,12 +208,12 @@ feature -- Access
 
 feature -- user change
 
-	reset_user_data is
+	reset_user_data
 		do
 			user_meaning := Void
 		end
 
-	set_user_meaning (a_meaning: STRING_GENERAL) is
+	set_user_meaning (a_meaning: STRING_GENERAL)
 			-- Set `user_meaning' to `a_meaning'	
 		do
 			if a_meaning /= Void then
@@ -227,7 +227,7 @@ feature -- user change
 			end
 		end
 
-	set_user_text (a_text: STRING_GENERAL) is
+	set_user_text (a_text: STRING_GENERAL)
 			-- Set `user_text' to `a_text'	
 		do
 			if a_text /= Void then
@@ -243,7 +243,7 @@ feature -- user change
 
 feature -- Change
 
-	set_exception_value	(a_dbg_value: like debug_value) is
+	set_exception_value	(a_dbg_value: like debug_value)
 			-- Set associated Exception value
 		do
 			reset_data
@@ -253,7 +253,7 @@ feature -- Change
 			end
 		end
 
-	reset_data is
+	reset_data
 		do
 			data_updated := False
 			exception_code := 0
@@ -263,7 +263,7 @@ feature -- Change
 			exception_others := Void
 		end
 
-	update_data is
+	update_data
 			-- Update using `debug_value' if available
 		do
 			if not data_updated then
@@ -274,7 +274,7 @@ feature -- Change
 			end
 		end
 
-	update_full_data is
+	update_full_data
 			-- Update using `debug_value' if available
 		do
 			if has_value then
@@ -283,7 +283,7 @@ feature -- Change
 			data_updated := True
 		end
 
-	update_heavy_data is
+	update_heavy_data
 			-- Update using `debug_value' if available
 			-- only for exception text...
 		do
@@ -295,7 +295,7 @@ feature -- Change
 
 feature -- Value Access
 
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Is Current has an effective Exception debug value ?
 		do
 			Result := debug_value /= Void
@@ -304,7 +304,7 @@ feature -- Value Access
 	debug_value: ABSTRACT_REFERENCE_VALUE
 			-- Exception debug value
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		do
 			if has_value then
@@ -315,13 +315,13 @@ feature -- Value Access
 			end
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_exception_value (Current)
 		end
 
-	address: DBG_ADDRESS is
+	address: DBG_ADDRESS
 			-- Address of the object represented by `Current'. Void if none.
 		do
 			if has_value then
@@ -331,7 +331,7 @@ feature -- Value Access
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
 			if {add: like address} address then
@@ -339,7 +339,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			Result := short_description
@@ -347,13 +347,13 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		do
 			Result := has_value
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'.
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -367,7 +367,7 @@ feature -- Output
 			end
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -376,7 +376,7 @@ feature -- Output
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := exception_debug_value_id
 		end
@@ -429,37 +429,37 @@ feature {APPLICATION_EXECUTION} -- Implementation access
 
 feature {APPLICATION_EXECUTION} -- Implementation Change
 
-	set_exception_code (v: like exception_code) is
+	set_exception_code (v: like exception_code)
 			-- Set `exception_code' with `v'
 		do
 			exception_code := v
 		end
 
-	set_exception_meaning (v: like exception_meaning) is
+	set_exception_meaning (v: like exception_meaning)
 			-- Set `exception_meaning' with `v'
 		do
 			exception_meaning := v
 		end
 
-	set_exception_message (v: like exception_message) is
+	set_exception_message (v: like exception_message)
 			-- Set `exception_message' with `v'
 		do
 			exception_message := v
 		end
 
-	set_exception_text (v: like exception_text) is
+	set_exception_text (v: like exception_text)
 			-- Set `exception_text' with `v'
 		do
 			exception_text := v
 		end
 
-	set_exception_type_name (v: like exception_type_name) is
+	set_exception_type_name (v: like exception_type_name)
 			-- Set `exception_type_name' with `v'
 		do
 			exception_type_name := v
 		end
 
-	set_exception_others (v: STRING_32; k: STRING) is
+	set_exception_others (v: STRING_32; k: STRING)
 			-- Set `exception_type_name' with `v'
 		require
 			k_not_void: k /= Void
@@ -471,7 +471,7 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 			exception_others.force_last (v, k)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

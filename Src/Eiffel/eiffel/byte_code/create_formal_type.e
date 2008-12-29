@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creation of a formal generic parameter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,18 +28,18 @@ feature -- Access
 
 feature -- C code generation
 
-	analyze is
+	analyze
 		do
 			associated_create_feat.analyze
 		end
 
-	generate is
+	generate
 			-- Generate creation type
 		do
 			associated_create_feat.generate
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL)
 			-- Generate formal creation type id
 		do
 			associated_create_feat.generate_type_id (buffer, final_mode, a_level)
@@ -47,7 +47,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL code for a formal creation type.
 		local
 			formal: FORMAL_A
@@ -71,7 +71,7 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a formal creation type.
 		do
 			associated_create_feat.make_byte_code (ba)
@@ -86,43 +86,43 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	is_explicit: BOOLEAN is
+	is_explicit: BOOLEAN
 			-- Is Current type fixed at compile time?
 		do
 			Result := False
 		end
 
-	generate_gen_type_conversion (a_level: NATURAL) is
+	generate_gen_type_conversion (a_level: NATURAL)
 			-- <Precursor>
 		do
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
 			-- <Precursor>
 		do
 			associated_create_feat.generate_cid (buffer, final_mode)
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL_32) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL_32)
 			-- <Precursor>
 		do
 			associated_create_feat.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 		end
 
-	generate_cid_array (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER) is
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; idx_cnt: COUNTER)
 			-- <Precursor>
 		do
 			associated_create_feat.generate_cid_array (buffer, final_mode, idx_cnt)
 		end
 
-	type_to_create : CL_TYPE_A is
+	type_to_create : CL_TYPE_A
 			-- <Precursor>
 		do
 		end
 
 feature {NONE} -- Helper
 
-	associated_create_feat: CREATE_FEAT is
+	associated_create_feat: CREATE_FEAT
 			-- Associated creation feature for formal.
 		local
 			l_feat: TYPE_FEATURE_I
@@ -136,7 +136,7 @@ feature {NONE} -- Helper
 			assocated_create_feat_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

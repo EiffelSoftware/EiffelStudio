@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for byte node instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Enlargment
 
-	enlarged: INSTR_B is
+	enlarged: INSTR_B
 			-- Enlarge current node for C code generation
 		do
 			Result := Precursor {BYTE_NODE}
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Line number setting
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 		do
 			line_number := lnr
 		ensure then
@@ -39,7 +39,7 @@ feature -- Line number setting
 
 feature -- Element Settings
 
-	set_line_pragma (a_line_pragma: like line_pragma) is
+	set_line_pragma (a_line_pragma: like line_pragma)
 			-- Set `line_pragma' with `a_line_pragma'.
 		do
 			line_pragma := a_line_pragma
@@ -47,7 +47,7 @@ feature -- Element Settings
 			line_pragma_set: line_pragma = a_line_pragma
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

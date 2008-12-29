@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents an actual code template tokenized code template, bound to a minimum version of the Eiffel compiler.
 	]"
@@ -50,7 +50,7 @@ feature -- Query
 			Result := version.is_compatible_with (a_version)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

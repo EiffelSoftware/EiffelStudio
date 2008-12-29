@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Temporary server for melted description indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,15 +15,15 @@ create
 
 feature
 
-	cache: CACHE [MELTED_DESC] is
+	cache: CACHE [MELTED_DESC]
 		once
 			create Result.make
 		end
 
-	Chunk: INTEGER is 200;
+	Chunk: INTEGER = 200;
 			-- Size of a HASH_TABLE block
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

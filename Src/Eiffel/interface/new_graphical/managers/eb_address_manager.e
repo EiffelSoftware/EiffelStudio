@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Location to enter the name of a class and the name of a feature.%
 				  % Manage the history of the parent as well."
 	legal: "See notice at end of class."
@@ -68,7 +68,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; for_context_tool: BOOLEAN) is
+	make (a_parent: like parent; for_context_tool: BOOLEAN)
 			-- Initialize the widget and set up the activate actions.
 			-- If `for_context_tool', do not initialize `widget', but
 			-- initialize `header_info' and `address_dialog' (Saves widgets).
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			create label_changed_actions
 		end
 
-	build_interface is
+	build_interface
 			-- Build Vision2 architecture.
 		local
 			hbox: like widget
@@ -246,7 +246,7 @@ feature {NONE} -- Initialization
 			lost_focus_action_enabled := True
 		end
 
-	build_viewpoints is
+	build_viewpoints
 			-- Build viewpoint selection list
 		local
 			l_label: EV_LABEL
@@ -281,7 +281,7 @@ feature -- Access
 	tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Tool bar items representing Current.
 
-	new_view_points_tool_bar_item: SD_TOOL_BAR_ITEM is
+	new_view_points_tool_bar_item: SD_TOOL_BAR_ITEM
 			-- New view points docking widget
 		local
 			l_combo: EV_COMBO_BOX
@@ -300,7 +300,7 @@ feature -- Access
 	header_info: EV_HORIZONTAL_BOX
 			-- Container for Cluser, Class and Feature selector.
 
-	cluster_label_text: STRING is
+	cluster_label_text: STRING
 			-- Name of the class as it appears in the cluster label.
 		do
 			if cluster_label /= Void and then not cluster_label.text.is_equal (default_cluster_name) then
@@ -308,7 +308,7 @@ feature -- Access
 			end
 		end
 
-	class_label_text: STRING is
+	class_label_text: STRING
 			-- Name of the class as it appears in the class label.
 		do
 			if class_label /= Void and then not class_label.text.is_equal (default_class_name) then
@@ -316,7 +316,7 @@ feature -- Access
 			end
 		end
 
-	feature_label_text: STRING is
+	feature_label_text: STRING
 			-- Name of the class as it appears in the feature label.
 		do
 			if feature_label /= Void and then not feature_label.text.is_equal (default_feature_name) then
@@ -332,7 +332,7 @@ feature -- Access
 			-- Name of the feature as it appears in the combo box.
 			-- Void if none.
 
-	parent_widget: EB_DEVELOPMENT_WINDOW is
+	parent_widget: EB_DEVELOPMENT_WINDOW
 			-- Development window.
 		require
 			not_context_mode: not mode
@@ -352,7 +352,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_format_name (a_name: STRING_GENERAL) is
+	set_format_name (a_name: STRING_GENERAL)
 			-- Set `format_name' to `a_name'.
 			-- `a_name' cannot be Void nor empty.
 		require
@@ -385,7 +385,7 @@ feature -- Element change
 			end
 		end
 
-	set_formatters (new_formatters: like known_formatters) is
+	set_formatters (new_formatters: like known_formatters)
 			-- Set `known_formatters' to `new_formatters'.
 		require
 			formatters_not_initialized: known_formatters = Void
@@ -410,7 +410,7 @@ feature -- Element change
 			widget.disable_item_expand (formatters_combo)
 		end
 
-	set_viewpoints (a_view: like viewpoints) is
+	set_viewpoints (a_view: like viewpoints)
 			-- Set `viewpoints' with `a_view'.
 		require
 			a_view_not_void: a_view /= Void
@@ -426,7 +426,7 @@ feature -- Element change
 	formatters_combo: SD_TOOL_BAR
 			-- Tool bar containing class format option buttons.
 
-	disable_formatters is
+	disable_formatters
 			-- Make the format combo box insensitive.
 		require
 			formatters_initialized: known_formatters /= Void
@@ -445,7 +445,7 @@ feature -- Element change
 			known_formatters.go_to (cur)
 		end
 
-	enable_formatters is
+	enable_formatters
 			-- Make the format combo box insensitive.
 		require
 			formatters_initialized: known_formatters /= Void
@@ -464,7 +464,7 @@ feature -- Element change
 			known_formatters.go_to (cur)
 		end
 
-	reset is
+	reset
 			-- Reset the address manager.
 		do
 			class_name := Void
@@ -474,7 +474,7 @@ feature -- Element change
 			feature_address.remove_text
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the class combo box.
 		do
 			if class_address.is_sensitive then
@@ -488,7 +488,7 @@ feature -- Element change
 			end
 		end
 
-	set_output_line (t: EV_LABEL) is
+	set_output_line (t: EV_LABEL)
 			-- Set the textable in which messages will be displayed.
 			-- `t' may be Void, this means that there will be no output.
 		require
@@ -499,7 +499,7 @@ feature -- Element change
 			output_line_not_void: output_line /= Void
 		end
 
-	set_feature_text_simply (s: STRING) is
+	set_feature_text_simply (s: STRING)
 			-- Set feature combo text with `s'.
 		require
 			s_attached: s /= Void
@@ -509,7 +509,7 @@ feature -- Element change
 			feature_address.change_actions.resume
 		end
 
-	enable_accept_general_group is
+	enable_accept_general_group
 			-- Enable that general group is acceptable.
 		do
 			is_general_group_acceptable := True
@@ -517,7 +517,7 @@ feature -- Element change
 			general_group_acceptable: is_general_group_acceptable
 		end
 
-	disable_accept_general_group is
+	disable_accept_general_group
 			-- Disable the acceptability of general group.
 		do
 			is_general_group_acceptable := False
@@ -527,7 +527,7 @@ feature -- Element change
 
 feature -- Observer management
 
-	on_update is
+	on_update
 			-- The history has changed. Update `Current'.
 		local
 			cluster_stone: CLUSTER_STONE
@@ -640,25 +640,25 @@ feature -- Observer management
 			feature_address.change_actions.resume
 		end
 
-	on_item_added (a_stone: STONE; a_stone_position: INTEGER) is
+	on_item_added (a_stone: STONE; a_stone_position: INTEGER)
 			-- `a_stone' has just been added.
 		do
 			on_update
 		end
 
-	on_item_removed (a_stone: STONE; index_item: INTEGER) is
+	on_item_removed (a_stone: STONE; index_item: INTEGER)
 			-- `a_stone' has just been removed.
 		do
 			on_update
 		end
 
-	on_position_changed is
+	on_position_changed
 			-- Position in history has changed.
 		do
 			on_update
 		end
 
-	on_new_tab_command is
+	on_new_tab_command
 			-- Handle EB_NEW_TAB_EDITOR_COMMAND.
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
@@ -677,7 +677,7 @@ feature -- Observer management
 
 feature -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current' and leave it in an unstable state,
 			-- so that we know whether we're not referenced any longer.
 		do
@@ -688,7 +688,7 @@ feature -- Memory management
 			parent := Void
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			address_dialog := Void
@@ -751,14 +751,14 @@ feature -- Properties
 
 feature -- Updating
 
-	refresh is
+	refresh
 			-- Update the text in the widgets according to parent's stone.
 		do
 			update_combos
 			update_colors
 		end
 
-	update_colors is
+	update_colors
 			-- Update the colors for the address manager labels
 		do
 			if mode then
@@ -768,7 +768,7 @@ feature -- Updating
 			end
 		end
 
-	on_project_created is
+	on_project_created
 			-- A new project has been loaded. Enable all controls.
 		do
 			if cluster_address /= Void then
@@ -781,7 +781,7 @@ feature -- Updating
 			feature_address.enable_sensitive
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Current project has been closed. Disable all controls.
 		do
 			if mode then
@@ -794,7 +794,7 @@ feature -- Updating
 			feature_address.disable_sensitive
 		end
 
-	pop_up_address_bar_at_position (a_x, a_y: INTEGER; a_focus: INTEGER) is
+	pop_up_address_bar_at_position (a_x, a_y: INTEGER; a_focus: INTEGER)
 			-- Display current address manager at position (`a_x', `a_y').
 			-- `a_focus' indicates which combo box will have focus by default:
 			-- 	 	1 cluster combo box
@@ -834,7 +834,7 @@ feature -- Updating
 			end
 		end
 
-	hide_address_bar is
+	hide_address_bar
 			-- Hide address bar dialog.
 		do
 			address_dialog.hide
@@ -842,20 +842,20 @@ feature -- Updating
 
 feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Execution
 
-	execute_with_cluster is
+	execute_with_cluster
 			-- The user just entered a new cluster name, process it.
 		do
 			extract_cluster_from_user_entry
 		end
 
-	execute_with_class is
+	execute_with_class
 			-- The user just entered a new class name, process it.
 		do
 			choosing_class := True
 			process_user_entry
 		end
 
-	execute_with_feature is
+	execute_with_feature
 			-- The user just entered a new feature name, process it.
 		do
 			choosing_class := False
@@ -864,7 +864,7 @@ feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Execution
 
 feature {NONE} -- Execution
 
-	process_cluster_callback (pos: INTEGER) is
+	process_cluster_callback (pos: INTEGER)
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_cluster: group_list /= Void
@@ -877,7 +877,7 @@ feature {NONE} -- Execution
 			process_cluster
 		end
 
-	process_class_callback (pos: INTEGER) is
+	process_class_callback (pos: INTEGER)
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_class: class_list /= Void
@@ -894,7 +894,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_feature_callback (pos: INTEGER) is
+	process_feature_callback (pos: INTEGER)
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_feature: feature_list /= Void
@@ -911,7 +911,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_cluster is
+	process_cluster
 			-- Finish processing the cluster after the user chose it.
 		do
 			if current_group = Void then
@@ -928,7 +928,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_class is
+	process_class
 			-- Finish processing the class after the user chose it.
 		local
 			ctxt: STRING
@@ -969,7 +969,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_feature_class is
+	process_feature_class
 			-- Analyze the class the user chose, but we are choosing a feature.
 		do
 			remove_error_message
@@ -998,7 +998,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_feature_feature is
+	process_feature_feature
 			-- Process the feature the user has selected.
 		local
 			f: E_FEATURE
@@ -1029,7 +1029,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	process_class_feature is
+	process_class_feature
 			-- We are choosing a class, but just in case we analyze the given feature.
 		local
 			l_class_c: CLASS_C
@@ -1084,7 +1084,7 @@ feature {NONE} -- Implementation
 	feature_list: LIST [E_FEATURE]
 			-- List of features of current class, if any.
 
-	history_manager: EB_HISTORY_MANAGER is
+	history_manager: EB_HISTORY_MANAGER
 			-- History for parent.
 		do
 			Result := parent.history_manager
@@ -1094,25 +1094,25 @@ feature {NONE} -- Implementation
 			-- Dialog that gives the user the choice between possible classes, groups or features.
 			-- It may be Void, destroyed, anything, so use with care.
 
-	drop_class (cst: CLASSI_STONE) is
+	drop_class (cst: CLASSI_STONE)
 			-- Attempt to drop a class into the address bar.
 		do
 			parent.advanced_set_stone (cst)
 		end
 
-	drop_feature (fst: FEATURE_STONE) is
+	drop_feature (fst: FEATURE_STONE)
 			-- Attempt to drop a feature into the address bar.
 		do
 			parent.advanced_set_stone (fst)
 		end
 
-	drop_cluster (cst: CLUSTER_STONE) is
+	drop_cluster (cst: CLUSTER_STONE)
 			-- Attempt to drop a class into the address bar.
 		do
 			parent.advanced_set_stone (cst)
 		end
 
-	display_cluster_choice is
+	display_cluster_choice
 				-- Display cluster names from `group_list' to `choice'.
 		require
 			group_list_not_void: group_list /= Void
@@ -1154,7 +1154,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_class_choice is
+	display_class_choice
 				-- Display class names from `class_list' to `choice'.
 		require
 			class_list_not_void: class_list /= Void
@@ -1227,7 +1227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_feature_choice is
+	display_feature_choice
 			-- Display feature names from `feature_list' to `choice'.
 		require
 			feature_list_not_void: feature_list /= Void
@@ -1269,7 +1269,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- open new class
 
-	extract_cluster_from_user_entry is
+	extract_cluster_from_user_entry
 			-- Process the user entry in `cluster_address' to generate `current_group'.
 		local
 			fname: STRING
@@ -1327,7 +1327,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	process_user_entry is
+	process_user_entry
 			-- process the user entry
 		local
 			cname: STRING
@@ -1434,7 +1434,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	extract_feature_from_user_entry is
+	extract_feature_from_user_entry
 			-- Process the user entry in `feature_address' to generate `feature_name'.
 		require
 			give_a_class_first: current_class /= Void
@@ -1510,7 +1510,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	get_feature_named (name: STRING): E_FEATURE is
+	get_feature_named (name: STRING): E_FEATURE
 			-- Return the feature named `name' of class `current_class'.
 		require
 			class_selected: class_i /= Void
@@ -1521,7 +1521,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	change_hist_to_class is
+	change_hist_to_class
 			-- Center the history manager on a different stone.
 		local
 			conv_int: INTEGER_REF
@@ -1534,7 +1534,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	change_hist_to_feature is
+	change_hist_to_feature
 			-- Center the history manager on a different stone.
 		local
 			conv_int: INTEGER_REF
@@ -1547,7 +1547,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	change_hist_to_cluster is
+	change_hist_to_cluster
 			-- Center the history manager on a different stone.
 		local
 			conv_int: INTEGER_REF
@@ -1560,7 +1560,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	cluster_key_up (k: EV_KEY) is
+	cluster_key_up (k: EV_KEY)
 			-- A key was released in the cluster address.
 			-- If it is return, call execute_with_cluster.
 		do
@@ -1579,7 +1579,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	class_key_up (k: EV_KEY) is
+	class_key_up (k: EV_KEY)
 			-- A key was released in the class address.
 			-- If it is return, call execute_with_class.
 		do
@@ -1598,7 +1598,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	feature_key_up (k: EV_KEY) is
+	feature_key_up (k: EV_KEY)
 			-- A key was released in the feature address.
 			-- If it is return, call execute_with_feature.
 		do
@@ -1617,7 +1617,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	class_key_down (k: EV_KEY) is
+	class_key_down (k: EV_KEY)
 			-- A key was pressed in the class address.
 			-- If it is return, call execute_with_class.
 		do
@@ -1642,7 +1642,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	cluster_key_down (k: EV_KEY) is
+	cluster_key_down (k: EV_KEY)
 			-- A key was pressed in the cluster address.
 			-- If it is return, call execute_with_cluster.
 		do
@@ -1667,7 +1667,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	feature_key_down (k: EV_KEY) is
+	feature_key_down (k: EV_KEY)
 			-- A key was pressed in the feature address.
 			-- If it is return, call execute_with_feature.
 		do
@@ -1714,7 +1714,7 @@ feature {NONE} -- open new class
 			-- May contain the class that corresponds to the name in `class_address'.
 			-- Used in the feature completion.
 
-	update_current_typed_class is
+	update_current_typed_class
 			-- Try to update `current_typed_class' based on the contents of `class_address'.
 		local
 			clist: CLASS_C_SERVER
@@ -1741,7 +1741,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	type_class is
+	type_class
 			-- Try to complete the class name.
 		local
 			str: STRING
@@ -1869,7 +1869,7 @@ feature {NONE} -- open new class
 			class_address.change_actions.resume
 		end
 
-	type_cluster is
+	type_cluster
 			-- Try to complete the cluster name.
 		local
 			str: STRING
@@ -1982,7 +1982,7 @@ feature {NONE} -- open new class
 			cluster_address.change_actions.resume
 		end
 
-	type_feature is
+	type_feature
 			-- The user typed a new key in the feature combo.
 			-- Try to complete the feature name.
 		local
@@ -2100,7 +2100,7 @@ feature {NONE} -- open new class
 			feature_address.change_actions.resume
 		end
 
-	current_class: CLASS_C is
+	current_class: CLASS_C
 			-- Currently examined class_c.
 			-- Either what the user typed in `class_address' or manager's stone.
 		do
@@ -2109,7 +2109,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	launch_cluster is
+	launch_cluster
 			-- Send a stone representing `current_group' to `parent'.
 		require
 			cluster_selected: current_group /= Void
@@ -2119,7 +2119,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	launch_class is
+	launch_class
 			-- Send a stone representing `current_class' or `class_i' to `parent'.
 		require
 			class_selected: class_i /= Void
@@ -2131,7 +2131,7 @@ feature {NONE} -- open new class
 			end
 		end
 
-	launch_feature is
+	launch_feature
 			-- Send a stone representing `feature' to `parent'.
 		require
 			feature_selected: current_feature /= Void
@@ -2159,13 +2159,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	address_dialog: EV_POPUP_WINDOW
 			-- Window that pops up in the context tool to change the stone centering.
 
-	set_mode (for_context_tool: BOOLEAN) is
+	set_mode (for_context_tool: BOOLEAN)
 			-- Define `Current's execution mode (generated parent_windows are different).
 		do
 			mode := for_context_tool
 		end
 
-	generate_header_info is
+	generate_header_info
 			-- Create all parent_windows used in `header_info'.
 		local
 			def_col: EV_STOCK_COLORS
@@ -2236,7 +2236,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			header_info.extend (hb)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		do
 			if context_menu_factory /= Void then
@@ -2244,7 +2244,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	update_labels is
+	update_labels
 			-- Refresh the text of the labels according to the history status.
 		require
 			for_context_tool: mode
@@ -2319,7 +2319,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			label_changed_actions.call (Void)
 		end
 
-	update_combos is
+	update_combos
 			-- Refresh the text in the combo boxes in order to display the current stone.
 		local
 			conv_clus: CLUSTER_STONE
@@ -2372,7 +2372,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	pop_up_address_bar is
+	pop_up_address_bar
 			-- Display a window containing an address bar to change the stone.
 		require
 	   		for_context_tool: mode
@@ -2380,7 +2380,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			pop_up_address_bar_at_position ((header_info.screen_x + header_info.width // 2) - address_dialog.width // 2, header_info.screen_y, 0)
 		end
 
-	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is
+	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER)
 			-- Action performed when one of the labels is clicked.
 			-- Pop up `address_dialog' and give focus to `combo'.
 		require
@@ -2396,7 +2396,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	one_lost_focus is
+	one_lost_focus
 			-- One of the widgets displayed in `address_dialog' has lost the focus.
 			-- If none now has the focus, hide `address_dialog'.
 		do
@@ -2415,14 +2415,14 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	Big_font: EV_FONT is
+	Big_font: EV_FONT
 			-- Font used to highlight labels.
 		do
 			Result := Default_font
 			Result.set_weight ({EV_FONT_CONSTANTS}.Weight_black)
 		end
 
-	Default_font: EV_FONT is
+	Default_font: EV_FONT
 			-- Font used to display labels.
 			-- FIXIT: We should use once routine instead of creating a EV_FONT every time? Because this is GDI object limitations on Windows.
 		local
@@ -2432,7 +2432,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			Result := l_shared.tool_bar_font.twin
 		end
 
-	highlight_label (lab: EV_LABEL) is
+	highlight_label (lab: EV_LABEL)
 			-- Display `lab' with a bold font.
 		local
 			a_font: EV_FONT
@@ -2442,7 +2442,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			lab.set_font (a_font)
 		end
 
-	maximum_label_width (a_text: STRING_GENERAL): INTEGER is
+	maximum_label_width (a_text: STRING_GENERAL): INTEGER
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -2450,13 +2450,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			Result := Default_font.string_width (a_text).max (big_font.string_width (a_text))
 		end
 
-	unhighlight_label (lab: EV_LABEL) is
+	unhighlight_label (lab: EV_LABEL)
 			-- Display `lab' with a bold font.
 		do
 			lab.set_font (Default_font)
 		end
 
-	display_error_message (a_message: STRING_GENERAL) is
+	display_error_message (a_message: STRING_GENERAL)
 			-- Display error message `a_message'.
 		require
 			a_message_not_void: a_message /= Void
@@ -2470,7 +2470,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	remove_error_message is
+	remove_error_message
 			-- Remove any message from `output_line'.
 		do
 			if output_line /= Void then
@@ -2478,49 +2478,49 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			end
 		end
 
-	enable_complete: BOOLEAN is
+	enable_complete: BOOLEAN
 			-- Does the user want class names to be completed?
 		do
 			Result := preferences.development_window_data.class_completion --, True
 		end
 
-	enable_feature_complete: BOOLEAN is
+	enable_feature_complete: BOOLEAN
 			-- Does the user want feature names to be completed?
 		do
 			Result := preferences.development_window_data.class_completion --, True
 		end
 
-	enable_cluster_complete: BOOLEAN is
+	enable_cluster_complete: BOOLEAN
 			-- Does the user want cluster names to be completed?
 		do
 			Result := preferences.development_window_data.class_completion --, True
 		end
 
-	default_class_name: STRING_GENERAL is
+	default_class_name: STRING_GENERAL
 			-- Default name for class
 		do
 			Result := interface_names.l_no_class_bra
 		end
 
-	default_feature_name: STRING_GENERAL is
+	default_feature_name: STRING_GENERAL
 			-- Default name for feature
 		do
 			Result := interface_names.l_no_feature_bra
 		end
 
-	default_cluster_name: STRING_GENERAL is
+	default_cluster_name: STRING_GENERAL
 			-- Default name for cluster		
 		do
 			Result := interface_names.l_no_cluster_bra
 		end
 
-	l_Space: STRING is " "
+	l_Space: STRING = " "
 
-	l_From: STRING is " from "
+	l_From: STRING = " from "
 
-	bold_ratio: DOUBLE is 1.19;
+	bold_ratio: DOUBLE = 1.19;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

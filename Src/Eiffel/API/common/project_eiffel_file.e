@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"project.eif or precompile.eif file for an eiffel project."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING) is
+	make (a_file_name: STRING)
 			-- Project file whose location is `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Store/Retrieval
 
-	retrieved_project: E_PROJECT is
+	retrieved_project: E_PROJECT
 			-- Retrieve project
 			-- (Note: error cannot be invalid_precompilation)
 		do
@@ -61,7 +61,7 @@ feature -- Store/Retrieval
 			version_number_exists: project_version_number /= Void
 		end;
 
-	retrieved_precompile: PRECOMP_INFO is
+	retrieved_precompile: PRECOMP_INFO
 			-- Retrieve the precompile info of project
 			-- (Note: error cannot be invalid_precompilation)
 		do
@@ -76,7 +76,7 @@ feature -- Store/Retrieval
 			valid_result: not has_error implies Result /= Void
 		end;
 
-	store (a_project: ANY; a_precompilation_id: INTEGER) is
+	store (a_project: ANY; a_precompilation_id: INTEGER)
 			-- Store `a_project' for version `a_version' and `a_precompilation_id'.
 		require
 			a_project_not_void: a_project /= Void
@@ -130,55 +130,55 @@ feature -- Store/Retrieval
 
 feature -- Status report
 
-	is_interrupted: BOOLEAN is
+	is_interrupted: BOOLEAN
 			-- Was the retrieve of the project interrupted?
 		do
 			Result := error_value = interrupt_value
 		end
 
-	is_invalid_precompilation: BOOLEAN is
+	is_invalid_precompilation: BOOLEAN
 			-- Is the precompilation invalid?
 		do
 			Result := error_value = invalid_precompilation_value
 		end
 
-	is_corrupted: BOOLEAN is
+	is_corrupted: BOOLEAN
 			-- Is the project corrupted?
 		do
 			Result := error_value = corrupt_value
 		end
 
-	is_incompatible: BOOLEAN is
+	is_incompatible: BOOLEAN
 			-- Is the project incompatible with the current version ?
 		do
 			Result := error_value = incompatible_value
 		end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current a valid project file?
 		do
 			Result := storage.is_readable and then storage.is_plain
 		end
 
-	error, has_error: BOOLEAN is
+	error, has_error: BOOLEAN
 			-- Did an error occurred during the retrieval?
 		do
 			Result := error_value /= ok_value
 		end;
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does `storage' exist?
 		do
 			Result := storage.exists
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is `storage' file readable?
 		do
 			Result := storage.is_readable
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is `storage' file writable?
 		do
 			Result := storage.is_writable
@@ -186,7 +186,7 @@ feature -- Status report
 
 feature -- Update
 
-	check_version_number (precomp_id: INTEGER) is
+	check_version_number (precomp_id: INTEGER)
 			-- Check the version number of the project.txt file.
 			-- If `precomp_id' is 0 then do not check precompilation_id.
 			-- If error ok set the error state.
@@ -229,15 +229,15 @@ feature {NONE} -- Implementation
 	error_value: INTEGER
 			-- Error value
 
-	ok_value: INTEGER is 1
-	corrupt_value: INTEGER is 2
-	invalid_precompilation_value: INTEGER is 3
-	incompatible_value: INTEGER is 4
-	interrupt_value: INTEGER is 5
-	cannot_store_value: INTEGER is 6
+	ok_value: INTEGER = 1
+	corrupt_value: INTEGER = 2
+	invalid_precompilation_value: INTEGER = 3
+	incompatible_value: INTEGER = 4
+	interrupt_value: INTEGER = 5
+	cannot_store_value: INTEGER = 6
 			-- Error values
 
-	retrieved_object: ANY is
+	retrieved_object: ANY
 			-- Retrieve project
 		local
 			retried: BOOLEAN
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	retrieved_using_old_storable: ANY is
+	retrieved_using_old_storable: ANY
 			-- Read project file using the C storable.
 		require
 			is_c_storable: is_c_storable
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	read_project_header (a_reader: SED_MEDIUM_READER_WRITER) is
+	read_project_header (a_reader: SED_MEDIUM_READER_WRITER)
 			-- Read project file to get version info.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	check_storage is
+	check_storage
 			-- Check validity of Storage.
 		require
 			storage_open: storage.is_open_read
@@ -360,23 +360,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	storage_validity_string: STRING is "EiffelStudio_Project"
+	storage_validity_string: STRING = "EiffelStudio_Project"
 			-- String to validate that an epr is somewhat valid.
 
 feature {NONE} -- C externals
 
-	is_c_storable: BOOLEAN is True
+	is_c_storable: BOOLEAN = True
 			-- We still default to C storage format because it is faster
 			-- to store.
 
-	ise_compiler_retrieved (f_desc, pos: INTEGER) : ANY is
+	ise_compiler_retrieved (f_desc, pos: INTEGER) : ANY
 		external
 			"C | %"pretrieve.h%""
 		alias
 			"parsing_retrieve"
 		end
 
-	compiler_store (f_desc: INTEGER; obj: POINTER) is
+	compiler_store (f_desc: INTEGER; obj: POINTER)
 		external
 			"C | %"pstore.h%""
 		alias
@@ -387,7 +387,7 @@ invariant
 	name_not_void: name /= Void
 	storage_not_void: storage /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

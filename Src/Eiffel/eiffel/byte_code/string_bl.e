@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged byte code for Eiffel string (allocated each time).
@@ -22,13 +22,13 @@ feature
 	register: REGISTRABLE
 			-- Where string is kept to ensure it is GC safe
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'
 		do
 			register := r
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate `r'
 		do
 			if not context.propagated then
@@ -39,13 +39,13 @@ feature
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo analysis work.
 		do
 			register := Void
 		end
 
-	analyze is
+	analyze
 			-- Analyze the string
 		do
 				-- We get a register to store the string because of the garbage
@@ -55,7 +55,7 @@ feature
 			get_register
 		end
 
-	generate is
+	generate
 			-- Generate the string
 		local
 			buf: GENERATION_BUFFER
@@ -70,7 +70,7 @@ feature
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print the string (or the register in which it is held)
 		do
 			if register = No_register then
@@ -80,7 +80,7 @@ feature
 			end
 		end
 
-	generate_string is
+	generate_string
 			-- Generate the string (created Eiffel object)
 		local
 			buf: GENERATION_BUFFER
@@ -98,7 +98,7 @@ feature
 			buf.put_character(')')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

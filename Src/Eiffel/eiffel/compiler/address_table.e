@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Address table indexed by class_id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create {SYSTEM_I}
 
 feature -- Initialize
 
-	make is
+	make
 		do
 			make_hash_table (100)
 			create dollar_id_counter
@@ -63,7 +63,7 @@ feature -- Initialize
 
 feature -- Access
 
-	has_dollar_operator (class_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+	has_dollar_operator (class_id: INTEGER; feature_id: INTEGER): BOOLEAN
 			-- Is the feature in the table?
 		require
 			class_id_valid: class_id > 0
@@ -76,7 +76,7 @@ feature -- Access
 			end
 		end
 
-	class_has_dollar_operator (a_class_id: INTEGER): BOOLEAN is
+	class_has_dollar_operator (a_class_id: INTEGER): BOOLEAN
 			-- Does the class with class_id a_class_id has at least one dollar-operator ?
 		local
 			l_table_of_class:  like table_of_class
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	has_agent (a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; o_map: like empty_omap): BOOLEAN is
+	has_agent (a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; o_map: like empty_omap): BOOLEAN
 			-- Is there an agent registered with the given parameters?
 		do
 			Result := has_table_of_class (a_class_id)
@@ -109,7 +109,7 @@ feature -- Access
 			end
 		end
 
-	is_lazy (a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; a_omap: like empty_omap): BOOLEAN is
+	is_lazy (a_class_id, a_feature_id: INTEGER; a_is_target_closed: BOOLEAN; a_omap: like empty_omap): BOOLEAN
 			-- Is the agent with the given parameters lazy? Meaning that there is no ececil entry generated for it.
 		require
 			class_id_valid: a_class_id > 0 and then has_table_of_class (a_class_id)
@@ -125,7 +125,7 @@ feature -- Access
 				l_table_entry.item (make_reordering (a_is_target_closed, a_omap)).frozen_age = new_frozen_age
 		end
 
-	id_of_dollar_feature (a_class_id, a_feature_id: INTEGER; a_class_type: CLASS_TYPE): INTEGER is
+	id_of_dollar_feature (a_class_id, a_feature_id: INTEGER; a_class_type: CLASS_TYPE): INTEGER
 			-- The dispatch_table id for the given feature
 		require
 			a_class_type_not_void: a_class_type /= Void
@@ -142,7 +142,7 @@ feature -- Access
 			Result := l_table_entry.dollar_ids.item (a_class_type.static_type_id)
 		end
 
-	update_ids is
+	update_ids
 			-- Recalculates all the ids for the dollar_operator dispatch_table. There is no dispatch table for agents!
 		local
 			l_table_of_class:  like table_of_class
@@ -216,7 +216,7 @@ feature -- Access
 
 feature -- Register
 
-	record_dollar_op (a_class_id, a_feature_id: INTEGER) is
+	record_dollar_op (a_class_id, a_feature_id: INTEGER)
 			-- Records a dollar op for the given feature in the address table
 		require
 			class_id_valid: a_class_id > 0
@@ -233,7 +233,7 @@ feature -- Register
 		end
 
 	record_agent (
-		a_class_id, a_feature_id: INTEGER; a_is_target_closed, a_is_inline_agent: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]) is
+		a_class_id, a_feature_id: INTEGER; a_is_target_closed, a_is_inline_agent: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER])
 			-- Records an agent with the reordering (defined by a_open_map) to the specified feature in the address_table
 		require
 			class_id_valid: a_class_id > 0
@@ -260,7 +260,7 @@ feature -- Register
 
 feature {NONE} -- Insert
 
-	force_new_table_entry (a_class_id, a_feature_id: INTEGER): ADDRESS_TABLE_ENTRY is
+	force_new_table_entry (a_class_id, a_feature_id: INTEGER): ADDRESS_TABLE_ENTRY
 			-- Forces, that there is an address table entry for feature with id a_feature_id of the class with id a_class_id
 		local
 			l_table_of_class: like table_of_class
@@ -285,7 +285,7 @@ feature {NONE} -- Insert
 
 feature -- Generation
 
-	generate (final_mode: BOOLEAN) is
+	generate (final_mode: BOOLEAN)
 		local
 			class_id: INTEGER
 			feature_id: INTEGER
@@ -435,7 +435,7 @@ feature -- Generation
 		end
 
 	calc_function_name (a_is_for_agent: BOOLEAN; a_feature_id, a_static_type_id: INTEGER;
-						a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): STRING is
+						a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): STRING
 		do
 			create Result.make (12)
 				-- 12 covers most cases without the need for a resize.
@@ -463,7 +463,7 @@ feature -- Generation
 
 feature -- Generation helpers
 
-	solved_type (context_type: CLASS_TYPE; type_a: TYPE_A): TYPE_C is
+	solved_type (context_type: CLASS_TYPE; type_a: TYPE_A): TYPE_C
 			-- Solved type associated with `context_type'.
 		require
 			context_type_not_void: context_type /= Void
@@ -474,7 +474,7 @@ feature -- Generation helpers
 			solved_type_not_void: Result /= Void
 		end
 
-	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG; is_for_agent: BOOLEAN; seed: FEATURE_I): ARRAY [STRING] is
+	arg_types (context_type: CLASS_TYPE; args: FEAT_ARG; is_for_agent: BOOLEAN; seed: FEATURE_I): ARRAY [STRING]
 			-- Generate declaration of the argument types.
 		require
 			arg_non_void: args /= Void
@@ -511,7 +511,7 @@ feature -- Generation helpers
 
 feature {NONE} -- Generation
 
-	generate_dispatch_table (buffer: GENERATION_BUFFER) is
+	generate_dispatch_table (buffer: GENERATION_BUFFER)
 			-- Generates the dispatch table for the dollar operators
 		require
 			buffer_exists: buffer /= Void
@@ -568,7 +568,7 @@ feature {NONE} -- Generation
 			buffer.put_string ("};%N%Nfnptr *egc_address_table_init = feif_address_table;%N%N")
 		end
 
-	arg_names (nb: INTEGER): ARRAY [STRING] is
+	arg_names (nb: INTEGER): ARRAY [STRING]
 			-- Names of the arguments
 		local
 			i: INTEGER
@@ -592,7 +592,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	generate_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; nb: INTEGER) is
+	generate_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; nb: INTEGER)
 			-- Generate declaration of `n' arguments.
 		local
 			i: INTEGER
@@ -614,7 +614,7 @@ feature {NONE} -- Generation
 
 		end
 
-	generate_workbench_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; context_type: CLASS_TYPE; args: FEAT_ARG) is
+	generate_workbench_arg_list (buffer: GENERATION_BUFFER; current_name: STRING; context_type: CLASS_TYPE; args: FEAT_ARG)
 			-- Generate declaration of `n' arguments.
 		local
 			i: INTEGER
@@ -650,7 +650,7 @@ feature {NONE} -- Generation
 
 	generate_feature (a_class: CLASS_C; a_feature: FEATURE_I; final_mode: BOOLEAN; buffer: GENERATION_BUFFER;
 					  is_for_agent, is_target_closed: BOOLEAN; omap: ARRAYED_LIST [INTEGER];
-					  a_oargs_encapsulated: BOOLEAN) is
+					  a_oargs_encapsulated: BOOLEAN)
 			-- Generate wrapper routine for `$f' if `is_for_agent' False.
 			-- Generate wrapper routine for `agent f' if `is_for_agent' True.
 		require
@@ -1045,7 +1045,7 @@ feature {NONE} -- Generation
 		end
 
 	generate_final_c_body (buffer: GENERATION_BUFFER; a_feature: FEATURE_I; a_current_name: STRING;
-						   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types): BOOLEAN is
+						   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types): BOOLEAN
 		local
 			l_table_name, l_function_name: STRING
 			l_entry: POLY_TABLE [ENTRY]
@@ -1108,7 +1108,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	is_polymorphic (a_feature: FEATURE_I; a_type: CLASS_TYPE): BOOLEAN is
+	is_polymorphic (a_feature: FEATURE_I; a_type: CLASS_TYPE): BOOLEAN
 			-- Is `a_feature' polymorphic for type `a_type' for all its
 			-- seeds?
 		require
@@ -1140,7 +1140,7 @@ feature {NONE} -- Generation
 		end
 
 	generate_workbench_c_body (buffer: GENERATION_BUFFER; a_feature: FEATURE_I; l_current_name: STRING;
-						   	   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types) is
+						   	   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types)
 		local
 			l_rout_id: INTEGER
 			l_rout_info: ROUT_INFO
@@ -1186,7 +1186,7 @@ feature {NONE} -- Generation
 		end
 
 	generate_arg_list_for_rout (a_buf: GENERATION_BUFFER; a_type: CLASS_TYPE; a_args: FEAT_ARG; final_mode: BOOLEAN;
-								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN) is
+								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN)
 			-- Generate declaration of `n' arguments for routine objects.
 		local
 			n: INTEGER
@@ -1269,7 +1269,7 @@ feature {NONE} -- Generation
 		end
 
 	agent_arg_names (a_type: CLASS_TYPE; a_args: FEAT_ARG;
-								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): ARRAY [STRING] is
+								a_omap: ARRAYED_LIST [INTEGER]; a_oargs_encapsulated: BOOLEAN): ARRAY [STRING]
 			-- Generate declaration of `n' arguments for routine objects.
 		local
 			n: INTEGER
@@ -1332,7 +1332,7 @@ feature {NONE} -- Generation
 
 	generate_signature_for_agent (a_buf: GENERATION_BUFFER; a_agent_types: like arg_types; a_types: like arg_types;
 								  a_agent_type, a_return_type, a_name: STRING; a_omap: ARRAYED_LIST [INTEGER];
-								  a_oargs_encapsulated: BOOLEAN) is
+								  a_oargs_encapsulated: BOOLEAN)
 			--
 		local
 			l_arg_names, l_arg_types: ARRAY [STRING]
@@ -1380,7 +1380,7 @@ feature {NONE} -- Generation
 			a_buf.generate_function_signature (a_agent_type, a_name, True, Void, l_arg_names, l_arg_types)
 		end
 
-	tmp_buffer: GENERATION_BUFFER is
+	tmp_buffer: GENERATION_BUFFER
 			-- helper buffer for feature generation
 		once
 			create Result.make (1024)
@@ -1388,7 +1388,7 @@ feature {NONE} -- Generation
 
 feature
 
-	make_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]): FEATURE_REORDERING is
+	make_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]): FEATURE_REORDERING
 			-- Creates a reordering with the given parameters
 		local
 			l_open_map: like empty_omap
@@ -1411,7 +1411,7 @@ feature {NONE}	--implementation
 
 	reordering: FEATURE_REORDERING;
 
-	empty_omap: ARRAYED_LIST [INTEGER] is
+	empty_omap: ARRAYED_LIST [INTEGER]
 		once
 			create Result.make (0)
 		end
@@ -1420,7 +1420,7 @@ feature {NONE}	--implementation
 
 	new_frozen_age: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

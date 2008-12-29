@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Error when the root cluster name is not in cluster list."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Unknown cluster name: ");
 			a_text_formatter.add (root_cluster_name);
@@ -31,13 +31,13 @@ feature -- Output
 
 feature -- Setting
 
-	set_root_cluster_name (s: STRING) is
+	set_root_cluster_name (s: STRING)
 			-- Assign `s' to `root_cluster_name'.
 		do
 			root_cluster_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

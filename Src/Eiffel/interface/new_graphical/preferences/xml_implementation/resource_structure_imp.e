@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives the data contained in a XML file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	initialize, initialize_from_file (default_file: STRING; normal_file: STRING) is
+	initialize, initialize_from_file (default_file: STRING; normal_file: STRING)
 			-- Initialize Current from `default_file', and update it with
 			-- `normal_file'.
 		local
@@ -32,7 +32,7 @@ feature -- Initialization
 			end
 		end
 
-	make_from_file_name (file_name: FILE_NAME) is
+	make_from_file_name (file_name: FILE_NAME)
 				-- Initialize Current from file
 				-- named `file_name'.
 		do
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Update
 
-	update (file_name: FILE_NAME) is
+	update (file_name: FILE_NAME)
 				-- Initialize Current from file
 				-- named `file_name'.
 		do
@@ -54,7 +54,7 @@ feature -- Update
 
 feature -- Saving
 
-	save is
+	save
 			-- Save structure in `location'.
 		do
 			root_folder_i.root_save (location)
@@ -65,7 +65,7 @@ feature -- Status report
 	location: FILE_NAME;
 		-- Current location of structure backup.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

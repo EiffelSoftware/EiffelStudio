@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared utilities for editor token related functionalites"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Editor token
 
-	string_representation_of_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]): STRING_32 is
+	string_representation_of_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]): STRING_32
 			-- String representation of `a_tokens'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -40,7 +40,7 @@ feature -- Editor token
 			result_attached: Result /= Void
 		end
 
-	initialize_editor_token_tooltip (a_tooltip: EB_EDITOR_TOKEN_TOOLTIP) is
+	initialize_editor_token_tooltip (a_tooltip: EB_EDITOR_TOKEN_TOOLTIP)
 			-- Setup parameters for `a_tooltip'.
 		require
 			a_tooltip_attached: a_tooltip /= Void
@@ -53,13 +53,13 @@ feature -- Editor token
 			a_tooltip.set_tooltip_maximum_height (ev_screen.height - 30)
 		end
 
-	last_focused_window: EV_WINDOW is
+	last_focused_window: EV_WINDOW
 			-- Last focused window
 		do
 			Result := window_manager.last_focused_development_window.window
 		end
 
-	ev_screen: EB_STUDIO_SCREEN is
+	ev_screen: EB_STUDIO_SCREEN
 			-- Screen
 		once
 			create Result
@@ -67,7 +67,7 @@ feature -- Editor token
 			result_attached: Result /= Void
 		end
 
-	editor_tokens_for_string (a_string: STRING_GENERAL): LIST [EDITOR_TOKEN] is
+	editor_tokens_for_string (a_string: STRING_GENERAL): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_string'
 		require
 			a_string_attached: a_string /= Void
@@ -80,7 +80,7 @@ feature -- Editor token
 
 feature -- Editor token style
 
-	feature_name_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_name_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate just feature name
 			-- Note: Do not change setting of this style.
 		once
@@ -96,7 +96,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	feature_signature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_signature_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate full feature signature
 			-- Note: Do not change setting of this style.
 		once
@@ -111,7 +111,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	feature_comment_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_comment_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate feature comment
 			-- Note: Do not change setting of this style.
 		once
@@ -121,7 +121,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	just_class_name_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+	just_class_name_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate class information (just class name).
 			-- e.g., HASH_TABLE.
 			-- Note: Do not change setting of this style.
@@ -132,7 +132,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	short_generic_class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+	short_generic_class_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate class information in short generic form.
 			-- e.g., HASH_TABLE [G, H -> ...].
 			-- Note: Do not change setting of this style.
@@ -146,7 +146,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	complete_generic_class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+	complete_generic_class_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate class information in complete generic form.
 			-- e.g., HASH_TABLE [G, H -> HASHABLE].
 			-- Note: Do not change setting of this style.
@@ -160,7 +160,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+	path_style: EB_PATH_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate path information for a query language item.
 			-- Note: Do not change setting of this style.
 		once
@@ -173,7 +173,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	agent_style: EB_AGENT_EDITOR_TOKEN_STYLE is
+	agent_style: EB_AGENT_EDITOR_TOKEN_STYLE
 			-- Editor token style generator whose output is coming from an agent.
 			-- Note: Do not change setting of this style.
 		once
@@ -182,7 +182,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	feature_with_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_with_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Feature style used to display feature information in form of "{CLASS}.feature" where {CLASS} is associated class of that feature.
 			-- Note: Do not change setting of this style.
 		once
@@ -198,7 +198,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	feature_with_written_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_with_written_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Feature style used to display feature information in form of "{CLASS}.feature" where {CLASS} is written class of that feature.
 			-- Note: Do not change setting of this style.
 		once
@@ -214,7 +214,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	ql_name_style: EB_SIMPLE_QL_NAME_STYLE is
+	ql_name_style: EB_SIMPLE_QL_NAME_STYLE
 			-- Name style for query item
 			-- Note: Do not change setting of this style.			
 		once
@@ -223,7 +223,7 @@ feature -- Editor token style
 			result_attached: Result /= Void
 		end
 
-	plain_text_style: EB_TEXT_EDITOR_TOKEN_STYLE is
+	plain_text_style: EB_TEXT_EDITOR_TOKEN_STYLE
 			-- Plain text style
 		once
 			create Result
@@ -233,7 +233,7 @@ feature -- Editor token style
 
 feature -- Editor token appearance
 
-	feature_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+	feature_appearance: TUPLE [INTEGER, INTEGER, INTEGER]
 			-- Feature appearance
 		do
 			Result := [editor_font_id, feature_text_color_id, feature_background_color_id]
@@ -241,7 +241,7 @@ feature -- Editor token appearance
 			result_attached: Result /= Void
 		end
 
-	assertion_tag_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+	assertion_tag_appearance: TUPLE [INTEGER, INTEGER, INTEGER]
 			-- Assertion tag appearance
 		do
 			Result := [editor_font_id, assertion_tag_text_color_id, assertion_tag_background_color_id]
@@ -249,7 +249,7 @@ feature -- Editor token appearance
 			result_attached: Result /= Void
 		end
 
-	warning_appearance: TUPLE [INTEGER, INTEGER, INTEGER] is
+	warning_appearance: TUPLE [INTEGER, INTEGER, INTEGER]
 			-- Warning message appearance
 		do
 			Result := [editor_font_id, warning_text_color_id, warning_background_color_id]
@@ -257,7 +257,7 @@ feature -- Editor token appearance
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

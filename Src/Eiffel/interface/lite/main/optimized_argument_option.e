@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument option for accessing flag boolean representations for the optimize switch."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature -- Status report
 
-	keep_assertions: BOOLEAN is
+	keep_assertions: BOOLEAN
 			-- Inidicates if assertions should be kept
 		do
 			Result := has_flag ({OPTIMIZED_ARGUMENT_SWITCH}.keep_flag)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

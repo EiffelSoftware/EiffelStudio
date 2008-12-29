@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]) is
+	make (precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER])
 			-- Create a new structure containing precompilation info.
 		require
 			precomp_dirs_not_void: precomp_dirs /= Void
@@ -52,7 +52,7 @@ feature -- Access
 	name: STRING;
 			-- Name of the precompiled system
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

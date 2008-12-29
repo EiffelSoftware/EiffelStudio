@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Executor that runs tests in the debugger.
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to show super cluster of entity the diagram of which%
 				%is currently displayed."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform operation.
 		local
 			cla_s: CLASSI_STONE
@@ -46,30 +46,30 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_super_cluster
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.F_super_cluster_diagram
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description for this command.
 		do
 			Result := Interface_names.F_super_cluster_diagram
 		end
 
-	name: STRING is "Supercluster_diagram";
+	name: STRING = "Supercluster_diagram";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

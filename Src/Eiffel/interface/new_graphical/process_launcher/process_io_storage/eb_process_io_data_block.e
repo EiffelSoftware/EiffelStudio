@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object in which a block of data from another launched process is stored"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,17 +17,17 @@ inherit
 
 feature -- State reporting
 
-	data: ANY is
+	data: ANY
 			-- Data that is stored in this block
 		deferred
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation of `data'
 		deferred
 		end
 
-	count: INTEGER is
+	count: INTEGER
 		-- Length of stored data in bytes.
 		deferred
 		end
@@ -37,7 +37,7 @@ feature -- State reporting
 
 	is_end: BOOLEAN;
 		-- Does it the last block of data?
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

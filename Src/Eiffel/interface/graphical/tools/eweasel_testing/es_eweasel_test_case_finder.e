@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Finder to find all test case classes.
 					
@@ -14,7 +14,7 @@ class
 
 feature -- Command
 
-	add_hook is
+	add_hook
 			-- Add hook `add_all_test_case_classes_to_compile' to {SYSTEM_I}.rebuild_configuration_actions
 		local
 			l_shared: SHARED_WORKBENCH
@@ -28,7 +28,7 @@ feature -- Command
 			added: agent_cell.item /= Void
 		end
 
-	remove_hook is
+	remove_hook
 			-- Remove `add_all_test_case_classes_to_compile' hook
 		local
 			l_shared: SHARED_WORKBENCH
@@ -44,7 +44,7 @@ feature -- Command
 
 feature -- Query
 
-	conf_class_of (a_class_name: !STRING): CONF_CLASS is
+	conf_class_of (a_class_name: !STRING): CONF_CLASS
 			-- Result void if not found
 		local
 			l_class_i: CLASS_I
@@ -56,7 +56,7 @@ feature -- Query
 			end
 		end
 
-	class_i_of (a_class_name: !STRING): CLASS_I is
+	class_i_of (a_class_name: !STRING): CLASS_I
 			-- Result void if not found
 			-- Find unique Result of `a_class_name'
 		local
@@ -94,7 +94,7 @@ feature -- Query
 			end
 		end
 
-	is_test_case_class (a_class: CLASS_I): BOOLEAN is
+	is_test_case_class (a_class: CLASS_I): BOOLEAN
 			-- If `a_class' is test case class?
 		local
 			l_string: !STRING
@@ -105,7 +105,7 @@ feature -- Query
 			end
 		end
 
-	all_test_case_classes: !ARRAYED_LIST [CLASS_I] is
+	all_test_case_classes: !ARRAYED_LIST [CLASS_I]
 			-- All test case classes in Current whole system
 		once
 			create Result.make (100)
@@ -113,13 +113,13 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	agent_cell: !CELL [PROCEDURE [ES_EWEASEL_TEST_CASE_FINDER, TUPLE]] is
+	agent_cell: !CELL [PROCEDURE [ES_EWEASEL_TEST_CASE_FINDER, TUPLE]]
 			-- Agent cell for `add_all_test_case_classes_to_compile'
 		once
 			create Result.put (Void)
 		end
 
-	add_all_test_case_classes_to_compile is
+	add_all_test_case_classes_to_compile
 			-- Find all test case classes and force compile
 		local
 			l_shared: SHARED_WORKBENCH
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_class_with_indexing (a_class: !CLASS_I; a_indexing_to_test: !STRING): BOOLEAN is
+	is_class_with_indexing (a_class: !CLASS_I; a_indexing_to_test: !STRING): BOOLEAN
 			-- If `a_class''s class indexing have the key `a_indexing_to_test' ?
 		local
 			l_tag: ID_AS
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

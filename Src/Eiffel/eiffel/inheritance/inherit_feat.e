@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Class for analysis of instances of FEATURE_I inherited under the
@@ -54,7 +54,7 @@ feature
 	rout_id_set: ROUT_ID_SET
 			-- Set of routine ids computed for the inherited feature
 
-	make is
+	make
 			-- Lists creation
 		do
 			create features.make
@@ -62,7 +62,7 @@ feature
 		end
 
 --| FIXME IEK: The following two features are currently unused.
-	has_assertion: BOOLEAN is
+	has_assertion: BOOLEAN
 			-- Do deferred_features or features have assertions?
 			-- (for Merging)
 		do
@@ -70,7 +70,7 @@ feature
 						check_assertion (features)
 		end
 
-	check_assertion (list: LINKED_LIST [INHERIT_INFO]): BOOLEAN is
+	check_assertion (list: LINKED_LIST [INHERIT_INFO]): BOOLEAN
 			-- Check to see if list has assertion
 			-- (for merging)
 		do
@@ -84,7 +84,7 @@ feature
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear the structure
 		do
 			deferred_features.wipe_out
@@ -93,19 +93,19 @@ feature
 			rout_id_set.wipe_out
 		end
 
-	set_inherited_info (f: INHERIT_INFO) is
+	set_inherited_info (f: INHERIT_INFO)
 			-- Assign `f' to `inherited_info'.
 		do
 			inherited_info := f
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Are the feature info lists empty ?
 		do
 			Result := features.count = 0 and then deferred_features.count = 0
 		end
 
-	insert (info: INHERIT_INFO) is
+	insert (info: INHERIT_INFO)
 			-- Insert `info' in one of the two lists.
 		require
 			info_not_void: info /= Void
@@ -120,7 +120,7 @@ feature
 			end
 		end
 
-	process_renamings is
+	process_renamings
 			-- Check renaming in both effective and deferred features.
 		do
 			if deferred_features.count > 0 then
@@ -131,7 +131,7 @@ feature
 			end
 		end
 
-	treat_renamings (feat: LINKED_LIST [INHERIT_INFO]) is
+	treat_renamings (feat: LINKED_LIST [INHERIT_INFO])
 			-- Check renamings in the feature list `feat'.
 		require
 			good_argument: feat /= Void
@@ -236,7 +236,7 @@ feature
 			end
 		end
 
-	process (cl: CLASS_C; feature_name_id: INTEGER; a_check_undefinition, a_check_redefinition: BOOLEAN) is
+	process (cl: CLASS_C; feature_name_id: INTEGER; a_check_undefinition, a_check_redefinition: BOOLEAN)
 			-- Process the features inherited under the same final name
 		require
 			inherited_info = Void
@@ -255,7 +255,7 @@ feature
 			end
 		end
 
-	process_undefinition (cl: CLASS_C; feature_name_id: INTEGER) is
+	process_undefinition (cl: CLASS_C; feature_name_id: INTEGER)
 			-- Process possible undefinitions
 		require
 			cl_not_void: cl /= Void
@@ -310,7 +310,7 @@ feature
 			end;
 		end;
 
-	check_deferred (cl: CLASS_C) is
+	check_deferred (cl: CLASS_C)
 			-- Process the deferred features
 		require
 			deferred_features.count > 0
@@ -319,7 +319,7 @@ feature
 			rout_id_set.update (deferred_features)
 		end
 
-	process_features (cl: CLASS_C; feature_name_id: INTEGER; a_check_redefinition: BOOLEAN) is
+	process_features (cl: CLASS_C; feature_name_id: INTEGER; a_check_redefinition: BOOLEAN)
 			-- Process the non-deferred inherited features.
 		require
 			features /= Void;
@@ -362,7 +362,7 @@ feature
 			rout_id_set.update (features);
 		end;
 
-	features_all_redefined (feature_name_id: INTEGER): BOOLEAN is
+	features_all_redefined (feature_name_id: INTEGER): BOOLEAN
 			-- Are all the non-deferred inherited features redefined?
 		require
 			features.count > 0
@@ -388,7 +388,7 @@ feature
 			end
 		end;
 
-	features_all_the_same: BOOLEAN is
+	features_all_the_same: BOOLEAN
 			-- Are all the non-deferred features all the same ?
 		require
 			good_context: features.count > 0;
@@ -449,7 +449,7 @@ feature
 			end
 		end
 
-	all_attributes: BOOLEAN is
+	all_attributes: BOOLEAN
 			-- Are all the inherited features non-deferred attributes ?
 		do
 			if deferred_features.count = 0 then
@@ -465,7 +465,7 @@ feature
 			end;
 		end;
 
-	exports (feature_name_id: INTEGER): EXPORT_I is
+	exports (feature_name_id: INTEGER): EXPORT_I
 			-- Concatenation of all the export statuses of the inherited
 			-- features (`feature_name_id' is the renamed name...)
 		require
@@ -513,7 +513,7 @@ feature
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("INHERIT_FEAT%N");
 			io.error.put_string ("%TDeferred%N");
@@ -542,7 +542,7 @@ feature -- Debug
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

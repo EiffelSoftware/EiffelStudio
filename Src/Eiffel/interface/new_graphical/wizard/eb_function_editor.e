@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Wizard to create features and insert them in a specific%N%
 		%feature clause."
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	routine_is_part: EV_HORIZONTAL_BOX is
+	routine_is_part: EV_HORIZONTAL_BOX
 			-- Box with `add_argument_button' and "): is".
 		local
 			c: EV_CELL
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
@@ -60,12 +60,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_function: BOOLEAN is True
+	is_function: BOOLEAN = True
 			-- Is `Current' a function editor?
 
 feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
-	enable_expanded_needed is
+	enable_expanded_needed
 			-- Set `expanded_needed' to `True'.
 		local
 			hb_type: EV_HORIZONTAL_BOX
@@ -82,7 +82,7 @@ feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 			hb_type.disable_item_expand (hb_type.last)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

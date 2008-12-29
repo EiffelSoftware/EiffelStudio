@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone that represents a line in a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,14 @@ feature -- Access
 	column_number: INTEGER assign set_column_number
 			-- Optional column number
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		once
 			Result := Cursors.cur_metric_line
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		once
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Status report
 
-	set_should_line_be_selected (b: BOOLEAN) is
+	set_should_line_be_selected (b: BOOLEAN)
 			-- Set `should_line_be_selected' with `b'.
 		do
 			should_line_be_selected := b
@@ -59,7 +59,7 @@ feature -- Status report
 			should_line_be_selected_set: should_line_be_selected = b
 		end
 
-	set_class_c (a_class_c: like class_c) is
+	set_class_c (a_class_c: like class_c)
 			-- Set `class_c' with `a_class_c'.
 		do
 			class_c := a_class_c
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_line_number (a_line_number: INTEGER) is
+	set_line_number (a_line_number: INTEGER)
 			-- Set `line_number' with `a_line_number'.
 		require
 			a_line_number_positive: a_line_number > 0
@@ -79,7 +79,7 @@ feature -- Setting
 			line_number_set: line_number = a_line_number
 		end
 
-	set_column_number (a_column: like column_number) is
+	set_column_number (a_column: like column_number)
 			-- Set `column_number' with `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -89,7 +89,7 @@ feature -- Setting
 			column_number_set: column_number = a_column
 		end
 
-	set_selection (a_selection: like selection) is
+	set_selection (a_selection: like selection)
 			-- Set `selection' with `a_selection'.
 		do
 			selection := a_selection
@@ -101,7 +101,7 @@ invariant
 	line_number_positive: line_number > 0
 	column_number_non_negative: column_number >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

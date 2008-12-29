@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Error which reports that a features result type was redefined differently.
 					This error occurs in the context of multi constraints.
@@ -64,7 +64,7 @@ create
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 4
+	subcode: INTEGER_32 = 4
 
 	feature_info: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
 
@@ -104,7 +104,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			feature_info_set: a_feature_info = feature_info
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

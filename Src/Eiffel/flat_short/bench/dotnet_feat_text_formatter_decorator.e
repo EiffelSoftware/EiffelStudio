@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatting decorator for .NET feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_text_formatter: TEXT_FORMATTER) is
+	make (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_text_formatter: TEXT_FORMATTER)
 			-- Initialize Current with feature 'a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			has_eiffel_class: class_i /= Void
 		end
 
-	make_from_entity (a_entity: CONSUMED_ENTITY; c: CONSUMED_TYPE; a_ci: CLASS_I; a_text_formatter: TEXT_FORMATTER) is
+	make_from_entity (a_entity: CONSUMED_ENTITY; c: CONSUMED_TYPE; a_ci: CLASS_I; a_text_formatter: TEXT_FORMATTER)
 			-- Initialize Current from .NET feature entity 'a_entity'.
 		require
 			a_entity_not_void: a_entity /= Void
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			initialize (a_text_formatter)
 		end
 
-	initialize (a_text_formatter: TEXT_FORMATTER) is
+	initialize (a_text_formatter: TEXT_FORMATTER)
 			-- Initialization.
 		local
 			retried: BOOLEAN
@@ -142,7 +142,7 @@ feature {NONE} -- Property
 
 feature -- Status Report
 
-	is_inherited: BOOLEAN is
+	is_inherited: BOOLEAN
 			-- Is 'current_feature' inherited?
 		do
 			Result := not declared_type.name.is_equal (consumed_t.dotnet_name)
@@ -150,7 +150,7 @@ feature -- Status Report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Format consumed type.
 		local
 			prev_class: CLASS_C
@@ -168,13 +168,13 @@ feature -- Execution
 
 feature -- Element change
 
-	set_use_dotnet_name_only is
+	set_use_dotnet_name_only
 			-- Set `use_dotnet_name_only' to True
 		do
 			use_dotnet_name_only := True
 		end
 
-	prepare_for_feature (a_dn_entity: CONSUMED_ENTITY) is
+	prepare_for_feature (a_dn_entity: CONSUMED_ENTITY)
 			-- Prepare for formatting of feature found in 'dn_entity'.
 		require
 			entity_not_void: a_dn_entity /= Void
@@ -196,7 +196,7 @@ feature -- Element change
 			declared_type_not_void: declared_type /= Void
 		end
 
-	put_normal_feature is
+	put_normal_feature
 			-- Format feature
 		local
 			l_feature: E_FEATURE
@@ -269,7 +269,7 @@ feature -- Element change
 			text_formatter.process_feature_dec_item (l_feature_name, False)
 		end
 
-	put_comments is
+	put_comments
 			-- Feature comments from XML.
 		local
 			l_member_info: MEMBER_INFORMATION
@@ -426,7 +426,7 @@ feature -- Element change
 
 feature {NONE} -- Element Change
 
-	put_feature_qualification is
+	put_feature_qualification
 			-- Put current feature qualification: frozen, deferred, infix or prefix.
 		require
 			text_formatter_not_void: text_formatter /= Void
@@ -452,7 +452,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	put_signature is
+	put_signature
 			-- Feature signature
 		local
 			l_c_arg: CONSUMED_ARGUMENT
@@ -523,7 +523,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	put_origin_comment is
+	put_origin_comment
 			-- Put the 'from (CLASS)' if feature is declared in ancestor where 'CLASS' is
 			-- ancestor class.
 		do
@@ -536,7 +536,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	put_argument_comments (a_param_info: ARRAYED_LIST [PARAMETER_INFORMATION]) is
+	put_argument_comments (a_param_info: ARRAYED_LIST [PARAMETER_INFORMATION])
 			-- Put the parameter information comments in the feature documentation.
 		require
 			param_info_not_void: a_param_info /= Void
@@ -600,7 +600,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
+	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING]
 				-- Strip 'a_summary' of all unwanted whites space
 			require
 				a_summary_not_void: a_summary /= Void
@@ -637,7 +637,7 @@ feature {NONE} -- Element Change
 				has_an_element: not a_summary.is_empty implies not Result.is_empty
 			end
 
-	parsed_entity_string (a_string: STRING): STRING is
+	parsed_entity_string (a_string: STRING): STRING
 			-- Parse 'a_string' for property or event to return correct .NET string.
 		require
 			string_not_void: a_string /= Void
@@ -645,7 +645,7 @@ feature {NONE} -- Element Change
 			Result := a_string.substring (a_string.index_of ('_', 1) + 1, a_string.count)
 		end
 
-	feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
+	feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed feature.
 		require
 			a_consumed_type_not_void: a_consumed_type /= Void
@@ -681,7 +681,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	creation_routine_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
+	creation_routine_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed constructor.
 		require
 			a_consumed_type_not_void: a_consumed_type /= Void
@@ -709,7 +709,7 @@ feature {NONE} -- Element Change
 			end
 		end
 
-	event_or_property_feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY is
+	event_or_property_feature_from_type (a_consumed_type: CONSUMED_TYPE; a_feature: E_FEATURE): CONSUMED_ENTITY
 			-- Given consumed 'a_type' and Eiffel 'a_feature' return consumed feature.
 		require
 			a_consumed_type_not_void: a_consumed_type /= Void
@@ -772,7 +772,7 @@ feature {NONE} -- Element Change
 
 feature {NONE} -- Implementation
 
-	max_length (a_list: ARRAYED_LIST [PARAMETER_INFORMATION]): INTEGER is
+	max_length (a_list: ARRAYED_LIST [PARAMETER_INFORMATION]): INTEGER
 			-- Get the count of the longest argument string in 'a_list'
 		require
 			a_list_not_void: a_list /= Void
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 			Result := l_max
 		end
 
-	Maximum_line_count: INTEGER is 70
+	Maximum_line_count: INTEGER = 70
 			-- Number of characters after which we should stop displaying
 			-- remaining characters of a string on same line.
 
@@ -801,7 +801,7 @@ invariant
 	has_consumed_type: consumed_t /= Void
 	do_flat: not is_short
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

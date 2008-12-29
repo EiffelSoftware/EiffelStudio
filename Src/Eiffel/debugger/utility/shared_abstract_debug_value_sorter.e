@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature {NONE} -- Implementation
 
-	Abstract_debug_value_sorter: DS_SORTER [ABSTRACT_DEBUG_VALUE] is
+	Abstract_debug_value_sorter: DS_SORTER [ABSTRACT_DEBUG_VALUE]
 			-- Attributes sorter.
 		local
 			l_comp: KL_COMPARABLE_COMPARATOR [ABSTRACT_DEBUG_VALUE]
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			create {DS_QUICK_SORTER [ABSTRACT_DEBUG_VALUE]} Result.make (l_comp)
 		end
 
-	sort_debug_values (lst: DS_LIST [ABSTRACT_DEBUG_VALUE]) is
+	sort_debug_values (lst: DS_LIST [ABSTRACT_DEBUG_VALUE])
 			-- sort `children' and return it.
 		require
 			lst_not_void: lst /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			lst_sorted: lst.sorted (abstract_debug_value_sorter)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

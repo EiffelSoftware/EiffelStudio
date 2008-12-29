@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract interface for the help provider service used in querying help service providers based on available providers described in {HELP_PROVIDER_KINDS}.
 	]"
@@ -137,7 +137,7 @@ feature -- Basic operations
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

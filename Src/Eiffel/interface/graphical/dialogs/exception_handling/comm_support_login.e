@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Communicates with the login site to permit logging in and out of the support system.
 	]"
@@ -202,7 +202,7 @@ invariant
 	last_password_attached: is_logged_in implies last_password /= Void
 	not_last_password_is_empty: is_logged_in implies not last_password.is_empty
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

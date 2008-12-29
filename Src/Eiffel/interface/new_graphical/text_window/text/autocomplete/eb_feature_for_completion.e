@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A feature to be inserted into the auto-complete list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create {EB_FEATURE_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_feature: E_FEATURE; a_name: like name; a_name_is_ambiguated, a_is_upper: BOOLEAN) is
+	make (a_feature: E_FEATURE; a_name: like name; a_name_is_ambiguated, a_is_upper: BOOLEAN)
 			-- Create and initialize a new completion feature using `a_feature'
 			-- `a_name' is either an ambiguated name when `a_name_is_ambiguated',
 			-- or a fixed name when not `a_name_is_ambiguated'.
@@ -102,28 +102,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_class: BOOLEAN is False
+	is_class: BOOLEAN = False
 			-- Is completion feature a class, of course not.	
 
-	insert_name: STRING_32 is
+	insert_name: STRING_32
 			-- Name to insert in editor
 		do
 			Result := insert_name_internal
 		end
 
-	full_insert_name: STRING_32 is
+	full_insert_name: STRING_32
 			-- Full name to insert in editor
 		do
 			Result := full_insert_name_internal
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Associated icon based on data
 		do
 			Result := pixmap_from_e_feature (associated_feature)
 		end
 
-	tooltip_text: STRING_32 is
+	tooltip_text: STRING_32
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
@@ -133,7 +133,7 @@ feature -- Access
 			Result.append (completion_type)
 		end
 
-	completion_type: STRING_32 is
+	completion_type: STRING_32
 			-- The type of the feature (for a function, attribute)
 		do
 			if internal_completion_type = Void then
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Grid item
 		local
 			l_style: like feature_style
@@ -186,7 +186,7 @@ feature -- Access
 
 feature -- Query
 
-	has_arguments: BOOLEAN is
+	has_arguments: BOOLEAN
 			-- Does `associated_feature' have arguments?
 		do
 			Result := associated_feature.has_arguments
@@ -194,14 +194,14 @@ feature -- Query
 
 feature -- Status report
 
-	is_obsolete: BOOLEAN is
+	is_obsolete: BOOLEAN
 			-- Is item obsolete?
 		do
 			Result := associated_feature.is_obsolete
 		end
 feature -- Comparison
 
-	begins_with (s: STRING_32): BOOLEAN is
+	begins_with (s: STRING_32): BOOLEAN
 			-- Does this feature name begins with `s'?
 		do
 			if show_disambiguated_name and name_is_ambiguated then
@@ -216,7 +216,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_insert_name (a_name: like insert_name) is
+	set_insert_name (a_name: like insert_name)
 			-- Set `insert_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 	associated_feature: E_FEATURE
 			-- Feature associated with completion item
 
-	feature_signature: STRING_32 is
+	feature_signature: STRING_32
 			-- The signature of `associated_feature'
 		require
 			associated_feature_not_void: associated_feature /= Void
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 	name_is_ambiguated: BOOLEAN
 			-- Is this name ambiguated. If not we always use the received name rather than the feature name.
 
-	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE
 			-- Feature style to generate text for `associated_feature'.
 		once
 			create Result
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 invariant
 	associated_feature_not_void: associated_feature /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

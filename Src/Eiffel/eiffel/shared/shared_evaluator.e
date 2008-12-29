@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Shared instances of types evaluators
@@ -7,7 +7,7 @@ class SHARED_EVALUATOR
 	
 feature {NONE}
 
-	Result_evaluator: RESULT_EVALUATOR is
+	Result_evaluator: RESULT_EVALUATOR
 			-- Evaluator of Result types
 		once
 			create Result
@@ -15,7 +15,7 @@ feature {NONE}
 			result_evaluator_not_void: Result /= Void
 		end
 
-	Arg_evaluator: ARG_EVALUATOR is
+	Arg_evaluator: ARG_EVALUATOR
 			-- Evaluator of argument types
 		once
 			create Result
@@ -23,7 +23,7 @@ feature {NONE}
 			arg_evaluator_not_void: Result /= Void
 		end
 
-	Local_evaluator: LOCAL_EVALUATOR is
+	Local_evaluator: LOCAL_EVALUATOR
 			-- Evaluator  of argument types
 		once
 			create Result
@@ -31,7 +31,7 @@ feature {NONE}
 			local_evaluator_not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

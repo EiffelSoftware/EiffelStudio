@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for replaying a backup."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ create
 
 feature
 
-	make is
+	make
 		do
 			build_preferences
 			create backup_controller
@@ -92,7 +92,7 @@ feature {NONE} -- Preferences
 
 feature {NONE} -- Actions
 
-	reset_preferences is
+	reset_preferences
 			-- Reset preferences to their default value.
 		do
 			ignore_bad_libraries_pref.set_value (True)
@@ -101,7 +101,7 @@ feature {NONE} -- Actions
 			refresh_ui
 		end
 
-	perform_compilation is
+	perform_compilation
 			-- Perform compilation for current iteration in backup directory.
 		local
 			l_text: STRING
@@ -143,7 +143,7 @@ feature {NONE} -- Actions
 			window.raise
 		end
 
-	load_text is
+	load_text
 			-- Load content of `compilation_info.txt' into `compilation_info_text'.
 		do
 			compilation_info_text.set_text (compilation_info_text_representation (counter.value))
@@ -151,7 +151,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Implementation
 
-	build_preferences is
+	build_preferences
 		local
 			l_manager: PREFERENCE_MANAGER
 			l_pref_factory: BASIC_PREFERENCE_FACTORY
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			copy_ecf_allowed := True
 		end
 
-	build_interface is
+	build_interface
 		local
 			l_vbox1, l_vbox2: EV_VERTICAL_BOX
 			l_frame: EV_FRAME
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			window_set: window /= Void
 		end
 
-	refresh_ui is
+	refresh_ui
 			--
 		do
 				-- Ignore bad libraries.
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			load_text
 		end
 
-	backup_path (i: INTEGER): FILE_NAME is
+	backup_path (i: INTEGER): FILE_NAME
 			-- Path to thr `i'-th compilation backup.
 		require
 			i_positive: i > 0
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			backup_path_not_void: Result /= Void
 		end
 
-	compilation_info_text_representation (i: INTEGER): STRING is
+	compilation_info_text_representation (i: INTEGER): STRING
 			-- Text of `compilation_info.txt' file for `i'-th copmpilation.
 		require
 			i_positive: i > 0
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			compilation_info_text_representation_not_void: Result /= Void
 		end
 
-	extract_values (i: INTEGER; a_key: STRING): ARRAYED_LIST [STRING] is
+	extract_values (i: INTEGER; a_key: STRING): ARRAYED_LIST [STRING]
 			-- Extract values associated with `a_key' in `compilation_info.txt' for `i'-th compilation.
 		require
 			i_positive: i > 0
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 			extract_values_not_void: Result /= Void
 		end
 
-	copy_files is
+	copy_files
 			-- Copy files of `counter.value'-th' compilation over to COMP1.
 		local
 			l_comp_first: FILE_NAME
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	smart_recursive_copy (a_source, a_dest: FILE_NAME) is
+	smart_recursive_copy (a_source, a_dest: FILE_NAME)
 			-- Recursively copy files that have changed from `a_source' into `a_dest'.
 			-- If `a_source' directory does not exist or if `a_dest' directory could
 			-- not be created, do nothing.

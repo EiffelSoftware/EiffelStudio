@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared object that knows to generate IL code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- IL generator object
 
-	il_generator: IL_CODE_GENERATOR is
+	il_generator: IL_CODE_GENERATOR
 			-- To generate IL code. So far we only support CIL.
 		once
 			Result := cil_generator
 		end
 
-	cil_generator: CIL_CODE_GENERATOR is
+	cil_generator: CIL_CODE_GENERATOR
 			-- Generator for CIL code
 		once
 				-- We keep both `INTERFACE_xx' and `SINGLE_xx' in
@@ -28,13 +28,13 @@ feature -- IL generator object
 
 feature -- IL label factory
 
-	il_label_factory: IL_LABEL_FACTORY is
+	il_label_factory: IL_LABEL_FACTORY
 			-- To create `label' in IL code.
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged byte code for assignment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (other: ASSIGN_B) is
+	make (other: ASSIGN_B)
 			-- Create new instance from `other'.
 		require
 			other_not_void: other /= Void
@@ -56,7 +56,7 @@ feature
 			-- Is register used to held metamorphosed value as opposed to the
 			-- result of RTMS (for manifest strings)?
 
-	print_register is
+	print_register
 			-- Print register
 		require else
 			register_exists: register /= Void
@@ -64,7 +64,7 @@ feature
 			register.print_register
 		end
 
-	get_register is
+	get_register
 			-- Get a register for string constants
 		do
 			create {REGISTER} register.make (target.c_type)
@@ -79,7 +79,7 @@ feature
 	simple_op_assignment: INTEGER
 			-- Records state of simple operations with assignments
 
-	find_assign_result is
+	find_assign_result
 			-- Check whether this is an assignment in Result, candidate for
 			-- final 'return' optimization. This won't be done if result is
 			-- expanded or if there are some postconditions which might use
@@ -106,7 +106,7 @@ feature
 			end
 		end
 
-	last_all_in_result: BOOLEAN is
+	last_all_in_result: BOOLEAN
 			-- Are all the function exit points an assignment to Result ?
 		do
 			Result := last_in_result
@@ -114,23 +114,23 @@ feature
 			Result = last_in_result
 		end
 
-	mark_last_instruction is
+	mark_last_instruction
 			-- Signals this assigment is an exit point for the routine.
 		do
 			last_instruction := not context.has_postcondition
 				and not context.has_invariant
 		end
 
-	No_simple_op: INTEGER is 1
+	No_simple_op: INTEGER = 1
 			-- There is no simple operation assignment.
 
-	Left_simple_op: INTEGER is 2
+	Left_simple_op: INTEGER = 2
 			-- The left part of the source is affected by a simple operation.
 
-	Right_simple_op: INTEGER is 3
+	Right_simple_op: INTEGER = 3
 			-- The right part of the source is affected by a simple operation.
 
-	analyze_simple_assignment is
+	analyze_simple_assignment
 			-- Take care of the simple operation assigments and sets
 			-- `simple_op_assigment' accordingly.
 		local
@@ -165,7 +165,7 @@ feature
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analyze assignment
 		local
 			string_b: STRING_B
@@ -338,7 +338,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate assignment
 		do
 			generate_line_info
@@ -358,22 +358,22 @@ feature
 			end
 		end
 
-	Simple_assignment: INTEGER is 4
+	Simple_assignment: INTEGER = 4
 			-- Simple assignment wanted
 
-	Metamorphose_assignment: INTEGER is 5
+	Metamorphose_assignment: INTEGER = 5
 			-- Metamorphose of source is necessary
 
-	Unmetamorphose_assignment: INTEGER is 6
+	Unmetamorphose_assignment: INTEGER = 6
 			-- Metamorphose of source is necessary
 
-	Clone_assignment: INTEGER is 7
+	Clone_assignment: INTEGER = 7
 			-- Clone of source is needed
 
-	Copy_assignment: INTEGER is 8
+	Copy_assignment: INTEGER = 8
 			-- Copy source into target, raise exception if source is Void
 
-	source_print_register is
+	source_print_register
 			-- Generate source (the True one or the metamorphosed one)
 		do
 			if register /= Void then
@@ -383,7 +383,7 @@ feature
 			end
 		end
 
-	generate_assignment is
+	generate_assignment
 			-- Generate a non-optimized assignment
 		local
 			target_type: TYPE_A
@@ -422,7 +422,7 @@ feature
 			end
 		end
 
-	generate_regular_assignment (how: INTEGER) is
+	generate_regular_assignment (how: INTEGER)
 			-- Generate the assignment
 		do
 			source.generate
@@ -436,7 +436,7 @@ feature
 			end
 		end
 
-	generate_special (how: INTEGER) is
+	generate_special (how: INTEGER)
 			-- Generate special pre-treatment
 		local
 			basic_source_type: BASIC_A
@@ -464,7 +464,7 @@ feature
 			end
 		end
 
-	generate_normal_assignment (how: INTEGER) is
+	generate_normal_assignment (how: INTEGER)
 			-- Genrate assignment not taken care of by target propagation
 		local
 			need_aging_tests: BOOLEAN
@@ -593,7 +593,7 @@ feature
 			end
 		end
 
-	generate_expanded_assignment is
+	generate_expanded_assignment
 			-- Generate reattachment between expanded `source' and `target'.
 		local
 			buf: GENERATION_BUFFER
@@ -634,7 +634,7 @@ feature
 			end
 		end
 
-	generate_last_return is
+	generate_last_return
 			-- Generate last assignment in Result (i.e. a return)
 		require
 			no_postcondition: not context.has_postcondition
@@ -670,7 +670,7 @@ feature
 			end
 		end
 
-	generate_last_assignment (how: INTEGER) is
+	generate_last_assignment (how: INTEGER)
 			-- Generate last assignment in Result
 		local
 			buf: GENERATION_BUFFER
@@ -699,7 +699,7 @@ feature
 			buf.put_character (';')
 		end
 
-	generate_simple_assignment is
+	generate_simple_assignment
 			-- Generates a simple assignment in target.
 		require
 			simple_assignment: simple_op_assignment = Left_simple_op or
@@ -743,7 +743,7 @@ feature
 			buf.put_character (';')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

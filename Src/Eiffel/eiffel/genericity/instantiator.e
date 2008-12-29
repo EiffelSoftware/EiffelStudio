@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Find all types in system. It includes reference class types and
 		expanded class types, as well as all generic derivations of a given
@@ -38,7 +38,7 @@ create
 
 feature -- Attributes
 
-	dispatch (a_type: TYPE_A; a_class: CLASS_C) is
+	dispatch (a_type: TYPE_A; a_class: CLASS_C)
 			-- Treat generic type `a_type': it is either a new
 			-- class filter or a new data. If it is a data, the instantiator
 			-- keeps it, or it is a filter then it sends the new filter
@@ -105,7 +105,7 @@ feature -- Attributes
 			end
 		end
 
-	process is
+	process
 			-- Process the list in order to find new class types
 		local
 			data: like item
@@ -154,7 +154,7 @@ feature -- Attributes
 			derivations.clear_all;
 		end;
 
-	derivations: DERIVATIONS is
+	derivations: DERIVATIONS
 			-- Set of all the processed derivations
 			-- Avoid recursive loop in process
 		once
@@ -163,7 +163,7 @@ feature -- Attributes
 
 feature {NONE}
 
-	check_array_class is
+	check_array_class
 			-- Force an array type in the system
 		require
 			any_compiled: System.any_class.is_compiled;
@@ -175,7 +175,7 @@ feature {NONE}
 			dispatch (Array_type_a, array_cl);
 		end;
 
-	check_tuple_class is
+	check_tuple_class
 			-- Force a tuple type in the system
 		require
 			tuple_compiled: System.tuple_class.is_compiled
@@ -186,7 +186,7 @@ feature {NONE}
 			dispatch (Tuple_type_a, tuple_cl);
 		end;
 
-	check_function_class is
+	check_function_class
 			-- Force a function type in the system
 		require
 			function_compiled: System.function_class.is_compiled
@@ -200,7 +200,7 @@ feature {NONE}
 			dispatch (Function_type_a, funct_cl);
 		end;
 
-	check_procedure_class is
+	check_procedure_class
 			-- Force a procedure type in the system
 		require
 			procedure_compiled: System.procedure_class.is_compiled
@@ -214,7 +214,7 @@ feature {NONE}
 			dispatch (Procedure_type_a, proc_cl);
 		end;
 
-	check_predicate_class is
+	check_predicate_class
 			-- Force a predicate type in the system
 		require
 			predicate_compiled: System.predicate_class.is_compiled
@@ -230,7 +230,7 @@ feature {NONE}
 
 feature
 
-	Array_type_a: GEN_TYPE_A is
+	Array_type_a: GEN_TYPE_A
 			-- Default array type
 		require
 			any_compiled: System.any_class.is_compiled;
@@ -247,7 +247,7 @@ feature
 			create Result.make (System.array_id, generics)
 		end;
 
-	Tuple_type_a: TUPLE_TYPE_A is
+	Tuple_type_a: TUPLE_TYPE_A
 			-- Default tuple type: TUPLE
 		require
 			tuple_compiled: System.tuple_class.is_compiled
@@ -259,7 +259,7 @@ feature
 			create Result.make (System.tuple_id, generics)
 		end;
 
-	Function_type_a: GEN_TYPE_A is
+	Function_type_a: GEN_TYPE_A
 			-- Default function type: FUNCTION [ANY, TUPLE, ANY]
 		require
 			function_compiled: System.function_class.is_compiled
@@ -280,7 +280,7 @@ feature
 			create Result.make (System.function_class_id, generics)
 		end
 
-	Predicate_type_a: GEN_TYPE_A is
+	Predicate_type_a: GEN_TYPE_A
 			-- Default function type: PREDICATE [ANY, TUPLE]
 		require
 			predicate_compiled: System.predicate_class.is_compiled
@@ -300,7 +300,7 @@ feature
 			create Result.make (System.predicate_class_id, generics)
 		end
 
-	Procedure_type_a: GEN_TYPE_A is
+	Procedure_type_a: GEN_TYPE_A
 			-- Default procedure type: PROCEDURE [ANY, TUPLE]
 		require
 			procedure_compiled: System.procedure_class.is_compiled
@@ -322,7 +322,7 @@ feature
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 
-	array_type: GEN_TYPE_A is
+	array_type: GEN_TYPE_A
 			-- Default array type.
 			-- Not a once since `array_id' might change.
 		local
@@ -335,7 +335,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES}
 			create Result.make (System.array_id, true_gen)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

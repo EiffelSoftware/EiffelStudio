@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formats .NET feature text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 
 feature -- Properties
 
-	is_flat: BOOLEAN is True
+	is_flat: BOOLEAN = True
 			-- Is the format doing a flat?
 
 feature -- Execution
 
-	format (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER) is
+	format (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER)
 			-- Format text for .NET `a_feature'.
 		require
 			valid_feature: a_feature /= Void
@@ -26,7 +26,7 @@ feature -- Execution
 			internal_format (new_format_context (a_feature, c, a_formatter))
 		end
 
-	format_short (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER) is
+	format_short (a_feature: E_FEATURE; c: CONSUMED_TYPE; a_formatter: TEXT_FORMATTER)
 			-- Format text for .NET `a_feature'.
 		require
 			valid_feature: a_feature /= Void
@@ -40,7 +40,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	new_format_context (a_feature: E_FEATURE; c: CONSUMED_TYPE;  a_formatter: TEXT_FORMATTER): DOTNET_FEAT_TEXT_FORMATTER_DECORATOR is
+	new_format_context (a_feature: E_FEATURE; c: CONSUMED_TYPE;  a_formatter: TEXT_FORMATTER): DOTNET_FEAT_TEXT_FORMATTER_DECORATOR
 			-- Create a new formatting context
 		require
 			valid_feature: a_feature /= Void
@@ -51,14 +51,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_format (f: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR) is
+	internal_format (f: DOTNET_FEAT_TEXT_FORMATTER_DECORATOR)
 			-- Text formatting implementation.
 		do
 			f.execute
 			error := f.execution_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

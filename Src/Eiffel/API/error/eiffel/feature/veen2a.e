@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a result entity in used in a precondition."
@@ -18,13 +18,13 @@ inherit
 
 feature
 
-	subcode: INTEGER is 21;
+	subcode: INTEGER = 21;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

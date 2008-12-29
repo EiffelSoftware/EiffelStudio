@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion that used a domain and a boolean as arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE}	-- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
@@ -32,7 +32,7 @@ feature{NONE}	-- Initialization
 
 feature -- Access
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion
 		local
 			l_criterion_factory: QL_CRITERION_FACTORY
@@ -64,12 +64,12 @@ feature -- Status report
 	only_current_version: BOOLEAN
 			-- Only current version?
 
-	is_caller_callee_criterion: BOOLEAN is True
+	is_caller_callee_criterion: BOOLEAN = True
 			-- Is current a caller criterion?
 
 feature -- Setting
 
-	enable_only_current_version is
+	enable_only_current_version
 			-- Enable only current version.
 		do
 			only_current_version := True
@@ -77,7 +77,7 @@ feature -- Setting
 			only_current_version_enabled: only_current_version
 		end
 
-	disable_only_current_version is
+	disable_only_current_version
 			-- disable only current version.
 		do
 			only_current_version := False
@@ -87,13 +87,13 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_caller_callee_criterion (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

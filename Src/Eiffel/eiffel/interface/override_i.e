@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of an override cluster"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature -- Attributes
 	sub_clusters: ARRAYED_LIST [CLUSTER_I];
 			-- List of sub clusters for Current cluster
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

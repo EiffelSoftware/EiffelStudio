@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help section for EIS entries."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_entry: like entry) is
+	make (a_entry: like entry)
 			-- Initialization
 		do
 			entry := a_entry
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	section: !STRING_GENERAL is
+	section: !STRING_GENERAL
 			-- String representation of the section
 		do
 			if {lt_name: STRING_GENERAL}entry.name and then not lt_name.is_empty then
@@ -51,7 +51,7 @@ feature -- Access
 	entry: !EIS_ENTRY;
 			-- The EIS entry
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

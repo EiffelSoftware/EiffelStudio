@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text replacer which replaces placeholders in a string with new texts provided by text fragments"
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Text replacement
 
-	new_text (a_text: STRING): STRING is
+	new_text (a_text: STRING): STRING
 			-- New text for `a_text' with all replacements defined in `text_fragments' applied
 		require
 			a_text_attached: a_text /= Void
@@ -68,7 +68,7 @@ feature -- Text replacement
 
 feature -- Access
 
-	text_fragments: LIST [EB_TEXT_FRAGMENT] is
+	text_fragments: LIST [EB_TEXT_FRAGMENT]
 			-- Text fragments where replacements are defined
 		do
 			if text_fragments_internal = Void then
@@ -79,7 +79,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	text_fragment_cache: HASH_TABLE [EB_TEXT_FRAGMENT, STRING] is
+	text_fragment_cache: HASH_TABLE [EB_TEXT_FRAGMENT, STRING]
 			-- Text fragment cache [text fragment, normalized text fragment name].
 			-- Cache is used to avoid duplicated calculation for replacements.
 			-- For example, if we want to replace all "$file_name" in string "$file_name, $file_name",
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_new_text_available: BOOLEAN is
+	is_new_text_available: BOOLEAN
 			-- Is `new_text' available?
 			-- If all fragments in `text_fragments' have been prepared, then `new_text' is available.
 			-- Call `prepare_replacement' to prepare.
@@ -108,14 +108,14 @@ feature -- Status report
 
 feature -- Synchronize status
 
-	prepare_replacement is
+	prepare_replacement
 			-- Prepare `text_fragments'.
 			-- Should be called before the first time you call `new_text' after every change in `text_fragments'.
 		do
 			text_fragments.do_all (agent (a_fragment: EB_TEXT_FRAGMENT) do a_fragment.safe_prepare_before_replacement end)
 		end
 
-	dispose_replacement is
+	dispose_replacement
 			-- Dispose `text_fragments'.
 			-- Should be called after the last time you call `new_text'.
 		do

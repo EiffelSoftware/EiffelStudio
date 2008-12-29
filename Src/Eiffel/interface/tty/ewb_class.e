@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of command using a class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	make (cn: STRING) is
+	make (cn: STRING)
 			-- Initialize class_name to `cn'.
 		do
 			class_name := cn;
@@ -34,7 +34,7 @@ feature -- Properties
 
 feature {NONE} -- Execution
 
-	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+	want_compiled_class (class_i: CLASS_I): BOOLEAN
 			-- Does current menu selection want `class_i' to be compiled?
 			-- (False by default)
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Execution
 		do
 		end;
 
-	loop_action is
+	loop_action
 			-- Execute Current command from loop.
 		do
 			command_line_io.get_class_name;
@@ -50,7 +50,7 @@ feature {NONE} -- Execution
 			check_arguments_and_execute;
 		end;
 
-	execute is
+	execute
 			-- Execute Current command.
 		local
 			class_i: CLASS_I;
@@ -127,7 +127,7 @@ feature {NONE} -- Execution
 			name_cleared: class_name = Void
 		end;
 
-	process_compiled_class (e_class: CLASS_C) is
+	process_compiled_class (e_class: CLASS_C)
 			-- Process compiled class `e_class'.
 			-- (Do nothing by default).
 		require
@@ -136,7 +136,7 @@ feature {NONE} -- Execution
 		do
 		end;
 
-	process_uncompiled_class (class_i: CLASS_I) is
+	process_uncompiled_class (class_i: CLASS_I)
 			-- Process  uncompiled class `class_i'.
 			-- (Do nothing by default).
 		require
@@ -145,7 +145,7 @@ feature {NONE} -- Execution
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

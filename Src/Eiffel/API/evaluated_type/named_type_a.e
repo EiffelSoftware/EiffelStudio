@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Types that are presented as a class name or generic parameter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,10 +16,10 @@ inherit
 
 feature -- Property
 
-	is_named_type: BOOLEAN is True;
+	is_named_type: BOOLEAN = True;
 			-- Current is a named type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

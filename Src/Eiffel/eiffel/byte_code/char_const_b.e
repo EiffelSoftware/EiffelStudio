@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Character constant for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: like value; t: TYPE_A) is
+	make (v: like value; t: TYPE_A)
 			-- Assign `v' of type `t' to `value'.
 		do
 			value := v
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_char_const_b (Current)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluation of Current.
 		do
 			if is_character_32 then
@@ -65,16 +65,16 @@ feature -- Evaluation
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expression
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- A constant is a predefined structure.
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A character constant is constant.
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type
 		do
 			if is_character_32 then
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Print the character constant
 		local
 			buf: GENERATION_BUFFER
@@ -102,17 +102,17 @@ feature -- C code generation
 			end
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- False
 		do
 		end
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true;
+	is_fast_as_local: BOOLEAN = true;
 			-- Is expression calculation as fast as loading a local?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

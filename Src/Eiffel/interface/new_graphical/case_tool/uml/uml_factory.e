@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that creates uml figures for models."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Basic operations
 
-	new_class_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE is
+	new_class_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
 			-- Create a node figure for `a_node'.
 		local
 			ec: ES_CLASS
@@ -31,7 +31,7 @@ feature -- Basic operations
 			end
 		end
 		
-	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE is
+	new_cluster_figure (a_cluster: EG_CLUSTER): EG_CLUSTER_FIGURE
 			-- Create a cluster figure for `a_cluster'.
 		local
 			ec: ES_CLUSTER
@@ -48,7 +48,7 @@ feature -- Basic operations
 			end
 		end
 		
-	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE is
+	new_link_figure (a_link: EG_LINK): EG_LINK_FIGURE
 			-- Create a link figure for `a_link'.
 		local
 			eih: ES_INHERITANCE_LINK
@@ -77,7 +77,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 		
-	new_inheritance_figure (eih: ES_INHERITANCE_LINK): UML_INHERITANCE_FIGURE is
+	new_inheritance_figure (eih: ES_INHERITANCE_LINK): UML_INHERITANCE_FIGURE
 			-- Create an inheritance figure.
 		require
 			eih_not_void: eih /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-	new_client_supplier_figure (ecs: ES_CLIENT_SUPPLIER_LINK): UML_CLIENT_SUPPLIER_FIGURE is
+	new_client_supplier_figure (ecs: ES_CLIENT_SUPPLIER_LINK): UML_CLIENT_SUPPLIER_FIGURE
 			-- Create a client supplier figure.
 		require
 			ecs_not_void: ecs /= Void
@@ -97,19 +97,19 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 		
-	xml_class_figure_node_name: STRING is "UML_CLASS_FIGURE"
+	xml_class_figure_node_name: STRING = "UML_CLASS_FIGURE"
 			-- Name of xml nodes describing class figures.
 		
-	xml_cluster_figure_node_name: STRING is "UML_CLUSTER_FIGURE"
+	xml_cluster_figure_node_name: STRING = "UML_CLUSTER_FIGURE"
 			-- Name of xml nodes describing cluster figures.
 			
-	xml_client_supplier_figure_node_name: STRING is "UML_CLIENT_SUPPLIER_FIGURE"
+	xml_client_supplier_figure_node_name: STRING = "UML_CLIENT_SUPPLIER_FIGURE"
 			-- Name of xml nodes describing client supplier links.
 		
-	xml_inheritance_figure_node_name: STRING is "UML_INHERITANCE_FIGURE";
+	xml_inheritance_figure_node_name: STRING = "UML_INHERITANCE_FIGURE";
 			-- Name of xml nodes describing inheritance links.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

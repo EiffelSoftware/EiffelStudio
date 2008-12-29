@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command that allows the user to have a nicer display for his object value %
 				%especially strings."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current' and associate it with `a_tool'.
 		do
 			create opened_viewers.make (3)
@@ -37,55 +37,55 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- 8*8 pixmap representing `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_expand_info_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- 8*8 pixel buffer representing `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_expand_info_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for Current.
 		do
 			Result := Interface_names.e_Pretty_print
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Tooltip for Current.
 		do
 			Result := Interface_names.e_Pretty_print
 		end
 
-	name: STRING is
+	name: STRING
 			-- Tooltip for Current.
 		do
 			Result := "Pretty_print"
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- No big pixmap is necessary.
 		do
 
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			-- Currently there is no pixel buffer for this command.
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name for `Current'.
 		do
 			Result := Interface_names.m_Pretty_print
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Status report
 
-	associated_window: EV_WINDOW is
+	associated_window: EV_WINDOW
 			-- Window to which the child dialogs will be modeless to.
 		do
 			Result := Eb_debugger_manager.debugging_window.window
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Status report
 
-	accepts_stone (a_stone: ANY): BOOLEAN is
+	accepts_stone (a_stone: ANY): BOOLEAN
 			-- Can the user drop `st'?
 		do
 			Result := {st: OBJECT_STONE} a_stone
@@ -111,21 +111,21 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_stone (st: OBJECT_STONE) is
+	set_stone (st: OBJECT_STONE)
 		do
 			if accepts_stone (st) then
 				on_stone_dropped (st)
 			end
 		end
 
-	execute is
+	execute
 			-- Launch `Current' as a command.
 			-- Pop up a new empty dialog.
 		do
 			open_new_dialog
 		end
 
-	refresh is
+	refresh
 			-- Update the state of all dialogs.
 		do
 			from
@@ -138,7 +138,7 @@ feature -- Basic operations
 			end
 		end
 
-	end_debug is
+	end_debug
 			-- A debug session ended. We free the resources.
 		do
 			from
@@ -152,7 +152,7 @@ feature -- Basic operations
 
 feature {ES_OBJECT_VIEWER_TOOL_PANEL, EB_OBJECT_VIEWERS_DIALOG} -- Dialog
 
-	remove_entry (e: like last_opened_viewer) is
+	remove_entry (e: like last_opened_viewer)
 			-- Remove `e' from the list of displayed viewers.
 		require
 			is_now_destroyed: e.is_destroyed
@@ -164,7 +164,7 @@ feature {ES_OBJECT_VIEWER_TOOL_PANEL, EB_OBJECT_VIEWERS_DIALOG} -- Dialog
 
 feature {EB_CONTEXT_MENU_FACTORY} -- Implementation
 
-	on_stone_dropped (st: OBJECT_STONE) is
+	on_stone_dropped (st: OBJECT_STONE)
 			-- An object was dropped on the button, display it.
 		do
 			open_new_dialog
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 	opened_viewers: ARRAYED_LIST [EB_OBJECT_VIEWERS_I]
 			-- All expanded viewers linked to `Current'.		
 
-	open_new_dialog is
+	open_new_dialog
 			-- Create and display a new expanded viewer dialog
 		local
 			dlg: EB_OBJECT_VIEWERS_DIALOG
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 	last_opened_viewer: EB_OBJECT_VIEWERS_I;
 			-- The last viewers that `Current' opened.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

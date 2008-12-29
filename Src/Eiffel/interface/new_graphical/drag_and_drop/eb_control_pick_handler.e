@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Handler for right pointer click when ctrl pressed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature -- Basic operations
 
-	launch_stone (st: STONE) is
+	launch_stone (st: STONE)
 			-- Send `st' to the default control-right-click receiver.
 		require
 			valid_stone: st /= Void and then st.is_valid
@@ -68,7 +68,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	chosen_receiver: STRING is
+	chosen_receiver: STRING
 			-- Where the stones should be sent (look up in the preferences).
 		do
 			Result := preferences.development_window_data.ctrl_right_click_receiver.as_lower
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			lower_case: Result.is_equal (Result.as_lower)
 		end
 
-	process_class (cs: CLASSI_STONE) is
+	process_class (cs: CLASSI_STONE)
 			-- Process class stone.
 		local
 			req: COMMAND_EXECUTOR
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_feature (fs: FEATURE_STONE) is
+	process_feature (fs: FEATURE_STONE)
 			-- Process feature stone.
 		local
 			req: COMMAND_EXECUTOR
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 				fs.class_i.file_name, fs.line_number))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

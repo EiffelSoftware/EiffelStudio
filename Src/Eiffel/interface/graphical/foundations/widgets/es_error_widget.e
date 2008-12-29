@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Simple, general purpose, error label widget with an error icon.
 	]"
@@ -150,7 +150,7 @@ feature {NONE} -- Factory
 			Result.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

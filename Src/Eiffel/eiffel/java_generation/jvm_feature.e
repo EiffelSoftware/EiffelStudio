@@ -1,4 +1,4 @@
-indexing
+note
 	description: "represents a JVM feature (internal or external, inherited or not). this is a common heir."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature {ANY} -- Access
 			-- class where it is written, but the class where it is reflected)
 			-- `-1' means the class does not have a type id
 			
-	class_: JVM_CLASS is
+	class_: JVM_CLASS
 			-- the class corresponding to `type_id'
 		require
 			valid_type_id: type_id > 0
@@ -41,7 +41,7 @@ feature {ANY} -- Access
 			class_not_void: class_ /= Void
 		end
 			
-	written_feature: JVM_WRITTEN_FEATURE is
+	written_feature: JVM_WRITTEN_FEATURE
 			-- Corresponding written feature
 			-- May be `Current' in case this is not a reflected feature
 		deferred
@@ -51,7 +51,7 @@ feature {ANY} -- Access
 			
 feature {ANY} --
 			
-	set_feature_id (i: INTEGER) is
+	set_feature_id (i: INTEGER)
 			-- set the feature id
 		do
 			feature_id := i
@@ -59,7 +59,7 @@ feature {ANY} --
 			feature_id_set: feature_id = i
 		end
 			
-	set_routine_id (i: INTEGER) is
+	set_routine_id (i: INTEGER)
 			-- set the routine id
 		do
 			routine_id := i
@@ -67,14 +67,14 @@ feature {ANY} --
 			routine_id_set: routine_id = i
 		end
 			
-	set_type_id (i: INTEGER) is
+	set_type_id (i: INTEGER)
 			-- set the type_id
 		do
 			type_id := i
 		ensure
 			type_id_set: type_id = i
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

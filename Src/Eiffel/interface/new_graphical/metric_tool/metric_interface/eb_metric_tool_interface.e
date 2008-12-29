@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric tool interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ feature -- Access
 	metric_tool: ES_METRICS_TOOL_PANEL
 			-- Metric tool
 
-	metric_tool_window: EV_WINDOW is
+	metric_tool_window: EV_WINDOW
 			-- Window where `metric_too' belongs
 		do
 			Result := metric_tool.develop_window.window
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_metric_tool (a_tool: like metric_tool) is
+	set_metric_tool (a_tool: like metric_tool)
 			-- Set `metric_tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
@@ -37,7 +37,7 @@ feature -- Setting
 invariant
 	metric_tool_attached: metric_tool /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Metric "OR" criterion
 				]"
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion			
 		local
 			l_cursor: CURSOR
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_or_criterion (Current)
@@ -60,10 +60,10 @@ feature -- Process
 
 feature -- Status report
 
-	is_or_criterion: BOOLEAN is True;
+	is_or_criterion: BOOLEAN = True;
 			-- Is current an "or" criterion?	
 			
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

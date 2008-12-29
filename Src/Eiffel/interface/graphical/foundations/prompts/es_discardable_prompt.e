@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base for all discardable prompts in EiffelStudio.
 	]"
@@ -239,7 +239,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	show (a_window: EV_WINDOW) is
+	show (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		do
@@ -252,7 +252,7 @@ feature -- Basic operations
 			end
 		end
 
-	show_on_active_window is
+	show_on_active_window
 			-- Attempts to show the dialog parented to the last active window.
 		do
 			if not is_discarded then
@@ -309,7 +309,7 @@ invariant
 	discard_check_attached: discard_check /= Void
 	buttons_contains_discard_button: buttons.has (discard_button)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

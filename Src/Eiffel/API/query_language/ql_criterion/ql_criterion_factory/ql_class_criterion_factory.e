@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria with class scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create agent_table.make (45)
@@ -141,7 +141,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_false_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion that always returns False.
 		do
 			create Result.make (agent false_agent, False)
@@ -149,7 +149,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_bottom_indexing_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_has_bottom_indexing_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class has bottom indexing
 		do
 			create Result.make (agent has_bottom_indexing_agent, True)
@@ -157,7 +157,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_indexing_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_has_indexing_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New  criterion to test if a class has indexing clause
 		do
 			create Result.make (agent has_indexing_agent, True)
@@ -165,7 +165,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_invariant_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_has_invariant_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class has invariant part
 		do
 			create Result.make (agent has_invariant_agent, True)
@@ -173,7 +173,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_has_top_indexing_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_has_top_indexing_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class has top indexing
 		do
 			create Result.make (agent has_top_indexing_agent, True)
@@ -181,7 +181,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_compiled_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
@@ -189,7 +189,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_deferred_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_deferred_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is deferred
 		do
 			create Result.make (agent is_deferred_agent, True)
@@ -197,7 +197,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_effective_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_effective_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is effective
 		do
 			create Result.make (agent is_effective_agent, True)
@@ -205,7 +205,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_enum_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_enum_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is enum
 		do
 			create Result.make (agent is_enum_agent, True)
@@ -213,7 +213,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_expanded_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_expanded_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is expanded
 		do
 			create Result.make (agent is_expanded_agent, True)
@@ -221,7 +221,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_external_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_external_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is external.
 		do
 			create Result.make (agent is_external_agent, True)
@@ -229,7 +229,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_frozen_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_frozen_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is frozen
 		do
 			create Result.make (agent is_frozen_agent, True)
@@ -237,7 +237,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_generic_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_generic_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is generic
 		do
 			create Result.make (agent is_generic_agent, True)
@@ -245,7 +245,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_obsolete_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_obsolete_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is obsolete
 		do
 			create Result.make (agent is_obsolete_agent, True)
@@ -253,7 +253,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_precompiled_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_precompiled_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is precompiled
 		do
 			create Result.make (agent is_precompiled_agent, True)
@@ -261,7 +261,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_valid_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_valid_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is valid
 		do
 			create Result.make (agent is_valid_agent, True)
@@ -269,7 +269,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_always_compiled_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_always_compiled_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is always compiled
 		do
 			create Result.make (agent is_always_compiled_agent, True)
@@ -277,7 +277,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_partial_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_partial_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is partial
 		do
 			create Result.make (agent is_partial_agent, True)
@@ -285,7 +285,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_read_only_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_read_only_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is read-only
 		do
 			create Result.make (agent is_read_only_agent, True)
@@ -293,7 +293,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_overriden_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_overriden_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is overriden
 		do
 			create Result.make (agent is_overriden_agent, True)
@@ -301,7 +301,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_overrider_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_overrider_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is overrider
 		do
 			create Result.make (agent is_overrider_agent, True)
@@ -309,7 +309,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_visible_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_is_visible_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion to test if a class is visible
 		do
 			create Result.make (agent is_visible_agent, True)
@@ -317,7 +317,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_SIMPLE_CLASS_CRITERION is
+	new_true_criterion: QL_SIMPLE_CLASS_CRITERION
 			-- New criterion that always returns True (tautology criterion)
 		do
 			create Result.make (agent true_agent, False)
@@ -325,7 +325,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_NAME_IS_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -335,7 +335,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_top_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_HAS_TAG_CRI is
+	new_top_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -345,7 +345,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_bottom_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_HAS_TAG_CRI is
+	new_bottom_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -355,7 +355,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_HAS_TAG_CRI is
+	new_indexing_has_tag_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_HAS_TAG_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -365,7 +365,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_top_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_CONTAIN_CRI is
+	new_top_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TOP_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -375,7 +375,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_bottom_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_CONTAIN_CRI is
+	new_bottom_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_BOTTOM_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -385,7 +385,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_CONTAIN_CRI is
+	new_indexing_contain_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_INDEXING_CONTAIN_CRI
 			-- New {QL_CLASS_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -395,7 +395,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_path_in_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI is
+	new_path_in_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI
 			-- New {QL_CLASS_PATH_IN_CRI} criterion.
 		require
 			a_path_attached: a_path /= Void
@@ -405,7 +405,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_path_is_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI is
+	new_path_is_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI
 			-- New {QL_CLASS_PATH_IS_CRI} criterion.
 		require
 			a_path_attached: a_path /= Void
@@ -415,7 +415,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TEXT_CONTAIN_CRI is
+	new_text_contain_criterion (a_text: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_CLASS_TEXT_CONTAIN_CRI
 			-- New {QL_CLASS_TEXT_CONTAIN_CRI} criterion.
 		require
 			a_text_attached: a_text /= Void
@@ -425,7 +425,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_ancestor_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI is
+	new_ancestor_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI
 			-- New {QL_CLASS_ANCESTOR_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -435,7 +435,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_proper_ancestor_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI is
+	new_proper_ancestor_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI
 			-- New {QL_CLASS_ANCESTOR_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -445,7 +445,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_parent_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI is
+	new_parent_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI
 			-- New {QL_CLASS_ANCESTOR_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -455,7 +455,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indirect_parent_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI is
+	new_indirect_parent_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_ANCESTOR_RELATION_CRI
 			-- New {QL_CLASS_ANCESTOR_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -465,7 +465,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_descendant_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI is
+	new_descendant_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI
 			-- New {QL_CLASS_DESCENDANT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -475,7 +475,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_proper_descendant_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI is
+	new_proper_descendant_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI
 			-- New {QL_CLASS_DESCENDANT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -485,7 +485,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_heir_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI is
+	new_heir_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI
 			-- New {QL_CLASS_DESCENDANT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -495,7 +495,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_indirect_heir_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI is
+	new_indirect_heir_is_criterion (a_domain: QL_DOMAIN): QL_CLASS_DESCENDANT_RELATION_CRI
 			-- New {QL_CLASS_DESCENDANT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -505,7 +505,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_supplier_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_SUPPLIER_RELATION_CRI is
+	new_supplier_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_SUPPLIER_RELATION_CRI
 			-- New {QL_CLASS_SUPPLIER_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -515,7 +515,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_client_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_CLIENT_RELATION_CRI is
+	new_client_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_CLIENT_RELATION_CRI
 			-- New {QL_CLASS_CLIENT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
@@ -525,7 +525,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
@@ -535,56 +535,56 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false: INTEGER is 1
-	c_has_bottom_indexing: INTEGER is 2
-	c_has_indexing: INTEGER is 3
-	c_has_invariant: INTEGER is 4
-	c_has_top_indexing: INTEGER is 5
-	c_is_compiled: INTEGER is 6
-	c_is_deferred: INTEGER is 7
-	c_is_effective: INTEGER is 8
-	c_is_enum: INTEGER is 9
-	c_is_expanded: INTEGER is 10
-	c_is_external: INTEGER is 11
-	c_is_frozen: INTEGER is 12
-	c_is_generic: INTEGER is 13
-	c_is_obsolete: INTEGER is 14
-	c_is_precompiled: INTEGER is 15
-	c_true: INTEGER is 16
-	c_name_is: INTEGER is 17
-	c_top_indexing_has_tag: INTEGER is 18
-	c_bottom_indexing_has_tag: INTEGER is 19
-	c_indexing_has_tag: INTEGER is 20
-	c_top_indexing_contain: INTEGER is 21
-	c_bottom_indexing_contain: INTEGER is 22
-	c_indexing_contain: INTEGER is 23
-	c_path_in: INTEGER is 24
-	c_path_is: INTEGER is 25
-	c_text_contain: INTEGER is 26
-	c_ancestor_is: INTEGER is 27
-	c_proper_ancestor_is: INTEGER is 28
-	c_parent_is: INTEGER is 29
-	c_indirect_parent_is: INTEGER is 30
-	c_descendant_is: INTEGER is 31
-	c_proper_descendant_is: INTEGER is 32
-	c_heir_is: INTEGER is 33
-	c_indirect_heir_is: INTEGER is 34
-	c_supplier_is: INTEGER is 35
-	c_client_is: INTEGER is 36
-	c_is_valid: INTEGER is 37
-	c_is_always_compiled: INTEGER is 38
-	c_is_partial: INTEGER is 39
-	c_is_read_only: INTEGER is 40
-	c_is_overriden: INTEGER is 41
-	c_is_overrider: INTEGER is 42
-	c_is_visible: INTEGER is 43
-	c_contain_ast: INTEGER is 44
-	c_value_of_metric_is: INTEGER is 45
-	c_is_satisfied_by: INTEGER is 46
+	c_false: INTEGER = 1
+	c_has_bottom_indexing: INTEGER = 2
+	c_has_indexing: INTEGER = 3
+	c_has_invariant: INTEGER = 4
+	c_has_top_indexing: INTEGER = 5
+	c_is_compiled: INTEGER = 6
+	c_is_deferred: INTEGER = 7
+	c_is_effective: INTEGER = 8
+	c_is_enum: INTEGER = 9
+	c_is_expanded: INTEGER = 10
+	c_is_external: INTEGER = 11
+	c_is_frozen: INTEGER = 12
+	c_is_generic: INTEGER = 13
+	c_is_obsolete: INTEGER = 14
+	c_is_precompiled: INTEGER = 15
+	c_true: INTEGER = 16
+	c_name_is: INTEGER = 17
+	c_top_indexing_has_tag: INTEGER = 18
+	c_bottom_indexing_has_tag: INTEGER = 19
+	c_indexing_has_tag: INTEGER = 20
+	c_top_indexing_contain: INTEGER = 21
+	c_bottom_indexing_contain: INTEGER = 22
+	c_indexing_contain: INTEGER = 23
+	c_path_in: INTEGER = 24
+	c_path_is: INTEGER = 25
+	c_text_contain: INTEGER = 26
+	c_ancestor_is: INTEGER = 27
+	c_proper_ancestor_is: INTEGER = 28
+	c_parent_is: INTEGER = 29
+	c_indirect_parent_is: INTEGER = 30
+	c_descendant_is: INTEGER = 31
+	c_proper_descendant_is: INTEGER = 32
+	c_heir_is: INTEGER = 33
+	c_indirect_heir_is: INTEGER = 34
+	c_supplier_is: INTEGER = 35
+	c_client_is: INTEGER = 36
+	c_is_valid: INTEGER = 37
+	c_is_always_compiled: INTEGER = 38
+	c_is_partial: INTEGER = 39
+	c_is_read_only: INTEGER = 40
+	c_is_overriden: INTEGER = 41
+	c_is_overrider: INTEGER = 42
+	c_is_visible: INTEGER = 43
+	c_contain_ast: INTEGER = 44
+	c_value_of_metric_is: INTEGER = 45
+	c_is_satisfied_by: INTEGER = 46
 
 feature{NONE} -- Implementation/Evaluate agent
 
-	true_agent (a_item: QL_CLASS): BOOLEAN is
+	true_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent which always returns True. (Tautology criterion)
 			-- Require compiled: False
 		require
@@ -594,7 +594,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := True
 		end
 
-	false_agent (a_item: QL_CLASS): BOOLEAN is
+	false_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent which always returns False.
 			-- Require compiled: False
 		require
@@ -603,7 +603,7 @@ feature{NONE} -- Implementation/Evaluate agent
 		do
 		end
 
-	has_bottom_indexing_agent (a_item: QL_CLASS): BOOLEAN is
+	has_bottom_indexing_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class has bottom indexing clause
 			-- Require compiled: True		
 		require
@@ -613,7 +613,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.ast.bottom_indexes /= Void
 		end
 
-	has_top_indexing_agent (a_item: QL_CLASS): BOOLEAN is
+	has_top_indexing_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class has top indexing clause
 			-- Require compiled: True		
 		require
@@ -623,7 +623,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.ast.top_indexes /= Void
 		end
 
-	has_indexing_agent (a_item: QL_CLASS): BOOLEAN is
+	has_indexing_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class has indexing clause (top or bottom or both)
 			-- Require compiled: True
 		require
@@ -633,7 +633,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then (a_item.ast.top_indexes /= Void or a_item.ast.bottom_indexes /= Void)
 		end
 
-	has_invariant_agent (a_item: QL_CLASS): BOOLEAN is
+	has_invariant_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class has invariant part
 			-- Require compiled: True
 		require
@@ -643,7 +643,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.has_invariant
 		end
 
-	is_compiled_agent (a_item: QL_CLASS): BOOLEAN is
+	is_compiled_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is compiled
 			-- Require compiled: False
 		require
@@ -653,7 +653,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled
 		end
 
-	is_deferred_agent (a_item: QL_CLASS): BOOLEAN is
+	is_deferred_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is deferred
 			-- Require compiled: True
 		require
@@ -663,7 +663,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_deferred
 		end
 
-	is_effective_agent (a_item: QL_CLASS): BOOLEAN is
+	is_effective_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is effective
 			-- Require compiled: True
 		require
@@ -673,7 +673,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then not a_item.class_c.is_deferred
 		end
 
-	is_enum_agent (a_item: QL_CLASS): BOOLEAN is
+	is_enum_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is enum
 			-- Require compiled: True
 		require
@@ -683,7 +683,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_enum
 		end
 
-	is_expanded_agent (a_item: QL_CLASS): BOOLEAN is
+	is_expanded_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is expanded
 			-- Require compiled: True
 		require
@@ -693,7 +693,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_expanded
 		end
 
-	is_external_agent (a_item: QL_CLASS): BOOLEAN is
+	is_external_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is external
 			-- Require compiled: True
 		require
@@ -703,7 +703,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_external
 		end
 
-	is_frozen_agent (a_item: QL_CLASS): BOOLEAN is
+	is_frozen_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is frozen
 			-- Require compiled: True
 		require
@@ -713,7 +713,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_frozen
 		end
 
-	is_generic_agent (a_item: QL_CLASS): BOOLEAN is
+	is_generic_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is generic
 			-- Require compiled: True
 		require
@@ -723,7 +723,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_generic
 		end
 
-	is_obsolete_agent (a_item: QL_CLASS): BOOLEAN is
+	is_obsolete_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is obsolete
 			-- Require compiled: True
 		require
@@ -733,7 +733,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_obsolete
 		end
 
-	is_precompiled_agent (a_item: QL_CLASS): BOOLEAN is
+	is_precompiled_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is precompiled
 			-- Require compiled: True
 		require
@@ -743,7 +743,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.class_c.is_precompiled
 		end
 
-	is_valid_agent (a_item: QL_CLASS): BOOLEAN is
+	is_valid_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is valid
 			-- Require compiled: True
 		require
@@ -753,7 +753,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.is_valid
 		end
 
-	is_always_compiled_agent (a_item: QL_CLASS): BOOLEAN is
+	is_always_compiled_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is always compiled
 			-- Require compiled: True
 		require
@@ -763,7 +763,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.is_always_compile
 		end
 
-	is_partial_agent (a_item: QL_CLASS): BOOLEAN is
+	is_partial_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is partial
 			-- Require compiled: True
 		require
@@ -773,7 +773,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.is_partial
 		end
 
-	is_read_only_agent (a_item: QL_CLASS): BOOLEAN is
+	is_read_only_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is read-only
 			-- Require compiled: True
 		require
@@ -783,7 +783,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.is_read_only
 		end
 
-	is_overriden_agent (a_item: QL_CLASS): BOOLEAN is
+	is_overriden_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is overriden
 			-- Require compiled: True
 		require
@@ -793,7 +793,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.is_overriden
 		end
 
-	is_overrider_agent (a_item: QL_CLASS): BOOLEAN is
+	is_overrider_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is overrider
 			-- Require compiled: True
 		require
@@ -803,7 +803,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_compiled and then a_item.conf_class.does_override
 		end
 
-	is_visible_agent (a_item: QL_CLASS): BOOLEAN is
+	is_visible_agent (a_item: QL_CLASS): BOOLEAN
 			-- Agent to test if a class is visible from its original generated level
 		require
 			a_item_attached: a_item /= Void
@@ -812,7 +812,7 @@ feature{NONE} -- Implementation/Evaluate agent
 			Result := a_item.is_visible
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

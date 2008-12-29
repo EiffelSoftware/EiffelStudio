@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to save current docking layout as a named layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		do
 			develop_window := a_develop_window
@@ -42,7 +42,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	execute is
+	execute
 			-- Save current docking layout as a named layout.
 		local
 			l_win: EV_WINDOW
@@ -64,7 +64,7 @@ feature -- Command
 
 feature -- Query
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_save_layout_as
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			-- We can't declare it as a routine local, otherwise it will be
 			-- automatically recycled by gc (at least on Linux) before user finished operations on the dialog.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

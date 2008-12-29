@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facade to access, manipulate, organize, .. the favorites."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: EB_TOOL_MANAGER) is
+	make (a_parent: EB_TOOL_MANAGER)
 			-- Initialization: build the widget and the menu.
 		do
 			development_window ?= a_parent
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status setting
 
-	go_to_favorite (a_favorite: EB_FAVORITES_ITEM) is
+	go_to_favorite (a_favorite: EB_FAVORITES_ITEM)
 			-- Load the favorite item corresponding to `a_favorite'.
 		local
 			stone: STONE
@@ -57,7 +57,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	veto_pebble_function (a_pebble: ANY): BOOLEAN is
+	veto_pebble_function (a_pebble: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_class_stone: CLASSI_STONE
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	cleanup is
+	cleanup
 			-- Routine to be called when this manager has became useless.
 		do
 			if favorites /= Void then
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_class is
+	add_class
 			-- Add current class in `class_window' to the favorites.
 		local
 			development_window_class_name: STRING
@@ -88,7 +88,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_stone (a_stone: STONE) is
+	add_stone (a_stone: STONE)
 			-- Add `a_stone' to favorites.
 		do
 			if widget /= Void then
@@ -96,14 +96,14 @@ feature -- Basic Operations
 			end
 		end
 
-	organize_favorites is
+	organize_favorites
 			-- Display a dialog to organize the favorites.
 		do
 				-- Show the dialog if not already shown, otherwise raise the dialog topmost.
 			organize_favorites_dialog.raise
 		end
 
-	remove (a_item: EB_FAVORITES_ITEM) is
+	remove (a_item: EB_FAVORITES_ITEM)
 			-- Remove `a_item' from favorites.
 		require
 			a_item_not_void: a_item /= Void
@@ -115,7 +115,7 @@ feature -- Basic Operations
 			source.prune (a_item)
 		end
 
-	new_favorite_class (a_window: EV_WINDOW) is
+	new_favorite_class (a_window: EV_WINDOW)
 			-- Create a new "favorite class" and add it to the
 			-- end of the root list.
 		local
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			end
 		end
 
-	create_folder (a_window: EV_WINDOW) is
+	create_folder (a_window: EV_WINDOW)
 			-- create a new folder and add it to the end of the
 			-- root list.
 		local
@@ -162,7 +162,7 @@ feature -- Basic Operations
 			end
 		end
 
-	move_to_folder (a_item: EB_FAVORITES_ITEM; a_window: EV_WINDOW) is
+	move_to_folder (a_item: EB_FAVORITES_ITEM; a_window: EV_WINDOW)
 			-- Move the selected item to a given folder.
 		require
 			a_item_not_void: a_item /= Void
@@ -211,13 +211,13 @@ feature -- Basic Operations
 
 feature -- Load / Save / Reset...
 
-	reset is
+	reset
 			-- Reset the favorites.
 		do
 			favorites.wipe_out
 		end
 
-	refresh is
+	refresh
 			-- Update `Current's display.
 		do
 			widget.refresh
@@ -227,7 +227,7 @@ feature -- Load / Save / Reset...
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -248,7 +248,7 @@ feature {EB_FAVORITES_MENU, EB_FAVORITES_TREE} -- Implementation
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.
 
-	organize_favorites_dialog: EB_ORGANIZE_FAVORITES_DIALOG is
+	organize_favorites_dialog: EB_ORGANIZE_FAVORITES_DIALOG
 			-- Dialog window to organize the favorites.
 		once
 			create Result.make (Current)
@@ -256,7 +256,7 @@ feature {EB_FAVORITES_MENU, EB_FAVORITES_TREE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

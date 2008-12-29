@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when address operator is applied to a non-existing feature."
@@ -22,12 +22,12 @@ feature -- Properties
 			-- Feature name involved: it is not a final name of the class
 			-- of id `class_id'.
 
-	code: STRING is "VZAA";
+	code: STRING = "VZAA";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -38,13 +38,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_address_name (s: STRING) is
+	set_address_name (s: STRING)
 			-- Assign `s' to `address_name'.
 		do
 			address_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

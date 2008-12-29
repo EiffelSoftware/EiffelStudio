@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A simple parser used to parse Eiffel editor embedded help URI, for the purpose of extracting a usable help context object {HELP_CONTEXT_I}.
 	]"
@@ -112,7 +112,7 @@ feature {NONE} -- Regular expressions
 			result_is_compiled: Result.is_compiled
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

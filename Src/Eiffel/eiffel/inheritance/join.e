@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Join of deferred features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Status Report
 
-	is_valid_old_features (old_feats: INHERIT_FEAT): BOOLEAN is
+	is_valid_old_features (old_feats: INHERIT_FEAT): BOOLEAN
 			-- Is `old_feats' valid for a JOIN?
 		do
 			Result := old_feats.deferred_features.count > 1
@@ -27,7 +27,7 @@ feature -- Status Report
 
 feature -- Checking
 
-	check_adaptation (feat_tbl: FEATURE_TABLE) is
+	check_adaptation (feat_tbl: FEATURE_TABLE)
 			-- Check if the signature of feature `new_feature' is
 			-- identical to the signatures of the deferred features
 			-- contained in `old_features'
@@ -84,7 +84,7 @@ feature -- Checking
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search report grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_search_tool: like search_tool) is
+	make (a_search_tool: like search_tool)
 			-- Initialization
 		require
 			a_search_tool_attached: a_search_tool /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			search_tool_set: search_tool = a_search_tool
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		do
 			context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
@@ -83,27 +83,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	grid_head_class: STRING_GENERAL is
+	grid_head_class: STRING_GENERAL
 		do
 			Result := interface_names.l_class
 		end
 
-	grid_head_line_number: STRING_GENERAL is
+	grid_head_line_number: STRING_GENERAL
 		do
 			Result := interface_names.l_line
 		end
 
-	grid_head_found: STRING_GENERAL is
+	grid_head_found: STRING_GENERAL
 		do
 			Result := interface_names.l_found
 		end
 
-	grid_head_context: STRING_GENERAL is
+	grid_head_context: STRING_GENERAL
 		do
 			Result := interface_names.l_context
 		end
 
-	grid_head_file_location: STRING_GENERAL is
+	grid_head_file_location: STRING_GENERAL
 		do
 			Result := interface_names.l_file_location
 		end
@@ -113,7 +113,7 @@ feature -- Access
 
 feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Access
 
-	header_width: ARRAYED_LIST [INTEGER] is
+	header_width: ARRAYED_LIST [INTEGER]
 			-- List of header width.
 		once
 			create Result.make (4)
@@ -123,10 +123,10 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Access
 			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space + 10)
 		end
 
-	column_border_space: INTEGER is 8
+	column_border_space: INTEGER = 8
 			-- Padding space for column content	
 
-	multi_search_performer: MSR is
+	multi_search_performer: MSR
 			-- Search performer from the search tool.
 		do
 			Result := search_tool.panel.multi_search_performer
@@ -136,7 +136,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Access
 
 feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 
-	redraw_grid is
+	redraw_grid
 			-- Redraw grid according to search result and refresh summary label.
 		local
 			l_index: INTEGER
@@ -269,7 +269,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 
 feature {NONE} -- Interface
 
-	build_interface is
+	build_interface
 			-- Build interface.
 		do
 			enable_row_height_fixed
@@ -291,7 +291,7 @@ feature {NONE} -- Interface
 			set_minimum_width (100)
 		end
 
-	new_label_item (a_string: STRING_GENERAL): EV_GRID_LABEL_ITEM is
+	new_label_item (a_string: STRING_GENERAL): EV_GRID_LABEL_ITEM
 			-- Create uniformed label item
 		require
 			string_attached: a_string /= Void
@@ -306,7 +306,7 @@ feature {NONE} -- Interface
 			new_item_not_void: Result /= Void
 		end
 
-	label_font: EV_FONT is
+	label_font: EV_FONT
 			-- Font of report text.
 		local
 			l_label: EV_LABEL
@@ -321,7 +321,7 @@ feature {NONE} -- Interface
 	text_height: INTEGER
 			-- Height of the text in the `search_report_grid', buffer for effiency enhancement
 
-	expose_drawable_action (drawable: EV_DRAWABLE; a_item: MSR_ITEM; query_grid_row: EV_GRID_ROW) is
+	expose_drawable_action (drawable: EV_DRAWABLE; a_item: MSR_ITEM; query_grid_row: EV_GRID_ROW)
 			-- Draw grid item, to make the text colorfull.
 			-- return width of current drawable item.
 		local
@@ -376,7 +376,7 @@ feature {NONE} -- Interface
 			end
 		end
 
-	row_text_color (a_bg_color: EV_COLOR): EV_COLOR is
+	row_text_color (a_bg_color: EV_COLOR): EV_COLOR
 			-- Text color according to its background color `a_bg_color'
 		require
 			bg_color_attached: a_bg_color  /= Void
@@ -390,7 +390,7 @@ feature {NONE} -- Interface
 
 	report_summary_string: STRING_GENERAL
 
-	adjust_grid_column_width is
+	adjust_grid_column_width
 			-- Adjust grid column width to best fit visible area.
 		do
 			safe_resize_column_to_content (column (1), True, False)
@@ -401,7 +401,7 @@ feature {NONE} -- Interface
 
 feature {NONE} -- Stone
 
-	stone_from_class_i (a_class_i: CLASS_I): STONE is
+	stone_from_class_i (a_class_i: CLASS_I): STONE
 			-- Make a stone from a_class_i.
 			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
 		require
@@ -412,7 +412,7 @@ feature {NONE} -- Stone
 
 feature {NONE} -- Sort data
 
-	on_grid_header_click (a_column_index: INTEGER; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_grid_header_click (a_column_index: INTEGER; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -451,7 +451,7 @@ feature {NONE} -- Sort data
 	sorted_column: INTEGER
 			-- Column on which sorting is done.	
 
-	column_index_valid (a_column_index: INTEGER): BOOLEAN  is
+	column_index_valid (a_column_index: INTEGER): BOOLEAN
 			-- Validate a column index.
 		do
 			Result := a_column_index > 0 and a_column_index <= column_count
@@ -462,7 +462,7 @@ feature {NONE} -- Sort data
 
 feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 
-	put_report_summary is
+	put_report_summary
 			-- Put report summary
 		require
 			performer_launched: multi_search_performer.is_search_launched
@@ -475,7 +475,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			search_tool.panel.report_tool.set_summary (report_summary_string)
 		end
 
-	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
+	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE
 			-- Grid pebble function
 		local
 			l_row: EV_GRID_ROW
@@ -515,7 +515,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM) is
+	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM)
 			-- Compute `adjust_vertical'
 		require
 			font_attached: a_font /= Void
@@ -545,7 +545,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	extend_pointer_actions (a_row: EV_GRID_ROW) is
+	extend_pointer_actions (a_row: EV_GRID_ROW)
 			-- Extend pointer actions to every row item.
 		require
 			a_row_attached: a_row /= Void
@@ -562,7 +562,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	on_grid_row_double_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW) is
+	on_grid_row_double_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW)
 			-- A row is clicked by mouse pointer.
 		do
 			if not selected_rows.is_empty then
@@ -572,7 +572,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- On key pressed.
 		local
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -605,7 +605,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	go_to_line_of_editor (a_row: EV_GRID_ROW) is
+	go_to_line_of_editor (a_row: EV_GRID_ROW)
 			-- Invoke when a row of the report grid selected
 		require
 			a_row_not_void: a_row /= Void
@@ -630,7 +630,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	on_grid_row_selected_perform is
+	on_grid_row_selected_perform
 			-- Do actual `on_grid_row_selected'
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -700,7 +700,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	select_current_row is
+	select_current_row
 			-- Select current row in the grid, and perform selecting in the editor.
 		require
 			search_launched: multi_search_performer.is_search_launched
@@ -730,7 +730,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	grid_row_by_data (a_data: ANY) : EV_GRID_ROW is
+	grid_row_by_data (a_data: ANY) : EV_GRID_ROW
 			-- Find a row in a_grid that include a_data
 		local
 			i: INTEGER
@@ -756,7 +756,7 @@ invariant
 	report_summary_string_not_void: report_summary_string /= Void
 	search_tool_set: search_tool /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

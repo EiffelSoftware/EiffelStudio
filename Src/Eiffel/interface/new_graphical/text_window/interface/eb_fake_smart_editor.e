@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When first initlialize smart editor, we create this fake one to make opening fast."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make (a_content: SD_CONTENT)
 			-- Creation method
 		do
 			content := a_content
@@ -39,12 +39,12 @@ feature -- Query
 	content: SD_CONTENT;
 			-- Content related.
 
-	is_offset_valid: BOOLEAN is True
+	is_offset_valid: BOOLEAN = True
 			-- Redefine for not break invariant.
 
 feature -- Stone
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			-- Redefine
 		local
 			l_cell: EB_FAKE_SMART_EDITOR_CELL
@@ -57,39 +57,39 @@ feature -- Stone
 
 feature -- Fake implemetation
 
-	on_focus is
+	on_focus
 			-- Redefine
 		do
 		end
 
-	changed: BOOLEAN is
+	changed: BOOLEAN
 			-- Redefine
 		do
 		end
 
-	update_click_list (after_save: BOOLEAN) is
+	update_click_list (after_save: BOOLEAN)
 			-- Redefine
 		do
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Redefine
 		do
 		end
 
-	set_focus is
+	set_focus
 			-- Redefine
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	internal_recycle is
+	internal_recycle
 			-- Do nothing, since we nothing was initialized.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

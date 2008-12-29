@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descritpion of the suppliers of a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create {SUPPLIER_LIST}
 
 feature -- Element change
 
-	remove_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
+	remove_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT])
 			-- Remove one occurrence for each supplier of id
 			-- included in `l'.
 			--| FIXME: look at eweasel test#incr109 and test#fixed070 which shows that
@@ -72,7 +72,7 @@ feature -- Element change
 			end
 		end
 
-	add_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]) is
+	add_occurrence (l: TWO_WAY_SORTED_SET [DEPEND_UNIT])
 			-- Add one occurrence for each supplier of id
 			-- included in `l'.
 		require
@@ -109,7 +109,7 @@ feature -- Element change
 			consistency: is_ok (l)
 		end
 
-	same_suppliers: SUPPLIER_LIST is
+	same_suppliers: SUPPLIER_LIST
 			-- Duplicated list
 		do
 			create Result.make (count)
@@ -123,7 +123,7 @@ feature -- Element change
 			end
 		end
 
-	classes: ARRAYED_LIST [CLASS_C] is
+	classes: ARRAYED_LIST [CLASS_C]
 			-- List of `CLASS_C'es
 		do
 			from
@@ -138,7 +138,7 @@ feature -- Element change
 			end
 		end
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class' from Current.
 			-- Cursor can be moved
 		require
@@ -164,7 +164,7 @@ feature -- Element change
 
 feature -- Consistency
 
-	is_ok (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): BOOLEAN is
+	is_ok (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): BOOLEAN
 			-- Is the supplier list consistant regarding to `l'.
 		require
 			l_not_void: l /= Void
@@ -194,7 +194,7 @@ feature -- Consistency
 
 feature {NONE} -- Implementation: debugging
 
-	trace is
+	trace
 			-- Debug purpose
 		do
 			io.error.put_string ("SUPPLIER_LIST.trace%N")
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation: debugging
 
 feature {NONE} -- Implementation: traversal
 
-	goto (id: INTEGER) is
+	goto (id: INTEGER)
 			-- Move cursor to supplier info of id `id'.
 		require
 			valid_id: id >= 0
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation: traversal
 			end
 		end
 
-	info (id: INTEGER): SUPPLIER_INFO is
+	info (id: INTEGER): SUPPLIER_INFO
 			-- Supplier information associated to supplier of id `id'.
 		require
 			valid_id: id >= 0
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation: traversal
 			go_to (cur)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

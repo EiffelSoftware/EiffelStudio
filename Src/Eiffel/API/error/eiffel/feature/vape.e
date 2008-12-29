@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when feature is not legally exported."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature
 
-	code: STRING is "VAPE"
+	code: STRING = "VAPE"
 			-- Error code
 
 	exported_feature: E_FEATURE
@@ -24,7 +24,7 @@ feature
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is error fully defined?
 		do
 			Result := is_class_defined and then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Construct `a_text_formatter' with error.
 		local
 			ec: CLASS_C
@@ -51,7 +51,7 @@ feature -- Output
 
 feature {ACCESS_FEAT_AS, CREATION_EXPR_AS, BINARY_AS, UNARY_AS, AST_FEATURE_CHECKER_GENERATOR} -- Setting
 
-	set_exported_feature (f: FEATURE_I) is
+	set_exported_feature (f: FEATURE_I)
 			-- Set `exported_feature' to `f'.
 		require
 			valid_f: f /= Void
@@ -61,7 +61,7 @@ feature {ACCESS_FEAT_AS, CREATION_EXPR_AS, BINARY_AS, UNARY_AS, AST_FEATURE_CHEC
 			exported_feature_not_void: exported_feature /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Context UUID used in event list service
 																					]"
@@ -12,31 +12,31 @@ class
 
 feature -- Enumeration
 
-	all_test_runs_dialog: !UUID is
+	all_test_runs_dialog: !UUID
 			-- Used by {ES_ALL_TEST_RUN_RESULTS_DIALOG}
 		once
 			create Result.make_from_string ("0BFCC3DB-268C-4DE2-8125-3BC3AB2E2CB0")
 		end
 
-	eweasel_result_analyzer: !UUID is
+	eweasel_result_analyzer: !UUID
 			-- Used by {EWEASEL_RESULT_ANALYZER}
 		once
 			create Result.make_from_string ("8BC8DAE7-7B87-4116-9CE8-D91A60400C83")
 		end
 
-	es_test_case_grid_manager: !UUID is
+	es_test_case_grid_manager: !UUID
 			-- Used by {ES_TEST_CASE_GRID_MANAGER}
 		once
 			create Result.make_from_string ("2F589F5C-8B51-4B25-B53E-5284CE8D2459")
 		end
 
-	execution_manager: !UUID is
+	execution_manager: !UUID
 			-- Used by {ES_EWEASEL_EXECUTION_MANAGER}
 		once
 			create Result.make_from_string ("75B5C239-304C-4AD6-8A72-D748670510B4")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

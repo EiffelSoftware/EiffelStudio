@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When breakpoint hits do ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -12,14 +12,14 @@ class
 
 feature
 
-	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		require
 			a_bp_not_void: a_bp /= Void
 			a_dm_not_void: a_dm /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

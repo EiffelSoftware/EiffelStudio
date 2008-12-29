@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Data used in conjuntion with an Eiffel AST-augmented code class text modifier {ES_CLASS_TEXT_AST_MODIFIER}.
 	]"
@@ -113,7 +113,7 @@ invariant
 	ast_attached: is_ast_available implies ast /= Void
 	ast_match_list_attached: is_ast_available implies ast_match_list /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

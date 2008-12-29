@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that manage all saved layouts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		require
 			not_void: a_dev_window /= Void
@@ -34,13 +34,13 @@ feature {NONE} -- Initlization
 			set: development_window = a_dev_window
 		end
 
-	init_existing_layouts is
+	init_existing_layouts
 			-- Initialize `layouts'.
 		do
 			init_existing_layouts_imp (layout_file_path (is_normal_mode), is_normal_mode)
 		end
 
-	init_existing_layouts_imp (a_dir: !DIRECTORY_NAME; a_from_normal_mode: BOOLEAN) is
+	init_existing_layouts_imp (a_dir: !DIRECTORY_NAME; a_from_normal_mode: BOOLEAN)
 			-- Used by `init_eixisting_layouts'.
 		require
 			dir_not_empty: not a_dir.is_empty
@@ -85,7 +85,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	add_layout (a_name: STRING_GENERAL): BOOLEAN is
+	add_layout (a_name: STRING_GENERAL): BOOLEAN
 			-- Add a new layout which name is `a_name if not exist.
 			-- Otherwise overwrite the exsiting one.
 		require
@@ -105,7 +105,7 @@ feature -- Command
 			Result := development_window.docking_manager.save_tools_data_with_name (l_fn, a_name)
 		end
 
-	open_layout (a_name: STRING_GENERAL) is
+	open_layout (a_name: STRING_GENERAL)
 			-- Open a named layout
 			-- `a_win' is the window which show modal to.
 		require
@@ -205,7 +205,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	is_normal_mode: BOOLEAN is
+	is_normal_mode: BOOLEAN
 			-- True means Eiffel Studio is normal mode now.
 			-- False means Eiffel Studio is debug mode now.
 		local
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 invariant
 	not_void: layouts /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

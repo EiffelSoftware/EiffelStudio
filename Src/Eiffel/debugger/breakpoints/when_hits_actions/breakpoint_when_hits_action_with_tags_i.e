@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When breakpoint hits do ... on set of breakpoints..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -24,13 +24,13 @@ feature -- Properties
 
 feature -- Change
 
-	set_tags (a_tags: like tags) is
+	set_tags (a_tags: like tags)
 			--
 		do
 			tags := a_tags
 		end
 
-	set_tags_from_string (a_s32: STRING_32) is
+	set_tags_from_string (a_s32: STRING_32)
 			--
 		local
 			lst: LIST [STRING_32]
@@ -56,7 +56,7 @@ feature -- Change
 
 feature -- Query
 
-	tags_as_string: STRING_32 is
+	tags_as_string: STRING_32
 			-- String representation of the `tags'.
 		local
 			i: INTEGER
@@ -76,7 +76,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

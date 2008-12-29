@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cluster having sorted sub-clusters and sorted classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (data: like actual_group) is
+	make (data: like actual_group)
 			-- Associate `data' to `Current' and sort children.
 		do
 			actual_group := data
@@ -30,7 +30,7 @@ feature -- Status
 
 feature -- Statusupdate
 
-	reinitialize is
+	reinitialize
 			-- (Re)initialize current
 		do
 			is_initialized := False
@@ -39,7 +39,7 @@ feature -- Statusupdate
 			initialized: is_initialized
 		end
 
-	initialize is
+	initialize
 			-- Initialize current
 		require
 			not_initialized: not is_initialized
@@ -223,13 +223,13 @@ feature -- Access
 	assemblies: DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 			-- assemblies in a sorted order.
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Can `Current' be modified?
 		do
 			Result := not actual_group.is_readonly
 		end
 
-	has_children: BOOLEAN is
+	has_children: BOOLEAN
 			-- Does `Current' have any children (classes, clusters, assemblies, libraries, overrides)?
 		local
 			l_sub_clusters: ARRAYED_LIST [CLUSTER_I]
@@ -263,7 +263,7 @@ feature -- Access
 	actual_group: CONF_GROUP
 			-- group associated to `Current'.
 
-	actual_cluster: CLUSTER_I is
+	actual_cluster: CLUSTER_I
 			-- cluster associated to `Current'.
 		require
 			is_cluster: is_cluster
@@ -273,7 +273,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	actual_library: CONF_LIBRARY is
+	actual_library: CONF_LIBRARY
 			-- library associated to `Current'.
 		require
 			is_library: is_library
@@ -283,7 +283,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	actual_assembly: CONF_ASSEMBLY is
+	actual_assembly: CONF_ASSEMBLY
 			-- assembly associated to `Current'.
 		require
 			is_assembly: is_assembly
@@ -296,7 +296,7 @@ feature -- Access
 	parent: EB_SORTED_CLUSTER
 			-- sorted cluster in which `Current' is.
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Does `Current' represent a cluster?
 		require
 			actual_group_not_void: actual_group /= Void
@@ -304,7 +304,7 @@ feature -- Access
 			Result := actual_group.is_cluster
 		end
 
-	is_library: BOOLEAN is
+	is_library: BOOLEAN
 			-- Does `Current' represent a library?
 		require
 			actual_group_not_void: actual_group /= Void
@@ -312,7 +312,7 @@ feature -- Access
 			Result := actual_group.is_library
 		end
 
-	is_assembly: BOOLEAN is
+	is_assembly: BOOLEAN
 			-- Does `Current' represent an assembly?
 		require
 			actual_group_not_void: actual_group /= Void
@@ -320,7 +320,7 @@ feature -- Access
 			Result := actual_group.is_assembly
 		end
 
-	is_physial_assembly: BOOLEAN is
+	is_physial_assembly: BOOLEAN
 			-- Does `Current' represent a physical assembly?
 		require
 			actual_group_not_void: actual_group /= Void
@@ -330,7 +330,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_parent (a_parent: EB_SORTED_CLUSTER) is
+	set_parent (a_parent: EB_SORTED_CLUSTER)
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
@@ -338,7 +338,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other' according to their names?
 		do
 			Result := actual_group.name < other.actual_group.name
@@ -346,7 +346,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	build_groups (a_group: LIST [CONF_GROUP]): DS_ARRAYED_LIST [like Current] is
+	build_groups (a_group: LIST [CONF_GROUP]): DS_ARRAYED_LIST [like Current]
 			-- Build a sorted list out of `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	generate_subfolder_mapping is
+	generate_subfolder_mapping
 			-- Generate subfolder mapping out of `a_classes'.
 		require
 			classes_not_void: classes /= Void
@@ -461,7 +461,7 @@ invariant
 	renamings_not_void: is_initialized implies renaming /= Void
 	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

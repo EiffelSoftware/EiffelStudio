@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dual pop-up toolbar button for a toolbarable toolbar command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_TOOLBARABLE_COMMAND) is
+	make (a_command: EB_TOOLBARABLE_COMMAND)
 			-- Creation method
 		do
 			sd_make
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Cleanup
 
-	internal_recycle is
+	internal_recycle
 			-- <Precursor>
 		do
 			if menu /= Void then
@@ -55,7 +55,7 @@ feature {NONE} -- Cleanup
 			Precursor
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			menu := Void
@@ -64,7 +64,7 @@ feature {NONE} -- Cleanup
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

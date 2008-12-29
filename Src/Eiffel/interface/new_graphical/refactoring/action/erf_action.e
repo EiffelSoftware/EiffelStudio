@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base class for undoable actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,22 +10,22 @@ deferred class
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- Undo the action.
 		deferred
 		end
 
-	redo is
+	redo
 			-- Redo the action.
 		deferred
 		end
 
-	destroy is
+	destroy
 			-- Called before the object is destroyed.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

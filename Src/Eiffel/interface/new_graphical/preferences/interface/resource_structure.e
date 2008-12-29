@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure which receives the data contained in a XML file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_location (default_file_name: STRING; location: STRING) is
+	make_from_location (default_file_name: STRING; location: STRING)
 		local
 			imp: RESOURCE_STRUCTURE_IMP
 		do
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			imp.initialize (default_file_name, location)
 		end
 
-	make_from_file (default_file_name: STRING; normal_file_name: STRING) is
+	make_from_file (default_file_name: STRING; normal_file_name: STRING)
 		local
 			imp: RESOURCE_STRUCTURE_IMP
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
-	item, resource (resource_name: STRING): RESOURCE is
+	item, resource (resource_name: STRING): RESOURCE
 			-- Resource named `resource_name'.
 			-- Name includes path.
 		require
@@ -44,19 +44,19 @@ feature  -- Access
 			Result := implementation.resource (resource_name)		
 		end
 
-	child_list (path: STRING): LINKED_LIST [like folder] is
+	child_list (path: STRING): LINKED_LIST [like folder]
 			-- List of children of `path' folder.
 		do
 			Result := implementation.child_list (path)
 		end
 
-	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
+	resource_list (path: STRING): LINKED_LIST [RESOURCE]
 			-- List of resources of `path' folder.
 		do
 			Result := implementation.resource_list (path)
 		end
 
-	folder (path: STRING): like root_folder is
+	folder (path: STRING): like root_folder
 			-- Find the category corresponding to 's'.
 			-- return Void if not found.
 		require
@@ -67,7 +67,7 @@ feature  -- Access
 
 feature -- Status Report
 
-	has_folder (s: STRING): BOOLEAN is
+	has_folder (s: STRING): BOOLEAN
 			-- Does Current has category pointed by 's'.
 		require
 			s_not_void: s /= Void
@@ -77,19 +77,19 @@ feature -- Status Report
 
 feature -- Modification
 
-	put_resource (res : RESOURCE) is
+	put_resource (res : RESOURCE)
 			-- Put `res' in Current.
 		do
 			implementation.put_resource (res)
 		end
 
-	replace_resource (res : RESOURCE) is
+	replace_resource (res : RESOURCE)
 			-- Put `res' in Current.
 		do
 			implementation.replace_resource (res)
 		end
 		
-	load_defaults is
+	load_defaults
 			-- Wipe out the contents of `Current' and load preferences in the default file instead.
 		do
 			implementation.make_default (defaults_file_name)
@@ -97,7 +97,7 @@ feature -- Modification
 
 feature -- Saving
 
-	save is
+	save
 			-- Save all changes in appropriate storing device
 		do
 			implementation.save
@@ -105,7 +105,7 @@ feature -- Saving
 
 feature -- Implementation
 
-	root_folder: RESOURCE_FOLDER is
+	root_folder: RESOURCE_FOLDER
 		do
 			Result := implementation.root_folder_i.interface
 		end
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	defaults_file_name: STRING;
 			-- Name of the file in which the defaults are stored.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

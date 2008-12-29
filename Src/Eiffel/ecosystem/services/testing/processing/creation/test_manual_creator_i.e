@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for a eiffe test factory that creates manual test cases.
 	]"

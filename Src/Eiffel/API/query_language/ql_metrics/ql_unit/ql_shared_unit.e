@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared metrics units used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Units
 
-	target_unit: QL_METRIC_UNIT is
+	target_unit: QL_METRIC_UNIT
 			-- Target unit
 		once
 			create Result.make (query_language_names.ql_target_unit)
@@ -25,7 +25,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	group_unit: QL_METRIC_UNIT is
+	group_unit: QL_METRIC_UNIT
 			-- Group unit
 		once
 			create Result.make (query_language_names.ql_group_unit)
@@ -34,7 +34,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	class_unit: QL_METRIC_UNIT is
+	class_unit: QL_METRIC_UNIT
 			-- Class unit
 		once
 			create Result.make (query_language_names.ql_class_unit)
@@ -43,7 +43,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	feature_unit: QL_METRIC_UNIT is
+	feature_unit: QL_METRIC_UNIT
 			-- Feature unit
 		once
 			create Result.make (query_language_names.ql_feature_unit)
@@ -52,7 +52,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	local_unit: QL_METRIC_UNIT is
+	local_unit: QL_METRIC_UNIT
 			-- Local unit
 		once
 			create Result.make (query_language_names.ql_local_unit)
@@ -61,7 +61,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	argument_unit: QL_METRIC_UNIT is
+	argument_unit: QL_METRIC_UNIT
 			-- Argument unit
 		once
 			create Result.make (query_language_names.ql_argument_unit)
@@ -70,7 +70,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	generic_unit: QL_METRIC_UNIT is
+	generic_unit: QL_METRIC_UNIT
 			-- Generic unit
 		once
 			create Result.make (query_language_names.ql_generic_unit)
@@ -79,7 +79,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	line_unit: QL_METRIC_UNIT is
+	line_unit: QL_METRIC_UNIT
 			-- Line unit
 		once
 			create Result.make (query_language_names.ql_line_unit)
@@ -88,7 +88,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	ratio_unit: QL_METRIC_UNIT is
+	ratio_unit: QL_METRIC_UNIT
 			-- Ratio unit
 		once
 			create Result.make (query_language_names.ql_ratio_unit)
@@ -96,7 +96,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	compilation_unit: QL_METRIC_UNIT is
+	compilation_unit: QL_METRIC_UNIT
 			-- Compilation unit
 		once
 			create Result.make (query_language_names.ql_compilation_unit)
@@ -104,7 +104,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	assertion_unit: QL_METRIC_UNIT is
+	assertion_unit: QL_METRIC_UNIT
 			-- Target unit
 		once
 			create Result.make (query_language_names.ql_assertion_unit)
@@ -113,7 +113,7 @@ feature -- Units
 			result_attached: Result /= Void
 		end
 
-	no_unit: QL_METRIC_UNIT is
+	no_unit: QL_METRIC_UNIT
 			-- No unit
 		once
 			create Result.make (query_language_names.ql_no_unit)
@@ -122,7 +122,7 @@ feature -- Units
 		end
 feature -- Access
 
-	unit_table: HASH_TABLE [QL_METRIC_UNIT, STRING] is
+	unit_table: HASH_TABLE [QL_METRIC_UNIT, STRING]
 			-- Table of supported units
 			-- Key is name in lower case, value is that unit
 		once
@@ -143,7 +143,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

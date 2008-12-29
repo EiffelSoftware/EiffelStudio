@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent constants used by ES_OBJECTS_GRID_SPECIFIC_LINE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Constants
 
-	Stack_id: INTEGER is 1
-	Current_object_id: INTEGER is 2
-	Arguments_id: INTEGER is 3
-	Locals_id: INTEGER is 4
-	Result_id: INTEGER is 5
-	Dropped_id: INTEGER is 6 ;
+	Stack_id: INTEGER = 1
+	Current_object_id: INTEGER = 2
+	Arguments_id: INTEGER = 3
+	Locals_id: INTEGER = 4
+	Result_id: INTEGER = 5
+	Dropped_id: INTEGER = 6 ;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

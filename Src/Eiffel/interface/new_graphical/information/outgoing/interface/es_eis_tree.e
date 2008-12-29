@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information tree. Class tree + tag tree + affected tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_eis_tree (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_widget: !ES_EIS_TOOL_WIDGET) is
+	make_eis_tree (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_widget: !ES_EIS_TOOL_WIDGET)
 			-- Initialization
 		require
 			a_context_menu_factory_not_void: a_context_menu_factory /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			storage.add_observer (Current)
 		end
 
-	build_tree is
+	build_tree
 			-- Remove and replace contents of `Current'.
 		local
 			l_sys: CONF_SYSTEM
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	add_target (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_target: CONF_TARGET) is
+	add_target (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_target: CONF_TARGET)
 			-- Add targets to the tree, recursively.
 		require
 			a_list_not_void: a_list /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 			a_target.child_targets.do_all (agent add_target (l_target_node, ?))
 		end
 
-	build_tags is
+	build_tags
 			-- Build the Items without tag item.
 		local
 			l_item: ES_EIS_TREE_TAG_ITEM
@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_affected_items is
+	build_affected_items
 			-- Build affected items
 		local
 			l_item: ES_EIS_TREE_TAG_ITEM
@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 
 feature -- Operation
 
-	rebuild_list_if_possible is
+	rebuild_list_if_possible
 			-- Synchronize
 		do
 			if old_view /= Void then
@@ -184,7 +184,7 @@ feature -- Operation
 
 feature -- Access
 
-	current_view: ?ES_EIS_COMPONENT_VIEW [ANY] is
+	current_view: ?ES_EIS_COMPONENT_VIEW [ANY]
 			-- Current view of list
 		do
 			Result := old_view
@@ -199,7 +199,7 @@ feature {NONE} -- Actions
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER) is
+							y_abs: INTEGER)
 			-- Display entries corresponding to the class double clicked.
 		do
 			on_component_click
@@ -212,7 +212,7 @@ feature {NONE} -- Actions
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER) is
+							y_abs: INTEGER)
 			-- Display entries corresponding to the cluster double clicked.
 		do
 			on_component_click
@@ -225,7 +225,7 @@ feature {NONE} -- Actions
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER) is
+							y_abs: INTEGER)
 			-- Display entries corresponding to the target double clicked.
 		do
 			on_component_click
@@ -238,13 +238,13 @@ feature {NONE} -- Actions
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER) is
+							y_abs: INTEGER)
 			-- Display entries corresponding to the double double clicked
 		do
 			on_component_click
 		end
 
-	on_key_released (a_key: EV_KEY) is
+	on_key_released (a_key: EV_KEY)
 			-- On key released
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
@@ -252,7 +252,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_component_click is
+	on_component_click
 			-- On target/cluster/class item clicked
 		local
 			l_view: ES_EIS_COMPONENT_VIEW [ANY]
@@ -277,7 +277,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Component view factory
 
-	view_from_selected_item: ?ES_EIS_COMPONENT_VIEW [ANY] is
+	view_from_selected_item: ?ES_EIS_COMPONENT_VIEW [ANY]
 			-- Get view from
 		local
 			l_item: EV_TREE_NODE
@@ -313,7 +313,7 @@ feature {NONE} -- Component view factory
 
 feature {NONE} -- EIS observer
 
-	on_tag_added (a_tag: !STRING_32) is
+	on_tag_added (a_tag: !STRING_32)
 			-- <precursor>
 		local
 			l_node: ES_EIS_TREE_TAG_ITEM
@@ -331,7 +331,7 @@ feature {NONE} -- EIS observer
 			end
 		end
 
-	on_tag_removed (a_tag: !STRING_32) is
+	on_tag_removed (a_tag: !STRING_32)
 			-- <precursor>
 		do
 			managed_tags.start
@@ -348,7 +348,7 @@ feature {NONE} -- EIS observer
 
 feature {NONE} -- Implemenation
 
-	internal_recycle is
+	internal_recycle
 			-- <precursor>
 		do
 			Precursor {EB_CLASSES_TREE}
@@ -372,7 +372,7 @@ feature {NONE} -- Access
 invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

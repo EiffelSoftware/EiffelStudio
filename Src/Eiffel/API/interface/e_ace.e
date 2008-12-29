@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Ace description of System."
@@ -15,26 +15,26 @@ inherit
 
 feature -- Properties
 
-	file_name: STRING is
+	file_name: STRING
 			-- Path to the universe/system description
 		do
 			Result := Lace.file_name
 		end
 
 feature -- Access
-	date_has_changed: BOOLEAN is
+	date_has_changed: BOOLEAN
 			-- Has the date changed for the lace file
 		do
 			Result := Lace.date_has_changed
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Was the last compilation of the Ace file successful?
 		do
 			Result := Lace.successful
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text of the Lace file.
 			-- Void if unreadable file
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	valid_file_name (f_name: STRING): BOOLEAN is
+	valid_file_name (f_name: STRING): BOOLEAN
 			-- Is `f_name' a valid file name (i.e
 			-- does it exist and is it readable)?
 		require
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_file_name (f_name: STRING) is
+	set_file_name (f_name: STRING)
 			-- Set lace_file_name to `f_name'.
 		do
 			if f_name /= Void then
@@ -75,7 +75,7 @@ feature -- Setting
 			file_name_set: f_name /= Void implies equal (f_name, file_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

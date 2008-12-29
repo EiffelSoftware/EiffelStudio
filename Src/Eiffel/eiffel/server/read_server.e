@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class for description of a read-only server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	item, frozen server_item (an_id: INTEGER): T is
+	item, frozen server_item (an_id: INTEGER): T
 			-- Object of id `an_id'
 		do
 			Result := cache.item_id (an_id)
@@ -25,7 +25,7 @@ feature -- Access
 			end
 		end
 
-	disk_item (an_id: INTEGER): T is
+	disk_item (an_id: INTEGER): T
 			-- Object of id `an_id'
 		local
 			info: READ_INFO
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	remove (an_id: INTEGER) is
+	remove (an_id: INTEGER)
 			-- Simply remove element from server structures
 			-- This is as read server, nothing id removed from disk.
 			--|Note: the O_N_TABLE table should also be updated but
@@ -58,13 +58,13 @@ feature -- Access
 
 feature -- Size
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Chunk size when updating the READ_SERVER
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

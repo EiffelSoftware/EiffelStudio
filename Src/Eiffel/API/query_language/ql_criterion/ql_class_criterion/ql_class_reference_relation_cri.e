@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents reference relations (supplier/client) between classes
 					For a supplier/client relation, we have two different kinds:
@@ -38,7 +38,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_criterion_domain: like criterion_domain; a_invocation: BOOLEAN; a_syntactical: BOOLEAN; a_indirect: BOOLEAN) is
+	make (a_criterion_domain: like criterion_domain; a_invocation: BOOLEAN; a_syntactical: BOOLEAN; a_indirect: BOOLEAN)
 			-- Initialize `criterion_domain' with `a_criterion_domain', `is_invocation_referenced_class_enabled' with `a_invocation',
 			-- `is_syntactical_class_enabled' with `a_syntactical' and
 			-- `is_indirect_class_enabled' with `a_indirect'.
@@ -58,7 +58,7 @@ feature{NONE} -- Initialization
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
-	intrinsic_domain: QL_CLASS_DOMAIN is
+	intrinsic_domain: QL_CLASS_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion			
 		local
 			l_list: like candidate_class_list
@@ -114,7 +114,7 @@ feature -- Access
 			-- if class A(id=1) depends on class B(id=2), C(id=3), than in this table,
 			-- there is a pair (value={2, 3}, key= 1).			
 
-	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of classes referenced by `a_class_c'.
 			-- In supplier criterion, it's suppliers of `a_class_c'.
 			-- In client criterion, it's clients of `a_class_c'.
@@ -125,7 +125,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of syntactically referened by `a_class_c'.
 			-- In supplier criterion, it's syntactical suppliers of `a_class_c'.
 			-- In client criterion, it's ssyntactical clients of `a_class_c'.
@@ -136,7 +136,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	reset is
+	reset
 			-- Reset internal structure
 		do
 			Precursor
@@ -155,7 +155,7 @@ feature{NONE} -- Implementation
 			reference_table_valid: reference_table /= Void and then reference_table.is_empty
 		end
 
-	mark_only_syntactical_classes (a_syntactical_class_list: LIST [CLASS_C]; a_non_syntactical_class_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C] is
+	mark_only_syntactical_classes (a_syntactical_class_list: LIST [CLASS_C]; a_non_syntactical_class_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C]
 			-- Mark only syntactically referenced classes in `only_syntactical_class_set' and
 			-- return a class set which are distinct classes retrieved from `a_syntactical_class_list' and `a_non_syntactical_class_list' (Because
 			-- referenced classes (`suppliers' or `clients') from a class may overlap with syntactically referenced classes (`syntactical_suppliers' or
@@ -226,7 +226,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	find_referenced_classes (a_class_c: CLASS_C) is
+	find_referenced_classes (a_class_c: CLASS_C)
 			-- Find all referenced classes (from `referenced_classes' or `syntactical_referenced_classes') of
 			-- `a_class_c' and put them in `candidate_class_list'.
 		local
@@ -272,7 +272,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_indirect_referenced_classes (a_class_c: CLASS_C) is
+	find_indirect_referenced_classes (a_class_c: CLASS_C)
 			-- Find indirect referenced (supplier/client) of `a_class_c' and put them in `candidate_class_list'
 		local
 			l_invocation: BOOLEAN
@@ -312,7 +312,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]] is
+	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
 			-- Finder used to find result for current criterion
 		do
 			if is_indirect_class_enabled then
@@ -324,7 +324,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	excepted_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C] is
+	excepted_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C]
 			-- Return `a_lsit' - `b_list'.
 		require
 			a_list_attached: a_list /= Void
@@ -350,7 +350,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	unioned_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C] is
+	unioned_set (a_list, b_list: DS_HASH_SET [CLASS_C]): DS_HASH_SET [CLASS_C]
 			-- Return `a_list' + `b_list'.
 		require
 			a_list_attached: a_list /= Void
@@ -375,7 +375,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	list_to_set (a_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C] is
+	list_to_set (a_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C]
 			-- Set representation of `a_list'
 		do
 			if a_list /= Void then
@@ -388,7 +388,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

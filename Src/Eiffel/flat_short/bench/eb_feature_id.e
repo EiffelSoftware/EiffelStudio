@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Identifier for an e_feature.%
 				%Trouble with e_feature is is_equal and hash_code,%
 				%which rely only on the name of the feature."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (f: E_FEATURE) is
+	make (f: E_FEATURE)
 			-- Create `Current' depending on `f'.
 		require
 			valid_feature: f /= Void
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for `Current'.
 			-- Depend on both the feature name and its associated class.
 		do
@@ -66,7 +66,7 @@ feature -- Miscellaneous
 
 feature -- Basic operations
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `Current' represent the same feature as `other'
 			-- (same name, same associated class).
 		do
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_feature: e_feature /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

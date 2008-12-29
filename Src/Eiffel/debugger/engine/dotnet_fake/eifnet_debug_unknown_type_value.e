@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -12,35 +12,35 @@ inherit
 
 feature
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 		do
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 		end
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 		do
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 		do
 		end
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 		do
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 		do
 		end
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 		do
 		end
 

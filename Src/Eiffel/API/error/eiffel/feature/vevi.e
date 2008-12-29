@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Variable Initialization error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,7 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	code: STRING is "VEVI"
+	code: STRING = "VEVI"
 			-- Error code
 
 feature {NONE} -- Variable name
@@ -86,7 +86,7 @@ feature {NONE} -- Context
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			Precursor (a_text_formatter)
 			if creation_procedure /= Void then
@@ -127,7 +127,7 @@ feature {NONE} -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

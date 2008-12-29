@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a base class for all Eiffel Studio models."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Status report
 			
 feature -- Access
 
-	needed_on_diagram_changed_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	needed_on_diagram_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `is_needed_on_diagram' changed.
 		do
 			if internal_needed_on_diagram_changed = Void then
@@ -34,7 +34,7 @@ feature -- Access
 			
 feature -- Status settings.
 
-	enable_needed_on_diagram is
+	enable_needed_on_diagram
 			-- Set `is_needed_on_diagram' to True.
 		do
 			if not is_needed_on_diagram then
@@ -45,7 +45,7 @@ feature -- Status settings.
 			set: is_needed_on_diagram
 		end
 		
-	disable_needed_on_diagram is
+	disable_needed_on_diagram
 			-- Set `is_needed_on_diagram' to False.
 		do
 			if is_needed_on_diagram then
@@ -58,7 +58,7 @@ feature -- Status settings.
 		
 feature -- Element change
 		
-	synchronize is
+	synchronize
 			-- Some properties may have changed due to recompilation.
 		deferred
 		end
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 invariant
 	needed_on_diagram_changed_actions_not_void: needed_on_diagram_changed_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

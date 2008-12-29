@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Item for EB_FAVORITES, This item describes a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create {EB_FAVORITES_CLASS}
 
 feature {NONE} -- Access
 
-	make_from_string (a_analyzed_string: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make_from_string (a_analyzed_string: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `a_analyzed_string' set to `a_name'.
 		local
 			l_split: LIST [STRING]
@@ -64,14 +64,14 @@ feature {NONE} -- Access
 			end
 		end
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			Precursor {EB_FAVORITES_FOLDER} (a_name, a_parent)
 			get_class_i
 		end
 
-	make_from_class_stone (a_stone: CLASSI_STONE; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make_from_class_stone (a_stone: CLASSI_STONE; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Generate from the data associated to a class stone and attach to `a_parent'
 		require
 			parent_non_void: a_parent /= Void
@@ -82,12 +82,12 @@ feature {NONE} -- Access
 
 feature -- Status
 
-	is_class: BOOLEAN is True
+	is_class: BOOLEAN = True
 			-- Is the current item a class ?			
 
 feature -- Element change
 
-	refresh is
+	refresh
 			-- Refresh this item.
 		local
 			l_stone: like associated_stone
@@ -103,12 +103,12 @@ feature -- Element change
 
 feature -- Graphical interface
 
-	mouse_cursor: EV_POINTER_STYLE is
+	mouse_cursor: EV_POINTER_STYLE
 		once
 			Result := Cursors.cur_Class
 		end
 
-	Xmouse_cursor: EV_POINTER_STYLE is
+	Xmouse_cursor: EV_POINTER_STYLE
 		once
 			Result := Cursors.cur_X_Class
 		end
@@ -118,7 +118,7 @@ feature -- Convert
 	associated_class_i: CLASS_I
 			-- CLASS_I associated with Current, Void if none.
 
-	associated_class_c: CLASS_C is
+	associated_class_c: CLASS_C
 			-- CLASS_C associated with this favorite class, Void if none
 		local
 			class_i: CLASS_I
@@ -129,7 +129,7 @@ feature -- Convert
 			end
 		end
 
-	associated_file_name: FILE_NAME is
+	associated_file_name: FILE_NAME
 			-- Full file name of this favorite class.
 		local
 			class_i: CLASS_I
@@ -140,7 +140,7 @@ feature -- Convert
 			end
 		end
 
-	associated_stone: CLASSI_STONE is
+	associated_stone: CLASSI_STONE
 			-- CLASSI_STONE associated with favorite class, Void if none.
 		local
 			class_i: CLASS_I
@@ -159,7 +159,7 @@ feature -- Convert
 
 feature {NONE} -- Implementation
 
-	get_class_i is
+	get_class_i
 			-- Find the corresponding class_i, depending on the name.
 		local
 			loc_list: LIST [CLASS_I]
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation for Current.
 		do
 			if count = 0 then
@@ -194,7 +194,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

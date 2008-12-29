@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Saves source class where invariant ast was defined%
@@ -12,7 +12,7 @@ class INVARIANT_ADAPTER
 
 feature -- Update
 
-	register (invariant_ast: like ast; format_reg: FORMAT_REGISTRATION) is
+	register (invariant_ast: like ast; format_reg: FORMAT_REGISTRATION)
 			-- Initialize and register Current with invariant ast
 			-- `ast'.
 		require
@@ -37,7 +37,7 @@ feature -- Properties
 
 feature -- Output
 
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format invariant.
 		do
 			ctxt.begin
@@ -46,7 +46,7 @@ feature -- Output
 			ctxt.commit
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

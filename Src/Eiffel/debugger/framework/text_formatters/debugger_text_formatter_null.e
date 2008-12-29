@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines for use by classes that need to display debugger related objects in TEXT_FORMATTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,56 +13,56 @@ inherit
 
 feature -- Generic
 
-	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		do
 		end
 
-	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER)
 		do
 		end
 
 feature -- Application status
 
-	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display the status of the running application.
 		do
 		end
 
-	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display exception in `st'.		
 		do
 		end
 
 feature -- Call stack
 
-	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER) is
+	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER)
 			-- Display callstack in `st'.
 		do
 		end
 
-	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		do
 		end
 
-	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		do
 		end
 
-	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display information about associated routine.
 		do
 		end
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER) is
+	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER)
 			-- Display information about debugger
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

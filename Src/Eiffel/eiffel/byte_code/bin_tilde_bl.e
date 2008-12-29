@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for ~ equality operator for C code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,25 +29,25 @@ feature -- Access
 
 feature -- C code generation
 
-	generate_negation is
+	generate_negation
 			-- Generate negation of an equality test (if required).
 		do
 				-- Nothing by default
 		end
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- <Precursor>
 		do
 			a_buffer.put_four_character (' ', '=', '=', ' ')
 		end
 
-	generate_boolean_constant is
+	generate_boolean_constant
 			-- Generate false constant
 		do
 			buffer.put_string ("EIF_FALSE")
 		end
 
-	get_left_register is
+	get_left_register
 			-- Get register for left expression
 		local
 			tmp_register: REGISTER
@@ -58,7 +58,7 @@ feature -- C code generation
 			end
 		end
 
-	get_right_register is
+	get_right_register
 			-- Get register for right expression
 		local
 			tmp_register: REGISTER
@@ -69,7 +69,7 @@ feature -- C code generation
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			left_type: TYPE_A
@@ -91,7 +91,7 @@ feature -- C code generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		local
 			void_register: REGISTER
@@ -101,7 +101,7 @@ feature -- C code generation
 			set_right_register (void_register)
 		end
 
-	free_register is
+	free_register
 			-- Free registers used
 		do
 			Precursor {BIN_TILDE_B}
@@ -113,7 +113,7 @@ feature -- C code generation
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			basic_i: BASIC_A
@@ -134,7 +134,7 @@ feature -- C code generation
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print expression value
 		local
 			left_type: TYPE_A
@@ -187,7 +187,7 @@ feature -- C code generation
 
 feature -- Settings
 
-	set_left_register (r: REGISTRABLE) is
+	set_left_register (r: REGISTRABLE)
 			-- Assign `r' to `left_register'
 		do
 			left_register := r
@@ -195,7 +195,7 @@ feature -- Settings
 			left_register_set: left_register = r
 		end
 
-	set_right_register (r: REGISTRABLE) is
+	set_right_register (r: REGISTRABLE)
 			-- Assign `r' to `right_register'
 		do
 			right_register := r
@@ -203,7 +203,7 @@ feature -- Settings
 			right_register_set: right_register = r
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

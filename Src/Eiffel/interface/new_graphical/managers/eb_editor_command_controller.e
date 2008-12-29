@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Intermediate object between development windows and the editor commands"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_current_editor (ed: EB_EDITOR) is
+	set_current_editor (ed: EB_EDITOR)
 			-- Change the observed editor.
 		require
 			valid_editor: ed /= Void
@@ -176,7 +176,7 @@ feature -- Status setting
 			editor_set: current_editor = ed
 		end
 
-	add_edition_command (cmd: EB_EDITOR_COMMAND) is
+	add_edition_command (cmd: EB_EDITOR_COMMAND)
 			-- Add a new editor command to the list of observers.
 		require
 			valid_command: cmd /= Void
@@ -187,7 +187,7 @@ feature -- Status setting
 			cmd_now_known: editor_commands.has (cmd)
 		end
 
-	add_selection_command (cmd: EB_ON_SELECTION_COMMAND) is
+	add_selection_command (cmd: EB_ON_SELECTION_COMMAND)
 			-- Add a new selection command to the list of observers.
 		require
 			valid_command: cmd /= Void
@@ -200,7 +200,7 @@ feature -- Status setting
 
 feature -- Contract support
 
-	is_same_as_current_editor (a_editor: EB_EDITOR): BOOLEAN is
+	is_same_as_current_editor (a_editor: EB_EDITOR): BOOLEAN
 			-- Check if `current_editor' same as `a_editor'
 			-- This can make sure not breaking the arrayed list looping of `on_text_fully_loaded' from TEXT_OBSERVER_MANAGER.
 		do
@@ -209,7 +209,7 @@ feature -- Contract support
 
 feature {NONE} -- Event handling
 
-	on_text_reset is
+	on_text_reset
 			-- Text in editor was reset.
 		do
 			if not is_recycled then
@@ -218,7 +218,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Update editor commands.
 		do
 			if not is_recycled then
@@ -227,7 +227,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- The main editor has just been reloaded.
 		local
 			ecmds: like editor_commands
@@ -277,7 +277,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_text_back_to_its_last_saved_state is
+	on_text_back_to_its_last_saved_state
 		do
 			if not is_recycled then
 				Precursor {TEXT_OBSERVER_MANAGER}
@@ -285,7 +285,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_text_edited (unused: BOOLEAN) is
+	on_text_edited (unused: BOOLEAN)
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
 		do
@@ -295,7 +295,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_selection_begun is
+	on_selection_begun
 			-- Update `editor_copy_cmd' and `editor_cut_command'
 			-- (to be performed when selection starts in one of the editors)
 		do
@@ -305,7 +305,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_selection_finished is
+	on_selection_finished
 			-- Update `editor_copy_cmd' and `editor_cut_command'
 			-- (to be performed when selection stops in one fo the editors)
 		do
@@ -321,7 +321,7 @@ feature {NONE} -- Event handling
 
 feature {NONE} -- Implementation
 
-	internal_recycle is
+	internal_recycle
 			-- Destroy references to `Current'.
 		local
 			scmds: like selection_commands
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			current_editor := Void
 		end
 
-	add_observers is
+	add_observers
 			-- Add observers
 		do
 			if not is_recycled then
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 	selection_commands: ARRAYED_LIST [EB_ON_SELECTION_COMMAND];
 			-- Commands relative to the current editor.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

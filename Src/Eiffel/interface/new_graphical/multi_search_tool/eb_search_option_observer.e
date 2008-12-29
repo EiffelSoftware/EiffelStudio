@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search options observer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,27 +11,27 @@ deferred class
 
 feature {EB_SEARCH_OPTION_OBSERVER_MANAGER} -- Element change
 
-	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN) is
+	on_case_sensitivity_changed (a_case_sensitive: BOOLEAN)
 			-- Case sensitivity option changed
 		deferred
 		end
 
-	on_match_regex_changed (a_match_regex: BOOLEAN) is
+	on_match_regex_changed (a_match_regex: BOOLEAN)
 			-- Match regex option changed
 		deferred
 		end
 
-	on_whole_word_changed (a_whole_word: BOOLEAN) is
+	on_whole_word_changed (a_whole_word: BOOLEAN)
 			-- Whole word option changed
 		deferred
 		end
 
-	on_backwards_changed (a_bachwards: BOOLEAN) is
+	on_backwards_changed (a_bachwards: BOOLEAN)
 			-- Backwards option changed
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

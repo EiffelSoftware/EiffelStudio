@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help provider helper for EIS."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Access
 
-	help_provider_from_protocol (a_protocol: ?STRING_32): !UUID is
+	help_provider_from_protocol (a_protocol: ?STRING_32): !UUID
 			-- Helper provider from `a_protocol'
 		do
 			if a_protocol /= Void and then not a_protocol.is_empty then
@@ -24,7 +24,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	providers: !HASH_TABLE [UUID, STRING_32] is
+	providers: !HASH_TABLE [UUID, STRING_32]
 			-- Provider mappings.
 			-- String in lower.
 		local
@@ -36,7 +36,7 @@ feature {NONE} -- Access
 			Result.force (l_provider.doc, "doc")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

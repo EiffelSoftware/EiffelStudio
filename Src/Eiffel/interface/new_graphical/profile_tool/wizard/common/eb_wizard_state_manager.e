@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "State navigator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {EB_WIZARD_WINDOW} -- Basic Operations
 
-	back is
+	back
 			-- Go to the previous state.
 		require
 			possible: history.count > 1 and then not history.isfirst
@@ -36,7 +36,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 			moved_back: history.index = old history.index - 1
 		end
 
-	next is
+	next
 			-- Go to the next step.
 		do
 			if not history.islast then
@@ -56,7 +56,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 			moved_forth: (not history.off and then not history.item.is_final_state) implies history.index = old history.index + 1
 		end
 
-	cancel_actions is
+	cancel_actions
 			-- Actions performed by Current when the user
 			-- exits the wizard ( i.e. he presses "Cancel") .
 		require
@@ -84,7 +84,7 @@ feature {EB_WIZARD_WINDOW} -- Basic Operations
 
 feature {NONE} -- Internal Operations
 
-	proceed_with_new_state(a_window: EB_WIZARD_STATE_WINDOW) is
+	proceed_with_new_state(a_window: EB_WIZARD_STATE_WINDOW)
 			-- Proceed with new step , the next step being 'a_window'.
 		require
 			window_exists: a_window /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	destroying_wizard: BOOLEAN;
 			-- Is the wizard being currently destroyed?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

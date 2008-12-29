@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error the feature called after a creation is not a creation procedure."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 6
+	subcode: INTEGER = 6
 
 	creation_feature: E_FEATURE;
 			-- Creation feature involved
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			print_name (a_text_formatter);
 			a_text_formatter.add ("Feature name: ");
@@ -37,7 +37,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_creation_feature (f: FEATURE_I) is
+	set_creation_feature (f: FEATURE_I)
 			-- Assign `f' to `creation_feature'.
 		do
 			if f /= Void then
@@ -45,7 +45,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

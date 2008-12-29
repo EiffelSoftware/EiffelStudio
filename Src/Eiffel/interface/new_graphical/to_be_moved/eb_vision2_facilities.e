@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities for programming in Vision2. %
 				  %Your Class should inherit from the class to use the facilities"
 	legal: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Basic operations
 
-	extend_no_expand (container: EV_BOX; widget: EV_WIDGET) is
+	extend_no_expand (container: EV_BOX; widget: EV_WIDGET)
 			-- Add `widget' to `container' and make `widget' not expandable
 		do
 			container.extend (widget)
 			container.disable_item_expand (widget)
 		end
 
-	extend_with_size (container: EV_BOX; widget: EV_WIDGET; a_width, a_height: INTEGER) is
+	extend_with_size (container: EV_BOX; widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Add `widget' to `container' and make `widget' not expandable
 			-- Set the minimum size of `widget' to (`a_width',`a_height')
 		do
@@ -31,7 +31,7 @@ feature -- Basic operations
 			container.disable_item_expand (widget)
 		end
 
-	extend_button (container: EV_BOX; button: EV_BUTTON) is
+	extend_button (container: EV_BOX; button: EV_BUTTON)
 			-- Add `widget' to `container' and make `widget' not expandable
 			-- Set the minimum size of `widget' to the default size for buttons
 		do
@@ -42,7 +42,7 @@ feature -- Basic operations
 
 feature -- Useful query
 
-	parent_window_from (w: EV_WIDGET): EV_WINDOW is
+	parent_window_from (w: EV_WIDGET): EV_WINDOW
 			-- Top parent Window containing `w'.
 		require
 			w_not_void: w /= Void
@@ -53,7 +53,7 @@ feature -- Useful query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

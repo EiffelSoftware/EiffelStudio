@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		local
 			f: EV_FRAME
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	display_message (mess: STRING) is
+	display_message (mess: STRING)
 			-- Display `mess'.
 		do
 			label.set_text (mess)
@@ -43,7 +43,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	message: STRING is
+	message: STRING
 			-- Return the currently displayed message.
 		do
 			Result := label.text
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	label: EV_LABEL;
 			-- Label where messages are displayed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

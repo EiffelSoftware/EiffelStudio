@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	get_color (s: STRING): EV_COLOR is
+	get_color (s: STRING): EV_COLOR
 		local
 			r: COLOR_RESOURCE
 		do
@@ -30,7 +30,7 @@ feature -- Access
 			end
 		end
 
-	get_array (s: STRING; default_result: ARRAY [STRING]): ARRAY [STRING] is
+	get_array (s: STRING; default_result: ARRAY [STRING]): ARRAY [STRING]
 		local
 			r: ARRAY_RESOURCE
 		do
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	get_integer (s: STRING; default_result: INTEGER): INTEGER is
+	get_integer (s: STRING; default_result: INTEGER): INTEGER
 		local
 			r: INTEGER_RESOURCE
 		do
@@ -56,7 +56,7 @@ feature -- Access
 			end
 		end
 
-	get_boolean (s: STRING; default_result: BOOLEAN): BOOLEAN is
+	get_boolean (s: STRING; default_result: BOOLEAN): BOOLEAN
 		local
 			r: BOOLEAN_RESOURCE
 		do
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end
 
-	get_string (s: STRING; default_result: STRING): STRING is
+	get_string (s: STRING; default_result: STRING): STRING
 		local
 			r: STRING_RESOURCE
 		do
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_value (s: STRING; new_value: STRING) is
+	set_value (s: STRING; new_value: STRING)
 			-- Used for font, color, and array.
 		do
 			if has (s) then
@@ -101,7 +101,7 @@ feature -- Setting
 --			set_value (s, new_value)
 --		end
 
-	set_integer (s: STRING; new_value: INTEGER)is
+	set_integer (s: STRING; new_value: INTEGER)
 		local
 			r: INTEGER_RESOURCE
 		do
@@ -113,7 +113,7 @@ feature -- Setting
 			end
 		end
 
-	set_boolean (s: STRING; new_value: BOOLEAN) is
+	set_boolean (s: STRING; new_value: BOOLEAN)
 		local
 			r: BOOLEAN_RESOURCE
 		do
@@ -125,7 +125,7 @@ feature -- Setting
 			end
 		end
 
-	set_string (s: STRING; new_value: STRING) is
+	set_string (s: STRING; new_value: STRING)
 		local
 			r: STRING_RESOURCE
 		do
@@ -139,20 +139,20 @@ feature -- Setting
 
 feature -- Element Change
 
-	put_resource (r: RESOURCE) is
+	put_resource (r: RESOURCE)
 			-- adds `r' in Current.
 		do
 			put (r, r.name)
 		end
 
-	replace_resource (r: RESOURCE) is
+	replace_resource (r: RESOURCE)
 			-- replace resource `r.name' by `r'.
 			-- do nothing if there is no resource calles `r.name'.
 		do
 			replace (r, r.name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

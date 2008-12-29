@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cstomized tool manager"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	change_actions: ACTION_SEQUENCE [TUPLE [LIST [STRING]]] is
+	change_actions: ACTION_SEQUENCE [TUPLE [LIST [STRING]]]
 			-- Actions to be performed when customized tools changes
 			-- Argument of the actions are list of ids of tools that are changed.			
 			-- By "changed", it means that tools that are removed or newly added.
@@ -25,7 +25,7 @@ feature -- Access
 			Result := change_actions_internal
 		end
 
-	tool_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP] is
+	tool_descriptors: LIST [EB_CUSTOMIZED_TOOL_DESP]
 			-- List of loaded descriptors for customized tool
 		do
 			if tool_descriptors_internal = Void then
@@ -36,7 +36,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	descriptor_by_id (a_id: STRING): EB_CUSTOMIZED_TOOL_DESP is
+	descriptor_by_id (a_id: STRING): EB_CUSTOMIZED_TOOL_DESP
 			-- Tool descriptor from `tool_descriptors' whose id is `a_id'
 			-- Void if no descriptor is found.
 		local
@@ -58,7 +58,7 @@ feature -- Access
 			l_desps.go_to (l_cursor)
 		end
 
-	tools_by_ids (a_ids: LIST [STRING]; a_include: BOOLEAN; a_develop_window: EB_DEVELOPMENT_WINDOW): LIST [EB_CUSTOMIZED_TOOL] is
+	tools_by_ids (a_ids: LIST [STRING]; a_include: BOOLEAN; a_develop_window: EB_DEVELOPMENT_WINDOW): LIST [EB_CUSTOMIZED_TOOL]
 			-- List of customized tool (for use by `a_develop_window') generated from `tools_descriptors'
 			-- whose ids are included in `a_ids' if `a_include' is True, otherwise, not included in `a_ids'.
 		require
@@ -97,7 +97,7 @@ feature -- Access
 			result_atached: Result /= Void
 		end
 
-	tool_ids: LIST [STRING] is
+	tool_ids: LIST [STRING]
 			-- IDs from `tool_descriptors'
 		local
 			l_desp: like tool_descriptors
@@ -119,7 +119,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tool_id_set: DS_HASH_SET [STRING] is
+	tool_id_set: DS_HASH_SET [STRING]
 			-- Set of ids from `tools'
 		do
 			create Result.make (10)
@@ -129,7 +129,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	id_equal (a_id, b_id: STRING): BOOLEAN is
+	id_equal (a_id, b_id: STRING): BOOLEAN
 			-- Is `a_id' equal to `b_id'?
 		require
 			a_id_attached: a_id /= Void
@@ -138,7 +138,7 @@ feature -- Access
 			Result := a_id.is_equal (b_id)
 		end
 
-	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT is
+	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT
 			-- Xml element for `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -176,7 +176,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_tools: BOOLEAN is
+	has_tools: BOOLEAN
 			-- Is there any customized tool?
 		do
 			Result := not tool_descriptors.is_empty
@@ -184,7 +184,7 @@ feature -- Status report
 
 feature -- Storage
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE]) is
+	load (a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load information.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local
@@ -229,7 +229,7 @@ feature -- Storage
 			change_actions.call ([l_id_list])
 		end
 
-	store is
+	store
 			-- Store information.
 		do
 			if has_tools then
@@ -237,7 +237,7 @@ feature -- Storage
 			end
 		end
 
-	store_descriptors (a_descriptors: like tool_descriptors) is
+	store_descriptors (a_descriptors: like tool_descriptors)
 			-- Store `a_descriptors' in tool definition xml file.
 		do
 			store_in_file (a_descriptors, n_tools, agent xml_for_descriptor, global_file_path, tool_file_name)
@@ -248,10 +248,10 @@ feature{NONE} -- Implementation
 	tool_descriptors_internal: like tool_descriptors
 			-- Implementation of `tool_descriptors'
 
-	tool_file_name: STRING is "tools.xml"
+	tool_file_name: STRING = "tools.xml"
 			-- File name of customized tool definition xml
 
-	tool_file: STRING is
+	tool_file: STRING
 			-- File including path of customized tool definition xml
 		do
 			Result := absolute_file_name (global_file_path, tool_file_name)

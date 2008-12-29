@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class
@@ -11,14 +11,14 @@ inherit
 
 feature -- Properties
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone.
 			-- Default is Void, meaning no cursor is associated with `Current'.
 		deferred
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 			-- Default is Void, meaning no cursor is associated with `Current'.
@@ -27,46 +27,46 @@ feature -- Properties
 
 feature  -- Access
 
-	help_text: STRING is
+	help_text: STRING
 			-- Explaination of what current element means,
 			-- "No help available" by default
 		do
 			Result := Interface_names.h_No_help_available.twin
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		deferred
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		deferred
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 			-- Name used in the history list,
 			-- (By default, it is the stone_signature
 			-- and a string to describe the type of stone (Class, feature,...)).
 		deferred
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
 			Result := True
 		end
 
-	is_storable: BOOLEAN is
+	is_storable: BOOLEAN
 			-- Can `Current' be kept?
 			-- True by default.
 		do
 			Result := True
 		end
 
-	synchronized_stone: STONE is
+	synchronized_stone: STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		do
@@ -77,7 +77,7 @@ feature  -- Access
 			valid_stone: Result /= Void implies Result.is_valid
 		end
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Is `other' same as Current?
 			--| By default: Result = equal (Current, other).
 		do
@@ -86,7 +86,7 @@ feature  -- Access
 			end
 		end
 
-	stone_name: STRING_GENERAL is
+	stone_name: STRING_GENERAL
 			-- Name of Current stone
 		do
 			Result := ""
@@ -94,7 +94,7 @@ feature  -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

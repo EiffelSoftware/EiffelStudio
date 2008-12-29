@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone which can contain any data"
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initializatioin
 
-	make (a_data: like data; a_validity_func: like validity_function) is
+	make (a_data: like data; a_validity_func: like validity_function)
 			-- Initialize `data' with `a_data'.
 		do
 			set_data (a_data)
@@ -29,7 +29,7 @@ feature{NONE} -- Initializatioin
 
 feature -- Properties
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone.
 			-- Default is Void, meaning no cursor is associated with `Current'.
@@ -37,7 +37,7 @@ feature -- Properties
 			Result := Cursors.cur_cluster
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 			-- Default is Void, meaning no cursor is associated with `Current'.
@@ -45,21 +45,21 @@ feature -- Properties
 			Result := Cursors.cur_x_Cluster
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		do
 			Result := "Groups stone"
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
 			Result := stone_signature.as_string_32
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 			-- Name used in the history list,
 			-- (By default, it is the stone_signature
 			-- and a string to describe the type of stone (Class, feature,...)).
@@ -76,7 +76,7 @@ feature -- Properties
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `data' valid?
 		do
 			if validity_function = Void then
@@ -86,7 +86,7 @@ feature -- Status report
 			end
 		end
 
-	is_storable: BOOLEAN is
+	is_storable: BOOLEAN
 			-- Can `Current' be kept?
 			-- False by default.
 		do
@@ -95,13 +95,13 @@ feature -- Status report
 
 feature -- Setting
 
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data' with `a_data'.
 		do
 			data := a_data
 		end
 
-	set_validity_function (a_validity_function: like validity_function) is
+	set_validity_function (a_validity_function: like validity_function)
 			-- Set `validity_function' with `a_validity_function'.
 		do
 			validity_function := a_validity_function

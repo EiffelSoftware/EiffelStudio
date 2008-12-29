@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List representing all opened windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window_manager: EB_WINDOW_MANAGER) is
+	make (a_window_manager: EB_WINDOW_MANAGER)
 			-- Initialization: build the list.
 		do
 			window_manager := a_window_manager
@@ -58,14 +58,14 @@ feature {NONE} -- Initialization
 
 feature -- Hole processing
 
-	drop_class (a_stone: CLASSI_STONE) is
+	drop_class (a_stone: CLASSI_STONE)
 			-- Process dropped stone `a_stone'.
 			-- This function exists to filter CLASS_STONEs
 		do
 			drop_stone (a_stone)
 		end
 
-	drop_feature (a_stone: FEATURE_STONE) is
+	drop_feature (a_stone: FEATURE_STONE)
 			-- Process dropped stone `a_stone'.
 			-- This function exists to filter FEATURE_STONEs
 		do
@@ -74,7 +74,7 @@ feature -- Hole processing
 
 feature {NONE} -- Initialization Implementation
 
-	build_list is
+	build_list
 			-- Build the list.
 		local
 			list_item: EV_LIST_ITEM
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization Implementation
 
 feature -- Observer pattern
 
-	on_item_added (an_item: EB_WINDOW) is
+	on_item_added (an_item: EB_WINDOW)
 			-- `an_item' has just been added
 		local
 			list_item: EV_LIST_ITEM
@@ -133,7 +133,7 @@ feature -- Observer pattern
 			list_item.pointer_double_press_actions.extend (agent button_action (?, ?, ?, ?, ?, ?, ?, ?, list_item))
 		end
 
-	on_item_removed (an_item: EB_WINDOW) is
+	on_item_removed (an_item: EB_WINDOW)
 			-- `an_item' has just been removed.
 		local
 			list_item_to_remove: EV_LIST_ITEM
@@ -145,7 +145,7 @@ feature -- Observer pattern
 			end
 		end
 
-	on_item_changed (an_item: EB_WINDOW) is
+	on_item_changed (an_item: EB_WINDOW)
 			-- `an_item' has just changed.
 		local
 			list_item_to_change: EV_LIST_ITEM
@@ -159,7 +159,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the object is no more used.
 		do
 			window_manager.remove_observer (Current)
@@ -169,7 +169,7 @@ feature {NONE} -- Recycle
 
 feature {NONE} -- Implementation
 
-	drop_stone (a_stone: STONE) is
+	drop_stone (a_stone: STONE)
 			-- Process dropped stone `a_stone': Create a new development window and
 			-- set it up with `a_stone'.
 		do
@@ -178,14 +178,14 @@ feature {NONE} -- Implementation
 
 	button_action (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
 					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
-					a_screen_x: INTEGER; a_screen_y: INTEGER; a_item: EV_LIST_ITEM) is
+					a_screen_x: INTEGER; a_screen_y: INTEGER; a_item: EV_LIST_ITEM)
 			-- Raise Development window corresponding to selected item.
 		do
 			a_item.enable_select
 			raise_selected
 		end
 
-	key_action (k: EV_KEY) is
+	key_action (k: EV_KEY)
 			-- If `k' is `Enter' then raise the selected window.
 		do
 			if k.code = {EV_KEY_CONSTANTS}.Key_enter then
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	raise_selected is
+	raise_selected
 			-- Raise Development window corresponding to selected item.
 		local
 			selected_window: EB_WINDOW
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 	window_manager: EB_WINDOW_MANAGER
 			-- Associated window manager
 
-	context_menu_handler (menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY) is
+	context_menu_handler (menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: ANY)
 			-- Context menu handler
 		local
 			l_menu: EV_MENU
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error in C++ extension specification for an external feature."
@@ -18,25 +18,25 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "EXT_STRUCT"
+	code: STRING = "EXT_STRUCT"
 			-- Error code
 
 	error_message: STRING
 			-- Error message
 
-	set_error_message (msg: STRING) is
+	set_error_message (msg: STRING)
         do
             error_message := msg
         end
  
-    build_explain (a_text_formatter: TEXT_FORMATTER) is
+    build_explain (a_text_formatter: TEXT_FORMATTER)
         do
             a_text_formatter.add ("Error message: ")
             a_text_formatter.add (error_message)
             a_text_formatter.add_new_line
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

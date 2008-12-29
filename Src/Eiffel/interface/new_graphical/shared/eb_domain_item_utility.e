@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared domain item utility"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	domain_item_from_stone (a_stone: STONE): EB_DOMAIN_ITEM is
+	domain_item_from_stone (a_stone: STONE): EB_DOMAIN_ITEM
 			-- Domain item from `a_stone'
 		require
 			a_stone_attached: a_stone /= Void
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	pixmap_from_domain_item (a_item: EB_DOMAIN_ITEM): EV_PIXMAP is
+	pixmap_from_domain_item (a_item: EB_DOMAIN_ITEM): EV_PIXMAP
 			-- Pixmap from `a_item'.
 		local
 			l_group: CONF_GROUP
@@ -129,7 +129,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	token_name_from_domain_item (a_item: EB_DOMAIN_ITEM): LIST [EDITOR_TOKEN] is
+	token_name_from_domain_item (a_item: EB_DOMAIN_ITEM): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -199,7 +199,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hold byte code information of a custom attribute creation%
 		%with or without named argument."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creation: CREATION_EXPR_B) is
+	make (a_creation: CREATION_EXPR_B)
 			-- Create new instance of Current.
 		require
 			a_creation_not_void: a_creation /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_custom_attribute_b (Current)
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_named_arguments (n: like named_arguments) is
+	set_named_arguments (n: like named_arguments)
 			-- Set `named_arguments' with `n'.
 		do
 			named_arguments := n
@@ -55,13 +55,13 @@ feature -- Settings
 
 feature {NONE} -- Not applicable
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type.
 		do
 			Result := creation_expr.type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local or forthcomming dot calls ?
 		do
 			check
@@ -72,7 +72,7 @@ feature {NONE} -- Not applicable
 invariant
 	creation_expr_not_void: creation_expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

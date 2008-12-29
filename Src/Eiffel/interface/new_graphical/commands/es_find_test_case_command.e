@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 							Command to find all test case classes in system
 																																				]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		local
 			l_shared: SHARED_EIFFEL_PROJECT
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute is
+	execute
 			-- <Precursor>
 		local
 			l_finder: ES_EWEASEL_TEST_CASE_FINDER
@@ -64,7 +64,7 @@ feature -- Command
 
 feature -- Query
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- <Precursor>
 		local
 			l_shared: SHARED_EIFFEL_PROJECT
@@ -75,24 +75,24 @@ feature -- Query
 
 feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		once
 			Result := pixel_buffer.to_pixmap
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		local
 			l_orignal: EV_PIXEL_BUFFER
@@ -105,20 +105,20 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 			Result := l_pixmaps.icon_buffer_with_overlay (l_orignal, l_overlay, 0, 0)
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "Find_test_case_classes"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_Find_test_case_classes
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

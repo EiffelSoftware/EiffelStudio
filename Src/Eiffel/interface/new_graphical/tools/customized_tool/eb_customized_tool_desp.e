@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descriptor containing definition information for customized tool"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: like name; a_id: like id) is
+	make (a_name: like name; a_id: like id)
 			-- Initialize `name' with `a_name' and `id' with `a_id'.
 		require
 			a_name_attached: a_name /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			-- This means that if a stone is dropped in Current tool,
 			-- we popup that tool specified by `tool_id' instead of handle the stone in current tool.
 
-	new_tool (a_develop_window: EB_DEVELOPMENT_WINDOW): EB_CUSTOMIZED_TOOL is
+	new_tool (a_develop_window: EB_DEVELOPMENT_WINDOW): EB_CUSTOMIZED_TOOL
 			-- New customized tool based upon information from Current descriptor
 		require
 			a_develop_window_attached: a_develop_window /= Void
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := id.hash_code
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -74,7 +74,7 @@ feature -- Setting
 			name_set: name /= Void and then name.is_equal (a_name)
 		end
 
-	set_id (a_id: like id) is
+	set_id (a_id: like id)
 			-- Set `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -85,7 +85,7 @@ feature -- Setting
 			id_set: id /= Void and then id.is_equal (a_id)
 		end
 
-	set_pixmap_location (a_pixmap_location: like pixmap_location) is
+	set_pixmap_location (a_pixmap_location: like pixmap_location)
 			-- Set `pixmap_location' with `a_pixmap_location'.
 		require
 			a_pixmap_location_attached: a_pixmap_location /= Void
@@ -93,7 +93,7 @@ feature -- Setting
 			pixmap_location := a_pixmap_location.twin
 		end
 
-	extend_handler (a_tool_id: like id; a_stone_name: STRING) is
+	extend_handler (a_tool_id: like id; a_stone_name: STRING)
 			-- Extend (`a_tool_id', `a_stone_name') pair into `handlers'.
 		require
 			a_tool_id_attached: a_tool_id /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Combobox that lets the user select a type%N%
 		%If that type has generics, displays more type selectors."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build interface.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -61,7 +61,7 @@ feature -- Access
 			-- Button to remove `Current' from its container.
 			-- Does nothing until `set_remove_procedure' gets called.
 
-	code: STRING is
+	code: STRING
 			-- Generated code.
 		local
 			t: STRING
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		local
 			t: STRING
@@ -90,14 +90,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	add_semicolon is
+	add_semicolon
 			-- Append a semicolon label at the end of `Current'.
 		do
 			extend (new_label (";"))
 			disable_item_expand (last)
 		end
 
-	remove_semicolon is
+	remove_semicolon
 			-- Remove the semicolon label at the end of `Current'.
 		local
 			lbl: EV_LABEL
@@ -110,7 +110,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Put `a_name' in `name_field'.
 		do
 			if a_name.is_empty then
@@ -120,7 +120,7 @@ feature -- Element change
 			end
 		end
 
-	set_remove_procedure (proc: PROCEDURE [ANY, TUPLE]) is
+	set_remove_procedure (proc: PROCEDURE [ANY, TUPLE])
 			-- Make `remove_button' call `proc'.
 		require
 			proc_exists: proc /= Void
@@ -131,7 +131,7 @@ feature -- Element change
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := (
@@ -141,7 +141,7 @@ feature {EV_ANY} -- Contract support
 			)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

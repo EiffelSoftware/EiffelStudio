@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of addition of Eiffel routines in a dynamic library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ feature -- Properties
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of the Def file.
 			-- Void if unreadable file
 		require
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_file_name (f_name: STRING): BOOLEAN is
+	valid_file_name (f_name: STRING): BOOLEAN
 			-- Is `f_name' a valid file name (i.e
 			-- does it exist and is it readable)?
 		require
@@ -56,7 +56,7 @@ feature -- Status report
 	is_content_valid: BOOLEAN
 			-- Is current date read from `file_name' valid?
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does current have some exported features?
 		do
 			Result := dynamic_lib_exports.is_empty
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Update
 
-	update is
+	update
 			-- Update data with new values from configuration file.
 			-- Set `file_name' with new shared definition file name if specified.
 			-- Set `is_content_valid' to True if `file_name' exists and contains
@@ -86,7 +86,7 @@ feature -- Update
 
 feature -- Setting
 
-	set_file_name (f_name: STRING) is
+	set_file_name (f_name: STRING)
 			-- Set lace_file_name to `f_name'.
 		require
 			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
@@ -98,14 +98,14 @@ feature -- Setting
 
 feature -- Data
 
-	dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER] is
+	dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
 		once
 			create Result.make(0)
 		end
 
 feature -- DYNAMIC_LIB Exports processing.
 
-	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
+	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING)
 		require
 			class_exists: d_class /= Void
 			creation_exists: d_creation /= Void
@@ -173,7 +173,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			end
 		end
 
-   add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias, t_call_type: STRING) is
+   add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias, t_call_type: STRING)
 		local
 			class_list: LIST [CLASS_I]
 			class_i:CLASS_I
@@ -229,7 +229,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 		end
 
-	parse_exports_from_file (f: PLAIN_TEXT_FILE) is
+	parse_exports_from_file (f: PLAIN_TEXT_FILE)
 			-- Parse content of `f'.
 		require
 			f_not_void: f /= Void
@@ -445,7 +445,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			end -- loop on file
 		end
 
-	save_to_file (f: PLAIN_TEXT_FILE) is
+	save_to_file (f: PLAIN_TEXT_FILE)
 		local
 			dl_exp:DYNAMIC_LIB_EXPORT_FEATURE
 			class_name: STRING
@@ -520,7 +520,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 feature {NONE} -- Implementation
 
-	has_alias_keyword (current_line: STRING; pos: INTEGER): BOOLEAN is
+	has_alias_keyword (current_line: STRING; pos: INTEGER): BOOLEAN
 			-- Is there the `alias' keyword in `current_line'?
 		require
 			valid_line: current_line /= Void and then current_line.count > 0
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_call_type_keyword (current_line: STRING; pos: INTEGER): BOOLEAN is
+	has_call_type_keyword (current_line: STRING; pos: INTEGER): BOOLEAN
 			-- Is there the `alias' keyword in `current_line'?
 		require
 			valid_line: current_line /= Void and then current_line.count > 0
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

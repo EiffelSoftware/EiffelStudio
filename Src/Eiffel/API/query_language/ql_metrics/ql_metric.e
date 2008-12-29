@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a metric in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Access
 	unit: QL_METRIC_UNIT
 			-- Unit of current metric
 
-	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric
 		require
 			a_domain_attached: a_domain /= Void
@@ -33,7 +33,7 @@ feature -- Access
 			result_has_one_value: Result.count = 1
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name of current metric
 		do
 			if name_internal = Void then
@@ -48,7 +48,7 @@ feature -- Access
 			-- Last generated domain		
 			-- Can be Void.
 
-	criteria: LIST [QL_CRITERION] is
+	criteria: LIST [QL_CRITERION]
 			-- List of criteria set to current metric
 		deferred
 		ensure
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -67,7 +67,7 @@ feature -- Setting
 			name_internal_set: name_internal /= Void and then name_internal.is_equal (a_name)
 		end
 
-	set_criterion (a_criterion: QL_CRITERION) is
+	set_criterion (a_criterion: QL_CRITERION)
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
@@ -76,7 +76,7 @@ feature -- Setting
 		deferred
 		end
 
-	set_criteria (a_criteria: LIST [QL_CRITERION]) is
+	set_criteria (a_criteria: LIST [QL_CRITERION])
 			-- Set criteria used when calculate metric
 		require
 			a_criteria_attached: a_criteria /= Void
@@ -84,12 +84,12 @@ feature -- Setting
 			a_criteria.do_all (agent set_criterion)
 		end
 
-	remove_criteria is
+	remove_criteria
 			-- Remove all criteria
 		deferred
 		end
 
-	enable_fill_domain is
+	enable_fill_domain
 			-- Enable that newly generated domain will be filled with satisfied items.
 		do
 			is_fill_domain_enabled := True
@@ -97,7 +97,7 @@ feature -- Setting
 			fill_domain_enabled: is_fill_domain_enabled
 		end
 
-	disable_fill_domain is
+	disable_fill_domain
 			-- Disable that newly generated domain will be filled with satisfied items.
 		do
 			is_fill_domain_enabled := False
@@ -112,7 +112,7 @@ feature -- Status report
 			-- will it be inserted into `domain'?
 			-- Default: False
 
-	has_delayed_domain: BOOLEAN is
+	has_delayed_domain: BOOLEAN
 			-- Does current metric use delayed domains?
 		local
 			l_checker: QL_CRITERION_CHECKER
@@ -138,7 +138,7 @@ feature{NONE} -- Implementation
 	name_internal: like name
 			-- Implementation of `name'
 
-	wipe_out_last_domain is
+	wipe_out_last_domain
 			-- Wipe out `last_domain'.
 		do
 			if last_domain /= Void then
@@ -149,7 +149,7 @@ feature{NONE} -- Implementation
 invariant
 	unit_set_attached: unit /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

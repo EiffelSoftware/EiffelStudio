@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a line domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Access
 
-	content: LIST [QL_LINE] is
+	content: LIST [QL_LINE]
 			-- Content of current domain
 		do
 			Result := Current
@@ -36,7 +36,7 @@ feature -- Access
 			good_result: Result = Current
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current domain			
 		do
 			Result := line_scope
@@ -44,7 +44,7 @@ feature -- Access
 			good_result: Result = line_scope
 		end
 
-	domain_generator: QL_LINE_DOMAIN_GENERATOR is
+	domain_generator: QL_LINE_DOMAIN_GENERATOR
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_line_domain: BOOLEAN is
+	is_line_domain: BOOLEAN
 			-- Is current a line domain?
 		do
 			Result := True
@@ -60,28 +60,28 @@ feature -- Status report
 
 feature -- Set operation
 
-	union (other: like Current): like Current is
+	union (other: like Current): like Current
 			-- An new domain containing all the elements from both `Current' and `other'.
 		do
 			create Result.make
 			internal_union (Result, other)
 		end
 
-	intersect (other: like Current): like Current is
+	intersect (other: like Current): like Current
 			-- A new domain containing all the elements that are in both `Current' and `other'.
 		do
 			create Result.make
 			internal_intersect (Result, other)
 		end
 
-	minus (other: like Current): like Current is
+	minus (other: like Current): like Current
 			-- A new domain containing all the elements of `Current', with the elements from `other' removed.
 		do
 			create Result.make
 			internal_complement (Result, other)
 		end
 
-	distinct: like Current is
+	distinct: like Current
 			-- A new domain which only contain distinct items in Current		
 		do
 			create Result.make
@@ -90,7 +90,7 @@ feature -- Set operation
 
 feature{QL_CRITERION} -- Implementation for default criterion domain	
 
-	class_item_from_current_domain (a_class: CONF_CLASS): QL_CLASS is
+	class_item_from_current_domain (a_class: CONF_CLASS): QL_CLASS
 			-- If `a_class' is included in current domain, return the item,
 			-- otherwise return Void.
 		do
@@ -98,7 +98,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- in a line domain.
 		end
 
-	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE is
+	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE
 			-- If `e_feature' is included in current domain, return the item,
 			-- otherwise return Void.
 		do
@@ -106,7 +106,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			-- in a line domain.
 		end
 
-	invariant_item_from_current_domain (a_class_c: CLASS_C): QL_FEATURE is
+	invariant_item_from_current_domain (a_class_c: CLASS_C): QL_FEATURE
 			-- If invariant part of `a_class_c' is included in current domain,
 			-- then return an QL_FEATURE object representing this invariant part, otherwise,
 			-- return Void.
@@ -120,7 +120,7 @@ feature{NONE} -- Type ancher
 	item_type: QL_LINE;
 			-- Anchor type for items in current domain
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

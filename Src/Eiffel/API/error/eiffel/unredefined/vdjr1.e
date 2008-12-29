@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for join rule when the types are not the same."
@@ -26,7 +26,7 @@ feature -- Properties
 
 feature -- Output
 
-	print_types (a_text_formatter: TEXT_FORMATTER) is
+	print_types (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("First type: ");
 			old_type.append_to (a_text_formatter);
@@ -36,7 +36,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Result types are different");
 			a_text_formatter.add_new_line;
@@ -46,19 +46,19 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		do
 			type := t;
 		end;
 
-	set_old_type (t: TYPE_A) is
+	set_old_type (t: TYPE_A)
 			-- Assign `t' to `old_type'.
 		do
 			old_type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

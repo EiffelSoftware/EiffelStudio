@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error in C++ extension specification for an external feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "EXT_CPP"
+	code: STRING = "EXT_CPP"
 			-- Error code
 
 	error_message: STRING
@@ -23,7 +23,7 @@ feature -- Properties
 
 feature -- Settings
 
-	set_error_message (msg: STRING) is
+	set_error_message (msg: STRING)
 			-- Set `error_message' with `msg'.
 		require
 			msg_not_void: msg /= Void
@@ -33,14 +33,14 @@ feature -- Settings
 
 feature -- Error display
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Error message: ")
 			a_text_formatter.add (error_message)
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

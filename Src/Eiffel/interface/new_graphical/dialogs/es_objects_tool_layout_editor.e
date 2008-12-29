@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to manage debugger's objects tool's layout ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	on_after_initialized is
+	on_after_initialized
             -- Use to perform additional creation initializations, after the UI has been created.		
 		do
 			Precursor {ES_TOOL_DIALOG}
@@ -144,7 +144,7 @@ feature {NONE} -- User interface elements
 
 feature {NONE} -- Actions
 
-	update is
+	update
 		require
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
@@ -249,7 +249,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh due to show or resize action
 		require
 			is_initialized: is_initialized
@@ -279,7 +279,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_grid_item_selected (gi: EV_GRID_ITEM) is
+	on_grid_item_selected (gi: EV_GRID_ITEM)
 			-- item selected
 		require
 			is_initialized: is_initialized
@@ -299,7 +299,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_grid_item_unselected (gi: EV_GRID_ITEM) is
+	on_grid_item_unselected (gi: EV_GRID_ITEM)
 			-- item unselected
 		require
 			is_initialized: is_initialized
@@ -309,7 +309,7 @@ feature {NONE} -- Actions
 			button_arrow_down.disable_sensitive
 		end
 
-	key_pressed_on_grid (k: EV_KEY) is
+	key_pressed_on_grid (k: EV_KEY)
 			--
 		require
 			is_initialized: is_initialized
@@ -341,7 +341,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	move_cell_by (a_cell: EV_GRID_ITEM; by: INTEGER) is
+	move_cell_by (a_cell: EV_GRID_ITEM; by: INTEGER)
 			--
 		require
 			is_initialized: is_initialized
@@ -376,7 +376,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Action handlers
 
-	on_apply is
+	on_apply
 			-- Called when the Apply button is pressed.
 		require
 			is_initialized: is_initialized
@@ -442,7 +442,7 @@ feature {NONE} -- Action handlers
 			is_close_vetoed: is_close_vetoed
 		end
 
-	on_reset is
+	on_reset
 			-- Called when the Reset button is pressed.
 		require
 			is_initialized: is_initialized or is_initializing
@@ -460,7 +460,7 @@ feature {NONE} -- Action handlers
 			is_close_vetoed: is_close_vetoed
 		end
 
-	on_cancel is
+	on_cancel
 			-- Called when the Cancel button is pressed.
 		require
 			is_initialized: is_initialized
@@ -492,7 +492,7 @@ feature {NONE} -- Factory
 			button_arrow_down_attached: button_arrow_down /= Void
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

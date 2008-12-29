@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent certain search strategy, and should be implemented later."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_search_strategy (a_keyword: like keyword; a_range: like surrounding_text_range) is
+	make_search_strategy (a_keyword: like keyword; a_range: like surrounding_text_range)
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_matched : ARRAYED_LIST [MSR_ITEM] is
+	item_matched : ARRAYED_LIST [MSR_ITEM]
 			-- Matched items
 		do
 			Result := item_matched_internal
@@ -35,7 +35,7 @@ feature -- Access
 			item_matched_not_void_if_launched: is_launched implies Result /= Void
 		end
 
-	keyword: STRING_32 is
+	keyword: STRING_32
 			-- Search keyword.
 		require
 			is_keyword_set : is_keyword_set
@@ -45,7 +45,7 @@ feature -- Access
 			keyword_not_void: Result = keyword_internal
 		end
 
-	surrounding_text_range : INTEGER is
+	surrounding_text_range : INTEGER
 			-- Number of characters on one side of found text in a item's context text.
 		do
 			Result:= surrounding_text_range_internal
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status report
 
-	case_sensitive : BOOLEAN is
+	case_sensitive : BOOLEAN
 			-- Is case matched?
 		do
 			Result := case_sensitive_internal
@@ -61,7 +61,7 @@ feature -- Status report
 			case_sensitive: Result = case_sensitive_internal
 		end
 
-	is_regular_expression_used : BOOLEAN is
+	is_regular_expression_used : BOOLEAN
 			-- Is regular expression used in searching?
 		do
 			Result := is_regular_expression_used_internal
@@ -69,7 +69,7 @@ feature -- Status report
 			is_regular_expression_used: Result = is_regular_expression_used_internal
 		end
 
-	is_whole_word_matched: BOOLEAN is
+	is_whole_word_matched: BOOLEAN
 			-- Is whole word matched?
 		do
 			Result := is_whole_word_matched_internal
@@ -77,7 +77,7 @@ feature -- Status report
 			is_whole_word_matched: Result = is_whole_word_matched_internal
 		end
 
-	is_launched: BOOLEAN is
+	is_launched: BOOLEAN
 			-- Is searching launched?
 		do
 			Result := launched
@@ -85,7 +85,7 @@ feature -- Status report
 			is_launched : Result = launched
 		end
 
-	is_keyword_set: BOOLEAN is
+	is_keyword_set: BOOLEAN
 			-- Is search keyword set
 		do
 			Result := (keyword_internal /= Void)
@@ -93,7 +93,7 @@ feature -- Status report
 			is_keyword_set_right: Result = (keyword_internal /= Void)
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result := True
@@ -101,7 +101,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_keyword (text: like keyword) is
+	set_keyword (text: like keyword)
 			-- Set `keyword_internal' with text for searching.
 		require
 			text_not_void: text /= Void
@@ -111,7 +111,7 @@ feature -- Status setting
 			keyword_not_void: keyword_internal = text
 		end
 
-	set_surrounding_text_range (range : INTEGER) is
+	set_surrounding_text_range (range : INTEGER)
 			-- Set `surrounding_text_range_internal' with range.
 		require
 			range_larger_equal_than_zero: range >= 0
@@ -121,7 +121,7 @@ feature -- Status setting
 			range_larger_equal_than_zero: surrounding_text_range_internal = range
 		end
 
-	set_case_sensitive is
+	set_case_sensitive
 			-- Set search matching case.
 		do
 			case_sensitive_internal := True
@@ -129,7 +129,7 @@ feature -- Status setting
 			case_sensitive : case_sensitive
 		end
 
-	set_case_insensitive is
+	set_case_insensitive
 			-- Set search not matching case.
 		do
 			case_sensitive_internal := False
@@ -137,7 +137,7 @@ feature -- Status setting
 			not_case_sensitive : not case_sensitive
 		end
 
-	set_regular_expression_used (p_regular_expression_used: BOOLEAN) is
+	set_regular_expression_used (p_regular_expression_used: BOOLEAN)
 			-- Set `is_regular_expression_used_internel' with p_regular_expression_used.
 		do
 			is_regular_expression_used_internal := p_regular_expression_used
@@ -145,7 +145,7 @@ feature -- Status setting
 			is_regular_expression_used_set: is_regular_expression_used = p_regular_expression_used
 		end
 
-	set_whole_word_matched (p_whole_word_matched: BOOLEAN) is
+	set_whole_word_matched (p_whole_word_matched: BOOLEAN)
 			-- Set `is_whole_word_matched_internal' with p_whole_word_matched.
 		do
 			is_whole_word_matched_internal := p_whole_word_matched
@@ -155,7 +155,7 @@ feature -- Status setting
 
 feature -- Basic operations		
 
-	reset_all is
+	reset_all
 			-- Reset
 		do
 			item_matched_internal := Void
@@ -178,7 +178,7 @@ feature -- Basic operations
 			whole_word_matched: not is_whole_word_matched_internal
 		end
 
-	launch is
+	launch
 			-- Launch searching
 		require
 			is_search_prepared: is_search_prepared
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	is_whole_word_matched_internal: like is_whole_word_matched
 			-- If search whole word
 
-	string_formatter: MSR_FORMATTER is
+	string_formatter: MSR_FORMATTER
 			-- Mute every GOBO regular expression meta-characters in a string.
 		once
 			Result := create {MSR_FORMATTER}
@@ -227,7 +227,7 @@ invariant
 	pcre_regex_not_void: pcre_regex /= Void
 	item_matched_internal_not_void_after_launched: launched implies item_matched_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of a configuration used to launch a test processor.
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Set of information about a profiled run."
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 			-- Creation feature
 		do
 			create eiffel_profiling_list.make;
@@ -27,7 +27,7 @@ feature -- Creation
 
 feature -- Iteration
 
-	start is
+	start
 			-- Set `item' to first item in the set.
 		do
 			eiffel_profiling_list.start;
@@ -35,7 +35,7 @@ feature -- Iteration
 			cycle_profiling_list.start;
 		end;
 
-	finish is
+	finish
 			-- Set `item' to last item in the set.
 		do
 			eiffel_profiling_list.finish;
@@ -45,7 +45,7 @@ feature -- Iteration
 			cycle_profiling_list.finish;
 		end;
 
-	forth is
+	forth
 			-- Make next item the current.
 		require
 			not_after: not after;
@@ -63,7 +63,7 @@ feature -- Iteration
 			end;
 		end;
 
-	back is
+	back
 			-- Make previous item the current.
 		require
 			not_before: not before;
@@ -81,7 +81,7 @@ feature -- Iteration
 			end;
 		end;
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no next item left?
 		do
 			Result := eiffel_profiling_list.after and then
@@ -89,7 +89,7 @@ feature -- Iteration
 						cycle_profiling_list.after;
 		end;
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no previous item left?
 		do
 			Result := cycle_profiling_list.before and then
@@ -97,7 +97,7 @@ feature -- Iteration
 						eiffel_profiling_list.before;
 		end;
 
-	item: PROFILE_DATA is
+	item: PROFILE_DATA
 			-- The current item.
 		do
 			if not eiffel_profiling_list.after then
@@ -115,7 +115,7 @@ feature -- Iteration
 
 feature {PROFILE_FILTER} -- Adding
 
-	insert_unknown_profile_data (data: PROFILE_DATA) is
+	insert_unknown_profile_data (data: PROFILE_DATA)
 			-- Puts `data' in the set.
 		local
 			ed: EIFFEL_PROFILE_DATA;
@@ -144,7 +144,7 @@ end;
 
 feature {PROFILE_INFORMATION, PROFILE_FILTER} -- Adding
 
-	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA) is
+	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA)
 		do
 debug("PROFILE_CONVERT")
 	io.error.put_string ("`insert_eiffel_profile_data' has been called.");
@@ -154,7 +154,7 @@ end;
 			update_eiffel (data);
 		end;
 
-	insert_c_profiling_data (data: C_PROFILE_DATA) is
+	insert_c_profiling_data (data: C_PROFILE_DATA)
 		do
 debug("PROFILE_CONVERT")
 	io.error.put_string ("`insert_c_profile_data' has been called.");
@@ -164,7 +164,7 @@ end;
 			update_c (data);
 		end;
 
-	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA) is
+	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA)
 		do
 debug("PROFILE_CONVERT")
 	io.error.put_string ("`insert_cycle_profile_data' has been called.");
@@ -174,7 +174,7 @@ end;
 			update_cycle (data);
 		end;
 
-	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER) is
+	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER)
 		local
 			function_added: BOOLEAN;
 		do
@@ -192,7 +192,7 @@ end;
 			end;
 		end;
 
-	has_cycle (number: INTEGER): BOOLEAN is
+	has_cycle (number: INTEGER): BOOLEAN
 		do
 			from
 				cycle_profiling_list.start;
@@ -207,7 +207,7 @@ end;
 			end;
 		end;
 
-	stop_computation is
+	stop_computation
 			-- Stops computation i.e. computes the averages.
 		local
 			count: INTEGER;
@@ -242,7 +242,7 @@ end;
 
 feature -- Status report
 
-	number_of_feature_calls: INTEGER is
+	number_of_feature_calls: INTEGER
 			-- Number of calls to Eiffel features
 		do
 			from
@@ -255,7 +255,7 @@ feature -- Status report
 			end;
 		end;
 
-	number_of_function_calls: INTEGER is
+	number_of_function_calls: INTEGER
 			-- Number of calls to C functions
 		do
 			from
@@ -268,19 +268,19 @@ feature -- Status report
 			end;
 		end;
 
-	number_of_cycles: INTEGER is
+	number_of_cycles: INTEGER
 			-- Number of cycles detected during the run.
 		do
 			Result := cycle_profiling_list.count;
 		end;
 
-	number_of_eiffel_features: INTEGER is
+	number_of_eiffel_features: INTEGER
 			-- Number of Eiffel features called during the run.
 		do
 			Result := eiffel_profiling_list.count;
 		end;
 
-	number_of_c_functions: INTEGER is
+	number_of_c_functions: INTEGER
 			-- Number of C functions called during the run.
 		do
 			Result := c_profiling_list.count;
@@ -299,7 +299,7 @@ feature -- Attributes
 
 feature {NONE} -- Implementation
 
-	init_eiffel (data: EIFFEL_PROFILE_DATA) is
+	init_eiffel (data: EIFFEL_PROFILE_DATA)
 			-- Initialization of column-attributes for the
 			-- language Eiffel.
 		do
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			total_avg_eiffel := data.total;
 		end;
 
-	init_c (data: C_PROFILE_DATA) is
+	init_c (data: C_PROFILE_DATA)
 			-- Initialization of column-attributes for the
 			-- language C.
 		do
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			total_avg_c := data.total;
 		end;
 
-	init_cycle (data: CYCLE_PROFILE_DATA) is
+	init_cycle (data: CYCLE_PROFILE_DATA)
 			-- Initialization of column-attributes for the
 			-- cycles.
 		do
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			total_avg_cycle := data.total;
 		end;
 
-	update_eiffel (data: EIFFEL_PROFILE_DATA) is
+	update_eiffel (data: EIFFEL_PROFILE_DATA)
 			-- Updates all column-attributes for the language
 			-- Eiffel.
 		do
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	update_c (data: C_PROFILE_DATA) is
+	update_c (data: C_PROFILE_DATA)
 			-- Updates all column-attributes for the language C.
 		do
 			if calls_min_c = -1 then
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	update_cycle (data: CYCLE_PROFILE_DATA) is
+	update_cycle (data: CYCLE_PROFILE_DATA)
 			-- Updates all column-attributes for the Cycles.
 		do
 			if calls_min_cycle = -1 then
@@ -562,7 +562,7 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 
 feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 
-	spit_info is
+	spit_info
 			-- Spits all kinds of information.
 			--| For dbugging purposes only.
 			--| See also `spit_info' in `PROFILE_INFORMATION'.
@@ -596,7 +596,7 @@ feature {PROFILE_INFORMATION} -- Spit Information (for debugging)
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

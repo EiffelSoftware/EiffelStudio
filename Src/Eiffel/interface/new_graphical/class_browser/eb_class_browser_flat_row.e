@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A row used in flat view of class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like feature_item; a_browser: like browser) is
+	make (a_feature: like feature_item; a_browser: like browser)
 			-- Initialize `feature_item' with `a_feature'.
 		require
 			a_feature_attached: a_feature /= Void
@@ -43,7 +43,7 @@ feature{NONE} -- Initialization
 
 feature -- Grid binding
 
-	refresh is
+	refresh
 			-- Refresh current row.
 		require
 			grid_row_attached: grid_row /= Void
@@ -52,7 +52,7 @@ feature -- Grid binding
 			update_row
 		end
 
-	bind_row (a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER) is
+	bind_row (a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER)
 			-- Bind current at the end of `a_grid' and set backgroud color of
 			-- inserted row with `a_background_color', set row height with `a_height'.
 		require
@@ -96,7 +96,7 @@ feature -- Grid binding
 
 feature -- Status report
 
-	is_parent: BOOLEAN is
+	is_parent: BOOLEAN
 			-- Is current row a parent row?
 		do
 			Result := parent = Current
@@ -115,7 +115,7 @@ feature -- Access
 	feature_item: QL_FEATURE
 			-- Feature associated with current row
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- E_FEATURE object of `feature_item'
 		require
 			real_feature: feature_item.is_real_feature
@@ -125,7 +125,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 			-- Written class of `feature_item'
 		do
 			Result := feature_item.written_class
@@ -133,7 +133,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- CLASS_C object of `feature_item'
 		do
 			Result := feature_item.class_c
@@ -147,7 +147,7 @@ feature -- Access
 	parent: like Current
 			-- Parent row of current
 
-	summary: STRING_32 is
+	summary: STRING_32
 			-- Summary of current row
 		do
 			Result := interface_names.l_feature_count (children_count + 1)
@@ -157,7 +157,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' with `a_parent'.
 		do
 			parent := a_parent
@@ -166,7 +166,7 @@ feature -- Setting
 			parent_set: parent = a_parent
 		end
 
-	set_is_expanded (b: BOOLEAN) is
+	set_is_expanded (b: BOOLEAN)
 			-- Set `is_expanded' with `b'.
 		do
 			is_expanded := b
@@ -175,7 +175,7 @@ feature -- Setting
 			is_expanded_set: is_expanded = b
 		end
 
-	set_children_count (a_count: INTEGER) is
+	set_children_count (a_count: INTEGER)
 			-- Set `children_count' with `a_count'.
 		do
 			children_count := a_count
@@ -186,7 +186,7 @@ feature -- Setting
 
 feature{NONE} -- Grid items
 
-	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Class item
 		do
 			update_row
@@ -195,7 +195,7 @@ feature{NONE} -- Grid items
 			result_attached: Result /= Void
 		end
 
-	feature_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	feature_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Feature item
 		do
 			update_row
@@ -212,7 +212,7 @@ feature{NONE} -- Implementation
 	class_item_internal: like class_grid_item
 			-- Internal `class_grid_item'
 
-	class_tooltip_tokens: LIST [EDITOR_TOKEN] is
+	class_tooltip_tokens: LIST [EDITOR_TOKEN]
 			-- Editor tokens for class tooltip
 		do
 			if class_tooltip_tokens_internal = Void then
@@ -228,7 +228,7 @@ feature{NONE} -- Implementation
 	class_image: STRING
 			-- Image of class used in search
 
-	feature_image: STRING is
+	feature_image: STRING
 			-- Image of feature used in search
 		do
 			if feature_image_internal = Void then
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	feature_comment: LIST [EDITOR_TOKEN] is
+	feature_comment: LIST [EDITOR_TOKEN]
 			-- Feature comment
 		do
 			if feature_comment_internal = Void then
@@ -264,7 +264,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Item setup
 
-	setup_class_item_with_blank (a_item: EB_GRID_EDITOR_TOKEN_ITEM) is
+	setup_class_item_with_blank (a_item: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Setup `a_item' using `class_c' into blank form.
 		require
 			a_item_attached: a_item /= Void
@@ -274,7 +274,7 @@ feature{NONE} -- Item setup
 			a_item.remove_pixmap
 		end
 
-	setup_feature_with_summary (a_item: like feature_grid_item) is
+	setup_feature_with_summary (a_item: like feature_grid_item)
 			-- Setup `a_item' using `feature_item' to summary form.
 		require
 			a_item_attached: a_item /= Void
@@ -286,7 +286,7 @@ feature{NONE} -- Item setup
 			a_item.remove_general_tooltip
 		end
 
-	update_row is
+	update_row
 			-- Update status of current row.
 		do
 			if not is_up_to_date then
@@ -313,7 +313,7 @@ feature{NONE} -- Item setup
 			status_up_to_date: is_up_to_date
 		end
 
-	should_feature_tooltip_be_displayed: BOOLEAN is
+	should_feature_tooltip_be_displayed: BOOLEAN
 			-- Should feature tooltip display be displayed?
 		do
 			Result := browser.should_tooltip_be_displayed
@@ -331,7 +331,7 @@ invariant
 	short_generic_class_tokens_attached: short_generic_class_tokens /= Void
 	feature_signature_tokens_attached: feature_signature_tokens /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

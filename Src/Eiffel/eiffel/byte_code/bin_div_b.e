@@ -1,4 +1,4 @@
-indexing
+note
 	description: "integer // operator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_div_b (Current)
@@ -25,13 +25,13 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_simple: BOOLEAN is
+	is_simple: BOOLEAN
 			-- Operation is usually simple (C can compact it in affectations)
 		do
 			Result := is_built_in
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one?
 		local
 			l_type: TYPE_A
@@ -42,19 +42,19 @@ feature -- Status report
 
 feature -- C code generation
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate the operator
 		do
 			a_buffer.put_three_character (' ', '/', ' ')
 		end
 
-	generate_simple is
+	generate_simple
 			-- Generate a simple assignment operation
 		do
 			buffer.put_string (" /= ")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

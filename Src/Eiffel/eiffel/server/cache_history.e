@@ -1,4 +1,4 @@
-indexing
+note
 	description: "History used for cache remembering system, so that element%
 				%accessed more often are kept as much as possible."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an history of size n
 		local
 			i: INTEGER
@@ -75,7 +75,7 @@ feature
 		-- Last element removed from the history
 		--  by the force function
 
-	add (e: G) is
+	add (e: G)
 			-- Add a new element in the history
 		require
 			non_void_arguement:	e /= Void
@@ -111,7 +111,7 @@ feature
 			end
 		end
 
-	make_younger (i: INTEGER) is
+	make_younger (i: INTEGER)
 			-- Make the element of index i younger
 			-- as it is accessed in the cache
 		require
@@ -136,7 +136,7 @@ feature
 			end
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove the item of index i from the
 			-- history
 			-- Do not check if i is really a used cell
@@ -170,7 +170,7 @@ feature
 			end
 		end
 
-	wipe_out, clear_all is
+	wipe_out, clear_all
 		local
 			int_array: ARRAY [INTEGER]
 			i: INTEGER
@@ -192,13 +192,13 @@ feature
 			previous.clear_all
 		end
 
-	set_item (e: G; i: INTEGER) is
+	set_item (e: G; i: INTEGER)
 		-- change the item at the index i
 		do
 			put (e, i)
 		end
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is content valid?
 		local
 			l_free_positions: SEARCH_TABLE [INTEGER]
@@ -264,7 +264,7 @@ invariant
 	count_good: count >= 0 and count <= size
 	valid_content: valid_content
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

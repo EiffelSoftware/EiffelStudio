@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Generator for custom attributes (CA) in CIL code generation.
 
@@ -50,7 +50,7 @@ inherit
 
 feature -- Code generation
 
-	generate (a_ca: CUSTOM_ATTRIBUTE_B; a_owner_token: INTEGER; a_code_generator: CIL_CODE_GENERATOR) is
+	generate (a_ca: CUSTOM_ATTRIBUTE_B; a_owner_token: INTEGER; a_code_generator: CIL_CODE_GENERATOR)
 			-- Generate `a_ca'.
 		require
 			a_ca_not_void: a_ca /= Void
@@ -158,7 +158,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Setting
 
-	set_target_type (a_type: like target_type) is
+	set_target_type (a_type: like target_type)
 			-- Set `a_type' to `target_type'.
 		do
 			target_type := a_type
@@ -168,7 +168,7 @@ feature {NONE} -- Setting
 
 feature {BYTE_NODE} -- Visitors
 
-	process_array_const_b (a_node: ARRAY_CONST_B) is
+	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- Process `a_node'.
 		local
 			l_expressions: BYTE_LIST [BYTE_NODE]
@@ -211,7 +211,7 @@ feature {BYTE_NODE} -- Visitors
 			set_target_type (l_old_target_type)
 		end
 
-	process_bool_const_b (a_node: BOOL_CONST_B) is
+	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -221,7 +221,7 @@ feature {BYTE_NODE} -- Visitors
 			ca_blob.put_boolean (a_node.value)
 		end
 
-	process_char_const_b (a_node: CHAR_CONST_B) is
+	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -235,7 +235,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-	process_constant_b (a_node: CONSTANT_B) is
+	process_constant_b (a_node: CONSTANT_B)
 			-- Process `a_node'.
 		local
 			l_value: VALUE_I
@@ -308,7 +308,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-	process_external_b (a_node: EXTERNAL_B) is
+	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
 		local
 			l_il_enum: IL_ENUM_EXTENSION_I
@@ -328,7 +328,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-	process_integer_constant (a_node: INTEGER_CONSTANT) is
+	process_integer_constant (a_node: INTEGER_CONSTANT)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -339,14 +339,14 @@ feature {BYTE_NODE} -- Visitors
 			insert_integer_constant (a_node)
 		end
 
-	process_paran_b (a_node: PARAN_B) is
+	process_paran_b (a_node: PARAN_B)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			a_node.expr.process (Current)
 		end
 
-	process_real_const_b (a_node: REAL_CONST_B) is
+	process_real_const_b (a_node: REAL_CONST_B)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -368,7 +368,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-	process_string_b (a_node: STRING_B) is
+	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
@@ -380,7 +380,7 @@ feature {BYTE_NODE} -- Visitors
 			ca_blob.put_string (a_node.value)
 		end
 
-	process_type_expr_b (a_node: TYPE_EXPR_B) is
+	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_gen_type: GEN_TYPE_A
@@ -425,7 +425,7 @@ feature {BYTE_NODE} -- Visitors
 			end
 		end
 
-	process_void_b (a_node: VOID_B) is
+	process_void_b (a_node: VOID_B)
 			-- Process `a_node'.
 		local
 			l_cl_type: CL_TYPE_A
@@ -442,7 +442,7 @@ feature {BYTE_NODE} -- Visitors
 
 feature {NONE} -- Implemention
 
-	is_target_object: BOOLEAN is
+	is_target_object: BOOLEAN
 			-- Is `a_type' of type System.Object?
 		require
 			target_type_not_void: target_type /= Void
@@ -456,7 +456,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	add_named_argument (a_class: CLASS_C; a_tuple: TUPLE [str: STRING_B; exp: EXPR_B]) is
+	add_named_argument (a_class: CLASS_C; a_tuple: TUPLE [str: STRING_B; exp: EXPR_B])
 			-- Lookup named argument in `a_tuple' and insert it in `ca_blob'.
 		require
 			blob_not_void: ca_blob /= Void
@@ -512,7 +512,7 @@ feature {NONE} -- Implemention
 			l_expr_b.process (Current)
 		end
 
-	insert_integer_constant (a_int: INTEGER_CONSTANT) is
+	insert_integer_constant (a_int: INTEGER_CONSTANT)
 			-- Simply insert `a_int' into `ca_blob'. Depending on `target_type'
 			-- it might requires to actually put any of the NATURAL_XX/INTEGER_XX
 			-- compatible value, or a REAL_32/REAL_64 value.
@@ -615,7 +615,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	insert_field_or_prop_type (a_type: TYPE_A) is
+	insert_field_or_prop_type (a_type: TYPE_A)
 			-- Fill `FieldOrPropType' in `ca_blob'.
 		require
 			a_type_not_void: a_type /= Void
@@ -647,7 +647,7 @@ feature {NONE} -- Implemention
 			end
 		end
 
-	insert_enum_type (a_cl_type: CL_TYPE_A) is
+	insert_enum_type (a_cl_type: CL_TYPE_A)
 			-- Insert enum specification in `ca_blob'.
 		require
 			a_cl_type_not_void: a_cl_type /= Void
@@ -668,7 +668,7 @@ feature {NONE} -- Implemention
 invariant
 	is_dotnet_compilation: system.il_generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

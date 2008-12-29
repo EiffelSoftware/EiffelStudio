@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Progress observer manager"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Element Change
 
-	add_observer (a_observer: !PROGRESS_OBSERVER) is
+	add_observer (a_observer: !PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if progress_observers = Void then
@@ -19,7 +19,7 @@ feature -- Element Change
 			progress_observers.extend (a_observer)
 		end
 
-	remove_observer (a_observer: !PROGRESS_OBSERVER) is
+	remove_observer (a_observer: !PROGRESS_OBSERVER)
 			-- Add observer to be managed
 		do
 			if progress_observers /= Void and then not progress_observers.is_empty then
@@ -29,7 +29,7 @@ feature -- Element Change
 
 feature {NONE} -- Observer notification
 
-	on_progress_start (a_total: INTEGER) is
+	on_progress_start (a_total: INTEGER)
 			-- On starting visiting the system
 		require
 			a_total_not_void: a_total > 0
@@ -50,7 +50,7 @@ feature {NONE} -- Observer notification
 			end
 		end
 
-	on_progress_progress (a_value: INTEGER) is
+	on_progress_progress (a_value: INTEGER)
 			-- On progress has been made
 		require
 			value_valid: is_value_valid (a_value)
@@ -76,7 +76,7 @@ feature {NONE} -- Observer notification
 			end
 		end
 
-	on_progress_stop is
+	on_progress_stop
 			-- On stop visiting the system
 		local
 			l_observers: like progress_observers
@@ -95,7 +95,7 @@ feature {NONE} -- Observer notification
 			end
 		end
 
-	on_progress_finish is
+	on_progress_finish
 			-- On finish visiting the system
 		local
 			l_observers: like progress_observers
@@ -116,7 +116,7 @@ feature {NONE} -- Observer notification
 
 feature {NONE} -- Querry
 
-	is_value_valid (a_value: INTEGER): BOOLEAN is
+	is_value_valid (a_value: INTEGER): BOOLEAN
 			-- Is `a_value' valid?
 		do
 			Result := a_value >= 0 and then a_value <= total
@@ -130,7 +130,7 @@ feature {NONE} -- Observers
 	total: INTEGER;
 			-- Total amount of the progress.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

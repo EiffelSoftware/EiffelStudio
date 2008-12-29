@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Format details related to the output of a format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Implementation
 
 feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 
-	indent is
+	indent
 			-- Increment `indent_depth'.
 		do
 			indent_depth := indent_depth + 1
@@ -41,7 +41,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			incremented: indent_depth = (old indent_depth) + 1
 		end
 
-	exdent is
+	exdent
 			-- Decrement `indent_depth'.
 		do
 			indent_depth := indent_depth - 1
@@ -49,7 +49,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			decremented: indent_depth = (old indent_depth) - 1
 		end
 
-	set_indent_depth (d: INTEGER) is
+	set_indent_depth (d: INTEGER)
 			-- Assign `d' to `indent_depth'.
 		do
 			indent_depth := d
@@ -57,7 +57,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			assigned: d = indent_depth
 		end
 
-	set_dot_needed (b: BOOLEAN) is
+	set_dot_needed (b: BOOLEAN)
 			-- Set `dot_needed' to `b'.
 		do
 			dot_needed := b
@@ -65,7 +65,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			dot_needed  = b
 		end
 
-	set_new_line_between_tokens (b: BOOLEAN) is
+	set_new_line_between_tokens (b: BOOLEAN)
 			-- Set indentation.
 		do
 			new_line_between_tokens := b
@@ -73,7 +73,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			new_line_between_tokens = b
 		end
 
-	set_separator (s: like separator) is
+	set_separator (s: like separator)
 			-- Set `separator' to `s'.	
 		do
 			separator := s
@@ -81,7 +81,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			separator = s
 		end
 
-	set_space_between_tokens (b: BOOLEAN) is
+	set_space_between_tokens (b: BOOLEAN)
 			-- Set spacing.
 		do
 			space_between_tokens := b
@@ -89,7 +89,7 @@ feature {TEXT_FORMATTER_DECORATOR, TEXT_FORMATTER} -- Local formatting control
 			space_between_tokens = b
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

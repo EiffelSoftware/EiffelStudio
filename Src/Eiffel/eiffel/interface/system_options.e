@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Options of the system as there are specified in the ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -44,7 +44,7 @@ feature -- Access
 	automatic_backup: BOOLEAN
 			-- Automatic backup generation?
 
-	has_multithreaded: BOOLEAN is
+	has_multithreaded: BOOLEAN
 			-- Is the system a multithreaded one, only true for classic system?
 		do
 			Result := not il_generation and then internal_has_multithreaded
@@ -84,7 +84,7 @@ feature -- Access
 	external_runtime: STRING
 			-- Name of run-time to use for linking.
 
-	uses_ise_gc_runtime: BOOLEAN is
+	uses_ise_gc_runtime: BOOLEAN
 			-- Does current use the ISE GC runtime?
 		do
 			Result := external_runtime = Void or else external_runtime.is_empty
@@ -125,7 +125,7 @@ feature -- Access: IL code generation
 	msil_culture: STRING
 			-- Culture of current assembly.
 
-	msil_classes_per_module: INTEGER is
+	msil_classes_per_module: INTEGER
 			-- Number of classes per generated module in IL code generation
 		do
 			Result := internal_msil_classes_per_module
@@ -158,7 +158,7 @@ feature -- Access: IL code generation
 
 feature -- Update
 
-	set_use_cluster_as_namespace (v: BOOLEAN) is
+	set_use_cluster_as_namespace (v: BOOLEAN)
 			-- Set `use_cluster_as_namespace' to `v'.
 		do
 			use_cluster_as_namespace := v
@@ -166,7 +166,7 @@ feature -- Update
 			use_cluster_as_namespace_set: use_cluster_as_namespace = v
 		end
 
-	set_use_all_cluster_as_namespace (v: BOOLEAN) is
+	set_use_all_cluster_as_namespace (v: BOOLEAN)
 			-- Set `use_all_cluster_as_namespace' to `v'.
 		do
 			use_all_cluster_as_namespace := v
@@ -174,7 +174,7 @@ feature -- Update
 			use_all_cluster_as_namespace_set: use_all_cluster_as_namespace = v
 		end
 
-	set_java_generation (v: BOOLEAN) is
+	set_java_generation (v: BOOLEAN)
 			-- Set `java_generation' to `v' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -194,7 +194,7 @@ feature -- Update
 				or else msil_generation_type.is_equal ("dll")
 		end
 
-	set_il_verifiable (b: BOOLEAN) is
+	set_il_verifiable (b: BOOLEAN)
 			-- Set `il_verifiable' with `b'.
 		do
 			il_verifiable := b
@@ -202,7 +202,7 @@ feature -- Update
 			il_verifiable_set: il_verifiable = b
 		end
 
-	set_clr_runtime_version (version: like clr_runtime_version) is
+	set_clr_runtime_version (version: like clr_runtime_version)
 			-- Set `clr_runtime_version' to `version'.
 		require
 			version_not_void: version /= Void
@@ -217,7 +217,7 @@ feature -- Update
 				clr_runtime_version = version
 		end
 
-	set_metadata_cache_path (s: STRING) is
+	set_metadata_cache_path (s: STRING)
 			-- Set `metadata_cache_path' to `s'
 		require
 			s_not_void: s /= Void
@@ -230,7 +230,7 @@ feature -- Update
 			metadata_cache_path_set: (create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else s.is_equal (metadata_cache_path)
 		end
 
-	set_msil_generation_type (s: STRING) is
+	set_msil_generation_type (s: STRING)
 			-- Set `msil_generation_type' to `s'
 		require
 			s_not_void: s /= Void
@@ -241,7 +241,7 @@ feature -- Update
 			msil_generation_type_set : msil_generation_type.is_equal (s)
 		end
 
-	set_il_generation (v: BOOLEAN) is
+	set_il_generation (v: BOOLEAN)
 			-- Set `il_generation' to `v' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -253,7 +253,7 @@ feature -- Update
 				il_generation = v
 		end
 
-	set_msil_classes_per_module (nb: like msil_classes_per_module) is
+	set_msil_classes_per_module (nb: like msil_classes_per_module)
 			-- Set `msil_classes_per_module' to `nb'.
 		require
 			nb_nonngegative: nb > 0
@@ -267,7 +267,7 @@ feature -- Update
 				msil_classes_per_module = nb
 		end
 
-	set_msil_culture (cult: STRING) is
+	set_msil_culture (cult: STRING)
 			-- Set `msil_culture' with `cult'.
 		do
 			msil_culture := cult
@@ -275,7 +275,7 @@ feature -- Update
 			msil_culture_set: msil_culture = cult
 		end
 
-	set_msil_version (vers: STRING) is
+	set_msil_version (vers: STRING)
 			-- Set `msil_version' with `vers'.
 		require
 			valid_version: (create {VERSION}).is_version_valid (vers)
@@ -285,7 +285,7 @@ feature -- Update
 			msil_version_set: msil_version = vers
 		end
 
-	set_msil_assembly_compatibility (comp: STRING) is
+	set_msil_assembly_compatibility (comp: STRING)
 			-- Set `msil_assembly_compatibility' with `comp'.
 		require
 			comp_not_void: comp /= Void
@@ -296,7 +296,7 @@ feature -- Update
 			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
 		end
 
-	set_msil_key_file_name (a_file_name: STRING) is
+	set_msil_key_file_name (a_file_name: STRING)
 			-- Set `msil_key_file_name' with `a_file_name'.
 		do
 			msil_key_file_name := a_file_name
@@ -304,7 +304,7 @@ feature -- Update
 			msil_key_file_name_set: msil_key_file_name = a_file_name
 		end
 
-	set_cls_compliant (v: BOOLEAN) is
+	set_cls_compliant (v: BOOLEAN)
 			-- Set `cls_compliant' to `v' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
@@ -315,7 +315,7 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else cls_compliant = v
 		end
 
-	set_dotnet_naming_convention (v: BOOLEAN) is
+	set_dotnet_naming_convention (v: BOOLEAN)
 			-- Set `dotnet_naming_convention' to `v' if project is not already compiled.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
@@ -326,14 +326,14 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else dotnet_naming_convention = v
 		end
 
-	set_do_not_check_vape (b: BOOLEAN) is
+	set_do_not_check_vape (b: BOOLEAN)
 		do
 			do_not_check_vape := b
 		ensure
 			do_not_check_vape_set: do_not_check_vape = b
 		end
 
-	set_check_generic_creation_constraint (b: BOOLEAN) is
+	set_check_generic_creation_constraint (b: BOOLEAN)
 			-- Set `check_generic_creation_constraint' with `b'.
 		do
 			check_generic_creation_constraint := b
@@ -341,42 +341,42 @@ feature -- Update
 			check_generic_creation_constraint_set: check_generic_creation_constraint = b
 		end
 
-	allow_address_expression (b: BOOLEAN) is
+	allow_address_expression (b: BOOLEAN)
 		do
 			address_expression_allowed := b
 		ensure
 			address_expression_allowed_set: address_expression_allowed = b
 		end
 
-	set_automatic_backup (b: BOOLEAN) is
+	set_automatic_backup (b: BOOLEAN)
 		do
 			automatic_backup := b
 		ensure
 			automatic_backup_set: automatic_backup = b
 		end
 
-	set_inlining_size (i: INTEGER) is
+	set_inlining_size (i: INTEGER)
 		do
 			inlining_size := i
 		ensure
 			inlining_size_set: inlining_size = i
 		end
 
-	set_inlining_on (b: BOOLEAN) is
+	set_inlining_on (b: BOOLEAN)
 		do
 			inlining_on := b
 		ensure
 			inlining_on_set: inlining_on = b
 		end
 
-	set_array_optimization_on (b: BOOLEAN) is
+	set_array_optimization_on (b: BOOLEAN)
 		do
 			array_optimization_on := b
 		ensure
 			array_optimization_on_set: array_optimization_on = b
 		end
 
-	set_remover_off (b: BOOLEAN) is
+	set_remover_off (b: BOOLEAN)
 			-- Assign `b' to `remover_off'
 		do
 			remover_off := b
@@ -384,14 +384,14 @@ feature -- Update
 			remover_off_set: remover_off = b
 		end
 
-	set_exception_stack_managed (b: BOOLEAN) is
+	set_exception_stack_managed (b: BOOLEAN)
 		do
 			exception_stack_managed := b
 		ensure
 			exception_stack_managed_set: exception_stack_managed = b
 		end
 
-	set_has_expanded is
+	set_has_expanded
 			-- Set `has_expanded' to True
 		do
 			has_expanded := True
@@ -399,7 +399,7 @@ feature -- Update
 			has_expanded_set: has_expanded = True
 		end
 
-	set_line_generation (b: BOOLEAN) is
+	set_line_generation (b: BOOLEAN)
 			-- Set `line_generation' to `b'
 		do
 			line_generation := b
@@ -407,7 +407,7 @@ feature -- Update
 			line_generation_set : line_generation = b
 		end
 
-	set_has_multithreaded (b: BOOLEAN) is
+	set_has_multithreaded (b: BOOLEAN)
 			-- Set `internal_has_multithreaded' to `b'
 		do
 			if internal_has_multithreaded /= b then
@@ -418,7 +418,7 @@ feature -- Update
 			has_multithreaded_set: internal_has_multithreaded = b
 		end
 
-	set_has_old_verbatim_strings (b: BOOLEAN) is
+	set_has_old_verbatim_strings (b: BOOLEAN)
 			-- Set `has_old_verbatim_strings' to `b'.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -430,7 +430,7 @@ feature -- Update
 				has_old_verbatim_strings = b
 		end
 
-	set_has_old_feature_replication (b: BOOLEAN) is
+	set_has_old_feature_replication (b: BOOLEAN)
 			-- Set `has_old_feature_replication' to `b'.
 		do
 			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
@@ -442,7 +442,7 @@ feature -- Update
 				has_old_feature_replication = b
 		end
 
-	set_console_application (b: BOOLEAN) is
+	set_console_application (b: BOOLEAN)
 			-- Set `is_console_application' to `b'
 		do
 			if is_console_application /= b then
@@ -453,7 +453,7 @@ feature -- Update
 			is_console_application_set: is_console_application = b
 		end
 
-	set_check_for_void_target (b: BOOLEAN) is
+	set_check_for_void_target (b: BOOLEAN)
 			-- Set `check_for_void_target' to `b'.
 		do
 			check_for_void_target := b
@@ -461,7 +461,7 @@ feature -- Update
 			check_for_void_target_set: check_for_void_target = b
 		end
 
-	set_check_for_catcall_at_runtime (b: BOOLEAN) is
+	set_check_for_catcall_at_runtime (b: BOOLEAN)
 			-- Set `check_for_catcall_at_runtime' to `b'.
 		do
 			check_for_catcall_at_runtime := b
@@ -469,7 +469,7 @@ feature -- Update
 			check_for_catcall_at_runtime_set: check_for_catcall_at_runtime = b
 		end
 
-	set_32bits (b: BOOLEAN) is
+	set_32bits (b: BOOLEAN)
 			-- Set `force_32bits' to `b'
 		do
 			if force_32bits /= b then
@@ -480,7 +480,7 @@ feature -- Update
 			is_32bits_set: force_32bits = b
 		end
 
-	set_dynamic_runtime (b: BOOLEAN) is
+	set_dynamic_runtime (b: BOOLEAN)
 			-- Set `is_console_application' to `b'
 		do
 			if has_dynamic_runtime /= b then
@@ -491,7 +491,7 @@ feature -- Update
 			has_dynamic_runtime: has_dynamic_runtime = b
 		end
 
-	set_external_runtime (v: STRING) is
+	set_external_runtime (v: STRING)
 			-- Set `external_runtime' to `v'
 		do
 			external_runtime := v
@@ -499,7 +499,7 @@ feature -- Update
 			external_runtime_set: external_runtime = v
 		end
 
-	set_dynamic_def_file (f: STRING) is
+	set_dynamic_def_file (f: STRING)
 			-- Set `dynamic_def_file' to `f'.
 		do
 			dynamic_def_file := f
@@ -507,19 +507,19 @@ feature -- Update
 			dynamic_def_file_set: dynamic_def_file = f
 		end
 
-	request_freeze is
+	request_freeze
 			-- Force freezing of system.
 		do
 			is_freeze_requested := True
 		end
 
-	set_melt is
+	set_melt
 			-- Force melting of system.
 		do
 			private_melt := True
 		end
 
-	set_finalize is
+	set_finalize
 			-- Force finalization of system.
 		do
 			private_finalize := True
@@ -527,7 +527,7 @@ feature -- Update
 			finalize_set: private_finalize
 		end
 
-	set_il_quick_finalization is
+	set_il_quick_finalization
 			-- Skip generation of single class modules
 		do
 			il_quick_finalization := True
@@ -535,7 +535,7 @@ feature -- Update
 			il_quick_finalization_set: il_quick_finalization
 		end
 
-	set_msil_use_optimized_precompile (b: BOOLEAN) is
+	set_msil_use_optimized_precompile (b: BOOLEAN)
 			-- Take optimized version of precompile assembly from F_code
 		do
 			msil_use_optimized_precompile := b
@@ -543,7 +543,7 @@ feature -- Update
 			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
 
-	set_platform (a_platform: INTEGER) is
+	set_platform (a_platform: INTEGER)
 			-- Override platform.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -575,7 +575,7 @@ feature {SYSTEM_I} -- Implementation
 	internal_has_multithreaded: BOOLEAN;
 			-- Is the system a multithreaded one?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

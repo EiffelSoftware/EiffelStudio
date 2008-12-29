@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creation with an hardwired dynamic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature	{NONE} -- Initialization
 
-	make (t: like type) is
+	make (t: like type)
 			-- Assign `t' to `type'.
 		require
 			t_not_void: t /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- C code generation
 
-	analyze is
+	analyze
 			-- Analyze of generated code.
 		do
 			if is_generic then
@@ -47,7 +47,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id.
 		local
 			cl_type_i : CL_TYPE_A
@@ -67,7 +67,7 @@ feature -- C code generation
 			end
 		end
 
-	generate is
+	generate
 			-- Generate creation type.
 		local
 			l_buffer: GENERATION_BUFFER
@@ -119,7 +119,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate IL code for a hardcoded creation type.
 		local
 			l_type: TYPE_A
@@ -132,7 +132,7 @@ feature -- IL code generation
 			end
 		end
 
-	generate_il_type is
+	generate_il_type
 			-- Generate IL code to load type.
 		local
 			l_type: TYPE_A
@@ -141,7 +141,7 @@ feature -- IL code generation
 			l_type.generate_gen_type_il (il_generator, True)
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_A is
+	created_in (other: CLASS_TYPE): TYPE_A
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
 			Result := type
@@ -149,7 +149,7 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a hardcoded creation type
 		do
 			ba.append (Bc_ctype)
@@ -158,13 +158,13 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	is_explicit: BOOLEAN is
+	is_explicit: BOOLEAN
 			-- Is Current type fixed at compile time?
 		do
 			Result := type.is_explicit
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
 			-- Generate creation type.
 		do
 				-- If we are here, it means that it is known that the type cannot have
@@ -174,7 +174,7 @@ feature -- Generic conformance
 			buffer.put_character (',')
 		end
 
-	type_to_create : CL_TYPE_A is
+	type_to_create : CL_TYPE_A
 		do
 			Result ?= context.creation_type (type)
 		end
@@ -182,7 +182,7 @@ feature -- Generic conformance
 invariant
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

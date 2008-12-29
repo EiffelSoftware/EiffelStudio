@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Representation of a table of attributes originated from an attribute
 			of a formal generic type for the final Eiffel executable.
@@ -43,7 +43,7 @@ create
 
 feature -- Status report
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id?
 		do
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Access
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
 			-- New entry corresponding to `f' in class of class ID `c'
 		do
 			Result := f.new_rout_entry
@@ -61,14 +61,14 @@ feature -- Access
 
 feature -- Code generation
 
-	write is
+	write
 			-- Generate table using writer.
 		do
 			generate_attribute_table (Attr_generator)
 			generate_routine_table (Rout_generator)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

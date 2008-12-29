@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile filter used to check whether `check_item' its argument's type %
@@ -18,13 +18,13 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 		end
 
 feature -- Checking
 
-	check_item (item: PROFILE_DATA): BOOLEAN is
+	check_item (item: PROFILE_DATA): BOOLEAN
 		local
 			e_p_d: EIFFEL_PROFILE_DATA
 		do
@@ -32,7 +32,7 @@ feature -- Checking
 			Result := e_p_d /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

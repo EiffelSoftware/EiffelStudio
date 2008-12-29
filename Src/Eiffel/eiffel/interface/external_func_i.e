@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an external function"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,30 +25,30 @@ feature
 	assigner_name_id: INTEGER
 			-- Id of `assigner_name' in `Names_heap' table
 
-	set_type (t: like type; a: like assigner_name_id) is
+	set_type (t: like type; a: like assigner_name_id)
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
 			assigner_name_id := a
 		end
 
-	is_function: BOOLEAN is True
+	is_function: BOOLEAN = True
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer datas form `other' into Current
 		do
 			Precursor {EXTERNAL_I} (other)
 			other.set_type (type, assigner_name_id)
 		end
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer datas form `other' into Current
 		do
 			Precursor {EXTERNAL_I} (other)
 			set_type (other.type, other.assigner_name_id)
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_EXTERNAL_FUNC_I;
@@ -67,7 +67,7 @@ feature
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_EXTERNAL_FUNC_I;
@@ -80,7 +80,7 @@ feature
 
 feature -- Api creation
 
-	new_api_feature: E_FUNCTION is
+	new_api_feature: E_FUNCTION
 			-- API feature creation
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
@@ -88,7 +88,7 @@ feature -- Api creation
 			update_api (Result)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

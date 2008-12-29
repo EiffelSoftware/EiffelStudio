@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Information about a routine.
 		A routine represents a feature with all its versions in descendant classes, 
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (org: CLASS_C; offs: INTEGER) is
+	make (org: CLASS_C; offs: INTEGER)
 		require
 			org_not_void: org /= Void
 			valid_offset: offs >= 0
@@ -50,7 +50,7 @@ invariant
 	valid_origin: origin > 0
 	valid_offset: offset >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

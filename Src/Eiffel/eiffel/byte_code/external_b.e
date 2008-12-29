@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Access to a C external
@@ -27,7 +27,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		local
 			c: CL_TYPE_A
@@ -67,7 +67,7 @@ feature -- Attributes for externals
 	external_name_id: INTEGER
 			-- Name ID of C external.
 
-	external_name: STRING is
+	external_name: STRING
 			-- Name of C external.
 		require
 			external_name_id_set: external_name_id > 0
@@ -81,13 +81,13 @@ feature -- Attributes for externals
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
-	is_external: BOOLEAN is True;
+	is_external: BOOLEAN = True;
 			-- Access is an external call
 
 	is_static_call: BOOLEAN
 			-- Is current external call made through a static access?
 
-	precursor_type: like static_class_type is
+	precursor_type: like static_class_type
 		require
 			il_generation: System.il_generation
 			not_a_static_call: not is_static_call
@@ -97,7 +97,7 @@ feature -- Attributes for externals
 
 feature -- Status report
 
-	is_constant_expression: BOOLEAN is
+	is_constant_expression: BOOLEAN
 			-- Is constant expression?
 		local
 			l_ext: IL_ENUM_EXTENSION_I
@@ -109,13 +109,13 @@ feature -- Status report
 
 feature -- Routines for externals
 
-	set_extension (e: like extension) is
+	set_extension (e: like extension)
 			-- Assign `e' to `extension'.
 		do
 			extension := e
 		end;
 
-	set_parameters (p: like parameters) is
+	set_parameters (p: like parameters)
 			-- Assign `p' to `parameters'.
 		local
 			i: INTEGER
@@ -134,13 +134,13 @@ feature -- Routines for externals
 			end
 		end
 
-	set_type (t: like type) is
+	set_type (t: like type)
 			-- Assign `t' to `type'.
 		do
 			type := t;
 		end;
 
-	enable_static_call is
+	enable_static_call
 			-- Set `is_static_call' to `True'.
 		do
 			is_static_call := True
@@ -149,7 +149,7 @@ feature -- Routines for externals
 			is_static_call_set: is_static_call
 		end
 
-	init (f: FEATURE_I) is
+	init (f: FEATURE_I)
 			-- Initialization
 		require
 			good_argument: f /= Void
@@ -168,7 +168,7 @@ feature -- Routines for externals
 			end
 		end;
 
-	set_external_name_id (id: INTEGER) is
+	set_external_name_id (id: INTEGER)
 			-- Assign `id' to `external_name_id'.
 		require
 			valid_id: id > 0
@@ -178,7 +178,7 @@ feature -- Routines for externals
 			external_name_id_set: external_name_id = id
 		end
 
-	set_encapsulated (b: BOOLEAN) is
+	set_encapsulated (b: BOOLEAN)
 			-- Assign `b' to `encapsulated'
 		do
 			encapsulated := b;
@@ -186,7 +186,7 @@ feature -- Routines for externals
 
 feature {STATIC_ACCESS_AS} -- Settings
 
-	set_written_in (id: INTEGER) is
+	set_written_in (id: INTEGER)
 			-- Set `written_in' to `id'.
 		require
 			valid_id: id > 0
@@ -207,7 +207,7 @@ feature -- Status report
 			Result := special_routines.has (feature_name_id, compilation_type, target_type)
 		end
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			external_b: EXTERNAL_B;
@@ -218,7 +218,7 @@ feature -- Status report
 			end;
 		end;
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		do
@@ -226,7 +226,7 @@ feature -- Status report
 			Result := enlarged_on (context_type)
 		end
 
-	enlarged_on (a_type_i: TYPE_A): CALL_ACCESS_B is
+	enlarged_on (a_type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `a_type_i'.
 		local
 			external_bl: EXTERNAL_BL
@@ -259,7 +259,7 @@ feature -- Status report
 
 feature -- IL code generation
 
-	need_target: BOOLEAN is
+	need_target: BOOLEAN
 			-- Does current call need a target to be performed?
 			-- Meaning that it is not a static call.
 		local
@@ -276,7 +276,7 @@ feature -- IL code generation
 
 feature -- Array optimization
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 				-- An external call can have access to the entire system
 				-- and move. resize objects. Thus it is unsafe to call
@@ -284,7 +284,7 @@ feature -- Array optimization
 			Result := True
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			if parameters /= Void then
@@ -292,7 +292,7 @@ feature -- Array optimization
 			end
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			if parameters /= Void then
 				Result := parameters.calls_special_features (array_desc)
@@ -301,7 +301,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if parameters /= Void then
 				Result := 1 + parameters.size
@@ -310,7 +310,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: CALL_B is
+	pre_inlined_code: CALL_B
 		local
 			inlined_current_b: INLINED_CURRENT_B
 		do
@@ -337,7 +337,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			type := real_type (type)
@@ -349,7 +349,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

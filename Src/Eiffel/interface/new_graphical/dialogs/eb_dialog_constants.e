@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,34 +13,34 @@ inherit
 
 feature -- Dummy
 
-	initialize_constants is
+	initialize_constants
 		do
 		end
 
 feature -- Access
 
-	close_string: STRING_GENERAL is
+	close_string: STRING_GENERAL
 			-- `Result' is STRING constant named `close_string'.
 		do
 			Result := interface_names.b_close
 		end
 
-	save_string: STRING_GENERAL is
+	save_string: STRING_GENERAL
 			-- `Result' is STRING constant named `save_string'.
 		do
 			Result := interface_names.b_save
 		end
 
-	small_padding: INTEGER is 4
+	small_padding: INTEGER = 4
 			-- `Result' is INTEGER constant named small_padding.
 
-	default_button_width: INTEGER is 75
+	default_button_width: INTEGER = 75
 			-- `Result' is INTEGER constant named default_button_width.
 
-	tiny_padding: INTEGER is 2;
+	tiny_padding: INTEGER = 2;
 			-- `Result' is INTEGER constant named tiny_padding.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

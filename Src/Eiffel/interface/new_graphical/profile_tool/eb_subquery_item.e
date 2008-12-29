@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class to represent subquery in a EV_MULTI_COLUMN_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create {EB_SUBQUERY_ITEM}
 
 feature -- Creation
 
-	make_first (a_subquery: STRING) is
+	make_first (a_subquery: STRING)
 		do
 			create subquery.make (0)
 			subquery := a_subquery
@@ -29,7 +29,7 @@ feature -- Creation
 			extend (value)
 		end
 
-	make_normal (an_operator, a_subquery: STRING; i: INTEGER) is
+	make_normal (an_operator, a_subquery: STRING; i: INTEGER)
 		do
 			create subquery.make (0)
 			create operator.make (0)
@@ -42,7 +42,7 @@ feature -- Creation
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 		do
 			create Result.make (0)
 			Result.append (operator)
@@ -52,7 +52,7 @@ feature -- Access
 			Result.append (subquery)
 		end
 
-	set_number (idx: INTEGER) is
+	set_number (idx: INTEGER)
 		do
 			number := idx
 		end
@@ -68,7 +68,7 @@ feature -- Attributes
 	number: INTEGER;
 		-- index of the subquery in the query
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

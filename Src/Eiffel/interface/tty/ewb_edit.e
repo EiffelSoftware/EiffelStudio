@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Class abstraction for editing text."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Element change
 
-	edit (a_file: STRING) is
+	edit (a_file: STRING)
 			-- Edit file `a_file'.
 		require
 			file_not_void: a_file /= Void
@@ -27,7 +27,7 @@ feature -- Element change
 			cmd_exec.execute (preferences.misc_data.external_editor_cli (a_file, 1))
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

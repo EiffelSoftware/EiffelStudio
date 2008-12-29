@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text genrated.
 		deferred
 		ensure
@@ -27,157 +27,157 @@ feature -- Access
 
 feature {NONE} -- Visit
 
-	process_editor_token_line_number (a_tok: EDITOR_TOKEN_LINE_NUMBER) is
+	process_editor_token_line_number (a_tok: EDITOR_TOKEN_LINE_NUMBER)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_space (a_tok: EDITOR_TOKEN_SPACE) is
+	process_editor_token_space (a_tok: EDITOR_TOKEN_SPACE)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_tabulation (a_tok: EDITOR_TOKEN_TABULATION) is
+	process_editor_token_tabulation (a_tok: EDITOR_TOKEN_TABULATION)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_text (a_tok: EDITOR_TOKEN_TEXT) is
+	process_editor_token_text (a_tok: EDITOR_TOKEN_TEXT)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_comment (a_tok: EDITOR_TOKEN_COMMENT) is
+	process_editor_token_comment (a_tok: EDITOR_TOKEN_COMMENT)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_operator (a_tok: EDITOR_TOKEN_OPERATOR) is
+	process_editor_token_operator (a_tok: EDITOR_TOKEN_OPERATOR)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_keyword (a_tok: EDITOR_TOKEN_KEYWORD) is
+	process_editor_token_keyword (a_tok: EDITOR_TOKEN_KEYWORD)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_character (a_tok: EDITOR_TOKEN_CHARACTER) is
+	process_editor_token_character (a_tok: EDITOR_TOKEN_CHARACTER)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_number (a_tok: EDITOR_TOKEN_NUMBER) is
+	process_editor_token_number (a_tok: EDITOR_TOKEN_NUMBER)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_string (a_tok: EDITOR_TOKEN_STRING) is
+	process_editor_token_string (a_tok: EDITOR_TOKEN_STRING)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL) is
+	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_group (a_tok: EDITOR_TOKEN_GROUP) is
+	process_editor_token_group (a_tok: EDITOR_TOKEN_GROUP)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_symbol (a_tok: EDITOR_TOKEN_SYMBOL) is
+	process_editor_token_symbol (a_tok: EDITOR_TOKEN_SYMBOL)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_breakpoint (a_tok: EDITOR_TOKEN_BREAKPOINT) is
+	process_editor_token_breakpoint (a_tok: EDITOR_TOKEN_BREAKPOINT)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_class (a_tok: EDITOR_TOKEN_CLASS) is
+	process_editor_token_class (a_tok: EDITOR_TOKEN_CLASS)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_cluster (a_tok: EDITOR_TOKEN_CLUSTER) is
+	process_editor_token_cluster (a_tok: EDITOR_TOKEN_CLUSTER)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_error_code (a_tok: EDITOR_TOKEN_ERROR_CODE) is
+	process_editor_token_error_code (a_tok: EDITOR_TOKEN_ERROR_CODE)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_feature (a_tok: EDITOR_TOKEN_FEATURE) is
+	process_editor_token_feature (a_tok: EDITOR_TOKEN_FEATURE)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_feature_start (a_tok: EDITOR_TOKEN_FEATURE_START) is
+	process_editor_token_feature_start (a_tok: EDITOR_TOKEN_FEATURE_START)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_object (a_tok: EDITOR_TOKEN_OBJECT) is
+	process_editor_token_object (a_tok: EDITOR_TOKEN_OBJECT)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_generic (a_tok: EDITOR_TOKEN_GENERIC) is
+	process_editor_token_generic (a_tok: EDITOR_TOKEN_GENERIC)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_local (a_tok: EDITOR_TOKEN_LOCAL) is
+	process_editor_token_local (a_tok: EDITOR_TOKEN_LOCAL)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_reserved (a_tok: EDITOR_TOKEN_RESERVED) is
+	process_editor_token_reserved (a_tok: EDITOR_TOKEN_RESERVED)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_tag (a_tok: EDITOR_TOKEN_TAG) is
+	process_editor_token_tag (a_tok: EDITOR_TOKEN_TAG)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET) is
+	process_editor_token_target (a_tok: EDITOR_TOKEN_TARGET)
 		do
 			init_tables_with_token (a_tok)
 			build_token_text (a_tok)
 		end
 
-	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH) is
+	process_editor_token_glyph (a_tok: EDITOR_TOKEN_GLYPH)
 		do
 
 		end
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	current_font_number: INTEGER
 			-- Current font number, after `init_tables_with_token'
 
-	init_tables_with_token (a_tok: EDITOR_TOKEN) is
+	init_tables_with_token (a_tok: EDITOR_TOKEN)
 			-- Initialize tables with `a_tok'.
 			-- `current_color_number' and `current_font_number' will be set.
 		local
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ise_info_lines: ARRAYED_LIST [EDITOR_LINE] is
+	ise_info_lines: ARRAYED_LIST [EDITOR_LINE]
 			-- Editor lines of ise infomation.
 		local
 			l_scanner: EDITOR_BASIC_SCANNER
@@ -238,14 +238,14 @@ feature {NONE} -- Implementation
 			Result.extend (l_line)
 		end
 
-	build_token_text (a_tok: EDITOR_TOKEN) is
+	build_token_text (a_tok: EDITOR_TOKEN)
 			-- Build token text for `a_tok'
 		require
 			a_tok_not_void: a_tok /= Void
 		deferred
 		end
 
-	ise_info: STRING is
+	ise_info: STRING =
 		"{
 			-- Generated by ISE Eiffel --
 			-- For more details: http://www.eiffel.com --
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 invariant
 	print_color_table_not_void: print_color_table /= Void
 	print_font_table_not_void: print_font_table /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

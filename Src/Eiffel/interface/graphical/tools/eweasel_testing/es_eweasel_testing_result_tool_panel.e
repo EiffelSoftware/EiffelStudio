@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						This tool showing result from eweasel tests.
 						This tool can also manage all test run data, compare test results etc.
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Redefine
 
-	build_tool_interface (a_grid: ES_GRID) is
+	build_tool_interface (a_grid: ES_GRID)
 			-- <Precursor>
 		local
 			l_cell: EV_CELL
@@ -64,7 +64,7 @@ feature {NONE} -- Redefine
 			set: failure_trace_grid = a_grid
 		end
 
-	on_after_initialized is
+	on_after_initialized
 			-- <Precursor>
 			-- Build own interface after base interface created
 		local
@@ -84,7 +84,7 @@ feature {NONE} -- Redefine
 			end
 		end
 
-	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW) is
+	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
 			-- <Precursor>
 		do
 			if {l_testing_event: EVENT_LIST_TESTING_RESULT_ITEM} a_event_item then
@@ -94,7 +94,7 @@ feature {NONE} -- Redefine
 			end
 		end
 
-	do_default_action (a_row: EV_GRID_ROW) is
+	do_default_action (a_row: EV_GRID_ROW)
 			-- <Precursor>
 		local
 			l_factory: ES_EWEASEL_SINGLETON_FACTORY
@@ -134,7 +134,7 @@ feature {NONE} -- Redefine
 			end
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -168,7 +168,7 @@ feature {NONE} -- Redefine
 			end
 		end
 
-	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN is
+	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_item /= Void and then a_item.category = {ENVIRONMENT_CATEGORIES}.testing and then
@@ -195,7 +195,7 @@ feature {NONE} -- Redefine
 
 feature -- Query
 
-	test_run_result_grid_manager: !ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER is
+	test_run_result_grid_manager: !ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER
 			-- Manager of `failure_trace_grid'
 		do
 			if not {l_test: ES_EWEASEL_TEST_RUN_RESULT_GRID_MANAGER} internal_test_run_result_grid_manager then
@@ -206,7 +206,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	set_is_failure_trace_button_enabled is
+	set_is_failure_trace_button_enabled
 			-- Set `session_data_id_show_failure_trace_enabled' session data
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			session_data.set_value (l_shared.manager.see_testing_failure_trace_command.is_selected, session_data_id_show_failure_trace_enabled)
 		end
 
-	is_failure_trace_button_enabled: BOOLEAN is
+	is_failure_trace_button_enabled: BOOLEAN
 			-- If failure trace button enabled in last time running Eiffel Studio?
 		do
 			if {l_result: BOOLEAN} session_data.value (session_data_id_show_failure_trace_enabled) then
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	session_data_id_show_failure_trace_enabled: STRING is "com.eiffel.testing.show_failure_trace_enabled"
+	session_data_id_show_failure_trace_enabled: STRING = "com.eiffel.testing.show_failure_trace_enabled"
 			-- Session data used for session service	
 			-- This id means whether show failure trace button is selected	
 
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			-- Instance holder.
 			-- Used by `test_run_result_grid_manager' ONLY!
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

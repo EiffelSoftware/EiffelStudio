@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Commander interface for interacting with eiffel test tools.
 	]"

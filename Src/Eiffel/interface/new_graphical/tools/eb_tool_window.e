@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent an externally docked tools window.
 		Used for tracking of external windows.
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_info (a_window: EV_WINDOW; a_tool: EV_WIDGET; a_development_window: EB_DEVELOPMENT_WINDOW; an_x_position, a_y_position: INTEGER) is
+	make_with_info (a_window: EV_WINDOW; a_tool: EV_WIDGET; a_development_window: EB_DEVELOPMENT_WINDOW; an_x_position, a_y_position: INTEGER)
 			-- Create `Current' representing `a_window' as window of tool `a_tool', relative to `a_development_window', and a position
 			-- of `an_x_position', `a_y_position' relative to `a_development_window'.
 		require
@@ -51,13 +51,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_x_position (an_x_position: INTEGER) is
+	set_x_position (an_x_position: INTEGER)
 			-- Assign `an_x_position' to `x_position'.
 		do
 			x_position := an_x_position
 		end
 
-	set_y_position (a_y_position: INTEGER) is
+	set_y_position (a_y_position: INTEGER)
 			-- Assign `a_y_position' to `y_position'.
 		do
 			y_position := a_y_position
@@ -68,7 +68,7 @@ invariant
 	development_window_not_void: development_window /= Void
 	tool_not_void: tool /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

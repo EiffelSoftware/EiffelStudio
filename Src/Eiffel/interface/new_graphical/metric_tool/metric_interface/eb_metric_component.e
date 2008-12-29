@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component which is attached to a metric panel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_metric_panel (a_metric_panel: like metric_panel) is
+	set_metric_panel (a_metric_panel: like metric_panel)
 			-- Set `metric_panel' with `a_metric_panel'.
 		require
 			a_metric_panel_attached: a_metric_panel /= Void
@@ -29,7 +29,7 @@ feature -- Setting
 invariant
 	metric_panel_attached: metric_panel /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

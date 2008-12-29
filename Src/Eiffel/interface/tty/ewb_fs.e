@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays flat/short of a class in output_window."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (cn, fn: STRING) is
+	make (cn, fn: STRING)
 			-- Initialization
 		require
 			cn_not_void: cn /= Void;
@@ -39,30 +39,30 @@ feature -- Initialization
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := flatshort_cmd_name;
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := flatshort_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := flatshort_abb
 		end;
 
 feature {NONE} -- Execution
 
-	associated_cmd: E_SHOW_FS is
+	associated_cmd: E_SHOW_FS
 		do
 			create Result
 			Result.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

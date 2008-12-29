@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dialog prompt base, to inform the user or to ask them as question.
 	]"
@@ -748,7 +748,7 @@ invariant
 	prompt_text_attached: prompt_text /= Void
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

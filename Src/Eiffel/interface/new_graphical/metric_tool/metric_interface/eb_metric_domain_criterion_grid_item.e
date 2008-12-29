@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric domain criterion"
 	author: ""
 	date: "$Date$"
@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			old_make (create {EB_METRIC_DOMAIN}.make)
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Load `a_criterion' into Current.
 		local
 			l_domain: EB_METRIC_DOMAIN
@@ -54,14 +54,14 @@ feature -- Setting
 			set_domain (l_domain)
 		end
 
-	store_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Store Current in `a_criterion'.
 		do
 			check domain /= Void end
 			a_criterion.set_domain (domain.twin)
 		end
 
-	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+	change_value_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if the value has been changed
 		do
 			Result := change_actions

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error detected when parsing the Ace file specified in LACE."
@@ -19,19 +19,19 @@ inherit
 
 feature -- Property
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		do
 			Result := generator
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- File in which error occurs.
 		do
 			to_implement ("May be we will never implement this when we go away from Lace?")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

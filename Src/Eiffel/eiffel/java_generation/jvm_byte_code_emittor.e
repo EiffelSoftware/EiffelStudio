@@ -1,4 +1,4 @@
-indexing
+note
 	description: "objects that can emit java byte code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature {ANY} -- Basic Access
 			-- doing that you give it a chance to calculate and set 
 			-- some fields (ie. lengths, etc) it needs to write in headers.
 	
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- is this emitter open?
 		do
 			Result := not is_closed
@@ -34,7 +34,7 @@ feature {ANY} -- Basic Access
 
 feature {ANY} -- Basic Operations	
 	
-	close is
+	close
 			-- before byte code can be emitted we need to close the emitter
 			-- this gives the emitter (descentants of it actually) the
 			-- chance to update or even build (some) it's contents. After the
@@ -49,7 +49,7 @@ feature {ANY} -- Basic Operations
 			closed: is_closed
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 			-- emmit byte code to `file'. The file must be open and
 			-- writeable. The byte code will be appended to the current
 			-- position in the file.
@@ -60,7 +60,7 @@ feature {ANY} -- Basic Operations
 		deferred
 		end
 			
-	set_constant_pool (cp: CONSTANT_POOL) is
+	set_constant_pool (cp: CONSTANT_POOL)
 			-- set the `constant_pool'
 		require
 			cp_not_void: cp /= Void
@@ -73,7 +73,7 @@ feature {ANY} -- Basic Operations
 invariant
 	is_open_equals_not_closed: is_open = not is_closed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

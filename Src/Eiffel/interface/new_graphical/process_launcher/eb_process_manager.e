@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that manages freezing and finalizing c compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_freezor, a_finalizor: EB_C_COMPILER_LAUNCHER; a_external: EB_EXTERNAL_LAUNCHER) is
+	make (a_freezor, a_finalizor: EB_C_COMPILER_LAUNCHER; a_external: EB_EXTERNAL_LAUNCHER)
 			-- Initialize using freezing launcher `freezor',
 			-- finalizing launcher `finalizor' and external command launcher `a_external'.
 		require
@@ -38,31 +38,31 @@ feature{NONE} -- Initialization
 
 feature -- Status reporting
 
-	is_c_compilation_running: BOOLEAN is
+	is_c_compilation_running: BOOLEAN
 			-- Is either `freezor' or `finalizor' running, or both?
 		do
 			Result := freezor.is_running or finalizor.is_running
 		end
 
-	is_external_command_running: BOOLEAN is
+	is_external_command_running: BOOLEAN
 			-- Is external command running?
 		do
 			Result := externalor.is_running
 		end
 
-	is_process_running: BOOLEAN is
+	is_process_running: BOOLEAN
 			-- Is either `freezor', `finalizor' or `externalor' running, or all?
 		do
 			Result := is_c_compilation_running or is_external_command_running
 		end
 
-	is_freezing_running: BOOLEAN is
+	is_freezing_running: BOOLEAN
 			-- Is freezor running?
 		do
 			Result := freezor.is_running
 		end
 
-	is_finalizing_running: BOOLEAN is
+	is_finalizing_running: BOOLEAN
 			-- Is finalizor running?
 		do
 			Result := finalizor.is_running
@@ -70,7 +70,7 @@ feature -- Status reporting
 
 feature -- Execution
 
-	terminate_c_compilation is
+	terminate_c_compilation
 			-- Terminate running freezing or fianlizing.
 		do
 			if is_freezing_running then
@@ -84,7 +84,7 @@ feature -- Execution
 			finalizor_not_running: not is_finalizing_running
 		end
 
-	terminate_finalizing is
+	terminate_finalizing
 			-- Terminate running finalizing if any.
 		do
 			if is_finalizing_running then
@@ -94,7 +94,7 @@ feature -- Execution
 			freezing_not_running: not is_freezing_running
 		end
 
-	terminate_freezing is
+	terminate_freezing
 			-- Terminate running freezing is any.
 		do
 			if is_freezing_running then
@@ -104,7 +104,7 @@ feature -- Execution
 			finalizing_not_running: not is_finalizing_running
 		end
 
-	terminate_external_command is
+	terminate_external_command
 			-- Terminate running external command if any.
 		do
 			if is_external_command_running then
@@ -114,14 +114,14 @@ feature -- Execution
 			external_command_not_running: not is_external_command_running
 		end
 
-	terminate_process is
+	terminate_process
 			-- Terminate running freezing, finalizing and external command if any.
 		do
 			terminate_c_compilation
 			terminate_external_command
 		end
 
-	confirm_process_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
+	confirm_process_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
 			-- Confirm if user want to terminate running c compilation.
 		require
 			a_window_not_void: a_window /= Void
@@ -141,7 +141,7 @@ feature -- Execution
 			end
 		end
 
-	confirm_process_termination_for_quiting (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
+	confirm_process_termination_for_quiting (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
 			-- Confirm if user want to exit EiffelStudio when c compilation or external command is running.
 		require
 			a_window_not_void: a_window /= Void
@@ -166,7 +166,7 @@ feature -- Execution
 			end
 		end
 
-	confirm_external_command_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW) is
+	confirm_external_command_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
 			-- Confirm running external command termination before destroy a development window.
 		require
 			a_window_not_void: a_window /= Void
@@ -196,7 +196,7 @@ invariant
 	finalizor_not_void: finalizor /= Void
 	externalor_not_void: externalor /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

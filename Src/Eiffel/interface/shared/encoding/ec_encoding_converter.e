@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used in EiffelStudio to detect/convert text among encodings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 			internal_detected_encoding_set: internal_detected_encoding = Result
 		end
 
-	utf32_string (a_stream: STRING): STRING_32 is
+	utf32_string (a_stream: STRING): STRING_32
 			-- <Precursor>
 		local
 			l_encoding: !like detected_encoding
@@ -66,7 +66,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	detect_encoding (a_str: ?STRING_GENERAL) is
+	detect_encoding (a_str: ?STRING_GENERAL)
 			-- <Precursor>
 		do
 			encoding_detector.detect (a_str)
@@ -79,7 +79,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	encoding_detector: !ENCODING_DETECTOR is
+	encoding_detector: !ENCODING_DETECTOR
 			-- Encoding detector
 		once
 			create {EC_SIMPLE_ENCODING_DETECTOR} Result
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation: Internal cache
 	internal_detected_encoding: ?like detected_encoding
 			-- Mutable version of `detected_encoding'.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

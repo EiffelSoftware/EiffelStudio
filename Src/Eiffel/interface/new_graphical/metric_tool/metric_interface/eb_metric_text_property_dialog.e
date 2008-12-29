@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to display text property"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			l_ver_box: EV_VERTICAL_BOX
@@ -110,7 +110,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		local
 			l_value: like value
@@ -141,7 +141,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Action to be performed when "OK" button is pressed
 		local
 			l_value: like value
@@ -168,7 +168,7 @@ feature{NONE} -- Implementation
 	name_text: EV_TEXT_FIELD
 			-- Text field for string input
 
-	matcher_index: INTEGER is
+	matcher_index: INTEGER
 			-- Matcher strategy index
 		do
 			if identical_radio.is_selected then
@@ -195,7 +195,7 @@ invariant
 	case_sensitive_checkbox_attached: case_sensitive_checkbox /= Void
 	name_text_attached: name_text /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

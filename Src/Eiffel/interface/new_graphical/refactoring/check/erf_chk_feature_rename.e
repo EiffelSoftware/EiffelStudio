@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check if a given feature can be renamed without any problems in the class hierarchy. Also computes the classes that will have to be modified."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: FEATURE_I; a_new_name: STRING; a_refactoring: ERF_FEATURE_RENAME) is
+	make (a_feature: FEATURE_I; a_new_name: STRING; a_refactoring: ERF_FEATURE_RENAME)
 			-- Create check for `a_feature' that gets renamed into `a_new_name' and
 			-- report the classes that have to be changed to `a_refactoring'.
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
             -- Execute a check.
 		local
 			l_class: CLASS_C
@@ -77,7 +77,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	check_class (a_class: CLASS_C) is
+	check_class (a_class: CLASS_C)
 			-- Check `a_class' and add all its descendants in `l_topological'. Add the clients to `a_clients'.
 		require
 			a_class_not_void: a_class /= Void
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_undefine_rename (a_class: CLASS_C) is
+	check_undefine_rename (a_class: CLASS_C)
 			-- Check if the feature gets undefined or renamed.
 		require
 			a_class_not_void: a_class /= Void
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation constants
 
-	Chunk: INTEGER is 100
+	Chunk: INTEGER = 100
 
 invariant
 	feature_i_not_void: feature_i /= Void
@@ -254,7 +254,7 @@ invariant
 	syntactical_clients_not_void: syntactical_clients /= Void
 	type_a_generator_not_void: type_a_generator /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

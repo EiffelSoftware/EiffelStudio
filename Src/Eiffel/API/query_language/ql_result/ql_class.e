@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a class item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_compiled_flag (a_class: like conf_class; a_parent: like parent) is
+	make_with_compiled_flag (a_class: like conf_class; a_parent: like parent)
 			-- Initialize `conf_class' with `a_class' and `parent' with `a_parent'.
 			-- And set `is_compiled' to True. (For optimization concern)
 		require
@@ -57,7 +57,7 @@ feature{NONE} -- Initialization
 			is_compiled: is_compiled
 		end
 
-	make_with_parent (a_class: like conf_class; a_parent: like parent) is
+	make_with_parent (a_class: like conf_class; a_parent: like parent)
 			-- Initialize `conf_class' with `a_class' and `parent' with `a_parent'.
 		require
 			a_class_attached: a_class /= Void
@@ -71,7 +71,7 @@ feature{NONE} -- Initialization
 			parent_set: parent = a_parent
 		end
 
-	make (a_class: like conf_class) is
+	make (a_class: like conf_class)
 			-- Initialize `conf_class' with `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -87,7 +87,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -99,7 +99,7 @@ feature -- Setting
 			name_set: name.is_equal (a_name.as_upper)
 		end
 
-	set_visible (b: BOOLEAN) is
+	set_visible (b: BOOLEAN)
 			-- Set `is_visible' with `b'.
 		do
 			is_visible := b
@@ -109,7 +109,7 @@ feature -- Setting
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			if name_internal = Void then
@@ -119,7 +119,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of current
 		do
 			if internal_hash_code = 0 then
@@ -130,7 +130,7 @@ feature -- Access
 			good_result: Result = internal_hash_code and internal_hash_code = conf_class.hash_code
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 			--| Note: This is slow.
 		local
@@ -169,10 +169,10 @@ feature -- Access
 			end
 		end
 
-	description_string: STRING is "description"
+	description_string: STRING = "description"
 			-- String of description item in top indexing of `class_i'
 
-	wrapped_domain: QL_CLASS_DOMAIN is
+	wrapped_domain: QL_CLASS_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
@@ -183,7 +183,7 @@ feature -- Access
 			-- Compiled class of `conf_class'
 			-- Void if `conf_class' is not compiled
 
-	written_class: like class_c is
+	written_class: like class_c
 			-- CLASS_C in which current is written
 		do
 			Result := class_c
@@ -194,7 +194,7 @@ feature -- Access
 	class_i: CLASS_I
 			-- Un-compiled class information of `conf_class'
 
-	ast: CLASS_AS is
+	ast: CLASS_AS
 			-- AST node associated with current class
 		do
 			Result := class_c.ast
@@ -202,7 +202,7 @@ feature -- Access
 			good_result: Result = class_c.ast
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := class_path_marker
@@ -210,7 +210,7 @@ feature -- Access
 			good_result: Result = class_path_marker
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := class_scope
@@ -218,7 +218,7 @@ feature -- Access
 			good_result: Result = class_scope
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text of `ast'
 		do
 			if is_compiled then
@@ -231,7 +231,7 @@ feature -- Access
 			end
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
@@ -243,7 +243,7 @@ feature -- Status report
 	conf_class: CONF_CLASS
 			-- Class associated with current
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Is Current item compiled?
 		do
 			if is_compiled_internal = Void then
@@ -271,7 +271,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_class (Current)
@@ -279,7 +279,7 @@ feature -- Visit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -300,7 +300,7 @@ feature{NONE} -- Implementation
 			-- Internal stored text.
 			-- Used for non-compiled class
 
-	roundtrip_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_eiffel_parser: EIFFEL_PARSER
 			-- Roundtrip parser used to retrieve indexing clause
 		do
 			if il_parsing then
@@ -312,20 +312,20 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER
 			-- Pure Eiffel parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
 		end
 
-	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER
 			-- IL Eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
 			Result.set_il_parser
 		end
 
-	class_text: STRING is
+	class_text: STRING
 			-- Text of current class if it's a non-compiled class
 		require
 			not_compiled: not is_compiled
@@ -355,7 +355,7 @@ invariant
 	class_i_attached: class_i /= Void
 	parent_valid: parent /= Void implies parent.is_group and parent.is_valid_domain_item
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

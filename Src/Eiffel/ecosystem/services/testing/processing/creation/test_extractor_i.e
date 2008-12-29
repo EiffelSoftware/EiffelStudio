@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Creates tests from a current application state
 		

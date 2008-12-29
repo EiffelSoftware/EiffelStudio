@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor for BYTE_NODE objects which generates the MSIL code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,7 @@ inherit
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current valid for visiting?
 		do
 			Result := il_generator /= Void
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Generation
 
-	generate_il (a_code_generator: like il_generator; a_body: BYTE_CODE) is
+	generate_il (a_code_generator: like il_generator; a_body: BYTE_CODE)
 			-- Generate IL byte code `a_body'.
 		local
 			r_type: TYPE_A
@@ -315,7 +315,7 @@ feature -- Generation
 			retry_label := Void
 		end
 
-	generate_il_node (a_code_generator: IL_CODE_GENERATOR; a_node: BYTE_NODE) is
+	generate_il_node (a_code_generator: IL_CODE_GENERATOR; a_node: BYTE_NODE)
 			-- Generate `a_node' using `il_generator'.
 		require
 			a_node_not_void: a_node /= Void
@@ -331,7 +331,7 @@ feature -- Generation
 			end
 		end
 
-	frozen generate_il_assignment (a_node: ACCESS_B; source_type: TYPE_A) is
+	frozen generate_il_assignment (a_node: ACCESS_B; source_type: TYPE_A)
 			-- Generate source assignment IL code.
 		require
 			is_valid: is_valid
@@ -345,7 +345,7 @@ feature -- Generation
 			generate_il_simple_assignment (a_node, target_type, source_type)
 		end
 
-	generate_reattachment (source: EXPR_B; source_type, target_type: TYPE_A) is
+	generate_reattachment (source: EXPR_B; source_type, target_type: TYPE_A)
 			-- Generate code that ensures semantics of reattachment
 			-- of expression of `source_type' to entity of `target_type'
 			-- assuming the expression value is on the stack.
@@ -401,7 +401,7 @@ feature -- Generation
 			end
 		end
 
-	generate_il_load_value (a_node: INSPECT_B) is
+	generate_il_load_value (a_node: INSPECT_B)
 			-- Load value of expression
 		require
 			is_valid: is_valid
@@ -414,7 +414,7 @@ feature -- Generation
 			end
 		end
 
-	generate_il_old_init (a_node: UN_OLD_B) is
+	generate_il_old_init (a_node: UN_OLD_B)
 			-- Generate old initialization of `a_node'.
 		require
 			is_valid: is_valid
@@ -426,7 +426,7 @@ feature -- Generation
 			il_generator.generate_catch_old_exception_block (a_node.exception_position)
 		end
 
-	generate_il_precondition_node (a_node: ASSERT_B; a_failure_block: IL_LABEL) is
+	generate_il_precondition_node (a_node: ASSERT_B; a_failure_block: IL_LABEL)
 			-- Generate `a_node' as precondition
 		require
 			is_valid: is_valid
@@ -438,7 +438,7 @@ feature -- Generation
 			il_generator.generate_precondition_check (a_node.tag, a_failure_block)
 		end
 
-	generate_il_when_part (a_node: INSPECT_B; case_index: INTEGER; labels: ARRAY [IL_LABEL]) is
+	generate_il_when_part (a_node: INSPECT_B; case_index: INTEGER; labels: ARRAY [IL_LABEL])
 			-- Generate code for When_part idetified by `case_index' and
 			-- adjust `labels' if required.
 		require
@@ -471,7 +471,7 @@ feature -- Generation
 
 feature {NONE} -- Implementation
 
-	generate_il_return (a_body: BYTE_CODE) is
+	generate_il_return (a_body: BYTE_CODE)
 			-- Generate IL final return statement
 		require
 			is_valid: is_valid
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_il_precondition (a_body: BYTE_CODE) is
+	generate_il_precondition (a_body: BYTE_CODE)
 			-- Generate IL precondition checking blocks.
 		require
 			is_valid: is_valid
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			context.set_assertion_type (0)
 		end
 
-	generate_il_local_info (local_list: ARRAYED_LIST [TYPE_A]) is
+	generate_il_local_info (local_list: ARRAYED_LIST [TYPE_A])
 			-- Generate IL info for local variables in `local_list'.
 		require
 			is_valid: is_valid
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_locals (local_list: ARRAYED_LIST [TYPE_A]) is
+	initialize_locals (local_list: ARRAYED_LIST [TYPE_A])
 			-- Generate code to initialize local variables of the current routine
 			-- taking their types from `local_list'.
 		require
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_copy is
+	generate_copy
 			-- Generate body of feature `copy' from ANY.
 		local
 			class_type, l_old_class_type: CLASS_TYPE
@@ -757,14 +757,14 @@ feature {NONE} -- Access
 
 feature {NONE} -- Routine visitor
 
-	process_std_byte_code (a_node: STD_BYTE_CODE) is
+	process_std_byte_code (a_node: STD_BYTE_CODE)
 			-- Process current element.
 		do
 		end
 
 feature {NONE} -- Visitors
 
-	process_access_expr_b (a_node: ACCESS_EXPR_B) is
+	process_access_expr_b (a_node: ACCESS_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_is_nested_call: like is_nested_call
@@ -781,7 +781,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_address_b (a_node: ADDRESS_B) is
+	process_address_b (a_node: ADDRESS_B)
 			-- Process `a_node'.
 		local
 			l_target_type: CL_TYPE_A
@@ -799,7 +799,7 @@ feature {NONE} -- Visitors
 			il_generator.generate_routine_address (l_target_type, l_target_feature_id, is_last_argument_current)
 		end
 
-	process_argument_b (a_node: ARGUMENT_B) is
+	process_argument_b (a_node: ARGUMENT_B)
 			-- Process `a_node'.
 		do
 			if need_access_address (a_node, is_nested_call) then
@@ -810,7 +810,7 @@ feature {NONE} -- Visitors
 			is_nested_call := False
 		end
 
-	process_array_const_b (a_node: ARRAY_CONST_B) is
+	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- Process `a_node'.
 		local
 			l_real_ty: GEN_TYPE_A
@@ -866,7 +866,7 @@ feature {NONE} -- Visitors
  			end
 		end
 
-	process_assert_b (a_node: ASSERT_B) is
+	process_assert_b (a_node: ASSERT_B)
 			-- Process `a_node'.
 		do
 			check
@@ -878,7 +878,7 @@ feature {NONE} -- Visitors
 			il_generator.generate_assertion_check (context.assertion_type, a_node.tag)
 		end
 
-	process_assign_b (a_node: ASSIGN_B) is
+	process_assign_b (a_node: ASSIGN_B)
 			-- Process `a_node'.
 		local
 			source_type: TYPE_A
@@ -908,7 +908,7 @@ feature {NONE} -- Visitors
 			generate_il_assignment (a_node.target, source_type)
 		end
 
-	process_attribute_b (a_node: ATTRIBUTE_B) is
+	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
 			l_r_type: TYPE_A
@@ -1014,13 +1014,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_and_b (a_node: BIN_AND_B) is
+	process_bin_and_b (a_node: BIN_AND_B)
 			-- Process `a_node'.
 		do
 			process_bin_and_then_b (a_node)
 		end
 
-	process_bin_and_then_b (a_node: B_AND_THEN_B) is
+	process_bin_and_then_b (a_node: B_AND_THEN_B)
 			-- Process `a_node'.
 		local
 			l_and_then_label, l_final_label: IL_LABEL
@@ -1040,37 +1040,37 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_div_b (a_node: BIN_DIV_B) is
+	process_bin_div_b (a_node: BIN_DIV_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_div)
 		end
 
-	process_bin_eq_b (a_node: BIN_EQ_B) is
+	process_bin_eq_b (a_node: BIN_EQ_B)
 			-- Process `a_node'.
 		do
 			generate_bin_equal_b (a_node, il_eq)
 		end
 
-	process_bin_free_b (a_node: BIN_FREE_B) is
+	process_bin_free_b (a_node: BIN_FREE_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_bin_ge_b (a_node: BIN_GE_B) is
+	process_bin_ge_b (a_node: BIN_GE_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_ge)
 		end
 
-	process_bin_gt_b (a_node: BIN_GT_B) is
+	process_bin_gt_b (a_node: BIN_GT_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_gt)
 		end
 
-	process_bin_implies_b (a_node: B_IMPLIES_B) is
+	process_bin_implies_b (a_node: B_IMPLIES_B)
 			-- Process `a_node'.
 		local
 			l_final_label: IL_LABEL
@@ -1089,50 +1089,50 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_le_b (a_node: BIN_LE_B) is
+	process_bin_le_b (a_node: BIN_LE_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_le)
 		end
 
-	process_bin_lt_b (a_node: BIN_LT_B) is
+	process_bin_lt_b (a_node: BIN_LT_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_lt)
 		end
 
-	process_bin_minus_b (a_node: BIN_MINUS_B) is
+	process_bin_minus_b (a_node: BIN_MINUS_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_minus)
 		end
 
-	process_bin_mod_b (a_node: BIN_MOD_B) is
+	process_bin_mod_b (a_node: BIN_MOD_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_mod)
 		end
 
-	process_bin_ne_b (a_node: BIN_NE_B) is
+	process_bin_ne_b (a_node: BIN_NE_B)
 			-- Process `a_node'.
 		do
 			generate_bin_equal_b (a_node, il_ne)
 		end
 
-	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B)
 			-- Process `a_node'.
 		do
 			process_bin_tilde_b (a_node)
 			il_generator.generate_unary_operator (il_not)
 		end
 
-	process_bin_or_b (a_node: BIN_OR_B) is
+	process_bin_or_b (a_node: BIN_OR_B)
 			-- Process `a_node'.
 		do
 			process_bin_or_else_b (a_node)
 		end
 
-	process_bin_or_else_b (a_node: B_OR_ELSE_B) is
+	process_bin_or_else_b (a_node: B_OR_ELSE_B)
 			-- Process `a_node'.
 		local
 			l_final_label: IL_LABEL
@@ -1150,13 +1150,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_plus_b (a_node: BIN_PLUS_B) is
+	process_bin_plus_b (a_node: BIN_PLUS_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_plus)
 		end
 
-	process_bin_power_b (a_node: BIN_POWER_B) is
+	process_bin_power_b (a_node: BIN_POWER_B)
 			-- Process `a_node'.
 		local
 			l_power_nb: REAL_CONST_B
@@ -1195,7 +1195,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_slash_b (a_node: BIN_SLASH_B) is
+	process_bin_slash_b (a_node: BIN_SLASH_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_built_in then
@@ -1209,13 +1209,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_star_b (a_node: BIN_STAR_B) is
+	process_bin_star_b (a_node: BIN_STAR_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_star)
 		end
 
-	process_bin_tilde_b (a_node: BIN_TILDE_B) is
+	process_bin_tilde_b (a_node: BIN_TILDE_B)
 			-- Process `a_node'.
 		local
 			l_lt, l_rt: TYPE_A
@@ -1308,13 +1308,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_bin_xor_b (a_node: BIN_XOR_B) is
+	process_bin_xor_b (a_node: BIN_XOR_B)
 			-- Process `a_node'.
 		do
 			generate_converted_binary_b (a_node, il_xor)
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B) is
+	process_bit_const_b (a_node: BIT_CONST_B)
 			-- Process `a_node'.
 		local
 			l_bit_type: BITS_A
@@ -1361,13 +1361,13 @@ feature {NONE} -- Visitors
  			end
 		end
 
-	process_bool_const_b (a_node: BOOL_CONST_B) is
+	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do
 			il_generator.put_boolean_constant (a_node.value)
 		end
 
-	process_byte_list (a_node: BYTE_LIST [BYTE_NODE]) is
+	process_byte_list (a_node: BYTE_LIST [BYTE_NODE])
 			-- Process `a_node'.
 		local
 			l_area: SPECIAL [BYTE_NODE]
@@ -1384,13 +1384,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_case_b (a_node: CASE_B) is
+	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		do
 			-- Nothing to be done, as it is handled in INSPECT_B
 		end
 
-	process_char_const_b (a_node: CHAR_CONST_B) is
+	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_character_32 then
@@ -1400,12 +1400,12 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_char_val_b (a_node: CHAR_VAL_B) is
+	process_char_val_b (a_node: CHAR_VAL_B)
 			-- Process `a_node'.
 		do
 		end
 
-	process_check_b (a_node: CHECK_B) is
+	process_check_b (a_node: CHECK_B)
 			-- Process `a_node'.
 		local
 			l_label: IL_LABEL
@@ -1435,14 +1435,14 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_constant_b (a_node: CONSTANT_B) is
+	process_constant_b (a_node: CONSTANT_B)
 			-- Process `a_node'.
 		do
 			is_nested_call := False
 			a_node.value.generate_il
 		end
 
-	process_creation_expr_b (a_node: CREATION_EXPR_B) is
+	process_creation_expr_b (a_node: CREATION_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_ext_call: EXTERNAL_B
@@ -1506,7 +1506,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_current_b (a_node: CURRENT_B) is
+	process_current_b (a_node: CURRENT_B)
 			-- Process `a_node'.
 		local
 			l_type_i: TYPE_A
@@ -1535,13 +1535,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B) is
+	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B)
 			-- Process `a_node'.
 		do
 			-- Generated by CUSTOM_ATTRIBUTE_GENERATOR.
 		end
 
-	process_debug_b (a_node: DEBUG_B) is
+	process_debug_b (a_node: DEBUG_B)
 			-- Process `a_node'.
 		do
 			process_pragma (a_node)
@@ -1559,19 +1559,19 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_elsif_b (a_node: ELSIF_B) is
+	process_elsif_b (a_node: ELSIF_B)
 			-- Process `a_node'.
 		do
 			-- Generation done in IF_B
 		end
 
-	process_expr_address_b (a_node: EXPR_ADDRESS_B) is
+	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
 			fixme ("Not supported in .NET")
 		end
 
-	process_external_b (a_node: EXTERNAL_B) is
+	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
 		local
 			l_cl_type: CL_TYPE_A
@@ -1694,7 +1694,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_feature_b (a_node: FEATURE_B) is
+	process_feature_b (a_node: FEATURE_B)
 			-- Process `a_node'.
 		local
 			l_cl_type: CL_TYPE_A
@@ -1964,12 +1964,12 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_agent_call_b (a_node: AGENT_CALL_B) is
+	process_agent_call_b (a_node: AGENT_CALL_B)
 		do
 			process_feature_b (a_node)
 		end
 
-	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
+	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B)
 			-- Process `a_node'.
 		local
 			l_type: TYPE_A
@@ -1994,13 +1994,13 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_hector_b (a_node: HECTOR_B) is
+	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do
 			cil_access_address_generator.generate_il_address (il_generator, a_node.expr)
 		end
 
-	process_if_b (a_node: IF_B) is
+	process_if_b (a_node: IF_B)
 			-- Process `a_node'.
 		local
 			l_elsif_clause: ELSIF_B
@@ -2079,7 +2079,7 @@ feature {NONE} -- Visitors
 			il_generator.put_silent_debug_info (a_node.end_location)
 		end
 
-	process_inspect_b (a_node: INSPECT_B) is
+	process_inspect_b (a_node: INSPECT_B)
 			-- Process `a_node'.
 		local
 			l_else_label: IL_LABEL
@@ -2160,7 +2160,7 @@ feature {NONE} -- Visitors
 			il_generator.put_silent_debug_info (a_node.end_location)
 		end
 
-	process_instr_call_b (a_node: INSTR_CALL_B) is
+	process_instr_call_b (a_node: INSTR_CALL_B)
 			-- Process `a_node'.
 		do
 			generate_il_line_info (a_node, True)
@@ -2168,36 +2168,36 @@ feature {NONE} -- Visitors
 			a_node.call.process (Current)
 		end
 
-	process_instr_list_b (a_node: INSTR_LIST_B) is
+	process_instr_list_b (a_node: INSTR_LIST_B)
 			-- Process `a_node'.
 		do
 			process_pragma (a_node)
 			a_node.compound.process (Current)
 		end
 
-	process_int64_val_b (a_node: INT64_VAL_B) is
+	process_int64_val_b (a_node: INT64_VAL_B)
 			-- Process `a_node'.
 		do
 		end
 
-	process_int_val_b (a_node: INT_VAL_B) is
+	process_int_val_b (a_node: INT_VAL_B)
 			-- Process `a_node'.
 		do
 		end
 
-	process_integer_constant (a_node: INTEGER_CONSTANT) is
+	process_integer_constant (a_node: INTEGER_CONSTANT)
 			-- Process `a_node'.
 		do
 			a_node.generate_il
 		end
 
-	process_inv_assert_b (a_node: INV_ASSERT_B) is
+	process_inv_assert_b (a_node: INV_ASSERT_B)
 			-- Process `a_node'.
 		do
 			process_assert_b (a_node)
 		end
 
-	process_invariant_b (a_node: INVARIANT_B) is
+	process_invariant_b (a_node: INVARIANT_B)
 			-- Process `a_node'.
 		local
 			l: ARRAYED_LIST [TYPE_A]
@@ -2225,7 +2225,7 @@ feature {NONE} -- Visitors
 			context.set_assertion_type (0)
 		end
 
-	process_local_b (a_node: LOCAL_B) is
+	process_local_b (a_node: LOCAL_B)
 			-- Process `a_node'.
 		do
 			if need_access_address (a_node, is_nested_call) then
@@ -2236,7 +2236,7 @@ feature {NONE} -- Visitors
 			is_nested_call := False
 		end
 
-	process_loop_b (a_node: LOOP_B) is
+	process_loop_b (a_node: LOOP_B)
 			-- Process `a_node'.
 		local
 			l_test_label, l_end_label, l_label: IL_LABEL
@@ -2337,17 +2337,17 @@ feature {NONE} -- Visitors
 
 		end
 
-	process_nat64_val_b (a_node: NAT64_VAL_B) is
+	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		do
 		end
 
-	process_nat_val_b (a_node: NAT_VAL_B) is
+	process_nat_val_b (a_node: NAT_VAL_B)
 			-- Process `a_node'.
 		do
 		end
 
-	process_nested_b (a_node: NESTED_B) is
+	process_nested_b (a_node: NESTED_B)
 			-- Process `a_node'.
 		local
 			l_can_discard_target: BOOLEAN
@@ -2442,7 +2442,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_object_test_b (a_node: OBJECT_TEST_B) is
+	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		local
 			l_target_type, l_source_type: TYPE_A
@@ -2557,7 +2557,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
 		do
 			if need_access_address (a_node, is_nested_call) then
 				il_generator.generate_local_address (context.object_test_local_position (a_node))
@@ -2567,19 +2567,19 @@ feature {NONE} -- Visitors
 			is_nested_call := False
 		end
 
-	process_once_string_b (a_node: ONCE_STRING_B) is
+	process_once_string_b (a_node: ONCE_STRING_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_once_string (a_node.number - 1, a_node.value, a_node.is_dotnet_string)
 		end
 
-	process_operand_b (a_node: OPERAND_B) is
+	process_operand_b (a_node: OPERAND_B)
 			-- Process `a_node'.
 		do
 			is_nested_call := False
 		end
 
-	process_parameter_b (a_node: PARAMETER_B) is
+	process_parameter_b (a_node: PARAMETER_B)
 			-- Process `a_node'.
 		local
 			target_type: TYPE_A
@@ -2591,14 +2591,14 @@ feature {NONE} -- Visitors
 			generate_reattachment (a_node.expression, context.real_type (a_node.type), target_type)
 		end
 
-	process_paran_b (a_node: PARAN_B) is
+	process_paran_b (a_node: PARAN_B)
 			-- Process `a_node'.
 		do
 			a_node.expr.process (Current)
 			is_object_load_required := False
 		end
 
-	process_real_const_b (a_node: REAL_CONST_B) is
+	process_real_const_b (a_node: REAL_CONST_B)
 			-- Process `a_node'.
 		do
 			if a_node.real_size = 64 then
@@ -2608,12 +2608,12 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_require_b (a_node: REQUIRE_B) is
+	process_require_b (a_node: REQUIRE_B)
 		do
 			process_assert_b (a_node)
 		end
 
-	process_result_b (a_node: RESULT_B) is
+	process_result_b (a_node: RESULT_B)
 			-- Process `a_node'.
 		do
 			if need_access_address (a_node, is_nested_call) then
@@ -2624,7 +2624,7 @@ feature {NONE} -- Visitors
 			is_nested_call := False
 		end
 
-	process_retry_b (a_node: RETRY_B) is
+	process_retry_b (a_node: RETRY_B)
 			-- Process `a_node'.
 		do
 			generate_il_line_info (a_node, True)
@@ -2632,7 +2632,7 @@ feature {NONE} -- Visitors
 			il_generator.generate_leave_to (retry_label)
 		end
 
-	process_reverse_b (a_node: REVERSE_B) is
+	process_reverse_b (a_node: REVERSE_B)
 			-- Process `a_node'.
 		local
 			l_target_type, l_source_type: TYPE_A
@@ -2759,7 +2759,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_routine_creation_b (a_node: ROUTINE_CREATION_B) is
+	process_routine_creation_b (a_node: ROUTINE_CREATION_B)
 			-- Process `a_node'.
 		local
 			l_set_rout_disp_feat: FEATURE_I
@@ -2802,7 +2802,7 @@ feature {NONE} -- Visitors
 				l_set_rout_disp_feat.argument_count, l_set_rout_disp_feat.has_return_value, True)
 		end
 
-	process_string_b (a_node: STRING_B) is
+	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		do
 			if a_node.is_dotnet_string then
@@ -2812,7 +2812,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_strip_b (a_node: STRIP_B) is
+	process_strip_b (a_node: STRIP_B)
 			-- Process `a_node'.
 		do
 			check
@@ -2820,7 +2820,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B)
 			-- Process `a_node'.
 		local
 			l_feat_tbl: FEATURE_TABLE
@@ -2871,7 +2871,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_tuple_const_b (a_node: TUPLE_CONST_B) is
+	process_tuple_const_b (a_node: TUPLE_CONST_B)
 			-- Process `a_node'.
 		local
 			l_real_ty: GEN_TYPE_A
@@ -2927,7 +2927,7 @@ feature {NONE} -- Visitors
  			end
 		end
 
-	process_type_expr_b (a_node: TYPE_EXPR_B) is
+	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_type_creator: CREATE_INFO
@@ -2943,49 +2943,49 @@ feature {NONE} -- Visitors
 
 		end
 
-	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B]) is
+	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])
 			-- Process `a_node'.
 		do
 		end
 
-	process_un_free_b (a_node: UN_FREE_B) is
+	process_un_free_b (a_node: UN_FREE_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_un_minus_b (a_node: UN_MINUS_B) is
+	process_un_minus_b (a_node: UN_MINUS_B)
 			-- Process `a_node'.
 		do
 			generate_unary_b (a_node, il_uminus)
 		end
 
-	process_un_not_b (a_node: UN_NOT_B) is
+	process_un_not_b (a_node: UN_NOT_B)
 			-- Process `a_node'.
 		do
 			generate_unary_b (a_node, il_not)
 		end
 
-	process_un_old_b (a_node: UN_OLD_B) is
+	process_un_old_b (a_node: UN_OLD_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_raising_old_exception (a_node.exception_position)
 			il_generator.generate_local (a_node.position)
 		end
 
-	process_un_plus_b (a_node: UN_PLUS_B) is
+	process_un_plus_b (a_node: UN_PLUS_B)
 			-- Process `a_node'.
 		do
 			generate_unary_b (a_node, il_uplus)
 		end
 
-	process_variant_b (a_node: VARIANT_B) is
+	process_variant_b (a_node: VARIANT_B)
 			-- Process `a_node'.
 		do
 			process_assert_b (a_node)
 		end
 
-	process_void_b (a_node: VOID_B) is
+	process_void_b (a_node: VOID_B)
 			-- Process `a_node'.
 		do
 			il_generator.put_void
@@ -2993,7 +2993,7 @@ feature {NONE} -- Visitors
 
 feature {NONE} -- Implementation
 
-	need_access_address (a_node: ACCESS_B; a_is_target_of_call: BOOLEAN): BOOLEAN is
+	need_access_address (a_node: ACCESS_B; a_is_target_of_call: BOOLEAN): BOOLEAN
 			-- Does `a_node' access need its address loaded in memory?
 		require
 			is_valid: is_valid
@@ -3046,7 +3046,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_expression_il_for_type (a_node: EXPR_B; a_target_type: TYPE_A) is
+	generate_expression_il_for_type (a_node: EXPR_B; a_target_type: TYPE_A)
 			-- Generate IL code for `expression' that is attached
 			-- or compared to the target of type `a_target_type'.
 		require
@@ -3084,7 +3084,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_il_eiffel_metamorphose (a_type: TYPE_A) is
+	generate_il_eiffel_metamorphose (a_type: TYPE_A)
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			is_valid: is_valid
@@ -3094,7 +3094,7 @@ feature {NONE} -- Implementation
 			il_generator.generate_eiffel_metamorphose (a_type)
 		end
 
-	generate_il_metamorphose (a_type, a_target_type: TYPE_A; a_real_metamorphose: BOOLEAN) is
+	generate_il_metamorphose (a_type, a_target_type: TYPE_A; a_real_metamorphose: BOOLEAN)
 			-- Generate a metamorphose of target object.
 			-- If `a_real_metamorphose' is set to True, target is an
 			-- expanded type and feature is defined in a non-expanded class.
@@ -3128,7 +3128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_il_line_info (a_node: BYTE_NODE; is_breakable_for_studio_dbg: BOOLEAN) is
+	generate_il_line_info (a_node: BYTE_NODE; is_breakable_for_studio_dbg: BOOLEAN)
 			-- Generate source line information in IL code.
 		require
 			is_valid: is_valid
@@ -3148,7 +3148,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_ghost_debug_infos (a_node: BYTE_NODE; n: INTEGER) is
+	generate_ghost_debug_infos (a_node: BYTE_NODE; n: INTEGER)
 			-- Generate `a_nb' ghost debug informations,
 			-- this is to deal, for instance, with the not generated debug clauses
 		require
@@ -3162,7 +3162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_pragma (a_node: INSTR_B) is
+	process_pragma (a_node: INSTR_B)
 			-- Process pragma `a_pragma'.
 		local
 			l_parser: LINE_PRAGMA_PARSER
@@ -3193,7 +3193,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: binary operators
 
-	generate_converted_binary_b (a_node: BINARY_B; an_opcode: INTEGER) is
+	generate_converted_binary_b (a_node: BINARY_B; an_opcode: INTEGER)
 			-- Generate binary node `a_node' which cast either left hand side
 			-- or right hand side to heaviest type before performing binary operation.
 		require
@@ -3241,7 +3241,7 @@ feature {NONE} -- Implementation: binary operators
 			end
 		end
 
-	generate_bin_equal_b (a_node: BIN_EQUAL_B; an_opcode: INTEGER) is
+	generate_bin_equal_b (a_node: BIN_EQUAL_B; an_opcode: INTEGER)
 			-- Generate byte code for equality test
 		require
 			is_valid: is_valid
@@ -3387,7 +3387,7 @@ feature {NONE} -- Implementation: binary operators
 
 feature {NONE} -- Implementation: Inspect
 
-	create_sorted_interval_list (a_node: INSPECT_B): SORTED_TWO_WAY_LIST [INTERVAL_B] is
+	create_sorted_interval_list (a_node: INSPECT_B): SORTED_TWO_WAY_LIST [INTERVAL_B]
 			-- Create sorted list of all intervals in inspect instruction
 		require
 			is_valid: is_valid
@@ -3433,7 +3433,7 @@ feature {NONE} -- Implementation: Inspect
 			result_not_void: Result /= Void
 		end
 
-	merge_intervals (a_node: INSPECT_B; intervals: like create_sorted_interval_list) is
+	merge_intervals (a_node: INSPECT_B; intervals: like create_sorted_interval_list)
 			-- Merge adjacent intervals with the same code
 		require
 			is_valid: is_valid
@@ -3463,11 +3463,11 @@ feature {NONE} -- Implementation: Inspect
 			end
 		end
 
-	minimum_group_size: INTEGER is 7
+	minimum_group_size: INTEGER = 7
 			-- Minimum number of items in group for which switch IL instruction is generated
 			-- Switch instruction adds too much overhead when group consists of less than 7 items
 
-	build_spans (a_node: INSPECT_B; intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN] is
+	build_spans (a_node: INSPECT_B; intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN]
 			-- New sorted list of spans built from given `intervals' bounded with `min_value' and `max_value'
 		require
 			is_valid: is_valid
@@ -3548,7 +3548,7 @@ feature {NONE} -- Implementation: Inspect
 			result_not_void: Result /= Void
 		end
 
-	generate_spans (a_node: INSPECT_B; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]) is
+	generate_spans (a_node: INSPECT_B; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL])
 			-- Generate selectors for `spans' with indexes `lower'..`upper' within interval `min'..`max'
 			-- where these bounds are included according to `is_min_inclued' and `is_max_included'. Use
 			-- `else_label' to branch to Else_part.
@@ -3578,7 +3578,7 @@ feature {NONE} -- Implementation: Inspect
 			end
 		end
 
-	generate_il_branch_on_greater (an_interval: INTERVAL_VAL_B; is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is
+	generate_il_branch_on_greater (an_interval: INTERVAL_VAL_B; is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B)
 			-- Generate branch to `label' if value on IL stack it greater than this value.
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		require
@@ -3606,7 +3606,7 @@ feature {NONE} -- Implementation: Inspect
 
 feature {NONE} -- Implementation: loop
 
-	generate_il_variant_init (a_node: VARIANT_B; a_local: INTEGER) is
+	generate_il_variant_init (a_node: VARIANT_B; a_local: INTEGER)
 			-- Initialize variant computation.
 		require
 			is_valid: is_valid
@@ -3631,7 +3631,7 @@ feature {NONE} -- Implementation: loop
 			il_generator.generate_assertion_check (context.assertion_type, a_node.tag)
 		end
 
-	generate_il_variant_check (a_node: VARIANT_B; a_local: INTEGER) is
+	generate_il_variant_check (a_node: VARIANT_B; a_local: INTEGER)
 			-- Compute new variant and raise an assertion violation if not satisfied.
 		require
 			is_valid: is_valid
@@ -3669,7 +3669,7 @@ feature {NONE} -- Implementation: loop
 
 feature {NONE} -- Implementation: unary operators
 
-	generate_unary_b (a_node: UNARY_B; an_opcode: INTEGER) is
+	generate_unary_b (a_node: UNARY_B; an_opcode: INTEGER)
 			-- Generate code for `a_node'.
 		require
 			is_valid: is_valid
@@ -3685,7 +3685,7 @@ feature {NONE} -- Implementation: unary operators
 
 feature {NONE} -- Implementation: assignments
 
-	generate_il_start_assignment (a_node: ACCESS_B) is
+	generate_il_start_assignment (a_node: ACCESS_B)
 			-- Generate location of assignment if needed.
 		require
 			is_valid: is_valid
@@ -3694,7 +3694,7 @@ feature {NONE} -- Implementation: assignments
 				-- Nothing to do in the current implementation.
 		end
 
-	generate_il_cancel_assignment (a_node: ACCESS_B) is
+	generate_il_cancel_assignment (a_node: ACCESS_B)
 			-- Remove any data from the stack put by `generate_il_start_assignment'.
 		require
 			is_valid: is_valid
@@ -3703,7 +3703,7 @@ feature {NONE} -- Implementation: assignments
 				-- Nothing to do in the current implementation.
 		end
 
-	frozen generate_il_simple_assignment (a_node: ACCESS_B; target_type, source_type: TYPE_A) is
+	frozen generate_il_simple_assignment (a_node: ACCESS_B; target_type, source_type: TYPE_A)
 			-- Generate simple source assignment
 		require
 			is_valid: is_valid
@@ -3771,7 +3771,7 @@ feature {NONE} -- Implementation: assignments
 
 feature {NONE} -- Implementation: Feature calls
 
-	need_real_metamorphose (a_node: CALL_ACCESS_B; a_type: CL_TYPE_A): BOOLEAN is
+	need_real_metamorphose (a_node: CALL_ACCESS_B; a_type: CL_TYPE_A): BOOLEAN
 			-- Does call `a_node' originate from a reference type?
 		require
 			is_valid: is_valid
@@ -3783,7 +3783,7 @@ feature {NONE} -- Implementation: Feature calls
 				a_node.written_in /= a_type.associated_class.class_id
 		end
 
-	generate_il_c_call (a_node: EXTERNAL_B; inv_checked: BOOLEAN) is
+	generate_il_c_call (a_node: EXTERNAL_B; inv_checked: BOOLEAN)
 			-- Generate IL code for feature call.
 			-- If `inv_checked' generates invariant check before call.
 		require
@@ -3893,7 +3893,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_call_invariant (cl_type: CL_TYPE_A; entry: BOOLEAN) is
+	generate_il_call_invariant (cl_type: CL_TYPE_A; entry: BOOLEAN)
 			-- Generate IL code for calling invariant feature on class type `cl_type'.
 			-- Is the invariant checking `entry'?
 		require
@@ -3910,7 +3910,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.generate_invariant_checking (cl_type, entry)
 		end
 
-	generate_il_call_invariant_leading (cl_type: CL_TYPE_A; is_checked_before_call: BOOLEAN) is
+	generate_il_call_invariant_leading (cl_type: CL_TYPE_A; is_checked_before_call: BOOLEAN)
 			-- Generate IL code for calling invariant feature on class type `cl_type'
 			-- before associated feature call if `is_checked_before_call' is true.
 			-- Object on which a class invariant has
@@ -3930,7 +3930,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_call_invariant_trailing (cl_type: CL_TYPE_A; a_return_type: TYPE_A) is
+	generate_il_call_invariant_trailing (cl_type: CL_TYPE_A; a_return_type: TYPE_A)
 			-- Generate IL code for calling invariant feature on class type `cl_type'
 			-- after associated feature call with result type `a_return_type'.
 			-- It is assumed that `generate_il_call_invariant_leading' is called
@@ -3956,7 +3956,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	il_special_routines: IL_SPECIAL_FEATURES is
+	il_special_routines: IL_SPECIAL_FEATURES
 			-- Array containing special routines.
 		once
 			create Result
@@ -3964,7 +3964,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_special_routines_not_void: Result /= Void
 		end
 
-	generate_il_normal_call (a_node: FEATURE_B; target_type: CL_TYPE_A; is_virtual: BOOLEAN) is
+	generate_il_normal_call (a_node: FEATURE_B; target_type: CL_TYPE_A; is_virtual: BOOLEAN)
 			-- Normal feature call.
 		require
 			is_valid: is_valid
@@ -4010,7 +4010,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_il_any_call (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A; is_virtual: BOOLEAN) is
+	generate_il_any_call (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A; is_virtual: BOOLEAN)
 			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT.
 			-- Arguments and target of the call are already pushed on the stack.
 		require
@@ -4130,7 +4130,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_frozen_boolean_routine (a_feature_name_id: INTEGER) is
+	generate_frozen_boolean_routine (a_feature_name_id: INTEGER)
 			-- Generate inlined call to routine of ANY that are completely frozen (that is to
 			-- say their definition is frozen and they don't call non-frozen routine in their
 			-- definition if ANY) and that returns a boolean value.
@@ -4178,7 +4178,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_clone_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A) is
+	generate_clone_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A)
 			-- Generate inlined call to xx_clone' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4216,7 +4216,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.generate_check_cast (Void, a_result_type)
 		end
 
-	generate_copy_routine (a_feature_name_id: INTEGER) is
+	generate_copy_routine (a_feature_name_id: INTEGER)
 			-- Generate inlined call to xx_copy' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4244,7 +4244,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_default (target_type, return_type: TYPE_A) is
+	generate_default (target_type, return_type: TYPE_A)
 			-- Generate inlined call to `default'.
 		require
 			is_valid: is_valid
@@ -4280,7 +4280,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_default_routine (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
+	generate_default_routine (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A)
 			-- Generate inlined call to `default_create' and `default_rescue'.
 		require
 			is_valid: is_valid
@@ -4311,7 +4311,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_default_pointer (target_type: TYPE_A) is
+	generate_default_pointer (target_type: TYPE_A)
 			-- Generate inlined call to `default_pointer'.
 		require
 			is_valid: is_valid
@@ -4325,7 +4325,7 @@ feature {NONE} -- Implementation: Feature calls
 			il_generator.convert_to_native_int
 		end
 
-	generate_do_nothing (target_type: TYPE_A) is
+	generate_do_nothing (target_type: TYPE_A)
 			-- Generate inlined call to `do_nothing'.
 		require
 			is_valid: is_valid
@@ -4335,7 +4335,7 @@ feature {NONE} -- Implementation: Feature calls
 			generate_call_on_void_target (target_type, False)
 		end
 
-	generate_equal_routine (a_feature_name_id: INTEGER) is
+	generate_equal_routine (a_feature_name_id: INTEGER)
 			-- Generate inlined call to `equal' and `is_equal' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4367,7 +4367,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 		end
 
-	generate_io (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
+	generate_io (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A)
 			-- Generate inlined call to `io'.
 		require
 			is_valid: is_valid
@@ -4391,7 +4391,7 @@ feature {NONE} -- Implementation: Feature calls
 			generate_il_normal_call (a_node, written_type, True)
 		end
 
-	generate_operating_environment (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A) is
+	generate_operating_environment (a_node: FEATURE_B; written_type, target_type: CL_TYPE_A)
 			-- Generate inlined call to `operating_environment'.
 		require
 			is_valid: is_valid
@@ -4414,7 +4414,7 @@ feature {NONE} -- Implementation: Feature calls
 			generate_il_normal_call (a_node, written_type, True)
 		end
 
-	generate_string_routine (a_node: FEATURE_B; written_type: CL_TYPE_A) is
+	generate_string_routine (a_node: FEATURE_B; written_type: CL_TYPE_A)
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
 		require
@@ -4476,7 +4476,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 		end
 
-	generate_twin_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A) is
+	generate_twin_routine (a_feature_name_id: INTEGER; a_result_type: TYPE_A)
 			-- Generate inlined call to xx_twin' routines of ANY.
 		require
 			is_valid: is_valid
@@ -4519,7 +4519,7 @@ feature {NONE} -- Implementation: Feature calls
 
 feature {NONE} -- Convenience
 
-	generate_call_on_void_target (target_type: TYPE_A; need_top_duplication: bOOLEAN) is
+	generate_call_on_void_target (target_type: TYPE_A; need_top_duplication: bOOLEAN)
 			-- Generate check that current object is not Void.
 		require
 			is_valid: is_valid
@@ -4548,7 +4548,7 @@ feature {NONE} -- Convenience
 			end
 		end
 
-	any_type: CL_TYPE_A is
+	any_type: CL_TYPE_A
 			-- Actual type of ANY
 		require
 			has_any: system.any_class /= Void
@@ -4559,7 +4559,7 @@ feature {NONE} -- Convenience
 			any_type_not_void: Result /= Void
 		end
 
-	system_string_type: CL_TYPE_A is
+	system_string_type: CL_TYPE_A
 			-- Actual type of SYSTEM_STRING
 		require
 			has_system_string: system.system_string_class /= Void
@@ -4570,7 +4570,7 @@ feature {NONE} -- Convenience
 			system_string_type_not_void: Result /= Void
 		end
 
-	system_exception_type: CL_TYPE_A is
+	system_exception_type: CL_TYPE_A
 			-- Actual type of SYSTEM_EXCEPTION
 		require
 			has_system_string: system.system_exception_type_class /= Void
@@ -4581,7 +4581,7 @@ feature {NONE} -- Convenience
 			system_exception_type_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

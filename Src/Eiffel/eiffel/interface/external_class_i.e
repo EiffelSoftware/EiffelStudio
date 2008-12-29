@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of a class that has been generated
 		in a different compilation or language in .NET context.
@@ -40,13 +40,13 @@ create {CONF_COMP_FACTORY}
 
 feature -- Access
 
-	set_changed (b: BOOLEAN) is
+	set_changed (b: BOOLEAN)
 			-- Assign `b' to `changed'.
 		do
 			changed := b
 		end
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- <Precursor>
 		do
 			if options_internal /= Void then
@@ -63,7 +63,7 @@ feature -- Access
 	assembly: ASSEMBLY_I
 			-- Cluster is an assembly.
 
-	external_consumed_type: CONSUMED_TYPE is
+	external_consumed_type: CONSUMED_TYPE
 			-- Associated CONSUMED_TYPE instance of Current
 		local
 			l_reader: like consumed_type_deserializer
@@ -77,13 +77,13 @@ feature -- Access
 			end
 		end
 
-	config_class: CONF_CLASS_ASSEMBLY is
+	config_class: CONF_CLASS_ASSEMBLY
 			-- Configuration class.
 		do
 			Result := Current
 		end
 
-	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CLASS_I is
+	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CLASS_I
 			-- Given an external type `c' get its associated CLASS_I.
 		require
 			c_not_void: c /= Void
@@ -121,12 +121,12 @@ feature -- Access
 
 feature -- Status Report
 
-	is_external_class: BOOLEAN is True
+	is_external_class: BOOLEAN = True
 			-- Class is defined outside current system.
 
 feature {EXTERNAL_CLASS_C} -- Mapping
 
-	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is
+	basic_type_mapping: HASH_TABLE [CLASS_I, STRING]
 			-- Mapping between name of basic class in mscorlib and Eiffel CLASS_I.
 		once
 			create Result.make (20)
@@ -150,7 +150,7 @@ feature {EXTERNAL_CLASS_C} -- Mapping
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	reset_options is
+	reset_options
 			-- <Precursor>
 		do
 				-- Reset any previous cached options.
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	consumed_type_deserializer: EIFFEL_DESERIALIZER is
+	consumed_type_deserializer: EIFFEL_DESERIALIZER
 			-- Deserializer engine
 		once
 			create Result
@@ -174,12 +174,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchor
 
-	class_type: EXTERNAL_CLASS_I is
+	class_type: EXTERNAL_CLASS_I
 			-- <Precursor>
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

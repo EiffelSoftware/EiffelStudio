@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component to let the user create features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name_number (a_number: INTEGER) is
+	set_name_number (a_number: INTEGER)
 			-- Assign `a_number' to `name_number'.
 		deferred
 		ensure
@@ -47,7 +47,7 @@ feature -- Element change
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		do
 			if feature_name_field /= Void then
@@ -57,24 +57,24 @@ feature -- Status report
 			end
 		end
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is `Current' a procedure editor?
 		do
 		end
 
-	is_function: BOOLEAN is
+	is_function: BOOLEAN
 			-- Is `Current' a function editor?
 		do
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Is `Current' an attribute editor?
 		do
 		end
 
 feature -- Error
 
-	show_error (a_parent_window: EV_WINDOW) is
+	show_error (a_parent_window: EV_WINDOW)
 			-- Check that name class_name is a valid class name.
 			-- (export status {NONE})
 		require
@@ -91,7 +91,7 @@ feature -- Error
 
 feature {NONE} -- Implementation
 
-	comments_code: STRING is
+	comments_code: STRING
 			-- Formatted Eiffel comments.
 		local
 			l_text: STRING
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_label (a_text: STRING; ind: INTEGER) is
+	add_label (a_text: STRING; ind: INTEGER)
 			-- Create new label with `a_text'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			disable_item_expand (hb)
 		end
 
-	add_indented (a_widget: EV_WIDGET; ind: INTEGER; enable_resizing: BOOLEAN) is
+	add_indented (a_widget: EV_WIDGET; ind: INTEGER; enable_resizing: BOOLEAN)
 			-- Add `a_widget' to `Current', indented.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_comment_field is
+	add_comment_field
 			-- Add `comment_field' to `Current'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 
 feature -- Adaptation
 
-	adapt (other: EB_FEATURE_EDITOR) is
+	adapt (other: EB_FEATURE_EDITOR)
 			-- Set with `other'.
 		local
 			tmpstr: STRING
@@ -195,13 +195,13 @@ feature {EB_FEATURE_EDITOR, EB_FEATURE_COMPOSITION_WIZARD} -- Access
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

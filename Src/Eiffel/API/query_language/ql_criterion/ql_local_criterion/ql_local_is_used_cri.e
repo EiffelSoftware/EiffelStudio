@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to decide whether or not a local is used"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_LOCAL): BOOLEAN is
+	is_satisfied_by (a_item: QL_LOCAL): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_real_feature: QL_REAL_FEATURE
@@ -29,7 +29,7 @@ feature -- Evaluate
 
 feature{NONE} -- Implementation
 
-	usage_checker: QL_LOCAL_USED_CHECKER is
+	usage_checker: QL_LOCAL_USED_CHECKER
 			-- Checker to check if a local is used
 		once
 			create Result
@@ -37,7 +37,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

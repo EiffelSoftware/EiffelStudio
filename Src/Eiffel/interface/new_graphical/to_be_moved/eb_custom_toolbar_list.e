@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A list containing toolbar buttons in order to customize a tool bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (is_pool: BOOLEAN) is
+	make (is_pool: BOOLEAN)
 			-- Create a list containing available buttons if `is_pool' or displayed buttons otherwise
 		do
 			default_create
@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	customizable_item: EB_CUSTOMIZABLE_LIST_ITEM is
+	customizable_item: EB_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
 			Result ?= item
 		end
 
-	customizable_selected_item: EB_CUSTOMIZABLE_LIST_ITEM is
+	customizable_selected_item: EB_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `selected_item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
 			Result ?= selected_item
@@ -48,7 +48,7 @@ feature -- Status Report
 
 feature -- Basic operations
 
-	extend (v: like item) is
+	extend (v: like item)
    			-- Add `v' to end. Do not move cursor.
 		local
 			a_customizable_item: like customizable_item
@@ -68,7 +68,7 @@ feature -- Basic operations
 			Precursor (v)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

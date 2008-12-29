@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A class to be inserted into the auto-complete list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create {EB_CLASS_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class) is
+	make (a_class: like associated_class)
 			-- Creates and initializes a new class completion item
 		require
 			a_class_not_void: a_class /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN
 			-- Is completion item a class?
 		do
 			Result := True
@@ -62,20 +62,20 @@ feature -- Access
 	insert_name: STRING_32
 			-- Name to insert in editor
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Associated icon based on data
 		do
 			Result := pixmap_from_class_i (associated_class)
 		end
 
-	tooltip_text: STRING_32 is
+	tooltip_text: STRING_32
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
 			Result := string
 		end
 
-	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item : EB_GRID_EDITOR_TOKEN_ITEM
 			-- Corresponding grid item
 		local
 			l_class: CLASS_C
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_obsolete: BOOLEAN is
+	is_obsolete: BOOLEAN
 			-- Is item obsolete?
 		local
 			l_class: like associated_class
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	associated_class: CLASS_I;
 			-- Corresponding class
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

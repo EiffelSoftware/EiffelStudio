@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Color Selection Box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Display
 	
-	display (new_resource: like resource) is
+	display (new_resource: like resource)
 			-- Display Current with title 'txt' and content 'new_value'.
 		local
 			val: EV_COLOR
@@ -47,7 +47,7 @@ feature -- Display
 
 feature {NONE} -- Commands
 
-	change is
+	change
 			-- Change the value 
 		require
 			resource_exists: resource /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Commands
 			color_tool.show_modal_to_window (change_dialog)
 		end 
 
-	update_changes is
+	update_changes
 			-- Retrieve Color Dialog data, and update
 			-- resource accordingly.
 		require else
@@ -83,7 +83,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		local
 			h2: EV_HORIZONTAL_BOX
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			change_item_widget := a_frame
 		end
 
-	set_as_auto is
+	set_as_auto
 			-- Set `Current' as an auto color (a default must be used).
 		require
 			resource_may_be_void: resource.is_voidable
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 	change_b: EV_BUTTON;
 			-- Button labeled "Change"
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

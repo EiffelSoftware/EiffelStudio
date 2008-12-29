@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to build EIFNET_DEBUG_VALUE from ICOR_DEBUG_VALUE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	debug_value_from (a_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE is
+	debug_value_from (a_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE
 		local
 			l_icd_prepared: ICOR_DEBUG_VALUE
 		do
@@ -31,7 +31,7 @@ feature -- Access
 			Result := debug_value_from_prepared_icd (a_icd, l_icd_prepared, a_stat_class)
 		end
 
-	debug_value_from_prepared_icd (a_icd: ICOR_DEBUG_VALUE; a_prepared_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE is
+	debug_value_from_prepared_icd (a_icd: ICOR_DEBUG_VALUE; a_prepared_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE
 		require
 			arg_not_void: a_prepared_icd /= Void
 		local
@@ -123,7 +123,7 @@ feature -- Access
 				Result.set_static_class (a_stat_class)
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

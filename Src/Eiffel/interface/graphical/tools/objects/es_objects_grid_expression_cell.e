@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that represent an expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+	make_with_text_and_provider (a_text: STRING_GENERAL; a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER)
 			-- Set `text' with `a_text'.
 			-- Set `completion_possibilities_provider' with `a_provider'.
 		do
@@ -30,7 +30,7 @@ feature -- Initialization
 			completion_possibilities_provider := a_provider
 		end
 
-	initialize_actions is
+	initialize_actions
 		do
 			Precursor
 			text_field.enable_edit
@@ -39,7 +39,7 @@ feature -- Initialization
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

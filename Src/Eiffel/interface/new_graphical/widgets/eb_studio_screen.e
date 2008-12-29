@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Added functionality to EV_SCREEN which we do not want to export yet to EV_SCREEN."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,55 +13,55 @@ inherit
 	
 feature -- Status report
 
-	virtual_width: INTEGER is
+	virtual_width: INTEGER
 			-- Virtual width of screen
 		do
 			Result := implementation.virtual_width
 		end	
 
-	virtual_height: INTEGER is
+	virtual_height: INTEGER
 			-- Virtual height of screen
 		do
 			Result := implementation.virtual_height
 		end
 
-	virtual_x: INTEGER is
+	virtual_x: INTEGER
 			-- X position of virtual screen in main display coordinates
 		do
 			Result := implementation.virtual_x
 		end
 
-	virtual_y: INTEGER is
+	virtual_y: INTEGER
 			-- Y position of virtual screen in main display coordinates
 		do
 			Result := implementation.virtual_y
 		end
 		
-	virtual_left: INTEGER is
+	virtual_left: INTEGER
 			-- Left position of virtual screen in main display coordinates
 		do
 			Result := virtual_x
 		end
 		
-	virtual_top: INTEGER is
+	virtual_top: INTEGER
 			-- Top position of virtual screen in main display coordinates
 		do
 			Result := virtual_y
 		end
 		
-	virtual_right: INTEGER is
+	virtual_right: INTEGER
 			-- Right position of virtual screen in main display coordinates
 		do
 			Result := virtual_x + virtual_width
 		end
 
-	virtual_bottom: INTEGER is
+	virtual_bottom: INTEGER
 			-- Bottom position of virtual screen in main display coordinates
 		do
 			Result := virtual_y + virtual_height
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

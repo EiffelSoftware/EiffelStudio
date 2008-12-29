@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Character description."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (w: BOOLEAN) is
+	make (w: BOOLEAN)
 			-- Create instance of CHAR_DESC. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
@@ -30,7 +30,7 @@ feature -- Access
 	is_wide: BOOLEAN
 			-- Is current character a wide one?
 
-	level: INTEGER is
+	level: INTEGER
 			-- Comparison criteria
 		do
 			if is_wide then
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			if is_wide then
 				Result := {SK_CONST}.Sk_wchar
@@ -49,7 +49,7 @@ feature -- Access
 			end
 		end
 
-	type_i: TYPE_A is
+	type_i: TYPE_A
 			-- Corresponding TYPE_I instance.
 		do
 			if is_wide then
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
@@ -72,7 +72,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

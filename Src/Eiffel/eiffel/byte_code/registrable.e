@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Records common properties of Eiffel sub-expressions, which can
@@ -8,106 +8,106 @@ deferred class REGISTRABLE
 	
 feature 
 
-	register: REGISTRABLE is
+	register: REGISTRABLE
 			-- Where expression is stored.
 		do
 		end;
 	
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
 		end;
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 			-- Associated C type
 		deferred
 		end;
 
-	register_name: STRING is
+	register_name: STRING
 			-- The ASCII representation of the register
 		deferred
 		end;
 
-	context: BYTE_CONTEXT is
+	context: BYTE_CONTEXT
 			-- Context in which generation occurs
 		deferred
 		end;
 
-	get_register is
+	get_register
 			-- Ask for a new register.
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Free register for use by others.
 		do
 		end;
 	
-	print_register is
+	print_register
 			-- Generates the C representation of `register'
 		do
 			context.buffer.put_string (register_name)
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagates the target of assignment `r' to avoid
 			-- an extra temporary variable.
 		do
 		end;
 
-	is_result: BOOLEAN is
+	is_result: BOOLEAN
 			-- Is register the Result entity ?
 		do
 		end;
 
-	is_inlined_result: BOOLEAN is
+	is_inlined_result: BOOLEAN
 			-- Is register the inlined Result entity ?
 		do
 		end;
 
-	is_current: BOOLEAN is
+	is_current: BOOLEAN
 			-- Is register the Current entity ?
 		do
 		end;
 
-	is_inlined_current: BOOLEAN is
+	is_inlined_current: BOOLEAN
 			-- Is register the inlined Current entity ?
 		do
 		end;
 
-	is_argument: BOOLEAN is
+	is_argument: BOOLEAN
 			-- Is register an argument entity ?
 		do
 		end;
 
-	is_predefined: BOOLEAN is
+	is_predefined: BOOLEAN
 			-- Is Current a predefined entity ?
 		do
 			Result := is_local or else is_argument or else is_result or else is_current;
 		end;
 
-	is_special: BOOLEAN is
+	is_special: BOOLEAN
 			-- Is register Result or Current ?
 		do
 		end;
 
-	is_local: BOOLEAN is
+	is_local: BOOLEAN
 			-- Is register a local entity ?
 		do
 		end;
 
-	is_temporary: BOOLEAN is
+	is_temporary: BOOLEAN
 			-- Is register a temporary one ?
 		do
 		end;
 
-	No_register: VOID_REGISTER is
+	No_register: VOID_REGISTER
 			-- Special entity for no register
 		once
 			create Result;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

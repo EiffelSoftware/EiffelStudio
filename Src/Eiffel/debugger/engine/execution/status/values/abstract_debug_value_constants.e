@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,26 +13,26 @@ inherit
 
 feature {DEBUG_VALUE_EXPORTER} -- Constants
 
-	abstract_debug_value_id: INTEGER is 0
-	abstract_special_value_id: INTEGER is 1
-	abstract_reference_value_id: INTEGER is 5
-	expanded_value_id: INTEGER is 6
-	bits_value_id: INTEGER is 7
-	debug_basic_value_id: INTEGER is 10
-	character_value_id: INTEGER is 11
-	character_32_value_id: INTEGER is 12
-	eifnet_debug_unknown_type_value_id: INTEGER is 20
-	eifnet_debug_native_array_value_id: INTEGER is 21
-	exception_debug_value_id: INTEGER is 30
-	procedure_return_debug_value_id: INTEGER is 31
-	dummy_message_debug_value_id: INTEGER is 32
+	abstract_debug_value_id: INTEGER = 0
+	abstract_special_value_id: INTEGER = 1
+	abstract_reference_value_id: INTEGER = 5
+	expanded_value_id: INTEGER = 6
+	bits_value_id: INTEGER = 7
+	debug_basic_value_id: INTEGER = 10
+	character_value_id: INTEGER = 11
+	character_32_value_id: INTEGER = 12
+	eifnet_debug_unknown_type_value_id: INTEGER = 20
+	eifnet_debug_native_array_value_id: INTEGER = 21
+	exception_debug_value_id: INTEGER = 30
+	procedure_return_debug_value_id: INTEGER = 31
+	dummy_message_debug_value_id: INTEGER = 32
 
 feature {NONE} -- Readme
 
 	--| For now, only value used in DEBUGGER_TEXT_FORMATTER_OUTPUT are set
 	--| don't forget to update any related classes.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

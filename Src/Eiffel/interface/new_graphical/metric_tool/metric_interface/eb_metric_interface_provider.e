@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface elements provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature -- Metric menu
 
-	approximate_width_of_menu (a_menu: EV_MENU): INTEGER is
+	approximate_width_of_menu (a_menu: EV_MENU): INTEGER
 			-- Approximate width in pixel of `a_menu'
 		require
 			a_menu_attached: a_menu /= Void
@@ -63,7 +63,7 @@ feature -- Metric menu
 
 feature -- Names
 
-	displayed_name (a_name: STRING_GENERAL): STRING_GENERAL is
+	displayed_name (a_name: STRING_GENERAL): STRING_GENERAL
 			-- Displayed name for `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -76,7 +76,7 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	pixmap_from_metric_type (a_type: INTEGER): EV_PIXMAP is
+	pixmap_from_metric_type (a_type: INTEGER): EV_PIXMAP
 			-- Pixmap for metric type `a_type'
 		require
 			a_type_valid: is_metric_type_valid (a_type)
@@ -92,7 +92,7 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	name_of_metric_type (a_type: INTEGER): STRING_GENERAL is
+	name_of_metric_type (a_type: INTEGER): STRING_GENERAL
 			-- Name of metric type `a_type'
 		require
 			a_type_valid: is_metric_type_valid (a_type)
@@ -108,7 +108,7 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	metric_value (a_value: DOUBLE; a_percent: BOOLEAN): STRING is
+	metric_value (a_value: DOUBLE; a_percent: BOOLEAN): STRING
 			-- String representation of `a_value'.
 			-- If `a_percent' is True, Result is in percentage form.
 		local
@@ -156,7 +156,7 @@ feature -- Names
 			end
 		end
 
-	metric_tooltip (a_metric: EB_METRIC; a_go_to_definition: BOOLEAN): STRING_32 is
+	metric_tooltip (a_metric: EB_METRIC; a_go_to_definition: BOOLEAN): STRING_32
 			-- Tooltip for `a_metric'.
 			-- If `a_go_to_definition' is True, Add "Go to definition" message.
 		require
@@ -188,7 +188,7 @@ feature -- Names
 
 feature -- Dialog
 
-	show_warning_dialog (a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
+	show_warning_dialog (a_msg: STRING_GENERAL; a_window: EV_WINDOW)
 			-- Show warning dialog to display `a_msg'.
 		require
 			a_msg_attached: a_msg /= Void
@@ -199,7 +199,7 @@ feature -- Dialog
 
 feature -- Actions binding
 
-	attach_non_editable_warning_to_text (a_msg: STRING_GENERAL; a_text: EV_TEXT_COMPONENT; a_window: EV_WINDOW) is
+	attach_non_editable_warning_to_text (a_msg: STRING_GENERAL; a_text: EV_TEXT_COMPONENT; a_window: EV_WINDOW)
 			-- Attach actions to display `a_msg' to `a_text'.
 			-- A warning dialog will be displayed when a key is pressed on `a_text'.
 		require
@@ -212,19 +212,19 @@ feature -- Actions binding
 
 feature -- Metric editor mode
 
-	readonly_mode: INTEGER is 1
+	readonly_mode: INTEGER = 1
 			-- Read only mode
 			-- This is used for browsing predefined metrics
 
-	new_mode: INTEGER is 2
+	new_mode: INTEGER = 2
 			-- New mode
 			-- This is used for define new metrics
 
-	edit_mode: INTEGER is 3
+	edit_mode: INTEGER = 3
 			-- Edit mode
 			-- This is used for editing existing metrics
 
-	is_mode_valid (a_mode: INTEGER): BOOLEAN is
+	is_mode_valid (a_mode: INTEGER): BOOLEAN
 			-- Is `a_mode' valid?
 		do
 			Result := a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode
@@ -234,7 +234,7 @@ feature -- Metric editor mode
 
 feature -- Layout
 
-	center_pixmap_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+	center_pixmap_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT)
 			-- Layout to align pixmap of `a_item' in center
 		require
 			a_item_attached: a_item /= Void
@@ -249,7 +249,7 @@ feature -- Layout
 
 feature -- Domain dialog
 
-	plain_domain_setup_dialog: EB_METRIC_GRID_PLAIN_DOMAIN_DIALOG is
+	plain_domain_setup_dialog: EB_METRIC_GRID_PLAIN_DOMAIN_DIALOG
 			-- Dialog to setup a metric domain
 		once
 			create Result
@@ -257,7 +257,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	client_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG is
+	client_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG
 			-- Dialog to setup a client domain
 		once
 			create Result
@@ -266,7 +266,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	supplier_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG is
+	supplier_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG
 			-- Dialog to setup a supplier domain
 		once
 			create Result
@@ -275,7 +275,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	caller_callee_domain_setup_dialog: EB_METRIC_GRID_CALLER_CALLEE_DIALOG is
+	caller_callee_domain_setup_dialog: EB_METRIC_GRID_CALLER_CALLEE_DIALOG
 			-- Dialog to setup caller/callee domain
 		once
 			create Result
@@ -283,7 +283,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	value_criterion_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+	value_criterion_dialog: EB_METRIC_VALUE_CRITERION_DIALOG
 			-- Dialog to setup value criterion
 		once
 			create Result.make (True, True, True)
@@ -292,7 +292,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	value_tester_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+	value_tester_dialog: EB_METRIC_VALUE_CRITERION_DIALOG
 			-- Dialog to setup value tester for archive node
 		once
 			create Result.make (True, False, True)
@@ -302,7 +302,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+	metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG
 			-- Dialog to setup metric value retriever
 		once
 			create Result.make (False, True, False)
@@ -311,7 +311,7 @@ feature -- Domain dialog
 			result_attached: Result /= Void
 		end
 
-	archive_metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+	archive_metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG
 			-- Dialog to setup metric value retriever
 		once
 			create Result.make (False, True, False)
@@ -323,7 +323,7 @@ feature -- Domain dialog
 
 feature -- Color
 
-	red_color: EV_COLOR is
+	red_color: EV_COLOR
 			-- Red color
 		once
 			Result := (create {EV_STOCK_COLORS}).red
@@ -331,7 +331,7 @@ feature -- Color
 			result_attached: Result /= Void
 		end
 
-	black_color: EV_COLOR is
+	black_color: EV_COLOR
 			-- Black color
 		once
 			Result := (create {EV_STOCK_COLORS}).black
@@ -341,7 +341,7 @@ feature -- Color
 
 feature -- Grid Support
 
-	new_grid_support (a_grid: ES_GRID): EB_EDITOR_TOKEN_GRID_SUPPORT is
+	new_grid_support (a_grid: ES_GRID): EB_EDITOR_TOKEN_GRID_SUPPORT
 			-- New grid support for `a_grid'.
 		require
 			a_grid_attached: a_grid /= Void
@@ -353,7 +353,7 @@ feature -- Grid Support
 
 feature -- Domain item
 
-	new_current_application_target_domain_item: EB_METRIC_DOMAIN_ITEM is
+	new_current_application_target_domain_item: EB_METRIC_DOMAIN_ITEM
 			-- New current application target domain item
 		do
 			create {EB_METRIC_TARGET_DOMAIN_ITEM}Result.make ("")
@@ -361,7 +361,7 @@ feature -- Domain item
 			result_attached: Result /= Void
 		end
 
-	new_input_domain_item: EB_METRIC_DOMAIN_ITEM is
+	new_input_domain_item: EB_METRIC_DOMAIN_ITEM
 			-- New input domain item
 		do
 			create {EB_METRIC_DELAYED_DOMAIN_ITEM}Result.make ("")
@@ -369,7 +369,7 @@ feature -- Domain item
 			result_attached: Result /= Void
 		end
 
-	new_delayed_domain_item: EB_METRIC_DOMAIN_ITEM is
+	new_delayed_domain_item: EB_METRIC_DOMAIN_ITEM
 			-- New delayed domain item
 		do
 			create {EB_METRIC_DELAYED_DOMAIN_ITEM}Result.make (n_delayed_domain_id)
@@ -379,7 +379,7 @@ feature -- Domain item
 
 feature -- Pixmap
 
-	ellipsis_pixmap: EV_PIXMAP is
+	ellipsis_pixmap: EV_PIXMAP
 			-- Icon for ellipsis
 		local
 			l_mask: EV_BITMAP
@@ -402,7 +402,7 @@ feature -- Pixmap
 
 feature{NONE} -- Font
 
-	bold_font: EV_FONT is
+	bold_font: EV_FONT
 			-- Bold font
 		once
 			create Result
@@ -413,7 +413,7 @@ feature{NONE} -- Font
 
 feature -- Pick and drop
 
-	drop_class (st: CLASSI_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
+	drop_class (st: CLASSI_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL)
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -432,7 +432,7 @@ feature -- Pick and drop
 			end
 		end
 
-	drop_feature (st: FEATURE_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
+	drop_feature (st: FEATURE_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL)
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -444,7 +444,7 @@ feature -- Pick and drop
 			a_metric_tool.develop_window.tools.features_relation_tool.set_focus
 		end
 
-	drop_cluster (st: CLUSTER_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL) is
+	drop_cluster (st: CLUSTER_STONE; a_metric_tool: ES_METRICS_TOOL_PANEL)
 			-- Action to be performed when `st' is dropped on current panel.
 		require
 			st_valid: st /= Void
@@ -453,7 +453,7 @@ feature -- Pick and drop
 			a_metric_tool.develop_window.tools.launch_stone (st)
 		end
 
-	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_metric_tool: ES_METRICS_TOOL_PANEL) is
+	extend_drop_actions (a_action_holder: EV_PICK_AND_DROPABLE_ACTION_SEQUENCES; a_metric_tool: ES_METRICS_TOOL_PANEL)
 			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into `a_action_holder'.
 		require
 			a_action_holder_attached: a_action_holder /= Void
@@ -464,7 +464,7 @@ feature -- Pick and drop
 			a_action_holder.drop_actions.extend (agent drop_cluster (?, a_metric_tool))
 		end
 
-	tool_drop_actions (a_metric_tool: ES_METRICS_TOOL_PANEL): EV_PND_ACTION_SEQUENCE is
+	tool_drop_actions (a_metric_tool: ES_METRICS_TOOL_PANEL): EV_PND_ACTION_SEQUENCE
 			-- Drop actions
 		do
 			create Result
@@ -473,7 +473,7 @@ feature -- Pick and drop
 			Result.extend (agent drop_cluster (?, a_metric_tool))
 		end
 
-	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: ES_METRICS_TOOL_PANEL) is
+	append_drop_actions (a_action_holders: ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]; a_metric_tool: ES_METRICS_TOOL_PANEL)
 			-- Register PnD related actions `drop_feature', `drop_class' and `drop_cluster' into every item in `a_action_holders'.
 		require
 			a_action_holders_attached: a_action_holders /= Void
@@ -484,7 +484,7 @@ feature -- Pick and drop
 
 feature{NONE} -- Implementation
 
-	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
+	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW)
 			-- Action to be performed when `a_key' is pressed
 		require
 			a_key_attached: a_key /= Void
@@ -518,7 +518,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	activate_grid_item (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_grid_item: EV_GRID_ITEM) is
+	activate_grid_item (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_grid_item: EV_GRID_ITEM)
 			-- Action to be performed to activate `a_grid_item'
 		require
 			a_grid_item_attached: a_grid_item /= Void
@@ -528,7 +528,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

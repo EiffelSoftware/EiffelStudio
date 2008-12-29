@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone based on feature name."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f_name: STRING; ec: CLASS_C) is
+	make (f_name: STRING; ec: CLASS_C)
 		require
 			valid_f_name: f_name /= Void
 			ec_attached: ec /= Void
@@ -52,7 +52,7 @@ feature -- Properties
 	feature_class: CLASS_C
 			-- Class with feature `feature_name'
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Signature of Current feature
 		do
 			Result := feature_name.twin
@@ -60,7 +60,7 @@ feature -- Properties
 
 feature -- Update
 
-	update is
+	update
 			-- Update current feature stone.
 		local
 			retried: BOOLEAN
@@ -87,7 +87,7 @@ feature -- Update
 
 feature -- Dragging
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		local
@@ -109,7 +109,7 @@ feature -- Dragging
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

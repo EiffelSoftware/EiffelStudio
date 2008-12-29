@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Creation type like an argument."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `position'.
 		do
 			position := i
@@ -36,7 +36,7 @@ feature -- Settings
 
 feature -- C code generation
 
-	analyze is
+	analyze
 		do
 			if is_generic then
 				context.mark_current_used
@@ -46,7 +46,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL) is
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
 		do
@@ -59,14 +59,14 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il is
+	generate_il
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
 		do
 			internal_generate_il (False)
 		end
 
-	generate_il_type is
+	generate_il_type
 			-- Generate IL code to load type of argument creation type.
 			-- Take the dynamic type of the argument if possible,
 			-- otherwise take its static type.
@@ -74,7 +74,7 @@ feature -- IL code generation
 			internal_generate_il (True)
 		end
 
-	created_in (other: CLASS_TYPE): TYPE_A is
+	created_in (other: CLASS_TYPE): TYPE_A
 			-- Resulting type of Current as if it was used to create object in `other'
 		do
 				-- Used to be `type_to_create.created_in' but I felt it was not really necessary.
@@ -83,7 +83,7 @@ feature -- IL code generation
 
 feature {NONE} -- IL code generation
 
-	internal_generate_il (a_is_for_type: BOOLEAN) is
+	internal_generate_il (a_is_for_type: BOOLEAN)
 		local
 			l_type: TYPE_A
 			creation_label, end_label: IL_LABEL
@@ -130,7 +130,7 @@ feature {NONE} -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for an argument anchored type.
 		do
 			ba.append (Bc_carg)
@@ -140,7 +140,7 @@ feature -- Byte code generation
 
 feature -- Generic conformance
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
 		do
 				-- If we are here, it means that it is known that the type cannot have
 				-- sublevel, thus the value of `0'. This is usually the case when describing
@@ -149,7 +149,7 @@ feature -- Generic conformance
 			buffer.put_character (',')
 		end
 
-	make_type_byte_code (ba : BYTE_ARRAY) is
+	make_type_byte_code (ba : BYTE_ARRAY)
 
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_arg_type)
@@ -158,7 +158,7 @@ feature -- Generic conformance
 		end
 
 	generate_cid_array (buffer : GENERATION_BUFFER;
-						final_mode : BOOLEAN; idx_cnt : COUNTER) is
+						final_mode : BOOLEAN; idx_cnt : COUNTER)
 		local
 			dummy : INTEGER
 		do
@@ -166,7 +166,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL) is
+	generate_cid_init (buffer : GENERATION_BUFFER; final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
 		local
 			dummy : INTEGER
 		do
@@ -186,12 +186,12 @@ feature -- Generic conformance
 
 feature -- Type information
 
-	type_to_create : CL_TYPE_A is
+	type_to_create : CL_TYPE_A
 		do
 			Result ?= argument_type
 		end
 
-	argument_type: TYPE_A is
+	argument_type: TYPE_A
 			-- Type of argument as declared.
 		do
 			Result := context.creation_type (context.byte_code.arguments.item (position))
@@ -199,7 +199,7 @@ feature -- Type information
 			argument_type_not_void: Result /= Void
 		end
 
-	associated_create_info: CREATE_INFO is
+	associated_create_info: CREATE_INFO
 		local
 			l_type: TYPE_A
 			l_formal: FORMAL_A
@@ -224,7 +224,7 @@ feature -- Type information
 			refined_create_info_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

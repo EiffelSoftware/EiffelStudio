@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (std: STD_BYTE_CODE) is
+	make (std: STD_BYTE_CODE)
 		require
 			std_not_void: std /= Void
 		do
@@ -47,12 +47,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_inlined_code: BOOLEAN is
+	has_inlined_code: BOOLEAN
 		do
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

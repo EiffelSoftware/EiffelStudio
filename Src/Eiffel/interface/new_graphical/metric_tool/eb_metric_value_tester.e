@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a value tester to test if a given is satisfied by given criteria
 					The criterion is given like:
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create {LINKED_LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]} criteria_internal.make
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Testing
 
-	is_satisfied_by (a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN is
+	is_satisfied_by (a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN
 			-- Is Current tester satisfied by `a_value'?
 		require
 			a_ql_domain_attached: a_ql_domain /= Void
@@ -44,7 +44,7 @@ feature -- Testing
 			end
 		end
 
-	is_satisfied_by_domain (a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN is
+	is_satisfied_by_domain (a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN
 			-- Is Current tester satisfied by `a_value'?
 			-- This is used to check warnings in metric archive node.
 			-- `a_domain' is the input domain used to calculate that archive node.
@@ -60,7 +60,7 @@ feature -- Testing
 
 feature -- Access
 
-	criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]] is
+	criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]]
 			-- Criteria set in Current tester
 		do
 			Result := criteria_internal
@@ -68,7 +68,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.l_value_tester
@@ -79,7 +79,7 @@ feature -- Status report
 	is_anded: BOOLEAN
 			-- Is sub criteria "anded" together?
 
-	is_ored: BOOLEAN is
+	is_ored: BOOLEAN
 			-- Is sub criteria "ored" together?
 		do
 			Result := not is_anded
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Setting
 
-	enable_anded is
+	enable_anded
 			-- Enable that sub criteria are "anded" together.
 		do
 			is_anded := True
@@ -97,7 +97,7 @@ feature -- Setting
 			is_anded: is_anded
 		end
 
-	enable_ored is
+	enable_ored
 			-- Enable that sub criteria are "ored" together.
 		do
 			is_anded := False
@@ -105,7 +105,7 @@ feature -- Setting
 			is_ored: is_ored
 		end
 
-	set_criteria (a_criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]]) is
+	set_criteria (a_criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]])
 			-- Set `criteria' with `a_criteria'.
 		do
 			criteria_internal.wipe_out
@@ -114,7 +114,7 @@ feature -- Setting
 			end
 		end
 
-	insert_criterion (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]) is
+	insert_criterion (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER])
 			-- Insert `a_criterion' into `criteria'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -124,7 +124,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_value_tester (Current)
@@ -132,43 +132,43 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is equal to `a_base_value'
 		do
 			Result := a_value = a_base_value
 		end
 
-	not_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	not_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is not equal to `a_base_value'
 		do
 			Result := a_value /= a_base_value
 		end
 
-	less_than_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	less_than_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is less than `a_base_value'
 		do
 			Result := a_value < a_base_value
 		end
 
-	less_than_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	less_than_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is less than or equal to `a_base_value'
 		do
 			Result := a_value <= a_base_value
 		end
 
-	greater_than_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	greater_than_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is greater than `a_base_value'
 		do
 			Result := a_value > a_base_value
 		end
 
-	greater_than_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN is
+	greater_than_equal_to_agent (a_value, a_base_value: DOUBLE): BOOLEAN
 			-- Tester to test if `a_value' is greater than or equal to `a_base_value'
 		do
 			Result := a_value >= a_base_value
 		end
 
-	tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [DOUBLE, DOUBLE], BOOLEAN], INTEGER] is
+	tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [DOUBLE, DOUBLE], BOOLEAN], INTEGER]
 			-- Table of tester agents.
 			-- Key is criterion type, and value is agent for that type.
 		once
@@ -186,7 +186,7 @@ feature{NONE} -- Implementation
 	criteria_internal: like criteria
 			-- Implementation of `criteria'
 
-	is_criterion_satisfied (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN is
+	is_criterion_satisfied (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN
 			-- Is `a_agent' satisfied by `a_crterion' and `a_value'?
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -195,7 +195,7 @@ feature{NONE} -- Implementation
 			Result := tester_table.item (a_criterion.a_criterion_type).item ([a_value, a_criterion.a_value_retriever.value (a_ql_domain)])
 		end
 
-	is_criterion_satisfied_with_domain (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN is
+	is_criterion_satisfied_with_domain (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN
 			-- Is `a_agent' satisfied by `a_crterion' and `a_value'?
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -207,7 +207,7 @@ feature{NONE} -- Implementation
 invariant
 	criteria_internal_attached: criteria_internal /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

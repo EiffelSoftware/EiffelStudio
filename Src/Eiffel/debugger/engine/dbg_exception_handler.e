@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Init
 
-	make_handling_by_name is
+	make_handling_by_name
 			-- Set handling based on exception type name
 		do
 			create enabled_handled_exceptions_by_name.make (3)
@@ -40,7 +40,7 @@ feature -- Access
 	enabled: BOOLEAN
 			-- Handler enabled ?
 
-	exception_catched_by_name (except_name: STRING): BOOLEAN is
+	exception_catched_by_name (except_name: STRING): BOOLEAN
 		require
 			except_name_not_void: except_name /= Void
 		local
@@ -83,31 +83,31 @@ feature -- Access
 
 feature -- Change
 
-	enable_exception_handling is
+	enable_exception_handling
 			-- Enable handling
 		do
 			enabled := True
 		end
 
-	disable_exception_handling is
+	disable_exception_handling
 			-- Disable handling	
 		do
 			enabled := False
 		end
 
-	set_catcall_console_warning_disabled (b: like catcall_console_warning_disabled) is
+	set_catcall_console_warning_disabled (b: like catcall_console_warning_disabled)
 			-- Set `catcall_console_warning_disabled' to `b'
 		do
 			catcall_console_warning_disabled := b
 		end
 
-	set_catcall_debugger_warning_disabled (b: like catcall_debugger_warning_disabled) is
+	set_catcall_debugger_warning_disabled (b: like catcall_debugger_warning_disabled)
 			-- Set `catcall_debugger_warning_disabled' to `b'
 		do
 			catcall_debugger_warning_disabled := b
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear filters
 		do
 			enabled_handled_exceptions_by_name.wipe_out
@@ -116,7 +116,7 @@ feature -- Change
 
 feature -- Change by name
 
-	ignore_exception_by_name (s: STRING) is
+	ignore_exception_by_name (s: STRING)
 			-- Set exception type name `s' to be ignored
 		local
 			ls: TUPLE [INTEGER, STRING]
@@ -128,7 +128,7 @@ feature -- Change by name
 			enabled_handled_exceptions_by_name.extend (ls)
 		end
 
-	catch_exception_by_name (s: STRING) is
+	catch_exception_by_name (s: STRING)
 			-- Set exception type name `s' to be catched	
 		local
 			ls: TUPLE [INTEGER, STRING]
@@ -140,7 +140,7 @@ feature -- Change by name
 			enabled_handled_exceptions_by_name.extend (ls)
 		end
 
-	disable_exception_by_name (s: STRING) is
+	disable_exception_by_name (s: STRING)
 			-- Set exception type name `s' to be disabled (no operation)	
 		local
 			ls: TUPLE [INTEGER, STRING]
@@ -154,7 +154,7 @@ feature -- Change by name
 
 feature -- Data by exception name
 
-	handled_exceptions_by_name: ARRAYED_LIST [TUPLE [role: INTEGER; name: STRING]] is
+	handled_exceptions_by_name: ARRAYED_LIST [TUPLE [role: INTEGER; name: STRING]]
 			-- All handled exceptions cases.
 		local
 			lst1, lst2: like handled_exceptions_by_name
@@ -172,7 +172,7 @@ feature -- Data by exception name
 	disabled_handled_exceptions_by_name: like handled_exceptions_by_name
 			-- Disabled exception cases.
 
-	external_exception_names: DS_LIST [STRING] is
+	external_exception_names: DS_LIST [STRING]
 		local
 			api: DEBUGGER_COMPILER_UTILITIES
 			lst: DS_LIST [STRING]
@@ -196,17 +196,17 @@ feature -- Data by exception name
 
 feature -- Constants
 
-	Role_disabled: INTEGER is 0
-	Role_continue: INTEGER is 1
-	Role_stop: INTEGER is 2
+	Role_disabled: INTEGER = 0
+	Role_continue: INTEGER = 1
+	Role_stop: INTEGER = 2
 
-	has_wildcards (item: STRING): BOOLEAN is
+	has_wildcards (item: STRING): BOOLEAN
 		do
 			Result := (item.index_of ('*', 1) > 0) or else
 					(item.index_of ('?', 1) > 0)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

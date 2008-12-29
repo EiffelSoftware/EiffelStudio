@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric value criterion"
 	author: ""
 	date: "$Date$"
@@ -36,7 +36,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 			-- `a_for_archive' indicates whether current item is for archive node.
 		do
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 			set_is_empty_tester_displayed (True)
 		end
 
-	make_with_setting (a_domain: like domain; a_for_archive: BOOLEAN) is
+	make_with_setting (a_domain: like domain; a_for_archive: BOOLEAN)
 			-- Initialize `domain' with `a_domain' and `is_for_archive' with `a_for_archive'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -61,7 +61,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	change_value_actions: ACTION_SEQUENCE [TUPLE] is
+	change_value_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions called if the value has been changed. A value of `Void' means the value has been unset.
 		do
 			Result := change_actions
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_pebble_droppable (a_pebble: ANY): BOOLEAN is
+	is_pebble_droppable (a_pebble: ANY): BOOLEAN
 			-- Can `a_pebble' be dropped on Current?
 		local
 			l_metric: EB_METRIC
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Load `a_criterion' into Current.
 		local
 			l_domain: EB_METRIC_DOMAIN
@@ -101,7 +101,7 @@ feature -- Setting
 			set_value ([a_criterion.metric_name, a_criterion.should_delayed_domain_from_parent_be_used, a_criterion.value_tester])
 		end
 
-	store_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Store Current in `a_criterion'.
 		local
 			l_value: TUPLE [a_metric_name: STRING; a_parent_used: BOOLEAN; a_tester: EB_METRIC_VALUE_TESTER]
@@ -128,7 +128,7 @@ feature -- Setting
 			a_criterion.set_should_delayed_domain_from_parent_be_used (l_value.a_parent_used)
 		end
 
-	set_is_for_archive (b: BOOLEAN) is
+	set_is_for_archive (b: BOOLEAN)
 			-- Set `is_for_archive' with `b'.
 		do
 			is_for_archive := b
@@ -136,7 +136,7 @@ feature -- Setting
 			is_for_archive_set: is_for_archive = b
 		end
 
-	set_is_empty_tester_displayed (b: BOOLEAN) is
+	set_is_empty_tester_displayed (b: BOOLEAN)
 			-- Set `is_empty_tester_displayed' with `b'.
 		do
 			is_empty_tester_displayed := b
@@ -146,7 +146,7 @@ feature -- Setting
 
 feature -- Drop
 
-	drop_pebble (a_pebble: ANY) is
+	drop_pebble (a_pebble: ANY)
 			-- Drop `a_pebble' into Current.
 		local
 			l_metric: EB_METRIC
@@ -168,7 +168,7 @@ feature -- Drop
 
 feature{NONE} -- Implementation
 
-	prepare_components is
+	prepare_components
 			-- Prepare components for display.
 		local
 			l_tester: EB_METRIC_VALUE_TESTER
@@ -230,7 +230,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	expression_generator: EB_METRIC_EXPRESSION_GENERATOR is
+	expression_generator: EB_METRIC_EXPRESSION_GENERATOR
 			-- Expression generator to generate editor editor output for current item
 		once
 			create Result.make (editor_token_output)
@@ -238,7 +238,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	editor_token_output: EB_METRIC_EXPRESSION_EDITOR_TOKEN_OUTPUT is
+	editor_token_output: EB_METRIC_EXPRESSION_EDITOR_TOKEN_OUTPUT
 			-- Output from `expression_generator'
 		once
 			create Result.make (token_writer)

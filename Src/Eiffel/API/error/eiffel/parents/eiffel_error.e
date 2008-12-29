@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error object sent by the compiler to the workbench."
@@ -26,13 +26,13 @@ feature -- Properties
 	class_c: CLASS_C;
 			-- Class where the error is encountered
 
-	file_name: STRING is
+	file_name: STRING
 			-- File where error is encountered
 		do
 			Result := class_c.file_name
 		end
 
-	has_associated_file: BOOLEAN is
+	has_associated_file: BOOLEAN
 			-- Error is relative to a file/class
 		do
 			Result := True
@@ -40,7 +40,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined
@@ -48,7 +48,7 @@ feature -- Access
 			yes_implies_class_defined: Result implies is_class_defined
 		end;
 
-	is_class_defined: BOOLEAN is
+	is_class_defined: BOOLEAN
 			-- Is `class_c' defined for error?
 		do
 			Result := class_c /= Void
@@ -58,11 +58,11 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 		end
 
-	trace (a_text_formatter: TEXT_FORMATTER) is
+	trace (a_text_formatter: TEXT_FORMATTER)
 		do
 			print_error_message (a_text_formatter);
 			a_text_formatter.add ("Class: ");
@@ -71,7 +71,7 @@ feature -- Output
 			build_explain (a_text_formatter)
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_class: !CLASS_C} class_c and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
@@ -83,7 +83,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_class (c: like class_c) is
+	set_class (c: like class_c)
 			-- Assign `c' to `class_c'.
 		require
 			valid_c: c /= Void
@@ -91,7 +91,7 @@ feature {COMPILER_EXPORTER}
 			class_c := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

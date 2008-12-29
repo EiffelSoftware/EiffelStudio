@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an export clause which lists to whom a feature%N%
 		%will be exported."
 	legal: "See notice at end of class."
@@ -52,7 +52,7 @@ create {EXPORT_SET_I}
 
 feature {NONE} -- Initialization
 
-	make (a_client: like item) is
+	make (a_client: like item)
 			-- Create set.
 		do
 			ll_make
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Property
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is the current object an instance of EXPORT_SET_I ?
 		do
 			Result := True
@@ -70,7 +70,7 @@ feature -- Property
 
 feature -- Access
 
-	same_as (other: EXPORT_I): BOOLEAN is
+	same_as (other: EXPORT_I): BOOLEAN
 			-- is `other' the same as Current ?
 		local
 			other_set: EXPORT_SET_I
@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: EXPORT_I): BOOLEAN is
+	is_less alias "<" (other: EXPORT_I): BOOLEAN
 			-- is Current less restrictive than other
 		local
 			other_set: EXPORT_SET_I
@@ -120,7 +120,7 @@ feature -- Comparison
 
 feature {COMPILER_EXPORTER} -- Compiler features
 
-	equiv (other: EXPORT_I): BOOLEAN is
+	equiv (other: EXPORT_I): BOOLEAN
 			-- Is 'other' equivalent to Current ?
 			-- [Semantic: old_status.equiv (new_status) ]
 		local
@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-	valid_for (client: CLASS_C): BOOLEAN is
+	valid_for (client: CLASS_C): BOOLEAN
 			-- Is the export valid for client `client' when the supplier is
 			-- `supplier' ?
 		do
@@ -163,7 +163,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-	concatenation (other: EXPORT_I): EXPORT_I is
+	concatenation (other: EXPORT_I): EXPORT_I
 			-- Concatenation of Current and `other'
 		local
 			other_set, new: EXPORT_SET_I
@@ -185,7 +185,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-	is_subset (other: EXPORT_I): BOOLEAN is
+	is_subset (other: EXPORT_I): BOOLEAN
 			-- Is Current clients a subset or equal with
 			-- `other' clients?
 		local
@@ -237,7 +237,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-	clause (written_in: INTEGER): CLIENT_I is
+	clause (written_in: INTEGER): CLIENT_I
 			-- Clause of attribute `written_in'
 		local
 			old_cursor: CURSOR
@@ -256,7 +256,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			go_to (old_cursor)
 		end
 
-	trace is
+	trace
 			-- Debug purpose
 		do
 			from
@@ -272,7 +272,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 
 feature {EXPORT_SET_I} -- Implementation
 
-	duplicate_internal (a_count: INTEGER): like Current is
+	duplicate_internal (a_count: INTEGER): like Current
 			-- Duplicate current.
 		local
 			l_cursor: CURSOR
@@ -283,7 +283,7 @@ feature {EXPORT_SET_I} -- Implementation
 			go_to (l_cursor)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

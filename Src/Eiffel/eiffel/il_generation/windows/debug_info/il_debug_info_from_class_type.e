@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Managing data used to get debugger info from eStudio info
 		This instance is related to one CLASS_TYPE
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_static_type_id: INTEGER) is
+	make (a_static_type_id: INTEGER)
 			-- Initialize `Current'.
 		require
 			a_static_type_id > 0
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- reset
 
-	reset (a_class_type: CLASS_TYPE) is
+	reset (a_class_type: CLASS_TYPE)
 			-- Reset data for `static_type_id'.
 		require
 			class_type_not_void: a_class_type /= Void
@@ -53,7 +53,7 @@ feature -- reset
 			clean_temporary_data
 		end
 
-	clean_temporary_data is
+	clean_temporary_data
 		do
 			last_eiffel_line_number := 0
 			last_instruction_position := 0
@@ -67,7 +67,7 @@ feature -- Properties
 
 feature -- Access
 
-	class_type: CLASS_TYPE is
+	class_type: CLASS_TYPE
 			-- Associated CLASS_TYPE
 		do
 			Result := Il_debug_info.class_types @ static_type_id
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Queries feature_token
 
-	feature_token (a_feature_i: FEATURE_I): NATURAL_32 is
+	feature_token (a_feature_i: FEATURE_I): NATURAL_32
 			-- `feature_token' associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -88,7 +88,7 @@ feature -- Queries feature_token
 			Result /= 0 implies list_feature_token.has (a_feature_i.feature_name_id)
 		end
 
-	know_feature_token_from_feature (a_feature: FEATURE_I): BOOLEAN is
+	know_feature_token_from_feature (a_feature: FEATURE_I): BOOLEAN
 			-- Know feature_token from `a_feature' ?
 		do
 			Result := list_feature_token.has (a_feature.feature_name_id)
@@ -96,7 +96,7 @@ feature -- Queries feature_token
 
 feature -- Recording Operation feature_token
 
-	record_feature_token (a_feature_token: NATURAL_32; a_feature_i: FEATURE_I) is
+	record_feature_token (a_feature_token: NATURAL_32; a_feature_i: FEATURE_I)
 			-- Record the correspondance
 			-- a_feature_i.feature_name_id => a_feature_token.
 		require
@@ -125,7 +125,7 @@ feature -- Recording Operation feature_token
 
 feature -- Queries once_tokens
 
-	once_tokens (a_feature_i: FEATURE_I): TUPLE [data_class_tok: NATURAL_32; done_tok: NATURAL_32; result_tok: NATURAL_32; exception_tok: NATURAL_32] is
+	once_tokens (a_feature_i: FEATURE_I): TUPLE [data_class_tok: NATURAL_32; done_tok: NATURAL_32; result_tok: NATURAL_32; exception_tok: NATURAL_32]
 			-- data class token,  `_done' and `_result' tokens associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -138,7 +138,7 @@ feature -- Queries once_tokens
 			Result /= Void implies list_once_tokens.has (a_feature_i.feature_name_id)
 		end
 
-	know_once_tokens_from_feature (a_feature: FEATURE_I): BOOLEAN is
+	know_once_tokens_from_feature (a_feature: FEATURE_I): BOOLEAN
 			-- Know once tokens from `a_feature' ?
 		do
 			Result := list_once_tokens.has (a_feature.feature_name_id)
@@ -148,7 +148,7 @@ feature -- Recording Operation once_tokens
 
 	record_once_tokens (a_data_class_token,
 					a_once_done_token, a_once_result_token, a_once_exception_token: NATURAL_32;
-					a_feature_i: FEATURE_I) is
+					a_feature_i: FEATURE_I)
 			-- Record the correspondance
 			-- a_feature_i.feature_name_id =>
 			--			a_data_class_token,
@@ -185,7 +185,7 @@ feature -- Recording Operation once_tokens
 
 feature -- Queries IL Offsets
 
-	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offsets: IL_OFFSET_SET]] is
+	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offsets: IL_OFFSET_SET]]
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -198,7 +198,7 @@ feature -- Queries IL Offsets
 			Result /= Void implies list_breakable_il_offset.has (a_feature_i.feature_name_id)
 		end
 
-	know_il_offset_from_feature (a_feature: FEATURE_I): BOOLEAN is
+	know_il_offset_from_feature (a_feature: FEATURE_I): BOOLEAN
 			-- Know il offsets from feature `a_feature' ?
 		do
 			Result := list_breakable_il_offset.has (a_feature.feature_name_id)
@@ -206,7 +206,7 @@ feature -- Queries IL Offsets
 
 feature -- Recording Operation
 
-	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]): TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET] is
+	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]): TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET]
 			-- Breakable line info for `eiffel_line' inside `a_data'
 		do
 			from
@@ -226,7 +226,7 @@ feature -- Recording Operation
 	last_instruction_position: INTEGER
 	last_feature_name_id: INTEGER
 
-	record_add_line_info (a_feature: FEATURE_I; a_il_offset: INTEGER; a_eiffel_line: INTEGER) is
+	record_add_line_info (a_feature: FEATURE_I; a_il_offset: INTEGER; a_eiffel_line: INTEGER)
 			-- Record IL Information regarding breakable Lines
 		require
 			a_feature /= Void
@@ -279,7 +279,7 @@ feature -- Recording Operation
 
 feature -- Cleaning operation
 
-	clean_feature_token (a_feature: FEATURE_I) is
+	clean_feature_token (a_feature: FEATURE_I)
 			-- Removed information related to `a_feature'
 			-- regarding feature_token.
 		require
@@ -293,7 +293,7 @@ feature -- Cleaning operation
 			removed: not know_feature_token_from_feature (a_feature)
 		end
 
-	clean_once_tokens (a_feature: FEATURE_I) is
+	clean_once_tokens (a_feature: FEATURE_I)
 			-- Removed information related to `a_feature'
 			-- regarding once_tokens.
 		require
@@ -307,7 +307,7 @@ feature -- Cleaning operation
 			removed: not know_once_tokens_from_feature (a_feature)
 		end
 
-	clean_breakable_il_offset (a_feature: FEATURE_I) is
+	clean_breakable_il_offset (a_feature: FEATURE_I)
 			-- Removed information related to `a_feature'
 			-- regarding breakable il offsets.
 		require
@@ -336,7 +336,7 @@ invariant
 
 	static_type_id_valid: static_type_id /= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

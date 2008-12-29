@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_renaming (a_access_inv_as: ACCESS_INV_AS) is
+	process_renaming (a_access_inv_as: ACCESS_INV_AS)
 			-- Process renaming for unqualified call.
 		require
 			access_inv_as_not_void: a_access_inv_as /= Void
@@ -235,27 +235,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 			-- <Precursor>
 		do
 			routine_as := l_as
 			Precursor (l_as)
 		end
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 			-- <Precursor>
 		do
 			Precursor (l_as)
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- <Precursor>
 		do
 			process_renaming (l_as)
 			Precursor (l_as)
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 			-- <Precursor>
 		do
 			process_renaming (l_as)

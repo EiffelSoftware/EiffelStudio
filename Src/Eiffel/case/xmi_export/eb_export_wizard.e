@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Guides the user through the options for XMI export."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Sets defaults.
 		do
 			Precursor
@@ -29,7 +29,7 @@ feature {EV_ANY} -- Initialization
 
 feature {NONE} -- Implementation
 
-	go_to_page (i: INTEGER) is
+	go_to_page (i: INTEGER)
 			-- Show page number `i' of current wizard.
 		do
 			inspect i when 1 then
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widgets showing differents states and controls for {TEST_GENERATOR_I}.
 	]"
@@ -117,7 +117,7 @@ feature {NONE} -- Internationalization
 	i_done_message: !STRING = "AutoTest is finished!%N%NResults can be found in: $1"
 	i_please_be_patient: !STRING = "Please be patient while AutoTest generates results.%N(The window might become unresponsive during that time)"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

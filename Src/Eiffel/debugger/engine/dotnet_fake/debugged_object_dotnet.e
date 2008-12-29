@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object being debugged."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,24 +15,24 @@ create
 
 feature
 
-	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
+	make (addr: like object_address; sp_lower, sp_upper: INTEGER)
 		do
 		end;	
 
-	reset is
+	reset
 			-- Reset internal data
 		do
 		end		
 
-	refresh (sp_lower, sp_upper: INTEGER) is
+	refresh (sp_lower, sp_upper: INTEGER)
 		do
 		end
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

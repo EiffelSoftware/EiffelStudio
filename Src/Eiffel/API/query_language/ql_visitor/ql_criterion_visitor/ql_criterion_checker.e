@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Query lanaguage criterion checker to check if a givn criterion has certain characteristics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Checking
 
-	check_criterion (a_criterion: QL_CRITERION) is
+	check_criterion (a_criterion: QL_CRITERION)
 			-- Check `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -38,19 +38,19 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	init is
+	init
 			-- Initialize before checking.
 		do
 			has_delayed_domain := False
 		end
 
-	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		do
 			process_domain_criterion (a_cri)
 		end
 
-	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION) is
+	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		local
 			l_criterion_domain: QL_DOMAIN
@@ -61,7 +61,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

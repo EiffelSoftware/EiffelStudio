@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that observer a DEBUGGER_MANAGER..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {DEBUGGER_MANAGER} -- Observe
 
-	attach_to_debugger (a_dm: like internal_debugger) is
+	attach_to_debugger (a_dm: like internal_debugger)
 			-- Observe `a_dm'
 		require
 			a_dm_not_void: a_dm /= Void
@@ -22,7 +22,7 @@ feature {DEBUGGER_MANAGER} -- Observe
 			is_attached: is_attached_to (a_dm)
 		end
 
-	unattach_from_debugger is
+	unattach_from_debugger
 			-- Un-observe `internal_debugger'
 		require
 			is_attached: is_attached_to (internal_debugger)
@@ -37,13 +37,13 @@ feature {DEBUGGER_MANAGER} -- Observe
 
 feature {DEBUGGER_MANAGER, DEBUGGER_OBSERVER} -- Status
 
-	is_attached: BOOLEAN is
+	is_attached: BOOLEAN
 			-- Is attached ?
 		do
 			Result := is_attached_to (internal_debugger)
 		end
 
-	is_attached_to (a_dm: like internal_debugger): BOOLEAN is
+	is_attached_to (a_dm: like internal_debugger): BOOLEAN
 			-- Is current attached to `a_dm' ?
 			--| Note: if `internal_debugger' is Void, then Current is not attached to any debugger
 		do
@@ -57,56 +57,56 @@ feature {DEBUGGER_MANAGER} -- Properties
 
 feature {DEBUGGER_MANAGER} -- Event handling
 
-	on_application_launched (dbg: DEBUGGER_MANAGER) is
+	on_application_launched (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has just been launched.
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_application_resumed (dbg: DEBUGGER_MANAGER) is
+	on_application_resumed (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has been resumed after a stop.
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_application_paused (dbg: DEBUGGER_MANAGER) is
+	on_application_paused (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has paused
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_application_debugger_update (dbg: DEBUGGER_MANAGER) is
+	on_application_debugger_update (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has paused for debugger update
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_application_stopped (dbg: DEBUGGER_MANAGER) is
+	on_application_stopped (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has stopped
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_application_exited (dbg: DEBUGGER_MANAGER) is
+	on_application_exited (dbg: DEBUGGER_MANAGER)
 			-- The debugged application has just died (exited).
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-	on_debugging_terminated (dbg: DEBUGGER_MANAGER) is
+	on_debugging_terminated (dbg: DEBUGGER_MANAGER)
 			-- The debugging is terminated.
 		require
 			same_debugger: dbg = internal_debugger
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

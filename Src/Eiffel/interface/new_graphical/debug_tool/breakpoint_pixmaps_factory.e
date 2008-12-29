@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pixmaps factory for breakpoints status ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature
 
-	pixmap_for_routine_index (a_dm: DEBUGGER_MANAGER; a_routine: E_FEATURE; a_index: INTEGER; in_execution: BOOLEAN): EV_PIXMAP is
+	pixmap_for_routine_index (a_dm: DEBUGGER_MANAGER; a_routine: E_FEATURE; a_index: INTEGER; in_execution: BOOLEAN): EV_PIXMAP
 			-- Graphical representation of the breakable mark.
 			-- 10 different representations whether the breakpoint
 			-- is enabled, disabled or not set , whether it has a condition or not,
@@ -69,12 +69,12 @@ feature
 
 feature {NONE} -- Pixmap resources
 
-	Shared_pixmaps: EB_SHARED_PIXMAPS is
+	Shared_pixmaps: EB_SHARED_PIXMAPS
 		once
 			create Result
 		end
 
-	frozen icons: ES_PIXMAPS_12X12 is
+	frozen icons: ES_PIXMAPS_12X12
 			-- Breakpoint icon resources
 		once
 			Result := shared_pixmaps.small_pixmaps
@@ -82,7 +82,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-	icon_group_bp_slot: ARRAY [EV_PIXMAP] is
+	icon_group_bp_slot: ARRAY [EV_PIXMAP]
 			-- Regular (no modifiers) breakpoint icon group.
 		once
 			Result := <<icons.bp_slot_icon, icons.bp_slot_other_frame_icon, icons.bp_slot_current_line_icon>>
@@ -90,7 +90,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-	icon_group_bp_enabled: ARRAY [EV_PIXMAP] is
+	icon_group_bp_enabled: ARRAY [EV_PIXMAP]
 			-- Enabled breakpoint icon group.
 		once
 			Result := <<icons.bp_enabled_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
@@ -98,7 +98,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-	icon_group_bp_disabled: ARRAY [EV_PIXMAP] is
+	icon_group_bp_disabled: ARRAY [EV_PIXMAP]
 			-- Disabled breakpoint icon group.
 		once
 			Result := <<icons.bp_disabled_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
@@ -106,7 +106,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP] is
+	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP]
 			-- Conditional, enabled breakpoint icon group.
 		once
 			Result := <<icons.bp_enabled_conditional_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
@@ -114,7 +114,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP] is
+	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP]
 			-- Conditional, disabled breakpoint icon group.
 		once
 			Result := <<icons.bp_disabled_conditional_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
@@ -122,7 +122,7 @@ feature {NONE} -- Pixmap resources
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

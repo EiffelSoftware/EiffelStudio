@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User specific options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_file_path: like project_file_path; a_target_name: like target_name) is
+	make (a_project_file_path: like project_file_path; a_target_name: like target_name)
 			-- Create a user specific data file for project with location `a_project_file_path'.
 		require
 			a_uuid_not_void: a_project_file_path /= Void
@@ -33,7 +33,7 @@ feature -- Access
 	project_file_path: STRING
 			-- Path of configuration file associated with user configurations.
 
-	target: TARGET_USER_OPTIONS is
+	target: TARGET_USER_OPTIONS
 			-- Options for currently selected target `target_name'.
 		do
 			Result := targets.item (target_name)
@@ -46,7 +46,7 @@ feature -- Access
 			target_not_void: target /= Void
 		end
 
-	target_of_name (a_name: STRING): like target is
+	target_of_name (a_name: STRING): like target
 			-- Options associated with target of name `a_name'.
 			-- Void if no target of name `a_name' exists.
 		require
@@ -58,7 +58,7 @@ feature -- Access
 	target_name: STRING
 			-- Name of last chosen target.
 
-	target_names: LIST [STRING] is
+	target_names: LIST [STRING]
 			-- List of available target names
 		do
 			create {ARRAYED_LIST [STRING]}Result.make_from_array (targets.current_keys)
@@ -73,7 +73,7 @@ feature {USER_OPTIONS, USER_OPTIONS_FACTORY} -- Implementation: Access
 
 feature -- Update
 
-	set_target_name (a_target: like target_name) is
+	set_target_name (a_target: like target_name)
 			-- Set `target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -89,7 +89,7 @@ invariant
 	target_name_not_void: target_name /= Void
 	target_name_not_empty: not target_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

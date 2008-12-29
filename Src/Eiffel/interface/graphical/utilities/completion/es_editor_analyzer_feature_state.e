@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A feature's declaration editor analyzer's state, used in processing tokens between the feature name and end tokens.
 		]"
@@ -177,7 +177,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

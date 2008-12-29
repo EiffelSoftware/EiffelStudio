@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		deferred
 		ensure
@@ -24,7 +24,7 @@ feature{NONE} -- Initialization
 
 feature -- Criterion creation
 
-	simple_criterion_with_index (a_index: INTEGER): like criterion_type is
+	simple_criterion_with_index (a_index: INTEGER): like criterion_type
 			-- Simple criterion with index `a_index'
 			-- A simple criterion is a criterion that needs no argument to initialize,
 			-- such as is_compiled for all kinds of items, and is_deferred for class and feature item.
@@ -37,7 +37,7 @@ feature -- Criterion creation
 			Result := criterion_with_index (a_index, [])
 		end
 
-	simple_criterion_with_name (a_name: STRING): like criterion_type is
+	simple_criterion_with_name (a_name: STRING): like criterion_type
 			-- Simple criterion with name `a_name'
 			-- `a_name' should be in lower case and without heading and trailing spaces.			
 			-- A simple criterion is a criterion that needs no argument to initialize.
@@ -49,7 +49,7 @@ feature -- Criterion creation
 			Result := simple_criterion_with_index (name_table.item (a_name))
 		end
 
-	criterion_with_index (a_index: INTEGER; a_argu: TUPLE): like criterion_type is
+	criterion_with_index (a_index: INTEGER; a_argu: TUPLE): like criterion_type
 			-- Criterion with `index' and `a_argu' as its initialization arguments
 			-- Void if no criterion with `a_name' is applicable with respect to current scope
 		require
@@ -63,7 +63,7 @@ feature -- Criterion creation
 			end
 		end
 
-	criterion_with_name (a_name: STRING; a_argu: TUPLE): like criterion_type is
+	criterion_with_name (a_name: STRING; a_argu: TUPLE): like criterion_type
 			-- Criterion with `a_name' as `a_argu' as its initialization arguments
 			-- Void if no criterion with `a_name' is applicable with respect to current scope
 		require
@@ -73,7 +73,7 @@ feature -- Criterion creation
 			Result := criterion_with_index (name_table.item (a_name), a_argu)
 		end
 
-	avaliable_indexes: LIST [INTEGER] is
+	avaliable_indexes: LIST [INTEGER]
 			-- List of indexes for all supported criteria
 		local
 			l_index_table: like agent_table
@@ -92,7 +92,7 @@ feature -- Criterion creation
 			result_attached: Result /= Void
 		end
 
-	available_names: LIST [STRING] is
+	available_names: LIST [STRING]
 			-- List of names for all supported criteria
 		local
 			l_index_table: like name_table
@@ -113,13 +113,13 @@ feature -- Criterion creation
 
 feature -- Status report
 
-	has_criterion_with_index (a_index: INTEGER): BOOLEAN is
+	has_criterion_with_index (a_index: INTEGER): BOOLEAN
 			-- Does Current contain criterion with index `a_index'?
 		do
 			Result := agent_table.has (a_index)
 		end
 
-	has_criterion_with_name (a_name: STRING): BOOLEAN is
+	has_criterion_with_name (a_name: STRING): BOOLEAN
 			-- Does Current contain criterion named `a_name'?
 			-- `a_name' should be in lower case and without heading and trailing spaces.
 		require
@@ -150,7 +150,7 @@ feature{NONE} -- Implementation
 			-- Name-index table
 			-- Key is agent index, value is name of the criterion that the agent creates
 
-	ast_index_list_from_string (a_text: STRING): LIST [INTEGER] is
+	ast_index_list_from_string (a_text: STRING): LIST [INTEGER]
 			-- A list of AST node indexes parsed from `a_text'
 			-- `a_text' is of the form: "ast_type1, ast_type2, ..., ast_typen".
 			-- For example, "if, inspect, loop, integer".
@@ -185,7 +185,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	value_criterion_evalaute_agent (a_item: QL_ITEM; a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): BOOLEAN is
+	value_criterion_evalaute_agent (a_item: QL_ITEM; a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): BOOLEAN
 			-- Value agent for value criterion.
 		require
 			a_item_attached: a_item /= Void
@@ -198,7 +198,7 @@ invariant
 	agent_index_table_attached: agent_table /= Void
 	index_name_table_attached: name_table /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

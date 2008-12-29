@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with NativeArray value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create {CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value)
 			-- 	Set `value' to `a_prepared_value'.
 		require
 			a_prepared_value_not_void: a_prepared_value /= Void
@@ -67,13 +67,13 @@ feature {NONE} -- Initialization
 
 feature -- get
 
-	get_array_value is
+	get_array_value
 			-- get `array_value'
 		do
 			array_value := icd_value_info.interface_debug_array_value
 		end
 
-	release_array_value is
+	release_array_value
 			-- Release `array_value'
 		do
 			if array_value /= Void then
@@ -86,7 +86,7 @@ feature -- Access
 
 	array_value: ICOR_DEBUG_ARRAY_VALUE
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
 			Result := debugger_manager.compiler_data.native_array_class_c
@@ -94,14 +94,14 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 			-- but in dotnet, STRING are not represented as SPECIAL[CHARACTER]
 		do
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_native_array_object_for_dotnet_value (Current)
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Output
 
-	extra_output_details: STRING_32 is
+	extra_output_details: STRING_32
 		do
 			get_array_value
 			Result := " count=" + array_value.get_count.out + " rank=" + array_value.get_rank.out
@@ -118,7 +118,7 @@ feature -- Output
 
 feature -- Output	
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -133,7 +133,7 @@ feature -- Output
 			end
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -146,7 +146,7 @@ feature -- Output
 			end
 		end
 
-	get_items (a_slice_min, a_slice_max: INTEGER) is
+	get_items (a_slice_min, a_slice_max: INTEGER)
 			-- Get Items for attributes
 		require else
 			slice_valid: a_slice_min <= a_slice_max
@@ -185,7 +185,7 @@ feature -- Output
 			items_computed := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

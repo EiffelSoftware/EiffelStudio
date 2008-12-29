@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to manage exception handling."
@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 		end
 
 feature -- Formatting
 
-	execute is
+	execute
 			-- Pause the execution.
 		do
 			if is_sensitive and debugger_manager.system_defined then
@@ -49,7 +49,7 @@ feature -- Formatting
 
 feature -- Dialog
 
-	build_handler_dialog is
+	build_handler_dialog
 			-- Build handler dialog
 		local
 			dialog: ES_EXCEPTION_HANDLER_DIALOG
@@ -64,46 +64,46 @@ feature -- Dialog
 
 feature {NONE} -- Attributes
 
-	name: STRING is "Exception_handler"
+	name: STRING = "Exception_handler"
 			-- Name of the command.
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Dbg_exception_handler
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Dbg_exception_handler
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		once
 			Result := Interface_names.m_Dbg_exception_handler
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			Result := pixmaps.icon_pixmaps.debug_exception_handling_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_exception_handling_icon_buffer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

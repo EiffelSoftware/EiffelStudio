@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a bit array"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_bit_count: INTEGER) is
+	make (a_bit_count: INTEGER)
 			-- Initialize Current with `a_bit_count' of bits.
 		require
 			a_bit_count_positive: a_bit_count > 0
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_bit (a_index: INTEGER) is
+	set_bit (a_index: INTEGER)
 			-- Set `a_index'-th bit to 1.
 		require
 			a_index_valid: is_index_valid (a_index)
@@ -59,7 +59,7 @@ feature -- Setting
 			bit_set: bit_at (a_index) = 1
 		end
 
-	unset_bit (a_index: INTEGER) is
+	unset_bit (a_index: INTEGER)
 			-- Unset `a_index'-th bit to 0.
 		require
 			a_index_valid: is_index_valid (a_index)
@@ -69,7 +69,7 @@ feature -- Setting
 			bit_unset: bit_at (a_index) = 0
 		end
 
-	set_bit_with_value (a_index: INTEGER; a_value: INTEGER) is
+	set_bit_with_value (a_index: INTEGER; a_value: INTEGER)
 			-- Set `a_index'-th bit to `a_value'.
 		require
 			a_index_valid: is_index_valid (a_index)
@@ -99,13 +99,13 @@ feature -- Access
 	count: INTEGER
 			-- Number of bits
 
-	is_index_valid (a_index: INTEGER): BOOLEAN is
+	is_index_valid (a_index: INTEGER): BOOLEAN
 			-- Is `a_index' valid?
 		do
 			Result := a_index >= 0 and then a_index < count
 		end
 
-	bit_at (a_index: INTEGER): INTEGER is
+	bit_at (a_index: INTEGER): INTEGER
 			-- Bit at position `a_index'
 			-- Result is 0 or 1.
 		require
@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 
-	is_bit_set (a_index: INTEGER): BOOLEAN is
+	is_bit_set (a_index: INTEGER): BOOLEAN
 			-- Is bit at position `a_index' set?
 		require
 			a_index_valid: is_index_valid (a_index)
@@ -136,7 +136,7 @@ feature -- Access
 			Result := storage.item (l_div).bit_and (bit_map.item (l_mod)) > 0
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -160,7 +160,7 @@ feature -- Access
 			end
 		end
 
-	count_of_set_bits: INTEGER is
+	count_of_set_bits: INTEGER
 			-- Number of bits whose value is 1
 		local
 			i: INTEGER
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-	count_of_unset_bits: INTEGER is
+	count_of_unset_bits: INTEGER
 			-- Number of bits whose value is 0
 		do
 			Result := count - count_of_set_bits
@@ -187,7 +187,7 @@ feature -- Access
 			good_result: Result = count - count_of_set_bits
 		end
 
-	list_of_bit_index (a_set: BOOLEAN): LIST [INTEGER] is
+	list_of_bit_index (a_set: BOOLEAN): LIST [INTEGER]
 			-- List of indexes of set bits if `a_set' is True,
 			-- otherwise unset bits
 		local
@@ -223,7 +223,7 @@ feature{QL_BIT_ARRAY} -- Implementation
 
 feature{NONE} -- Implementation
 
-	bit_map: SPECIAL [NATURAL_32] is
+	bit_map: SPECIAL [NATURAL_32]
 			-- Map for bits
 		local
 			l_map: NATURAL_32
@@ -244,7 +244,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	reversed_bit_map: SPECIAL [NATURAL_32] is
+	reversed_bit_map: SPECIAL [NATURAL_32]
 			-- Reversed map for bits
 		local
 			l_map: NATURAL_32
@@ -272,7 +272,7 @@ invariant
 	bit_map_attached: bit_map /= Void
 	reversed_bit_map_attached: reversed_bit_map /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

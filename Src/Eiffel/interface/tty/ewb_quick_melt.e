@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Freeze eiffel system."
@@ -19,30 +19,30 @@ inherit
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := quick_melt_cmd_name
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := quick_melt_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := quick_melt_abb
 		end;
 
 feature {NONE} -- Implementation
 
-    perform_compilation is
+    perform_compilation
             -- Quick melt of Current eiffel project.
         do
             Eiffel_project.quick_melt;
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

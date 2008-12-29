@@ -1,23 +1,23 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class OPTION_I 
 	
 feature -- Property
 
-	is_yes: BOOLEAN is
+	is_yes: BOOLEAN
 			-- Is the option `yes'?
 		do
 		end;
 
-	byte_code: CHARACTER is 
+	byte_code: CHARACTER 
 		once
 			Result := 'n'
 		end;
 
 feature -- Output
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate assertion value in `buffer'.
 		require
 			good_argument: buffer /= Void;
@@ -25,7 +25,7 @@ feature -- Output
 			buffer.put_string ("(int16) 0");
 		end;
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code representation of the assertion
 		do
 debug ("OPTIONS");
@@ -36,7 +36,7 @@ end;
 			ba.append (byte_code)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

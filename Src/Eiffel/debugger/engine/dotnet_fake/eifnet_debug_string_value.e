@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with String value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,25 +20,25 @@ inherit
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 		once
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 		do
 		end
 
 feature {NONE} -- Output
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 		do
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

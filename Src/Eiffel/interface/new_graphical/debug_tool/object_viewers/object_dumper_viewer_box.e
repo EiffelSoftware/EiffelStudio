@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object dumper viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Implementation
 
-	build_widget is
+	build_widget
 		local
 			vb: EV_VERTICAL_BOX
 			f: EV_FRAME
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
  			set_title (name)
 		end
 
-	build_tool_bar is
+	build_tool_bar
 		local
 			but: SD_TOOL_BAR_BUTTON
 		do
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_mini_tool_bar is
+	build_mini_tool_bar
 		local
 			but: SD_TOOL_BAR_BUTTON
 		do
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 		do
 			Result := Interface_names.t_viewer_object_dumper_title
 		end
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Access
 
-	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
 			Result := {st: OBJECT_STONE} a_stone
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Change
 
-	refresh is
+	refresh
 			-- Recompute the displayed text.
 		local
 			dobj: DEBUGGED_OBJECT
@@ -136,7 +136,7 @@ feature -- Change
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy Current
 		do
 			reset
@@ -148,12 +148,12 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 		do
 			Result := True
 		end
 
-	parent_window (w: EV_WIDGET): EV_WINDOW is
+	parent_window (w: EV_WIDGET): EV_WINDOW
 		local
 			p: EV_WIDGET
 		do
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear is
+	clear
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			editor.clear_window
@@ -174,30 +174,30 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Event handling
 
-	impl_text_formatter: YANK_STRING_WINDOW is
+	impl_text_formatter: YANK_STRING_WINDOW
 		once
 			create Result.make
 		end
 
-	copy_button_selected is
+	copy_button_selected
 			-- Called by `select_actions' of `copy_button'.
 		do
 			Ev_application.clipboard.set_text (editor.wide_text)
 		end
 
-	on_stone_dropped (st: OBJECT_STONE) is
+	on_stone_dropped (st: OBJECT_STONE)
 			-- A stone was dropped in the editor. Handle it.
 		do
 			set_stone (st)
 		end
 
-	close_action is
+	close_action
 			-- Close dialog
 		do
 			destroy
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

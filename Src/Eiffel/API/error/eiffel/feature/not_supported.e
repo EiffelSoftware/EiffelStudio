@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for not supported construction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,22 +17,22 @@ feature
 
 	message: STRING;
 
-	set_message (i: STRING) is
+	set_message (i: STRING)
 		do
 			message := i
 		end
 
-	code: STRING is "NOT_SUPPORTED"
+	code: STRING = "NOT_SUPPORTED"
 			-- Error code
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Error message: ")
 			a_text_formatter.add (message)
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

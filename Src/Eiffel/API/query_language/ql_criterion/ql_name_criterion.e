@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to decide whether or not an item's name is equal to another name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			set_name (a_name)
 		end
 
-	make_with_setting (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER) is
+	make_with_setting (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER)
 			-- Initialize `name' with `a_name', `is_case_sensitive' with `a_case_sensitive' and `matching_strategy' with `a_matching_strategy'.
 		require
 			a_name_valid: a_name /= Void
@@ -59,25 +59,25 @@ feature -- Access
 
 feature -- Matching strategy
 
-	identity_matching_strategy: INTEGER is 1
+	identity_matching_strategy: INTEGER = 1
 			-- Identical strategy: two strings are only considered matched if they are (case-sensitively or case-insensitively) identical
 			-- Result is affected also by `is_case_sensitive'.
 
-	containing_matching_strategy: INTEGER is 2
+	containing_matching_strategy: INTEGER = 2
 			-- Normal strategy: a string is considered matched by a given pattern if the string is a substring of the given pattern
 			-- Result is affected also by `is_case_sensitive'.
 
-	wildcard_matching_strategy: INTEGER is 3
+	wildcard_matching_strategy: INTEGER = 3
 			-- Wildcard strategy: a string is considered matched by a given pattern (in form of wildcard) if the string satisfies the given pattern
 			-- Result is affected also by `is_case_sensitive'.
 
-	regular_expression_matching_strategy: INTEGER is 4
+	regular_expression_matching_strategy: INTEGER = 4
 			-- Regular expression strategy: a string is considered matched by a given pattern (in form of regular expression) if the string satisfies the given pattern
 			-- Result is affected also by `is_case_sensitive'.
 
 feature -- Status report
 
-	is_matching_strategy_valid (a_strategy: INTEGER): BOOLEAN is
+	is_matching_strategy_valid (a_strategy: INTEGER): BOOLEAN
 			-- Is `a_strategy' a valid matching strategy?
 		do
 			Result := a_strategy = identity_matching_strategy or else
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 			lower_name_set: lower_name /= Void and then lower_name.is_equal (a_name.as_lower)
 		end
 
-	enable_case_sensitive is
+	enable_case_sensitive
 			-- Enable case sensitive name comparison.
 		do
 			is_case_sensitive := True
@@ -110,7 +110,7 @@ feature -- Setting
 			comparison_is_case_sensitive: is_case_sensitive
 		end
 
-	disable_case_sensitive is
+	disable_case_sensitive
 			-- Disable case sensitive name comparison.
 		do
 			is_case_sensitive := False
@@ -119,7 +119,7 @@ feature -- Setting
 			comparison_is_not_case_sensitive: not is_case_sensitive
 		end
 
-	set_matching_strategy (a_strategy: INTEGER) is
+	set_matching_strategy (a_strategy: INTEGER)
 			-- Set `matching_strategy' with `a_strategy'.
 		require
 			a_strategy_valid: is_matching_strategy_valid (a_strategy)
@@ -132,7 +132,7 @@ feature -- Setting
 
 feature -- Evaluate
 
-	is_name_same_as (a_name: STRING): BOOLEAN is
+	is_name_same_as (a_name: STRING): BOOLEAN
 			-- Is `a_name' same as `name'?
 			-- If `is_case_sensitive' is True, compare names case-sensitively.
 		require
@@ -149,7 +149,7 @@ feature{NONE} -- Implementation
 	wildcard_match_engine: KMP_WILD
 			-- Wildcard matcher engine
 
-	initialize_regexp_match_engine is
+	initialize_regexp_match_engine
 			-- Recompile `regexp_match_engine'.
 		require
 			serach_engine_attached: regexp_match_engine /= Void
@@ -166,7 +166,7 @@ feature{NONE} -- Implementation
 			l_search_engine.compile (name)
 		end
 
-	initialize_wildcard_match_engine is
+	initialize_wildcard_match_engine
 			-- Initialize wildcard matcher.
 		do
 			if is_case_sensitive then
@@ -179,7 +179,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Matchers
 
-	identity_matcher (a_string: STRING): BOOLEAN is
+	identity_matcher (a_string: STRING): BOOLEAN
 			-- Identity matcher
 		require
 			a_string_attached: a_string /= Void
@@ -195,7 +195,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	containing_matcher (a_string: STRING): BOOLEAN is
+	containing_matcher (a_string: STRING): BOOLEAN
 			-- Containing matcher
 		require
 			a_string_attached: a_string /= Void
@@ -211,7 +211,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	wildcard_matcher (a_string: STRING): BOOLEAN is
+	wildcard_matcher (a_string: STRING): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
@@ -224,7 +224,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	regexp_matcher (a_string: STRING): BOOLEAN is
+	regexp_matcher (a_string: STRING): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
@@ -237,7 +237,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	prepare_matching_strategy is
+	prepare_matching_strategy
 			-- Prepare matching strategy according to `matching_strategy'.
 		require
 			matching_strategy_valid: is_matching_strategy_valid (matching_strategy)
@@ -269,7 +269,7 @@ feature{NONE} -- Matchers
 	string_matcher: FUNCTION [ANY, TUPLE [a_string: STRING], BOOLEAN]
 			-- String matcher used to match `a_string'
 
-	set_string_matcher (a_matcher: like string_matcher) is
+	set_string_matcher (a_matcher: like string_matcher)
 			-- Set `string_matcher' with `a_matcher'.
 		do
 			string_matcher := a_matcher
@@ -283,7 +283,7 @@ invariant
 	regexp_match_engin_attached: regexp_match_engine /= Void
 	wildcard_attached: wildcard_match_engine /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

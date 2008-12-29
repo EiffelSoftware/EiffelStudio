@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String adapter, gives a fast way to change a_string for the objects that refer current one."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (a_string: like real_string) is
+	make (a_string: like real_string)
 			-- Make with a_string
 		require
 			a_string /= Void
@@ -24,7 +24,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_real_string (a_string: like real_string) is
+	set_real_string (a_string: like real_string)
 			-- Set `real_string'
 		require
 			a_string /= Void
@@ -41,7 +41,7 @@ invariant
 
 	real_string_not_void: real_string /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

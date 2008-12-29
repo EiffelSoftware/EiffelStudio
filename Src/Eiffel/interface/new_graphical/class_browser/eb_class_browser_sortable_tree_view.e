@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sortable tree view used in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	rows: EB_TREE_NODE [like row_type] is
+	rows: EB_TREE_NODE [like row_type]
 			-- Rows to be displayed in Current view
 			-- Rows to be displayed in Current browser
 		do
@@ -29,7 +29,7 @@ feature -- Access
 	rows_internal: like rows
 			-- Implementation of `rows'
 
-	levels_column_table: HASH_TABLE [LINEAR [INTEGER], INTEGER] is
+	levels_column_table: HASH_TABLE [LINEAR [INTEGER], INTEGER]
 			-- Column to levels mapper indexed by column index.
 			-- In a tree grid, several levels can be binded into one column, for example:
 
@@ -51,7 +51,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	level_starting_column_index: ARRAYED_LIST [INTEGER] is
+	level_starting_column_index: ARRAYED_LIST [INTEGER]
 			-- Starting column index of levels indexed by level index.
 		do
 			if level_starting_column_index_internal = Void then
@@ -60,7 +60,7 @@ feature -- Access
 			Result := level_starting_column_index_internal
 		end
 
-	selected_rows: LIST [EV_GRID_ROW] is
+	selected_rows: LIST [EV_GRID_ROW]
 			-- Selected rows in `grid'.
 			-- If empty, put the first row in `grid' in result.
 		do
@@ -73,7 +73,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_grid_focus_in is
+	on_grid_focus_in
 			-- Action to be performed when `grid' gets focus
 		do
 			if is_tree_node_highlight_enabled then
@@ -81,7 +81,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_grid_focus_out is
+	on_grid_focus_out
 			-- Action to be performed when `grid' loses focus
 		do
 			if is_tree_node_highlight_enabled then
@@ -89,7 +89,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when some key is pressed in `grid'
 		require
 			a_key_attached: a_key /= Void
@@ -99,21 +99,21 @@ feature{NONE} -- Actions
 			l_processed := on_predefined_key_pressed (a_key)
 		end
 
-	on_expand_all_level is
+	on_expand_all_level
 			-- Action to be performed to recursively expand all selected rows.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent expand_row_recursively)
 		end
 
-	on_collapse_all_level is
+	on_collapse_all_level
 			-- Action to be performed to recursively collapse all selected rows.
 		do
 			processed_rows.wipe_out
 			do_all_in_rows (selected_rows, agent collapse_row_recursively)
 		end
 
-	on_expand_one_level is
+	on_expand_one_level
 			-- Action to be performed to expand all selected rows.
 		local
 			l_selected_rows: like selected_rows
@@ -134,7 +134,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_collapse_one_level is
+	on_collapse_one_level
 			-- Action to be performed to collapse all selected rows.
 		local
 			l_selected_rows: like selected_rows
@@ -155,7 +155,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_collapse_one_level_partly is
+	on_collapse_one_level_partly
 			-- Action to be performed to collapse on level but leave the first level of child rows open.
 		do
 			processed_rows.wipe_out
@@ -164,7 +164,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Sorting
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [like row_type]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [like row_type])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -188,7 +188,7 @@ feature{NONE} -- Sorting
 			bind_grid
 		end
 
-	sort_level (a_level: EB_TREE_NODE [like row_type]; a_level_index: INTEGER; a_current_level: INTEGER; a_comparator: AGENT_LIST_COMPARATOR [like row_type]; a_column_index: INTEGER) is
+	sort_level (a_level: EB_TREE_NODE [like row_type]; a_level_index: INTEGER; a_current_level: INTEGER; a_comparator: AGENT_LIST_COMPARATOR [like row_type]; a_column_index: INTEGER)
 			-- Sort row level whose level index is specified by `a_level_index' starting from level `a_level' indexed by `a_level'.
 			-- `a_comparator' is used to decide row orders.
 		require
@@ -218,7 +218,7 @@ feature{NONE} -- Sorting
 			end
 		end
 
-	tree_node_tester (a_node, b_node: EB_TREE_NODE [like row_type]; a_comparator: KL_PART_COMPARATOR [like row_type]): BOOLEAN is
+	tree_node_tester (a_node, b_node: EB_TREE_NODE [like row_type]; a_comparator: KL_PART_COMPARATOR [like row_type]): BOOLEAN
 			-- Tester to decide order of `a_node' and `b_node' according to comparator `a_comparator'.
 		require
 			a_node_attached: a_node /= Void
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation
 	levels_column_table_internal: like levels_column_table;
 			-- Implementation of `levels_column_table'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

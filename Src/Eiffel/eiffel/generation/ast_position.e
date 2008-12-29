@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Records position of possible breakpoints within debuggable byte code,
@@ -20,7 +20,7 @@ create
 
 feature -- Debugger
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current element less than `other'?
 		do
 			Result := position < other.position;
@@ -33,20 +33,20 @@ feature -- Debugger
 			-- The AST node which is associated with the break-point (that is
 			-- the ast node which follows the break-point at `position'.
 
-	make (pos: INTEGER; node: AST_EIFFEL) is
+	make (pos: INTEGER; node: AST_EIFFEL)
 			-- Initialization
 		do
 			position := pos;
 			ast_node := node;
 		end;
 
-	shift (amount: INTEGER) is
+	shift (amount: INTEGER)
 			-- Shift `position' by `amount'
 		do
 			position := position + amount;
 		end;
 
-	set_stop (b: BOOLEAN) is
+	set_stop (b: BOOLEAN)
 		do
 			is_set := b;
 		end;
@@ -54,7 +54,7 @@ feature -- Debugger
 	is_set: BOOLEAN;
 		-- is a breakpoint set at this position
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

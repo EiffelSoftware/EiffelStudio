@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter displayer which uses an editor to display result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_editor: like editor) is
+	make (a_editor: like editor)
 			-- Initialize Current with `a_editor'.
 		require
 			a_editor_attached: a_editor /= Void
@@ -30,7 +30,7 @@ feature -- Access
 	editor: EB_CLICKABLE_EDITOR
 			-- Browser
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of Current displayer
 		do
 			Result := editor.widget
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_editor (a_editor: like editor) is
+	set_editor (a_editor: like editor)
 			-- Set `editor' with `a_editor'.
 		require
 			a_editor_attached: a_editor /= Void
@@ -50,7 +50,7 @@ feature -- Setting
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			editor.recycle
@@ -60,7 +60,7 @@ feature {NONE} -- Recycle
 invariant
 	editor_attached: is_interface_usable implies editor /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

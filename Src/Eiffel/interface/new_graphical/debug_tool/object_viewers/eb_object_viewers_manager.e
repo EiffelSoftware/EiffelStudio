@@ -1,4 +1,4 @@
-indexing
+note
 	description: "object viewer manager ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create {ES_OBJECT_VIEWER_TOOL_PANEL}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			v, vr: like current_viewer
 			for_tool: BOOLEAN
@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 			build_interface
 		end
 
-	make_for_tool (a_tool: like tool) is
+	make_for_tool (a_tool: like tool)
 		do
 			tool := a_tool
 			make
 		end
 
-	add_viewer (v: like current_viewer; p: like current_viewer) is
+	add_viewer (v: like current_viewer; p: like current_viewer)
 		do
 			if p /= Void then
 				p.subviewers.extend (v)
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Interface
 
-	build_interface is
+	build_interface
 			--
 		local
 			vb: EV_VERTICAL_BOX
@@ -89,7 +89,7 @@ feature -- Interface
  			set_title (Interface_names.t_Object_viewer_tool)
 		end
 
-	menu: EV_MENU is
+	menu: EV_MENU
 		local
 			lst: LIST [EV_MENU_ITEM]
 			mi: EV_MENU_ITEM
@@ -110,7 +110,7 @@ feature -- Interface
 			end
 		end
 
-	menu_items (a_level: INTEGER; lst: LIST [like current_viewer]): LIST [EV_MENU_ITEM] is
+	menu_items (a_level: INTEGER; lst: LIST [like current_viewer]): LIST [EV_MENU_ITEM]
 		local
 			mi: EV_MENU_ITEM
 			v: like current_viewer
@@ -148,7 +148,7 @@ feature -- Viewers
 
 	blank_viewer_widget: EV_WIDGET
 
-	set_current_viewer (v: like current_viewer) is
+	set_current_viewer (v: like current_viewer)
 		do
 			if v = Void or else current_viewer /= v then
 				if v = Void then
@@ -169,7 +169,7 @@ feature -- Viewers
 			end
 		end
 
-	refresh_current_viewer is
+	refresh_current_viewer
 			-- Refresh Current Viewer
 		local
 			v: like current_viewer
@@ -180,7 +180,7 @@ feature -- Viewers
 			end
 		end
 
-	replace_cell_content (cl: EV_CELL; w: EV_WIDGET) is
+	replace_cell_content (cl: EV_CELL; w: EV_WIDGET)
 			-- Replace the content of cell `c' with `w'
 		local
 			p: EV_CONTAINER
@@ -213,17 +213,17 @@ feature -- Access
 
 feature -- Change
 
-	set_title (t: like title) is
+	set_title (t: like title)
 		do
 			title := t
 		end
 
-	lock is
+	lock
 		do
 			is_locked := True
 		end
 
-	unlock is
+	unlock
 		do
 			is_locked := False
 		end
@@ -233,7 +233,7 @@ feature -- Access
 	is_locked: BOOLEAN
 			-- Is locked ?
 
-	is_stone_valid (a_stone: ANY): BOOLEAN is
+	is_stone_valid (a_stone: ANY): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
 			Result := {st: OBJECT_STONE} a_stone and then valid_viewer (st) /= Void
@@ -242,7 +242,7 @@ feature -- Access
 	current_object: OBJECT_STONE
 			-- Object `Current' is displaying.
 
-	has_object: BOOLEAN is
+	has_object: BOOLEAN
 			-- Has an object been assigned to current?
 		do
 			Result := current_object /= Void
@@ -253,7 +253,7 @@ feature -- Access
 
 feature -- Change
 
-	set_stone (st: OBJECT_STONE) is
+	set_stone (st: OBJECT_STONE)
 			-- Give a new object to `Current' and refresh the display.
 		require
 			stone_valid: is_stone_valid (st)
@@ -284,7 +284,7 @@ feature -- Change
 			refresh
 		end
 
-	retrieve_dump_value is
+	retrieve_dump_value
 			-- Retrieve `current_dump_value' from `current_object'.
 		require
 			has_current_object: has_object
@@ -295,7 +295,7 @@ feature -- Change
 			end
 		end
 
-	refresh is
+	refresh
 		local
 			v: like current_viewer
 		do
@@ -317,7 +317,7 @@ feature -- Change
 			end
 		end
 
-	update_menu is
+	update_menu
 		local
 			lm: EV_MENU
 			lmi: EV_MENU_ITEM
@@ -356,12 +356,12 @@ feature -- Change
 			end
 		end
 
-	valid_viewer (st: like current_object): like current_viewer is
+	valid_viewer (st: like current_object): like current_viewer
 		do
 			Result := valid_viewer_from (st, viewers)
 		end
 
-	valid_viewer_from (st: like current_object; lst: LIST [like current_viewer]): like current_viewer is
+	valid_viewer_from (st: like current_object; lst: LIST [like current_viewer]): like current_viewer
 		local
 		do
 			if lst /= Void then
@@ -382,7 +382,7 @@ feature -- Change
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy Current
 		do
 			clear
@@ -390,7 +390,7 @@ feature -- Change
 			widget := Void
 		end
 
-	reset is
+	reset
 		local
 			st: APPLICATION_STATUS
 		do
@@ -404,7 +404,7 @@ feature -- Change
 			set_current_viewer (Void)
 		end
 
-	clear is
+	clear
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			current_object := Void
@@ -412,7 +412,7 @@ feature -- Change
 			clear_viewers (viewers)
 		end
 
-	reset_viewers (lst: LIST [like current_viewer]) is
+	reset_viewers (lst: LIST [like current_viewer])
 		do
 			if lst /= Void then
 				from
@@ -427,7 +427,7 @@ feature -- Change
 			end
 		end
 
-	clear_viewers (lst: LIST [like current_viewer]) is
+	clear_viewers (lst: LIST [like current_viewer])
 		do
 			if lst /= Void then
 				from
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 
 	internal_menu: like menu
 
-	parent_window (w: EV_WIDGET): EV_WINDOW is
+	parent_window (w: EV_WIDGET): EV_WINDOW
 		local
 			p: EV_WIDGET
 		do
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

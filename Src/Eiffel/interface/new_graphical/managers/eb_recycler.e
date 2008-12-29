@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Recycler for recyclable objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ obsolete
 
 feature -- Basic operations
 
-	destroy is
+	destroy
 			-- To be called when Current has became useless.
 		do
 			if managed_recyclable_items /= Void then
@@ -29,7 +29,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_recyclable (a_recyclable_item: EB_RECYCLABLE) is
+	add_recyclable (a_recyclable_item: EB_RECYCLABLE)
 			-- Add `a_recyclable_items' to the list of managed recyclable
 			-- items.
 		do
@@ -39,7 +39,7 @@ feature -- Basic operations
 			managed_recyclable_items.extend (a_recyclable_item)
 		end
 
-	recycle_item (a_recyclable: EB_RECYCLABLE) is
+	recycle_item (a_recyclable: EB_RECYCLABLE)
 			-- Recycle `a_recyclable' if it is in `managed_recyclable_items' and then remove it from `managed_recyclable_items'.
 		require
 			a_recyclable_attached: a_recyclable /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	managed_recyclable_items: ARRAYED_LIST [EB_RECYCLABLE];
 			-- Registered recyclable items.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

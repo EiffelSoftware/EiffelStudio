@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for integer constant. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_value (v: INTEGER) is
+	make_with_value (v: INTEGER)
 			-- Create an integer constant of size 32.
 		do
 			is_initialized := True
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			integer_32_value_set: integer_32_value = v
 		end
 
-	make_from_type (a_type: TYPE_A; is_neg: BOOLEAN; s: STRING) is
+	make_from_type (a_type: TYPE_A; is_neg: BOOLEAN; s: STRING)
 			-- Create a new INTEGER AST node.
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process_byte_node (v: BYTE_NODE_VISITOR) is
+	process_byte_node (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_integer_constant (Current)
@@ -96,25 +96,25 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_integer: BOOLEAN is True
+	is_integer: BOOLEAN = True
 			-- Is it an integer value?
 
-	is_one: BOOLEAN is
+	is_one: BOOLEAN
 			-- Is constant equal to 1?
 		do
 			Result := value = 1 and then not has_minus
 		end
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expression
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- A constant is a predefined structure.
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A constant is a constant.
 
-	has_constant_type: BOOLEAN is
+	has_constant_type: BOOLEAN
 			-- Has constant an explicit type?
 		do
 			Result := constant_type /= Void or else internal_constant_actual_type /= Void
@@ -124,7 +124,7 @@ feature -- Properties
 
 feature {NONE} -- Types
 
-	constant_actual_type: TYPE_A is
+	constant_actual_type: TYPE_A
 			-- Actual type of integer constant
 		require
 			has_constant_type: has_constant_type
@@ -144,7 +144,7 @@ feature {NONE} -- Types
 
 feature -- Access
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Integer type
 		do
 			check
@@ -170,7 +170,7 @@ feature -- Access
 			end
 		end
 
-	manifest_type: TYPE_A is
+	manifest_type: TYPE_A
 			-- Manifest integer type
 		require
 			is_initialized: is_initialized
@@ -203,7 +203,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluate current expression, if possible.
 		do
 			Result := Current
@@ -211,7 +211,7 @@ feature -- Evaluation
 
 feature -- Unary operators
 
-	unary_minus: INTEGER_CONSTANT is
+	unary_minus: INTEGER_CONSTANT
 			-- Apply `-' operator to Current.
 		do
 			Result := twin
@@ -220,7 +220,7 @@ feature -- Unary operators
 
 feature -- Type checking
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t'?
 		do
 			if t.is_integer or else t.is_natural then
@@ -229,7 +229,7 @@ feature -- Type checking
 			end
 		end
 
-	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B
 			-- Inspect value of the given `value_type'
 		local
 			integer_a: INTEGER_A
@@ -299,13 +299,13 @@ feature -- Type checking
 
 feature -- Conveniences
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 		do
 		end
 
 feature -- Settings
 
-	set_real_type (t: TYPE_A) is
+	set_real_type (t: TYPE_A)
 			-- Extract size information of `t' and assign it to Current.
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
@@ -320,7 +320,7 @@ feature -- Settings
 
 feature -- Generation
 
-	print_register is
+	print_register
 			-- Print integer constant
 			--| The '()' are present for the case where int_val=INT32_MIN,
 			--| ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
@@ -328,7 +328,7 @@ feature -- Generation
 			generate (buffer)
 		end
 
-	generate (buf: GENERATION_BUFFER) is
+	generate (buf: GENERATION_BUFFER)
 			-- Generate value in `buf'.
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
@@ -396,10 +396,10 @@ feature -- Generation
 			buf.put_character (')')
 		end
 
-	is_fast_as_local: BOOLEAN is True
+	is_fast_as_local: BOOLEAN = True
 			-- Is expression calculation as fast as loading a local?
 
-	il_element_type: INTEGER_8 is
+	il_element_type: INTEGER_8
 			-- Default IL element type matching this constant type
 		do
 			inspect default_type
@@ -422,7 +422,7 @@ feature -- Generation
 			end
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for integer constant value.
 		do
 			inspect default_type
@@ -445,7 +445,7 @@ feature -- Generation
 			end
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for an integer constant value.
 		do
 			inspect default_type
@@ -478,7 +478,7 @@ feature -- Generation
 
 feature {INTEGER_CONSTANT} -- Operations
 
-	negate is
+	negate
 			-- Perform negation of current value.
 		do
 			has_minus := not has_minus
@@ -488,19 +488,19 @@ feature {INTEGER_CONSTANT} -- Operations
 
 feature {NONE} -- Code generation string constants
 
-	natural_8_cast: STRING is "(EIF_NATURAL_8) "
-	natural_16_cast: STRING is "(EIF_NATURAL_16) "
-	natural_32_cast: STRING is "(EIF_NATURAL_32) "
-	natural_64_cast: STRING is "(EIF_NATURAL_64) "
-	integer_8_cast: STRING is "(EIF_INTEGER_8) "
-	integer_16_cast: STRING is "(EIF_INTEGER_16) "
-	integer_32_cast: STRING is "(EIF_INTEGER_32) "
-	integer_64_cast: STRING is "(EIF_INTEGER_64) "
+	natural_8_cast: STRING = "(EIF_NATURAL_8) "
+	natural_16_cast: STRING = "(EIF_NATURAL_16) "
+	natural_32_cast: STRING = "(EIF_NATURAL_32) "
+	natural_64_cast: STRING = "(EIF_NATURAL_64) "
+	integer_8_cast: STRING = "(EIF_INTEGER_8) "
+	integer_16_cast: STRING = "(EIF_INTEGER_16) "
+	integer_32_cast: STRING = "(EIF_INTEGER_32) "
+	integer_64_cast: STRING = "(EIF_INTEGER_64) "
 			-- String used to generate a cast.
 
 feature {NONE} -- Implementation
 
-	type_mask (t: TYPE_A): like default_type is
+	type_mask (t: TYPE_A): like default_type
 			-- Bit mask for the given type `t'
 		local
 			integer_a: INTEGER_A
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_type is
+	adjust_type
 			-- Make sure that this constant matches `constant_type' if possible.
 			-- Set `is_initialized' to `False' otherwise.
 		local
@@ -536,7 +536,7 @@ invariant
 	constant_type_valid: has_constant_type implies
 		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

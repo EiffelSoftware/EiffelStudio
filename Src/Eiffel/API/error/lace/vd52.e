@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for precompiled systems that cannot be succesfully%
@@ -28,7 +28,7 @@ feature -- Access
 	precompiled_version: STRING
 			-- Precompile version
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 		do
 			Result := path /= Void and then
 				compiler_version /= Void and then
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			check
 				path_not_void: path /= Void
@@ -60,7 +60,7 @@ feature -- Output
 
 feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 
-	set_path (s: STRING) is
+	set_path (s: STRING)
 			-- Assign `s' to `path'.
 		require
 			s_not_void: s /= Void
@@ -70,7 +70,7 @@ feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 			path_set: path = s
 		end
 
-	set_precompiled_version (v: like precompiled_version) is
+	set_precompiled_version (v: like precompiled_version)
 			-- Assign `v' to `precompiled_version'.
 		do
 			if v = Void then
@@ -83,7 +83,7 @@ feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 			precompiled_version_set: v /= Void implies precompiled_version.is_equal (v)
 		end
 
-	set_compiler_version (v: like compiler_version) is
+	set_compiler_version (v: like compiler_version)
 			-- Assign `v' to `compiler_version'.
 		require
 			v_not_void: v /= Void
@@ -93,7 +93,7 @@ feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 			compiler_version_set: compiler_version = v
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

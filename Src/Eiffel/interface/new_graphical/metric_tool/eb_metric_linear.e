@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Linear metric
 					Linear metric is metric defined in linear form, for example:
@@ -27,19 +27,19 @@ create
 
 feature -- Status report
 
-	is_result_domain_available: BOOLEAN is
+	is_result_domain_available: BOOLEAN
 			-- After metric calculation, can we get the last generated domain
 			-- for detail display?
 		do
 			Result := False
 		end
 
-	is_linear: BOOLEAN is True
+	is_linear: BOOLEAN = True
 			-- Is current a linear metric?
 
 feature -- Metric calculation
 
-	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric calculated over `a_scope'
 		local
 			l_value: DOUBLE
@@ -61,7 +61,7 @@ feature -- Metric calculation
 
 feature -- Access
 
-	coefficient: LIST [DOUBLE] is
+	coefficient: LIST [DOUBLE]
 			-- Coefficient of `variable_metric'
 		do
 			if coefficient_internal = Void then
@@ -72,7 +72,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	variable_metric: LIST [STRING] is
+	variable_metric: LIST [STRING]
 			-- Variable metrics in current linear metric
 		do
 			if variable_metric_internal = Void then
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_linear_metric (Current)
@@ -99,7 +99,7 @@ feature{NONE} -- Implementation
 	variable_metric_internal: like variable_metric
 			-- Implementation of `variable_metric'
 
-	term_value (a_metric: EB_METRIC; a_coefficient: DOUBLE; a_scope: EB_METRIC_DOMAIN): DOUBLE is
+	term_value (a_metric: EB_METRIC; a_coefficient: DOUBLE; a_scope: EB_METRIC_DOMAIN): DOUBLE
 			-- Value of `a_metric' * a_coefficient with `a_scope' as input
 		require
 			a_metric_attached: a_metric /= Void
@@ -119,7 +119,7 @@ invariant
 	coefficient_attached: coefficient /= Void
 	variable_metri_attached: variable_metric /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

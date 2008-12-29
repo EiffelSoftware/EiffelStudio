@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A code token to represent a line break.
 	]"
@@ -37,7 +37,7 @@ feature -- Visitor
 			a_visitor.process_code_token_eol (Current)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

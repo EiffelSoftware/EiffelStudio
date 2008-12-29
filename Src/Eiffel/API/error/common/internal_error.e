@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal error of the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (m: like message) is
+	make (m: like message)
 			-- New internal error with message `m'.
 		require
 			m_not_void: m /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			message_set: message = m
 		end
 
-	make_class_name_mismatch is
+	make_class_name_mismatch
 			-- New internal error for a class name mismatch.
 		do
 			message := "Class mismatch found"
@@ -39,13 +39,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is "INTERNAL_ERROR"
+	code: STRING = "INTERNAL_ERROR"
 			-- Name of error.
 
 	is_class_name_mismatch: BOOLEAN
 			-- Is internal error due to a class name mismatch found at degree 5?
 
-	file_name: STRING is
+	file_name: STRING
 		do
 		end
 
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {ERROR_TRACER} -- Formatting
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
@@ -66,7 +66,7 @@ feature {ERROR_TRACER} -- Formatting
 invariant
 	message_not_void: message /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

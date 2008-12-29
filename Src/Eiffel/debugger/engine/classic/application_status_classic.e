@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {APPLICATION_EXECUTION}
 
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
-	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, reas: INTEGER) is
+	set (n: STRING; add: DBG_ADDRESS; ot, dt, offs, reas: INTEGER)
 			-- Set the various attributes identifying current
 			-- position in source code.
 		require
@@ -84,12 +84,12 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 feature -- Access
 
-	Ipc_request: IPC_REQUEST is
+	Ipc_request: IPC_REQUEST
 		once
 			create Result
 		end
 
-	switch_to_current_thread_id	is
+	switch_to_current_thread_id
 			-- Switch debugger context thread id to `current_thread_id'.
 		do
 			Precursor
@@ -99,7 +99,7 @@ feature -- Access
 
 feature {NONE} -- CallStack Impl
 
-	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do
@@ -108,7 +108,7 @@ feature {NONE} -- CallStack Impl
 
 feature -- Query
 
-	dummy_call_stack_element: CALL_STACK_ELEMENT_CLASSIC is
+	dummy_call_stack_element: CALL_STACK_ELEMENT_CLASSIC
 		do
 			create Result.dummy_make (e_feature, 1, True, break_index, object_address, dynamic_type, dynamic_class, origin_class)
 		end
@@ -118,7 +118,7 @@ feature -- Values
 	current_call_stack: EIFFEL_CALL_STACK_CLASSIC
 			-- Current Eiffel call stack
 
-	refresh_current_thread_id is
+	refresh_current_thread_id
 			-- Refresh current thread id
 		do
 			-- FIXME jfiat: for now Classic system do not support thread selection
@@ -127,19 +127,19 @@ feature -- Values
 
 feature -- Threads related access
 
-	thread_name (id: like current_thread_id): STRING is
+	thread_name (id: like current_thread_id): STRING
 			-- Thread name.
 		do
 			--| Classic does not provide feature for that purpose
 		end
 
-	thread_priority (id: like current_thread_id): INTEGER is
+	thread_priority (id: like current_thread_id): INTEGER
 			-- Thread priority.
 		do
 			--| Classic does not provide feature for that purpose			
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

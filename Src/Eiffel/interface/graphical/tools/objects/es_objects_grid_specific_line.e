@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_as (a_id: INTEGER) is
+	make_as (a_id: INTEGER)
 			-- Initialize `Current'.
 		do
 			written_line := Current
@@ -38,27 +38,27 @@ feature {NONE} -- Initialization
 			set_read_only (True)
 		end
 
-	make_as_stack is
+	make_as_stack
 		do
 			make_as (stack_id)
 		end
 
-	make_as_arguments is
+	make_as_arguments
 		do
 			make_as (arguments_id)
 		end
 
-	make_as_locals is
+	make_as_locals
 		do
 			make_as (locals_id)
 		end
 
-	make_as_result is
+	make_as_result
 		do
 			make_as (result_id)
 		end
 
-	make_as_current_object is
+	make_as_current_object
 		do
 			make_as (current_object_id)
 		end
@@ -71,7 +71,7 @@ feature -- Access
 
 	id: INTEGER
 
-	is_represented_by (aline: ES_OBJECTS_GRID_LINE): BOOLEAN is
+	is_represented_by (aline: ES_OBJECTS_GRID_LINE): BOOLEAN
 		do
 			Result := (aline = written_line)
 		end
@@ -80,17 +80,17 @@ feature -- Access
 
 feature -- Change
 
-	set_display_expanded (b: BOOLEAN) is
+	set_display_expanded (b: BOOLEAN)
 			-- Set `display_expanded' with `b'
 		do
 			display_expanded := b
 		end
 
-	update is
+	update
 		do
 		end
 
-	compute_grid_display is
+	compute_grid_display
 		local
 			cse: like call_stack_element
 		do
@@ -127,7 +127,7 @@ feature -- Change
 			end
 		end
 
-	record_layout is
+	record_layout
 		do
 			Precursor
 			if
@@ -149,7 +149,7 @@ feature -- Change
 			end
 		end
 
-	reset is
+	reset
 			--
 		do
 			Precursor
@@ -163,7 +163,7 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
+	call_stack_element: EIFFEL_CALL_STACK_ELEMENT
 			--
 		local
 			app: APPLICATION_EXECUTION
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_grid_display_for_arguments (cse: like call_stack_element) is
+	compute_grid_display_for_arguments (cse: like call_stack_element)
 		local
 			glab: EV_GRID_LABEL_ITEM
 			list: LIST [ABSTRACT_DEBUG_VALUE]
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_grid_display_for_locals (cse: like call_stack_element) is
+	compute_grid_display_for_locals (cse: like call_stack_element)
 		local
 			i: INTEGER
 			glab: EV_GRID_LABEL_ITEM
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_grid_display_for_result (cse: like call_stack_element) is
+	compute_grid_display_for_result (cse: like call_stack_element)
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			glab: EV_GRID_LABEL_ITEM
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_grid_display_for_current_object (cse: like call_stack_element) is
+	compute_grid_display_for_current_object (cse: like call_stack_element)
 		local
 			value: ABSTRACT_DEBUG_VALUE
 			proc: PROCEDURE [ANY, TUPLE]
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_grid_display_for_stack (cse: like call_stack_element) is
+	compute_grid_display_for_stack (cse: like call_stack_element)
 		local
 			r: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_exception_dialog (a_exc_dv: EXCEPTION_DEBUG_VALUE) is
+	show_exception_dialog (a_exc_dv: EXCEPTION_DEBUG_VALUE)
 			-- Show `a_exc_dv' in exception dialog
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
@@ -472,29 +472,29 @@ feature {NONE} -- Implementation
 			dlg.show_on_active_window
 		end
 
-	Cst_exception_double_click_text: STRING_GENERAL is
+	Cst_exception_double_click_text: STRING_GENERAL
 		do
 			Result := interface_names.l_exception_double_click_text
 		end
 
-	Cst_exception_raised_text: STRING_GENERAL is
+	Cst_exception_raised_text: STRING_GENERAL
 		do
 			Result := interface_names.l_exception_raised
 		end
 
-	Cst_exception_first_chance_text: STRING_GENERAL is
+	Cst_exception_first_chance_text: STRING_GENERAL
 		do
 			Result := interface_names.l_first_chance
 		end
 
-	Cst_exception_unhandled_text: STRING_GENERAL is
+	Cst_exception_unhandled_text: STRING_GENERAL
 		do
 			Result := interface_names.l_unhandled
 		end
 
 feature -- Query
 
-	debug_output: STRING is
+	debug_output: STRING
 		do
 			inspect
 				id
@@ -513,12 +513,12 @@ feature -- Query
 			end
 		end
 
-	text_data_for_clipboard: STRING_32 is
+	text_data_for_clipboard: STRING_32
 		do
 			Result := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A base implementation for feature-based analyzer states ({ES_EDITOR_ANALYZER_STATE}).
 		]"
@@ -66,7 +66,7 @@ feature {NONE} -- Helpers
 			create Result
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when the is a conflict on values in an inspect expression."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER = 3;
 
 	interval: INTERVAL_B;
 			-- Interval of conflicting values
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Duplicate values: ");
 			interval.display (a_text_formatter);
@@ -34,13 +34,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_interval (t: INTERVAL_B) is
+	set_interval (t: INTERVAL_B)
 			-- Assign `t' to `interval'.
 		do
 			interval := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

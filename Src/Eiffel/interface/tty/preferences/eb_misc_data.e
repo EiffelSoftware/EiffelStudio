@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Miscellaneous preferences.  Please remove this class and put the preferences in the sensible places."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -37,56 +37,56 @@ feature {NONE} -- Initialization
 
 feature -- Value
 
-	dotnet_debugger: STRING is ""
+	dotnet_debugger: STRING = ""
 
-	use_postscript: BOOLEAN is False
+	use_postscript: BOOLEAN = False
 
-	use_external_editor: BOOLEAN is False
+	use_external_editor: BOOLEAN = False
 
-	print_shell_command: STRING is "lpr $target"
+	print_shell_command: STRING = "lpr $target"
 
-	dyn_lib_window_width: INTEGER is
+	dyn_lib_window_width: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := dyn_lib_window_width_preference.value
 		end
 
-	dyn_lib_window_height: INTEGER is
+	dyn_lib_window_height: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := dyn_lib_window_height_preference.value
 		end
 
-	preference_window_width: INTEGER is
+	preference_window_width: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := preference_window_width_preference.value
 		end
 
-	preference_window_height: INTEGER is
+	preference_window_height: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := preference_window_height_preference.value
 		end
 
-	acrobat_reader: STRING is
+	acrobat_reader: STRING
 		do
 			Result := acrobat_reader_preference.value
 		end
 
-	text_mode_is_windows: BOOLEAN is
+	text_mode_is_windows: BOOLEAN
 		do
 			Result := text_mode_is_windows_preference.value
 		end
 
-	external_editor_command: STRING is
+	external_editor_command: STRING
 		do
 			Result := external_editor_command_preference.value
 		ensure
 			external_editor_command_not_void: Result /= Void
 		end
 
-	external_editor_cli (a_target: STRING; a_line: INTEGER): STRING is
+	external_editor_cli (a_target: STRING; a_line: INTEGER): STRING
 			-- Update `external_editor_command' by replacing $target and
 			-- $line with `a_target' and `a_line' to create a working command
 			-- line.
@@ -127,42 +127,42 @@ feature -- Value
 			external_editor_cli_not_empty: not Result.is_empty
 		end
 
-	show_hidden_preferences: BOOLEAN is
+	show_hidden_preferences: BOOLEAN
 		do
 			Result := show_hidden_preferences_preference.value
 		end
 
-	console_shell_command: STRING is
+	console_shell_command: STRING
 			-- Shell to open a console
 		do
 			Result := console_shell_command_preference.value
 		end
 
-	file_browser_command: STRING is
+	file_browser_command: STRING
 			-- Command to open a target in file browser
 		do
 			Result := file_browser_command_preference.value
 		end
 
-	web_browser_command: STRING is
+	web_browser_command: STRING
 			-- Command to open a target in web browser
 		do
 			Result := internet_browser_preference.value
 		end
 
-	locale_id: STRING is
+	locale_id: STRING
 			-- Locale ID of current language
 		do
 			Result := locale_id_preference.selected_value
 		end
 
-	is_pnd_mode: BOOLEAN is
+	is_pnd_mode: BOOLEAN
 			-- Is current Pnd mode? If False, Contextual Menu mode.
 		do
 			Result := pnd_preference.value
 		end
 
-	eis_path: STRING is
+	eis_path: STRING
 			-- EIS path for project searching of incoming location
 		do
 			Result := eis_path_preference.value
@@ -187,24 +187,24 @@ feature -- Preference
 
 feature {NONE} -- Preference Strings
 
-	acrobat_reader_string: STRING is "general.acrobat_reader"
-	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
-	internet_browser_string: STRING is "general.internet_browser"
-	external_editor_command_string: STRING is "general.external_editor_command"
-	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
-	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
-	preference_window_width_string: STRING is "general.preference_window_width"
-	preference_window_height_string: STRING is "general.preference_window_height"
-	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
-	console_shell_command_string: STRING is "general.console_shell_command"
-	file_browser_command_string: STRING is "general.file_browser_command"
-	locale_id_preference_string: STRING is "general.locale"
-	pnd_preference_string: STRING is "general.pick_and_drop_(pnd)_mode"
-	eis_path_preference_string: STRING is "general.eis_path"
+	acrobat_reader_string: STRING = "general.acrobat_reader"
+	text_mode_is_windows_string: STRING = "editor.eiffel.text_mode_is_windows"
+	internet_browser_string: STRING = "general.internet_browser"
+	external_editor_command_string: STRING = "general.external_editor_command"
+	dyn_lib_window_width_string: STRING = "general.dynamic_library_window_width"
+	dyn_lib_window_height_string: STRING = "general.dynamic_library_window_height"
+	preference_window_width_string: STRING = "general.preference_window_width"
+	preference_window_height_string: STRING = "general.preference_window_height"
+	show_hidden_preferences_string: STRING = "general.show_hidden_preferences"
+	console_shell_command_string: STRING = "general.console_shell_command"
+	file_browser_command_string: STRING = "general.file_browser_command"
+	locale_id_preference_string: STRING = "general.locale"
+	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
+	eis_path_preference_string: STRING = "general.eis_path"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	init_locale is
+	init_locale
 			-- Init available locales.
 		require
 			locale_id_preference_not_void: locale_id_preference /= Void
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_string: STRING is "Unselected";
+	default_string: STRING = "Unselected";
 
 invariant
 	preferences_not_void: preferences /= Void
@@ -365,7 +365,7 @@ invariant
 	pnd_preference_not_void: pnd_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

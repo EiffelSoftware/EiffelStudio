@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an UML view for an inheritance link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create {UML_INHERITANCE_FIGURE}
 
 feature {NONE} -- Initialization
 
-	make_with_model (a_model: ES_INHERITANCE_LINK) is
+	make_with_model (a_model: ES_INHERITANCE_LINK)
 			-- Create a UML_INHERITANCE_FIGURE showing `a_model'.
 		do
 			default_create
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
@@ -67,7 +67,7 @@ feature -- Access
 			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "UML_INHERITANCE_FIGURE"
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_line_width (a_line_width: like line_width) is
+	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_widht'.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
@@ -99,7 +99,7 @@ feature -- Element change
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -125,14 +125,14 @@ feature {NONE} -- Implementation
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve preferences.
 		do
 			set_line_width (uml_inheritance_line_width)
 			set_foreground_color (uml_inheritance_color)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

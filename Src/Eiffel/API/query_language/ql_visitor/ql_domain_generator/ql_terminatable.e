@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Utilities to support domain generation termination"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
+	tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]]
 			-- Actions to be performaed after every `interval_counter' items have been processed.
 			-- Note: Argument passed to `tick_actions' may be Void.
 		do
@@ -20,7 +20,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	interval: NATURAL_64 is
+	interval: NATURAL_64
 			-- Interval to decide if `tick_actions' should be called.
 			-- `tick_actions' will be called after every `interval' number of items have been processed.
 			-- Default value is `initial_interval'.
@@ -28,7 +28,7 @@ feature -- Access
 			Result := interval_cell.item
 		end
 
-	internal_counter: NATURAL_64 is
+	internal_counter: NATURAL_64
 			-- Internal counter to indicate how many items have been processed
 		do
 			Result := internal_counter_cell.item
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_interval_tick_actions: BOOLEAN is
+	has_interval_tick_actions: BOOLEAN
 			-- Is there any tick actions registered?
 		do
 			Result := not tick_actions.is_empty
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_interval (a_interval: NATURAL_64) is
+	set_interval (a_interval: NATURAL_64)
 			-- Set `interval' with `a_interval'.
 		require
 			a_interval_positive: a_interval > 0
@@ -56,7 +56,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	increase_internal_counter (a_item: QL_ITEM) is
+	increase_internal_counter (a_item: QL_ITEM)
 			-- Increase `internal_counter' by 1.
 		local
 			l_counter: like internal_counter
@@ -77,7 +77,7 @@ feature -- Basic operations
 
 feature{NONE} -- Implementation
 
-	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE [QL_ITEM]]] is
+	interval_tick_actions_cell: CELL [ACTION_SEQUENCE [TUPLE [QL_ITEM]]]
 			-- Cell to hold `tick_actions'.
 		once
 			create Result.put (create{ACTION_SEQUENCE[TUPLE [QL_ITEM]]})
@@ -85,7 +85,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	internal_counter_cell: CELL [NATURAL_64] is
+	internal_counter_cell: CELL [NATURAL_64]
 			-- Cell to hold `internal_counter'.
 		once
 			create Result.put (0)
@@ -93,7 +93,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	interval_cell: CELL [NATURAL_64] is
+	interval_cell: CELL [NATURAL_64]
 			-- Cell to hold `interval'
 		once
 			create Result.put (initial_interval)
@@ -101,14 +101,14 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	initial_interval: NATURAL_64 is 5000
+	initial_interval: NATURAL_64 = 5000
 			-- Default value of `internval'	
 
 invariant
 	interval_tick_actions_cell_attached: interval_tick_actions_cell /= Void
 	interval_tick_actions_attached: tick_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

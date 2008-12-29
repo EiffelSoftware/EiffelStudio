@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Scanners for Eiffel comment"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= BREAK_TOKEN)
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -247,7 +247,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
@@ -267,7 +267,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,   13,   13,   14,   13,   13,   13,   13,   13,   13,
@@ -368,7 +368,7 @@ feature {NONE} -- Table templates
 			  166,  166,  166,  166,  166,  166,  166,  166,  166,  166, yy_Dummy>>)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    5,    5,    5,    5,    5,    5,    5,    5,    5,
@@ -469,7 +469,7 @@ feature {NONE} -- Table templates
 			  166,  166,  166,  166,  166,  166,  166,  166,  166,  166, yy_Dummy>>)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,  827,  826,    0,    0,   41,    0,  822,
@@ -494,7 +494,7 @@ feature {NONE} -- Table templates
 			  782,  799,  817, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  167,  167,  168,  168,  166,    5,  166,    7,  166,
@@ -519,7 +519,7 @@ feature {NONE} -- Table templates
 			  166,  166,  166, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -552,7 +552,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    2,    2,    1,    1,    3,    4,    1,
@@ -562,7 +562,7 @@ feature {NONE} -- Table templates
 			    1,    4, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,   24,
@@ -587,53 +587,53 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 838
+	yyJam_base: INTEGER = 838
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 166
+	yyJam_state: INTEGER = 166
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 167
+	yyTemplate_mark: INTEGER = 167
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN = false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN = false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 23
+	yyNb_rules: INTEGER = 23
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 24
+	yyEnd_of_buffer: INTEGER = 24
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is false
+	yyLine_used: BOOLEAN = false
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is false
+	yyPosition_used: BOOLEAN = false
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	DOT_FEATURE: INTEGER is 1
-	NOT_BREAK_TOKEN: INTEGER is 2
-	BREAK_TOKEN: INTEGER is 3
+	INITIAL: INTEGER = 0
+	DOT_FEATURE: INTEGER = 1
+	NOT_BREAK_TOKEN: INTEGER = 2
+	BREAK_TOKEN: INTEGER = 3
 			-- Start condition codes
 
 feature -- User-defined features
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

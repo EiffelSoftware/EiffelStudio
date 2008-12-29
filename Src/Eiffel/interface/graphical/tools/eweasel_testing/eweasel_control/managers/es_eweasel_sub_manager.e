@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					eweasel managers who are responding for eweasel 
 					test case creation, executions, result analyzing.
@@ -13,14 +13,14 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method
 		do
 		end
 
 feature -- Query
 
-	manager: !ES_EWEASEL_EXECUTION_MANAGER is
+	manager: !ES_EWEASEL_EXECUTION_MANAGER
 			-- Chief manager
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -28,7 +28,7 @@ feature -- Query
 			create l_shared
 			Result := l_shared.manager
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

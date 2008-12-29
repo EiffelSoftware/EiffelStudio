@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facade to access, manipulate, organize, .. the clusters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: EB_TOOL_MANAGER) is
+	make (a_window: EB_TOOL_MANAGER)
 			-- Initialize `Current' as dependent of `a_window'.
 		do
 			development_window ?= a_window
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	go_to (a_class: CLASS_I) is
+	go_to (a_class: CLASS_I)
 			-- `a_class' has been selected, the associated class
 			-- window should load the class corresponding to `a_class'.
 		local
@@ -50,19 +50,19 @@ feature -- Status setting
 
 feature -- Observer pattern
 
-	on_project_loaded is
+	on_project_loaded
 			-- Project has been loaded or re-loaded.
 		do
 			manager.on_project_loaded
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Project will soon be unloaded.
 		do
 			manager.on_project_unloaded
 		end
 
-	refresh is
+	refresh
 			-- Make `manager' up-to-date.
 		do
 			manager.refresh
@@ -70,7 +70,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			development_window := Void
@@ -78,7 +78,7 @@ feature {NONE} -- Recyclable
 
 feature -- Load / Save / Reset...
 
-	reset is
+	reset
 			-- Reset the favorites.
 		do
 --			favorites.wipe_out
@@ -87,7 +87,7 @@ feature -- Load / Save / Reset...
 	development_window: EB_DEVELOPMENT_WINDOW;
 			-- Associated development window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

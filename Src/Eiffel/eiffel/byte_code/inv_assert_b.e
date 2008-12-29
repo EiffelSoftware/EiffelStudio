@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for instruction inside an invariant clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_inv_assert_b (Current)
@@ -23,7 +23,7 @@ feature -- Visitor
 
 feature
 
-	fill_from (a: ASSERT_B) is
+	fill_from (a: ASSERT_B)
 			-- Initialization
 		require
 			good_argument: not (a = Void)
@@ -34,7 +34,7 @@ feature
 			tag := a.tag
 		end
 
-	 generate is
+	 generate
 			-- Generate assertion
 		local
 			buf: GENERATION_BUFFER
@@ -67,7 +67,7 @@ feature
 			buf.put_character ('}')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

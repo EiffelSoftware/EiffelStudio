@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for class violating the expanded client rule."
@@ -21,15 +21,15 @@ feature -- Properties
 	client: CLASS_C;
 			-- Unvalid class type
 
-	code: STRING is "VLEC"
+	code: STRING = "VLEC"
 			-- Error code
 
-	has_associated_file: BOOLEAN is False
+	has_associated_file: BOOLEAN = False
 			-- No associated file
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Name of class involved in cycle: ");
 			client.append_name (a_text_formatter);
@@ -49,14 +49,14 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_client (c: CLASS_C) is
+	set_client (c: CLASS_C)
 		require
 			valid_c: c /= Void
 		do
 			client := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

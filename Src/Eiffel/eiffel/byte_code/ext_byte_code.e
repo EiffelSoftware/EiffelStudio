@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for external features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name_id: INTEGER) is
+	make (a_name_id: INTEGER)
 			-- Assign `s' to `a_name_id'.
 		require
 			a_name_id_positive: a_name_id > 0
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_name: STRING is
+	external_name: STRING
 			-- External name to call
 		do
 			Result := Names_heap.item (external_name_id)
@@ -45,7 +45,7 @@ feature -- Access
 	external_name_id: INTEGER
 			-- Name ID of external.
 
-	argument_types: like std_argument_types is
+	argument_types: like std_argument_types
 			-- Type of arguments, not including Current.
 		local
 			arg: TYPE_A
@@ -76,7 +76,7 @@ feature -- Access
 			argument_types_not_void: Result /= Void
 		end
 
-	argument_names: like std_argument_names is
+	argument_names: like std_argument_names
 			-- Type of arguments, not including Current.
 		local
 			l_lower, l_upper: INTEGER
@@ -94,13 +94,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_external: BOOLEAN is True
+	is_external: BOOLEAN = True
 			-- Is the current byte code a byte code for external
 			-- features ?
 
 feature -- Analyzis
 
-	analyze is
+	analyze
 			-- Analyze external code
 		do
 			if not system.il_generation then
@@ -110,7 +110,7 @@ feature -- Analyzis
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generate body of routine.
 		local
 			l_ret_type: like result_type
@@ -137,7 +137,7 @@ feature -- C code generation
 			result_type := l_ret_type
 		end
 
-	generate_il_code is
+	generate_il_code
 			-- Generate code for IL code generation.
 		local
 			l_ret_type: TYPE_A
@@ -166,7 +166,7 @@ feature -- C code generation
 			context.inherited_assertion.wipe_out
 		end
 
-	generate_compound is
+	generate_compound
 			-- Byte code generation
 		local
 			buf: GENERATION_BUFFER
@@ -223,13 +223,13 @@ feature -- C code generation
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 			-- An external does not have a body
 			-- Inlining is done differently
 		do
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 		end
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 	has_hector_variables: BOOLEAN
 			-- Does current external calls needs to protect some of its arguments?
 
-	compute_hector_variables is
+	compute_hector_variables
 			-- Set `has_hector_variables' to True if some arguments are references?
 		local
 			i, nb: INTEGER
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_hector_variables is
+	generate_hector_variables
 			-- Generate protection of arguments that needs one.
 		require
 			has_hector_variables: has_hector_variables
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	release_hector_variables is
+	release_hector_variables
 			-- Release protection of arguments.
 		local
 			l_buf: GENERATION_BUFFER
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			l_buf.put_character ('}')
 		end
 
-	number_of_hector_variables: INTEGER is
+	number_of_hector_variables: INTEGER
 			-- Number of arguments to protect?
 		local
 			i, nb: INTEGER
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 invariant
 	external_name_id_positive: external_name_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

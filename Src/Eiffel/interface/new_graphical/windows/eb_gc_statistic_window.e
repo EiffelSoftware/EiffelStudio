@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Window to perform GC statistics.
 
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_font: EV_FONT) is
+	make (a_font: EV_FONT)
 			-- Initialize current with `a_font' which will be used to display GC statistics.
 		require
 			a_font_not_void: a_font /= Void
@@ -87,13 +87,13 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	show is
+	show
 			-- Show Current
 		do
 			window.raise
 		end
 
-	show_memory_usage is
+	show_memory_usage
 			-- Update `output_text' with current memory usage.
 		local
 			eiffel_mem_info, c_mem_info, total_mem_info: MEM_INFO
@@ -125,7 +125,7 @@ feature -- Update
 			output_text.set_text (l_content)
 		end
 
-	show_memory_map is
+	show_memory_map
 			-- Show memory map
 		local
 			l_new_table, l_old_table: HASH_TABLE [INTEGER, INTEGER]
@@ -193,13 +193,13 @@ feature -- Update
 			update_grid_content
 		end
 
-	collect is
+	collect
 			-- Perform a GC cycle.
 		do
 			mem.full_collect
 		end
 
-	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- Disable or enable GC
 		require
 			a_button_not_void: a_button /= Void
@@ -227,7 +227,7 @@ feature {NONE} -- Access
 	output_grid: EV_GRID
 			-- Grid control used to show memory map.
 
-	mem: MEMORY is
+	mem: MEMORY
 			-- Access to MEMORY routines
 		once
 			create Result
@@ -247,7 +247,7 @@ feature {NONE} -- Access
 	sorting_order: BOOLEAN
 			-- If True, sorted from the smaller to the bigger.
 
-	red_color: EV_COLOR is
+	red_color: EV_COLOR
 			-- Red color
 		once
 			Result := (create {EV_STOCK_COLORS}).red
@@ -255,7 +255,7 @@ feature {NONE} -- Access
 			red_color_set: Result /= Void
 		end
 
-	green_color: EV_COLOR is
+	green_color: EV_COLOR
 			-- Green color
 		once
 			Result := (create {EV_STOCK_COLORS}).dark_green
@@ -263,7 +263,7 @@ feature {NONE} -- Access
 			green_color_set: Result /= Void
 		end
 
-	row_data: TUPLE [type_name: STRING; nb: INTEGER; delta: INTEGER; type_id:INTEGER] is
+	row_data: TUPLE [type_name: STRING; nb: INTEGER; delta: INTEGER; type_id:INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		do
@@ -271,7 +271,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	show_output_text is
+	show_output_text
 			-- Show `output_text' if not yet visible.
 		require
 			window_not_void: display_container /= Void
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			output_grid_empty: output_grid.row_count = 0
 		end
 
-	show_output_grid is
+	show_output_grid
 			-- Show `output_grid' if not yet visible.
 		require
 			window_not_void: display_container /= Void
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			output_text_empty: output_text.text_length = 0
 		end
 
-	on_grid_header_click (a_column_index: INTEGER) is
+	on_grid_header_click (a_column_index: INTEGER)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_positive: a_column_index > 0
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_grid_content is
+	update_grid_content
 			-- Fill grid using `grid_data'
 		require
 			grid_data_not_void: grid_data /= Void
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_expand_actions_for_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+	on_expand_actions_for_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- For each object of type `a_dynamic_type' create a list of objects referencing them
 			-- ordered by increasing number of reference to objects of type `a_dynamic_type.
 			-- This list is inserted as a child node of `a_parent_row'.
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+	on_expand_actions_for_type (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Add all objects of the given dynamic type of `a_dynamic_type' as subnode
 			-- of row `a_parent_row'.
 		require
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_expand_actions_for_referers (an_object: ANY; a_parent_row: EV_GRID_ROW) is
+	on_expand_actions_for_referers (an_object: ANY; a_parent_row: EV_GRID_ROW)
 			-- Add all objects referring to `an_object' as subnode
 			-- of row `a_parent_row'.
 		require
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_data is
+	sort_data
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		require
 			grid_data_not_void: grid_data /= Void
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 			l_sorter.sort (grid_data)
 		end
 
-	sort_on_type_name (u, v: like row_data): BOOLEAN is
+	sort_on_type_name (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -673,7 +673,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_on_count (u, v: like row_data): BOOLEAN is
+	sort_on_count (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_on_delta (u, v: like row_data): BOOLEAN is
+	sort_on_delta (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN is
+	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN
 			-- Compare u, v
 		require
 			u_not_void: u /= Void
@@ -714,7 +714,7 @@ invariant
 	output_text_not_void: output_text /= Void
 	output_grid_not_void: output_grid /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This allows undoable file renaming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_original_name: STRING; a_new_name: STRING) is
+	make (an_original_name: STRING; a_new_name: STRING)
 			-- Rename `an_original_name' into `a_new_name'
 		require
 			an_original_name_not_void: an_original_name /= void
@@ -38,7 +38,7 @@ feature -- Status
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- Undo the actions.
 		local
 			l_file, l_dst_file: RAW_FILE
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 		end
 
-	redo is
+	redo
 			-- Redo the actions.
 		local
 			l_file, l_dst_file: RAW_FILE
@@ -93,7 +93,7 @@ invariant
 	new_name_set: new_name /= void and not new_name.is_empty
 	error_implies_message: is_error implies error_message /= Void and then not error_message.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

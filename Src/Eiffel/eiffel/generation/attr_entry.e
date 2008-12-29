@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Representation for an attribute entry in an instance of ATTR_TABLE
@@ -13,7 +13,7 @@ inherit
 
 feature -- for dead code removal
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Is the entry associated with an attribute?
 		do
 			Result := True
@@ -21,7 +21,7 @@ feature -- for dead code removal
 
 feature -- previously in ATTR_UNIT
 
-	entry (class_type: CLASS_TYPE): ATTR_ENTRY is
+	entry (class_type: CLASS_TYPE): ATTR_ENTRY
 			-- Attribute entry in an attribute offset table
 		do
 			create Result
@@ -35,13 +35,13 @@ feature -- previously in ATTR_UNIT
 
 feature -- from ATTR_ENTRY
 
-	used: BOOLEAN is
+	used: BOOLEAN
 			-- Is an attribute entry used?
 		do
 			Result := True
 		end
 
-	workbench_offset: INTEGER is
+	workbench_offset: INTEGER
 			-- Offset of attribute in object structure
 		require
 			is_attribute: is_attribute
@@ -72,7 +72,7 @@ feature -- Status setting
 			has_body := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

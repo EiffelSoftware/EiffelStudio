@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Parse a query text"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Parsing
 
-	parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN is
+	parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN
 			-- Parse `str', put results in `sqv' and
 			-- return true if the query has a good syntax.
 		require
@@ -32,7 +32,7 @@ feature -- Parsing
 
 feature {NONE} -- Implementation
 
-	real_parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN is
+	real_parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN
 			-- Real parsing feature.
 		local
 			col_name, operator, value, boolean_op: STRING
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	init_expected_values is
+	init_expected_values
 		do
 			expects_int := True
 			expects_real := True
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			expects_bounded := True
 		end --| Guillaume 09/18/97
 
-	column_name (str: STRING; idx: INTEGER): STRING is
+	column_name (str: STRING; idx: INTEGER): STRING
 			-- Get the column name in `str' at position `idx'
 		do
 			if idx < str.count then
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	operator_str (str: STRING; idx: INTEGER): STRING is
+	operator_str (str: STRING; idx: INTEGER): STRING
 			-- Get operator str from `str' at position `idx'.
 		local
 			operator: STRING
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 		end --| Guillaume - 09/18/97
 
-	value_str (str: STRING; index, end_index: INTEGER): STRING is
+	value_str (str: STRING; index, end_index: INTEGER): STRING
 			-- Get value str from `str' beetween position 'index' and 'end_index'
 		do
 			create Result.make (0)
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_expected_value (value: STRING) : BOOLEAN is
+	is_expected_value (value: STRING) : BOOLEAN
 			-- Is the 'value' string an expected value
 		do
 			Result := (expects_int and value.is_integer) or else (expects_int and is_computed_value (value))
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded (value))
 		end
 
-	is_computed_value (value: STRING) : BOOLEAN is
+	is_computed_value (value: STRING) : BOOLEAN
 		do
 			if value.is_equal (profiler_max) or else value.is_equal (profiler_min) or else value.is_equal (profiler_avg) then
 				Result := true
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_bounded (value: STRING) : BOOLEAN is
+	is_bounded (value: STRING) : BOOLEAN
 		local
 			range_position : INTEGER
 			lower_value, upper_value: STRING
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			end
 		end  --| Guillaume - 09/18/97
 
-	boolean_operator (str: STRING; idx: INTEGER): STRING is
+	boolean_operator (str: STRING; idx: INTEGER): STRING
 			-- Get boolean operator in `str' at `idx'.
 		do
 			if
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	white_space_length (str: STRING; idx: INTEGER): INTEGER is
+	white_space_length (str: STRING; idx: INTEGER): INTEGER
 			-- Length of white space starting at `idx' in `str'
 		do
 			from
@@ -274,13 +274,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_range_operator (str: STRING; idx: INTEGER): BOOLEAN is
+	has_range_operator (str: STRING; idx: INTEGER): BOOLEAN
 			-- Is there a '-' at or after `idx' in `str'?
 		do
 			Result := str @ idx = '-'
 		end
 
-	stricly_positive_min (a, b, c : INTEGER): INTEGER is
+	stricly_positive_min (a, b, c : INTEGER): INTEGER
 			-- The min of a, b and c that is not zero
 			-- a < c and b < c
 		do
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	chis_space (c: CHARACTER): BOOLEAN is
+	chis_space (c: CHARACTER): BOOLEAN
 		external
 			"C [macro %"ctype.h%"] (char): EIF_CHARACTER"
 		alias
@@ -325,7 +325,7 @@ feature {NONE} -- Attributes
 
 	expects_bounded: BOOLEAN;
 		-- The expected type of the subquery 'value' is a bounded value
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

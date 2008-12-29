@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to enter execution replay mode"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current'.
 		do
 			eb_debugger_manager := a_manager
@@ -36,13 +36,13 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	reset is
+	reset
 			-- Reset Current
 		do
 			set_select (False)
 		end
 
-	execute is
+	execute
 			-- Pause the execution.
 		local
 			dbg: like eb_debugger_manager
@@ -61,14 +61,14 @@ feature -- Status
 
 	execution_replay_mode_activated: BOOLEAN
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 		do
 			Result := execution_replay_mode_activated
 		end
 
 feature -- Change text
 
-	set_select (b: BOOLEAN) is
+	set_select (b: BOOLEAN)
 			-- <Precursor>
 		do
 			execution_replay_mode_activated := b
@@ -78,13 +78,13 @@ feature -- Change text
 
 feature {NONE} -- Properties
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			if not is_selected then
@@ -94,7 +94,7 @@ feature {NONE} -- Properties
 			end
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			if not is_selected then
@@ -104,10 +104,10 @@ feature {NONE} -- Properties
 			end
 		end
 
-	name: STRING is "debug_replay_mode"
+	name: STRING = "debug_replay_mode"
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			if not is_selected then
@@ -117,29 +117,29 @@ feature {NONE} -- Properties
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			Result := pixmaps.icon_pixmaps.execution_replay_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.execution_replay_icon_buffer
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 		do
 			Result := pixmaps.mini_pixmaps.execution_replay_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 		do
 			Result := pixmaps.mini_pixmaps.execution_replay_icon_buffer
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

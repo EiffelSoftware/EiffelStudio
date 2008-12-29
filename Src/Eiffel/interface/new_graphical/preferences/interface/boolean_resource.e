@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A resource value for boolean resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: BOOLEAN) is
+	make (a_name: STRING; a_value: BOOLEAN)
 			-- Initialize Current.
 		do
 			name := a_name
@@ -29,19 +29,19 @@ feature -- Access
 	default_value, actual_value: BOOLEAN
 			-- Value represented by Current
 
-	value: STRING is
+	value: STRING
 			-- Value as a `STRING' as represented by Current
 		do
 			Result := actual_value.out
 		end
 
-	is_valid (a_value: STRING): BOOLEAN is
+	is_valid (a_value: STRING): BOOLEAN
 			-- Is `a_value' valid for use in Current?
 		do
 			Result := a_value.is_boolean
 		end
 
-	has_changed: BOOLEAN is
+	has_changed: BOOLEAN
 			-- Has the resource changed from the default value?
 		do
 			Result := actual_value /= default_value
@@ -49,26 +49,26 @@ feature -- Access
 
 feature -- Setting
 
-	set_value (new_value: STRING) is
+	set_value (new_value: STRING)
 			-- Set `actual_value' according to `new_value'.
 		do
 			actual_value := new_value.to_boolean
 		end
 
-	set_actual_value (a_bool: BOOLEAN) is
+	set_actual_value (a_bool: BOOLEAN)
 			-- Set `actual_value' to `a_bool'.
 		do
 			actual_value := a_bool
 		end
 
-	mark_saved is
+	mark_saved
 		do
 			default_value := actual_value
 		end
 
 feature -- Output
 
-	xml_trace: STRING is
+	xml_trace: STRING
 			-- XML representation of Current
 		do
 			Result := "<TEXT>"
@@ -78,13 +78,13 @@ feature -- Output
 			Result.append ("</BOOLEAN></TEXT>")
 		end
 
-	registry_name: STRING is
+	registry_name: STRING
 			-- name of Current in the registry
 		do
 			Result := "EIFBOL_" + name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

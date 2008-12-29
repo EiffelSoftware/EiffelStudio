@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree grid to display metric history"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ create
 
 feature -- Access
 
-	checkbox_item_index: INTEGER is
+	checkbox_item_index: INTEGER
 			-- Item index of checkbox grid item
 		do
 			Result := 1
 		end
 
-	sorting_order_preference: STRING_PREFERENCE is
+	sorting_order_preference: STRING_PREFERENCE
 			-- Sort order preference
 		do
 			Result := preferences.metric_tool_data.tree_view_sorting_order_preference
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Grid binding
 
-	bind_grid (a_selected_nodes: like selected_archives) is
+	bind_grid (a_selected_nodes: like selected_archives)
 			-- Bind `archive' in `grid'.
 			-- If `a_selected_nodes' is Void, use values from `selected_archives', otherwise, use `a_selected_nodes'.
 		local
@@ -117,7 +117,7 @@ feature -- Grid binding
 			selection_change_actions.resume
 		end
 
-	update is
+	update
 			-- Update status of current
 		local
 			l_grid: like grid
@@ -146,7 +146,7 @@ feature -- Grid binding
 
 feature{NONE} -- Implementation
 
-	bind_row (a_row: EV_GRID_ROW; a_archive: EB_METRIC_ARCHIVE_NODE; a_checked: BOOLEAN) is
+	bind_row (a_row: EV_GRID_ROW; a_archive: EB_METRIC_ARCHIVE_NODE; a_checked: BOOLEAN)
 			-- Bind `a_archive_node' in `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 			a_row.set_data (a_archive)
 		end
 
-	update_base_row (a_row: EV_GRID_ROW; a_row_type: INTEGER) is
+	update_base_row (a_row: EV_GRID_ROW; a_row_type: INTEGER)
 			-- Update base row `a_row'.
 			-- `a_row_type' is 0 indicates if `a_row' is an even row, otherwise an odd row.
 		require
@@ -198,7 +198,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	update_row (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	update_row (a_archive_node: EB_METRIC_ARCHIVE_NODE)
 			-- Update the row that contains `a_archive_node'.
 		local
 			l_grid_row: EV_GRID_ROW
@@ -254,7 +254,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	auto_resize is
+	auto_resize
 			-- Auto resize columns
 		local
 			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
@@ -271,7 +271,7 @@ feature{NONE} -- Implementation
 			auto_resize_columns (grid, l_column_tbl)
 		end
 
-	initialize_grid is
+	initialize_grid
 			-- Initialize `grid'.
 		do
 			grid.set_column_count_to (10)
@@ -298,7 +298,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Color
 
-	even_row_background_color: EV_COLOR is
+	even_row_background_color: EV_COLOR
 			-- Background color for even rows
 		do
 			Result := preferences.class_browser_data.even_row_background_color
@@ -306,13 +306,13 @@ feature{NONE} -- Color
 			result_attached: Result /= Void
 		end
 
-	odd_row_background_color: EV_COLOR is
+	odd_row_background_color: EV_COLOR
 			-- Background color for odd rows
 		do
 			Result := preferences.class_browser_data.odd_row_background_color
 		end
 
-	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE)
 			-- Set background color for `a_grid_row' which contains `a_archive_node'.
 		local
 			l_parent_row: EV_GRID_ROW
@@ -333,7 +333,7 @@ feature{NONE} -- Color
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

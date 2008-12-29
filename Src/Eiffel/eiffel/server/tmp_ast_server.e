@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server abstract synax tree on temporary file for AST. This server is%
 				%used during the compilation. The goal is to merge the file Tmp_ast_file%
 				%and Ast_file if the compilation is successful. Indexed by class id."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} --  Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			Precursor {COMPILER_SERVER}
@@ -44,7 +44,7 @@ feature {NONE} --  Initialization
 
 feature -- AST Element change
 
-	put (t: CLASS_AS) is
+	put (t: CLASS_AS)
 			-- Put class `t' in memory.
 		require else
 			t_not_void: t /= Void
@@ -55,7 +55,7 @@ feature -- AST Element change
 			has: has (t.class_id)
 		end
 
-	remove (a_class_id: INTEGER) is
+	remove (a_class_id: INTEGER)
 			-- Remove the class with `a_class_id'.
 		require else
 			a_class_id_positive: a_class_id >= 0
@@ -68,7 +68,7 @@ feature -- AST Element change
 
 feature -- Body element change
 
-	body_force (a_body: FEATURE_AS; a_body_index: INTEGER) is
+	body_force (a_body: FEATURE_AS; a_body_index: INTEGER)
 			-- Put `a_body' under `a_body_index'.
 		require
 			a_body_not_void: a_body /= Void
@@ -79,7 +79,7 @@ feature -- Body element change
 			has: body_has (a_body_index)
 		end
 
-	body_replace (an_old_body_index, a_new_body_index: INTEGER) is
+	body_replace (an_old_body_index, a_new_body_index: INTEGER)
 			-- Replace the id of the body with `an_old_body_index' with `a_new_body_index'.
 		require
 			an_old_body_index_positive: an_old_body_index >= 0
@@ -105,7 +105,7 @@ feature -- Body element change
 			has_new: body_has (a_new_body_index)
 		end
 
-	desactive (a_body_index: INTEGER) is
+	desactive (a_body_index: INTEGER)
 			-- Put `a_body_index' in `useless_body_indexes'.
 		require
 			body_index_positive: a_body_index >= 0
@@ -120,7 +120,7 @@ feature -- Body element change
 			end
 		end
 
-	reactivate (a_body_index: INTEGER) is
+	reactivate (a_body_index: INTEGER)
 			-- Remove `a_body_index' from `useless_body_indexes' if
 			-- present, otherwise nothing.
 		require
@@ -140,7 +140,7 @@ feature -- Body element change
 
 feature -- Invariant element change
 
-	invariant_remove (a_class_id: INTEGER) is
+	invariant_remove (a_class_id: INTEGER)
 			-- Remove the invariant of `a_class_id' in INV_AST_SERVER upon finalization.
 		require
 			a_class_id_positive: a_class_id >= 0
@@ -152,7 +152,7 @@ feature -- Invariant element change
 
 feature -- Unique values element change
 
-	unique_values_put (a_unique_values: HASH_TABLE [INTEGER, STRING]; a_class_id: INTEGER) is
+	unique_values_put (a_unique_values: HASH_TABLE [INTEGER, STRING]; a_class_id: INTEGER)
 			-- Put the `a_unique_values' of `a_class_id'.
 		require
 			a_unique_values_not_void: a_unique_values /= Void
@@ -166,7 +166,7 @@ feature -- Unique values element change
 
 feature -- Element access
 
-	has (a_class_id: INTEGER): BOOLEAN is
+	has (a_class_id: INTEGER): BOOLEAN
 			-- Does the server contain a class with `a_class_id'?
 		require else
 			a_class_id_positive: a_class_id >= 0
@@ -174,7 +174,7 @@ feature -- Element access
 			Result := storage.has (a_class_id) or else Precursor (a_class_id)
 		end
 
-	item (a_class_id: INTEGER): CLASS_AS is
+	item (a_class_id: INTEGER): CLASS_AS
 			-- Get class with `a_class_id'.
 		do
 			Result := storage.item (a_class_id)
@@ -183,7 +183,7 @@ feature -- Element access
 			end
 		end
 
-	body_has (a_body_id: INTEGER): BOOLEAN is
+	body_has (a_body_id: INTEGER): BOOLEAN
 			-- Does the server contain a feature with `a_body_id'?
 		require
 			a_body_id_positive: a_body_id >= 0
@@ -191,7 +191,7 @@ feature -- Element access
 			Result := body_storage.has (a_body_id) or else body_info.has (a_body_id)
 		end
 
-	body_item (a_body_id: INTEGER): FEATURE_AS is
+	body_item (a_body_id: INTEGER): FEATURE_AS
 			-- Get feature with `a_body_id'.
 		require
 			a_body_id_positive: a_body_id >= 0
@@ -219,7 +219,7 @@ feature -- Element access
 			end
 		end
 
-	invariant_has (a_class_id: INTEGER): BOOLEAN is
+	invariant_has (a_class_id: INTEGER): BOOLEAN
 			-- Does the server contain an invariant with `a_class_id'?
 		require
 			a_class_id_positive: a_class_id >= 0
@@ -231,7 +231,7 @@ feature -- Element access
 			end
 		end
 
-	invariant_item (a_class_id: INTEGER): INVARIANT_AS is
+	invariant_item (a_class_id: INTEGER): INVARIANT_AS
 			-- Get invariant with `a_class_id'.
 		require
 			a_class_id_positive: a_class_id >= 0
@@ -259,7 +259,7 @@ feature -- Element access
 			end
 		end
 
-	unique_values_item (a_class_id: INTEGER): HASH_TABLE [INTEGER, STRING] is
+	unique_values_item (a_class_id: INTEGER): HASH_TABLE [INTEGER, STRING]
 			-- Get the unique values of `a_class_id'.
 		require
 			a_class_id_positive: a_class_id >= 0
@@ -269,7 +269,7 @@ feature -- Element access
 
 feature -- Finalization
 
-	finalize is
+	finalize
 			-- Finalization after a successful recompilation.
 		local
 			useless_body_index: INTEGER
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation (in memory)
 
 feature -- Implementation (disk cache)
 
-	cache: CACHE [CLASS_AS] is
+	cache: CACHE [CLASS_AS]
 			-- Cache for classes.
 		once
 			create Result.make
@@ -391,7 +391,7 @@ feature {NONE} -- Store to disk
 	current_class_id: INTEGER
 			-- The current class id (used to insert invariants during file saving).
 
-	make_index (obj: ANY; file_position, object_count: INTEGER) is
+	make_index (obj: ANY; file_position, object_count: INTEGER)
 			-- Store object `obj' and track the instances
 			-- of FEATURE_AS and INVARIANT_AS
 		local
@@ -408,7 +408,7 @@ feature {NONE} -- Store to disk
 			end
 		end
 
-	need_index (obj: ANY): BOOLEAN is
+	need_index (obj: ANY): BOOLEAN
 			-- Is an index needed for `obj'?
 		local
 			l_dynamic_type: INTEGER
@@ -429,13 +429,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation of dynamic type checking
 
-	invariant_as_type: INTEGER is
+	invariant_as_type: INTEGER
 			-- Dynamic type of objects of type INVARIANT_AS.
 		once
 			Result := dynamic_type_from_string ("INVARIANT_AS")
 		end
 
-	feature_as_type: INTEGER is
+	feature_as_type: INTEGER
 			-- Dynamic type of objects of type INVARIANT_AS.
 		once
 			Result := dynamic_type_from_string ("FEATURE_AS")
@@ -443,12 +443,12 @@ feature {NONE} -- Implementation of dynamic type checking
 
 feature {NONE} -- Implementation Constants
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 feature {NONE} -- Implementation disk read
 
-	partial_retrieve_body (file_desc: INTEGER; pos, nb_obj: INTEGER): FEATURE_AS is
+	partial_retrieve_body (file_desc: INTEGER; pos, nb_obj: INTEGER): FEATURE_AS
 			-- (export status {NONE})
 		external
 			"C | %"pretrieve.h%""
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation disk read
 			"partial_retrieve"
 		end
 
-	partial_retrieve_invariant (file_desc: INTEGER; pos, nb_obj: INTEGER): INVARIANT_AS is
+	partial_retrieve_invariant (file_desc: INTEGER; pos, nb_obj: INTEGER): INVARIANT_AS
 			-- (export status {NONE})
 		external
 			"C | %"pretrieve.h%""
@@ -474,7 +474,7 @@ invariant
 	useless_body_indexes_not_void: useless_body_indexes /= Void
 	invariants_to_remove_not_void: invariants_to_remove /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

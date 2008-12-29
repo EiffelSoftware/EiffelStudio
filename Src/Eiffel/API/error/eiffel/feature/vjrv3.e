@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for invalid reverse assignment attempt on attached entities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,9 +16,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER = 3;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for violation of Creation Procedure rule"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (c: CLASS_C; n: FEATURE_NAME; t: TYPE_A; l: LOCATION_AS; s: like subcode) is
+	make (c: CLASS_C; n: FEATURE_NAME; t: TYPE_A; l: LOCATION_AS; s: like subcode)
 			-- Create error object for class `c' and type `t' at location `l' with subcode `s'.
 		require
 			c_attached: c /= Void
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Access
 
-	code: STRING is "VYCP"
+	code: STRING = "VYCP"
 			-- Name of error
 
 	subcode: INTEGER
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	type: TYPE_A
 			-- Conversion type
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			Precursor (a_text_formatter)
 			a_text_formatter.add ("Feature name: ")
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

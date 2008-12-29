@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process BUILT_IN_AS nodes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	File_buffer: YY_FILE_BUFFER is
+	File_buffer: YY_FILE_BUFFER
 			-- Parser input file buffer
 			-- Redefined as nested parsing causes assertion violations.
 		once

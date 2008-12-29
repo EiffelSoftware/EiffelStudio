@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for real 32 bits type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize new instance of REAL_32_A.
 		do
 			make (associated_class.class_id)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_real_32_a (Current)
@@ -35,12 +35,12 @@ feature -- Visitor
 
 feature -- Property
 
-	is_real_32: BOOLEAN is True
+	is_real_32: BOOLEAN = True
 			-- Is the current type a real 32 bits type ?
 
 feature -- Access
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class REAL
 		once
 			Result := System.real_32_class.compiled_class
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- IL code generation
 
-	heaviest (other: TYPE_A): TYPE_A is
+	heaviest (other: TYPE_A): TYPE_A
 			-- `other' if `other' is heavier than Current,
 			-- Current otherwise.
 		do
@@ -61,22 +61,22 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER}
 
-	is_numeric: BOOLEAN is True
+	is_numeric: BOOLEAN = True
 			-- Is the current type a numeric type ?
 
-	c_type: REAL_32_I is
+	c_type: REAL_32_I
 			-- C type
 		do
 			Result := real32_c_type
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := same_type (other)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

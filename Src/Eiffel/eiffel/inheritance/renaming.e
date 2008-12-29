@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compiler representation of feature renaming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (name_id: like feature_name_id; alias_id: like alias_name_id; convert_mark: like has_convert_mark) is
+	make (name_id: like feature_name_id; alias_id: like alias_name_id; convert_mark: like has_convert_mark)
 			-- Initialize `Current'.
 		require
 			valid_name_id: names_heap.valid_index (name_id)
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Modification
 
-	set_alias_name_id (alias_id: like alias_name_id) is
+	set_alias_name_id (alias_id: like alias_name_id)
 			-- Set `alias_name_id' to `alias_id'.
 		require
 			valid_alias_id: alias_id /= 0 and then names_heap.valid_index (alias_id)
@@ -64,7 +64,7 @@ invariant
 	valid_alias_name_id: alias_name_id /= 0 implies names_heap.valid_index (alias_name_id)
 	valid_has_convert_mark: has_convert_mark implies alias_name_id /= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

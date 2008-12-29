@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects used to store and retrieve data for IL Debug Information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			system_name := Void
@@ -35,35 +35,35 @@ feature -- Data
 
 feature -- Change
 
-	set_system_name (val: like system_name) is
+	set_system_name (val: like system_name)
 			-- Change value
 		require
 		do
 			system_name := val
 		end
 
-	set_project_path (val: like project_path) is
+	set_project_path (val: like project_path)
 			-- Change value
 		require
 		do
 			project_path := val
 		end
 		
-	set_modules_debugger_info (val: like modules_debugger_info) is
+	set_modules_debugger_info (val: like modules_debugger_info)
 			-- Change value
 		require
 		do
 			modules_debugger_info := val
 		end
 
-	set_class_types_debugger_info (val: like class_types_debugger_info) is
+	set_class_types_debugger_info (val: like class_types_debugger_info)
 			-- Change value
 		require
 		do
 			class_types_debugger_info := val
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

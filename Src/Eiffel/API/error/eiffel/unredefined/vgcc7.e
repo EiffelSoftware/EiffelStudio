@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Target of a creation instruction can only be an attribute, a local or Result."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,9 +15,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 7;
+	subcode: INTEGER = 7;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

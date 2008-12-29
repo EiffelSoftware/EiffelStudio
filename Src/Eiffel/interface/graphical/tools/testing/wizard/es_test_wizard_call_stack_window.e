@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_CALL_STACK_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -298,7 +298,7 @@ feature {NONE} -- Constants
 			Result := (create {EV_STOCK_COLORS}).grey
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

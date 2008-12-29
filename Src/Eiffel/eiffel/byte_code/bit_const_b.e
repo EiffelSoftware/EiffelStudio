@@ -1,4 +1,4 @@
-indexing
+note
 	description: "BIT constant byte node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: STRING) is
+	make (v: STRING)
 			-- Assign `v' to `value'.
 		do
 			value := v
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bit_const_b (Current)
@@ -43,32 +43,32 @@ feature -- Access
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A string is a simple expression
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A bit constant is constant
 
-	type: BITS_A is
+	type: BITS_A
 			-- Bit type
 		do
 			create Result.make (value.count)
 		end
 
-	enlarged: BIT_CONST_BL is
+	enlarged: BIT_CONST_BL
 			-- Enlarged node
 		do
 			create Result.make (value)
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
             -- Is register `r' used in local or forthcomming dot calls ?
         do
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

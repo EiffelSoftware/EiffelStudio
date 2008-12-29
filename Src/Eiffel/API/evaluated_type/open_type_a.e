@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type of operand `?' in argument list of an agent creation. Just a placeholder during type check."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 		end
 
 feature -- Visitor
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_open_type_a (Current)
@@ -30,11 +30,11 @@ feature -- Visitor
 
 feature -- Properties
 
-	has_associated_class: BOOLEAN is False
+	has_associated_class: BOOLEAN = False
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		local
 			t : OPEN_TYPE_A
@@ -45,12 +45,12 @@ feature -- Comparison
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := {SHARED_HASH_CODE}.other_code
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			other_type: OPEN_TYPE_A
@@ -59,7 +59,7 @@ feature -- Access
 			Result := (other_type /= Void)
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class to the type (Void)
 		do
 			-- Nothing.
@@ -67,7 +67,7 @@ feature -- Access
 			not_called : False
 		end
 
-	good_generics: BOOLEAN is
+	good_generics: BOOLEAN
 
 		do
 			Result := True
@@ -75,12 +75,12 @@ feature -- Access
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.add ({SHARED_TEXT_ITEMS}.ti_Open_arg)
 		end
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		do
 			create Result.make (1)
@@ -89,7 +89,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Conformance
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		do
 			-- An open type can be replaced by anything
@@ -98,13 +98,13 @@ feature {COMPILER_EXPORTER} -- Conformance
 
 feature {COMPILER_EXPORTER} -- Instantitation of a feature type
 
-	create_info: CREATE_INFO is
+	create_info: CREATE_INFO
 			-- Byte code information for entity type creation
 		do
 			-- Not creatable
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

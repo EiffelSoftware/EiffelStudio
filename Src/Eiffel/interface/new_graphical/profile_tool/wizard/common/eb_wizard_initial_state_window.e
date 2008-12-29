@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Template for the first state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ feature -- Access
 
 feature -- Basic Operations
 
-	display is
+	display
 			-- Display Current State
 		do
 			build
 		end
 
-	build is
+	build
 			-- Special display box for the first and the last state
 		local
 			vertical_separator: EV_VERTICAL_SEPARATOR
@@ -80,7 +80,7 @@ feature -- Basic Operations
 			main_box.extend (interior_box)			
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

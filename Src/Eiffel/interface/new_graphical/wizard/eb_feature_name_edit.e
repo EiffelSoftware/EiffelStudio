@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Edit field that prompt the user to type a symbol for a feature%N%
 		%or local variable. Cannot be a symbol already defined or a keyword."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			set_minimum_width (100)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Are contents of `Current' valid?
 		do
 			Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (text)
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	on_text_change is
+	on_text_change
 		local
 			t: STRING
 		do
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_defined (a_string: STRING): BOOLEAN is
+	is_defined (a_string: STRING): BOOLEAN
 			-- Is `a_string' already defined in current class?
 		require
 			a_string_not_void: a_string /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

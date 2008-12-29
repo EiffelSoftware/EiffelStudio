@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Prepare the C code to work with the server"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			store_init
 			retrieve_init
@@ -21,7 +21,7 @@ feature -- Initialization
 
 feature -- Disposal
 
-	dispose is
+	dispose
 		external
 			"C use %"pstore.h%""
 		alias
@@ -30,21 +30,21 @@ feature -- Disposal
 
 feature {NONE} -- Externals
 
-	store_init is
+	store_init
 		external
 			"C use %"pstore.h%""
 		alias
 			"parsing_store_initialize"
 		end
 
-	retrieve_init is
+	retrieve_init
 		external
 			"C use %"pretrieve.h%""
 		alias
 			"parsing_retrieve_initialize"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

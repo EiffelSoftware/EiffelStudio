@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows that allow the user to choose the feature he or she%N%
 				%wants to delete"
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the dialog box.
 		do
 			Precursor
@@ -74,7 +74,7 @@ feature -- Access
 	cancel_button: EV_BUTTON
 			-- Button with label "Cancel".
 
-	selected_item: STRING is
+	selected_item: STRING
 			-- Feature name chosen by the user.
 			-- Void if none.
 		do
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [STRING] is
+	selected_items: LINKED_LIST [STRING]
 			-- Feature names chosen by the user.
 		local
 			tmp: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+	set_strings (a_string_array: INDEXABLE [STRING, INTEGER])
 			-- Wipe out `feature_list' and re-initialize with an item
 			-- for each of `a_string_array'.
 		do
@@ -122,21 +122,21 @@ feature {NONE} -- Implementation
 
 	feature_list: EV_LIST
 
-	ok_action is
+	ok_action
 			-- Closes dialog.
 		do
 			cancelled := False
 			hide
 		end
 
-	cancel_action is
+	cancel_action
 			-- Closes dialog.
 		do
 			cancelled := True
 			hide
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Records arguments for application execution."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 			-- Execute Current batch command
 		local
 			args, new_args, cmd: STRING;
@@ -52,12 +52,12 @@ feature {NONE} -- Execution
 			end;
 		end;
 
-	execute is
+	execute
 			-- This command is available only for the `loop' mode.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

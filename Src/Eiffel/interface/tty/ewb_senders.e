@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays the senders of a feature in output_window."
@@ -22,19 +22,19 @@ create
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current command
 		do
 			Result := callers_cmd_name
 		end
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 			-- Help message for current command
 		do
 			Result := callers_help
 		end
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 			-- Abbreviation for current command
 		do
 			Result := callers_abb
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_all_callers is
+	set_all_callers
 			-- Set `to_show_all_callers' to `True'
 		do
 			to_show_all_callers := True
@@ -50,7 +50,7 @@ feature -- Setting
 			to_show_all_callers: to_show_all_callers
 		end
 
-	clear_target_only is
+	clear_target_only
 			-- Do not restrict callers only to assigners or creators.
 		do
 			is_assigners_only := False
@@ -60,7 +60,7 @@ feature -- Setting
 			not_is_creators_only: not is_creators_only
 		end
 
-	set_assigners_only is
+	set_assigners_only
 			-- Restrict callers only to assigners.
 		do
 			is_assigners_only := True
@@ -70,7 +70,7 @@ feature -- Setting
 			not_is_creators_only: not is_creators_only
 		end
 
-	set_creators_only is
+	set_creators_only
 			-- Restrict callers only to creators.
 		do
 			is_assigners_only := False
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	is_creators_only: BOOLEAN
 			-- Have creators to be shown only?
 
-	associated_cmd: E_SHOW_CALLERS is
+	associated_cmd: E_SHOW_CALLERS
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	loop_action is
+	loop_action
 		do
 			command_line_io.get_class_name
 			class_name := command_line_io.last_input
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			check_arguments_and_execute
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

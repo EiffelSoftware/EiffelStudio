@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bit description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ feature -- Access
 	value: INTEGER
 			-- Bits value
 
-	type_i: TYPE_A is
+	type_i: TYPE_A
 			-- Correspdonding instance of BIT type.
 		do
 			create {BITS_A} Result.make (value)
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 			-- Sk value
 		do
 			Result := {SK_CONST}.Sk_bit + value
@@ -34,12 +34,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_bits: BOOLEAN is True
+	is_bits: BOOLEAN = True
 			-- Is the attribute a bits one ?
 
 feature -- Comparisons
 
-	same_as (other: ATTR_DESC): BOOLEAN is
+	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			other_bits: BITS_DESC
@@ -52,7 +52,7 @@ feature -- Comparisons
 
 feature -- Settings
 
-	set_value (i: INTEGER) is
+	set_value (i: INTEGER)
 			-- Assign `i' to `value'.
 		require
 			i_positive: i >= 0
@@ -64,7 +64,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
@@ -73,7 +73,7 @@ feature -- Code generation
 			buffer.put_integer (value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

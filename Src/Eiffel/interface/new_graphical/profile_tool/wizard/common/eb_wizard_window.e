@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window on which is displayed the wizards"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current window.
 		local
 			v1: EV_VERTICAL_BOX
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			reset_default_cancel_button
 		end
 
-	build_navigation_bar (a_box: EV_BOX) is
+	build_navigation_bar (a_box: EV_BOX)
 			-- Build the navigation bar.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature -- Operations
 
-	load_first_state (initial_state: EB_WIZARD_STATE_WINDOW) is
+	load_first_state (initial_state: EB_WIZARD_STATE_WINDOW)
 			-- Load first state.
 		do
 			proceed_with_new_state (initial_state)
@@ -112,32 +112,32 @@ feature {NONE} -- Implementation
 
 feature {EB_WIZARD_STATE_WINDOW} -- Basic Operations	
 
-	set_final_state (text: STRING_GENERAL) is
+	set_final_state (text: STRING_GENERAL)
 			-- Current state is final, hence a special process.
 		do
 			next_b.set_text(text)
 			is_final := True
 		end
 
-	set_intermediary_state is
+	set_intermediary_state
 			-- Current state is intermediate.
 		do
 			is_final := False
 		end
 
-	disable_next_button is
+	disable_next_button
 			-- Disable the Next/Finish button
 		do
 			next_b.disable_sensitive
 		end
 
-	enable_next_button is
+	enable_next_button
 			-- Enable the Next/Finish button
 		do
 			next_b.enable_sensitive
 		end
 
-	disable_back_button is
+	disable_back_button
 			-- Enable the Next/Finish button
 		do
 			previous_b.disable_sensitive
@@ -157,7 +157,7 @@ feature {EB_WIZARD_STATE_WINDOW} -- Basic Operations
 
 feature -- Basic Operations
 
-	previous_page is
+	previous_page
 			-- Go to the previous page.
 		do
 			if history.count > 1 then
@@ -166,7 +166,7 @@ feature -- Basic Operations
 			update_navigation
 		end
 
-	update_navigation is
+	update_navigation
 			-- Update navigation buttons.
 		do
 			if history.count < 1 or else history.isfirst  then
@@ -179,7 +179,7 @@ feature -- Basic Operations
 			end
 		end
 
-	next_page is
+	next_page
 			-- Go to next page if possible.
 		do
 			if not history.after then
@@ -188,7 +188,7 @@ feature -- Basic Operations
 			update_navigation
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			wide_image := ""
@@ -50,14 +50,14 @@ feature -- Width & height
 			-- The width is equal to the pixmap width since this token is not
 			-- a real text token.
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
 			Result := 0
 		end
 
-	retrieve_position_by_width (a_width: INTEGER): INTEGER is
+	retrieve_position_by_width (a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
@@ -66,7 +66,7 @@ feature -- Width & height
 
 feature -- Miscellaneous
 
-	update_position is
+	update_position
 			-- Update the value of `position' to its correct value
 		do
 				-- Update current position
@@ -78,7 +78,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 		local
 			a_background_color: like background_color
 		do
@@ -100,29 +100,29 @@ feature -- Miscellaneous
 			end
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		do
 		end
 
-	hide is
+	hide
 			-- Hide Current
 		do
 			width := 0
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Graphical representation of the breakable mark.
 		do
 			Result := Breakpoint_pixmaps_factory.pixmap_for_routine_index (Debugger_manager, pebble.routine, pebble.index, True)
 		end
 
-	Breakpoint_pixmaps_factory: BREAKPOINT_PIXMAPS_FACTORY is
+	Breakpoint_pixmaps_factory: BREAKPOINT_PIXMAPS_FACTORY
 		once
 			create Result
 		end
 
-	editor_preferences: EB_EDITOR_DATA is
+	editor_preferences: EB_EDITOR_DATA
 			--
 		once
 			Result ?= editor_preferences_cell.item
@@ -130,14 +130,14 @@ feature -- Miscellaneous
 
 feature -- Color
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			Result := breakpoint_background_color_id
 		end
 
 feature -- Visitor
 
-	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+	process (a_visitor: EIFFEL_TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_breakpoint (Current)
@@ -146,7 +146,7 @@ feature -- Visitor
 invariant
 		breakpoint_is_first: previous = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared metric utilities. Can be used in both batch and gui mode"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	metric_validity_checker: EB_METRIC_VALIDITY_VISITOR is
+	metric_validity_checker: EB_METRIC_VALIDITY_VISITOR
 			-- Metric validity checker
 		once
 			create Result.make (metric_manager)
@@ -24,7 +24,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	archive_validity_checker: EB_METRIC_ARCHIVE_VALIDITY_CHECKER is
+	archive_validity_checker: EB_METRIC_ARCHIVE_VALIDITY_CHECKER
 			-- Metric archiv evalidity checker
 		once
 			create Result.make (metric_manager)
@@ -32,7 +32,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	criterion_factory: EB_METRIC_CRITERION_FACTORY is
+	criterion_factory: EB_METRIC_CRITERION_FACTORY
 			-- Criterion factory
 		once
 			create Result.make
@@ -42,16 +42,16 @@ feature -- Access
 
 feature -- Access/Metric type
 
-	basic_metric_type: INTEGER is 1
+	basic_metric_type: INTEGER = 1
 			-- Basic metric type
 
-	linear_metric_type: INTEGER is 2
+	linear_metric_type: INTEGER = 2
 			-- Linear metric type
 
-	ratio_metric_type: INTEGER is 3
+	ratio_metric_type: INTEGER = 3
 			-- Ratio metric type
 
-	metric_type_id (a_metric: EB_METRIC): INTEGER is
+	metric_type_id (a_metric: EB_METRIC): INTEGER
 			-- Metric type id of `a_metric'
 		require
 			a_metric_attached: a_metric /= Void
@@ -67,7 +67,7 @@ feature -- Access/Metric type
 			good_result: is_metric_type_valid (Result)
 		end
 
-	metric_type_name (a_metric_type_id: INTEGER): STRING_GENERAL is
+	metric_type_name (a_metric_type_id: INTEGER): STRING_GENERAL
 			-- Metric type name of `a_metrc_type_id'
 		require
 			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
@@ -87,7 +87,7 @@ feature -- Access/Metric type
 
 feature -- Status report
 
-	is_metric_type_valid (a_type: INTEGER): BOOLEAN is
+	is_metric_type_valid (a_type: INTEGER): BOOLEAN
 			-- Is `a_type' a valid metric type
 			-- For information of metric type, see `basic_metric_type', `linear_metric_type' and `ratio_metric_type'
 		do
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- UUID
 
-	shared_uuid: UUID is
+	shared_uuid: UUID
 			-- UUID
 		once
 			create Result
@@ -106,23 +106,23 @@ feature -- UUID
 
 feature -- Value test operator type index
 
-	equal_to_type: INTEGER is 1
-	not_equal_to_type: INTEGER is 2
-	less_than_type: INTEGER is 3
-	less_than_equal_to_type: INTEGER is 4
-	greater_than_type: INTEGER is 5
-	greater_than_equal_to_type: INTEGER is 6
+	equal_to_type: INTEGER = 1
+	not_equal_to_type: INTEGER = 2
+	less_than_type: INTEGER = 3
+	less_than_equal_to_type: INTEGER = 4
+	greater_than_type: INTEGER = 5
+	greater_than_equal_to_type: INTEGER = 6
 
-	equal_to_operator: STRING is "="
-	not_equal_to_operator: STRING is "/="
-	less_than_operator: STRING is "<"
-	less_than_equal_to_operator: STRING is "<="
-	greater_than_operator: STRING is ">"
-	greater_than_equal_to_operator: STRING is ">="
+	equal_to_operator: STRING = "="
+	not_equal_to_operator: STRING = "/="
+	less_than_operator: STRING = "<"
+	less_than_equal_to_operator: STRING = "<="
+	greater_than_operator: STRING = ">"
+	greater_than_equal_to_operator: STRING = ">="
 
 feature -- Access/Criterion type
 
-	operator_table: HASH_TABLE [STRING, INTEGER] is
+	operator_table: HASH_TABLE [STRING, INTEGER]
 			-- Table for "=", "/=", ">", ">=", "<", "<=" operators
 			-- Key is operator type index, value is name of that operator
 		once
@@ -137,7 +137,7 @@ feature -- Access/Criterion type
 			result_attached: Result /= Void
 		end
 
-	operator_name_table: HASH_TABLE [INTEGER, STRING] is
+	operator_name_table: HASH_TABLE [INTEGER, STRING]
 			-- Table for "=", "/=", ">", ">=", "<", "<=" operators
 			-- Key is the operator name, value is operator type index of that operator
 		once
@@ -154,7 +154,7 @@ feature -- Access/Criterion type
 
 feature -- Matching strategies
 
-	matching_strategy_names_table: HASH_TABLE [STRING_32, INTEGER] is
+	matching_strategy_names_table: HASH_TABLE [STRING_32, INTEGER]
 			-- Display name table for matching strategies
 			-- [Displayed matching strategy name, matching strategy index]
 		once
@@ -167,7 +167,7 @@ feature -- Matching strategies
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

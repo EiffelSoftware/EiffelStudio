@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {DBG_EVALUATOR_DOTNET} -- Access
 
-	Eifnet_debugger: EIFNET_DEBUGGER is
+	Eifnet_debugger: EIFNET_DEBUGGER
 			-- Initialize `Current'.
 		once
 			create Result.make
@@ -23,17 +23,17 @@ feature {DBG_EVALUATOR_DOTNET} -- Access
 
 feature -- Status
 
-	eifnet_debugger_initialized: BOOLEAN is
+	eifnet_debugger_initialized: BOOLEAN
 		do
 			Result := eifnet_debugger_initialized_cell.item
 		end
 
-	eifnet_debugger_initialized_cell: CELL [BOOLEAN] is
+	eifnet_debugger_initialized_cell: CELL [BOOLEAN]
 		once
 			create Result.put (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Error if the specified target could not be found."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: STRING) is
+	make (a_target: STRING)
 			-- Create.
 		require
 			a_target_not_void: a_target /= Void
@@ -35,14 +35,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add ("Target with name "+target_name+" could not be found.");
 			st.add_new_line
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

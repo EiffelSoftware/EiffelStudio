@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C inline extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature  -- Initialization
 
-	make (is_cpp_inline: BOOLEAN) is
+	make (is_cpp_inline: BOOLEAN)
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_inline'.
 		do
@@ -37,12 +37,12 @@ feature -- Properties
 	is_cpp: BOOLEAN
 		-- Is Current inline a C++ one?
 
-	is_inline: BOOLEAN is True
+	is_inline: BOOLEAN = True
 		-- Is Current external an inline one?
 
 feature -- Settings
 
-	set_argument_names (args: like argument_names) is
+	set_argument_names (args: like argument_names)
 			-- Set `argument_names' with `args'.
 		do
 			argument_names := args
@@ -52,14 +52,14 @@ feature -- Settings
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 		do
 			Result := Precursor (other) and then special_is_equal (argument_names, other.argument_names)
 		end
 
 feature -- Code generation
 
-	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate code for inline C feature in a body, i.e. encpasulation of inline.
 		local
 			l_buffer: GENERATION_BUFFER
@@ -110,7 +110,7 @@ feature -- Code generation
 			l_buffer.put_two_character (')', ';')
 		end
 
-	force_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING]) is
+	force_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING])
 			-- Add routine `name' in set of already generated inlines if not present already.
 		require
 			a_ret_type_not_void: a_ret_type /= Void
@@ -123,7 +123,7 @@ feature -- Code generation
 			end
 		end
 
-	inline_name (a_name: STRING): STRING is
+	inline_name (a_name: STRING): STRING
 			-- Name of inline routine from original name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -133,7 +133,7 @@ feature -- Code generation
 			inline_name_not_void: Result /= Void
 		end
 
-	generate_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING]) is
+	generate_inline_def (a_ret_type: TYPE_A; name: STRING; arg_types: ARRAY [STRING])
 			-- Generate content of inline routine `name' in a separate routine called `inline_name'.
 		require
 			a_ret_type_not_void: a_ret_type /= Void
@@ -184,7 +184,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	internal_generate_inline (a_ret_type: TYPE_A) is
+	internal_generate_inline (a_ret_type: TYPE_A)
 			-- Generate code for inline C feature.
 		local
 			l_code, l_arg: STRING
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	inline_arg_names (count: INTEGER): ARRAY [STRING] is
+	inline_arg_names (count: INTEGER): ARRAY [STRING]
 			-- Names of the arguments
 		local
 			i : INTEGER
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	alias_contains_return (c_code: STRING): BOOLEAN is
+	alias_contains_return (c_code: STRING): BOOLEAN
 			-- checks, whether there is a return statement in c_code
 		local
 			in_string, in_char, in_single_comment,
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 		end
 	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

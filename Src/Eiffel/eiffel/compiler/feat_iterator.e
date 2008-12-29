@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -19,7 +19,7 @@ feature
 	marked_table: ARRAY [ROUT_ID_SET]
 				-- table of marked rout_ids indexed by body_indexes
 
-	make is
+	make
 			-- Initialization
 		do
 			create used_table.make (1, System.body_index_counter.count)
@@ -69,7 +69,7 @@ feature {NONE} -- Modification
 
 feature {NONE}
 
-	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER) is
+	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER)
 			-- Mark feature and its redefinitions
 		local
 			table: ROUT_TABLE;
@@ -100,7 +100,7 @@ feature {NONE}
 			end;
 		end;
 
-	mark_and_record (body_index: INTEGER; actual_class_id: INTEGER; written_class_id: INTEGER) is
+	mark_and_record (body_index: INTEGER; actual_class_id: INTEGER; written_class_id: INTEGER)
 			-- Mark feature `feat' alive.
 		local
 			depend_list: FEATURE_DEPENDANCE
@@ -161,19 +161,19 @@ DEBUG ("DEAD_CODE")
 end
 		end
 
-	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; dep: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; dep: FEATURE_DEPENDANCE)
 		deferred
 		end
 
 feature
 
-	mark_alive (body_index: INTEGER) is
+	mark_alive (body_index: INTEGER)
 			-- record feature of body_index
 		do
 			used_table.put (True, body_index)
 		end
 
-	mark_treated (body_index: INTEGER; rout_id: INTEGER) is
+	mark_treated (body_index: INTEGER; rout_id: INTEGER)
 			-- record feature of body_index
 		local
 			tmp: ROUT_ID_SET
@@ -186,12 +186,12 @@ feature
 			tmp.extend (rout_id)
 		end
 
-	is_alive (body_index: INTEGER): BOOLEAN is
+	is_alive (body_index: INTEGER): BOOLEAN
 		do
 			Result := used_table.item (body_index)
 		end
 
-	is_treated (body_index: INTEGER; rout_id: INTEGER): BOOLEAN is
+	is_treated (body_index: INTEGER; rout_id: INTEGER): BOOLEAN
 		local
 			tmp: ROUT_ID_SET
 		do
@@ -199,7 +199,7 @@ feature
 			Result := tmp /= Void and then tmp.has (rout_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

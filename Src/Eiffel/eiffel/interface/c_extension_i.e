@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Code generation
 
-	generate_body (c_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (c_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate encapsulation to C/C++ macro external `c_byte_code'.
 		local
 			l_ret_type: TYPE_A
@@ -38,7 +38,7 @@ feature -- Code generation
 			l_buffer.put_new_line
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_args: ARRAY [STRING]; a_ret_type: TYPE_A) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_args: ARRAY [STRING]; a_ret_type: TYPE_A)
 			-- Generate inline C external call.
 		require
 			external_name_not_void: external_name /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	internal_generate_access (
 			external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER;
 			a_ret_type: TYPE_A; l_argument_types: ARRAY [STRING])
-		is
+		
 			-- Generate inline C external call.
 		require
 			external_name_not_void: external_name /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

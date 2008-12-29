@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that changes all occurrences of a class name to a new name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_old_class_name: STRING; a_new_class_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN) is
+	make (an_old_class_name: STRING; a_new_class_name: STRING; a_change_comments: BOOLEAN; a_change_strings: BOOLEAN)
 			-- Create a visitor that renames the class `an_old_class_name' into `a_new_class_name'.
 			-- `a_change_comments' specifies if the occurance of the name in comments should be changed.
 			-- `a_change_strings' specifies if the occurance of the name in strings should be changed.
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 			-- Process `l_as'.
 		do
 			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
@@ -52,7 +52,7 @@ feature
 			Precursor (l_as)
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
 				l_as.class_name.replace_text (new_class_name, match_list)
@@ -61,7 +61,7 @@ feature
 			Precursor (l_as)
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 			-- Process `l_as'.
 		do
 			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
@@ -71,7 +71,7 @@ feature
 			Precursor (l_as)
 		end
 
-	 process_client_as (l_as: CLIENT_AS) is
+	 process_client_as (l_as: CLIENT_AS)
 			-- Process export clauses
 		local
 			l_list: EIFFEL_LIST [ID_AS]
@@ -92,7 +92,7 @@ feature
 			end
 		end
 
-	process_break_as (l_as: BREAK_AS) is
+	process_break_as (l_as: BREAK_AS)
 			-- Process breaks which could be comments.
 		do
 			if change_comments then
@@ -102,7 +102,7 @@ feature
 			Precursor (l_as)
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 		do
 			if change_strings then
 				l_as.replace_subtext ("{"+old_class_name+"}", "{"+new_class_name+"}", False, match_list)
@@ -111,7 +111,7 @@ feature
 			Precursor (l_as)
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 			if change_strings then
 				l_as.replace_subtext ("{"+old_class_name+"}", "{"+new_class_name+"}", False, match_list)
@@ -140,7 +140,7 @@ invariant
 	old_class_name_upper: old_class_name.is_equal (old_class_name.as_upper)
 	new_class_name_upper: new_class_name.is_equal (new_class_name.as_upper)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

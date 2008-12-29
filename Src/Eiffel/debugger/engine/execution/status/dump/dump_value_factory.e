@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dbg: like debugger_manager) is
+	make (dbg: like debugger_manager)
 			-- Instanciate Current with `dbg'
 		require
 			dbg_attached: dbg /= Void
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature {DEBUGGER_MANAGER} -- Change
 
-	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled) is
+	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled)
 			-- Set `debug_output_evaluation_enabled' to `b'
 		do
 			debug_output_evaluation_enabled := b
@@ -38,7 +38,7 @@ feature {NONE} -- Properties
 
 feature -- Prepare value
 
-	init_value (dv: DUMP_VALUE) is
+	init_value (dv: DUMP_VALUE)
 			-- Initialize value `dv' with optional parameters
 		require
 			dv_attached: dv /= Void
@@ -48,7 +48,7 @@ feature -- Prepare value
 
 feature -- Access
 
-	new_boolean_value (value: BOOLEAN; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_boolean_value (value: BOOLEAN; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a boolean item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -58,7 +58,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_character_value (value: CHARACTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_character_value (value: CHARACTER; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a character item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -68,7 +68,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_character_32_value (value: CHARACTER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_character_32_value (value: CHARACTER_32; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a character_32 item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -78,7 +78,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_integer_8_value  (value: INTEGER_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_integer_8_value  (value: INTEGER_8; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -88,7 +88,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_integer_16_value  (value: INTEGER_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_integer_16_value  (value: INTEGER_16; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -98,7 +98,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_integer_32_value  (value: INTEGER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_integer_32_value  (value: INTEGER_32; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -108,7 +108,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_integer_64_value  (value: INTEGER_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_integer_64_value  (value: INTEGER_64; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer_64 item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -118,7 +118,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_natural_8_value  (value: NATURAL_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_natural_8_value  (value: NATURAL_8; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -128,7 +128,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_natural_16_value  (value: NATURAL_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_natural_16_value  (value: NATURAL_16; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -138,7 +138,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_natural_32_value  (value: NATURAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_natural_32_value  (value: NATURAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -148,7 +148,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_natural_64_value  (value: NATURAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_natural_64_value  (value: NATURAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a integer_64 item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -158,7 +158,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_real_32_value (value: REAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_real_32_value (value: REAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a real item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -168,7 +168,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_real_64_value (value: REAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_real_64_value (value: REAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a real_64 item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -178,7 +178,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_bits_value  (a_value, a_type: STRING; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_bits_value  (a_value, a_type: STRING; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- Make bit item of type `a_type' and class `dtype'
 			-- initialized with `value'.
 		require
@@ -193,7 +193,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_pointer_value (value: POINTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
+	new_pointer_value (value: POINTER; dtype: CLASS_C): DUMP_VALUE_BASIC
 			-- make a pointer item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -203,7 +203,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_void_value (dtype: CLASS_C): DUMP_VALUE is
+	new_void_value (dtype: CLASS_C): DUMP_VALUE
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_void_value (dtype)
@@ -212,7 +212,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_object_value (addr: DBG_ADDRESS; a_dtype: CLASS_C): DUMP_VALUE is
+	new_object_value (addr: DBG_ADDRESS; a_dtype: CLASS_C): DUMP_VALUE
 			-- make a object item initialized to `value'
 		local
 			dvnet: DUMP_VALUE_DOTNET
@@ -234,7 +234,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C): DUMP_VALUE is
+	new_expanded_object_value  (addr: DBG_ADDRESS; dtype: CLASS_C): DUMP_VALUE
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
@@ -246,7 +246,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_manifest_string_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE is
+	new_manifest_string_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE
 			-- make a string item initialized to `value'
 		do
 			create Result.make_empty (debugger_manager)
@@ -256,7 +256,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE is
+	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_exception_value (value)
@@ -265,7 +265,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE): DUMP_VALUE is
+	new_procedure_return_value  (value: PROCEDURE_RETURN_DEBUG_VALUE): DUMP_VALUE
 		do
 			create Result.make_empty (debugger_manager)
 			Result.set_procedure_return_value (value)
@@ -276,7 +276,7 @@ feature -- Access
 
 feature -- Dotnet creation
 
-	new_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE): DUMP_VALUE_DOTNET is
+	new_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE): DUMP_VALUE_DOTNET
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_dsv /= Void
@@ -288,7 +288,7 @@ feature -- Dotnet creation
 			Result_attached: Result /= Void
 		end
 
-	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE_DOTNET is
+	new_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE): DUMP_VALUE_DOTNET
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_drv /= Void
@@ -300,7 +300,7 @@ feature -- Dotnet creation
 			Result_attached: Result /= Void
 		end
 
-	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE_DOTNET is
+	new_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE): DUMP_VALUE_DOTNET
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			arg_not_void: a_eifnet_dnav /= Void
@@ -316,7 +316,7 @@ invariant
 
 	debugger_manager_not_void: debugger_manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

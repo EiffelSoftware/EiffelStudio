@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Finalize precompiled eiffel system."
 	legal: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature -- Initialization
 
-	make (keep: like keep_assertions) is
+	make (keep: like keep_assertions)
 			-- Initialize Current with keep_assertions as `keep'
 			-- and project `proj'.
 		do
@@ -50,24 +50,24 @@ feature -- Initialization
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := finalized_precompile_cmd_name
 		end
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := finalize_precompile_help
 		end
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := finalize_precompile_abb
 		end
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 			-- Execute Current batch command form -loop.
 		local
 			answer: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	execute is
+	execute
 			-- Execute Current batch command.
 		do
 			print_header;
@@ -108,7 +108,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	perform_compilation is
+	perform_compilation
 		do
 			if Workbench.system_defined and then
 				System.keep_assertions /= keep_assertions
@@ -120,7 +120,7 @@ feature {NONE} -- Execution
 			Eiffel_project.finalize_precompile (keep_assertions)
 		end
 
-	process_finish_freezing (finalized_dir: BOOLEAN) is
+	process_finish_freezing (finalized_dir: BOOLEAN)
 			-- Perform finish_freezing step if needed or display message.
 		do
 			if eiffel_project.comp_system.il_generation then
@@ -132,7 +132,7 @@ feature {NONE} -- Execution
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

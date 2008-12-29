@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate the auxiliary files at the end%
 				%of a C generation"
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialisation
 
-	make (current_system: SYSTEM_I; current_context: BYTE_CONTEXT)  is
+	make (current_system: SYSTEM_I; current_context: BYTE_CONTEXT)
 		do
 			system := current_system
 			context := current_context
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Dynamic Library file
 
-	generate_dynamic_lib_file is
+	generate_dynamic_lib_file
 			-- generate dynamic_lib.
 		local
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
@@ -378,7 +378,7 @@ feature -- Dynamic Library file
 
 feature -- Plug and Makefile file
 
-	generate_plug is
+	generate_plug
 			-- Generate plug with run-time
 		local
 			any_cl, string_cl, bit_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
@@ -1160,7 +1160,7 @@ feature -- Plug and Makefile file
 			plug_file.close
 		end
 
-	generate_dynamic_ref_type (buffer: GENERATION_BUFFER) is
+	generate_dynamic_ref_type (buffer: GENERATION_BUFFER)
 			-- Generate dynaminc reference types of basic classes.
 		require
 			buffer_exists: buffer /= Void
@@ -1235,14 +1235,14 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N")
 		end
 
-	generate_make_file is
+	generate_make_file
 			-- Generate make file
 		do
 			system.makefile_generator.generate
 			system.makefile_generator.clear
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

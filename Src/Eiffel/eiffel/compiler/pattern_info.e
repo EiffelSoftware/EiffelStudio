@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Description of a pattern. Used for workbench code generation to ease
 		transfer of control between C generated code and melted code.
@@ -37,32 +37,32 @@ feature
 	pattern: PATTERN;
 			-- Pattern
 
-	make (i: INTEGER; p: PATTERN) is
+	make (i: INTEGER; p: PATTERN)
 			-- Initialization
 		do
 			written_in := i;
 			pattern := p;
 		end;
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: INTEGER)
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i;
 		end;
 
-	set_pattern (p: PATTERN) is
+	set_pattern (p: PATTERN)
 			-- Assign `p' to `pattern'.
 		do
 			pattern := p;
 		end;
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: INTEGER)
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;
 		end;
 
-	is_equal (other: PATTERN_INFO): BOOLEAN is
+	is_equal (other: PATTERN_INFO): BOOLEAN
 			-- Is `other' equal to Current ?
 		do
 			Result :=
@@ -70,19 +70,19 @@ feature
 				and then pattern.is_equal (other.pattern);
 		end;
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := written_in.bit_xor (pattern.hash_code)
 		end;
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class to the current pattern information
 		do
 			Result := System.class_of_id (written_in);
 		end;
 
-	instantiation_in (type: CLASS_TYPE): PATTERN is
+	instantiation_in (type: CLASS_TYPE): PATTERN
 			-- Instantiation of `pattern' in the context of `type'.
 		require
 			good_argument: type /= Void
@@ -92,7 +92,7 @@ feature
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

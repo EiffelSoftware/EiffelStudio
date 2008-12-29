@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
 	]"
@@ -17,7 +17,7 @@ feature -- Access
 
 feature {DEBUGGER_MANAGER, EB_TOOL} -- Access		
 
-	force_update is
+	force_update
 			-- Update now, no delay
 		do
 			if is_visible then
@@ -25,7 +25,7 @@ feature {DEBUGGER_MANAGER, EB_TOOL} -- Access
 			end
 		end
 
-	request_update is
+	request_update
 			-- Request an update, this should call update only
 			-- once per debugging "operation"
 			-- This is to avoid computing twice the data
@@ -36,7 +36,7 @@ feature {DEBUGGER_MANAGER, EB_TOOL} -- Access
 			end
 		end
 
-	reset is
+	reset
 			-- Reset current's panel
 		do
 			if is_tool_instantiated and then panel.is_initialized then
@@ -44,7 +44,7 @@ feature {DEBUGGER_MANAGER, EB_TOOL} -- Access
 			end
 		end
 
-	refresh is
+	refresh
 			-- Call refresh on panel
 		do
 			if is_visible then
@@ -54,7 +54,7 @@ feature {DEBUGGER_MANAGER, EB_TOOL} -- Access
 
 feature -- Status
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			--  Is Current's panel visible ?
 			--| i.e: sd content exists
 		do
@@ -63,7 +63,7 @@ feature -- Status
 			end
 		end
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is Current's panel shown on the screen?
 		do
 			if is_tool_instantiated and then panel.is_initialized then
@@ -71,7 +71,7 @@ feature -- Status
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

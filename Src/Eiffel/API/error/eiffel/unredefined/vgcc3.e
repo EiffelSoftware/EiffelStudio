@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the creation type of a creation instruction %
@@ -21,7 +21,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 3
+	subcode: INTEGER = 3
 
 	is_symbol: BOOLEAN
 		-- Does Current have a non-Void type?
@@ -31,7 +31,7 @@ feature -- Properties
 
 feature -- Output
 
-	print_name (a_text_formatter: TEXT_FORMATTER) is
+	print_name (a_text_formatter: TEXT_FORMATTER)
 		do
 			if target_name /= Void then
 				a_text_formatter.add ("Creation of: ");
@@ -49,13 +49,13 @@ feature -- Output
 
 feature -- Settings
 
-	set_is_symbol is
+	set_is_symbol
 			-- The error is related to a symbol.
 		do
 			is_symbol := True
 		end
 
-	set_symbol_name (s: STRING) is
+	set_symbol_name (s: STRING)
 			-- Set `s' to `symbol_name'.
 		require
 			s_not_void: s /= Void
@@ -65,7 +65,7 @@ feature -- Settings
 			symbol_name_set: symbol_name.is_equal (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog displayed at startup of $EiffelGraphicalCompiler$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -94,7 +94,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Initialize the dialog with a regular layout (Create/Open project)
 		do
 			show_open_project_frame := True
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			build_interface
 		end
 
-	make_without_open_project_frame is
+	make_without_open_project_frame
 			-- Initialize the dialog with the "Create Project" frame only.
 		do
 			show_open_project_frame := False
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			build_interface
 		end
 
-	build_interface is
+	build_interface
 			-- Initialize
 		local
 			new_project_vb: EV_VERTICAL_BOX
@@ -240,7 +240,7 @@ feature -- Status report
 	ok_selected: BOOLEAN
 			-- Has the button "OK" been selected?
 
-	cancel_selected: BOOLEAN is
+	cancel_selected: BOOLEAN
 			-- Has the button "Cancel" been selected?
 		do
 			Result := not ok_selected
@@ -248,7 +248,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		do
@@ -259,7 +259,7 @@ feature -- Basic operations
 
 feature {NONE} -- Execution
 
-	on_cancel is
+	on_cancel
 			-- Cancel button has been pressed
 		do
 			ok_selected := False
@@ -268,7 +268,7 @@ feature {NONE} -- Execution
 			incoming_command_manager.notify_closing_starting_dialog
 		end
 
-	on_item_deselected is
+	on_item_deselected
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Ok button has been pressed
 		do
 			update_preferences
@@ -302,7 +302,7 @@ feature {NONE} -- Execution
 
 	on_double_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER;
 					a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE;
-					a_screen_x: INTEGER; a_screen_y: INTEGER) is
+					a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- A radio button has been double clicked
 		do
 				-- Execute the selected radio button
@@ -311,7 +311,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	create_blank_project is
+	create_blank_project
 			-- Create a new blank project.
 		require
 			parent_window_not_void: parent_window /= Void
@@ -332,7 +332,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	create_new_project_using_wizard is
+	create_new_project_using_wizard
 			-- Create a new project using the ISE Wizard.
 		require
 			parent_window_not_void: parent_window /= Void
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	compile_project: BOOLEAN
 			-- Should a compilation be launched upon completion of this dialog?
 
-	update_preferences is
+	update_preferences
 			-- Update user preferences
 		do
 			if show_open_project_frame then
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_and_fill_wizards_list is
+	create_and_fill_wizards_list
 			-- Create and fill `wizards_list'
 		do
 			create wizards_list
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			wizards_list_created: wizards_list /= Void
 		end
 
-	fill_list_with_available_wizards is
+	fill_list_with_available_wizards
 			-- Fill in `wizard_list' with the available wizards
 		local
 			list_item: EV_GRID_LABEL_ITEM
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			l_column.set_width (l_column.required_width_of_item_span (1, wizards_list.row_count))
 		end
 
-	load_available_wizards is
+	load_available_wizards
 			-- Enumerate the available wizards.
 		local
 			new_project_directory: DIRECTORY
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	selected_wizard: EB_NEW_PROJECT_WIZARD is
+	selected_wizard: EB_NEW_PROJECT_WIZARD
 			-- Currently selected wizard.
 		local
 			selected_item: EV_GRID_LABEL_ITEM
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_project (directory_name: STRING; ace_file_name: STRING) is
+	create_project (directory_name: STRING; ace_file_name: STRING)
 			-- Create a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
 		require
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			set_error_message (warning_messages.w_unable_to_initiate_project)
 		end
 
-	start_wizard (a_wizard: EB_NEW_PROJECT_WIZARD) is
+	start_wizard (a_wizard: EB_NEW_PROJECT_WIZARD)
 			-- Start the selected wizard, wait for the wizard to
 			-- terminate and load the generated wizard.
 		local
@@ -635,7 +635,7 @@ feature {NONE} -- Private attributes
 	open_project: EB_OPEN_PROJECT_WIDGET;
 			-- Widget for opening a project using a config file.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays warnings and errors of compilation."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (ow: like output_window) is
+	make (ow: like output_window)
 			-- Initialize current with `output_window' to `ow'
 		do
 			output_window := ow
@@ -38,12 +38,12 @@ feature -- Property
 
 feature -- Output
 
-	force_display is
+	force_display
 			-- Make sure the user can see the messages we send.
 		do
 		end
 
-	trace_warnings (handler: ERROR_HANDLER) is
+	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		local
 			warning_list: LINKED_LIST [ERROR];
@@ -82,7 +82,7 @@ feature -- Output
 			end;
 		end;
 
-	trace_errors (handler: ERROR_HANDLER) is
+	trace_errors (handler: ERROR_HANDLER)
 			-- Display error messages from `handler'.
 		local
 			error_list: LINKED_LIST [ERROR]
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 
 	retried: BOOLEAN;
 
-	display_error_error (a_text_formatter: TEXT_FORMATTER) is
+	display_error_error (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Exception occurred while displaying error message.");
 			a_text_formatter.add_new_line;
@@ -130,14 +130,14 @@ feature {NONE} -- Implementation
 			a_text_formatter.add_new_line
 		end;
 
-	display_separation_line (a_text_formatter: TEXT_FORMATTER) is
+	display_separation_line (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("--------------------------------------------%
 							%-----------------------------------");
 			a_text_formatter.add_new_line
 		end
 
-	display_additional_info (a_text_formatter: TEXT_FORMATTER) is
+	display_additional_info (a_text_formatter: TEXT_FORMATTER)
 		do
 		end
 
@@ -145,7 +145,7 @@ invariant
 
 	non_void_output_window: output_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

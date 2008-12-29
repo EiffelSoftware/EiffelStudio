@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Automatically generates a series of test from a given configuration
 		

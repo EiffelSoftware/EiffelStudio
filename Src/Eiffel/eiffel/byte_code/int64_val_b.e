@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a 64-bit manifest integer constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_int64_val_b (Current)
@@ -28,18 +28,18 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_allowed_unique_value: BOOLEAN is
+	is_allowed_unique_value: BOOLEAN
 			-- Does `Current' represent an allowed unique value?
 		do
 			Result := value > 0
 		end
 
-	is_signed: BOOLEAN is True
+	is_signed: BOOLEAN = True
 			-- Current requires signed comparison.
 
 feature -- Measurement
 
-	distance (other: like Current): DOUBLE is
+	distance (other: like Current): DOUBLE
 			-- Distance between `other' and Current
 		do
 				-- Convert to result type first to avoid overflow if difference is higher than maximum integer
@@ -49,14 +49,14 @@ feature -- Measurement
 
 feature -- Error reporting
 
-	display (a_text_formatter: TEXT_FORMATTER) is
+	display (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.process_number_text (value.out)
 		end
 
 feature -- Iteration
 
-	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE]) is
+	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE])
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		local
@@ -88,7 +88,7 @@ feature -- Iteration
 
 feature -- IL code generation
 
-	generate_il_subtract (is_included: BOOLEAN) is
+	generate_il_subtract (is_included: BOOLEAN)
 			-- Generate code to subtract this value if `is_included' is true or
 			-- next value if `is_included' is false from top of IL stack.
 			-- Ensure that resulting value on the stack is UInt32.
@@ -108,13 +108,13 @@ feature -- IL code generation
 
 feature {TYPED_INTERVAL_B} -- IL code generation
 
-	il_load_value is
+	il_load_value
 			-- Load value to IL stack.
 		do
 			il_generator.put_integer_64_constant (value)
 		end
 
-	il_load_difference (other: like Current) is
+	il_load_difference (other: like Current)
 			-- Load a difference between current and `other' to IL stack.
 		do
 			il_generator.put_integer_64_constant (value - other.value)
@@ -122,7 +122,7 @@ feature {TYPED_INTERVAL_B} -- IL code generation
 
 feature {NONE} -- Implementation: C generation
 
-	generate_value (v: like value) is
+	generate_value (v: like value)
 			-- Generate single value `v'.
 		local
 			buf: GENERATION_BUFFER
@@ -133,13 +133,13 @@ feature {NONE} -- Implementation: C generation
 			buf.put_character (')')
 		end
 
-	next_value (v: like value): like value is
+	next_value (v: like value): like value
 			-- Value after given value `v'
 		do
 			Result := v + 1
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

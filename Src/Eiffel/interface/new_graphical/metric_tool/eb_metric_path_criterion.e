@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric path criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		local
 			l_platform: PLATFORM
@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_path_criterion (Current)
@@ -50,10 +50,10 @@ feature -- Process
 
 feature -- Status report
 
-	is_path_criterion: BOOLEAN is True;
+	is_path_criterion: BOOLEAN = True;
 			-- Is current a path criterion?
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

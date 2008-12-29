@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_FEAT_B
@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	perused: BOOLEAN is True;
+	perused: BOOLEAN = True;
 		--| The registers used by the parameters must be kept for the assignment
 		--| Eabc(l[2], l[3], l[4]) cannot be replaced by
 		--| l[3] = l[2]
@@ -36,13 +36,13 @@ feature
 	context_cl_type, written_cl_type: CL_TYPE_A
 			-- Type from where the feature is written.
 
-	result_type: TYPE_A is
+	result_type: TYPE_A
 			-- Type of an inlined feature
 		do
 			Result := real_type (byte_code.result_type)
 		end
 
-	fill_from (f: FEATURE_B) is
+	fill_from (f: FEATURE_B)
 		do
 			feature_name_id := f.feature_name_id;
 			feature_id := f.feature_id;
@@ -54,7 +54,7 @@ feature
 			end
 		end
 
-	set_context_type (context_class_type: CLASS_TYPE; a_context_cl_type: CL_TYPE_A; written_class_type: CLASS_TYPE; a_type: CL_TYPE_A) is
+	set_context_type (context_class_type: CLASS_TYPE; a_context_cl_type: CL_TYPE_A; written_class_type: CLASS_TYPE; a_type: CL_TYPE_A)
 			-- Set a class type on which the feature is called
 			-- and a class type where the feature is written in.
 		require
@@ -72,7 +72,7 @@ feature
 			written_type_id_set: written_type_id = written_class_type.type_id
 		end
 
-	enlarged: INLINED_FEAT_B is
+	enlarged: INLINED_FEAT_B
 		local
 			local_inliner: INLINER
 		do
@@ -97,7 +97,7 @@ feature
 			local_inliner.set_inlined_feature (Void)
 		end
 
-	free_register is
+	free_register
             -- Free registers
 		do
 			Precursor {FEATURE_BL};
@@ -106,7 +106,7 @@ feature
 			end
 		end
 
-	unanalyze is
+	unanalyze
 		do
 			Precursor {FEATURE_BL};
 			if saved_compound /= Void then
@@ -116,7 +116,7 @@ feature
 			end
 		end
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 		local
 			r_type: TYPE_A
 			reg_type: TYPE_C
@@ -213,7 +213,7 @@ feature
 			Context.set_inlined_current_register (Void)
 		end
 
-	argument_type (pos: INTEGER): TYPE_A is
+	argument_type (pos: INTEGER): TYPE_A
 			-- Type of the argument at position `pos'
 		do
 				-- No need to call `real_type' here, it was already done when `byte_code' was
@@ -223,7 +223,7 @@ feature
 
 feature -- Generation
 
-	generate_parameters (gen_reg: REGISTRABLE) is
+	generate_parameters (gen_reg: REGISTRABLE)
 		local
 			expr: EXPR_B;
 			context_class_type: CLASS_TYPE
@@ -366,7 +366,7 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Void)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 		do
 			Context.set_inlined_current_register (current_reg);
 			if result_reg /= Void then
@@ -377,7 +377,7 @@ feature -- Generation
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
-		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
+		basic_type: BASIC_A; buf: GENERATION_BUFFER)
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type)
@@ -395,14 +395,14 @@ feature -- Registers
 
 feature {NONE}
 
-	inliner: INLINER is
+	inliner: INLINER
 		do
 			Result := System.remover.inliner
 		end
 
 feature {NONE} -- Registers
 
-	get_inlined_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTER] is
+	get_inlined_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTER]
 		local
 			i, count: INTEGER
 		do
@@ -420,7 +420,7 @@ feature {NONE} -- Registers
 			end
 		end;
 
-	get_inlined_param_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTRABLE] is
+	get_inlined_param_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTRABLE]
 		local
 			i ,count: INTEGER
 			is_param_temporary_reg: BOOLEAN
@@ -515,12 +515,12 @@ feature {NONE} -- Registers
 			end
 		end;
 
-	get_inline_register (type_i: TYPE_A): REGISTER is
+	get_inline_register (type_i: TYPE_A): REGISTER
 		do
 			create Result.make (type_i.c_type);
 		end
 
-	free_inlined_registers (a: ARRAY [REGISTER]) is
+	free_inlined_registers (a: ARRAY [REGISTER])
 		local
 			i, count: INTEGER
 		do
@@ -537,7 +537,7 @@ feature {NONE} -- Registers
 			end
 		end;
 
-	free_inlined_param_registers (a: ARRAY [REGISTRABLE]) is
+	free_inlined_param_registers (a: ARRAY [REGISTRABLE])
 		local
 			i, count: INTEGER
 		do
@@ -556,7 +556,7 @@ feature {NONE} -- Registers
 			end
 		end
 
-	reset_register_value (a_type: TYPE_A; reg: REGISTER) is
+	reset_register_value (a_type: TYPE_A; reg: REGISTER)
 		local
 			buf: GENERATION_BUFFER
 			l_class_type: CLASS_TYPE
@@ -589,12 +589,12 @@ feature -- Code to inline
 
 	saved_compound: like compound;
 
-	set_inlined_byte_code (b: STD_BYTE_CODE) is
+	set_inlined_byte_code (b: STD_BYTE_CODE)
 		do
 			byte_code := b
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

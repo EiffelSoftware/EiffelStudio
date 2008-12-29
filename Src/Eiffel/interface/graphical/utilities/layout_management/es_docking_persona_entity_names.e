@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Entity names for layout persona description files for {ES_DOCKING_PERSONA_LOAD_CALLBACKS}.
 	]"
@@ -50,7 +50,7 @@ feature -- Values
 
 	auto_hide_style_value: !STRING = "auto-hide"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

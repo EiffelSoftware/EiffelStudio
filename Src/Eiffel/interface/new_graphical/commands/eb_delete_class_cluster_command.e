@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command that allows the user to remove a class or a cluster %
 			%from the system (deletion is permanent and a confirmation dialog %
 			%is popped up)"
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: like window) is
+	make (a_window: like window)
 			-- Initialize `Current' and associate it with `a_window'.
 		do
 			default_create
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -57,7 +57,7 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_cluster)
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create tool bar button for docking.
 		do
 			Result := Precursor (display_text)
@@ -67,52 +67,52 @@ feature -- Access
 
 feature -- Properties
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Comment about `Current' for customization.
 		do
 			Result := Interface_names.e_Remove_class_cluster
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name of the menu corresponding to `Current'.
 		do
 			Result := Interface_names.m_Remove_class_cluster
 		end
 
-	name: STRING is "Remove_class_cluster"
+	name: STRING = "Remove_class_cluster"
 			-- Internal identifier of `Current'.
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' in toolbars.
 		once
 			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' in toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.general_delete_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing `Current' in toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.general_delete_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Text string that appears when focus is given to `Current's buttons.
 		once
 			Result := description
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text that appears on toolbar button
 		once
 			Result := Interface_names.B_remove_class_cluster
@@ -120,7 +120,7 @@ feature -- Properties
 
 feature -- Events
 
-	drop_class (st: CLASSI_STONE) is
+	drop_class (st: CLASSI_STONE)
 			-- Extract the class that should be removed from `st' and erase it.
 		local
 			l_editor: EB_SMART_EDITOR
@@ -133,7 +133,7 @@ feature -- Events
 			end
 		end
 
-	drop_cluster (st: CLUSTER_STONE) is
+	drop_cluster (st: CLUSTER_STONE)
 			-- Extract the cluster that should be removed from `st' and erase it.
 		local
 			l_editor: EB_SMART_EDITOR
@@ -149,7 +149,7 @@ feature -- Events
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Button has been pressed.
 		local
 			classst: CLASSI_STONE
@@ -171,7 +171,7 @@ feature -- Basic operations
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			window := Void
@@ -179,7 +179,7 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Implementation
 
-	real_execute is
+	real_execute
 			-- Ask confirmation before removing `class_i' or `group'
 			-- from the system and from the disk.
 		local
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_class is
+	delete_class
 			-- Remove `class_i' from the system.
 		require
 			classi_non_void: class_i /= Void
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	delete_cluster is
+	delete_cluster
 			-- Remove `group' from the system.
 		do
 			if Debugger_manager.application_is_executing then
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 invariant
 	cluster_i_implies_path: group /= Void implies path /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

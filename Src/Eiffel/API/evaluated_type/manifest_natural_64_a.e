@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for integer constant type NATURAL_64."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_constant (convertible_to_integer_64: BOOLEAN) is
+	make_for_constant (convertible_to_integer_64: BOOLEAN)
 			-- Create instance of NATURAL_A represented by 64 bits
 			-- and that can be converted to INTEGER_64 iff
 			-- `is_convertible_to_integer_64' is `True'.
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_manifest_natural_64_a (Current)
@@ -46,7 +46,7 @@ feature -- Property
 	is_convertible_to_integer_64: BOOLEAN
 			-- Is manifest constant value compatible with INTEGER_64?
 
-	intrinsic_type: NATURAL_A is
+	intrinsic_type: NATURAL_A
 			-- Real type of current manifest integer.
 		do
 			Result := natural_64_type
@@ -54,7 +54,7 @@ feature -- Property
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
 		local
@@ -97,7 +97,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 invariant
 	correct_size: size = 64
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

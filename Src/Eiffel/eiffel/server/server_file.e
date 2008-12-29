@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File for server."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (i: INTEGER) is
+	make (i: INTEGER)
 			-- Initialization
 		require
 			positive_argument: i /= 0
@@ -64,7 +64,7 @@ end
 
 feature -- Initialization
 
-	file_make (fn: STRING) is
+	file_make (fn: STRING)
 			-- Create file object with `fn' as file name.
 		require
 			string_exists: fn /= Void
@@ -90,7 +90,7 @@ feature -- Access
 	is_open: BOOLEAN
 			-- Is the current file open ?
 
-	descriptor: INTEGER is
+	descriptor: INTEGER
 			-- File descriptor as used by the operating system.
 		require
 			file_opened: is_open
@@ -98,13 +98,13 @@ feature -- Access
 			Result := file_fd (file_pointer)
 		end
 
-	add_occurrence is
+	add_occurrence
 			-- Add one occurrence.
 		do
 			occurrence := occurrence + 1
 		end
 
-	remove_occurrence is
+	remove_occurrence
 			-- Remove one occurrence and remove current file from
 			-- the server controler if null occurrence
 			--|Note: If occurrence goes down to 0 the file
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Status setting
 
-	open is
+	open
 			-- Open file in read mode if precompiled
 			-- in read-write otherwise.
 		require
@@ -160,7 +160,7 @@ end
 			end
 		end
 
-	server_open_write is
+	server_open_write
 			-- Open file in append mode only for doing `store_append' in
 			-- COMPILER_SERVER
 		require
@@ -175,7 +175,7 @@ end
 			opened: is_open
 		end
 
-	last_offset: INTEGER is
+	last_offset: INTEGER
 			-- Return the size of the file without checking it exists.
 		require
 			file_exists: is_open or else exists
@@ -188,7 +188,7 @@ end
 			end
 		end
 
-	close is
+	close
 			-- Close server file
 		require
 			is_open: is_open
@@ -200,7 +200,7 @@ end
 			is_closed: not is_open
 		end
 
-	clear_content is
+	clear_content
 			-- Clear the content of a file by opening it
 			-- in write-only mode and closing it.
 		local
@@ -218,7 +218,7 @@ end
 			retry
 		end
 
-	update_path is
+	update_path
 			-- Update the file path of Current
 			-- server file. (It might have changed
 			-- between compilations)
@@ -237,7 +237,7 @@ end
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does physical file exist?
 			-- (Uses effective UID.)
 		local
@@ -247,7 +247,7 @@ feature -- Status report
 			Result := file_exists ($external_name)
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
 		do
@@ -255,7 +255,7 @@ feature -- Status report
 			Result := buffered_file_info.is_readable
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is file writable?
 			-- (Checks write permission for effective UID.)
 		do
@@ -263,7 +263,7 @@ feature -- Status report
 			Result := buffered_file_info.is_writable
 		end
 
-	is_readable_and_writable: BOOLEAN is
+	is_readable_and_writable: BOOLEAN
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
 		do
@@ -271,7 +271,7 @@ feature -- Status report
 			Result := buffered_file_info.is_readable and buffered_file_info.is_writable
 		end
 
-	precompiled: BOOLEAN is
+	precompiled: BOOLEAN
 			-- Does the Current server file contain
 			-- precompiled information?
 		do
@@ -280,7 +280,7 @@ feature -- Status report
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Remove link with physical file.
 			-- File does not physically disappear from the disk
 			-- until no more processes reference it.
@@ -303,7 +303,7 @@ feature -- Removal
 
 feature -- Disposal
 
-	dispose is
+	dispose
 			-- Close file if not yet closed
 		do
 			if file_pointer /= default_pointer then
@@ -316,13 +316,13 @@ feature -- Disposal
 
 feature {SERVER_CONTROL, SERVER_FILE} -- File access
 
-	packet_number (an_id: INTEGER): INTEGER is
+	packet_number (an_id: INTEGER): INTEGER
 			-- Packet in which the file will be stored (100 is the default_size)
 		do
 			Result := (an_id // 100) + 1
 		end
 
-	file_name (an_id: INTEGER): STRING is
+	file_name (an_id: INTEGER): STRING
 			-- Server file basename
 		do
 			create Result.make (7)
@@ -330,7 +330,7 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 			Result.append_integer (an_id)
 		end
 
-	directory_path (an_id: INTEGER): STRING is
+	directory_path (an_id: INTEGER): STRING
 			-- Server file directory path
 		do
 			if an_id > file_counter.precompiled_offset then
@@ -343,19 +343,19 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 
 feature {NONE} -- Implementation
 
-	file_counter: FILE_COUNTER is
+	file_counter: FILE_COUNTER
 			-- File counter
 		once
 			Result := server_controler.file_counter
 		end
 
-	buffered_file_info: UNIX_FILE_INFO is
+	buffered_file_info: UNIX_FILE_INFO
 			-- Information about the file.
 		once
 			create Result.make
 		end
 
-	set_buffer is
+	set_buffer
 			-- Resynchronizes information on file
 		require
 			file_exists: exists
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			buffered_file_info.update (name)
 		end
 
-	file_open (f_name: POINTER; how: INTEGER): POINTER is
+	file_open (f_name: POINTER; how: INTEGER): POINTER
 			-- File pointer for file `f_name', in mode `how'.
 		external
 			"C use %"eif_file.h%""
@@ -371,31 +371,31 @@ feature {NONE} -- Implementation
 			"file_binary_open"
 		end
 
-	file_close (file: POINTER) is
+	file_close (file: POINTER)
 			-- Close `file'.
 		external
 			"C signature (FILE *) use %"eif_file.h%""
 		end
 
-	file_unlink (fname: POINTER) is
+	file_unlink (fname: POINTER)
 			-- Delete file `fname'.
 		external
 			"C use %"eif_file.h%""
 		end
 
-	file_fd (file: POINTER): INTEGER is
+	file_fd (file: POINTER): INTEGER
 			-- Operating system's file descriptor
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
 		end
 
-	file_exists (f_name: POINTER): BOOLEAN is
+	file_exists (f_name: POINTER): BOOLEAN
 			-- Does `f_name' exist.
 		external
 			"C use %"eif_file.h%""
 		end
 
-	file_size (file: POINTER): INTEGER is
+	file_size (file: POINTER): INTEGER
 			-- Size of `file'
 		external
 			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			"eif_file_size"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

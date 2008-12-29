@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The query as to run the profile information with."
@@ -11,7 +11,7 @@ class PROFILER_QUERY
 
 feature -- Status setting
 
-	set_subqueries (new_queries: LINKED_LIST [SUBQUERY]) is
+	set_subqueries (new_queries: LINKED_LIST [SUBQUERY])
 			-- Set `subqueries' to `new_queries'.
 		do
 			from
@@ -27,7 +27,7 @@ feature -- Status setting
 			end;
 		end;
 
-	append_subqueries (new_subqueries: LINKED_LIST [SUBQUERY]) is
+	append_subqueries (new_subqueries: LINKED_LIST [SUBQUERY])
 			-- Append `new_subqueries' to `subqueries'.
 		require
 			subquires_not_void: subqueries /= Void
@@ -44,7 +44,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR]) is
+	set_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR])
 			-- Set `subquery_operators' to `new_operators'.
 		do
 			from
@@ -60,7 +60,7 @@ feature -- Status setting
 			end;
 		end;
 
-	append_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR]) is
+	append_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR])
 			-- Add `new_operators' to `subquery_operators'.
 		do
 			from
@@ -75,7 +75,7 @@ feature -- Status setting
 			end
 		end;
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge contents of `other' into Current.
 		do
 			if subqueries = Void then
@@ -88,7 +88,7 @@ feature -- Status setting
 			append_subquery_operators (other.subquery_operators)
 		end
 
-	extend_subquery_operator (new_operator: SUBQUERY_OPERATOR) is
+	extend_subquery_operator (new_operator: SUBQUERY_OPERATOR)
 			-- Add only one operator to subquery_operators
 		do
 			if new_operator.is_active then
@@ -98,7 +98,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	image: STRING is
+	image: STRING
 			-- Image of all subqueries and operators.
 		local
 			sq: SUBQUERY
@@ -123,7 +123,7 @@ feature -- Status report
 			end
 		end		
 
-	subquery_at (index: INTEGER): SUBQUERY is
+	subquery_at (index: INTEGER): SUBQUERY
 			-- Result is the subquery at position `index'.
 		require
 			index_large_enough: index >= 1;
@@ -143,7 +143,7 @@ feature -- Status report
 			Result := subqueries.item;
 		end;
 
-	operator_at (index: INTEGER): SUBQUERY_OPERATOR is
+	operator_at (index: INTEGER): SUBQUERY_OPERATOR
 			-- Result is the operator at position `index'.
 		require
 			index_large_enough: index >= 1;
@@ -169,7 +169,7 @@ feature -- Status report
 	subquery_operators: LINKED_LIST [SUBQUERY_OPERATOR];
 			-- All active operators.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -12,13 +12,13 @@ create
 
 feature {NONE} -- Implementation of deferred features
 
-	generic_modify_item is
+	generic_modify_item
 			-- send the first part of the 'modify-local' request
 		do
 			send_rqst_3(Rqst_modify_local, Application.current_execution_stack_number, item_type, item.item_number)
 		end
 	
-	start_feature is
+	start_feature
 			-- What to do to initialize the modification of an item.
 		do
 			stack := Application.status.current_stack_element
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation of deferred features
 			end
 		end
 
-	update_display is
+	update_display
 			-- update the call stack after local variable modification.
 		local
 			call_stack_elem: CALL_STACK_ELEMENT
@@ -96,11 +96,11 @@ feature {NONE} -- Private variables
 
 feature {NONE} -- Private Constants (defined in eif_debug.h for the run-time side)
 
-	Dlt_argument: INTEGER is 0
-	Dlt_localvar: INTEGER is 1
-	Dlt_result	: INTEGER is 2;
+	Dlt_argument: INTEGER = 0
+	Dlt_localvar: INTEGER = 1
+	Dlt_result	: INTEGER = 2;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

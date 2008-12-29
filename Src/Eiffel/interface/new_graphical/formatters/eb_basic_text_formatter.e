@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter to display the text a class with no analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Create a formatter associated with `a_manager'.
 		do
 			Precursor {EB_CLASS_TEXT_FORMATTER} (a_manager)
@@ -41,7 +41,7 @@ feature -- Properties
 	is_editable: BOOLEAN
 			-- Can the generated text be edited?
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -49,13 +49,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.view_editor_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.view_editor_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showtext_new
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget'.
 		local
 			f_name: STRING
@@ -115,20 +115,20 @@ feature -- Formatting
 
 feature -- Status setting
 
-	set_accelerator (accel: EV_ACCELERATOR) is
+	set_accelerator (accel: EV_ACCELERATOR)
 			-- Changes the accelerator.
 		do
 			Precursor {EB_CLASS_TEXT_FORMATTER} (accel)
 			accelerator.actions.put_front (agent invalidate)
 		end
 
-	set_class (a_class: CLASS_C) is
+	set_class (a_class: CLASS_C)
 			-- Associate `Current' with `a_class'.
 		do
 			set_classi (a_class.original_class)
 		end
 
-	set_stone (new_stone: CLASSI_STONE) is
+	set_stone (new_stone: CLASSI_STONE)
 			-- Associate `Current' with class contained in `new_stone'.
 		local
 			a_stone: CLASSI_STONE
@@ -148,7 +148,7 @@ feature -- Status setting
 			end
 		end
 
-	set_classi (a_class: CLASS_I) is
+	set_classi (a_class: CLASS_I)
 			-- Associate current formatter with `a_class'.
 		do
 			classi := a_class
@@ -162,7 +162,7 @@ feature -- Status setting
 			ensure_display_in_widget_owner
 		end
 
-	force_stone (a_stone: STONE) is
+	force_stone (a_stone: STONE)
 			-- Directly set `stone' with `a_stone'
 		local
 			l_stone: CLASSI_STONE
@@ -182,23 +182,23 @@ feature {NONE} -- Properties
 	classi: CLASS_I
 			-- Class currently associated with `Current'.
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Basic_text
 		end
 
-	post_fix: STRING is "txt"
+	post_fix: STRING = "txt"
 			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	generate_text is
+	generate_text
 			-- Create `formatted_text'.
 		do
 		end
 
-	create_class_cmd is
+	create_class_cmd
 			-- Create `class_cmd'.
 		require else
 			True
@@ -206,13 +206,13 @@ feature {NONE} -- Implementation
 			create class_cmd
 		end
 
-	has_breakpoints: BOOLEAN is False
+	has_breakpoints: BOOLEAN = False
 		-- Should `Current' display breakpoints?
 
-	line_numbers_allowed: BOOLEAN is True;
+	line_numbers_allowed: BOOLEAN = True;
 		-- Does it make sense to show line numbers in Current?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

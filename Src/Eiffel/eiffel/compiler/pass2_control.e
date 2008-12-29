@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Second pass controler: it is the result of the incrementality%
 		%test after the second pass"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			Precursor {PASS_CONTROL}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	add_external (an_external: EXTERNAL_I) is
+	add_external (an_external: EXTERNAL_I)
 			-- Assign `an_external' to `new_externals'.
 		require
 			an_external_not_void: an_external /= Void
@@ -42,7 +42,7 @@ feature -- Settings
 			new_externals.extend (an_external)
 		end
 
-	remove_external (an_external: EXTERNAL_I) is
+	remove_external (an_external: EXTERNAL_I)
 			-- Add `an_external' to `old_externals'.
 		require
 			an_external_not_void: an_external /= Void
@@ -54,7 +54,7 @@ feature -- Settings
 
 feature -- Processing
 
-	process_externals is
+	process_externals
 			-- Update the system external feature controler
 		require
 			new_externals_exists: new_externals /= Void
@@ -87,7 +87,7 @@ feature -- Processing
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Empty the structure
 		do
 			Precursor {PASS_CONTROL}
@@ -105,7 +105,7 @@ feature -- Access
 			-- New externals written in a class
 			-- | Processed by feature `feature_unit' of INHERIT_TABLE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

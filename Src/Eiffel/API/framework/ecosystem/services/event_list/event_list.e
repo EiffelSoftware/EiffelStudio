@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The ecosystem's default implementation for the {EVENT_LIST_S} interface.
 		It performs the simple event of managing event items and raising the appropriate events to any and all subscribers.
@@ -255,7 +255,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_item_removed (a_event_item: EVENT_LIST_ITEM_I) is
+	on_item_removed (a_event_item: EVENT_LIST_ITEM_I)
 			-- Called after a event item has been removed from the service `a_service'
 			--
 			-- `a_event_item': The event item removed from the service.
@@ -321,7 +321,7 @@ invariant
 	internal_event_items_index_attached: internal_event_items_index /= Void
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

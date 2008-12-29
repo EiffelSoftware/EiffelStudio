@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Retrieves the profiler configuration file."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make_and_load (prof: STRING) is
+	make_and_load (prof: STRING)
 			-- Load the specific profiler-configuration file.
 		do
 			create shared_prof_config;
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	read_config_file (prof: STRING) is
+	read_config_file (prof: STRING)
 			-- Reads the values from the configuration file
 		local
 			file_name: FILE_NAME;
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	get_number_of_columns is
+	get_number_of_columns
 			-- Retrieves the number of columns from the configure file.
 		local
 			i: INTEGER
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_index_column is
+	get_index_column
 			-- Retriees the position of the index field.
 		local
 			i: INTEGER
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_function_time_column is
+	get_function_time_column
 			-- Retrieves the column of the function_time field.
 		local
 			i: INTEGER
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_descendant_time_column is
+	get_descendant_time_column
 			-- Retrieves the column of the descendant_time field.
 		local
 			i: INTEGER
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_number_of_calls_column is
+	get_number_of_calls_column
 			-- Retrieves the column of the number_of_calls_field.
 		local
 			i: INTEGER
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_function_name_column is
+	get_function_name_column
 			-- Retrieves the column of the function_name field.
 		local
 			i: INTEGER
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_percentage_column is
+	get_percentage_column
 			-- Retrieves the column of the percentage field.
 		local
 			i: INTEGER
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_leading_underscore is
+	get_leading_underscore
 			-- Retrieves whether the profiler generates a leading
 			-- underscore.
 		local
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_integer_value (s: STRING): INTEGER is
+	get_integer_value (s: STRING): INTEGER
 			-- Retrieve the integer value for tag 's' in the
 			-- configuration file.
 			-- Return -1, if 's' is not found.
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-	get_string_value (s: STRING): STRING is
+	get_string_value (s: STRING): STRING
 			-- Retrieve the integer value for tag 's' in the
 			-- configuration file.
 			-- Return Void, if 's' is not found.
@@ -259,28 +259,28 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Constants
 
-	NOC_string: STRING is "number_of_columns";
+	NOC_string: STRING = "number_of_columns";
 		-- number_of_columns
 
-	IC_string: STRING is "index_column";
+	IC_string: STRING = "index_column";
 		-- index_column
 
-	FTC_string: STRING is "function_time_column";
+	FTC_string: STRING = "function_time_column";
 		-- functin_time_column
 
-	DTC_string: STRING is "descendant_time_column";
+	DTC_string: STRING = "descendant_time_column";
 		-- descendant_time_column
 
-	NOCC_string: STRING is "number_of_calls_column";
+	NOCC_string: STRING = "number_of_calls_column";
 		-- number_of_calls_column
 
-	FNC_string: STRING is "function_name_column";
+	FNC_string: STRING = "function_name_column";
 		-- function_name_column
 
-	PC_string: STRING is "percentage_column";
+	PC_string: STRING = "percentage_column";
 		-- percentage_column
 
-	GLU_string: STRING is "generates_leading_underscore";
+	GLU_string: STRING = "generates_leading_underscore";
 		-- generates_leading_underscore
 
 feature -- Error handling
@@ -299,11 +299,11 @@ feature {NONE} -- Implementation: Access
 	error_code: INTEGER
 		-- Configure load error code
 
-	Invalid_profiler_type: INTEGER is 1;
+	Invalid_profiler_type: INTEGER = 1;
 		-- No profiler information file found in
 		-- Eiffel installation directory under "bench/profiler".
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

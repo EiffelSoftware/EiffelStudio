@@ -162,7 +162,7 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Type_declaration Type_declaration_no_id Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Tuple_type Type_no_id Constraint_type Actual_generic_type
+%type <TYPE_AS>				Type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Tuple_type Type_no_id Constraint_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -199,7 +199,7 @@ create
 %type <EIFFEL_LIST [STRING_AS]>			String_list
 %type <DEBUG_KEY_LIST_AS>	Debug_keys
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
-%type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list Generic_type_list Generic_type_list_impl
+%type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
 %type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
 %type <LOCAL_DEC_LIST_AS>	Local_declarations
 %type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
@@ -845,7 +845,7 @@ Is_keyword: -- Empty
 			{ $$ := $1 }
 	;
 
-Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
+Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 			{
 					-- Attribute case
 				if $3 = Void then
@@ -855,7 +855,7 @@ Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
 				end				
 				feature_indexes := $4
 			}
-	|       TE_COLON Type_declaration Assigner_mark_opt TE_EQ Constant_attribute Dotnet_indexing
+	|       TE_COLON Type Assigner_mark_opt TE_EQ Constant_attribute Dotnet_indexing
 			{
 					-- Constant case
 				if $3 = Void then
@@ -866,7 +866,7 @@ Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
 				
 				feature_indexes := $6
 			}
-	|	TE_COLON Type_declaration Assigner_mark_opt TE_IS Constant_attribute Dotnet_indexing
+	|	TE_COLON Type Assigner_mark_opt TE_IS Constant_attribute Dotnet_indexing
 			{
 					-- Constant case
 				if $3 = Void then
@@ -883,7 +883,7 @@ Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
 				$$ := ast_factory.new_body_as (Void, Void, Void, $3, Void, $1, Void, $2)
 				feature_indexes := $2
 			}
-	|	TE_COLON Type_declaration Assigner_mark_opt TE_IS Indexing Routine
+	|	TE_COLON Type Assigner_mark_opt TE_IS Indexing Routine
 		{
 					-- Function without arguments
 				if $3 = Void then
@@ -894,7 +894,7 @@ Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
 				
 				feature_indexes := $5
 		}
-	|	TE_COLON Type_declaration Assigner_mark_opt Indexing Routine
+	|	TE_COLON Type Assigner_mark_opt Indexing Routine
 			{
 					-- Function without arguments
 				if $3 = Void then
@@ -911,7 +911,7 @@ Declaration_body: TE_COLON Type_declaration Assigner_mark_opt Dotnet_indexing
 				$$ := ast_factory.new_body_as ($1, Void, Void, $4, Void, $2, Void, $3)
 				feature_indexes := $3
 			}
-	|	Formal_arguments TE_COLON Type_declaration Assigner_mark_opt Is_keyword Indexing Routine
+	|	Formal_arguments TE_COLON Type Assigner_mark_opt Is_keyword Indexing Routine
 			{
 					-- Function with arguments
 				if $4 = Void then
@@ -1294,7 +1294,7 @@ Entity_declaration_list: Entity_declaration_group
 			}
 	;
 
-Entity_declaration_group: Add_counter Identifier_list Remove_counter TE_COLON Type_declaration ASemi
+Entity_declaration_group: Add_counter Identifier_list Remove_counter TE_COLON Type ASemi
 			{ $$ := ast_factory.new_type_dec_as ($2, $5, $4) }
 	;
 
@@ -1570,19 +1570,6 @@ Type: Class_or_tuple_type
 			{ $$ := $1 }
 	;
 	
-Type_declaration:
-		Type
-			{ $$ := $1 }
-	|	TE_FROZEN Type
-			{
-				$$ := $2
-				if $$ /= Void then
-					$$.set_is_frozen (True)
-					$$.set_conformance_keyword ($1)
-				end
-			}
-	;
-
 Attached_type: Attached_class_type
 			{ $$ := $1 }
 	|	Tuple_type
@@ -1591,19 +1578,6 @@ Attached_type: Attached_class_type
 			{ $$ := $1 }
 	;
 	
-Type_declaration_no_id:
-		Type_no_id
-			{ $$ := $1 }
-	|	TE_VARIANT Type_no_id
-			{
-				$$ := $2
-				if $$ /= Void then
-					$$.set_is_variant (True)
-					$$.set_conformance_keyword ($1)
-				end
-			}
-	;
-
 Type_no_id: 
 		Class_identifier Generics
 			{ $$ := new_class_type ($1, $2) }
@@ -1707,7 +1681,7 @@ Generics_opt: -- Empty
 			}
 	;
 
-Generics:	TE_LSQURE Generic_type_list TE_RSQURE
+Generics:	TE_LSQURE Type_list TE_RSQURE
 			{
 				$$ := $2
 				if $$ /= Void then
@@ -1744,42 +1718,6 @@ Type_list_impl: Type
 			}
 	;
 
-Generic_type_list: Add_counter Generic_type_list_impl Remove_counter
-		{ $$ := $2 }
-	;
-
-Generic_type_list_impl: Actual_generic_type
-			{
-				$$ := ast_factory.new_eiffel_list_type (counter_value + 1)
-				if $$ /= Void and then $1 /= Void then
-					$$.reverse_extend ($1)
-				end
-			}
-	|	Actual_generic_type TE_COMMA Increment_counter Generic_type_list_impl
-			{
-				$$ := $4
-				if $$ /= Void and then $1 /= Void then
-					$$.reverse_extend ($1)
-					ast_factory.reverse_extend_separator ($$, $2)
-				end
-			}
-	;
-
-Actual_generic_type: Type
-			{
-				$$ := $1
-			}
-	| TE_VARIANT Type
-			{
-				$$ := $2
-				if $$ /= Void then
-					$$.set_is_variant (True)
-					$$.set_conformance_keyword ($1)
-				end
-			}
-	;
-
-
 Tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
@@ -1813,7 +1751,7 @@ Tuple_type: Tuple_identifier
 			}
 	;
 
-Actual_parameter_list:	Actual_generic_type TE_RSQURE				
+Actual_parameter_list:	Type TE_RSQURE				
 			{
 				$$ := ast_factory.new_eiffel_list_type (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
@@ -1830,7 +1768,7 @@ Actual_parameter_list:	Actual_generic_type TE_RSQURE
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
-	|	Type_declaration_no_id TE_COMMA Increment_counter Actual_Parameter_List
+	|	Type_no_id TE_COMMA Increment_counter Actual_Parameter_List
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -1840,7 +1778,7 @@ Actual_parameter_list:	Actual_generic_type TE_RSQURE
 			}
 	;
 	
-Named_parameter_list: TE_ID TE_COLON Type_declaration TE_RSQURE
+Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
 				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
@@ -1869,7 +1807,7 @@ Named_parameter_list: TE_ID TE_COLON Type_declaration TE_RSQURE
 					last_identifier_list := Void     
 				end
 			}
-	|	TE_ID TE_COLON Type_declaration ASemi Increment_counter2 Add_counter Named_parameter_list
+	|	TE_ID TE_COLON Type ASemi Increment_counter2 Add_counter Named_parameter_list
 			{
 				remove_counter
 				$$ := $7
@@ -1957,6 +1895,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 					$$ := ast_factory.new_formal_as ($2, False, True, $1)
 				end
 			}
+
 	|	Class_identifier
 			{
 				if $1 /= Void and then none_class_name_id = $1.name_id then
@@ -2464,11 +2403,11 @@ Optional_formal_arguments:
 	;
 	
 Type_mark:
- 	|	TE_COLON Type_declaration
- 		{
- 			create $$.make ($1, $2)
- 		}
- 	;
+	|	TE_COLON Type
+		{
+			create $$.make ($1, $2)
+		}
+	;
 
 Optional_attribute_or_routine:
 		Routine
@@ -2640,7 +2579,7 @@ Expression:
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3, $2); has_type := True }
 	|	Qualified_binary_expression
 			{ $$ := $1; has_type := True }
-	|	TE_LCURLY TE_ID TE_COLON Type_declaration TE_RCURLY Expression %prec TE_NOT
+	|	TE_LCURLY TE_ID TE_COLON Type TE_RCURLY Expression %prec TE_NOT
 			{
 				$$ := ast_factory.new_object_test_as ($1, $2, $4, $6);
 				has_type := True

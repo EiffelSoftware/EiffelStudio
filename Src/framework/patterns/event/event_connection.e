@@ -16,47 +16,18 @@ inherit
 	DISPOSABLE_SAFE
 
 create
-	make,
-	make_from_array
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_map: like events_action_map)
-			-- Initializes a connection using a event-action connection map.
+	make (a_agent: like observer_event_action_map_fetch_action)
+			-- Initializes a connection using a event-action connection map function.
 			--
-			-- `a_map': A set of event to observer action mappings to use with the connection.
+			-- `a_agent': An agent to call to retrieve an observer's event-action map.
 		do
-			events_action_map := a_map.twin
+			observer_event_action_map_fetch_action := a_agent
 		ensure
-			events_action_map_set: events_action_map ~ a_map
-		end
-
-	make_from_array (a_array: !ARRAY [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]])
-			-- Initializes a connection using a array of event-action connections.
-			--
-			-- `a_array': An array of event to observer action mappings to use with the connection.
-		require
-			not_a_array_is_empty: not a_array.is_empty
-			a_array_contains_unique_items: {l_array: ARRAY [!ANY]} a_array and then
-				l_array.for_all (agent (ia_item: !ANY; ia_array: !ARRAY [!ANY]): BOOLEAN
-					do
-						Result := ia_array.occurrences (ia_item) = 1
-					end (?, a_array))
-		local
-			l_map: like events_action_map
-			i, l_upper: INTEGER
-		do
-			create events_action_map.make_default
-			from
-				l_map := events_action_map
-				i := a_array.lower
-				l_upper := a_array.upper
-			until
-				i > l_upper
-			loop
-				l_map.force_last (a_array [i])
-				i := i + 1
-			end
+			observer_event_action_map_fetch_action_set: observer_event_action_map_fetch_action ~ a_agent
 		end
 
 feature {NONE} -- Clean up
@@ -88,12 +59,6 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen events_action_map: !DS_HASH_SET [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]]
-			-- A set of events mapped to an associated observer action.
---		attribute
---			create Result.make_default
---		end
-
 	frozen connections: !DS_ARRAYED_LIST [?G]
 			-- Current connections to event connections.
 		require
@@ -111,6 +76,10 @@ feature {NONE} -- Access
 		ensure
 			result_consistent: Result ~ connections
 		end
+
+	frozen observer_event_action_map_fetch_action: !FUNCTION [I, TUPLE [observer: !G], !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]]
+			-- A very confusing looking agent to retrieve an array of tuples, containing an event type and event handler routine on an observer {G}.
+			-- The function should be implemented on the interface {I}.
 
 feature -- Status report
 
@@ -137,28 +106,27 @@ feature -- Event connection
 	connect_events (a_observer: !G)
 			-- <Precursor>
 		local
-			l_events: like events_action_map
-			l_event: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]
-			l_cursor: ?DS_HASH_SET_CURSOR [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]]
-			l_action: !PROCEDURE [G, TUPLE]
+			l_event_maps: !ARRAY [?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_event_map: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
+			l_action: !PROCEDURE [ANY, TUPLE]
+			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
-			l_events := events_action_map
-			if not l_events.is_empty then
-					-- Subscribe to all events
-				l_cursor := l_events.new_cursor
-				check l_cursor_attached: l_cursor /= Void end
-				from l_cursor.start until l_cursor.after loop
-					l_event := l_cursor.item
-					if l_event /= Void then
-						l_action := l_event.action.deep_twin
-						check l_action_is_target_closed: l_action.is_target_closed end
-						l_action.set_target (a_observer)
-						l_event.event.subscribe (l_action)
+			l_event_maps := observer_event_action_map_fetch_action.item ([a_observer])
+			if not l_event_maps.is_empty then
+				from
+					i := l_event_maps.lower
+					l_upper := l_event_maps.upper
+				until
+					i > l_upper
+				loop
+					l_event_map := l_event_maps[i]
+					if l_event_map /= Void then
+						l_action := l_event_map.action
+						l_event_map.event.subscribe (l_action)
 					end
-					l_cursor.forth
+					i := i + 1
 				end
-				check l_cursor_after: l_cursor.after end
 			end
 
 				-- Add the connection to the list of managed connections.
@@ -170,13 +138,12 @@ feature -- Event connection
 	disconnect_events (a_observer: !G)
 			-- <Precursor>
 		local
-			l_events: like events_action_map
-			l_cursor: ?DS_HASH_SET_CURSOR [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]]
 			l_connections: like connections
-			l_connection: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]
+			l_maps: !ARRAY [?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+			l_map: ?TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]
+			l_action: !PROCEDURE [ANY, TUPLE]
 			l_event: !EVENT_TYPE [TUPLE]
-			l_action: !PROCEDURE [G, TUPLE]
-			l_old_target: ANY
+			l_upper, i: INTEGER
 		do
 				-- Remove the connection from the list of managed connections
 			l_connections := connections
@@ -185,26 +152,26 @@ feature -- Event connection
 			check not_l_connections_after: not l_connections.after end
 			if not l_connections.after then
 					-- Unsubscribe to events on the observer.
-				l_events := events_action_map
-				if not l_events.is_empty then
-					l_cursor := l_events.new_cursor
-					from l_cursor.start until l_cursor.after loop
-						l_connection := l_cursor.item
-						if l_connection /= Void then
-							l_event := l_connection.event
-							l_action := l_connection.action
-								-- Store the target and replace when the action has been unsubscribed
-							l_old_target := l_action.target
-							l_action.set_target (a_observer)
-							if l_event.is_subscribed (l_action) then
+				l_maps := observer_event_action_map_fetch_action.item ([a_observer])
+				if not l_maps.is_empty then
+					from
+						i := l_maps.lower
+						l_upper := l_maps.upper
+					until
+						i > l_upper
+					loop
+						l_map := l_maps[i]
+						if l_map /= Void then
+							l_action := l_map.action
+							l_event := l_map.event
+							if not l_event.is_subscribed (l_action) then
 								l_event.unsubscribe (l_action)
 							end
-								-- Restore the old target
-							l_action.set_target (l_old_target)
 						end
-						l_cursor.forth
+						i := i + 1
 					end
 				end
+					-- Remove the connection.
 				l_connections.remove_at
 			end
 		ensure then

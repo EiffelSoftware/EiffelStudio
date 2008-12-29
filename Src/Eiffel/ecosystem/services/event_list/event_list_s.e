@@ -161,12 +161,14 @@ feature -- Events: Connection point
 			l_result := internal_event_list_connection
 			if l_result = Void then
 				create l_observer
-				create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make_from_array (<<
-					[item_added_event, agent l_observer.hacked_on_event_item_added],
-					[item_adopted_event, agent l_observer.hacked_on_event_item_adopted],
-					[item_changed_event, agent l_observer.hacked_on_event_item_changed],
-					[item_removed_event, agent l_observer.hacked_on_event_item_removed]
-				>>)
+				create {EVENT_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S]} Result.make (
+					agent (ia_observer: !EVENT_LIST_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [item_added_event, agent ia_observer.on_event_item_added],
+								[item_adopted_event, agent ia_observer.on_event_item_adopted],
+								[item_changed_event, agent ia_observer.on_event_item_changed],
+								[item_removed_event, agent ia_observer.on_event_item_removed] >>
+						end)
 				automation.auto_dispose (Result)
 				internal_event_list_connection := Result
 			else

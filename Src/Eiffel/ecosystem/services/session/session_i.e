@@ -212,15 +212,15 @@ feature -- Events: Connection point
 	session_connection: !EVENT_CONNECTION_I [SESSION_EVENT_OBSERVER, SESSION_I]
 			-- <Precursor>
 		local
-			l_observer: SESSION_EVENT_OBSERVER
 			l_result: like internal_session_connection
 		do
 			l_result := internal_session_connection
 			if l_result = Void then
-				create l_observer
-				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make_from_array (<<
-					[value_changed_event, agent l_observer.hacked_on_session_value_changed]
-				>>)
+				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make (
+					agent (ia_observer: !SESSION_EVENT_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [value_changed_event, agent ia_observer.on_session_value_changed] >>
+						end)
 				automation.auto_dispose (Result)
 				internal_session_connection := Result
 			else

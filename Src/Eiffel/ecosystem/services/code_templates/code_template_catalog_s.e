@@ -102,15 +102,15 @@ feature -- Events: Connection point
 	code_template_catalog_connection: !EVENT_CONNECTION_I [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]
 			-- <Precursor>
 		local
-			l_observer: CODE_TEMPLATE_CATALOG_OBSERVER
 			l_result: like internal_code_template_catalog_connection
 		do
 			l_result := internal_code_template_catalog_connection
 			if l_result = Void then
-				create l_observer
-				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make_from_array (<<
-					[catalog_changed_event, agent l_observer.hacked_on_catalog_changed]
-				>>)
+				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make (
+					agent (ia_observer: !CODE_TEMPLATE_CATALOG_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [catalog_changed_event, agent ia_observer.on_catalog_changed] >>
+						end)
 				automation.auto_dispose (Result)
 				internal_code_template_catalog_connection := Result
 			else

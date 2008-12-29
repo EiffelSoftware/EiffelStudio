@@ -13,8 +13,7 @@ class
 inherit
 	EVENT_CONNECTION [G, I]
 		rename
-			make as make_connection,
-			make_from_array as make_connection_from_array
+			make as make_connection
 		redefine
 			is_interface_usable,
 			is_valid_connection,
@@ -23,12 +22,10 @@ inherit
 		end
 
 create
-	make,
-	make_from_array
-
+	make
 feature {NONE} -- Initialization
 
-	make (a_map: like events_action_map; a_link: like linked_connection)
+	make (a_agent: like observer_event_action_map_fetch_action; a_link: like linked_connection)
 			-- Initializes a connection using a event-action connection map.
 			--
 			-- `a_map': A set of event to observer action mappings to use with the connection.
@@ -36,41 +33,11 @@ feature {NONE} -- Initialization
 		require
 			a_link_is_interface_usable: a_link.is_interface_usable
 		do
-			events_action_map := a_map
 			linked_connection := a_link
+			make_connection (a_agent)
 		ensure
-			events_action_map_set: events_action_map ~ a_map
+			observer_event_action_map_fetch_action_set: observer_event_action_map_fetch_action ~ a_agent
 			linked_connection_set: linked_connection ~ a_link
-		end
-
-	make_from_array (a_array: !ARRAY [!TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [G, TUPLE]]]; a_link: like linked_connection)
-			-- Initializes a connection using a array of event-action connections.
-			--
-			-- `a_array': An array of event to observer action mappings to use with the connection.
-			-- `a_link': The parent chain link, containing parent events.
-		require
-			not_a_array_is_empty: not a_array.is_empty
-			a_array_contains_unique_items: {l_array: ARRAY [!ANY]} a_array and then
-				l_array.for_all (agent (ia_item: !ANY; ia_array: !ARRAY [!ANY]): BOOLEAN
-					do
-						Result := ia_array.occurrences (ia_item) = 1
-					end (?, a_array))
-			a_link_is_interface_usable: a_link.is_interface_usable
-		local
-			l_map: like events_action_map
-			i, l_upper: INTEGER
-		do
-			create l_map.make_default
-			from
-				i := a_array.lower
-				l_upper := a_array.upper
-			until
-				i > l_upper
-			loop
-				l_map.force_last (a_array [i])
-				i := i + 1
-			end
-			make (l_map, a_link)
 		end
 
 feature {NONE} -- Access

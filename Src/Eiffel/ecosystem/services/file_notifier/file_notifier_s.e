@@ -149,15 +149,15 @@ feature -- Events: Connection point
 	file_notifier_connection: !EVENT_CONNECTION_I [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]
 			-- <Precursor>
 		local
-			l_observer: FILE_NOTIFIER_EVENT_OBSERVER
 			l_result: like internal_file_notifier_connection
 		do
 			l_result := file_notifier_connection
 			if l_result = Void then
-				create l_observer
-				create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make_from_array (<<
-					[file_modified_events, agent l_observer.hacked_on_file_modified]
-				>>)
+				create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make (
+					agent (ia_observer: !FILE_NOTIFIER_EVENT_OBSERVER): !ARRAY [TUPLE [event: !EVENT_TYPE [TUPLE]; action: !PROCEDURE [ANY, TUPLE]]]
+						do
+							Result := << [file_modified_events, agent ia_observer.on_file_modified] >>
+						end)
 				automation.auto_dispose (Result)
 				internal_file_notifier_connection := Result
 			else

@@ -7,6 +7,8 @@ class
 inherit
 	ARGUMENTS
 
+	SHARED_ERROR_HANDLER
+
 	STRING_HANDLER
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -121,16 +123,16 @@ feature {NONE} -- Implementation
 						-- Fast parsing using our `fast_factory' to detect old constructs.
 					fast_factory.reset
 					fast_parser.parse_from_string (string_buffer)
-					if fast_parser.error_handler.has_error then
+					if error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
-						parser.error_handler.wipe_out
+						error_handler.wipe_out
 						io.error.put_string ("Syntax error in file: " + file_name)
 						io.error.put_new_line
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
 						parser.parse_from_string (string_buffer)
-						check no_error: not parser.error_handler.has_error end
+						check no_error: not error_handler.has_error end
 
 						visitor.setup (parser.root_node, parser.match_list, True, True)
 							-- Free some memory from the parser that we don't need.
@@ -179,4 +181,35 @@ invariant
 	visitor_not_void: visitor /= Void
 	string_buffer_not_void: string_buffer /= Void
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

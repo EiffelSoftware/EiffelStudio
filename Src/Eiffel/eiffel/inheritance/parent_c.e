@@ -136,6 +136,18 @@ feature
 						redefining.has (feature_name_id)
 		end
 
+	has_redefining: BOOLEAN is
+			-- Does `Current' redefine any features?
+		do
+			Result := redefining /= Void and then redefining.count > 0
+		end
+
+	has_undefining: BOOLEAN is
+			-- Does `Current' undefine any features?
+		do
+			Result := undefining /= Void and then undefining.count > 0
+		end
+
 	is_undefining (feature_name_id: INTEGER): BOOLEAN is
 			-- Is the current parent undefining `feature_name_id'?
 		do

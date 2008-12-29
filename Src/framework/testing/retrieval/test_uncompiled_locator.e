@@ -23,7 +23,10 @@ inherit
 			process_library
 		end
 
-	SHARED_ERROR_HANDLER
+	SHARED_EIFFEL_PARSER_WRAPPER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -171,22 +174,17 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			a_class_in_project: project.is_class_in_project (a_class)
 			factory_reset: inheritance_ast_factory.is_reset
 		local
-			l_file: KL_BINARY_INPUT_FILE
 			l_universe: UNIVERSE_I
 			l_group: CONF_GROUP
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_list: !DS_ARRAYED_LIST [!EIFFEL_CLASS_I]
+			l_text: STRING_32
 		do
 			l_universe := project.eiffel_project.universe
 			l_group := a_class.cluster
-			create l_file.make (a_class.file_name)
-			l_file.open_read
-			if l_file.is_open_read then
-				check
-					error_handler_empty: error_handler.error_list.is_empty and
-								error_handler.warning_list.is_empty
-				end
-				inheritance_parser.parse (l_file)
+			l_text := a_class.text
+			if l_text /= Void then
+				eiffel_parser_wrapper.parse_with_option (inheritance_parser, l_text, a_class.options, True)
 				create l_list.make (inheritance_ast_factory.ancestors.count)
 				l_cursor := inheritance_ast_factory.ancestors.new_cursor
 				from
@@ -199,10 +197,8 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 					end
 					l_cursor.forth
 				end
-				l_file.close
 				inheritance_ast_factory.reset
 				inheritance_parser.reset
-				error_handler.wipe_out
 			else
 				create l_list.make (0)
 			end

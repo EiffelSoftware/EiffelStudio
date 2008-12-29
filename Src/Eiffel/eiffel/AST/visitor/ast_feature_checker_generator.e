@@ -6756,9 +6756,25 @@ feature -- Implementation
 			i, j, nb: INTEGER
 			l_case: CASE_B
 			l_list: BYTE_LIST [BYTE_NODE]
+			l_is_empty: BOOLEAN
 		do
 			if not is_byte_node_enabled then
-				l_as.interval.process (Current)
+				from
+					nb := l_as.interval.count
+					i := nb
+					j := nb + 1
+				until
+					i <= 0
+				loop
+					l_as.interval.i_th (i).process (Current)
+					if inspect_control.last_interval_byte_node /= Void then
+						j := j - 1
+					end
+					i := i - 1
+				end
+				if j > nb then
+					l_is_empty := True
+				end
 				if l_as.compound /= Void then
 					process_compound (l_as.compound)
 				end
@@ -6780,7 +6796,13 @@ feature -- Implementation
 					end
 					i := i - 1
 				end
-				if j <= nb then
+				if j > nb then
+					l_is_empty := True
+					if l_as.compound /= Void then
+						process_compound (l_as.compound)
+						last_byte_node := Void
+					end
+				else
 						-- Array of intervals is not empty
 					if j > 1 then
 							-- Remove voids
@@ -6820,7 +6842,10 @@ feature -- Implementation
 				end
 				last_byte_node := l_case
 			end
-			context.save_sibling
+			if not l_is_empty then
+					-- If all intervals are empty, the scope information is not changed, otherwise it's updated.
+				context.save_sibling
+			end
 		end
 
 	process_ensure_as (l_as: ENSURE_AS) is

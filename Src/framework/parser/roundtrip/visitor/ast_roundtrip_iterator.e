@@ -277,6 +277,8 @@ feature
 			-- Process `l_as'.
 		do
 			safe_process (l_as.type)
+			process_leading_leaves (l_as.index)
+			last_index := l_as.index
 		end
 
 	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is

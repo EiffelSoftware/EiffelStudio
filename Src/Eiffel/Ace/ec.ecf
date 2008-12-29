@@ -4,7 +4,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true">
+		<option trace="false" profile="false" debug="false" warning="true" syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
@@ -33,7 +33,7 @@
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
 		</library>
-		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false"/>
+		<library name="framework_patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true">
 			<option>
 				<warning name="syntax" enabled="false"/>
@@ -106,7 +106,7 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option is_void_safe="false">
+		<option>
 			<warning name="once_in_generic" enabled="false"/>
 		</option>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">

@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 					file.close
 						-- Fast parsing using our `fast_factory' to detect old constructs.
 					fast_factory.reset
-					fast_parser.parse_from_string (string_buffer)
+					parse_eiffel_class (fast_parser, string_buffer)
 					if error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 						io.error.put_new_line
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
-						parser.parse_from_string (string_buffer)
+						parse_eiffel_class (parser, string_buffer)
 						check no_error: not error_handler.has_error end
 
 						visitor.setup (parser.root_node, parser.match_list, True, True)
@@ -157,6 +157,32 @@ feature {NONE} -- Implementation
 				else
 					io.error.put_string ("Couldn't open: " + file_name)
 					io.error.put_new_line
+				end
+			end
+		end
+
+	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+			-- Using a parser, parse our code using different parser mode, to ensure that we can
+			-- indeed convert any kind of Eiffel classes.
+		require
+			a_parser_not_void: a_parser /= Void
+			a_buffer_not_void: a_buffer /= Void
+		do
+				-- First we do it using the old conventions.
+			a_parser.set_is_indexing_keyword (True)
+			a_parser.set_is_attribute_keyword (False)
+			a_parser.set_is_note_keyword (False)
+			a_parser.parse_from_string (a_buffer)
+			if error_handler.has_error then
+				error_handler.wipe_out
+					-- There was an error, let's try to see if the code is already using `note'.
+				a_parser.set_is_note_keyword (True)
+				a_parser.parse_from_string (a_buffer)
+				if error_handler.has_error then
+					error_handler.wipe_out
+						-- Still an error, let's try to see if the code is already using `attribute'.
+					a_parser.set_is_attribute_keyword (True)
+					a_parser.parse_from_string (a_buffer)
 				end
 			end
 		end

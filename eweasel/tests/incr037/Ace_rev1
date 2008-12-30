@@ -11,7 +11,7 @@
 --| Public License version 2.
 </description>
 		<root cluster="root_cluster" class="test" feature="make"/>
-		<option>
+		<option syntax_level="1">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		$EWEASEL_DOTNET_SETTING

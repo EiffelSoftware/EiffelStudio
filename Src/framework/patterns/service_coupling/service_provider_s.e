@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The service interface for retrieving the global service provider.
 	]"

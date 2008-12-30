@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface to determine in an interface is usable.
 		

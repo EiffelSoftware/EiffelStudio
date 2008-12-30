@@ -23,7 +23,7 @@ optimize: "-O2"
 wkoptimize: "-O0"
 
 -- compiler flags
-ccflags: "-imacros eif_config.mingw.h -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+ccflags: "-imacros eif_config.mingw.h -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_WIN32_IE=0x400 -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
 mtccflags: "$ccflags -DEIF_THREADS"
 cppflags: "$ccflags"
 mtcppflags: "$mtccflags"

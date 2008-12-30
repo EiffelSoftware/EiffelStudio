@@ -241,7 +241,7 @@ feature -- Events
 		deferred
 		end
 
-	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I; error: !STRING; token_values: !TUPLE]]
+	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I; error: !STRING; token_values: TUPLE]]
 			-- Events called when a processor raises an error message
 			--
 			-- test_suite: `Current'

@@ -190,7 +190,7 @@ feature {NONE} -- Events: test suite
 			end
 		end
 
-	frozen on_processor_error_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_tokens: !TUPLE)
+	frozen on_processor_error_frozen (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_tokens: TUPLE)
 			-- <Precursor>
 		do
 			if a_processor = processor then
@@ -251,10 +251,11 @@ feature {NONE} -- Events: processor
 		do
 		end
 
-	on_processor_error (a_error: !STRING_8; a_tokens: !TUPLE)
+	on_processor_error (a_error: !STRING_8; a_tokens: TUPLE)
 			-- Called when `processor' reports an error
+		require
+			a_tokens_attached: a_tokens /= Void
 		do
-
 		end
 
 feature {NONE} -- Implementation

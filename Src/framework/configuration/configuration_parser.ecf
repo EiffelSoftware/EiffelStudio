@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="configuration_parser" uuid="A548E53F-02A4-4B6A-9570-26A727A3A069" library_target="default">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="configuration_parser" uuid="A548E53F-02A4-4B6A-9570-26A727A3A069" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework.Ecf">
+		<option namespace="EiffelSoftware.Framework.Ecf" syntax_level="1">
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

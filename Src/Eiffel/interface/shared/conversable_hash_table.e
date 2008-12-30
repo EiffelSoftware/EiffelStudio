@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (new: ?G; a_key: ?H)
+	put (new: G; a_key: H)
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Make `inserted' true if and only if an insertion has
@@ -107,7 +107,7 @@ feature -- Element change
 			end
 		end
 
-	replace (new: ?G; a_key: ?H)
+	replace (new: G; a_key: H)
 			-- Replace item at `a_key', if present,
 			-- with `new'; do not change associated key.
 			-- Make `replaced' true if and only if a replacement has
@@ -122,7 +122,7 @@ feature -- Element change
 			end
 		end
 
-	force (new: ?G; a_key: ?H)
+	force (new: G; a_key: H)
 			-- If `a_key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `a_key'.
 			-- Make `inserted' true.
@@ -136,7 +136,7 @@ feature -- Element change
 			end
 		end
 
-	replace_key (new_key: ?H; old_key: ?H)
+	replace_key (new_key: H; old_key: H)
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
 			-- Make `replaced' true if and only if a replacement has
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 		end
 
-	replace_item (new_item: ?G; old_item: ?G)
+	replace_item (new_item: G; old_item: G)
 			-- If table contains `old_item',
 			-- replace its key by `new_item'.
 			-- Make `item_replaced' true if and only if a replacement has

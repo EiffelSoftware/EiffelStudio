@@ -67,7 +67,7 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	has_item (v: ?G): BOOLEAN
+	has_item (v: G): BOOLEAN
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -81,7 +81,7 @@ feature -- Access
 			internal_table_built: internal_table_built
 		end
 
-	valid_item (a_item: ?G): BOOLEAN
+	valid_item (a_item: G): BOOLEAN
 			-- Valid `a_item'
 		do
 			Result := internal_table.valid_key (a_item)

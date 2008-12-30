@@ -248,6 +248,7 @@ feature {TEST_SUITE_S} -- Status setting
 			is_running := False
 			is_queued := False
 			has_execution_status_changed := True
+			is_outcome_added := True
 		ensure then
 			tags_contain_outcome_tag: tags.has (outcome_tag)
 		end

@@ -1,5 +1,5 @@
 note
-	"Controls access to Microsoft HTML Help, allows to display given urls"
+	description: "Controls access to Microsoft HTML Help, allows to display given urls"
 
 class
 	WIZARD_HTML_HELP_HANDLER

@@ -98,8 +98,4 @@ feature {NONE} -- Protected procedures
 			"finalize"			
 		end
 
-feature -- Manual Add ons
-	
-	frozen Void: NONE;
-			-- Void reference
 end

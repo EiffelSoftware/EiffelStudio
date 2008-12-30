@@ -1,10 +1,9 @@
 note
-
 	status: "See notice at end of class."
 	Date: "$Date$"
 	Revision: "$Revision$"
 	Product: EiffelStore
-	Database: All_Bases "(At least ODBC)"
+	Database: "All_Bases (At least ODBC)"
 
 class
 	PARAMETER_HDL

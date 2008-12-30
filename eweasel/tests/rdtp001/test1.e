@@ -1,5 +1,12 @@
 
 class TEST1 [G -> {STRING, STRING, STRING, STRING} create make end]
+
+inherit
+	LIST [STRING]
+
+inherit {NONE}
+	STRING
+
 feature
 	try
 		do
@@ -42,7 +49,5 @@ feature
 	dynamic_pointer_type: INTEGER once Result := dynamic_type_from_string ((default_pointer).generating_type) end
 	dynamic_string_8_type: INTEGER once Result := dynamic_type_from_string ((create {STRING_8}.make_empty).generating_type) end
 	dynamic_string_32_type: INTEGER once Result := dynamic_type_from_string ((create {STRING_32}.make_empty).generating_type) end
-
-end
 
 end

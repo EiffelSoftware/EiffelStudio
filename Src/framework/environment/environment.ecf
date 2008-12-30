@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="environment" uuid="FBD84CA6-731E-47C0-8447-E6F316708B24" library_target="environment">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="environment" uuid="FBD84CA6-731E-47C0-8447-E6F316708B24" library_target="environment">
 	<target name="environment">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option syntax_level="1" namespace="EiffelSoftware.Framework">
+			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
@@ -15,10 +16,11 @@
 			</condition>
 		</library>
 		<cluster name="environment" location=".\" recursive="true">
+			<option namespace="Environment">
+			</option>
 			<file_rule>
 				<exclude>/spec$</exclude>
 			</file_rule>
-			<option namespace="Environment"/>
 		</cluster>
 		<cluster name="unix" location="spec\unix\">
 			<condition>
@@ -29,7 +31,8 @@
 			<condition>
 				<platform value="windows"/>
 			</condition>
-			<option namespace="Environment"/>
+			<option namespace="Environment">
+			</option>
 		</cluster>
 	</target>
 </system>

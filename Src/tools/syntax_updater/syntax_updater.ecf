@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="syntax_updater" uuid="F8339F54-4EB3-4743-946E-9BFAA27DBA90">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="syntax_updater" uuid="F8339F54-4EB3-4743-946E-9BFAA27DBA90">
 	<target name="syntax_updater">
 		<description>Let you set convert your Eiffel source code from old syntax constructs to new one.</description>
 		<root class="SYNTAX_UPDATER" feature="make"/>
@@ -29,6 +29,7 @@
 				<custom name="ISE_C_COMPILER" excluded_value="msc"/>
 			</condition>
 		</pre_compile_action>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>

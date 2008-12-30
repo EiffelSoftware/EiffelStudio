@@ -173,7 +173,7 @@ feature {MUTUAL_EXCLUSIVITY_SPECIFICATION, OPTION_SPECIFICATION}-- Status settin
 	
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 		local
 			s1, s2: STRING
 		do

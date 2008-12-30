@@ -5,7 +5,11 @@ class
 	SYNTAX_UPDATER
 
 inherit
-	ARGUMENTS
+	ARGUMENT_MULTI_PARSER
+		rename
+			make as argument_make,
+			execute as argument_execute
+		end
 
 	SHARED_ERROR_HANDLER
 
@@ -20,7 +24,6 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-
 			create factory
 			create parser.make_with_factory (factory)
 			create fast_factory
@@ -32,7 +35,11 @@ feature {NONE} -- Initialization
 			create visitor.make_with_default_context
 
 			create string_buffer.make (102400)
-			execute
+
+				--
+			argument_make (false, True)
+			is_using_builtin_switches := False
+			argument_execute (agent execute)
 		end
 
 feature {NONE} -- File discovering and processing
@@ -40,28 +47,58 @@ feature {NONE} -- File discovering and processing
 	execute is
 			-- Process all files under directories specified on the command line arguments.
 		local
-			i: INTEGER
 			dir: KL_DIRECTORY
 			l_dir: STRING
+			l_values: LIST [STRING]
+			l_has_error: BOOLEAN
+			l_processed_values: ARRAYED_LIST [STRING]
 		do
-			if argument_count < 1 then
-				io.error.put_string ("Specify a directory for a recursive processing of all Eiffel files.")
-				io.error.put_new_line
-			else
+				-- Ensure directories exist.
+			from
+				l_values := values
+				create l_processed_values.make (l_values.count)
+				l_values.start
+			until
+				l_values.after
+			loop
+				l_dir := Execution_environment.interpreted_string (l_values.item)
+				create dir.make (l_dir)
+				if not dir.exists then
+					if not l_dir.is_empty and then (l_dir.item (l_dir.count) = '/' or l_dir.item (l_dir.count) = '\') then
+						l_dir.remove_tail (1)
+						l_processed_values.extend (l_dir)
+						create dir.make (l_dir)
+						if not dir.exists then
+							l_has_error := True
+							io.error.put_string ("directory: " + l_dir + " is not accessible%N")
+						end
+					else
+						l_has_error := True
+						io.error.put_string ("directory: " + l_dir + " is not accessible%N")
+					end
+				else
+					l_processed_values.extend (l_dir)
+				end
+				l_values.forth
+			end
+
+				-- All directories seem to exist, let's process them.
+			if not l_has_error then
 				from
-					i := 1
+					l_values := l_processed_values
+					l_values.start
 				until
-					i > argument_count
+					l_values.after
 				loop
-					l_dir := Execution_environment.interpreted_string (argument (i))
-					create dir.make (l_dir)
+					create dir.make (l_values.item)
 					if dir.exists then
 						test_recursive (dir)
-						i := i + 1
 					else
-						print ("directory: " + l_dir + " is not accessible%N")
-						i := argument_count + 1
+						io.error.put_string ("Error trying to access directory: ")
+						io.error.put_string (l_values.item)
+						io.error.put_new_line
 					end
+					l_values.forth
 				end
 			end
 		end
@@ -162,6 +199,10 @@ feature {NONE} -- Implementation
 								if outfile.is_open_write then
 									outfile.put_string (l_text)
 									outfile.close
+									if has_option (verbose_switch) then
+										io.put_string ("Converted: " + file_name)
+										io.put_new_line
+									end
 								else
 									io.error.put_string ("Could not write to: " + file_name)
 									io.error.put_new_line
@@ -219,6 +260,24 @@ feature {NONE}
 
 	string_buffer: STRING
 			-- Buffer for reading Eiffel classes.
+
+feature {NONE} -- Arguments processing
+
+	name: STRING = "Eiffel Syntax Updater"
+	version: STRING = "v6.4"
+
+	non_switched_argument_name: STRING = "Directory"
+	non_switched_argument_description: STRING = "Directory to process"
+	non_switched_argument_type: STRING = "Directory"
+	verbose_switch: STRING = "v|verbose"
+	verbose_switch_description: STRING = "Verbose output of processing"
+			-- Our arguments
+
+	switches: !ARRAYED_LIST [!ARGUMENT_SWITCH]
+		once
+			create Result.make (1)
+			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))
+		end
 
 invariant
 	parser_not_void: parser /= Void

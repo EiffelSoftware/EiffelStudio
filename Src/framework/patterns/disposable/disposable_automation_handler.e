@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A automation handler for managing automatic disposal of ancillary objects.
 	]"

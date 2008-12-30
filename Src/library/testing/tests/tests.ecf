@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="testing-tests" uuid="DD3DA5DF-AE77-44CD-88D1-177058DDD672" library_target="testing-tests">
+	<description>Unit-tests for testing library.</description>
+	<target name="testing-tests">
+		<root class="ANY" feature="default_create"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+			<exclude>/tests</exclude>
+			<exclude>/EIFGENs</exclude>
+		</file_rule>
+		<option syntax_level="1" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\" recursive="true">
+			<option namespace="Tests">
+			</option>
+		</tests>
+	</target>
+</system>

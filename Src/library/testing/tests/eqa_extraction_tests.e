@@ -26,7 +26,7 @@ feature -- Test routines
 				do
 					assert ("correct_a_current", a_obj.a_current = a_obj)
 					assert ("integer_correct", a_obj.a_integer = 100)
-					if {l_string: !STRING} object_for_id ("#2") then
+					if {l_string: STRING} object_for_id ("#2") then
 						assert ("correct_a_string", a_obj.a_string = l_string)
 					end
 				end, ["#1"])

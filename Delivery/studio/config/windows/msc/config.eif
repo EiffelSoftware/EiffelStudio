@@ -23,7 +23,7 @@ wkoptimize: "-Od -Zi -MT"
 optimize: "-Ox -MT"
 
 -- compiler flags
-ccflags: "-w -nologo -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
+ccflags: "-w -nologo -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -D_CRT_SECURE_NO_DEPRECATE -D_UNICODE -DUNICODE $(ISE_CFLAGS)"
 mtccflags: "$ccflags -DEIF_THREADS"
 cppflags: "$ccflags"
 mtcppflags: "$mtccflags"

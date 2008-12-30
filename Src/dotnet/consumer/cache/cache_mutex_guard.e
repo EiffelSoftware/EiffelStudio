@@ -10,13 +10,8 @@ frozen class
 
 inherit
 	SYSTEM_OBJECT
-	
-	CACHE_SETTINGS
-		export
-			{NONE} all
-		end
 
-	MUTEX_FACTORY
+	CACHE_SETTINGS
 		export
 			{NONE} all
 		end
@@ -126,7 +121,8 @@ feature {NONE} -- Implementation
 	guard: SYSTEM_MUTEX is
 			-- guard implementation
 		once
-			Result := new_mutex (cache_lock_id)
+			create Result.make (False, "Global\" + create {STRING}.make_from_cil (cache_lock_id))
+			setup_mutex (Result)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -135,6 +131,36 @@ feature {NONE} -- Implementation
 			-- internal count
 		once
 			create Result
+		end
+
+	setup_mutex (a_mutex: SYSTEM_MUTEX) is
+			-- Setup `a_mutex' to be shared among various users of a machine.
+		require
+			a_mutex_not_void: a_mutex /= Void
+		local
+			retried: BOOLEAN
+			l_security: MUTEX_SECURITY
+			l_rule: MUTEX_ACCESS_RULE
+			l_account: NT_ACCOUNT
+			l_identity: IDENTITY_REFERENCE
+		do
+			if not retried then
+				create l_account.make ("Everyone")
+				if l_account.is_valid_target_type ({SECURITY_IDENTIFIER}) then
+						-- In theory the following code should always succeed since we check for its validity
+						-- just before, but on a swedish version of Windows it simply crashes with a
+						-- IdentityNotMappedException exception. This is why we have the rescue clause.
+						-- If it fails it simply keeps the default access control.
+					l_identity := l_account.translate ({SECURITY_IDENTIFIER})
+					l_security := a_mutex.get_access_control
+					create l_rule.make (l_identity, {MUTEX_RIGHTS}.Full_control, {ACCESS_CONTROL_TYPE}.Allow)
+					l_security.add_access_rule (l_rule)
+					a_mutex.set_access_control (l_security)
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 indexing

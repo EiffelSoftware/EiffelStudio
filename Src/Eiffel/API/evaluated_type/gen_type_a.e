@@ -1448,6 +1448,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				l_formal_generic_parameter: FORMAL_A
 				l_generic_parameter: TYPE_A
 				l_conform: BOOLEAN
+				l_formal_as: FORMAL_AS
 				l_formal_dec_as: FORMAL_CONSTRAINT_AS
 				l_check_creation_readiness: BOOLEAN
 			do
@@ -1490,8 +1491,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 									-- to check conformance to the formal generic parameter.
 								l_constraint_item := l_constraint_item.to_other_attachment (a)
 							end
-							if l_generic_parameter.conformance_type.conform_to (a_type_context, l_constraint_item) then
-								-- Everything is fine, we conform
+							l_formal_as := l_class.generics.i_th (i).formal
+							if l_generic_parameter.conformance_type.conform_to (a_type_context, l_constraint_item) and then
+								(l_formal_as.is_expanded implies l_generic_parameter.is_expanded) and then
+								(l_formal_as.is_reference implies l_generic_parameter.is_reference)
+							then
+									-- Everything is fine, we conform
 							else
 									-- We do not conform, insert an error for this type.
 								l_conform := False
@@ -1504,7 +1509,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 								-- Check now for the validity of the creation constraint clause if
 								-- there is one which can be checked, i.e. when `to_check' conforms
 								-- to `constraint_type'.
-							l_formal_dec_as ?= associated_class.generics.i_th (i)
+							l_formal_dec_as ?= l_class.generics.i_th (i)
 							check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
 							if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint and a_check_creation_readiness) then
 									-- If we are not in degree 3 (i.e. 4), we cannot have a
@@ -1833,7 +1838,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

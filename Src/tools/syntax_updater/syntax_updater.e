@@ -107,6 +107,7 @@ feature {NONE} -- Implementation
 			file: KL_BINARY_INPUT_FILE
 			outfile: KL_BINARY_OUTPUT_FILE
 			count, nb: INTEGER
+			l_text: STRING
 		do
 			if file_name.substring (file_name.count - 1, file_name.count).is_case_insensitive_equal (".e") then
 				create file.make (file_name)
@@ -126,9 +127,12 @@ feature {NONE} -- Implementation
 					if error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
-						error_handler.wipe_out
 						io.error.put_string ("Syntax error in file: " + file_name)
+						if {l_syntax1: SYNTAX_ERROR} error_handler.error_list.last then
+							io.error.put_string (" (" + l_syntax1.line.out + ", " + l_syntax1.column.out + ")" + l_syntax1.error_message)
+						end
 						io.error.put_new_line
+						error_handler.wipe_out
 					elseif fast_factory.has_obsolete_constructs then
 							-- Slow parsing to rewrite the class using the new constructs.
 						parse_eiffel_class (parser, string_buffer)
@@ -141,14 +145,27 @@ feature {NONE} -- Implementation
 							-- Perform the visiting
 						visitor.process_ast_node (visitor.parsed_class)
 						if visitor.is_updated then
-							create outfile.make (file_name)
-							outfile.open_write
-							if outfile.is_open_write then
-								outfile.put_string (visitor.text)
-								outfile.close
-							else
-								io.error.put_string ("Could not write to: " + file_name)
+							l_text := visitor.text
+							parse_eiffel_class (fast_parser, l_text)
+							if error_handler.has_error then
+									-- We ignore syntax errors since we want to test roundtrip parsing
+									-- on valid Eiffel classes.
+								io.error.put_string ("After conversion syntax error in file: " + file_name)
+								if {l_syntax2: SYNTAX_ERROR} error_handler.error_list.last then
+									io.error.put_string (" (" + l_syntax2.line.out + ", " + l_syntax2.column.out + ")" + l_syntax2.error_message)
+								end
 								io.error.put_new_line
+								error_handler.wipe_out
+							else
+								create outfile.make (file_name)
+								outfile.open_write
+								if outfile.is_open_write then
+									outfile.put_string (l_text)
+									outfile.close
+								else
+									io.error.put_string ("Could not write to: " + file_name)
+									io.error.put_new_line
+								end
 							end
 						end
 							-- Free our memory.
@@ -176,11 +193,15 @@ feature {NONE} -- Implementation
 			if error_handler.has_error then
 				error_handler.wipe_out
 					-- There was an error, let's try to see if the code is already using `note'.
+				a_parser.set_is_indexing_keyword (True)
 				a_parser.set_is_note_keyword (True)
+				a_parser.set_is_attribute_keyword (False)
 				a_parser.parse_from_string (a_buffer)
 				if error_handler.has_error then
 					error_handler.wipe_out
 						-- Still an error, let's try to see if the code is already using `attribute'.
+					a_parser.set_is_indexing_keyword (True)
+					a_parser.set_is_note_keyword (True)
 					a_parser.set_is_attribute_keyword (True)
 					a_parser.parse_from_string (a_buffer)
 				end

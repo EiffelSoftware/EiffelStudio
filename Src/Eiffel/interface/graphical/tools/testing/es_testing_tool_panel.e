@@ -824,11 +824,12 @@ feature {TEST_SUITE_S} -- Events: test suite
 			end
  		end
 
- 	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: !TUPLE)
+ 	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING_8; a_token_values: TUPLE)
  			-- <Precursor>
  		do
  			if window_manager.last_focused_window = develop_window then
- 				prompts.show_error_prompt (locale_formatter.formatted_translation (a_error, a_token_values), develop_window.window, Void)
+ 					-- Note: remove `as_attached' compiler treats Current as attached
+ 				prompts.show_error_prompt (locale_formatter.formatted_translation (a_error, a_token_values.as_attached), develop_window.window, Void)
  			end
  		end
 

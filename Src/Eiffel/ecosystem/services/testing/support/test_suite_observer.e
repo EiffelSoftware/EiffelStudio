@@ -76,7 +76,7 @@ feature {TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING; a_token_values: !TUPLE)
+	on_processor_error (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I; a_error: !STRING; a_token_values: TUPLE)
 			-- Called when a processor raises an error
 			--
 			-- `a_test_suite': Test suite that triggered event.
@@ -88,6 +88,7 @@ feature {TEST_SUITE_S} -- Events
 			a_test_suite_usable: a_test_suite.is_interface_usable
 			a_processor_usable: a_processor.is_interface_usable
 			a_processor_stopped: a_processor.is_running
+			a_token_values_attached: a_token_values /= Void
 		do
 		end
 

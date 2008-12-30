@@ -410,7 +410,8 @@ feature -- Status setting
 					if not test_class_map.is_empty then
 						test_routine_map.wipe_out
 						test_class_map.wipe_out
-						tests_reset_event.publish ([Current])
+							-- Note: replace `as_attached' with Current when compiler treats Current as attached
+						tests_reset_event.publish ([as_attached])
 					end
 				end
 				is_updating_tests := False
@@ -636,7 +637,8 @@ feature {NONE} -- Element change
 					end
 					l_et.set_explicit_tags (l_ftags)
 					if l_et.has_changed then
-						test_changed_event.publish ([Current, l_et])
+							-- Note: replace `as_attached' with Current when compiler treats Current as attached
+						test_changed_event.publish ([as_attached, l_et.as_attached])
 						l_et.clear_changes
 					end
 					l_features.remove_found_item
@@ -667,7 +669,8 @@ feature {NONE} -- Element change
 					l_et.clear_changes
 				end
 				test_routine_map.force (l_et, test_identifier (a_test_class, l_features.key_for_iteration))
-				test_added_event.publish ([Current, l_et])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				test_added_event.publish ([as_attached, l_et.as_attached])
 				l_features.forth
 			end
 		end
@@ -710,7 +713,8 @@ feature {NONE} -- Element change
 			test_routine_map.search (a_id)
 			l_test := test_routine_map.found_item
 			test_routine_map.remove_found_item
-			test_removed_event.publish ([Current, l_test])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			test_removed_event.publish ([as_attached, l_test.as_attached])
 		ensure
 			not_has_test_for_id: not test_routine_map.has (a_id)
 		end

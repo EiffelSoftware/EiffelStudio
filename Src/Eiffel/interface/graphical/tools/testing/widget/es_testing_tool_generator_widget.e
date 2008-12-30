@@ -88,7 +88,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_processor_error (a_error: !STRING_8; a_tokens: !TUPLE)
+	on_processor_error (a_error: !STRING_8; a_tokens: TUPLE)
 			-- <Precursor>
 		do
 			has_error := True

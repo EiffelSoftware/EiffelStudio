@@ -1,6 +1,6 @@
 note
 	description: "[
-		Widget showing status and control buttons for an {TEST_EXECUTOR_I}.
+		Widget showing status and control buttons for a {TEST_EXECUTOR_I}.
 	]"
 	author: ""
 	date: "$Date$"

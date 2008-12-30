@@ -140,7 +140,8 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			a_processor.start (a_arg)
-			processor_launched_event.publish ([Current, a_processor])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			processor_launched_event.publish ([as_attached, a_processor.as_attached])
 
 			if a_blocking then
 				from until
@@ -157,7 +158,8 @@ feature {TEST_PROCESSOR_I} -- Status setting
 	propagate_error (a_error: !STRING; a_token_values: !TUPLE; a_processor: !TEST_PROCESSOR_I)
 			-- <Precursor>
 		do
-			processor_error_event.publish ([Current, a_processor, a_error, a_token_values])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			processor_error_event.publish ([as_attached, a_processor.as_attached, a_error.as_attached, a_token_values.as_attached])
 		end
 
 feature {TEST_EXECUTOR_I} -- Status setting
@@ -166,7 +168,8 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			-- <Precursor>
 		do
 			a_test.set_queued (a_executor)
-			test_changed_event.publish ([Current, a_test])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			test_changed_event.publish ([as_attached, a_test.as_attached])
 			a_test.clear_changes
 		end
 
@@ -174,7 +177,8 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			-- <Precursor>
 		do
 			a_test.set_running
-			test_changed_event.publish ([Current, a_test])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			test_changed_event.publish ([as_attached, a_test.as_attached])
 			a_test.clear_changes
 		end
 
@@ -202,7 +206,8 @@ feature {TEST_EXECUTOR_I} -- Status setting
 				end
 			end
 			a_test.add_outcome (a_outcome)
-			test_changed_event.publish ([Current, a_test])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			test_changed_event.publish ([as_attached, a_test.as_attached])
 			a_test.clear_changes
 		end
 
@@ -210,7 +215,8 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			-- <Precursor>
 		do
 			a_test.abort
-			test_changed_event.publish ([Current, a_test])
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			test_changed_event.publish ([as_attached, a_test.as_attached])
 			a_test.clear_changes
 		end
 
@@ -321,9 +327,11 @@ feature {NONE} -- Basic operations
 		do
 			a_processor.proceed
 			if a_processor.is_finished then
-				processor_finished_event.publish ([Current, a_processor])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				processor_finished_event.publish ([as_attached, a_processor.as_attached])
 			else
-				processor_proceeded_event.publish ([Current, a_processor])
+					-- Note: replace `as_attached' with Current when compiler treats Current as attached
+				processor_proceeded_event.publish ([as_attached, a_processor.as_attached])
 			end
 		end
 
@@ -337,7 +345,8 @@ feature {NONE} -- Basic operations
 			a_processor_launched_by_current: a_processor.test_suite = Current
 		do
 			a_processor.stop
-			processor_stopped_event.publish_if ([Current, a_processor],
+				-- Note: replace `as_attached' with Current when compiler treats Current as attached
+			processor_stopped_event.publish_if ([as_attached, a_processor.as_attached],
 				agent (ts: !like Current; p: !TEST_PROCESSOR_I): BOOLEAN
 					do
 						Result := not p.is_running
@@ -358,7 +367,7 @@ feature -- Events
 	processor_stopped_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I]]
 			-- <Precursor>
 
-	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I; error: !STRING; token_values: !TUPLE]]
+	processor_error_event: !EVENT_TYPE [TUPLE [test_suite: !TEST_SUITE_S; processor: !TEST_PROCESSOR_I; error: !STRING; token_values: TUPLE]]
 			-- <Precursor>
 
 invariant

@@ -1,6 +1,5 @@
 indexing
 	description	: "System's root class"
-	note		: "Initial version automatically generated"
 
 class
 	PARSER_TEST
@@ -68,7 +67,7 @@ feature {NONE} -- Implementation
 				file.open_read
 				if file.is_open_read then
 					file.read_string (count)
-					parser.parse_from_string (file.last_string)
+					parse_eiffel_class (parser, file.last_string)
 
 					if parser.error_handler.has_error then
 							-- We ignore syntax errors since we want to test roundtrip parsing
@@ -94,6 +93,27 @@ feature {NONE} -- Implementation
 				else
 					print ("couldn't open file: " + file_name)
 					io.new_line
+				end
+			end
+		end
+
+	parse_eiffel_class (a_parser: STANDALONE_EIFFEL_PARSER; a_buffer: STRING)
+		require
+			a_parser_not_void: a_parser /= Void
+			a_buffer_not_void: a_buffer /= Void
+		do
+			a_parser.set_is_indexing_keyword (True)
+			a_parser.set_is_attribute_keyword (False)
+			a_parser.set_is_note_keyword (False)
+			a_parser.parse_from_string (a_buffer)
+			if a_parser.error_handler.has_error then
+				a_parser.error_handler.wipe_out
+				a_parser.set_is_note_keyword (True)
+				a_parser.parse_from_string (a_buffer)
+				if a_parser.error_handler.has_error then
+					a_parser.error_handler.wipe_out
+					a_parser.set_is_attribute_keyword (True)
+					a_parser.parse_from_string (a_buffer)
 				end
 			end
 		end

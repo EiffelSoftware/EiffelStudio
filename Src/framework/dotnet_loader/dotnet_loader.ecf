@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="configuration" uuid="06DF248D-6B7F-4EC5-BB4E-25ACCA9C7FF7" library_target="default">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="configuration" uuid="06DF248D-6B7F-4EC5-BB4E-25ACCA9C7FF7" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<option syntax_level="1">
+			<assertions precondition="true"/>
 		</option>
 		<external_include location="-D_WIN32_DCOM">
 			<condition>

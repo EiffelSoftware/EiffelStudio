@@ -8,6 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option syntax_level="1"/>
 		<external_object location="$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ingres_store.lib">
 			<condition>
 				<platform value="windows"/>

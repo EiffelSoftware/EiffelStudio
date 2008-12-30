@@ -8,6 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option syntax_level="1"/>
 		<external_include location="$(ISE_LIBRARY)\library\store\dbms\rdbms\oracle\Clib">
 			<condition>
 				<platform value="windows"/>

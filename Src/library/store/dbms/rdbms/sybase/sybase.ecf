@@ -8,6 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option syntax_level="1"/>
 		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
 			<condition>
 				<platform excluded_value="windows"/>

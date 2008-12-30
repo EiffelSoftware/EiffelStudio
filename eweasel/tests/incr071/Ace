@@ -6,7 +6,7 @@
 --| Public License version 2.
 </description>
 		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true">
+		<option warning="true" syntax_level="1">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>

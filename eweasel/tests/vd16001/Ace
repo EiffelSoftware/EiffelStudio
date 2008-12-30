@@ -5,7 +5,7 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 		</description>
-		<option warning="true">
+		<option warning="true" syntax_level="1">
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>

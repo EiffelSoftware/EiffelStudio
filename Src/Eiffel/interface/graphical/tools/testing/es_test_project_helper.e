@@ -41,26 +41,32 @@ feature -- Access
 
 	last_added_class: !EIFFEL_CLASS_I
 			-- <Precursor>
+		local
+			l_class: like internal_added_class
 		do
-			if {l_class: like last_added_class} internal_added_class then
-				Result := l_class
-			end
+			l_class := internal_added_class
+			check l_class /= Void end
+			Result := l_class
 		end
 
 	last_added_cluster: !CONF_CLUSTER
 			-- <Precursor>
+		local
+			l_cluster: like internal_added_cluster
 		do
-			if {l_cluster: like last_added_cluster} internal_added_cluster then
-				Result := l_cluster
-			end
+			l_cluster := last_added_cluster
+			check l_cluster /= Void end
+			Result := l_cluster
 		end
 
 	last_error: !STRING_32
 			-- <Precursor>
+		local
+			l_error: like internal_error
 		do
-			if {l_error: like last_error} internal_error then
-				Result := l_error
-			end
+			l_error := internal_error
+			check l_error /= Void end
+			Result := l_error
 		end
 
 feature {NONE} -- Access
@@ -153,12 +159,12 @@ feature -- Element change
 
 	add_cluster (a_target: !CONF_TARGET; a_path: !STRING)
 			-- <Precursor>
+		local
+			l_cluster: like internal_added_cluster
 		do
 			internal_error := Void
-			internal_added_cluster := Void
-			if {l_cluster: like last_added_cluster} manager.last_added_cluster then
-				internal_added_cluster := l_cluster
-			else
+			internal_added_cluster := manager.last_added_cluster
+			if internal_added_cluster = Void then
 				internal_error := locale_formatter.translation ("unknown error occurred")
 			end
 		end

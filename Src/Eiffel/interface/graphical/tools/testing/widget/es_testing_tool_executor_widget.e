@@ -184,6 +184,8 @@ feature {NONE} -- Factory
 
 	create_tool_bar_items: ?DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
+		local
+			l_items: like create_tool_bar_items
 		do
 			create Result.make (4)
 
@@ -194,7 +196,8 @@ feature {NONE} -- Factory
 			register_action (run_button.select_actions, agent on_run)
 			Result.force_last (run_button)
 
-			if {l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]} Precursor then
+			l_items := Precursor
+			if l_items /= Void then
 				Result.append_last (l_items)
 			end
 

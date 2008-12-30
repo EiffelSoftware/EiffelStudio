@@ -115,6 +115,8 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := assigner /= Void
+		ensure then
+			result_implies_assigner_attached: Result implies assigner /= Void
 		end
 
 	is_finished: BOOLEAN
@@ -408,6 +410,7 @@ feature {NONE} -- Basic functionality
 			l_tuple: !TUPLE [index: NATURAL; outcome: ?EQA_TEST_OUTCOME; attempts: NATURAL]
 			l_done, l_terminate: BOOLEAN
 			l_test: !TEST_I
+			l_outcome: EQA_TEST_OUTCOME
 		do
 			from
 			until
@@ -422,7 +425,8 @@ feature {NONE} -- Basic functionality
 						if not l_test.is_running then
 							test_suite.set_test_running (l_test)
 						end
-						if {l_outcome: !EQA_TEST_OUTCOME} l_tuple.outcome then
+						l_outcome := l_tuple.outcome
+						if l_outcome /= Void then
 							completed_tests_count := completed_tests_count + 1
 							test_suite.add_outcome_to_test (l_test, l_outcome)
 

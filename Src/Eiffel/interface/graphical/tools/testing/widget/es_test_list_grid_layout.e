@@ -273,10 +273,13 @@ feature {NONE} -- Implementation
 
 	append_class_name (a_test: !TEST_I)
 			-- Item showing class for `a_test'.
+		local
+			l_class: ?EIFFEL_CLASS_I
 		do
 			token_writer.add_space
 			token_writer.add_char ('(')
-			if {l_class: EIFFEL_CLASS_I} test_suite.service.class_for_test (a_test) then
+			l_class := test_suite.service.class_for_test (a_test)
+			if l_class /= Void then
 				token_writer.add_class (l_class)
 			else
 				token_writer.add_string (a_test.class_name)

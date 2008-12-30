@@ -118,10 +118,14 @@ feature {NONE}
 		local
 			l_featc: FEATURE_CLAUSE_AS
 			l_reuse: BOOLEAN
+			l_class: ?EIFFEL_CLASS_I
+			l_name: ?STRING
+			l_name_32: STRING_32
 		do
 			l_featc := wizard_information.feature_clause_cache
 			l_reuse := not wizard_information.is_new_feature_clause_cache
-			if {l_class: EIFFEL_CLASS_I} wizard_information.test_class_cache then
+			l_class := wizard_information.test_class_cache
+			if l_class /= Void then
 				class_tree.show_class (l_class)
 			end
 			if selected_class = Void then
@@ -137,10 +141,11 @@ feature {NONE}
 					new_feature_clause_button.enable_select
 				end
 			end
-			if {l_name: !STRING} wizard_information.feature_clause_name then
-				if {l_name32: !STRING_32} l_name.to_string_32 then
-					new_feature_clause_name.set_text (l_name32)
-				end
+			l_name := wizard_information.feature_clause_name_cache
+			if l_name /= Void then
+				l_name_32 := l_name.to_string_32
+				check l_name_32 /= Void end
+				new_feature_clause_name.set_text (l_name_32)
 			end
 			new_feature_clause_name.validate
 
@@ -216,7 +221,7 @@ feature {NONE} -- Events
 		do
 			selected_class := Void
 			if class_tree.selected_item /= Void then
-				if {l_eclass: !like selected_class} class_tree.selected_item.data then
+				if {l_eclass: like selected_class} class_tree.selected_item.data then
 					selected_class := l_eclass
 					wizard_information.set_test_class (l_eclass)
 				else

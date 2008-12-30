@@ -66,11 +66,13 @@ feature {NONE} -- Implementation
 			locating: is_locating
 		local
 			l_list: ARRAYED_LIST [CLASS_C]
+			l_class: ?EIFFEL_CLASS_I
 		do
 				-- Note: because of multiple inheritance and possible (but rare) corrupted EIFGENs we need to
 				--       check whether class has already been added to project. Although this gets checked by
 				--       the project, we make sure the class is not deferred before reporting.
-			if {l_class: !EIFFEL_CLASS_I} an_ancestor.original_class and then not an_ancestor.is_deferred then
+			l_class := an_ancestor.original_class
+			if l_class /= Void and then not an_ancestor.is_deferred then
 				project.report_test_class (l_class)
 			end
 			l_list := an_ancestor.direct_descendants

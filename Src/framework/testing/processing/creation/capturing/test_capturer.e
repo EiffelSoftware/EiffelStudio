@@ -97,12 +97,15 @@ feature -- Query
 			--           1) not represent a call to an external feature
 			--           2) not be a call to an inline agent
 			--           3) exported to any or be a creation procedure
+		local
+			l_feature: ?E_FEATURE
 		do
-			if {l_feat: E_FEATURE} a_cse.routine and {l_class: !EIFFEL_CLASS_C} a_cse.dynamic_class then
-				if not (l_feat.is_external or l_feat.is_inline_agent) then
-					Result := l_feat.export_status.is_all or else
-						l_class.creation_feature = l_feat.associated_feature_i or else
-						(l_class.creators /= Void and then l_class.creators.has (l_feat.name))
+			l_feature := a_cse.routine
+			if l_feature /= Void and {l_class: EIFFEL_CLASS_C} a_cse.dynamic_class then
+				if not (l_feature.is_external or l_feature.is_inline_agent) then
+					Result := l_feature.export_status.is_all or else
+						l_class.creation_feature = l_feature.associated_feature_i or else
+						(l_class.creators /= Void and then l_class.creators.has (l_feature.name))
 				end
 			end
 		end
@@ -181,16 +184,21 @@ feature -- Basic operations
 			l_element: !TEST_CAPTURED_STACK_ELEMENT
 			i: INTEGER
 			l_abort: BOOLEAN
-			l_type: !STRING
+			l_type, l_value: STRING
+			l_feature: ?E_FEATURE
+			l_dbg_value: ?ABSTRACT_DEBUG_VALUE
 		do
-			if {l_feature: !E_FEATURE} a_cse.routine then
+			l_feature := a_cse.routine
+			if l_feature /= Void then
 				create l_type.make_from_string (a_cse.current_object_value.dump_value.generating_type_representation (True))
 				create l_element.make (l_feature, l_type)
 				if not l_element.is_creation_procedure then
-					if {l_adv1: !ABSTRACT_DEBUG_VALUE} a_cse.current_object_value then
-						compute_string_representation (l_adv1, 0)
-						if {l_ref: !STRING} last_value and {l_type1: !STRING} l_adv1.dump_value.generating_type_representation (True) then
-							l_element.add_operand (l_ref, l_type1)
+					l_dbg_value := a_cse.current_object_value
+					if l_dbg_value /= Void then
+						compute_string_representation (l_dbg_value, 0)
+						l_value := last_value
+						if l_value /= Void then
+							l_element.add_operand (l_value, l_type)
 						else
 							l_abort := True
 						end
@@ -202,10 +210,14 @@ feature -- Basic operations
 					i > l_feature.argument_count or l_abort
 				loop
 					l_abort := True
-					if {l_adv2: !ABSTRACT_DEBUG_VALUE} a_cse.argument (i) then
-						compute_string_representation (l_adv2, 0)
-						if {l_value: !STRING} last_value and {l_type2: !STRING} l_adv2.dump_value.generating_type_representation (True) then
-							l_element.add_operand (l_value, l_type2)
+					l_dbg_value := a_cse.argument (i)
+
+					if l_dbg_value /= Void then
+						compute_string_representation (l_dbg_value, 0)
+						l_value := last_value
+						if l_value /= Void then
+							create l_type.make_from_string (l_dbg_value.dump_value.generating_type_representation (True))
+							l_element.add_operand (l_value, l_type)
 							l_abort := False
 						end
 					end
@@ -271,6 +283,8 @@ feature {NONE} -- Basic operations
 					last_value := l_bool.value.out
 				elseif {l_pointer: !DEBUG_BASIC_VALUE [POINTER]} an_adv then
 
+						-- Note: we do not store pointer values
+
 				elseif {l_value: !DEBUG_BASIC_VALUE [ANY]} an_adv then
 					l_type := l_value.dynamic_class.name
 					l_manifest := l_value.value.out
@@ -301,8 +315,9 @@ feature {NONE} -- Basic operations
 			l_id, l_depth: NATURAL
 			l_system: SYSTEM_I
 			l_classi: EIFFEL_CLASS_I
-			l_type: !STRING
+			l_type, l_dump: STRING
 			l_object: !TEST_CAPTURED_OBJECT
+			l_children: ?DS_LINEAR [ABSTRACT_DEBUG_VALUE]
 		do
 			l_adv := object_queue.item.object
 			l_depth := object_queue.item.depth
@@ -311,25 +326,26 @@ feature {NONE} -- Basic operations
 			create l_type.make_from_string (l_adv.dump_value.generating_type_representation (True))
 			l_id := object_identifier (l_adv)
 
-			if {l_class: !EIFFEL_CLASS_C} l_adv.dynamic_class then
+			if {l_class: EIFFEL_CLASS_C} l_adv.dynamic_class then
 				l_classi := l_class.original_class
 				l_system := l_class.system
 				if l_system.string_32_class = l_classi or l_system.string_8_class = l_classi then
-					if {l_string: !STRING} l_adv.dump_value.truncated_string_representation (0, -1).to_string_8 then
-						create {TEST_CAPTURED_STRING_OBJECT} l_object.make (l_id, l_type, l_string)
-					else
-						create {TEST_CAPTURED_STRING_OBJECT} l_object.make (l_id, l_type, "")
-					end
+					l_dump := l_adv.dump_value.truncated_string_representation (0, -1).to_string_8
+					check l_dump /= Void end
+					create {TEST_CAPTURED_STRING_OBJECT} l_object.make (l_id, l_type, l_dump)
+
 					-- TODO: Store agents in a way they can restored again later (this is currently not possible).
 --				elseif l_system.routine_class = l_classi or l_system.predicate_class = l_classi or l_system.procedure_class = l_classi then
 --					create {TEST_CAPTURED_ITEM_OBJECT} l_object.make (l_id, l_type, 0)
+
 				else
 					if l_class.is_special or l_class.is_tuple then
 						create {TEST_CAPTURED_ITEM_OBJECT} l_object.make (l_id, l_type, l_adv.children.count)
 					else
 						create {TEST_CAPTURED_ATTRIBUTE_OBJECT} l_object.make (l_id, l_type, l_adv.children.count)
 					end
-					if {l_children: !DS_LINEAR [ABSTRACT_DEBUG_VALUE]} l_adv.children then
+					l_children := l_adv.children
+					if l_children /= Void then
 						fill_object (l_object, l_children, l_depth)
 					end
 				end
@@ -347,6 +363,8 @@ feature {NONE} -- Basic operations
 			a_object_has_items_or_attributes: a_object.has_attributes or a_object.has_items
 		local
 			l_dbg_value: ABSTRACT_DEBUG_VALUE
+			l_value: like last_value
+			l_name: STRING
 		do
 			from
 				a_list.start
@@ -365,13 +383,14 @@ feature {NONE} -- Basic operations
 					else
 						compute_string_representation (l_dbg_value, a_depth + 1)
 					end
-					if {l_value: !STRING} last_value then
+					l_value := last_value
+					if l_value /= Void then
 						if a_object.has_items then
 							a_object.items.force_last (l_value)
 						else
-							if {l_name: !STRING} l_dbg_value.name then
-								a_object.attributes.force_last (l_value, l_name)
-							end
+							l_name := l_dbg_value.name
+							check l_name /= Void end
+							a_object.attributes.force_last (l_value, l_name)
 						end
 					end
 				end
@@ -428,4 +447,35 @@ invariant
 	capturing_equals_object_map_attached: is_capturing = (object_map /= Void)
 	capturing_equals_object_queue_attached: is_capturing = (object_queue /= Void)
 
+indexing
+	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			 Eiffel Software
+			 5949 Hollister Ave., Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 end

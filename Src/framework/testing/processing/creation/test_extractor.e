@@ -51,21 +51,26 @@ feature {NONE} -- Status setting
 			-- <Precursor>
 		local
 			l_source_writer: !TEST_EXTRACTED_SOURCE_WRITER
+			l_app_stat: ?APPLICATION_STATUS
+			l_cs: ?EIFFEL_CALL_STACK
 		do
 			create l_source_writer.make
 			capturer.observers.force_last (l_source_writer)
 
 			l_source_writer.prepare (a_file, a_class_name)
-			if {l_stat: APPLICATION_STATUS} debugger_manager.application_status then
-				if {l_cs: EIFFEL_CALL_STACK} l_stat.current_call_stack then
+			l_app_stat := debugger_manager.application_status
+			if l_app_stat /= Void then
+				l_cs := l_app_stat.current_call_stack
+				if l_cs /= Void then
 					from
 						capturer.prepare
 						l_cs.start
 					until
 						l_cs.after
 					loop
-						if {l_cse: !EIFFEL_CALL_STACK_ELEMENT} l_cs.item and then
-						   configuration.call_stack_elements.has (l_cse.level_in_stack)
+						if
+							{l_cse: !EIFFEL_CALL_STACK_ELEMENT} l_cs.item and then
+							configuration.call_stack_elements.has (l_cse.level_in_stack)
 						then
 							capturer.capture_call_stack_element (l_cse)
 						end

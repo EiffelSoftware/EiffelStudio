@@ -165,8 +165,11 @@ feature -- Query
 			usable: is_interface_usable
 			project_initialized: is_project_initialized
 			tests_has_a_test: tests.has (a_test)
+		local
+			l_class: like class_for_test
 		do
-			if {l_class: !EIFFEL_CLASS_I} class_for_test (a_test) and then l_class.is_compiled then
+			l_class := class_for_test (a_test)
+			if l_class /= Void and then l_class.is_compiled then
 				if {l_class_c: like compiled_class_for_test} l_class.compiled_class then
 					Result := l_class_c
 				end

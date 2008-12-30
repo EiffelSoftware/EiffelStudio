@@ -56,6 +56,8 @@ feature {NONE} -- Initialization
 			l_stack: ?EIFFEL_CALL_STACK
 			i: INTEGER
 			l_reg: TEST_PROCESSOR_REGISTRAR_I
+			l_row: EV_GRID_ROW
+			l_cse: CALL_STACK_ELEMENT
 		do
 			if test_suite.is_service_available then
 				l_reg := test_suite.service.processor_registrar
@@ -79,9 +81,11 @@ feature {NONE} -- Initialization
 				until
 					l_stack.after
 				loop
-					if {l_row: !EV_GRID_ROW} grid.row (i) and {l_cse: !CALL_STACK_ELEMENT} l_stack.item then
-						populate_row (l_row, l_cse)
-					end
+					l_row := grid.row (i)
+					check l_row /= Void end
+					l_cse := l_stack.item
+					check l_cse /= Void end
+					populate_row (l_row, l_cse)
 					l_stack.forth
 					i := i + 1
 				end
@@ -266,7 +270,7 @@ feature {NONE} -- Events
 		local
 			l_index: INTEGER
 		do
-			if {l_cse: !CALL_STACK_ELEMENT} a_item.data then
+			if {l_cse: CALL_STACK_ELEMENT} a_item.data then
 				l_index := l_cse.level_in_stack
 				if a_item.is_checked then
 					wizard_information.call_stack_elements.force (l_index)

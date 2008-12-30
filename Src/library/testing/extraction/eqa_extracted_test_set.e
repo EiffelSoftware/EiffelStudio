@@ -360,6 +360,7 @@ feature {NONE} -- Object initialization
 		local
 			l_type: INTEGER
 			l_result: like create_special_object
+			l_special: like new_special_any_instance
 		do
 			if {l_b_special: TYPE [SPECIAL [BOOLEAN]]} a_special then
 				Result := create {SPECIAL [BOOLEAN]}.make (a_count)
@@ -396,9 +397,9 @@ feature {NONE} -- Object initialization
 				l_type := generic_dynamic_type (a_special, 1)
 
 				if l_type >= 0 and then is_special_any_type (l_type) then
-					if {l_special: like create_special_object} new_special_any_instance (l_type, a_count) then
-						l_result := l_special
-					end
+					l_special := new_special_any_instance (l_type, a_count)
+					check l_special /= Void end
+					l_result := l_special
 				else
 					assert ("special type not supported", False)
 				end
@@ -416,6 +417,7 @@ feature {NONE} -- Object initialization
 			i, j, l_dtype: INTEGER
 			l_attributes: HASH_TABLE [INTEGER, !STRING]
 			l_obj: !ANY
+			l_name: like field_name
 		do
 			create l_attributes.make (an_attributes.count // 2)
 			from
@@ -436,83 +438,83 @@ feature {NONE} -- Object initialization
 			until
 				i > field_count (an_object)
 			loop
-				if {l_name: !STRING} field_name (i, an_object) then
-					if l_attributes.has (l_name) then
-						j := l_attributes.item (l_name)
-						inspect field_type (i, an_object)
-						when reference_type then
-							if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
-								if is_valid_id (l_id) and then is_existing_id (l_id) then
-									l_obj := object_for_id (l_id)
-									l_dtype := detachable_type (field_static_type_of_type (i, dynamic_type (an_object)))
-									if type_conforms_to (dynamic_type (l_obj), l_dtype) then
-										set_reference_field (i, an_object, l_obj)
-									end
+				l_name := field_name (i, an_object)
+				check l_name /= Void end
+				if l_attributes.has (l_name) then
+					j := l_attributes.item (l_name)
+					inspect field_type (i, an_object)
+					when reference_type then
+						if an_attributes.is_reference_item (j) and then {l_id: !STRING} an_attributes.reference_item (j) then
+							if is_valid_id (l_id) and then is_existing_id (l_id) then
+								l_obj := object_for_id (l_id)
+								l_dtype := detachable_type (field_static_type_of_type (i, dynamic_type (an_object)))
+								if type_conforms_to (dynamic_type (l_obj), l_dtype) then
+									set_reference_field (i, an_object, l_obj)
 								end
 							end
-						when boolean_type then
-							if an_attributes.is_boolean_item (j) then
-								set_boolean_field (i, an_object, an_attributes.boolean_item (j))
-							end
-						when character_8_type then
-							if an_attributes.is_character_8_item (j) then
-								set_character_8_field (i, an_object, an_attributes.character_8_item (j))
-							end
-						when character_32_type then
-							if an_attributes.is_character_32_item (j) then
-								set_character_32_field (i, an_object, an_attributes.character_32_item (j))
-							end
-						when integer_8_type then
-							if an_attributes.is_integer_8_item (j) then
-								set_integer_8_field (i, an_object, an_attributes.integer_8_item (j))
-							end
-						when integer_16_type then
-							if an_attributes.is_integer_16_item (j) then
-								set_integer_16_field (i, an_object, an_attributes.integer_16_item (j))
-							end
-						when integer_32_type then
-							if an_attributes.is_integer_32_item (j) then
-								set_integer_32_field (i, an_object, an_attributes.integer_32_item (j))
-							end
-						when integer_64_type then
-							if an_attributes.is_integer_64_item (j) then
-								set_integer_64_field (i, an_object, an_attributes.integer_64_item (j))
-							end
-						when natural_8_type then
-							if an_attributes.is_natural_8_item (j) then
-								set_natural_8_field (i, an_object, an_attributes.natural_8_item (j))
-							end
-						when natural_16_type then
-							if an_attributes.is_natural_16_item (j) then
-								set_natural_16_field (i, an_object, an_attributes.natural_16_item (j))
-							end
-						when natural_32_type then
-							if an_attributes.is_natural_32_item (j) then
-								set_natural_32_field (i, an_object, an_attributes.natural_32_item (j))
-							end
-						when natural_64_type then
-							if an_attributes.is_natural_64_item (j) then
-								set_natural_64_field (i, an_object, an_attributes.natural_64_item (j))
-							end
-						when real_32_type then
-							if an_attributes.is_real_item (j) then
-								set_real_field (i, an_object, an_attributes.real_item (j))
-							end
-						when real_64_type then
-							if an_attributes.is_double_item (j) then
-								set_double_field (i, an_object, an_attributes.double_item (j))
-							end
-						when pointer_type then
-								-- in general pointer type attributes are not supported (default initialisation).
-							set_pointer_field (i, an_object, create {POINTER}.default_create)
-						else
-							check attribute_type_not_supported: False end
-								-- Type we do not cover yet.
 						end
+					when boolean_type then
+						if an_attributes.is_boolean_item (j) then
+							set_boolean_field (i, an_object, an_attributes.boolean_item (j))
+						end
+					when character_8_type then
+						if an_attributes.is_character_8_item (j) then
+							set_character_8_field (i, an_object, an_attributes.character_8_item (j))
+						end
+					when character_32_type then
+						if an_attributes.is_character_32_item (j) then
+							set_character_32_field (i, an_object, an_attributes.character_32_item (j))
+						end
+					when integer_8_type then
+						if an_attributes.is_integer_8_item (j) then
+							set_integer_8_field (i, an_object, an_attributes.integer_8_item (j))
+						end
+					when integer_16_type then
+						if an_attributes.is_integer_16_item (j) then
+							set_integer_16_field (i, an_object, an_attributes.integer_16_item (j))
+						end
+					when integer_32_type then
+						if an_attributes.is_integer_32_item (j) then
+							set_integer_32_field (i, an_object, an_attributes.integer_32_item (j))
+						end
+					when integer_64_type then
+						if an_attributes.is_integer_64_item (j) then
+							set_integer_64_field (i, an_object, an_attributes.integer_64_item (j))
+						end
+					when natural_8_type then
+						if an_attributes.is_natural_8_item (j) then
+							set_natural_8_field (i, an_object, an_attributes.natural_8_item (j))
+						end
+					when natural_16_type then
+						if an_attributes.is_natural_16_item (j) then
+							set_natural_16_field (i, an_object, an_attributes.natural_16_item (j))
+						end
+					when natural_32_type then
+						if an_attributes.is_natural_32_item (j) then
+							set_natural_32_field (i, an_object, an_attributes.natural_32_item (j))
+						end
+					when natural_64_type then
+						if an_attributes.is_natural_64_item (j) then
+							set_natural_64_field (i, an_object, an_attributes.natural_64_item (j))
+						end
+					when real_32_type then
+						if an_attributes.is_real_item (j) then
+							set_real_field (i, an_object, an_attributes.real_item (j))
+						end
+					when real_64_type then
+						if an_attributes.is_double_item (j) then
+							set_double_field (i, an_object, an_attributes.double_item (j))
+						end
+					when pointer_type then
+							-- in general pointer type attributes are not supported (default initialisation).
+						set_pointer_field (i, an_object, create {POINTER}.default_create)
 					else
-						-- `context' does not contain this attribute, whic is not considered to be an error, since a
-						-- class interface can change. If the invariants are not satisfied, an error will still occur.
+						check attribute_type_not_supported: False end
+							-- Type we do not cover yet.
 					end
+				else
+					-- `context' does not contain this attribute, whic is not considered to be an error, since a
+					-- class interface can change. If the invariants are not satisfied, an error will still occur.
 				end
 				i := i + 1
 			end

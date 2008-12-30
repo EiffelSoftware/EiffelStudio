@@ -138,10 +138,12 @@ feature {NONE} -- Factory
 
 	create_evaluator: !TEST_EVALUATOR_CONTROLLER
 			-- <Precursor>
+		local
+			l_assigner: like assigner
 		do
-			if {l_assigner: !like assigner} assigner then
-				create {TEST_DEBUG_EVALUATOR_CONTROLLER} Result.make (l_assigner, test_suite.eiffel_project_helper)
-			end
+			l_assigner := assigner
+			check l_assigner /= Void end
+			create {TEST_DEBUG_EVALUATOR_CONTROLLER} Result.make (l_assigner, test_suite.eiffel_project_helper)
 		end
 
 invariant

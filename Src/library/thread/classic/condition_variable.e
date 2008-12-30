@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class describing a condition variable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

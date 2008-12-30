@@ -1,5 +1,5 @@
 
-indexing
+note
 	description:
 		"Class defining thread attributes."
 	legal: "See notice at end of class."

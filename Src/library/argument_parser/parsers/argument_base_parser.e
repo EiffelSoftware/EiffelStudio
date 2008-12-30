@@ -1462,7 +1462,7 @@ feature {NONE} -- Output
 					if is_using_unix_switch_style or else l_options.item.has_short_name then
 						l_max_len := l_max_len.max (l_options.item.long_name.count + 5)
 					else
-						l_max_len := l_max_len.max (l_options.item.long_name.count)
+						l_max_len := l_max_len.max (l_options.item.long_name.count + 1)
 					end
 				end
 				l_options.forth

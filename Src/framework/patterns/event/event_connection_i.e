@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base interface for connecting observers to an interface, to be notified when an event is published on the inheriting interface.
 		

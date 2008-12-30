@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Default implementation for {EVENT_OBSERVER_CONNECTION_I} for interface implementations.
 	]"

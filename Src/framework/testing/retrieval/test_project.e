@@ -178,8 +178,11 @@ feature -- Query
 
 	feature_for_test (a_test: !TEST_I): ?E_FEATURE
 			-- <Precursor>
+		local
+			l_class: like compiled_class_for_test
 		do
-			if {l_class: !EIFFEL_CLASS_C} compiled_class_for_test (a_test) then
+			l_class := compiled_class_for_test (a_test)
+			if l_class /= Void then
 				Result := l_class.feature_with_name (a_test.name)
 			end
 		end
@@ -283,6 +286,8 @@ feature {NONE} -- Query
 			l_fcl: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			l_fl: EIFFEL_LIST [FEATURE_AS]
 			l_old_fcl, l_old_fl: CURSOR
+			l_fc_as: ?FEATURE_CLAUSE_AS
+			l_f_as: FEATURE_AS
 		do
 			create Result.make_default
 			if a_class.features /= Void then
@@ -293,7 +298,8 @@ feature {NONE} -- Query
 				until
 					l_fcl.after
 				loop
-					if {l_fc_as: !FEATURE_CLAUSE_AS} l_fcl.item and then is_valid_feature_clause (l_fc_as) then
+					l_fc_as := l_fcl.item
+					if l_fc_as /= Void and then is_valid_feature_clause (l_fc_as) then
 						from
 							l_fl := l_fcl.item.features
 							l_old_fl := l_fl.cursor
@@ -301,8 +307,9 @@ feature {NONE} -- Query
 						until
 							l_fl.after
 						loop
-							if {l_f: FEATURE_AS} l_fl.item and then is_valid_feature (l_f) then
-								Result.force (l_f, create {STRING}.make_from_string (test_routine_name (l_f)))
+							l_f_as := l_fl.item_for_iteration
+							if l_f_as /= Void and then is_valid_feature (l_f_as) then
+								Result.force (l_f_as, create {STRING}.make_from_string (test_routine_name (l_f_as)))
 							end
 							l_fl.forth
 						end
@@ -365,7 +372,7 @@ feature {NONE} -- Query
 			l_system := eiffel_project.system.system
 			if not l_system.root_creators.is_empty then
 				l_group := l_system.root_creators.first.cluster
-				if {l_class: like class_for_name} eiffel_project.universe.safe_class_named (a_name, l_group) then
+				if {l_class: EIFFEL_CLASS_I} eiffel_project.universe.safe_class_named (a_name, l_group) then
 					Result := l_class
 				end
 			end
@@ -376,7 +383,7 @@ feature {NONE} -- Query
 				until
 					l_list.after or Result /= Void
 				loop
-					if {l_class2: like class_for_name} l_list.item_for_iteration then
+					if {l_class2: EIFFEL_CLASS_I} l_list.item_for_iteration then
 						Result := l_class2
 					end
 					l_list.forth
@@ -574,18 +581,24 @@ feature {NONE} -- Element change
 			l_ctags, l_ftags: !DS_HASH_SET [!STRING]
 			l_tag: !STRING
 			l_name: STRING
+			l_note_clause: ?INDEXING_CLAUSE_AS
 		do
 			l_names := a_test_class.internal_names
 			l_features := valid_features (a_class_as)
 
 			create l_ctags.make_default
 			l_ctags.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [!STRING]})
-			if {l_ticlause: !INDEXING_CLAUSE_AS} a_class_as.top_indexes then
-				add_note_tags (l_ticlause, l_ctags)
+
+				-- Add tags of top and bottom note clauses
+			l_note_clause := a_class_as.top_indexes
+			if l_note_clause /= Void then
+				add_note_tags (l_note_clause, l_ctags)
 			end
-			if {l_biclause: !INDEXING_CLAUSE_AS} a_class_as.bottom_indexes then
-				add_note_tags (l_biclause, l_ctags)
+			l_note_clause := a_class_as.bottom_indexes
+			if l_note_clause /= Void then
+				add_note_tags (l_note_clause, l_ctags)
 			end
+
 			create l_tag.make (20)
 			l_tag.append ("class")
 			l_tag.append_character (tag_utilities.split_char)
@@ -614,9 +627,10 @@ feature {NONE} -- Element change
 				l_et := test_routine_map.found_item
 				l_features.search (l_cursor.item)
 				if l_features.found then
-					if {l_ficlause: !INDEXING_CLAUSE_AS} l_features.found_item.indexes then
+					l_note_clause := l_features.found_item.indexes
+					if l_note_clause /= Void then
 						l_ftags := l_ctags.cloned_object
-						add_note_tags (l_ficlause, l_ftags)
+						add_note_tags (l_note_clause, l_ftags)
 					else
 						l_ftags := l_ctags
 					end
@@ -641,9 +655,10 @@ feature {NONE} -- Element change
 			loop
 				l_names.force (l_features.key_for_iteration)
 				l_et := new_test (l_features.key_for_iteration, a_test_class)
-				if {l_ficlause2: !INDEXING_CLAUSE_AS} l_features.item_for_iteration.indexes then
+				l_note_clause := l_features.item_for_iteration.indexes
+				if l_note_clause /= Void then
 					l_ftags := l_ctags.cloned_object
-					add_note_tags (l_ficlause2, l_ftags)
+					add_note_tags (l_note_clause, l_ftags)
 				else
 					l_ftags := l_ctags
 				end
@@ -816,11 +831,15 @@ feature {NONE} -- Implementation: tag retrieval
 			l_uni: UNIVERSE_I
 			l_list: LIST [!CONF_LIBRARY]
 			l_path: LIST [STRING]
+			l_class: like class_for_name
+			l_uuid: ?UUID
+			l_dir: ?STRING
 		do
-			if {l_class: CLASS_I} class_for_name (a_class_name) then
+			l_class := class_for_name (a_class_name)
+			if l_class /= Void then
 				l_uni := eiffel_project.universe
 				from
-					l_current := l_class.group
+					l_current := l_class.cluster
 				until
 					l_current = Void
 				loop
@@ -830,7 +849,8 @@ feature {NONE} -- Implementation: tag retrieval
 						if l_cluster.parent /= Void then
 							l_current := l_cluster.parent
 						elseif l_cluster.is_used_in_library then
-							if {l_uuid: !UUID} l_cluster.target.system.uuid then
+							l_uuid := l_cluster.target.system.uuid
+							if l_uuid /= Void then
 								l_list := l_uni.library_of_uuid (l_uuid, True)
 								if not l_list.is_empty then
 									from
@@ -874,20 +894,19 @@ feature {NONE} -- Implementation: tag retrieval
 					cluster_stack.remove_last
 				end
 				cluster_stack.wipe_out
-				if {l_eclass: EIFFEL_CLASS_I} l_class then
-					l_path := l_eclass.path.split (unix_file_system.directory_separator)
-					from
-						l_path.start
-					until
-						l_path.after
-					loop
-						if {l_dir: STRING} l_path.item_for_iteration and then not l_dir.is_empty then
-							a_tag.append (tag_utilities.directory_prefix)
-							a_tag.append (l_dir)
-							a_tag.append_character (tag_utilities.split_char)
-						end
-						l_path.forth
+				l_path := l_class.path.split (unix_file_system.directory_separator)
+				from
+					l_path.start
+				until
+					l_path.after
+				loop
+					l_dir := l_path.item_for_iteration
+					if l_dir /= Void and then not l_dir.is_empty then
+						a_tag.append (tag_utilities.directory_prefix)
+						a_tag.append (l_dir)
+						a_tag.append_character (tag_utilities.split_char)
 					end
+					l_path.forth
 				end
 			end
 			a_tag.append (tag_utilities.class_prefix)

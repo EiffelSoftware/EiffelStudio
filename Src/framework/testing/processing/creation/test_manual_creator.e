@@ -87,7 +87,7 @@ feature {NONE} -- Basic operations
 	template_parameters: DS_HASH_TABLE [!STRING, !STRING]
 			-- Template parameters for creating actual class text from template file.
 		local
-			l_redefine, l_body, l_indexing: !STRING
+			l_redefine, l_body, l_indexing, l_name: STRING
 			l_cursor: DS_LINEAR_CURSOR [!STRING]
 			l_count: INTEGER
 			l_tags: !DS_LINEAR [!STRING]
@@ -100,9 +100,8 @@ feature {NONE} -- Basic operations
 					-- Use new syntax
 				Result.force_last ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
 			end
-			if {l_class_name: !STRING} configuration.new_class_name then
-				Result.force_last (l_class_name, v_class_name)
-			end
+			l_name := configuration.new_class_name
+			Result.force_last (l_name, v_class_name)
 			if False then--configuration.is_system_level_test then
 					-- TODO: switch to system level tests
 				Result.force_last (test_set_ancestor, v_test_set_ancestor)

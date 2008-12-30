@@ -56,10 +56,12 @@ feature -- Access
 
 	name: !STRING
 			-- <Precursor>
+		local
+			l_name: like name_cache
 		do
-			if {l_name: like name} name_cache then
-				Result := l_name
-			end
+			l_name := name_cache
+			check l_name /= Void end
+			Result := l_name
 		end
 
 	tags: !DS_LINEAR [!STRING]
@@ -100,50 +102,62 @@ feature -- Access
 
 	new_class_name: !STRING
 			-- <Precursor>
+		local
+			l_name: like new_class_name_cache
 		do
-			if {l_name: like new_class_name} new_class_name_cache then
-				Result := l_name
-			end
+			l_name := new_class_name_cache
+			check l_name /= Void end
+			Result := l_name
 		end
 
 	cluster: !CONF_CLUSTER
 			-- <Precursor>
+		local
+			l_cluster: like cluster_cache
 		do
-			if {l_cluster: like cluster} cluster_cache then
-				Result := l_cluster
-			end
+			l_cluster := cluster_cache
+			check l_cluster /= Void end
+			Result := l_cluster
 		end
 
 	path: !STRING
 			-- <Precursor>
+		local
+			l_path: like path_cache
 		do
-			if {l_path: like path} path_cache then
-				Result := l_path
-			end
+			l_path := path_cache
+			check l_path /= Void end
+			Result := l_path
 		end
 
 	test_class: !EIFFEL_CLASS_I
 			-- <Precursor>
+		local
+			l_class: like test_class_cache
 		do
-			if {l_class: like test_class} test_class_cache then
-				Result := l_class
-			end
+			l_class := test_class_cache
+			check l_class /= Void end
+			Result := l_class
 		end
 
 	feature_clause: !FEATURE_CLAUSE_AS
 			-- <Precursor>
+		local
+			l_fc: like feature_clause_cache
 		do
-			if {l_fc: like feature_clause} feature_clause_cache then
-				Result := l_fc
-			end
+			l_fc := feature_clause_cache
+			check l_fc /= Void end
+			Result := l_fc
 		end
 
 	feature_clause_name: !STRING
 			-- <Precursor>
+		local
+			l_name: like feature_clause_name_cache
 		do
-			if {l_name: like feature_clause_name} feature_clause_name_cache then
-				Result := l_name
-			end
+			l_name := feature_clause_name_cache
+			check l_name /= Void end
+			Result := l_name
 		end
 
 	call_stack_elements: !DS_HASH_SET [INTEGER]

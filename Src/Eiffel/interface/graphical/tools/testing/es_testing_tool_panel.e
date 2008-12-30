@@ -396,7 +396,7 @@ feature {NONE} -- Status setting: view
 	update_view
 			-- Refresh `tree_view' according to current view definition.
 		local
-			l_tag: STRING
+			l_tag, l_expr: STRING
 		do
 			develop_window.lock_update
 			if test_suite.is_service_available then
@@ -410,7 +410,9 @@ feature {NONE} -- Status setting: view
 				if not filter.is_connected then
 					filter.connect (test_suite.service)
 				end
-				if {l_expr: !STRING} filter_box.text.to_string_8 and then not l_expr.is_empty then
+				l_expr := filter_box.text.to_string_8
+				check l_expr /= Void end
+				if not l_expr.is_empty then
 					if not (filter.has_expression and then filter.expression.is_equal (l_expr)) then
 						filter.set_expression (l_expr)
 					end
@@ -498,6 +500,7 @@ feature {NONE} -- Status settings: widgets
 		local
 			l_text: STRING_32
 			l_ts: TEST_SUITE_S
+			l_tool_bar: like right_tool_bar_widget
 		do
 			if test_suite.is_service_available then
 				l_ts := test_suite.service
@@ -525,8 +528,9 @@ feature {NONE} -- Status settings: widgets
 					errors_label.disable_sensitive
 				end
 
-				if {l_tb: like right_tool_bar_widget} right_tool_bar_widget then
-					l_tb.compute_minimum_size
+				l_tool_bar := right_tool_bar_widget
+				if l_tool_bar /= Void then
+					l_tool_bar.compute_minimum_size
 				end
 			end
 		end
@@ -784,12 +788,12 @@ feature {TEST_SUITE_S} -- Events: test suite
 			if not l_found then
 				l_window := develop_window
 				check l_window /= Void end
-				if {l_executor: !TEST_EXECUTOR_I} a_processor then
+				if {l_executor: TEST_EXECUTOR_I} a_processor then
 					create {ES_TESTING_TOOL_EXECUTOR_WIDGET} l_new_tab.make (l_executor, l_window)
-				elseif {l_generator: !TEST_GENERATOR_I} a_processor then
+				elseif {l_generator: TEST_GENERATOR_I} a_processor then
 					create {ES_TESTING_TOOL_GENERATOR_WIDGET} l_new_tab.make (l_generator, l_window)
-				elseif {l_factory: !TEST_CREATOR_I} a_processor then
-					create {ES_TESTING_TOOL_CREATOR_WIDGET} l_new_tab.make (l_factory, l_window)
+				elseif {l_creator: TEST_CREATOR_I} a_processor then
+					create {ES_TESTING_TOOL_CREATOR_WIDGET} l_new_tab.make (l_creator, l_window)
 				end
 				if l_new_tab /= Void then
 					l_new_tab.widget.set_data (l_new_tab)

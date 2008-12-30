@@ -211,11 +211,14 @@ feature {NONE} -- Implementation: uncompiled test retrieval
 			-- <Precursor>
 		require else
 			locating: is_locating
+		local
+			l_ht: ?HASH_TABLE [CONF_CLASS, STRING]
 		do
 				-- TODO: make this a user preference whether to look search in all clusters for tests or only
 				--       test clusters.
 			if has_tests_cluster_parent (a_cluster) then
-				if {l_ht: HASH_TABLE [CONF_CLASS, STRING]} a_cluster.classes then
+				l_ht := a_cluster.classes
+				if l_ht /= Void then
 					from
 						l_ht.start
 					until

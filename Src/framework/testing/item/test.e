@@ -81,8 +81,11 @@ feature -- Access: Memento
 
 	added_tags: like tags
 			-- Tags added by last call to `set_explicit_tags'
+		local
+			l_tags: like internal_added_tags
 		do
-			if {l_tags: like tags} internal_added_tags then
+			l_tags := internal_added_tags
+			if l_tags /= Void then
 				Result := l_tags
 			else
 				Result := empty_tags
@@ -91,8 +94,11 @@ feature -- Access: Memento
 
 	removed_tags: like tags
 			-- Tags removed by last call to `set_explicit_tags'
+		local
+			l_tags: like internal_removed_tags
 		do
-			if {l_tags: like tags} internal_removed_tags then
+			l_tags := internal_removed_tags
+			if l_tags /= Void then
 				Result := l_tags
 			else
 				Result := empty_tags

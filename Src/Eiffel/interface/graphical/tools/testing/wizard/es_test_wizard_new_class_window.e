@@ -159,20 +159,22 @@ feature {NONE} -- Initialization
 			-- Called after all widgets have been initialized.
 		local
 			l_text: STRING_32
+			l_name, l_path: ?STRING
+			l_cluster: ?CONF_CLUSTER
+			b: BOOLEAN
 		do
-			if {l_name: !STRING} wizard_information.new_class_name_cache then
-				if {l_name32: !STRING_32} l_name.to_string_32 then
-					class_name.widget.set_text (l_name32)
-				end
+			l_name := wizard_information.new_class_name_cache
+			if l_name /= Void then
+				class_name.widget.set_text (l_name)
 			end
 			l_text := class_name.widget.text
 			check l_text /= Void end
-			if {l_res: BOOLEAN} validate_class_name (l_text) then
-				-- Nothing to do
-			end
+			b := validate_class_name (l_text)
 
-			if {l_cluster: !CONF_CLUSTER} wizard_information.cluster_cache then
-				if {l_path: !STRING} wizard_information.path_cache then
+			l_cluster := wizard_information.cluster_cache
+			if l_cluster /= Void then
+				l_path := wizard_information.path_cache
+				if l_path /= Void then
 					class_tree.show_subfolder (l_cluster, l_path)
 				else
 					class_tree.show_subfolder (l_cluster, "")
@@ -312,27 +314,29 @@ feature {NONE} -- Events
 			-- Called when item in `class_tree' is selected.
 		local
 			l_text: STRING_32
+			l_parent: CONF_CLUSTER
+			l_path: ?STRING
+			b: BOOLEAN
 		do
 			wizard_information.cluster_cache := Void
 			wizard_information.path_cache := Void
 			if {l_item: ES_TEST_WIZARD_CLASS_TREE_FOLDER_ITEM} class_tree.selected_item then
 				if {l_eb_cluster: EB_SORTED_CLUSTER} l_item.data then
-					if {l_parent: !CONF_CLUSTER} l_eb_cluster.actual_cluster then
-						wizard_information.cluster_cache := l_parent
-						if {l_path: !STRING} l_item.path then
-							wizard_information.path_cache := l_path
-						else
-							wizard_information.path_cache := ""
-						end
+					l_parent := l_eb_cluster.actual_cluster
+					check l_parent /= Void end
+					wizard_information.cluster_cache := l_parent
+					l_path := l_item.path
+					if l_path /= Void then
+						wizard_information.path_cache := l_path
+					else
+						wizard_information.path_cache := ""
 					end
 				end
 			end
 			validate_cluster
 			l_text := class_name.widget.text
 			check l_text /= Void end
-			if {l_res: BOOLEAN} validate_class_name (l_text) then
-					-- Nothing to do
-			end
+			b := validate_class_name (l_text)
 			update_next_button_status
 		end
 

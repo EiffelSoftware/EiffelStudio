@@ -84,11 +84,13 @@ feature {NONE} -- Implementation
 			a_status_is_listening: a_status.is_listening
 		local
 			l_rescued: BOOLEAN
+			l_connection: ?NETWORK_STREAM_SOCKET
 		do
 			if not l_rescued then
 				a_socket.accept
-				if {l_receiver: !NETWORK_STREAM_SOCKET} a_socket.accepted then
-					receive_results (l_receiver, a_status)
+				l_connection := a_socket.accepted
+				if l_connection /= Void then
+					receive_results (l_connection, a_status)
 				end
 			end
 			a_status.set_disconnected

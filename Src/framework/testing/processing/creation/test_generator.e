@@ -157,6 +157,7 @@ feature {NONE} -- Basic operations
 		local
 			l_total: INTEGER
 			l_progress: REAL
+			l_file: ?KI_TEXT_OUTPUT_STREAM
 		do
 			is_finished := is_stop_requested
 			if current_task /= Void and then current_task.has_next_step then
@@ -228,10 +229,9 @@ feature {NONE} -- Basic operations
 					interpreter := Void
 				end
 				if error_handler /= Void then
-					if {l_file: KI_FILE} error_handler.error_file then
-						if l_file.is_open then
-							l_file.close
-						end
+					l_file := error_handler.error_file
+					if l_file /= Void and then l_file.is_closable then
+						l_file.close
 					end
 					error_handler := Void
 				end

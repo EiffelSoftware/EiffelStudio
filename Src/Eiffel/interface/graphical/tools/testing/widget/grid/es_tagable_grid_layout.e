@@ -211,6 +211,8 @@ feature {NONE} -- Factory
 			l_cluster: ?CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_list: LIST [CONF_LIBRARY]
+			l_class: ?CLASS_I
+			l_feature: ?E_FEATURE
 		do
 			l_token := a_node.token
 			token_writer.new_line
@@ -224,7 +226,8 @@ feature {NONE} -- Factory
 			end
 			if l_token.starts_with (class_prefix) and l_token.count > class_prefix.count then
 				l_name := l_token.substring (class_prefix.count + 1, l_token.count)
-				if {l_class: !CLASS_I} class_from_name (l_name, l_cluster) then
+				l_class := class_from_name (l_name, l_cluster)
+				if l_class /= Void then
 					a_node.set_data (l_class)
 					token_writer.add_class (l_class)
 					l_pixmap := pixmap_from_class_i (l_class)
@@ -236,7 +239,8 @@ feature {NONE} -- Factory
 				l_pixmap := pixmaps.icon_pixmaps.feature_routine_icon
 				if l_pnode /= Void and then {l_classi: CLASS_I} l_pnode.data then
 					if l_classi.is_compiled and then l_classi.compiled_class.has_feature_table then
-						if {l_feature: E_FEATURE} l_classi.compiled_class.feature_with_name (l_name) then
+						l_feature := l_classi.compiled_class.feature_with_name (l_name)
+						if l_feature /= Void then
 							token_writer.add_feature (l_feature, l_name)
 							a_node.set_data (l_feature)
 						end

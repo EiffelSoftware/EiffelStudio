@@ -130,15 +130,20 @@ feature {NONE} -- Initialization
 			l_tags: DS_BILINEAR_CURSOR [!STRING]
 			l_text: !STRING_32
 			l_feat: E_FEATURE
+			l_name: ?STRING
+			l_name_32: STRING_32
+			l_class: ?CLASS_I
 		do
-			if {l_name: !STRING} wizard_information.name_cache then
-				if {l_name32: !STRING_32} l_name.to_string_32 then
-					test_name.set_text (l_name32)
-				end
+			l_name := wizard_information.name_cache
+			if l_name /= Void then
+				l_name_32 := l_name.to_string_32
+				check l_name_32 /= Void end
+				test_name.set_text (l_name_32)
 			end
 			test_name.validate
 
-			if {l_class: !CLASS_I} wizard_information.class_covered then
+			l_class := wizard_information.class_covered
+			if l_class /= Void then
 				l_feat := wizard_information.feature_covered
 				class_tree.show_class (l_class)
 				if l_feat /= Void then
@@ -267,21 +272,22 @@ feature {NONE} -- Events
 		local
 			l_valid: BOOLEAN
 			l_msg: STRING_32
+			l_name: STRING
 		do
-			if {l_name: !STRING} a_name.to_string_8 then
-				wizard_information.name_cache := l_name
-				if not wizard_information.is_new_class and then {l_class: !CLASS_I} wizard_information.test_class then
-					feature_name_validator.validate_new_feature_name (l_name, l_class)
-				else
-					feature_name_validator.validate_feature_name (l_name)
-				end
-				l_valid := feature_name_validator.is_valid
-				l_msg := feature_name_validator.last_error_message
-				if l_valid then
-					if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
-						l_valid := False
-						l_msg := locale_formatter.translation (e_bad_test_name)
-					end
+			l_name := a_name.to_string_8
+			check l_name /= Void end
+			wizard_information.name_cache := l_name
+			if not wizard_information.is_new_class and then {l_class: !CLASS_I} wizard_information.test_class then
+				feature_name_validator.validate_new_feature_name (l_name, l_class)
+			else
+				feature_name_validator.validate_feature_name (l_name)
+			end
+			l_valid := feature_name_validator.is_valid
+			l_msg := feature_name_validator.last_error_message
+			if l_valid then
+				if l_name.is_equal ("setup") or l_name.is_equal ("tear_down") then
+					l_valid := False
+					l_msg := locale_formatter.translation (e_bad_test_name)
 				end
 			end
 			Result := [l_valid, l_msg]
@@ -296,7 +302,7 @@ feature {NONE} -- Events
 			feature_tree.wipe_out
 			wizard_information.set_class_covered (Void)
 			wizard_information.set_feature_covered (Void)
-			if {l_item: !EB_CLASSES_TREE_CLASS_ITEM} class_tree.selected_item then
+			if {l_item: EB_CLASSES_TREE_CLASS_ITEM} class_tree.selected_item then
 				l_classi := l_item.data
 				if wizard_information.class_covered /= l_classi then
 					wizard_information.set_class_covered (l_classi)
@@ -315,7 +321,7 @@ feature {NONE} -- Events
 		do
 			wizard_information.set_feature_covered (Void)
 			if feature_tree.selected_item /= Void then
-				if {l_feat: !E_FEATURE} feature_tree.selected_item.data then
+				if {l_feat: E_FEATURE} feature_tree.selected_item.data then
 					wizard_information.set_feature_covered (l_feat)
 				end
 			end
@@ -398,6 +404,7 @@ feature {NONE} -- Implementation: feature tree
 			l_container: EV_CONTAINER
 			l_tree: like feature_tree
 			l_class_ast: CLASS_AS
+			l_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 		do
 
 			l_tree := feature_tree
@@ -421,7 +428,8 @@ feature {NONE} -- Implementation: feature tree
 						l_tree.selected_item.disable_select
 					end
 
-					if {l_clauses: !EIFFEL_LIST [FEATURE_CLAUSE_AS]} l_class_ast.features then
+					l_clauses := l_class_ast.features
+					if l_clauses /= Void then
 							-- Build tree from AST nodes
 						build_tree_imp (l_clauses, a_class_c)
 					else
@@ -429,7 +437,7 @@ feature {NONE} -- Implementation: feature tree
 						l_tree.extend (create {EV_TREE_ITEM}.make_with_text (warning_messages.w_no_feature_to_display))
 					end
 				end
-			elseif {l_external_classc: !EXTERNAL_CLASS_C} a_class_c then
+			elseif {l_external_classc: EXTERNAL_CLASS_C} a_class_c then
 				-- Special processing for a .NET type since has no 'ast' in the normal
 				-- sense.
 
@@ -588,9 +596,7 @@ feature {NONE} -- Implementation: feature tree
 						if ef = Void then
 							l_tree_item.set_text (f_item_name)
 							l_tree_item.set_data (f_item_name)
-							if {l_feature_name: !STRING_8} l_first_item_name then
-								l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, f_names.index))
-							end
+							l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, f_names.index))
 						else
 							l_tree_item.set_data (ef)
 							-- if is_clickable then

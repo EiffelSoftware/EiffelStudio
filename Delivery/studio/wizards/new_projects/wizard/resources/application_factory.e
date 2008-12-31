@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for compiler wizard."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Factory
 
-	new_wizard_initial_state: WIZARD_INITIAL_STATE is
+	new_wizard_initial_state: WIZARD_INITIAL_STATE
 			-- New initial state for wizard.
 		do
 			create Result.make (create {WIZARD_INFORMATION}.make)

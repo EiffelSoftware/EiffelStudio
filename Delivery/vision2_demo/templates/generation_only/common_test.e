@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide attributes for all examples."
 	author: ""
 	date: "$Date$"
@@ -22,7 +22,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	numbered_pixmap (a_number: INTEGER): EV_PIXMAP is
+	numbered_pixmap (a_number: INTEGER): EV_PIXMAP
 			-- `Result' is pixmap named "image" + a_number.out.
 		local
 			filename: FILE_NAME

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is inherit by all the application"
 	author: ""
 	date: "$Date$"

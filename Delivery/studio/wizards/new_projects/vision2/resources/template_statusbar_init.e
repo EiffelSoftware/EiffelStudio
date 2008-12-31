@@ -10,7 +10,7 @@ feature {NONE} -- StatusBar Implementation
 			-- Note: Call `standard_status_label.set_text (...)' to change the text
 			--       displayed in the status bar.
 
-	build_standard_status_bar is
+	build_standard_status_bar
 			-- Create and populate the standard toolbar.
 		require
 			status_bar_not_yet_created: 

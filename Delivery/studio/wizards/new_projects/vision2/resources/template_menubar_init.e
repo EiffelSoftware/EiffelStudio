@@ -10,7 +10,7 @@ feature {NONE} -- Menu Implementation
 	help_menu: EV_MENU
 			-- "Help" menu for this window (contains About...)
 
-	build_standard_menu_bar is
+	build_standard_menu_bar
 			-- Create and populate `standard_menu_bar'.
 		require
 			menu_bar_not_yet_created: standard_menu_bar = Void 
@@ -31,7 +31,7 @@ feature {NONE} -- Menu Implementation
 				not standard_menu_bar.is_empty
 		end
 
-	build_file_menu is
+	build_file_menu
 			-- Create and populate `file_menu'.
 		require
 			file_menu_not_yet_created: file_menu = Void
@@ -71,7 +71,7 @@ feature {NONE} -- Menu Implementation
 			file_menu_created: file_menu /= Void and then not file_menu.is_empty
 		end
 
-	build_help_menu is
+	build_help_menu
 			-- Create and populate `help_menu'.
 		require
 			help_menu_not_yet_created: help_menu = Void

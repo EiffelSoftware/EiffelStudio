@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All information about the wizard ... This class is inherited in each state "
 	author: "davids"
 	date: "$Date$"
@@ -14,14 +14,14 @@ create
 	make
 
 feature  -- Initialization
-	make is
+	make
 		do
 		
 		end
 
 feature -- Setting
 
-	set_location (s: STRING) is
+	set_location (s: STRING)
 		do
 			location:= s
 		end

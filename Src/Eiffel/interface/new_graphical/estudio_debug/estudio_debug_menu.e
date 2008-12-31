@@ -264,13 +264,11 @@ feature {NONE} -- Actions
 			vb.extend (but)
 			vb.extend (cbut)
 			vb.disable_item_expand (tf)
-			vb.disable_item_expand (but)
 			vb.disable_item_expand (cbut)
-
 			l_dlg.extend (vb)
 			l_dlg.set_default_cancel_button (cbut)
 			cbut.hide
-			l_dlg.set_width (200)
+			l_dlg.set_width (300)
 			paste_new_uuid (tf)
 			if window /= Void then
 				l_dlg.show_relative_to_window (window)

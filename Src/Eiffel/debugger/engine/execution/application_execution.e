@@ -5,8 +5,7 @@ note
 	date		: "$Date$"
 	revision	: "$Revision $"
 
-deferred
-class APPLICATION_EXECUTION
+deferred class APPLICATION_EXECUTION
 
 inherit
 	PROJECT_CONTEXT

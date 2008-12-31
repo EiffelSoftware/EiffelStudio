@@ -1,52 +1,35 @@
 note
-	description: "Summary description for {EWB_AUTO_TEST}."
+	description: "Summary description for {EWB_TEST_TREE_VIEW}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EWB_AUTO_TEST
+	EWB_TEST_TREE_VIEW
 
 inherit
-	EWB_CMD
+	EWB_TEST_CMD
 
-create
-	default_create,
-	make_with_arguments
+feature -- Access
 
-feature {NONE} -- Initialization
+	name: STRING_8 = "Tree view"
+			-- <Precursor>
 
-	make_with_arguments (a_arguments: LINKED_LIST [STRING])
-			-- Initialize `auto_test_arguments' with `a_arguments'.
-		require
-			a_arguments_attached: a_arguments /= Void
-		do
-		end
-
-feature -- Properties
-
-	name: STRING
-		do
-			Result := "AutoTest"
-		end
+	abbreviation: CHARACTER = 't'
+			-- <Precursor>
 
 	help_message: STRING_GENERAL
+			-- <Precursor>
 		do
-			Result := "AutoTest"
+			Result := locale.translation ("Display tests in a tree structure")
 		end
 
-	abbreviation: CHARACTER
-		do
-			Result := 'e'
-		end
+feature {NONE} -- Basic operations
 
-feature -- Execution
-
-	execute
-			-- Action performed when invoked from the
-			-- command line.
+	execute_with_test_suite
+			-- <Precursor>
 		do
-			io.put_string ("AutoTest is only available in graphical version of EiffelStudio.%N%N")
+
 		end
 
 note

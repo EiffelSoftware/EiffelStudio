@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,13 +9,13 @@ class
 
 feature {NONE}
 
-	object_tool_generator: OBJECT_TOOL_GENERATOR is
+	object_tool_generator: OBJECT_TOOL_GENERATOR
 			-- `Result' is the object tool generator.
 		once
 			create Result.make ("Object tool")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

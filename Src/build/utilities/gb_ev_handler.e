@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to all the currently supported%
 		%Vision2 types for Build2."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 	
 feature -- Access
 
-	supported_types: ARRAYED_LIST [STRING] is
+	supported_types: ARRAYED_LIST [STRING]
 			-- All Vision2 types supported by the system.
 		once
 			create Result.make (0)
@@ -78,7 +78,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 		
-	get_files_in_sub_directories (a_directory: STRING; files: ARRAYED_LIST[STRING]) is
+	get_files_in_sub_directories (a_directory: STRING; files: ARRAYED_LIST[STRING])
 			-- `Result' is all filenames recursively in `a_directory'.
 		local
 			directory: DIRECTORY
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

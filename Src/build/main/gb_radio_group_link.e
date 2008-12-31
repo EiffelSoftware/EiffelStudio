@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a displayable radio link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign `an_object' to `object'.
 		require
 			object_not_void: an_object /= Void
@@ -57,7 +57,7 @@ feature -- Status setting
 			object_set: object = an_object
 		end
 
-	set_gb_ev_container (a_container: GB_EV_CONTAINER) is
+	set_gb_ev_container (a_container: GB_EV_CONTAINER)
 			-- Assign `a_container' to `gb_ev_container'.
 		require
 			container_not_void: a_container /= Void
@@ -69,7 +69,7 @@ feature -- Status setting
 
 feature {GB_EV_CONTAINER} -- Implementation
 
-	update_displayed_text is
+	update_displayed_text
 			--  Display text on `Current' detailing `object'.
 		do
 			if object.name.is_empty then
@@ -83,7 +83,7 @@ feature {GB_EV_CONTAINER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	start_animation (x, y, button: INTEGER) is
+	start_animation (x, y, button: INTEGER)
 			-- Start animation on `layout_item' of `object'.
 		local
 			layout_item:GB_LAYOUT_CONSTRUCTOR_ITEM
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	animate is
+	animate
 			-- `animate' layout_item' of `obejct'.
 		local
 			a_cell: EV_CELL
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 	timer: EV_TIMEOUT;
 		-- Timer for layout constructor animation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

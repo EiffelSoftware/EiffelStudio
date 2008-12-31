@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can generate/retrieve simple xml files%
 		%i.e. one level deep. The format must be a valid build format."
 	legal: "See notice at end of class."
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	create_file (root_node_name: STRING; file_name: STRING; data: ARRAY [TUPLE [STRING, STRING]]) is
+	create_file (root_node_name: STRING; file_name: STRING; data: ARRAY [TUPLE [STRING, STRING]])
 			-- Create an XML file `file_name', with a root node named `root_node_name' and the root node
 			-- containing information given by `data'.
 		require
@@ -103,7 +103,7 @@ feature -- Basic operations
 			end
 		end
 
-	load_file (file_name: STRING): HASH_TABLE [STRING, STRING] is
+	load_file (file_name: STRING): HASH_TABLE [STRING, STRING]
 			-- Load file `file_name. `Result' contains the
 			-- information contained in the file.
 			-- Do nothing if the file is a directory.
@@ -150,7 +150,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	load_and_parse_xml_file (a_filename:STRING): HASH_TABLE [STRING, STRING] is
+	load_and_parse_xml_file (a_filename:STRING): HASH_TABLE [STRING, STRING]
 			-- Load file `a_filename' and parse.
 			-- `Result' is all information in `a_filename'.
 		require
@@ -179,13 +179,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+	pipe_callback: XM_TREE_CALLBACKS_PIPE
 			-- Create unique callback pipe.
 		once
 			create Result.make
 		end
 
-	parse_file (a_filename: STRING) is
+	parse_file (a_filename: STRING)
 			-- Parse XML file `filename' with `parser'.
 		local
 			file: KL_BINARY_INPUT_FILE
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
 
-	show_warning_dialog is
+	show_warning_dialog
 			-- Show a warning with notification that the file
 			-- was not a valid build file.
 		local
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			dialog.show_modal_to_window (components.tools.main_window)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

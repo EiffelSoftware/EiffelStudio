@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for setting of the root window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result := not components.tools.widget_selector.objects.is_empty and not components.tools.Layout_constructor.is_empty
@@ -47,14 +47,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute is
+	execute
 				-- Execute `Current'.
 		do
 			components.tools.widget_selector.change_root_window
 			components.tools.widget_selector.tool_bar.update_select_root_window_command
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

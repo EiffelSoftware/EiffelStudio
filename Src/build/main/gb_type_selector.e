@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow you to select a widget type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Fill with supported Widgets.
 		do
@@ -116,10 +116,10 @@ feature -- Access
 	tool_bar: EV_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
 
-	name: STRING is "Type Selector"
+	name: STRING = "Type Selector"
 			-- Full name used to represent `Current'.
 
-	is_in_classic_view_mode: BOOLEAN is
+	is_in_classic_view_mode: BOOLEAN
 			-- Is `Current' in the classic view mode?
 		do
 			Result := (tree /= Void and then tree.parent /= Void) or
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	ensure_top_item_visible is
+	ensure_top_item_visible
 			-- Ensure that the topmost displayed item
 			-- in `Current' is visible.
 		require
@@ -142,7 +142,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	add_tree_items (list: ARRAY [STRING]; tree_item: EV_TREE_ITEM) is
+	add_tree_items (list: ARRAY [STRING]; tree_item: EV_TREE_ITEM)
 			-- Add items corresponding to contents of `list' to `tree_item'.
 		require
 			list_not_void: list /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_classic_view is
+	build_classic_view
 			-- Build classic view mode.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	build_icon_view is
+	build_icon_view
 			-- Build icon view mode.
 		local
 			figure_line: EV_FIGURE_LINE
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			drawing_area.resize_actions.extend (agent drawing_area_resized)
 		end
 
-	add_figure_items (list: ARRAY [STRING]; a_world: EV_FIGURE_WORLD) is
+	add_figure_items (list: ARRAY [STRING]; a_world: EV_FIGURE_WORLD)
 			-- Add items corresponding to contents of `list' to `table'.
 		local
 			counter: INTEGER
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drawing_area_resized (an_x, a_y, a_width, a_height: INTEGER) is
+	drawing_area_resized (an_x, a_y, a_width, a_height: INTEGER)
 			-- Respond to `drawing_area' resizing by re-positioning all figures
 			-- and re-projecting.
 		local
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 			projector.project
 		end
 
-	switch_view_mode is
+	switch_view_mode
 			-- Switch view mode between classic and icon.
 		do
 			if view_mode_button.is_selected then
@@ -349,19 +349,19 @@ feature {NONE} -- Implementation
 	tree: EV_TREE
 		-- Tree Representation of `Current'.
 
-	spacing: INTEGER is 4
+	spacing: INTEGER = 4
 		-- Spacing used around the figures when not `is_in_classic_view_mode'.
 
-	containers_offset: INTEGER is 1
+	containers_offset: INTEGER = 1
 		-- Index of first container figure within `figure_world'.
 
-	primitive_offset: INTEGER is
+	primitive_offset: INTEGER
 			-- Index of first primitive figure within `figure_world'.
 		once
 			Result := containers.count + 2
 		end
 
-	items_offset: INTEGER is
+	items_offset: INTEGER
 			-- Index of first item figure within `figure_world'.
 		once
 			Result := containers.count + primitives.count + 4
@@ -372,7 +372,7 @@ feature {GB_FIGURE_TYPE_SELECTOR_ITEM} -- Implementation
 	drawing_area: EV_DRAWING_AREA;
 		-- Drawing area into which all figures are drawn.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

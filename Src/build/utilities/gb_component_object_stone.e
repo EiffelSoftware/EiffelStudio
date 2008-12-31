@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent stones carrying a GB_OBJECT representing a component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_component (a_component: GB_COMPONENT) is
+	make_with_component (a_component: GB_COMPONENT)
 			-- Create `Curent' and assign `a_component' to `component'.
 		require
 			a_component_not_void: a_component /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- Object which `Current' is representing.
 			-- Warning this builds new objects, so do not call
 			-- from a veto pebble function, only on the drop.
@@ -41,7 +41,7 @@ feature -- Access
 			Result := component.object
 		end
 		
-	object_type: STRING is
+	object_type: STRING
 			-- EiffelVision2 Type of object represented.
 		do
 			Result := component.root_element_type
@@ -50,7 +50,7 @@ feature -- Access
 	component: GB_COMPONENT;
 		-- Component represented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a context for a constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_context (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING) is
+	make_with_context (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING)
 			-- Build `Current; to reflect the arguments.
 		require
 			constant_not_void: a_constant /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		
 feature -- Status_setting
 
-	modify (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING) is
+	modify (a_constant: GB_CONSTANT; an_object: GB_OBJECT; a_property, a_field: STRING)
 			-- Modify `Current' to reflect arguments.
 		require
 			not_destroyed: not is_destroyed
@@ -63,7 +63,7 @@ feature -- Access
 		
 feature -- Measurement
 
-	is_equal (other: GB_CONSTANT_CONTEXT): BOOLEAN is
+	is_equal (other: GB_CONSTANT_CONTEXT): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		require else
@@ -83,7 +83,7 @@ feature -- Measurement
 		
 feature -- Destruction
 
-	destroy is
+	destroy
 			-- Destroy `Current' and unreference.
 		require
 			not_destroyed: not is_destroyed
@@ -111,7 +111,7 @@ invariant
 	property_not_void: property /= Void and not property.is_empty
 	field_not_void: field /= Void and not field.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

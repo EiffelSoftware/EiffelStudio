@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"General notion of an eiffel command (semantic unity).%
 		%To write an actual command inherit from this class and%
@@ -12,7 +12,7 @@ deferred class E_CMD
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is Current command executable?
 			-- (True by default)
 		do
@@ -21,14 +21,14 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute Current command.
 		require
 			executable: executable
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to settings for manipulating the recent projects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,12 +18,12 @@ inherit
 
 feature -- Basic operations
 
-	components: GB_INTERNAL_COMPONENTS is
+	components: GB_INTERNAL_COMPONENTS
 			-- Access to a set of internal components for an EiffelBuild instance.
 		deferred
 		end
 
-	add_project_to_recent_projects is
+	add_project_to_recent_projects
 			-- Added currently open project to recent project in resources.
 		require
 			project_open: components.system_status.project_open
@@ -85,7 +85,7 @@ feature -- Basic operations
 			preferences.preferences.save_preferences
 		end
 
-	clip_recent_projects is
+	clip_recent_projects
 			-- Clip stored recent projects to number stored in preferences.
 		local
 			recent_projects: ARRAY [STRING]
@@ -98,7 +98,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

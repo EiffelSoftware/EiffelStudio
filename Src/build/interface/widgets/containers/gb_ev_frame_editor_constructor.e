@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_FRAME."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_FRAME
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_FRAME"
+	type: STRING = "EV_FRAME"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -56,7 +56,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -81,20 +81,20 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to do here.
 		end
 
-	selection_changed is
+	selection_changed
 			-- Selection in `combo_box' changed.
 		do
 			for_all_objects (agent {EV_FRAME}.set_style (style_from_text (combo_box.selected_item.text)))
 		end
 		
-	style_from_text (text: STRING): INTEGER is
+	style_from_text (text: STRING): INTEGER
 			-- `Result' is value of Ev_frame_constants matching `text'.
 		do
 			if text.is_equal (Ev_frame_lowered_string) then
@@ -118,16 +118,16 @@ feature {NONE} -- Implementation
 	label: EV_LABEL
 		-- Identifies `combo_box'.
 		
-	Style_string: STRING is "Style"
+	Style_string: STRING = "Style"
 	
-	Ev_frame_lowered_string: STRING is "Ev_frame_lowered"
-	Ev_frame_raised_string: STRING is "Ev_frame_raised"
-	Ev_frame_etched_in_string: STRING is "Ev_frame_etched_in"
-	Ev_frame_etched_out_string: STRING is "Ev_frame_etched_out"
+	Ev_frame_lowered_string: STRING = "Ev_frame_lowered"
+	Ev_frame_raised_string: STRING = "Ev_frame_raised"
+	Ev_frame_etched_in_string: STRING = "Ev_frame_etched_in"
+	Ev_frame_etched_out_string: STRING = "Ev_frame_etched_out"
 	
 	item_lowered, item_raised, item_etched_in, item_etched_out: EV_LIST_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

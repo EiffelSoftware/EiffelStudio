@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow modification of attributes. For%
 		% insertion into a GB_OBJECT_EDITOR."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -48,13 +48,13 @@ feature -- Access
 
 feature -- Status Setting
 
-	enable_update_for_child_addition is
+	enable_update_for_child_addition
 			-- Assign `True' to `update_for_child_addition'.
 		do
 			update_for_child_addition := True
 		end
 
-	set_type_represented (a_type: STRING) is
+	set_type_represented (a_type: STRING)
 			-- Assign `a_type' to `type'.
 		require
 			type_not_void: a_type /= Void
@@ -64,14 +64,14 @@ feature -- Status Setting
 			type_represented.is_equal (a_type)
 		end
 
-	set_creating_class (a_class: GB_EV_ANY) is
+	set_creating_class (a_class: GB_EV_ANY)
 			-- Assign `a_class' to `creating_class'.
 		do
 			creating_class := a_class
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an item in a GB_LAYOUT_STRUCTURE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
+	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `an_object' to `object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -64,7 +64,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Assign `Current' to `pebble'.
 		do
@@ -81,13 +81,13 @@ feature {GB_RADIO_GROUP_LINK} -- Access
 
 feature {GB_RADIO_GROUP_LINK}-- Status setting
 
-	enable_animation is
+	enable_animation
 			-- Assign `True' to `is_animated'.
 		do
 			is_animated := True
 		end
 
-	disable_animation is
+	disable_animation
 			-- Assign `False' to `is_animated'.
 		do
 			is_animated := False
@@ -95,7 +95,7 @@ feature {GB_RADIO_GROUP_LINK}-- Status setting
 
 feature {GB_OBJECT} -- Implementation
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign `an_object' to `object'
 		do
 			object := an_object
@@ -103,7 +103,7 @@ feature {GB_OBJECT} -- Implementation
 			object_set: object = an_object
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			object := Void
@@ -113,7 +113,7 @@ feature {GB_OBJECT} -- Implementation
 
 feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 
-	update_pixmap is
+	update_pixmap
 			-- Set pixmap of `Current' to match type
 			-- of `object'
 		require
@@ -127,7 +127,7 @@ feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 
-	unparent is
+	unparent
 			-- Remove `Current' from its `parent' if any.
 		local
 			parent_item: EV_TREE_NODE_LIST
@@ -154,19 +154,19 @@ feature {EV_ANY, EV_ANY_I}-- Implementation
 
 feature {NONE} -- Implementation
 
-	register_expand is
+	register_expand
 			-- Flag `object' as expanded.
 		do
 			object.register_expand
 		end
 
-	register_collapse is
+	register_collapse
 			-- Flag `obejct' as collapsed.
 		do
 			object.register_collapse
 		end
 
-	update_docked_object_editor is
+	update_docked_object_editor
 			-- update `docked_object_editor' to reflect `Current'
 		do
 			if components.system_status.project_open then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

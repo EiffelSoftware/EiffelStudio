@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preferences for code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {GB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,7 +26,7 @@ feature {GB_PREFERENCES} -- Initialization
 
 feature {GB_SHARED_PREFERENCES} -- Value
 
-	generate_empty_directories: BOOLEAN is
+	generate_empty_directories: BOOLEAN
 			-- 
 		do
 			Result := generate_empty_directories_preference.value
@@ -38,11 +38,11 @@ feature -- Preference
 
 feature -- Preference Strings
 
-	generate_empty_directories_string: STRING is "code_generation.generate_empty_directories"
+	generate_empty_directories_string: STRING = "code_generation.generate_empty_directories"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: GB_PREFERENCE_MANAGER	
@@ -59,7 +59,7 @@ invariant
 	preferences_not_void: preferences /= Void
 	generate_empty_directories_preference_not_void: generate_empty_directories_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

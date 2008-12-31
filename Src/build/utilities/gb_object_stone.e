@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent stones for transport which carry a GB_OBJECT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ deferred class
 
 feature -- Access
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- Object which `Current' is representing.
 		deferred
 		end
 
-	object_type: STRING is
+	object_type: STRING
 			-- EiffelVision2 Type of object represented.
 		deferred
 		end
 
-	is_instance_of_top_level_object: BOOLEAN is
+	is_instance_of_top_level_object: BOOLEAN
 			-- Does `object' represent a top level object?
 		do
 			Result := associated_top_level_object > 0
@@ -37,7 +37,7 @@ feature -- Access
 invariant
 	all_contained_instance_not_void: all_contained_instances /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

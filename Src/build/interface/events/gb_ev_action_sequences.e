@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a Vision2 action sequences class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,29 +14,29 @@ inherit
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of action sequence in Current.
 		do
 			Result := names.count		
 		end
 		
-	names: ARRAYED_LIST [STRING] is
+	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		deferred
 		end
 		
 	
-	types: ARRAYED_LIST [STRING] is
+	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		deferred
 		end
 	
-	comments: ARRAYED_LIST [STRING] is
+	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		deferred
 		end
 		
-	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
 			-- action sequence and all arguments in `textable'. If not `adding' then `remove_only_added' `action_sequence'.
 		require
@@ -46,7 +46,7 @@ feature -- Access
 		deferred
 		end
 		
-	remove_only_added (a: EV_ACTION_SEQUENCE [TUPLE []]) is
+	remove_only_added (a: EV_ACTION_SEQUENCE [TUPLE []])
 			-- Remove all procedures from `a' who's `target' correponds
 			-- to GB_EV_ACTION_SEQUENCE. This allows us to selectively
 			-- add and remove events define in these action squences, leaving
@@ -73,7 +73,7 @@ invariant
 	-- Could reference each atribute in the 
 	--lists_equal_in_length: (names.count = types.count) and (names.count = comments.count)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

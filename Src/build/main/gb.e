@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical builder application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	execute is
+	execute
 			-- Execute `Current'.
 			-- There are sections of commented code in here which interpret the command
 			-- line for different launches. Each starts with a check to ensure that the
@@ -137,7 +137,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	display_tip_of_the_day is
+	display_tip_of_the_day
 			-- Display a tip of the day dialog if not disabled from preferences.
 		do
 			if preferences.global_data.show_tip_of_the_day then
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_with_name (f: STRING) is
+	open_with_name (f: STRING)
 			-- Use the open project command to open
 			-- file `f'.
 		require
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 --			digit_checker.end_processing	
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

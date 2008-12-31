@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for the deletion of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
+	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `an_object' to be deleted.
 		do
 			components := a_components
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		do
 			internal_execute (child_id, previous_parent_id, parent_id, previous_position_in_parent, insert_position)
@@ -55,7 +55,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -64,7 +64,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			child_name, parent_name: STRING
@@ -87,7 +87,7 @@ feature -- Basic Operation
 			Result := child_name + " removed from " + parent_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

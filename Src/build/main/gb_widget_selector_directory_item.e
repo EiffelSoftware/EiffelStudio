@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent subdirectoy layouts for windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create current with name `a_name' displayed as `text' and
 			-- assign `a_components' to `components'.
 		require
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature {GB_XML_STORE} -- Implementation
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate properties of `Current' into `element'.
 		require
 			element_not_void: element /= Void
@@ -62,7 +62,7 @@ feature {GB_XML_STORE} -- Implementation
 
 feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update `Current' based on information in `element'
 		require
 			element_not_void: element /= Void
@@ -83,7 +83,7 @@ feature {GB_WIDGET_SELECTOR, GB_WIDGET_SELECTOR_TOOL_BAR} -- Implementation
 	is_grayed_out: BOOLEAN
 		-- Is current represent with a gray icon?
 
-	display_in_color is
+	display_in_color
 			-- Ensure `Current' is represented in color.
 		do
 			if is_grayed_out then
@@ -94,7 +94,7 @@ feature {GB_WIDGET_SELECTOR, GB_WIDGET_SELECTOR_TOOL_BAR} -- Implementation
 			not_grayed_out: not is_grayed_out
 		end
 
-	display_in_gray is
+	display_in_gray
 			-- Ensure `Current' is represented in gray.
 		do
 			if not is_grayed_out then
@@ -107,7 +107,7 @@ feature {GB_WIDGET_SELECTOR, GB_WIDGET_SELECTOR_TOOL_BAR} -- Implementation
 
 feature -- Implementation
 
-	handle_object_drop (object_pebble: GB_OBJECT_STONE) is
+	handle_object_drop (object_pebble: GB_OBJECT_STONE)
 			-- Respond to the dropping of `object_pebble' onto `selector_item'.
 		require
 			object_pebble_not_void: object_pebble /= Void
@@ -115,7 +115,7 @@ feature -- Implementation
 			components.tools.widget_selector.handle_object_drop (object_pebble, Current)
 		end
 
-	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN is
+	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN
 			-- Is `object_stone' permitted to be dropped?
 		require
 			object_stone_not_void: object_stone /= Void
@@ -130,7 +130,7 @@ feature -- Implementation
 			end
 		end
 
-	path: ARRAYED_LIST [STRING] is
+	path: ARRAYED_LIST [STRING]
 			-- `Result' is list of directories `Current' is contained in, from the
 			-- top level down.
 		local
@@ -163,7 +163,7 @@ feature -- Implementation
 			is_empty_implies_parent_is_widget_selector: Result.is_empty and parent /= Void implies parent = components.tools.widget_selector
 		end
 
-	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
+	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE)
 			-- Add a new directory within `Current' to `widget_selector'.
 			-- `directory_pebble' is used to type the agent for pick and drop purposes.
 		require
@@ -175,7 +175,7 @@ feature -- Implementation
 invariant
 	contents_alphabetical: tree_node_contents_alphabetical (tree_item)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a flat horizontal split area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Set flat mode.
 		do
 			Precursor {EV_HORIZONTAL_SPLIT_AREA}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for addition of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (parent, child: GB_OBJECT; an_insert_position: INTEGER; a_components: GB_INTERNAL_COMPONENTS) is
+	make (parent, child: GB_OBJECT; an_insert_position: INTEGER; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be inserted in `parent' at
 			-- position `position'.
 		require
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		do
 			internal_execute (child_id, parent_id, previous_parent_id, insert_position, previous_position_in_parent)
@@ -67,7 +67,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -76,7 +76,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			child_name, parent_name: STRING
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		-- The position `execute' will insert `child_object'
 		-- in `parent_object'.
 
-	update_parent_object_editors (an_object, a_parent_object: GB_OBJECT) is
+	update_parent_object_editors (an_object, a_parent_object: GB_OBJECT)
 			-- For every item in `editors', update to reflect changed in `an_object'.
 		local
 			editor: GB_OBJECT_EDITOR
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_execute (a_child_id, a_parent_id, an_original_parent_id, an_insert_position, an_original_insert_pos: INTEGER) is
+	internal_execute (a_child_id, a_parent_id, an_original_parent_id, an_insert_position, an_original_insert_pos: INTEGER)
 			-- Add object referenced by `a_child_id' to `a_parent_id'. If `an_original_parent_id' is not 0 then remove
 			-- original representations of `a_child_id' from object represented at `an_original_parent_id'. `an_insert_position'
 			-- is the position to insert `a_child_id' within `a_parent_id' and `an_original_insert_pos' is the original insertion
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			components.system_status.set_object_structure_changed
 		end
 
-	unparent_children (a_child: GB_OBJECT) is
+	unparent_children (a_child: GB_OBJECT)
 			-- For all instance referers of `parent' recursively, remove child
 			-- at position `child_index'.
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			instance_referers_not_changed: old a_child.instance_referers = a_child.instance_referers
 		end
 
-	create_new_representations (parent_object: GB_PARENT_OBJECT; child_object: GB_OBJECT; insert_pos: INTEGER) is
+	create_new_representations (parent_object: GB_PARENT_OBJECT; child_object: GB_OBJECT; insert_pos: INTEGER)
 			-- Recursivley create new representations of `child_object' for each `parent_object'
 			-- and link new representations to `child_object'.
 		require
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 		-- As `Current' executes, we must create new instances of each object if not contained in `here',
 		-- otherwise we must rebuild the object without changing any of the ids.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

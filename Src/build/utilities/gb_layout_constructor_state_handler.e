@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that allow you to temporarily store and retrieve the expanded state of all items in the
 			GB_LAYOUT_CONSTRUCTOR.
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	store_layout_constructor is
+	store_layout_constructor
 			-- Store representation of `layout_constructor' in `state_tree'.
 		local
 			tree_item: GB_BOOLEAN_TREE_ITEM
@@ -49,7 +49,7 @@ feature -- Access
 			state_tree.set_root_node (tree_item)
 		end
 
-	restore_layout_constructor is
+	restore_layout_constructor
 			-- Restore representation of `layout_constructor' from `state_tree'.
 		local
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	reset_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
+	reset_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM)
 			-- Reset state of `layout_item' from `tree_item'.
 		local
 			current_tree_item: GB_BOOLEAN_TREE_ITEM
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	store_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
+	store_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM)
 			-- Store representation of `layout_item' into `tree_item'.
 		local
 			new_tree_item: GB_BOOLEAN_TREE_ITEM
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 		-- An internal representation of layout_constructor.
 		-- Void unless `store_layout_constructor' called.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that compress all used ids in Build.%
 		%This ensures that they are contiguous."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Creation
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	compress_all_id is
+	compress_all_id
 			-- Compress all ids used in system, so they
 			-- are contiguous.
 		local
@@ -133,7 +133,7 @@ feature -- Basic operation
 				old components.object_handler.deleted_objects.count = components.object_handler.deleted_objects.count
 		end
 
-	shift_all_ids_upwards is
+	shift_all_ids_upwards
 			-- For every id in system, shift higher.
 			-- Used when importing projects, so we do not get
 			-- a clash between the current and new ids.
@@ -152,7 +152,7 @@ feature -- Basic operation
 			end
 		end
 
-	shift_object_ids_updwards (an_object: GB_OBJECT) is
+	shift_object_ids_updwards (an_object: GB_OBJECT)
 			-- For `an_object' and all child objects recursively, shift their
 			-- ids upwards by `amount_to_shift_ids_during_import'.
 		require
@@ -177,7 +177,7 @@ feature -- Basic operation
 			end
 		end
 
-	shift_referer_ids (an_object: GB_OBJECT) is
+	shift_referer_ids (an_object: GB_OBJECT)
 			-- For all `instance_referers' of `an_object', shift their
 			-- ids upwards by `amount_to_shift_ids_during_import'.
 		require
@@ -203,7 +203,7 @@ feature -- Basic operation
 			instance_referers_count_not_changed: old an_object.instance_referers.count = an_object.instance_referers.count
 		end
 
-	shift_id (an_object: GB_OBJECT) is
+	shift_id (an_object: GB_OBJECT)
 			-- Adjust id of `an_object' upwards by `amount_to_shift_ids_during_import'.
 		require
 			an_object_not_void: an_object /= Void
@@ -225,7 +225,7 @@ feature -- Basic operation
 			end
 		end
 
-	compress_object_id (an_object: GB_OBJECT; start_value: INTEGER) is
+	compress_object_id (an_object: GB_OBJECT; start_value: INTEGER)
 			-- Compress all ids of `an_object' and all children, so
 			-- they are contiguous, starting at `start_value'.
 		require
@@ -285,7 +285,7 @@ feature {GB_COMPONENT} -- implementation
 
 feature {NONE} -- Implementation
 
-	record_id (an_object: GB_OBJECT) is
+	record_id (an_object: GB_OBJECT)
 			-- Add `id' of `an_object' to `existing_ids'.
 		require
 			an_object_not_void: an_object /= Void
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			added: existing_ids.has (an_object.id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

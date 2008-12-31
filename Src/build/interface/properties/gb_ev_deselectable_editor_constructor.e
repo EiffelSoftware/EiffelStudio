@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_DESELECTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_DESELECTABLE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_DESELECTABLE"
+	type: STRING = "EV_DESELECTABLE"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -41,7 +41,7 @@ feature -- Access
 			update_attribute_editor
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -54,7 +54,7 @@ feature -- Access
 			check_button.select_actions.resume
 		end
 		
-	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
@@ -72,10 +72,10 @@ feature -- Access
 			widget.key_release_actions.force_extend (agent start_timer)
 		end
 		
-	has_user_events: BOOLEAN is True
+	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
 		
-	start_timer is
+	start_timer
 			-- Start a timer which is used to delay execution of `check_state'
 			-- until after the staate has changed.
 		local
@@ -86,7 +86,7 @@ feature -- Access
 			timer.actions.extend (agent timer.destroy)
 		end
 		
-	check_state is
+	check_state
 			--  Check state of `user_event_widget' and update first object in response.
 		require
 			widget_not_void: user_event_widget /= Void
@@ -104,7 +104,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 	check_button: EV_CHECK_BUTTON
 		-- Check button used for setting attribute.
 	
-	toggle_selected is
+	toggle_selected
 			-- Update sensitive state.
 		do
 			if check_button.is_selected then
@@ -126,9 +126,9 @@ feature {NONE} -- Implementation
 
 	-- Constants for XML
 	
-	is_selected_string: STRING is "Is_selected";
+	is_selected_string: STRING = "Is_selected";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

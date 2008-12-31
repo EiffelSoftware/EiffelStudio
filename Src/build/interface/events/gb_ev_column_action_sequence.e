@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_COLUMN_ACTION_SEQUENCE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,21 +15,21 @@ inherit
 
 feature -- Access
 
-	argument_types: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("INTEGER")
 		end
 	
-	argument_names: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("a_column")
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER]] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER]]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `textable'.
@@ -44,14 +44,14 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	internal_display_agent (column: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+	internal_display_agent (column: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER)
 			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
 			string_handler.record_string (name + " fired.%NColumns : " + column.out)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

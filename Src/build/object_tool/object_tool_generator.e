@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing the object tool generator %
 				% which allows the user to build an object %
 				% tool for a specific class."
@@ -29,7 +29,7 @@ create
 
 feature -- Creation
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create the object tool generator.
 		local
 			vertical_box, v_box: EV_VERTICAL_BOX
@@ -95,7 +95,7 @@ feature -- Creation
 			create form_table.make (10)
 		end
 
-	set_values is
+	set_values
 			-- Set values for GUI elements.
 		local
 			temp_title: STRING
@@ -104,7 +104,7 @@ feature -- Creation
 			excluded_list.enable_multiple_selection
 		end
 
-	set_callbacks is
+	set_callbacks
 			-- Set the GUI elments callbacks.
 		do
 			include_button.select_actions.extend (agent include_queries)
@@ -150,31 +150,31 @@ feature --{QUERY_EDITOR_FORM}
 
 feature -- Command execution
 
-	include_queries is
+	include_queries
 			-- Include selected queries.
 		do
 			move_items (excluded_list, included_list)
 		end
 
-	include_all_queries is
+	include_all_queries
 			-- Include all queries.
 		do
 			move_all_items (excluded_list, included_list)
 		end
 
-	exclude_queries is
+	exclude_queries
 			-- Exclude selected queries.
 		do
 			move_items (included_list, excluded_list)
 		end
 
-	exclude_all_queries is
+	exclude_all_queries
 			-- Exclude all queries.
 		do
 			move_all_items (included_list, excluded_list)
 		end
 
-	move_items (source_list, target_list: EV_LIST) is
+	move_items (source_list, target_list: EV_LIST)
 			-- Move selected items of `source_list' into
 			-- `target_list'.
 		local
@@ -219,7 +219,7 @@ feature -- Command execution
 			end
 		end
 
-	move_all_items (source_list, target_list: EV_LIST) is
+	move_all_items (source_list, target_list: EV_LIST)
 			-- Move all items from `source_list' into
 			-- `target_list'.
 		local
@@ -246,7 +246,7 @@ feature -- Command execution
 			end
 		end
 
-	add_query_editor_form (a_query: APPLICATION_QUERY) is
+	add_query_editor_form (a_query: APPLICATION_QUERY)
 			-- Add a form to edit `a_query' properties.
 		require
 			query_not_void: a_query /= Void
@@ -266,7 +266,7 @@ feature -- Command execution
 			end
 		end
 
-	remove_query_editor_form (a_query: APPLICATION_QUERY) is
+	remove_query_editor_form (a_query: APPLICATION_QUERY)
 			-- Remove a form from the set of properties.
 		require
 			query_not_void: a_query /= Void
@@ -301,13 +301,13 @@ feature -- Command execution
 
 feature -- Closeable
 
-	close is
+	close
 			-- Close object tool generator.
 		do
 			hide
 		end
 
-	display (application_class: EV_LIST_ITEM) is
+	display (application_class: EV_LIST_ITEM)
 			-- Display object tool generator.
 		require
 			class_not_void: application_class /= Void
@@ -329,7 +329,7 @@ feature -- Closeable
 
 feature {NONE} -- Implementation
 
-	update_interface is
+	update_interface
 			-- Update the interface according to the new application
 			-- class that is edited.
 		require
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	perform_code_generation is
+	perform_code_generation
 			-- Generate Eiffel class text.
 		local
 			generate_object_tool: GENERATE_OBJECT_TOOL_CMD
@@ -381,7 +381,7 @@ feature -- Attributes
 	scrollable_area_box: EV_VERTICAL_BOX;
 			-- Box to contain all the `QUERY_EDITOR_FORM'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

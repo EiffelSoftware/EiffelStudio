@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelBuild tree item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Access
 		-- A representation of `Current' used
 		-- in the builder_window
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- `Current' is never full.
 			-- Always room for one more tree item.
 		do
@@ -38,7 +38,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current' at position `position'.
 		local
 			tree_item: EV_TREE_ITEM
@@ -64,7 +64,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Implementation
 
-	accepts_child (a_type: STRING): BOOLEAN is
+	accepts_child (a_type: STRING): BOOLEAN
 			-- Does `Current' accept `a_type'?
 		local
 			current_type: INTEGER
@@ -75,7 +75,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

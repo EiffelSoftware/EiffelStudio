@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a paste object command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
+		execute
 				-- Execute `Current'.
 			local
 				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
@@ -94,7 +94,7 @@ feature -- Basic operations
 				command_add.execute
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

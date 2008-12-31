@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for flattening of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (an_object: GB_OBJECT; deep_flatten: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
+	make (an_object: GB_OBJECT; deep_flatten: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be inserted in `parent' at
 			-- position `position'.
 		require
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			an_object: GB_OBJECT
@@ -79,7 +79,7 @@ feature -- Basic Operation
 		end
 
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -228,7 +228,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			object_name: STRING
@@ -249,7 +249,7 @@ feature -- Basic Operation
 
 feature {GB_WIDGET_SELECTOR} -- Implementation
 
-	silent_execute is
+	silent_execute
 			-- Execute a shallow flatten silently, without addition to the history
 			-- and therefore not undoable.
 		local
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	is_deep_flatten: BOOLEAN
 		-- Does `Current' represent a deep flatten command?
 
-	internal_shallow_flatten (current_object, associated_object: GB_OBJECT) is
+	internal_shallow_flatten (current_object, associated_object: GB_OBJECT)
 			-- Recursively flatten all instance representations of `Current' object to `associated_object' if the
 			-- current structure is not a representation of another top level object. If it is, reconnect
 			-- all instance referers in the `current_object' structure to those in the `associated_object' structure.
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			associated_object_children_index_not_changed: old associated_object.children.index = associated_object.children.index
 		end
 
-	update_editors_for_change is
+	update_editors_for_change
 			-- Now update all editors. As we have replaced the original object, we need to
 			-- ensure that if they reference the original object, they now reference the new object.
 		local
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 	original_referers: HASH_TABLE [INTEGER, INTEGER];
 		-- All original referers of flattened object
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

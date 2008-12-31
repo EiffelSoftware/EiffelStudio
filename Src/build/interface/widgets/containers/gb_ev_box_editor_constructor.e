@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_BOX."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_BOX
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_BOX"
+	type: STRING = "EV_BOX"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -89,7 +89,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -125,7 +125,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_input (?), Border_string)
 		end
 
-	update_widget_expanded (check_button: EV_CHECK_BUTTON; index: INTEGER) is
+	update_widget_expanded (check_button: EV_CHECK_BUTTON; index: INTEGER)
 			-- Change the expanded status of `index' item based on status of `check_button'.
 		require
 			check_button_not_void: check_button /= Void
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	actual_update_widget_expanded (an_object: GB_OBJECT; is_expanded: BOOLEAN; index: INTEGER) is
+	actual_update_widget_expanded (an_object: GB_OBJECT; is_expanded: BOOLEAN; index: INTEGER)
 			-- Updated expanded state of item` index' within `an_object' to reflect `is_expanded'.
 		require
 			an_object_not_void: an_object /= Void
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_object_expansion (child_object: GB_OBJECT is_expanded: BOOLEAN) is
+	update_object_expansion (child_object: GB_OBJECT is_expanded: BOOLEAN)
 			-- Modify expanded state of `index' child of `object', based on
 			-- `is_expanded'.
 		do
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_homogeneous is
+	update_homogeneous
 			-- Update homogeneous state of items in `objects' depending on
 			-- state of `is_homogeneous_check'.
 		do
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Update property `padding' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -207,13 +207,13 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 
-	valid_input (value: INTEGER): BOOLEAN is
+	valid_input (value: INTEGER): BOOLEAN
 			-- Is `value' a valid padding?
 		do
 			Result := value >= 0
 		end
 
-	set_border (value: INTEGER) is
+	set_border (value: INTEGER)
 			-- Update property `border' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -226,15 +226,15 @@ feature {NONE} -- Implementation
 
 	border_entry, padding_entry: GB_INTEGER_INPUT_FIELD
 
-	Is_homogeneous_string: STRING is "Is_homogeneous"
-	Padding_string: STRING is "Padding"
-	Border_string: STRING is "Border"
-	Is_item_expanded_string: STRING is "Is_item_expanded"
+	Is_homogeneous_string: STRING = "Is_homogeneous"
+	Padding_string: STRING = "Padding"
+	Border_string: STRING = "Border"
+	Is_item_expanded_string: STRING = "Is_item_expanded"
 
 	check_buttons: ARRAYED_LIST [EV_CHECK_BUTTON];
 		-- All check buttons created to handle `disable_item_expand'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

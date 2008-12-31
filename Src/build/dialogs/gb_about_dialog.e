@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "About Dialog, displaying general information about $EiffelGraphicalCompiler$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			eiffel_image: EV_PIXMAP
 			eiffel_text_box: EV_VERTICAL_BOX
@@ -132,7 +132,7 @@ feature -- Initialization
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

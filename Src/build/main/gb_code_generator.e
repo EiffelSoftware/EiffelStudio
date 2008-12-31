@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate an Eiffel class text based on the%
 		%current system built by the user."
 	legal: "See notice at end of class."
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	generate_single_window (window_name: STRING) is
+	generate_single_window (window_name: STRING)
 			-- Generate code for top level object named `window_name' only.
 			-- No other files are generated.
 		require
@@ -99,13 +99,13 @@ feature -- Basic operation
 		-- Name of window to generate if a single window is being generated,
 		-- Void otherwise.
 
-	generating_single_window: BOOLEAN is
+	generating_single_window: BOOLEAN
 			-- Is a single window being generated?
 		do
 			Result := window_to_generate /= Void
 		end
 
-	generate is
+	generate
 			-- Generate the project as per settings in `project_settings'.
 		local
 			directory: DIRECTORY
@@ -224,7 +224,7 @@ feature -- Basic operation
 	last_generation_successful: BOOLEAN
 		-- Was last call to `generate' or `generate_window' successful?
 
-	parse_directories (an_element: XM_ELEMENT; parent_directories: ARRAYED_LIST [STRING]) is
+	parse_directories (an_element: XM_ELEMENT; parent_directories: ARRAYED_LIST [STRING])
 			-- Parse `an_element' and build windows and directories found. `parent_directories' holds
 			-- the current position in the directory structure where the data for `an_element_resides'.
 		require
@@ -307,7 +307,7 @@ feature -- Basic operation
 	class_directories: ARRAYED_LIST [STRING]
 		-- Directory paths for all classes that must be generated as returned by `parse_directories'.
 
-	create_directory_from_path (a_path: ARRAYED_LIST [STRING]) is
+	create_directory_from_path (a_path: ARRAYED_LIST [STRING])
 			-- Create the directory corresponding to `a_path' from the root of the
 			-- current project, only if it does not already exist.
 		require
@@ -334,7 +334,7 @@ feature -- Basic operation
 
 feature {GB_CODE_GENERATION_DIALOG, GB_GENERATION_COMMAND} -- Implementation
 
-	set_progress_bar (bar: EV_PROGRESS_BAR) is
+	set_progress_bar (bar: EV_PROGRESS_BAR)
 			-- Assign `bar' to `progress_bar'
 		require
 			progress_bar_not_void: bar /= Void
@@ -346,7 +346,7 @@ feature {GB_CODE_GENERATION_DIALOG, GB_GENERATION_COMMAND} -- Implementation
 
 feature {NONE} -- Implementation
 
-	generate_xml_for_project is
+	generate_xml_for_project
 			-- Generate XML for the current project into `current_document'.
 			-- This XML document will be used to generate the source code.
 		local
@@ -366,21 +366,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_progress_from_store (total, stored: INTEGER) is
+	report_progress_from_store (total, stored: INTEGER)
 			-- Report progress from XML store, represented by percentage
 			-- of `stored' against `total'.
 		do
 			set_progress (progress_switch * (stored / total))
 		end
 
-	reset_generation_constants is
+	reset_generation_constants
 			-- Reset all constants and attributes required before a generation.
 			-- Only called once per generation.
 		do
 			reset_generation_constants_for_class
 		end
 
-	reset_generation_constants_for_class is
+	reset_generation_constants_for_class
 	 		-- Reset all constants required to be reset before a class generation.
 			-- This will be called multiple times, once for each set of classes
 			-- that is generated.
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			create non_exported_attributes.make (20)
 		end
 
-	generated_path: FILE_NAME is
+	generated_path: FILE_NAME
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.actual_generation_location)
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	build_ace_file is
+	build_ace_file
 			-- Generate the ace file for the project
 			-- dependent in information in `system_status'.
 			-- Note that For Visual Studio, we need to
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			generate_ace_file (ecf_file_name.twin, ecf_name)
 		end
 
-	generate_ace_file (template_file_name, file_name: STRING) is
+	generate_ace_file (template_file_name, file_name: STRING)
 			-- Generate a new ace file from template `template_file_name', and save it
 			-- as `file_name'. `template_file_name' is full path, but `file_name' is
 			-- just name of ace file.
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_constants_file is
+	build_constants_file
 			-- Build class file containing all generated constants.
 		local
 			constants_file_name: FILE_NAME
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	build_constants_load_file is
+	build_constants_load_file
 			-- Build text file containing constants to be loaded.
 		local
 			constants_file_name: FILE_NAME
@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 			constants_file.close
 		end
 
-	build_application_file is
+	build_application_file
 			-- Generate an application class for the project.
 		local
 			application_template_file, application_output_file: PLAIN_TEXT_FILE
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_main_window_implementation (info: GB_GENERATED_INFO; directory_name: FILE_NAME) is
+	build_main_window_implementation (info: GB_GENERATED_INFO; directory_name: FILE_NAME)
 			-- Generate a main window for the project.
 		require
 			info_not_void: info /= Void
@@ -966,7 +966,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_main_window (info: GB_GENERATED_INFO; directory_name: FILE_NAME) is
+	build_main_window (info: GB_GENERATED_INFO; directory_name: FILE_NAME)
 			-- Generate interface of our window.
 		require
 			info_not_void: info /= Void
@@ -1037,7 +1037,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_generated_string (a_class_text, new, tag: STRING) is
+	add_generated_string (a_class_text, new, tag: STRING)
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
 		require
@@ -1069,7 +1069,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_class_name (a_name: STRING) is
+	set_class_name (a_name: STRING)
 			-- Replace all occurances of `class_name_tag' with
 			-- `a_name' within `class_text'.
 		require
@@ -1079,7 +1079,7 @@ feature {NONE} -- Implementation
 			class_text.replace_substring_all (class_name_tag, a_name)
 		end
 
-	set_inherited_class_name (a_name: STRING) is
+	set_inherited_class_name (a_name: STRING)
 			-- Replace all occurances of `inherited_class_name_tag' with
 			-- `a_name' within `class_text'.
 		require
@@ -1088,7 +1088,7 @@ feature {NONE} -- Implementation
 			class_text.replace_substring_all (inherited_class_name_tag, a_name)
 		end
 
-	prepass_xml (element: XM_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER) is
+	prepass_xml (element: XM_ELEMENT; info: GB_GENERATED_INFO; depth: INTEGER)
 			-- With information in element, build information into `info'.
 		require
 			element_not_void: element /= Void
@@ -1183,7 +1183,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_declarations (info: GB_GENERATED_INFO) is
+	generate_declarations (info: GB_GENERATED_INFO)
 			-- With information in `element', generate code which includes the
 			-- attribute declarations and creation of all components in system.
 		require
@@ -1221,7 +1221,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_structure (info: GB_GENERATED_INFO) is
+	generate_structure (info: GB_GENERATED_INFO)
 			-- With information in `document_info', generate code which will
 			-- parent all objects.
 		require
@@ -1284,7 +1284,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_setting (info: GB_GENERATED_INFO) is
+	generate_setting (info: GB_GENERATED_INFO)
 			-- With information in `document_info', generate code which will
 			-- set_all_objects.
 		require
@@ -1336,7 +1336,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_events (info: GB_GENERATED_INFO) is
+	generate_events (info: GB_GENERATED_INFO)
 			-- Using `document_info' which was generated in `prepass_xml',
 			-- generate source code corresponding to selected events.
 		require
@@ -1480,7 +1480,7 @@ feature {NONE} -- Implementation
 		-- A list of all non exported attributes of a particular type found during parsing,
 		-- hashed by their type.
 
-	add_item_to_hash_table (item, key: STRING; hash_table: HASH_TABLE [ARRAYED_LIST [STRING], STRING]) is
+	add_item_to_hash_table (item, key: STRING; hash_table: HASH_TABLE [ARRAYED_LIST [STRING], STRING])
 			-- Add `item' to list in `hash_table' with key `key'.
 		require
 			item_not_void: item /= Void
@@ -1499,7 +1499,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_local_declaration (generated_info: GB_GENERATED_INFO) is
+	add_local_declaration (generated_info: GB_GENERATED_INFO)
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
 			-- Each new local will be grouped with other locals of same type. e.g.
@@ -1537,7 +1537,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_attributes (a_string, indent_string: STRING; attributes: HASH_TABLE [ARRAYED_LIST [STRING], STRING]) is
+	process_attributes (a_string, indent_string: STRING; attributes: HASH_TABLE [ARRAYED_LIST [STRING], STRING])
 			-- Add declarations for all attributes held within `attributes' using `indent_string' between lines
 			-- to `a_string'. If `project_settings.grouped_locals' then group each declaration of identical types.
 		require
@@ -1590,7 +1590,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_locals is
+	process_locals
 			-- Perform processing for generation of attribute and local strings.
 		require
 			locals_not_void: locals /= Void
@@ -1620,7 +1620,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_line_containing (string: STRING; body: STRING) is
+	remove_line_containing (string: STRING; body: STRING)
 			-- Remove the line of text from `body' containing `string'.
 			-- The "%N" following `string' is the one removed. The start of
 			-- the line is determined by the previous "%N".
@@ -1639,7 +1639,7 @@ feature {NONE} -- Implementation
 			body.remove_substring (tab_index + 1, next_index)
 		end
 
-	create_local (generated_info: GB_GENERATED_INFO) is
+	create_local (generated_info: GB_GENERATED_INFO)
 			-- Add code representation of the creation of local based on `generated_info'
 			-- to `create_string'.
 		require
@@ -1657,7 +1657,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_build (constructor: STRING) is
+	add_build (constructor: STRING)
 			-- Add `constructor' to `build_string'.
 		require
 			constructor_not_void: constructor /= Void
@@ -1672,7 +1672,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_event_connection (event: STRING) is
+	add_event_connection (event: STRING)
 			-- Add `indent' and `event' to `event_connection_string'.
 			-- Create `event_connection_string' if empty.
 		require
@@ -1684,7 +1684,7 @@ feature {NONE} -- Implementation
 			event_connection_string := event_connection_string + indent + event
 		end
 
-	add_event_declaration (event: STRING) is
+	add_event_declaration (event: STRING)
 			-- Add `indent' and `event' to `event_declaration_string'.
 			-- Create `event_declaration_string' if empty.
 		require
@@ -1693,7 +1693,7 @@ feature {NONE} -- Implementation
 			event_declaration_string := event_declaration_string + indent_less_two + event
 		end
 
-	add_event_implementation (event: STRING) is
+	add_event_implementation (event: STRING)
 			-- Add `indent' and `event' to `event_implementation_string.
 			-- Create `event_implementation_string' if empty.
 		require
@@ -1702,7 +1702,7 @@ feature {NONE} -- Implementation
 			event_implementation_string := event_implementation_string + indent_less_two + event
 		end
 
-	add_set (set: STRING) is
+	add_set (set: STRING)
 			-- Add a setting represention, `set' to
 			-- `set_string'.
 		require
@@ -1735,7 +1735,7 @@ feature {NONE} -- Implementation
 	total_windows: INTEGER
 		-- The total number of windows that muat be generated.
 
-	set_progress (value: REAL)	is
+	set_progress (value: REAL)
 			-- Assign `value' to proportion of `progress_bar'
 			-- if `progress_bar' /= Void
 		require
@@ -1753,7 +1753,7 @@ feature {NONE} -- Implementation
 	document_info: GB_GENERATED_INFO
 		-- Representation of XML file after `prepass_xml'.
 
-	project_settings: GB_PROJECT_SETTINGS is
+	project_settings: GB_PROJECT_SETTINGS
 			-- Short access to system_status.current_project_settings.
 			-- Cannot be a once, as the settings may change.
 		do
@@ -1814,7 +1814,7 @@ feature {NONE} -- Implementation
 	progress_bar: EV_PROGRESS_BAR
 		-- A progress bar that will be updated during generation.
 
-	progress_switch: REAL is 0.6
+	progress_switch: REAL = 0.6
 		-- Progress level for end of xml storing, and start of generation.
 		-- As they are performed independently, we need the progress of each to
 		-- work as a whole
@@ -1825,7 +1825,7 @@ feature {NONE} -- Implementation
 	read_only_files: ARRAYED_LIST [STRING]
 			-- All files that could not be accessed during generation.
 
-	open_text_file_for_read (file_name: STRING): PLAIN_TEXT_FILE is
+	open_text_file_for_read (file_name: STRING): PLAIN_TEXT_FILE
 			-- Open file plain text file named `file_name',
 			-- and return it if it exists, otherwise return Void.
 		require
@@ -1845,7 +1845,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generated_names: ARRAYED_LIST [STRING] is
+	generated_names: ARRAYED_LIST [STRING]
 			-- All names generated automatically.
 		once
 			create Result.make (0)
@@ -1861,7 +1861,7 @@ invariant
 	event_implementation_string_not_void: event_implementation_string /= Void
 	event_declaration_string_not_void: event_declaration_string /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

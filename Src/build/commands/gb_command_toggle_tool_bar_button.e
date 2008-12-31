@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Toolbar toggle button for a toolbarable command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
@@ -39,7 +39,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I;
 			-- Responsible for interaction with the native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

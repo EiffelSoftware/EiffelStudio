@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_PROGRESS_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_PROGRESS_BAR
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_PROGRESS_BAR"
+	type: STRING = "EV_PROGRESS_BAR"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -37,7 +37,7 @@ feature -- Access
 			check_button.select_actions.extend (agent update_editors)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -50,7 +50,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	check_button: EV_CHECK_BUTTON
 		-- Check button used for setting attribute.
 	
-	toggle_segmented is
+	toggle_segmented
 			-- Update segmented state.
 		do
 			if check_button.is_selected then
@@ -72,9 +72,9 @@ feature {NONE} -- Implementation
 
 	-- Constants for XML
 	
-	is_segmented_string: STRING is "Is_segmented";
+	is_segmented_string: STRING = "Is_segmented";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

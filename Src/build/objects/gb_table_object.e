@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EV_TABLE within Build."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current' at position representing `position'
 			-- in the layout tree.
 		local
@@ -61,7 +61,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	resize_to_accomodate (children_count: INTEGER) is
+	resize_to_accomodate (children_count: INTEGER)
 			-- Resize `display_object' and `object' of `object' to
 			-- smallest square dimensions that will accomodate `children_count'
 			-- children.
@@ -84,7 +84,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- Not possible to check this right now.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

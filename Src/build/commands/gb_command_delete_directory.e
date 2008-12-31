@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for the deletion of a directory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (a_directory, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS) is
+	make (a_directory, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			temp_file_name: FILE_NAME
@@ -77,7 +77,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -104,7 +104,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		do
 			Result := "directory %"" + directory_name.last + "%" removed from project."
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 	directory_name: ARRAYED_LIST [STRING];
 		-- Name of directory that was deleted.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a command for the conversion of an existing object to a top level object
 		that now represents the original object which becomes a locked representation of the new top level object.
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (child: GB_OBJECT; parent_directory: GB_WIDGET_SELECTOR_COMMON_ITEM; new_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make (child: GB_OBJECT; parent_directory: GB_WIDGET_SELECTOR_COMMON_ITEM; new_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be converted to a top level object named `new_name'
 			-- within `parent_directory'.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			all_children_old, all_children_new: ARRAYED_LIST [GB_OBJECT]
@@ -178,7 +178,7 @@ feature -- Basic Operation
 			executed_once := True
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -274,7 +274,7 @@ feature -- Basic Operation
 				-- Also must perform recursively for all children, but not easy to write
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			child_name: STRING
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 	name: STRING;
 		-- Name used for the new object that is created.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

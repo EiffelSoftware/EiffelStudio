@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the general tab in the project settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current' and build widget structure.
 		local
 			label: EV_LABEL
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		
 feature -- Basic operation
 
-	update_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	update_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Update all attributes of `Current' to reflect information
 			-- in `project_settings'.
 		do
@@ -40,7 +40,7 @@ feature -- Basic operation
 			location_field.set_tooltip ("%"" + location_field.text + "%" (This entry is the location of the project, and may not be modified)")
 		end
 		
-	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	save_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Save all attributes of `Current' into `project_settings'.
 		do
 			-- Currently nothing to save, as fields in `Current'
@@ -49,12 +49,12 @@ feature -- Basic operation
 	
 feature -- Access
 
-	name: STRING is "General"
+	name: STRING = "General"
 		-- Name to be displayed for `Current'.
 		
 feature {GB_SYSTEM_WINDOW} -- Implementation
 
-	validate is
+	validate
 			-- Validate input fields of `Current'.
 		do
 				-- There are no fields the user may
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 
 	location_field: EV_TEXT_FIELD;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

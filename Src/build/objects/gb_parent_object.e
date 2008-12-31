@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold one or more children."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,14 +14,14 @@ inherit
 	
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current' at position `position'.
 		require
 			correct_type: accepts_child (an_object.type)
 		deferred
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

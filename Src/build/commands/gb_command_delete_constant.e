@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the deletion of a constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 
-	make (constant: GB_CONSTANT; a_component: GB_INTERNAL_COMPONENTS) is
+	make (constant: GB_CONSTANT; a_component: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -64,7 +64,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	undo is
+	undo
 			-- Execute `Current'.
 		local
 --			integer_constant: GB_INTEGER_CONSTANT
@@ -98,7 +98,7 @@ feature -- Basic Operation
 --			command_handler.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command executed.
 		do
 		--	Result := internal_constant.type + " constant named " + internal_constant.name + " remove from project."
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 	internal_constant: GB_CONSTANT;
 		-- Constant which is the subject of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

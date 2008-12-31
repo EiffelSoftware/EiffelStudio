@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelBuild Pixmap constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create {GB_PIXMAP_SETTINGS_DIALOG}
 
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_name_and_value (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS)
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_not_void: a_name /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature {GB_PIXMAP_SETTINGS_DIALOG}
 
-	set_attributes (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
+	set_attributes (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS)
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_not_void: a_name /= Void
@@ -76,7 +76,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			components_set: components = a_components
 		end
 
-	convert_to_full is
+	convert_to_full
 			-- Convert representation of a pixmap constant, `Current', into
 			-- a fully referenced constant with a context.
 		require
@@ -107,7 +107,7 @@ feature -- Access
 	is_absolute: BOOLEAN
 			-- Does `Current' reference an absolute constant or a relative constant?
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := Pixmap_constant_type
@@ -125,7 +125,7 @@ feature -- Access
 		-- Name of file name constants comprising `Current'.
 		-- Not set if `is_absolute'.
 
-	value_as_string: STRING is
+	value_as_string: STRING
 			-- Value represented by `Current' as a STRING.
 			-- If not absolute, then `Result' is evaluated full path.
 		local
@@ -149,7 +149,7 @@ feature -- Access
 			end
 		end
 
-	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
+	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
 			-- Representation of `Current' as a multi column list row.
 		do
 			create Result
@@ -166,7 +166,7 @@ feature -- Access
 
 feature -- Status setting
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XM representation of `Current' in `element'.
 		do
 			add_element_containing_string (element, type_string, type)
@@ -183,7 +183,7 @@ feature -- Status setting
 
 feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 
-	update is
+	update
 			-- Rebuild representations of `Current', and update all referers within system.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -214,7 +214,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	retrieve_pixmap_image is
+	retrieve_pixmap_image
 			-- Retrieve actual image of pixmap represented by `Current'.
 		local
 			file: RAW_FILE
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

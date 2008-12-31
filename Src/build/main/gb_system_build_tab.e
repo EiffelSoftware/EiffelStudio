@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the build tab in the project settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current' and build widget structure.
 		local
 			label: EV_LABEL
@@ -101,12 +101,12 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	name: STRING is "Build"
+	name: STRING = "Build"
 		-- Name to be displayed for `Current'.
 		
 feature -- Status setting
 
-	update_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	update_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Update all attributes of `Current' to reflect information
 			-- in `project_settings'.
 		do
@@ -125,7 +125,7 @@ feature -- Status setting
 			end
 		end
 		
-	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	save_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Save all attributes of `Current' into `project_settings'.
 		do
 			project_settings.set_main_window_class_name (main_window_class_name_field.text.as_upper)
@@ -145,7 +145,7 @@ feature -- Status setting
 
 feature {GB_SYSTEM_WINDOW} -- Implementation
 
-	validate is
+	validate
 			-- Validate input fields of `Current'.
 		local
 			warning_dialog: EV_WARNING_DIALOG
@@ -194,7 +194,7 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			end
 		end
 		
-	project_type_modified is
+	project_type_modified
 			-- Update sensitivity of `application_class_name_field'
 			-- dependent on state of `project_radio_button.
 		do
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	rebuild_ace_file: EV_CHECK_BUTTON;
 		-- Holds whether we should re-generate the ace file every time.
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

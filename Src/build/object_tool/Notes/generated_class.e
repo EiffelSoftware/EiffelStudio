@@ -1,4 +1,4 @@
-indexing
+note
 	description: " Generated command used to change %
 				% the queries of a EV_TITLED_WINDOW object."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature
 
-	execute is
+	execute
 		require else
 			target_set: target_set
 		do
@@ -36,7 +36,7 @@ feature
 			end
 		end
 
-	display_error_message(message: STRING; a_parent: EV_CONTAINER) is
+	display_error_message(message: STRING; a_parent: EV_CONTAINER)
 		local
 			error_dialog: EV_ERROR_DIALOG
 		do
@@ -46,7 +46,7 @@ feature
 				message_displayed := True
 			end
 		end
-	make is
+	make
 		local
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
@@ -83,14 +83,14 @@ feature -- Access
 
 	target: EV_TITLED_WINDOW
 
-	set_target (a_target: EV_TITLED_WINDOW) is
+	set_target (a_target: EV_TITLED_WINDOW)
 		require
 			a_target /= Void
 		do
 			target := a_target
 		end
 
-	target_set: BOOLEAN is
+	target_set: BOOLEAN
 		do
 			Result := target /= Void
 		end
@@ -105,7 +105,7 @@ feature -- Implementation
 
 	argument2: EV_COMBO_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

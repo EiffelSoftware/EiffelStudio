@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide a graphical means to view instance referers of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_object_and_parent (an_object: GB_OBJECT; a_parent: EV_CONTAINER; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_object_and_parent (an_object: GB_OBJECT; a_parent: EV_CONTAINER; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create instance viewer for object `an_object' parented in `a_parent'.
 		require
 			an_object_not_void: an_object /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_parent.extend (drawing_area)
 		end
 
-	make_with_object (an_object: GB_OBJECT) is
+	make_with_object (an_object: GB_OBJECT)
 			-- Create instance viewer for object `an_object' shown modally to `main_window'.
 		require
 			an_object_not_void: an_object /= Void
@@ -72,11 +72,11 @@ feature {NONE} -- Implementation
 	world: EV_FIGURE_WORLD
 		-- World containing all figures.
 
-	rectangle_width: INTEGER is 40
-	spacing: INTEGER is 30
+	rectangle_width: INTEGER = 40
+	spacing: INTEGER = 30
 		-- Default sizing for the  figures.
 
-	initialize is
+	initialize
 			-- Initialize the drawing area.
 		do
 			create world
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 	projector: EV_DRAWING_AREA_PROJECTOR
 		-- Projector for drawing.
 
-	fill_world is
+	fill_world
 			-- Fill all figures into `world'.
 		local
 			rectangle: EV_FIGURE_RECTANGLE
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			fill_world_internal (object, 2, list, rectangle)
 		end
 
-	fill_world_internal (an_object: GB_OBJECT; depth: INTEGER; counts: ARRAYED_LIST [INTEGER]; parent_rect: EV_FIGURE_RECTANGLE) is
+	fill_world_internal (an_object: GB_OBJECT; depth: INTEGER; counts: ARRAYED_LIST [INTEGER]; parent_rect: EV_FIGURE_RECTANGLE)
 			-- Add `instance_referers' for `an_object' to `world' with a depth of `depth', a horizontal position given by `counts'
 			-- and a parent rectangle to associate a line with given by `parent_rect'.
 		require
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 invariant
 	is_in_debug_mode: components.system_status.is_in_debug_mode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

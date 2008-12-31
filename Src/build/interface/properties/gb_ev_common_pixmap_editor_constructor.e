@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a common editor constructor for pixmap and pixmapable objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ inherit
 
 feature -- Access
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -51,41 +51,41 @@ feature -- Access
 			end
 		end
 
-	execute (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL) is
+	execute (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL)
 			-- Asssign `a_pixmap' located at `pixmap_path' to all representations of `Current'.
 			-- If `a_pixmap' is Void, remove pixmap and path.
 		deferred
 		end
 
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN is
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		deferred
 		end
 
-	return_pixmap: EV_PIXMAP is
+	return_pixmap: EV_PIXMAP
 			-- `Result' is pixmap used for `Current'.
 		deferred
 		end
 
-	return_pixmap_path: STRING_GENERAL is
+	return_pixmap_path: STRING_GENERAL
 			-- `Result' is path used to retrieve pixmap.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap_path_string: STRING is "Pixmap_path"
+	pixmap_path_string: STRING = "Pixmap_path"
 
-	Remove_tooltip: STRING is "Remove pixmap"
+	Remove_tooltip: STRING = "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-	Select_tooltip: STRING is "Select pixmap"
+	Select_tooltip: STRING = "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
 	pixmap_input_field: GB_PIXMAP_INPUT_FIELD;
 		-- Input field to retrieve pixmap.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

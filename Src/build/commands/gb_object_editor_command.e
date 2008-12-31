@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an object_editor command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
+		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON
 				-- Create a new toolbar item linked to `Current'. This has been redefined as each button
 				-- needs to have its drop actions set.
 			do
@@ -55,7 +55,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-		do_not_allow_object_type (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
+		do_not_allow_object_type (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN
 				-- May `transported_object' be dropped on a toolbar button
 			require
 				object_stone_not_void: object_stone /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-		update_object_editor (object_stone: GB_STANDARD_OBJECT_STONE; button: GB_COMMAND_TOOL_BAR_BUTTON) is
+		update_object_editor (object_stone: GB_STANDARD_OBJECT_STONE; button: GB_COMMAND_TOOL_BAR_BUTTON)
 				-- If `button' is parented (at any level) in a GB_OBJECT_EDITOR then assign `object' to
 				-- the parent object editor, otherwise create a new object_editor containing `object'.
 			require
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-		show_usage_dialog is
+		show_usage_dialog
 				-- Show an information dialog explaining usagre
 				-- of the button.
 			local
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				dialog.show_modal_to_window (components.tools.main_window)
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

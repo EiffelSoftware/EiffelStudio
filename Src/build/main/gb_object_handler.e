@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An object which handles objects of type GB_OBJECT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -73,7 +73,7 @@ feature -- Initialization
 
 feature -- Access
 
-	object_contained_in_object (parent_object, child_object: GB_OBJECT): BOOLEAN is
+	object_contained_in_object (parent_object, child_object: GB_OBJECT): BOOLEAN
 			-- Is `child_object' a child (recursively) of `parent_object'?
 		require
 			parent_not_void: parent_object /= Void
@@ -84,7 +84,7 @@ feature -- Access
 			Result := object_contained_in_object_result
 		end
 
-	is_child (child_object: GB_OBJECT; parent_object: GB_OBJECT) is
+	is_child (child_object: GB_OBJECT; parent_object: GB_OBJECT)
 			-- Is `child_object' a direct child of `parent_object'?
 		require
 			child_object_not_void: child_object /= Void
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	objects_all_named (some_objects: ARRAYED_LIST [GB_OBJECT]): BOOLEAN is
+	objects_all_named (some_objects: ARRAYED_LIST [GB_OBJECT]): BOOLEAN
 			-- Are all GB_OBJECT in `objects' named?
 		require
 			some_objects_not_void: some_objects /= Void
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	add_object (container, new_object: GB_OBJECT; position: INTEGER) is
+	add_object (container, new_object: GB_OBJECT; position: INTEGER)
 			-- Add `new_object' to `container' at position `position'.
 		require
 			container_object_exists: container /= Void
@@ -165,7 +165,7 @@ feature -- Basic operation
 			new_object_object_not_void: new_object.object /= Void
 		end
 
-	move_object_contents (new_object, old_object: GB_OBJECT; in_type_change: BOOLEAN) is
+	move_object_contents (new_object, old_object: GB_OBJECT; in_type_change: BOOLEAN)
 			-- Take all children of `old_object', and their representations,
 			-- and move into `new_object'. If `in_type_change' then do not unparent
 			-- layout items of children, so use `unparent_during_type_change' otherwise using
@@ -198,7 +198,7 @@ feature -- Basic operation
 			end
 		end
 
-	replace_object (an_object, new_object: GB_OBJECT) is
+	replace_object (an_object, new_object: GB_OBJECT)
 			-- Replace `an_object' with `new_object'.
 			-- We must transfer the children of the object, the display_object children
 			-- and the layout_item children.
@@ -264,7 +264,7 @@ feature -- Basic operation
 			end
 		end
 
-	add_initial_window is
+	add_initial_window
 			-- Add a new window when there are no other contained.
 		require
 			root_window_void: root_window_object = Void
@@ -286,7 +286,7 @@ feature -- Basic operation
 			root_window_set: root_window_object /= Void
 		end
 
-	add_root_window (a_type: STRING): GB_OBJECT is
+	add_root_window (a_type: STRING): GB_OBJECT
 			-- Add a new root item and return the newly created object.
 			-- The only root item types that are currently supported
 			-- are GB_TITLED_WINDOW_OBJECT and GB_DIALOG which is a descendent
@@ -308,7 +308,7 @@ feature -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT) is
+	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT)
 			-- Perform necessary initialization for new window,
 			-- `window_object'.
 		require
@@ -355,7 +355,7 @@ feature -- Basic operation
 			end
 		end
 
-	add_new_object (an_object: GB_OBJECT) is
+	add_new_object (an_object: GB_OBJECT)
 			-- Perform necessary initialization for new top level object,
 			-- `an_object'.
 		local
@@ -388,7 +388,7 @@ feature -- Basic operation
 			insert_into_window (an_object.display_object, builder_win)
 		end
 
-	remove_object (an_object: GB_OBJECT) is
+	remove_object (an_object: GB_OBJECT)
 			-- Remove `an_object' from `objects'.
 		do
 			objects.remove (an_object.id)
@@ -396,7 +396,7 @@ feature -- Basic operation
 			not_in_objects: not objects.has (an_object.id)
 		end
 
-	build_object_from_string_and_assign_id (a_text: STRING): GB_OBJECT is
+	build_object_from_string_and_assign_id (a_text: STRING): GB_OBJECT
 			-- Generate `Result' from `text' with a new id assigned.
 		do
 			Result := build_object_from_string (a_text)
@@ -405,7 +405,7 @@ feature -- Basic operation
 			add_object_to_objects (Result)
 		end
 
-	build_object_from_string (a_text: STRING): GB_OBJECT is
+	build_object_from_string (a_text: STRING): GB_OBJECT
 			-- Generate `Result' from `text'.
 			-- `Result' will not have and id.
 		require
@@ -509,7 +509,7 @@ feature -- Basic operation
 			Result_not_void: Result /= Void
 		end
 
-	clear_all_objects is
+	clear_all_objects
 			-- Remove all objects, so we are back in the intial
 			-- state of the system.
 		do
@@ -522,7 +522,7 @@ feature -- Basic operation
 			widget_selector_is_empty: components.tools.widget_selector.count = 0
 		end
 
-	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN is
+	string_used_globally_as_object_or_feature_name (a_string: STRING): BOOLEAN
 			-- Is `a_string' used anywhere in the system as feature name or object_name?
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
@@ -550,7 +550,7 @@ feature -- Basic operation
 			end
 		end
 
-	all_object_and_event_names: ARRAYED_LIST [STRING] is
+	all_object_and_event_names: ARRAYED_LIST [STRING]
 			-- `Result' is all object and event names in system.
 		local
 			object_events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
@@ -581,7 +581,7 @@ feature -- Basic operation
 			Result /= Void
 		end
 
-	string_is_object_name (object_name: STRING; an_object: GB_OBJECT; compare_original_object: BOOLEAN): BOOLEAN is
+	string_is_object_name (object_name: STRING; an_object: GB_OBJECT; compare_original_object: BOOLEAN): BOOLEAN
 			-- Is `object_name' a valid named for `an_object', or does it clash
 			-- with an existing name in the scope of `an_object'. For example, objects in
 			-- different windows may have the same name, but windows must have unique names as
@@ -622,7 +622,7 @@ feature -- Basic operation
 			end
 		end
 
-	check_object_name (object_name: STRING; original_object: GB_OBJECT; compare_original_object: BOOLEAN; an_object: GB_OBJECT) is
+	check_object_name (object_name: STRING; original_object: GB_OBJECT; compare_original_object: BOOLEAN; an_object: GB_OBJECT)
 			-- Is `object_name' a valid object name for `original_object' in the scope of `an_object'. If `compare_original_object' then
 			-- check must include the original object, and result may be queried from `string_is_object_name_result'.
 		local
@@ -643,7 +643,7 @@ feature -- Basic operation
 	string_is_feature_name_result: BOOLEAN
 		-- Result used for `string_is_object_name'.
 
-	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+	string_is_feature_name (object_name: STRING; an_object: GB_OBJECT): BOOLEAN
 			-- Is `object_name' already used as a feature name for event connection?
 		require
 			object_name_not_void: object_name /= Void
@@ -660,7 +660,7 @@ feature -- Basic operation
 			end
 		end
 
-	check_feature_name (object_name: STRING; original_object, an_object: GB_OBJECT) is
+	check_feature_name (object_name: STRING; original_object, an_object: GB_OBJECT)
 			-- Is `object_name' a valid feature name for `original_object', in the context
 			-- of `an_object'? Result may be queried from `string_is_feature_name_result'.
 		local
@@ -689,7 +689,7 @@ feature -- Basic operation
 			end
 		end
 
-	valid_constant_name (a_name: STRING): BOOLEAN is
+	valid_constant_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid name for a constant?
 		require
 			name_valid: a_name /= Void
@@ -715,7 +715,7 @@ feature -- Basic operation
 			Result := not (string_is_feature_name_result or string_is_object_name_result)
 		end
 
-	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
+	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN
 			-- Is `object_name' a valid name for `an_object'? Must check
 			-- all other object names in the current scope (window) as `an_object',
 			-- including names of all connceted events in scope.
@@ -730,7 +730,7 @@ feature -- Basic operation
 				string_is_feature_name (object_name, an_object)
 		end
 
-	existing_feature_matches (feature_name, type: STRING; an_object: GB_OBJECT): BOOLEAN is
+	existing_feature_matches (feature_name, type: STRING; an_object: GB_OBJECT): BOOLEAN
 			-- Do all action sequences with feature named `feature_name' connected, in scope of `an_object'
 			-- have a type that is compatible (argument wise) with `type'?
 		require
@@ -746,7 +746,7 @@ feature -- Basic operation
 			Result := existing_feature_matches_result
 		end
 
-	check_feature_clash (feature_name, type: STRING; an_object: GB_OBJECT) is
+	check_feature_clash (feature_name, type: STRING; an_object: GB_OBJECT)
 			-- Is feature name valid for action sequence type `type' in the context of
 			-- `an_object'. Store result in `existing_feature_matches_result'.
 		local
@@ -786,7 +786,7 @@ feature -- Basic operation
 	existing_feature_matches_result: BOOLEAN
 		-- Last result of call to `existing_feature_matches'
 
-	mark_as_deleted (an_object: GB_OBJECT) is
+	mark_as_deleted (an_object: GB_OBJECT)
 			-- Move `an_object' and all children at all levels in
 			-- to `deleted_objects'.
 		require
@@ -816,7 +816,7 @@ feature -- Basic operation
 			object_deleted: deleted_objects.has (an_object.id) and not objects.has (an_object.id)
 		end
 
-	mark_existing (an_object: GB_OBJECT) is
+	mark_existing (an_object: GB_OBJECT)
 			-- Move `an_object' and all children at all levels in to
 			-- `objects'.
 		require
@@ -848,7 +848,7 @@ feature -- Basic operation
 			object_removed_from_deleted: objects.has (an_object.id) and not deleted_objects.has (an_object.id)
 		end
 
-	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [ANY, TUPLE [GB_OBJECT]])
 			-- For `an_object' and all objects parented at any level in
 			-- `an_object', call `action' with the current object as
 			-- the argument.
@@ -879,7 +879,7 @@ feature -- Basic operation
 			end
 		end
 
-	object_from_display_widget (ev_any: EV_ANY): GB_OBJECT is
+	object_from_display_widget (ev_any: EV_ANY): GB_OBJECT
 			-- `Result' is GB_OBJECT with `ev_any' as `object'.
 			-- Only checks in `objects'.
 		local
@@ -899,7 +899,7 @@ feature -- Basic operation
 			end
 		end
 
-	object_from_id (an_id: INTEGER): GB_OBJECT is
+	object_from_id (an_id: INTEGER): GB_OBJECT
 			-- `Result' is GB_OBJECT with id `an_id'.
 			-- Only checks in `objects'.
 		require
@@ -908,7 +908,7 @@ feature -- Basic operation
 			Result := objects.item (an_id)
 		end
 
-	deep_object_from_id (an_id: INTEGER): GB_OBJECT is
+	deep_object_from_id (an_id: INTEGER): GB_OBJECT
 			-- `Result' is GB_OBJECT with id `an_id'.
 			-- Checks in `objects' and `deleted_objects'.
 		require
@@ -920,7 +920,7 @@ feature -- Basic operation
 			end
 		end
 
-	add_default_names (some_objects: ARRAYED_LIST [GB_OBJECT]) is
+	add_default_names (some_objects: ARRAYED_LIST [GB_OBJECT])
 			-- For all objects in `some_objects', add a default name, if
 			-- they do not have a name assigned.
 		local
@@ -959,14 +959,14 @@ feature -- Basic operation
 			components.system_status.mark_as_dirty
 		end
 
-	reset_deleted_objects is
+	reset_deleted_objects
 			-- Reset `deleted_objects' to it's default state.
 		do
 			--|FIXME should probably remove all deleted instance referers.
 			create deleted_objects.make (100)
 		end
 
-	reset_objects is
+	reset_objects
 			-- Reset `objects' to it's default state.
 		do
 			create objects.make (100)
@@ -974,7 +974,7 @@ feature -- Basic operation
 
 feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Implementatation
 
-	update_all_associated_objects is
+	update_all_associated_objects
 			-- Update all objects in system after a load or import
 			-- so that the instance referers are correctly built.
 			-- If an import has just been executed, there is no need to update
@@ -993,7 +993,7 @@ feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Implementatation
 
 feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations
 
-	set_root_window (a_window: GB_TITLED_WINDOW_OBJECT) is
+	set_root_window (a_window: GB_TITLED_WINDOW_OBJECT)
 			-- Assign `a_window' to `root_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -1005,7 +1005,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations
 
 feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operations		
 
-	remove_root_window is
+	remove_root_window
 			-- Ensure `rot_window' is Void.
 		do
 			root_window_object := Void
@@ -1015,7 +1015,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operations
 
 feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
-	build_object (new_object: GB_OBJECT) is
+	build_object (new_object: GB_OBJECT)
 			-- Build internal representations of `new_object'
 			-- such as the layout item and display object.
 			-- `new_object' is not added to `objects'.
@@ -1041,7 +1041,7 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 
 feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 
-	reset_object (an_object: GB_OBJECT) is
+	reset_object (an_object: GB_OBJECT)
 			-- Reset `an_object' by rebuilding. An XML representation
 			-- of the object is built, and then a new object is generated from
 			-- this XML. The new object replaces the old version with the same ID,
@@ -1254,7 +1254,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 
 feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMPORT, GB_COMMAND} -- Implementation
 
-	add_object_to_objects (an_object: GB_OBJECT) is
+	add_object_to_objects (an_object: GB_OBJECT)
 			-- Add `an_object' to `objects'.
 		require
 			not_already_included: not objects.has (an_object.id)
@@ -1266,7 +1266,7 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMP
 
 feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 
-	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT) is
+	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT)
 			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
 		local
 			editor: GB_OBJECT_EDITOR
@@ -1311,7 +1311,7 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_A
 			end
 		end
 
-	update_for_delete (object_id: INTEGER) is
+	update_for_delete (object_id: INTEGER)
 				-- Perform any necessary processing on object referenced
 				-- by id `object_id' and all children contained,
 				-- for a deletion event. I.e. unmerge radio connection.
@@ -1337,7 +1337,7 @@ feature {NONE} -- Implementation
 	object_contained_in_object_result: BOOLEAN
 		-- Result of last call to `object_contained_in_object'.
 
-	objects_updated_correctly (old_objects, new_objects: like objects; an_object: GB_OBJECT): BOOLEAN is
+	objects_updated_correctly (old_objects, new_objects: like objects; an_object: GB_OBJECT): BOOLEAN
 			-- Are contents of `old_objects' and `new_objects' the same except for
 			-- the item referenced by `an_object.id'. This is only used for the postcondition of `reset_object'.
 			-- Only the `item' in `objects' that was reset may change. All other objects must remain identical
@@ -1379,7 +1379,7 @@ feature -- Access
 	root_window_object: GB_TITLED_WINDOW_OBJECT;
 		-- The object representing the window that will be launched by the application.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

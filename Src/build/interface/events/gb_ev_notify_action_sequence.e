@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_NOTIFY_ACTION_SEQUENCE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,19 +14,19 @@ inherit
 
 feature -- Access
 
-	argument_types: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 		end
 	
-	argument_names: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE []] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE []]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.
@@ -41,13 +41,13 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	output_agent2 (name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+	output_agent2 (name: STRING; string_handler: ORDERED_STRING_HANDLER)
 			--
 		do
 			string_handler.record_string (name + " fired.")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

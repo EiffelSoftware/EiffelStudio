@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a generation command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute is
+	execute
 				-- Execute `Current'.
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 	dialog: GB_CODE_GENERATION_DIALOG
 		-- Displays generation output.
 
-	generate_single_window (object_stone: GB_STANDARD_OBJECT_STONE) is
+	generate_single_window (object_stone: GB_STANDARD_OBJECT_STONE)
 			-- Generate code for `object' only.
 		require
 			object_stone_not_void: object_stone /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			dialog.show_modal_to_window (components.tools.main_window)
 		end
 
-	veto_drop (pebble: ANY): BOOLEAN is
+	veto_drop (pebble: ANY): BOOLEAN
 			-- Veto dropping for `generate_single_window' as the object
 			-- must be a named top level object.
 		require
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a dialog informing the user that the%
 		%object name they have just entered already exists."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MESSAGE_DIALOG}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

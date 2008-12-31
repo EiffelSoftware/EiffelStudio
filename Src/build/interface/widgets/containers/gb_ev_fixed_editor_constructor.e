@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_FIXED."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,10 +28,10 @@ feature -- Access
 	ev_type: EV_FIXED
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_FIXED"
+	type: STRING = "EV_FIXED"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -56,7 +56,7 @@ feature -- Access
 			update_attribute_editor
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -67,7 +67,7 @@ feature -- Access
 		
 feature {GB_FIXED_POSITIONER} -- Implementation
 
-	set_item_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
+	set_item_x_position (widget: EV_WIDGET; x_pos: INTEGER)
 			-- Set x_position of `widget' in `first' to `x_pos'.
 		local
 			index: INTEGER
@@ -83,7 +83,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end
 		
-	actual_set_item_x_position (an_object: GB_OBJECT; index, x_pos: INTEGER) is
+	actual_set_item_x_position (an_object: GB_OBJECT; index, x_pos: INTEGER)
 			-- Set `index' items within representations of `an_object' to x position `x_pos'.
 		require
 			object_not_void: an_object /= Void
@@ -105,7 +105,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end
 		
-	set_item_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
+	set_item_y_position (widget: EV_WIDGET; y_pos: INTEGER)
 			-- Set y_position of `widget' in `first' to `y_pos'.
 		local
 			index: INTEGER
@@ -120,7 +120,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end
 		
-	actual_set_item_y_position (an_object: GB_OBJECT; index, y_pos: INTEGER) is
+	actual_set_item_y_position (an_object: GB_OBJECT; index, y_pos: INTEGER)
 			-- Set `index' items within representations of `an_object' to y position `y_pos'.
 		require
 			object_not_void: an_object /= Void
@@ -142,7 +142,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end
 		
-	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
+	set_item_width (widget: EV_WIDGET; new_width: INTEGER)
 			-- Set width of `widget' in `first' to `new_width'.
 		local
 			index: INTEGER
@@ -157,7 +157,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end
 		
-	actual_set_item_width (an_object: GB_OBJECT; index, new_width: INTEGER) is
+	actual_set_item_width (an_object: GB_OBJECT; index, new_width: INTEGER)
 			-- Set width of `index' item within representations of `an_object' to `new_width'.
 		require
 			object_not_void: an_object /= Void
@@ -181,7 +181,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end	
 
-	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
+	set_item_height (widget: EV_WIDGET; new_height: INTEGER)
 			-- Set height of `widget' in `first' to `new_height'.
 		local
 			combo_box: EV_COMBO_BOX
@@ -200,7 +200,7 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 			end
 		end	
 		
-	actual_set_item_height (an_object: GB_OBJECT; index, new_height: INTEGER) is
+	actual_set_item_height (an_object: GB_OBJECT; index, new_height: INTEGER)
 			-- Set height of `index' item within representations of `an_object' to `new_height'.
 		require
 			object_not_void: an_object /= Void
@@ -226,14 +226,14 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to do here.
 		end
 		
-	show_layout_window is
+	show_layout_window
 			-- Display window allowing placement of widgets.
 		do
 			if layout_window = Void then
@@ -245,15 +245,15 @@ feature {NONE} -- Implementation
 	layout_window: GB_FIXED_POSITIONER
 		-- Window used for positining of children.
 
-	x_position_string: STRING is "Children_x_position"
+	x_position_string: STRING = "Children_x_position"
 	
-	y_position_string: STRING is "Children_y_position"
+	y_position_string: STRING = "Children_y_position"
 	
-	height_string: STRING is "Children_height"
+	height_string: STRING = "Children_height"
 	
-	width_string: STRING is "Children_width";
+	width_string: STRING = "Children_width";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

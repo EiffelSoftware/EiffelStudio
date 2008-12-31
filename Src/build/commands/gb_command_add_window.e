@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command to add a window to a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (window: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS) is
+	make (window: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			an_object: GB_OBJECT
@@ -103,7 +103,7 @@ feature -- Basic Operation
 			components.system_status.mark_as_dirty
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -136,7 +136,7 @@ feature -- Basic Operation
 			components.system_status.mark_as_dirty
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			object_name: STRING
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 	original_id: INTEGER;
 		-- id of object that was deleted.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

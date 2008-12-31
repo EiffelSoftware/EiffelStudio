@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class LOCAL_NAMER 
@@ -11,7 +11,7 @@ create
 	
 feature 
 
-	reset is
+	reset
 			-- Reset `Current'.
 		do
 			integer_generator.reset
@@ -30,7 +30,7 @@ feature {NONE}
 			
 feature 
 
-	make (a_seed: STRING) is
+	make (a_seed: STRING)
 			-- Create the generator by setting its seed value.
 		require
 			not_a_void_string: not (a_seed = Void)
@@ -40,7 +40,7 @@ feature
 			create integer_generator
 		end
 
-	next is
+	next
 			-- Next unique string whose prefix is `value' and
 			-- suffix is the next integer
 		do
@@ -50,7 +50,7 @@ feature
 			value.append_integer (integer_generator.value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

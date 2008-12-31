@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_POINTER_BUTTON_ACTION_SEQUENCE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	argument_types: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
@@ -28,7 +28,7 @@ feature -- Access
 			Result.extend ("INTEGER")
 		end
 	
-	argument_names: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
@@ -42,7 +42,7 @@ feature -- Access
 			Result.extend ("a_screen_y")
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `textable'.
@@ -57,7 +57,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	internal_display_agent (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE width, height: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+	internal_display_agent (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE width, height: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER)
 			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 				" x_tilt : " + x_tilt.out + " y_tilt : " + y_tilt.out + " pressure : " + pressure.out + " width : " + width.out + " height : " + height.out)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

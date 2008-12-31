@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent stones carrying a GB_OBJECT that is already in existence in the project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_object (an_object: GB_OBJECT) is
+	make_with_object (an_object: GB_OBJECT)
 			-- Create `current' and assifgn `an_object' to `internal_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- Object which `Current' is representing.
 			-- As this obbject already exists for this type of
 			-- pebble, it may be called as often as required with no slow down.
@@ -63,7 +63,7 @@ feature -- Access
 			Result := internal_object
 		end
 		
-	object_type: STRING is
+	object_type: STRING
 			
 		do
 			Result := internal_object.type
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 	internal_object: GB_OBJECT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

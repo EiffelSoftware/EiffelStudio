@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that expand the layout tree."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tool_bar_button: EV_TOOL_BAR_BUTTON is
+	tool_bar_button: EV_TOOL_BAR_BUTTON
 			-- `Result' is a tool bar button that when selected, expands `layout_constructor'.
 		do
 			create Result
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			top_window: EV_WINDOW
@@ -63,7 +63,7 @@ feature -- Execution
 			top_window.unlock_update
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_CONTAINER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_CONTAINER
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_CONTAINER"
+	type: STRING = "EV_CONTAINER"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -85,42 +85,42 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to do here.
 		end
 
-	new_merge (object_stone: GB_STANDARD_OBJECT_STONE) is
+	new_merge (object_stone: GB_STANDARD_OBJECT_STONE)
 			-- Merge radio group of `an_object' with `Current'.
 		deferred
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		deferred
 		end
 		
-	update_linked_names is
+	update_linked_names
 			-- For all items in `merged_list', update
 			-- their texts to reflect the current state of
 			-- associated object names.
 		deferred
 		end
 		
-	unlink_group (group_link: GB_RADIO_GROUP_LINK) is
+	unlink_group (group_link: GB_RADIO_GROUP_LINK)
 			--
 		deferred
 		end
 		
-	update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR) is
+	update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR)
 			-- For every item in `editors', updated, to reflect an unmerging of `merged_object'.
 		deferred
 		end
 
-	veto_merge (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
+	veto_merge (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN
 			-- Stop invalid radio_group_merges.
 			-- An object may not be dropped if it is the same object that
 			-- `Current' represents, or it is already merged to the object
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	link_to_object (an_object: GB_CONTAINER_OBJECT) is
+	link_to_object (an_object: GB_CONTAINER_OBJECT)
 			-- Perform a merging of `Current' and `an_object'.
 		local
 			container: EV_CONTAINER
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 	propagate_foreground_color, propagate_background_color: EV_TOOL_BAR_BUTTON
 		-- Buttons used for color propagation.
 	
-	internal_propagate_color (an_object: GB_OBJECT; is_foreground_color: BOOLEAN) is
+	internal_propagate_color (an_object: GB_OBJECT; is_foreground_color: BOOLEAN)
 			-- Propagate color setting specified by `is_foreground_color' of `an_object' to all children
 			-- recursively.
 		require
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	update_color (an_object: GB_OBJECT; color: EV_COLOR; constant: GB_CONSTANT; is_foreground_color: BOOLEAN) is
+	update_color (an_object: GB_OBJECT; color: EV_COLOR; constant: GB_CONSTANT; is_foreground_color: BOOLEAN)
 			-- Update color of `an_object' to `color' setting a constant reference to `constant' if not Void.
 			-- If `constant' is Void then remove existing constant context if any.
 			-- `is_foreground_color' specifis if it is a foreground or background color.
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 		-- Access to the colorizable editor item used by `Current' as the propagate butons
 		-- are only available to containers.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to a GB_DEFERRED_BUILDER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature {NONE} -- Implementation
 
-	deferred_builder: GB_DEFERRED_BUILDER is
+	deferred_builder: GB_DEFERRED_BUILDER
 			-- `Result' is the GB_DEFERRED_BUILDER used by
 			-- the system. There should only be one.
 			-- Any class that needs access, simply inherits from
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			create Result.initialize
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

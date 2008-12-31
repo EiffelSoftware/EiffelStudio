@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,19 +18,19 @@ inherit
 
 feature -- Access
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version at least).
 			-- Items at position 3 and 4 contain text.
 		deferred
 		end
 
-	mini_pixmap: ARRAY [EV_PIXMAP] is
+	mini_pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command for mini toolbars.
 		do
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for the toolbar button.
 		deferred
 		ensure
@@ -50,19 +50,19 @@ feature -- Status Report
 
 feature -- Status setting
 
-	enable_displayed is
+	enable_displayed
 			-- Set `is_displayed' to True.
 		do
 			is_displayed := True
 		end
 
-	disable_displayed is
+	disable_displayed
 			-- Set `is_displayed' to False.
 		do
 			is_displayed := False
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			toolbar_items: like managed_toolbar_items
@@ -83,7 +83,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			toolbar_items: like managed_toolbar_items
@@ -106,7 +106,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -148,7 +148,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_mini_toolbar_item: GB_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_toolbar_item: GB_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new mini toolbar button for this command.
 		require
 			mini_pixmap_not_void: mini_pixmap /= Void
@@ -172,10 +172,10 @@ feature {GB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 			-- Toolbar items associated with this command.
 	
-	Opening_parenthesis: STRING is " ("
-	Closing_parenthesis: STRING is ")";
+	Opening_parenthesis: STRING = " ("
+	Closing_parenthesis: STRING = ")";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

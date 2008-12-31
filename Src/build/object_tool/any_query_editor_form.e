@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Form containing a set of query properties used to generate %
 				% the corresponding object editor. Used when the returned %
 				% is not BOOLEAN."
@@ -26,7 +26,7 @@ create
 
 feature {NONE}
 
-   create_interface (test_preconditions: BOOLEAN) is
+   create_interface (test_preconditions: BOOLEAN)
 			-- Create interface.
 		local
 			label: EV_LABEL
@@ -111,14 +111,14 @@ feature {NONE}
 			set_values
 		end
 
-	set_values is
+	set_values
 			-- Set values for GUI elements.
 		do
 			field_toggle_b.enable_select
 			deactivate_menu_fields
 		end
 
-	update_interface is
+	update_interface
 			-- Update the interface after setting `query'.
 		local
 			error_message: STRING
@@ -174,7 +174,7 @@ feature -- GUI attributes
 
 feature {NONE} -- Heuristic
 
-	update_procedure_opt_pull is
+	update_procedure_opt_pull
 			-- Display a list of compatible procedure in
 			-- `procedure_opt_pull'.
 		local
@@ -197,7 +197,7 @@ feature {NONE} -- Heuristic
 
 feature -- Execution
 
-	menu_text_field_return is
+	menu_text_field_return
 			-- Return has been pressed in `menu_text_field', so
 			-- handle this event.
 		local
@@ -212,7 +212,7 @@ feature -- Execution
 			end
 		end
 		
-	delete_button_selected is
+	delete_button_selected
 			-- Delete button has been selected so handle this.
 		local
 			selected_items: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -246,7 +246,7 @@ feature -- Execution
 				end
 		end
 		
-		menu_choice_sc_selected is
+		menu_choice_sc_selected
 				-- A new menu item has been selected so set the
 				-- default choice.
 			local
@@ -266,7 +266,7 @@ feature -- Execution
 				end
 			end
 			
-		any_radio_fired is
+		any_radio_fired
 				-- Any of the radio buttons have been selected so
 				-- respond accordingly.
 			do
@@ -283,7 +283,7 @@ feature -- Execution
 				end
 			end
 
-	deactivate_menu_fields is
+	deactivate_menu_fields
 			-- Deactivate every field related to the notion of Menu.
 		do
 			menu_choice_label.disable_sensitive
@@ -293,7 +293,7 @@ feature -- Execution
 
 		end
 
-	activate_menu_fields is
+	activate_menu_fields
 			-- Activate every field related to the notion of Menu.
 		do
 			menu_choice_label.enable_sensitive
@@ -309,7 +309,7 @@ feature {NONE} -- Attribute
 
 feature -- Interface generation
 
-	generate_interface_elements: STRING is
+	generate_interface_elements: STRING
 			-- Generate declarations for user interface widgets.
 		do
 			create Result.make (0)
@@ -320,7 +320,7 @@ feature -- Interface generation
 			end
 		end
 		
-	build_interface (parent_name: STRING): STRING is
+	build_interface (parent_name: STRING): STRING
 			-- Generate Eiffel code which builds the widgets
 			-- for the user interface
 		local
@@ -355,7 +355,7 @@ feature -- Interface generation
 			end
 		end
 
-	fill_menu (an_opt_pull_c: EV_COMBO_BOX) is
+	fill_menu (an_opt_pull_c: EV_COMBO_BOX)
 			-- Fill menus for `an_opt_pull_c'.
 		local
 			list_item: EV_LIST_ITEM
@@ -423,7 +423,7 @@ feature -- Command generation
 --			end	
 --		end
 
-	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING is
+	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		local
@@ -493,7 +493,7 @@ feature -- Command generation
 			end
 		end
 
-	eiffel_setting (actual_argument: STRING; part_argument: STRING): STRING is
+	eiffel_setting (actual_argument: STRING; part_argument: STRING): STRING
 			-- Generate the setting of the query using `argument'.
 		local
 			preconditions: LINKED_LIST [APPLICATION_PRECONDITION]
@@ -523,7 +523,7 @@ feature -- Command generation
 			Result.append (")%N")
 		end
 
-	procedure: APPLICATION_COMMAND is
+	procedure: APPLICATION_COMMAND
 			-- Procedure chosen to set `query'
 		require
 			item_selected: procedure_opt_pull.selected_item /= Void
@@ -546,7 +546,7 @@ feature -- Command generation
 			-- Does the interface use both a text field and 
 			-- an option pull.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

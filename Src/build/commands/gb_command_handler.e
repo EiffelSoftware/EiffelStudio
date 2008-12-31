@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that handle commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Access
 
-	make_with_components (components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (components: GB_INTERNAL_COMPONENTS)
 			-- Initialize current with `components'.
 		require
 			components_not_void: components /= Void
@@ -148,7 +148,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	update is
+	update
 			-- For every command in `all_standard_commands',
 			--  and `all_two_state_commands', update their state.
 		local
@@ -192,7 +192,7 @@ feature {GB_MAIN_WINDOW} -- Implementation
 
 	all_two_state_commands: ARRAYED_LIST [GB_TWO_STATE_COMMAND];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

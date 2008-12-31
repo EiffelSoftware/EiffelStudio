@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent items for the widget selector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature -- Access
 	name: STRING
 		-- Name of `Current'.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in `Current'.
 		do
 			Result := children.count
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_recursive (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM): BOOLEAN is
+	has_recursive (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM): BOOLEAN
 			-- Is `selector_item' contained within `Current' at any level?
 		require
 			selector_item_not_void: selector_item /= Void
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -87,7 +87,7 @@ feature -- Status setting
 			name_set: name.is_equal (a_name)
 		end
 
-	set_parent (new_parent: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	set_parent (new_parent: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Assign `new_parent' to `parent'.
 		do
 			parent := new_parent
@@ -95,7 +95,7 @@ feature -- Status setting
 			parent_set: parent = new_parent
 		end
 
-	unparent is
+	unparent
 			-- Remove `Current' from its parent.
 		local
 			parent_item: GB_WIDGET_SELECTOR_COMMON_ITEM
@@ -126,7 +126,7 @@ feature -- Status setting
 			parent_void: parent = Void
 		end
 
-	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_DIRECTORY_ITEM is
+	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
 		require
@@ -142,7 +142,7 @@ feature -- Status setting
 			Cursor_not_moved: old children.index = children.index
 		end
 
-	window_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_ITEM is
+	window_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_ITEM
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
 		require
@@ -158,13 +158,13 @@ feature -- Status setting
 			Cursor_not_moved: old children.index = children.index
 		end
 
-	prune_all (v: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	prune_all (v: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Remove all occurrences of `v'.
 		do
 			v.unparent
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from `Current'.
 		do
 			from
@@ -176,7 +176,7 @@ feature -- Status setting
 			end
 		end
 
-	add_alphabetically (new_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	add_alphabetically (new_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Add `representation of `new_item' to `Current' alphabetically.
 		require
 			new_item_not_void: new_item /= Void
@@ -203,7 +203,7 @@ feature -- Status setting
 			components.tools.widget_selector.item_added_to_directory (Current, new_item)
 		end
 
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM]]) is
+	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM]])
 			-- Apply `action' to very item recusively.
 		do
 			from
@@ -217,7 +217,7 @@ feature -- Status setting
 			end
 		end
 
-	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN is
+	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN
 			-- For all items in `Current' recursively, call `action'.
 			-- `Result' is True if one call to `action' returns True, False otherwise.
 		require
@@ -239,7 +239,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_select is
+	enable_select
 			-- Select `Current'
 		require
 			tree_item.is_selectable
@@ -249,7 +249,7 @@ feature -- Status setting
 			tree_item_is_selected: tree_item.is_selected
 		end
 
-	disable_select is
+	disable_select
 			-- Unselect `Current'
 		do
 			tree_item.disable_select
@@ -257,7 +257,7 @@ feature -- Status setting
 			tree_item_is_not_selected: not tree_item.is_selected
 		end
 
-	expand is
+	expand
 			-- Expand `Current'.
 		do
 			if tree_item /= Void and then tree_item.is_expandable then
@@ -265,7 +265,7 @@ feature -- Status setting
 			end
 		end
 
-	expand_recursive is
+	expand_recursive
 			-- Expand `Current'.
 		do
 			if tree_item.is_expandable then
@@ -276,7 +276,7 @@ feature -- Status setting
 			(tree_item /= Void and then tree_item.is_expandable) implies tree_item.is_expanded
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to graphical representations of `Current'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -284,7 +284,7 @@ feature -- Status setting
 			tree_item.set_pixmap (a_pixmap)
 		end
 
-	directory_names: ARRAYED_LIST [STRING] is
+	directory_names: ARRAYED_LIST [STRING]
 			-- `Result' is names of all directories contained in `Current'.
 		local
 			l_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
@@ -303,7 +303,7 @@ feature -- Status setting
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			tree_item.destroy
@@ -312,7 +312,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	common_make is
+	common_make
 			-- Initialize structures required by `Current'.
 		do
 			create tree_item
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			name := ""
 		end
 
-	internal_directory_object_from_name (parent_object: GB_WIDGET_SELECTOR_COMMON_ITEM; texts: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_COMMON_ITEM is
+	internal_directory_object_from_name (parent_object: GB_WIDGET_SELECTOR_COMMON_ITEM; texts: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_COMMON_ITEM
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from the current `index' of `texts' from directory object `parent_object'.
 		require
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			children_index_unchanged: old parent_object.children.index = parent_object.children.index
 		end
 
-	internal_expand_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	internal_expand_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Expand `Current' .
 		require
 			widget_selector_common_item_not_void: widget_selector_common_item /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 invariant
 	tree_item_not_void: tree_item /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

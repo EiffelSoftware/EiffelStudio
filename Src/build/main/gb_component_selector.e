@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold user defined components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_LIST}
@@ -97,18 +97,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: EV_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
 		do
 			create Result
 		end
 
-	name: STRING is "Component Selector"
+	name: STRING = "Component Selector"
 			-- Full name used to represent `Current'.
 
 feature -- Basic operation
 
-	add_new_component (object_stone: GB_OBJECT_STONE) is
+	add_new_component (object_stone: GB_OBJECT_STONE)
 			-- Add a new component representing `object_stone'.
 		require
 			object_stone_not_void: object_stone /= Void
@@ -128,7 +128,7 @@ feature -- Basic operation
 			end
 		end
 
-	valid_component_name (a_name: STRING): BOOLEAN is
+	valid_component_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid component name?
 		local
 			temp_string: STRING
@@ -142,7 +142,7 @@ feature -- Basic operation
 			end
 		end
 
-	delete_component (component_name: STRING) is
+	delete_component (component_name: STRING)
 			-- Remove component with name `component_name'.
 		require
 			vaid_component_name: component_name /= Void and not component_name.is_empty
@@ -177,7 +177,7 @@ feature -- Basic operation
 			end
 		end
 
-	is_valid_object (object_stone: GB_OBJECT_STONE): BOOLEAN is
+	is_valid_object (object_stone: GB_OBJECT_STONE): BOOLEAN
 			-- Is `an_object' a valid object which may be dropped
 			-- in Current?
 		require
@@ -206,7 +206,7 @@ feature -- Basic operation
 
 feature {GB_XML_HANDLER} -- Basic operation
 
-	add_components (list: ARRAYED_LIST [STRING]) is
+	add_components (list: ARRAYED_LIST [STRING])
 			-- For every item in `list', add a matching
 			-- component to `Current'.
 		require
@@ -229,7 +229,7 @@ feature {GB_XML_HANDLER} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	check_for_component_delete (a_key: EV_KEY) is
+	check_for_component_delete (a_key: EV_KEY)
 			-- Respond to keypress of `a_key' and delete selected object.
 		require
 			a_key_not_void: a_key /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	all_component_names: ARRAYED_LIST [STRING] is
+	all_component_names: ARRAYED_LIST [STRING]
 			-- `Result' is all named components displayed in `Current'.
 			-- All components must be in `Current', so this is all components
 			-- in the system. All strings in `Result' are lowercase.
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			comparing_objects: Result.object_comparison
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

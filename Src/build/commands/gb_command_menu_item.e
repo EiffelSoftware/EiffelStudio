@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu item for a menuable command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: GB_MENUABLE_COMMAND) is
+	make (a_command: GB_MENUABLE_COMMAND)
 		do
 			default_create
 			command := a_command
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Cleaning
 
-	recycle is
+	recycle
 			-- To be called when the button has became useless.
 		do
 			command.managed_menu_items.prune_all (Current)
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 	command: GB_MENUABLE_COMMAND;
 			-- Command associated with Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

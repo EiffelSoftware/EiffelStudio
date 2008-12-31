@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple toolbarable and menuable command.%
 				%When using it, do not forget to define all the standardized fields"
 	legal: "See notice at end of class."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create execute_agents.make
 			name := "Default_command_name_Please_change_it"
 		end
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pixmaps (new_p: ARRAY [EV_PIXMAP]) is
+	set_pixmaps (new_p: ARRAY [EV_PIXMAP])
 			-- Define pixmaps associated with `Current'.
 		require
 			new_p_non_void: new_p /= Void
@@ -71,7 +71,7 @@ feature -- Status setting
 			pixmap := new_p
 		end
 
-	set_tooltip (s: STRING) is
+	set_tooltip (s: STRING)
 			-- Define a new tooltip for `Current', and possibly a new description.
 		do
 			tooltip := s
@@ -80,7 +80,7 @@ feature -- Status setting
 			end
 		end
 
-	set_description (s: STRING) is
+	set_description (s: STRING)
 			-- Define a new description for `Current', and possibly a new tooltip.
 		do
 			description := s
@@ -89,7 +89,7 @@ feature -- Status setting
 			end
 		end
 
-	set_accelerator (acc: EV_ACCELERATOR) is
+	set_accelerator (acc: EV_ACCELERATOR)
 			-- Define an accelerator for `Current'.
 		do
 			accelerator := acc
@@ -98,25 +98,25 @@ feature -- Status setting
 			end
 		end
 
-	set_menu_name (s: STRING) is
+	set_menu_name (s: STRING)
 			-- Define a new menu name for `Current'.
 		do
 			menu_name := s
 		end
 
-	set_name (s: STRING) is
+	set_name (s: STRING)
 			-- Define a new name for `Current'.
 		do
 			name := s
 		end
 
-	add_agent (a: PROCEDURE [ANY, TUPLE []]) is
+	add_agent (a: PROCEDURE [ANY, TUPLE []])
 			-- Extend `execute_agents' with `a'.
 		do
 			execute_agents.extend (a)
 		end
 
-	set_mini_pixmaps (p: ARRAY [EV_PIXMAP]) is
+	set_mini_pixmaps (p: ARRAY [EV_PIXMAP])
 			-- Define the pixmaps displayed on mini buttons associated to `Current'.
 		do
 			mini_pixmap := p
@@ -124,7 +124,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Call all agents associated with `Current'.
 		do
 			from
@@ -137,7 +137,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_if_executable is
+	execute_if_executable
 			-- Call all agents associated with `Current' if
 			-- executable.
 		do
@@ -154,7 +154,7 @@ feature -- Basic operations
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

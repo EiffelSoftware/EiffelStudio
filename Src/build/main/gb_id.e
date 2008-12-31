@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that handle object id's in Build."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -30,7 +30,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	reset_id_counter is
+	reset_id_counter
 			-- Reset `counter' to 1.
 			-- This forces object ids to start
 			-- at one again. Should be performed
@@ -41,7 +41,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_id: INTEGER is
+	new_id: INTEGER
 			-- `Result' is a new id.
 		do
 			Result := current_id_counter
@@ -50,7 +50,7 @@ feature -- Basic operations
 			result_positive: Result > 0
 		end
 
-	set_current_id_counter (value: INTEGER) is
+	set_current_id_counter (value: INTEGER)
 			-- Set `value' to `internal_counter'.
 		do
 			current_id_counter := value
@@ -59,7 +59,7 @@ feature -- Basic operations
 	current_id_counter: INTEGER;
 			-- `Result' is value of `internal_counter'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

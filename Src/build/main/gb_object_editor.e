@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow you to edit the properties of a widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			tool_bar: EV_TOOL_BAR
@@ -171,7 +171,7 @@ feature -- Access
 		-- All object modifications are applied to this
 		-- object.
 
-	has_object: BOOLEAN is
+	has_object: BOOLEAN
 			-- Is an object being edited in `Current'?
 		do
 			Result := object /= Void
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign `an_object' to `object'.
 			-- Set up `Current' to modify `object'.
 		require
@@ -200,7 +200,7 @@ feature -- Status setting
 			an_object_set: object = an_object
 		end
 
-	make_empty is
+	make_empty
 			-- Remove all editor objects from `Current'.
 			-- Assign `Void' to `object'.
 		local
@@ -232,7 +232,7 @@ feature -- Status setting
 			object_is_void: object = Void
 		end
 
-	update_current_object is
+	update_current_object
 			-- Update fields for `object'. This ensures that
 			-- representation of `object' displayed in `Current'
 			-- is up to date. For now, we just rebuild the whole
@@ -245,7 +245,7 @@ feature -- Status setting
 			object_not_changed: old object = object
 		end
 
-	replace_object_editor_item (a_type: STRING) is
+	replace_object_editor_item (a_type: STRING)
 			-- Replace object editor item of type `a_type' with a newly built one.
 			-- This forces an update due to the current state of `object'.
 		local
@@ -257,7 +257,7 @@ feature -- Status setting
 			end
 		end
 
-	editor_item_by_type (a_type: STRING): GB_OBJECT_EDITOR_ITEM is
+	editor_item_by_type (a_type: STRING): GB_OBJECT_EDITOR_ITEM
 			-- `Result' is editor item of type `a_type', contained
 			-- in `Current'. Void if none exists.
 		require
@@ -278,7 +278,7 @@ feature -- Status setting
 			end
 		end
 
-	flush is
+	flush
 			-- Remove `object' if it has been deleted.
 		do
 			if object /= Void and then components.object_handler.deleted_objects.has (object.id) then
@@ -288,7 +288,7 @@ feature -- Status setting
 
 feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS_DIALOG, GB_CONSTANT} -- Implementation
 
-	constant_added (a_constant: GB_CONSTANT) is
+	constant_added (a_constant: GB_CONSTANT)
 			-- Update `Current' to reflect adition of constant `a_constant'.
 		require
 			constant_not_void: a_constant /= Void
@@ -296,7 +296,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			for_all_input_fields (agent constant_added_internal (?, a_constant))
 		end
 
-	constant_added_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT) is
+	constant_added_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT)
 			-- Update `input_field' to reflect the addition of `a_constant'.
 		require
 			input_field_not_void: input_field /= Void
@@ -307,13 +307,13 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			end
 		end
 
-	constant_changed (a_constant: GB_CONSTANT) is
+	constant_changed (a_constant: GB_CONSTANT)
 			--  Update `Current' to reflect modification of constant `a_constant'.
 		do
 			for_all_input_fields (agent constant_changed_internal (?, a_constant))
 		end
 
-	constant_changed_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT) is
+	constant_changed_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT)
 			-- Update `input_field' to reflect the modification of `a_constant'.
 		require
 			input_field_not_void: input_field /= Void
@@ -324,7 +324,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			end
 		end
 
-	constant_removed (a_constant: GB_CONSTANT) is
+	constant_removed (a_constant: GB_CONSTANT)
 			-- Update `Current' to reflect removal of constant `a_constant'.
 		require
 			constant_not_void: a_constant /= Void
@@ -332,7 +332,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 			for_all_input_fields (agent constant_removed_internal (?, a_constant))
 		end
 
-	constant_removed_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT) is
+	constant_removed_internal (input_field: GB_INPUT_FIELD; a_constant: GB_CONSTANT)
 			-- Update `input_field' to reflect the removal of `a_constant'.
 		require
 			input_field_not_void: input_field /= Void
@@ -345,7 +345,7 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 
 feature {GB_OBJECT_EDITORS} -- Implementation
 
-	name_in_use (a_name: STRING): BOOLEAN is
+	name_in_use (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid name for `object'? Not if it is already
 			-- in use.
 		require
@@ -355,7 +355,7 @@ feature {GB_OBJECT_EDITORS} -- Implementation
 				(build_reserved_words.has (name_field.text.as_lower)) or components.constants.all_constants.item (a_name) /= Void
 		end
 
-	end_name_change_on_object is
+	end_name_change_on_object
 			-- Update the object to reflect the edited name.
 			-- If the edited name is not valid, then we restore the name of `object'
 			-- to the previous name before the editing began.
@@ -389,7 +389,7 @@ feature {GB_OBJECT_EDITORS} -- Implementation
 
 feature {GB_OBJECT_EDITOR} -- Implementation
 
-	update_event_selection_button_text is
+	update_event_selection_button_text
 			-- Change text displayed on `event_selection_button',
 			-- dependent on number of items in events from `object'.
 		do
@@ -402,14 +402,14 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	viewport_resized is
+	viewport_resized
 			-- Adjust contents of `viewport' in response to viewport
 			-- resizing
 		do
 			viewport.set_item_width (viewport.width)
 		end
 
-	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
+	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN
 		do
 				-- If the object is not void, it means that
 				-- we are not currently picking a type.
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_title_from_name is
+	set_title_from_name
 			-- Update title of top level window to reflect the
 			-- name of the object in `Current'.
 		do
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	construct_editor is
+	construct_editor
 			-- Build `Current'. Build all attribute editors and populate,
 			-- to represent `object'.
 		require
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	flatten_object (deep_flatten: BOOLEAN) is
+	flatten_object (deep_flatten: BOOLEAN)
 			-- Flatten `object'.
 		require
 			object_not_void: object /= Void
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	update_client_setting is
+	update_client_setting
 			-- Update client setting of `object'.
 		require
 			object_is_top_level: object.is_top_level_object
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	undo_client_change is
+	undo_client_change
 			-- Restore `client_check_button' to original state before it was
 			-- selected by a user.
 		do
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	internal_update_client_setting is
+	internal_update_client_setting
 			-- Actually perform the client setting of `object' in response
 			-- to a change.
 		require
@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 			components.system_status.mark_as_dirty
 		end
 
-	show_event_dialog is
+	show_event_dialog
 			-- Display the event dialog
 		require
 			object_not_void: object /= Void
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation
 			components.object_editors.update_editors_by_calling_feature (object.object, Current, agent {GB_OBJECT_EDITOR}.update_event_selection_button_text)
 		end
 
-	update_visual_representations_on_name_change is
+	update_visual_representations_on_name_change
 			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
 		local
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_editors_for_name_change is
+	update_editors_for_name_change
 			-- Call `update_editors_by_calling_feature' with object.object,
 			-- `Current', and the procedure update_name_field as arguments.
 		do
@@ -713,7 +713,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	start_name_change_on_object is
+	start_name_change_on_object
 			-- Inform object that a name change has begun.
 		require
 			object_not_void: object /= Void
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation
 			object.set_edited_name (object.name)
 		end
 
-	update_name_when_return_pressed is
+	update_name_when_return_pressed
 			-- Return has been pressed in `name_field'. We must now either accept the new
 			-- name for `object' if it is valid and unique. If it is not, then we notify the user
 			-- with a warning dialog, telling them that the name already exists, and giving the option
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			name_field.focus_out_actions.resume
 		end
 
-	restore_name_field (a_text: STRING; caret_position: INTEGER) is
+	restore_name_field (a_text: STRING; caret_position: INTEGER)
 			-- Assign `a_text' to text of `name_field', set the caret position
 			-- to `caret_position' and give `name_field' the focus.
 		require
@@ -775,7 +775,7 @@ feature {NONE} -- Implementation
 			focus_set: name_field.has_focus
 		end
 
-	update_scroll_bar is
+	update_scroll_bar
 			-- Show/hide the scroll bar as appropriate. Modify the
 			-- range of the scroll bar as needed.
 		local
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_scroll_bar_again (a_timeout: EV_TIMEOUT) is
+	show_scroll_bar_again (a_timeout: EV_TIMEOUT)
 			-- Call show on `scroll_bar' and destroy `a_timeout'.
 			-- This is needed, as there is a Vision2 resizing bug on Windows
 			-- which stops teh scroll bar being displayed when it is first shown, as you
@@ -849,7 +849,7 @@ feature {NONE} -- Implementation
 			a_timeout.destroy
 		end
 
-	scroll_bar_changed (value: INTEGER) is
+	scroll_bar_changed (value: INTEGER)
 			-- Set the offset of the controls to `Value'
 			-- within the viewport.
 		do
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 	client_check_button: EV_CHECK_BUTTON
 		-- Enables a user to specify if `Current' uses EiffelVision as a client or not.
 
-	for_all_input_fields (action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]]) is
+	for_all_input_fields (action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]])
 			-- For all input fields within `Current', call `action'.
 		require
 			action_not_void: action /= Void
@@ -891,7 +891,7 @@ feature {NONE} -- Implementation
 			for_all_input_fields_internal (item_parent, action)
 		end
 
-	for_all_input_fields_internal (a_parent: EV_WIDGET_LIST; action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]]) is
+	for_all_input_fields_internal (a_parent: EV_WIDGET_LIST; action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]])
 			-- For all input fields within `a_parent', call `action'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	update_name_field is
+	update_name_field
 			-- Update `name_field' to reflect `object.name'.
 			-- Used when a name changes from another
 			-- object editor. All must be updated.
@@ -938,7 +938,7 @@ feature -- Implementation
 			name_field.change_actions.resume
 		end
 
-	update_merged_containers is
+	update_merged_containers
 			-- Update object editors to reflect merged
 			-- containers having changed.
 		local
@@ -952,7 +952,7 @@ feature -- Implementation
 
 feature {NONE} -- Debug information
 
-	show_id_dialog is
+	show_id_dialog
 			-- Show a dialog permitting enty of a particular object id to be viewed.
 		require
 			is_in_debug_mode: components.system_status.is_in_debug_mode
@@ -986,7 +986,7 @@ feature {NONE} -- Debug information
 			dialog.show_modal_to_window (parent_window (Current))
 		end
 
-	highlight_object (text_field: EV_TEXT_FIELD) is
+	highlight_object (text_field: EV_TEXT_FIELD)
 			-- Ensure `an_object' is highlighted object in `Current'.
 			-- Only if `an_object' is contained in the structure of `Current', and
 			-- is not a titled window.
@@ -1003,7 +1003,7 @@ feature {NONE} -- Debug information
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

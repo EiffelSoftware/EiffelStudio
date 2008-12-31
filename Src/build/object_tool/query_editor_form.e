@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Form containing a set of query properties used to generate %
 				% the corresponding object editor."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Creation
 
-	make (a_name: STRING; a_parent: EV_CONTAINER; test_preconditions: BOOLEAN) is
+	make (a_name: STRING; a_parent: EV_CONTAINER; test_preconditions: BOOLEAN)
 			-- Create current form.
 		do
 			default_create
@@ -36,19 +36,19 @@ feature -- Creation
 
 feature {NONE} -- GUI
 
-	create_interface (test_preconditions: BOOLEAN) is
+	create_interface (test_preconditions: BOOLEAN)
 			-- Create the corresponding interface
 		deferred
 		end
 
-	update_interface is
+	update_interface
 			-- Update interface after setting `query'.
 		deferred
 		end
 
 feature -- Access
 
-	set_query (a_query: APPLICATION_QUERY) is
+	set_query (a_query: APPLICATION_QUERY)
 			-- Set `query' to `a_query'.
 		require
 			query_not_void: a_query /= Void
@@ -64,47 +64,47 @@ feature -- Attributes
 
 feature -- Command generation
 		
-	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING is
+	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
 		deferred
 		end
 		
-	generate_interface_elements: STRING is
+	generate_interface_elements: STRING
 		deferred
 		end
 		
-	build_interface (parent_name: STRING): STRING is
+	build_interface (parent_name: STRING): STRING
 		deferred
 		end
 
 feature
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN
 			-- Is the type of the query is real?
 		do
 			Result := query.query_type.is_equal ("REAL")
 		end
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN
 			-- Is the type of the query is boolean?
 		do
 			Result := query.query_type.is_equal ("BOOLEAN")
 		end
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN
 			-- Is the type of the query is integer?
 		do
 			Result := query.query_type.is_equal ("INTEGER")
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Is the type of the query is double?
 		do
 			Result := query.query_type.is_equal ("DOUBLE")
 		end
 
-	extension_to_add: STRING is
+	extension_to_add: STRING
 			-- Extension to add to match types.
 		do
 			create Result.make (0)
@@ -119,7 +119,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

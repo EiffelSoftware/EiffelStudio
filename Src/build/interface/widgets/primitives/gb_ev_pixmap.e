@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate objects of type EV_PIXMAP"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 		
 feature {GB_XML_STORE} -- Output
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if first.pixmap_path /= Void or uses_constant (pixmap_path_string) then
@@ -49,7 +49,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		do
 				-- We set up some deferred building, as
@@ -59,7 +59,7 @@ feature {GB_XML_STORE} -- Output
 			deferred_builder.defer_building (Current, element)
 		end
 
-	modify_from_xml_after_build (element: XM_ELEMENT) is
+	modify_from_xml_after_build (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'
 			-- post standard building of system.
 		local
@@ -101,7 +101,7 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -121,7 +121,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

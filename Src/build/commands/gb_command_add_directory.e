@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent commands to add directories to a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_directory: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make (directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_directory: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	create_new_directory is
+	create_new_directory
 			-- Actually create directory
 		local
 			temp_file_name: FILE_NAME
@@ -131,7 +131,7 @@ feature -- Basic Operation
 			end
 		end
 
-	set_directory_added_succesfully is
+	set_directory_added_succesfully
 			-- Assign `True' to `directory_added_succesfully'
 		do
 			directory_added_succesfully := True
@@ -143,7 +143,7 @@ feature -- Basic Operation
 	test_directory: DIRECTORY
 		-- Temporary directory created and used to check the current file name.
 
-	execute is
+	execute
 			-- Execute `Current'.
 		require else
 			directory_added_succesfully: directory_added_succesfully
@@ -175,7 +175,7 @@ feature -- Basic Operation
 			executed_once := True
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -205,13 +205,13 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		do
 			Result := "directory %"" + directory_name + "%" added to project."
 		end
 
-	supress_warnings is
+	supress_warnings
 			-- Ensure no warning is displayed when adding a directory
 			-- that already exists.
 		do
@@ -239,7 +239,7 @@ invariant
 	parent_directory_path_not_void: parent_directory_path /= Void
 	directory_name_not_void: directory_name /= Void and not directory_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

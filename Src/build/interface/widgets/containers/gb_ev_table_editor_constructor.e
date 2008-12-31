@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_TABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,13 +22,13 @@ feature -- Access
 	ev_type: EV_TABLE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is
+	type: STRING
 			-- String representation of object_type modifyable by `Current'.
 		once
 			Result := Ev_table_string
 		end
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -66,7 +66,7 @@ feature -- Access
 			update_attribute_editor
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -89,7 +89,7 @@ feature -- Access
 			homogeneous_button.select_actions.resume
 		end
 		
-	table_items (table: EV_TABLE): ARRAYED_LIST [EV_WIDGET] is
+	table_items (table: EV_TABLE): ARRAYED_LIST [EV_WIDGET]
 			-- `Result' is all items in `table'. Ordered from
 			-- top left, going down, before moving right to the
 			-- next column.
@@ -117,7 +117,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 
 feature {GB_TABLE_POSITIONER} -- Implementation
 		
-	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER)
 			-- Move `v' to `a_column', `a_row' and resize to `columns', `rows'.
 		require
 			widget_not_void: v /= Void
@@ -158,7 +158,7 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 			end
 		end
 		
-	actual_set_item_position_and_span (an_object: GB_OBJECT; index, a_column, a_row, columns, rows: INTEGER) is
+	actual_set_item_position_and_span (an_object: GB_OBJECT; index, a_column, a_row, columns, rows: INTEGER)
 			-- Set `index' items within representations of `an_object' to new position.
 		require
 			object_not_void: an_object /= Void
@@ -184,7 +184,7 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 			end
 		end
 
-	show_layout_window is
+	show_layout_window
 			-- Display window allowing placement of widgets.
 		do
 			if layout_window = Void then
@@ -193,35 +193,35 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 			layout_window.show_modal_to_window (parent_window (parent_editor))
 		end
 
-	set_rows (row_value: INTEGER) is
+	set_rows (row_value: INTEGER)
 			-- Resize table to accomodate `row_value' rows.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (first.columns, row_value))
 			update_editors
 		end
 		
-	set_columns (column_value: INTEGER) is
+	set_columns (column_value: INTEGER)
 			-- Resize table to accomodate `column_value' columns.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
 			update_editors
 		end
 
-	set_border_width (border_width: INTEGER) is
+	set_border_width (border_width: INTEGER)
 			-- Assign `border_width' to border width of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_border_width (border_width))
 			update_editors
 		end
 		
-	set_row_spacing (row_spacing: INTEGER) is
+	set_row_spacing (row_spacing: INTEGER)
 			-- Assign `row_spacing' to row spacing of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_row_spacing (row_spacing))
 			update_editors
 		end
 		
-	set_column_spacing (column_spacing: INTEGER) is
+	set_column_spacing (column_spacing: INTEGER)
 			-- Assign `column_spacing' to column spacing of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_column_spacing (column_spacing))
@@ -229,25 +229,25 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 		end
 		
 		
-	valid_row_value (new_value: INTEGER): BOOLEAN is
+	valid_row_value (new_value: INTEGER): BOOLEAN
 			-- Is `new_value' a valid row size for table.
 		do
 			Result := first.rows_resizable_to (new_value)
 		end
 		
-	valid_column_value (new_value: INTEGER): BOOLEAN is
+	valid_column_value (new_value: INTEGER): BOOLEAN
 			-- Is `new_value' a valid column size for table.
 		do
 			Result := first.columns_resizable_to (new_value)
 		end
 		
-	valid_spacing (new_value: INTEGER): BOOLEAN is
+	valid_spacing (new_value: INTEGER): BOOLEAN
 			-- Is `new_value' a valid spacing value?
 		do
 			Result := new_value > 0
 		end
 		
-	toggle_homogeneous is
+	toggle_homogeneous
 			-- NOT `is_homogeneous' state.
 		do
 			if first.is_homogeneous then
@@ -268,25 +268,25 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 	layout_button: EV_TOOL_BAR_BUTTON
 		-- Provides access to the layout window.
 		
-	Column_positions_string: STRING is "Column_positions"
+	Column_positions_string: STRING = "Column_positions"
 	
-	Row_positions_string: STRING is "Row_positions"
+	Row_positions_string: STRING = "Row_positions"
 	
-	Column_spans_string: STRING is "Column_spans"
+	Column_spans_string: STRING = "Column_spans"
 	
-	Row_spans_string: STRING is "Row_spans"
+	Row_spans_string: STRING = "Row_spans"
 	
-	rows_string: STRING is "Rows"
+	rows_string: STRING = "Rows"
 	
-	columns_string: STRING is "Columns"
+	columns_string: STRING = "Columns"
 	
-	row_spacing_string: STRING is "Row_spacing"
+	row_spacing_string: STRING = "Row_spacing"
 	
-	column_spacing_string: STRING is "Column_spacing"
+	column_spacing_string: STRING = "Column_spacing"
 	
-	border_width_string: STRING is "Border_width";
+	border_width_string: STRING = "Border_width";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

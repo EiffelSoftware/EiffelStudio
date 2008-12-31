@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent events fired by EiffelBuild. If you are using EiffelBuild in
 		client mode, you will need to respond to these events in order to update
@@ -21,7 +21,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize all action sequences and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -74,7 +74,7 @@ feature -- Access
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pixmaps used in interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Pngs
 
-	Help_about_pixmap: EV_PIXMAP is
+	Help_about_pixmap: EV_PIXMAP
 			-- Full path name and file title of PNG used in the help about window.
 		local
 			file_name: FILE_NAME
@@ -33,33 +33,33 @@ feature -- Pngs
 			Result.set_with_named_file (file_name)
 		end
 
-	Icon_object_symbol: EV_PIXMAP is
+	Icon_object_symbol: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("icon_object_symbol")
 		end
 
-	Icon_save: ARRAY [EV_PIXMAP] is
+	Icon_save: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("save")
 		end
 
-	Icon_undo: ARRAY [EV_PIXMAP] is
+	Icon_undo: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("undo")
 		end
 
-	Icon_cmd_history: ARRAY [EV_PIXMAP] is
+	Icon_cmd_history: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("cmd_history")
 		end
 
-	Icon_cmd_history_title: ARRAY [EV_PIXMAP] is
+	Icon_cmd_history_title: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
@@ -67,185 +67,185 @@ feature -- Pngs
 		end
 
 
-	Icon_redo: ARRAY [EV_PIXMAP] is
+	Icon_redo: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("redo")
 		end
 
-	Icon_new_editor: ARRAY [EV_PIXMAP] is
+	Icon_new_editor: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("new_editor")
 		end
 
-	Icon_open_file: ARRAY [EV_PIXMAP] is
+	Icon_open_file: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("open_file")
 		end
 
-	Icon_new_class: ARRAY [EV_PIXMAP] is
+	Icon_new_class: ARRAY [EV_PIXMAP]
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("new_class")
 		end
 
-	Icon_delete_small: ARRAY [EV_PIXMAP] is
+	Icon_delete_small: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("delete_small")
 		end
 
-	Icon_system_window: EV_PIXMAP is
+	Icon_system_window: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("icon_system_color")
 		end
 
-	Icon_component_display_view: EV_PIXMAP is
+	Icon_component_display_view: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("icon_component_display_view_color")
 		end
 
-	Icon_component_build_view: EV_PIXMAP is
+	Icon_component_build_view: EV_PIXMAP
 		once
 			Result := pixmap_file_content ("icon_component_build_view_color")
 		end
 
-	Icon_display_window: ARRAY [EV_PIXMAP] is
+	Icon_display_window: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("display_window")
 		end
 
-	Icon_builder_window: ARRAY [EV_PIXMAP] is
+	Icon_builder_window: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("builder_window")
 		end
 
-	Icon_object_editor: ARRAY [EV_PIXMAP] is
+	Icon_object_editor: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("object_editor")
 		end
 
-	Icon_component_viewer: ARRAY [EV_PIXMAP] is
+	Icon_component_viewer: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("component_viewer")
 		end
 
-	Icon_component_window: ARRAY [EV_PIXMAP] is
+	Icon_component_window: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("component_window")
 		end
 
-	Icon_object_window: ARRAY [EV_PIXMAP] is
+	Icon_object_window: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("object_window")
 		end
 
-	Icon_code_generation: ARRAY [EV_PIXMAP] is
+	Icon_code_generation: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("code_generation")
 		end
 
-	Icon_build_window: ARRAY [EV_PIXMAP] is
+	Icon_build_window: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("build_window")
 		end
 
-	Icon_format_onces: ARRAY [EV_PIXMAP] is
+	Icon_format_onces: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("format_onces")
 		end
 
-	Icon_minimize: ARRAY [EV_PIXMAP] is
+	Icon_minimize: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("minimize")
 		end
 
-	Icon_maximize: ARRAY [EV_PIXMAP] is
+	Icon_maximize: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("maximize")
 		end
 
-	Icon_restore: ARRAY [EV_PIXMAP] is
+	Icon_restore: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("restore")
 		end
 
-	Icon_close: ARRAY [EV_PIXMAP] is
+	Icon_close: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("close")
 		end
 
-	Icon_directory: ARRAY [EV_PIXMAP] is
+	Icon_directory: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("cluster_symbol")
 		end
 
-	Icon_string: ARRAY [EV_PIXMAP] is
+	Icon_string: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("string_small")
 		end
 
-	Icon_integer: ARRAY [EV_PIXMAP] is
+	Icon_integer: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("integer_small")
 		end
 
-	Icon_titled_window_main: ARRAY [EV_PIXMAP] is
+	Icon_titled_window_main: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("titled_window_main")
 		end
 
-	Icon_titled_window_main_small: ARRAY [EV_PIXMAP] is
+	Icon_titled_window_main_small: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("titled_window_main_small")
 		end
 
-	Icon_missing_pixmap_small: ARRAY [EV_PIXMAP] is
+	Icon_missing_pixmap_small: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("missing_pixmap_small")
 		end
 
-	Icon_locked: ARRAY [EV_PIXMAP] is
+	Icon_locked: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("locked")
 		end
 
-	Icon_paste: ARRAY [EV_PIXMAP] is
+	Icon_paste: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("past")
 		end
 
-	Icon_cut: ARRAY [EV_PIXMAP] is
+	Icon_cut: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("cut")
 		end
 
-	Icon_copy: ARRAY [EV_PIXMAP] is
+	Icon_copy: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("copy")
 		end
 
-	Icon_clipboard: ARRAY [EV_PIXMAP] is
+	Icon_clipboard: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("clipboard")
 		end
 
-	Icon_mini_back: ARRAY [EV_PIXMAP] is
+	Icon_mini_back: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("mini_back")
 		end
 
-	Icon_mini_forth: ARRAY [EV_PIXMAP] is
+	Icon_mini_forth: ARRAY [EV_PIXMAP]
 		once
 			Result := build_classic_pixmap ("mini_forth")
 		end
 
-	pixmap_by_name (a_name: STRING): EV_PIXMAP is
+	pixmap_by_name (a_name: STRING): EV_PIXMAP
 			-- `Result' is a pixmap loaded from file matching
 			-- `a_name' in Build bitmaps location.
 			-- If platform is windows then add ".ico" to name
@@ -287,7 +287,7 @@ feature -- Pngs
 			result_not_void: Result /= Void
 		end
 
-	png_location: STRING is
+	png_location: STRING
 			-- `Result' is directory containing png files.
 		once
 			Result := Bitmap_path
@@ -297,7 +297,7 @@ feature -- Pngs
 
 feature {NONE} -- Update
 
-	pixmap_file_content (fn: STRING): EV_PIXMAP is
+	pixmap_file_content (fn: STRING): EV_PIXMAP
 		local
 			file_name: FILE_NAME
 			file: RAW_FILE
@@ -316,24 +316,24 @@ feature {NONE} -- Update
 			end
 		end
 
-	pixmaps_by_name: HASH_TABLE [EV_PIXMAP, STRING] is
+	pixmaps_by_name: HASH_TABLE [EV_PIXMAP, STRING]
 			-- All pixmaps returned from `pixmap_by_name'.
 			-- Key is name used as argument.
 		once
 			create Result.make (50)
 		end
 
-	Pixmap_suffix: STRING is "png"
+	Pixmap_suffix: STRING = "png"
 			-- Suffix for pixmaps.
 
-	Bitmap_path: DIRECTORY_NAME is
+	Bitmap_path: DIRECTORY_NAME
 			-- Path for Bmp/Xpm for Windows/Unix.
 		once
 			create Result.make_from_string (eiffel_layout.bitmaps_path)
 			Result.extend (Pixmap_suffix)
 		end
 
-	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
+	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP]
 			-- Build an array of 2 pixmaps. The first pixmap is the
 			-- colored pixmap, the second is the corresponding gray pixmap.
 			--
@@ -346,7 +346,7 @@ feature {NONE} -- Update
 			result_valid: Result /= Void and then Result.count = 1
 		end
 
-	build_text_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
+	build_text_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP]
 			-- Build an array of 4 pixmaps. The first pixmap is the
 			-- colored pixmap, the second is the corresponding gray pixmap.
 			-- The third is a colored pixmap with some explaining text and
@@ -362,7 +362,7 @@ feature {NONE} -- Update
 			result_valid: Result /= Void and then Result.count = 2
 		end
 
-	pixmap_file_name (file: STRING): FILE_NAME is
+	pixmap_file_name (file: STRING): FILE_NAME
 			-- `Result' is full path to `file'.
 			-- Dependent on platform, and type of
 			-- execution (Wizard, normal.)
@@ -378,13 +378,13 @@ feature {NONE} -- Update
 
 feature {NONE} -- Implementation
 
-	all_missing_files: HASH_TABLE [STRING, STRING] is
+	all_missing_files: HASH_TABLE [STRING, STRING]
 			-- All pixmaps that have been found to be missing so far.
 		once
 			create Result.make (10)
 		end
 
-	pixmap_warning_dialog: EV_WARNING_DIALOG is
+	pixmap_warning_dialog: EV_WARNING_DIALOG
 			-- Dialog to be displayed, when a pixmap is
 			-- missing from the installation.
 		once
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			Result.show
 		end
 
-	update_warning_dialog_text (new_text: STRING) is
+	update_warning_dialog_text (new_text: STRING)
 			-- Add `new_text' to text of warning dialog, one
 			-- line before the end.
 		require
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

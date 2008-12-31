@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog for output while generating code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_default (a_components: GB_INTERNAL_COMPONENTS) is
+	make_default (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create current in default state and assign `a_components'
 			-- to `components'.
 		require
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	make_for_single_generation (an_object_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_for_single_generation (an_object_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' for generation of the single window named `an_object_name'.
 			-- Assign `a_components' to `components'.
 		require
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 
 feature {GB_GENERATION_COMMAND} -- Basic operation
 
-	show_completion is
+	show_completion
 			-- Display to user that completion has finished.
 		do
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
@@ -108,7 +108,7 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			destroy
 		end
 
-	start_generation is
+	start_generation
 			-- Begin generation and set generation
 			-- output progress bar to `progress_bar'.
 		local
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	object_name: STRING;
 		-- Name of single object to generate, or None if Void.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

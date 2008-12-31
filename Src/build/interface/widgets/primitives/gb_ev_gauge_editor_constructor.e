@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_GAUGE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_GAUGE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_GAUGE"
+	type: STRING = "EV_GAUGE"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -48,7 +48,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_lower (?), lower_string)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			lower_entry.update_constant_display (first.value_range.lower.out)
 		end
 		
-	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
@@ -92,10 +92,10 @@ feature {NONE} -- Implementation
 			widget.pointer_button_release_actions.force_extend (agent start_timer)
 		end
 		
-	has_user_events: BOOLEAN is True
+	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
 		
-	start_timer is
+	start_timer
 			-- Start a timer, which is used as a delay between an event begin
 			-- received by `user_event_widget' and `check_state'.
 		local
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			timer.actions.extend (agent timer.destroy)
 		end
 			
-	check_state is
+	check_state
 			-- Update the display window representation of
 			-- the gauge, to reflect change from user.
 		do
@@ -116,40 +116,40 @@ feature {NONE} -- Implementation
 		
 	user_event_widget: like ev_type
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Update property `value' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_value (a_value))
 			update_editors
 		end
 		
-	valid_value (a_value: INTEGER): BOOLEAN is
+	valid_value (a_value: INTEGER): BOOLEAN
 			-- is `a_value' a valid value for items in `objects'?
 		do
 			Result := (a_value >= 0 and first.value_range.has (a_value))
 		end
 
-	set_step (a_step: INTEGER)is
+	set_step (a_step: INTEGER)
 			-- Set step on all items in `objects' to `a_step'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_step (a_step))
 			update_editors
 		end
 		
-	positive_value (a_value: INTEGER): BOOLEAN is
+	positive_value (a_value: INTEGER): BOOLEAN
 			-- is `a_value' greater than 0?
 		do
 			Result := a_value > 0
 		end
 		
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Set leap on all items in `objects' to `a_leap'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_leap (a_leap))
 			update_editors
 		end
 		
-	set_upper (integer: INTEGER) is
+	set_upper (integer: INTEGER)
 			-- Update property `upper' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	adapt_value_range (an_object: GB_OBJECT; value_range: INTEGER_INTERVAL) is
+	adapt_value_range (an_object: GB_OBJECT; value_range: INTEGER_INTERVAL)
 			-- Adapt value range of `an_object' to `value_range'.
 		require
 			object_not_void: an_object /= Void
@@ -185,13 +185,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	valid_upper (upper: INTEGER): BOOLEAN is
+	valid_upper (upper: INTEGER): BOOLEAN
 			-- Is `upper' a valid upper?
 		do
 			Result := upper >= lower_entry.text.to_integer		
 		end
 		
-	set_lower (integer: INTEGER) is
+	set_lower (integer: INTEGER)
 			-- Update property `lower' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -211,22 +211,22 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	valid_lower (lower: INTEGER): BOOLEAN is
+	valid_lower (lower: INTEGER): BOOLEAN
 			-- Is `lower' a valid upper?
 		do
 			Result := lower <= upper_entry.text.to_integer
 		end
 
-	Value_string: STRING is "Value"
-	Step_string: STRING is "Step"
-	Leap_string: STRING is "Leap"
-	Upper_string: STRING is "Upper"
-	Lower_string: STRING is "Lower"
+	Value_string: STRING = "Value"
+	Step_string: STRING = "Step"
+	Leap_string: STRING = "Leap"
+	Upper_string: STRING = "Upper"
+	Lower_string: STRING = "Lower"
 	
 	upper_entry, lower_entry, value_entry, step_entry, leap_entry: GB_INTEGER_INPUT_FIELD;
 		-- Input widgets for `Upper', `Lower' and `Value'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

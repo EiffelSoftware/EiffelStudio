@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_SPLIT_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_SPLIT_AREA
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_SPLIT_AREA"
+	type: STRING = "EV_SPLIT_AREA"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -48,7 +48,7 @@ feature -- Access
 			update_attribute_editor
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		local
@@ -71,13 +71,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 		end
 
-	update_first_expanded is
+	update_first_expanded
 			-- Update expanded state of first item.
 		do
 			actual_update_first_expanded (object)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	update_second_expanded is
+	update_second_expanded
 			-- Update expanded state of second item.
 		do
 			actual_update_second_expanded (object)
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	actual_update_first_expanded (an_object: GB_OBJECT) is
+	actual_update_first_expanded (an_object: GB_OBJECT)
 			-- Update expanded state of first item for `an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actual_update_second_expanded (an_object: GB_OBJECT) is
+	actual_update_second_expanded (an_object: GB_OBJECT)
 			-- Update expanded state of second item for `an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -142,10 +142,10 @@ feature {NONE} -- Implementation
 	first_expanded: EV_CHECK_BUTTON
 	second_expanded: EV_CHECK_BUTTON
 
-	is_item_expanded_string: STRING is "Is_item_expanded";
+	is_item_expanded_string: STRING = "Is_item_expanded";
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

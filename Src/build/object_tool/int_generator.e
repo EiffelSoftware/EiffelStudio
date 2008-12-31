@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INT_GENERATOR 
@@ -10,25 +10,25 @@ feature
 	value: INTEGER;
 			-- Generated integer value
 
-	next is
+	next
 			-- Set `value' to the next unique integer.
 		do
 			value := value + 1
 		end;
 
-	reset is
+	reset
 			-- Set `value' to its default value.
 		do
 			value := 0
 		end;
 
-	set (i: INTEGER) is
+	set (i: INTEGER)
 			-- Set `value' to `i'.
 		do
 			value := i
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that handle the removal and restoration of files from the disk."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,12 +24,12 @@ inherit
 
 feature -- Access
 
-	components: GB_INTERNAL_COMPONENTS is
+	components: GB_INTERNAL_COMPONENTS
 			-- Access to a set of internal components for an EiffelBuild instance.
 		deferred
 		end
 
-	delete_files is
+	delete_files
 			-- Delete files associated with `orignal_id', and store contents.
 		local
 			full_file_name, file_location: FILE_NAME
@@ -70,7 +70,7 @@ feature -- Access
 			delete_file (create {DIRECTORY}.make (file_location), object.name + ".e")
 		end
 
-	restore_files is
+	restore_files
 			-- Restore files deleted by last call to `delete_files'.
 		local
 			file_name: FILE_NAME
@@ -112,17 +112,17 @@ feature {NONE} -- Implementation
 	implementation_file_contents: STRING
 		-- Contents of IMP file after deletion
 
-	original_id: INTEGER is
+	original_id: INTEGER
 			-- Original id of object to be removed/restored.
 		deferred
 		end
 
-	parent_directory: ARRAYED_LIST [STRING] is
+	parent_directory: ARRAYED_LIST [STRING]
 			-- Parent directory of object associated with `original_id' before removal.
 		deferred
 		end
 
-	generated_path: FILE_NAME is
+	generated_path: FILE_NAME
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	store_file_contents (file_name: FILE_NAME) is
+	store_file_contents (file_name: FILE_NAME)
 			-- Store contents of file `file_name' as text in `last_stored_string'.
 		require
 			file_name_not_void: file_name /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	last_stored_string: STRING;
 		-- Last string stored as  result of a call to `store_file_contents'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

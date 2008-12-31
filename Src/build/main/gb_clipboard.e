@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that handle clipboard manipulation in EiffelBuild"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Access
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- `Result' is a new object representation of the contents.
 		local
 			a_list: ARRAYED_LIST [GB_OBJECT]
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	object_stone: GB_CLIPBOARD_OBJECT_STONE is
+	object_stone: GB_CLIPBOARD_OBJECT_STONE
 				-- Execute `Current'.
 			local
 				contents, temp_element: XM_ELEMENT
@@ -157,7 +157,7 @@ feature -- Access
 	object_type: STRING
 			-- Type of `object' or Void if `is_empty'.
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is clipboard empty?
 		do
 			Result := contents_cell.item = Void
@@ -168,7 +168,7 @@ feature -- Access
 
 feature {GB_CLIPBOARD_COMMAND} -- Implementation
 
-	internal_object: GB_OBJECT is
+	internal_object: GB_OBJECT
 			-- `Result' is a new object representing clipboard contents.
 			-- This is a minimal representation and does not have it's id's updated, referers connected etc etc.
 			-- Used when you simply need a copy of the clipboard's contents for viewing.
@@ -195,7 +195,7 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 
 feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB_PASTE_OBJECT_COMMAND} -- Implementation
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign a copy of `an_object' to `Current'.
 		require
 			an_object_not_void: an_object /= Void
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 		object_stone_dirty: BOOLEAN
 			-- Should `object_stone_internal' be recomputed?
 
-		history_changed is
+		history_changed
 				-- Index of history has changed, so flag `object_stone_internal'
 				-- for recomputation. If the history position changes, it is possible
 				-- that the structure of the object references kept within the clipboard have changed.
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 invariant
 --	content_change_actions_not_void: content_change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

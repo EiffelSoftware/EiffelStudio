@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_TITLED_WINDOW_ACTION_SEQUENCES."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 		
-	names: ARRAYED_LIST [STRING] is
+	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -25,7 +25,7 @@ feature -- Access
 		end
 		
 	
-	types: ARRAYED_LIST [STRING] is
+	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -34,7 +34,7 @@ feature -- Access
 			Result.extend ("EV_NOTIFY_ACTION_SEQUENCE")
 		end
 	
-	comments: ARRAYED_LIST [STRING] is
+	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -43,14 +43,14 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when window leaves `maximized' or `minimized' state.")
 		end
 		
-	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
 			-- action sequence and all arguments in `string_handler'. If no `adding' then `remove_only_added' `action_sequence'.
 		do
 			--| FIXME implement
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

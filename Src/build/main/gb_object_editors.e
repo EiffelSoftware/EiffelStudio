@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to a GB_OBJECT_EDITOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -55,14 +55,14 @@ feature -- Implementation
 			-- These are floating, and there is no limit on their number.
 			-- These are considered to be "floating"
 
-	all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR] is
+	all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			-- All object editors in system, floating and docked.
 		do
 			Result := floating_object_editors.twin
 			Result.force (docked_object_editor)
 		end
 
-	update_editors_for_property_change (vision2_object: EV_ANY; property_type: STRING; calling_object_editor: GB_OBJECT_EDITOR) is
+	update_editors_for_property_change (vision2_object: EV_ANY; property_type: STRING; calling_object_editor: GB_OBJECT_EDITOR)
 			-- For all editors referencing `vision2_object', update `property_type' attribute_editor.
 			-- `property_type' is "GB_EV_SENSITIVE", "GB_EV_BUTTON" etc etc.
 			-- Note that `vision2_object' is the first of GB_EV_ANY `Objects' which should correspond
@@ -99,7 +99,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
+	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE])
 			-- For all editors referencing `vision2_object', update by calling `p' on the editor.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
@@ -125,7 +125,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
+	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE])
 			-- For all editors, update by calling `p' on the editor.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
@@ -151,7 +151,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	rebuild_associated_editors (object_id: INTEGER) is
+	rebuild_associated_editors (object_id: INTEGER)
 			-- For all editors referencing an object with id `object_id', rebuild any associated object editors.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
@@ -189,7 +189,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	destroy_floating_editors is
+	destroy_floating_editors
 			-- For evey item in `floating_object_editors',
 			-- remove and destroy.
 		local
@@ -212,7 +212,7 @@ feature -- Implementation
 			no_floating_editors: floating_object_editors.is_empty
 		end
 
-	flush_all is
+	flush_all
 			-- For every item in `floating_object_editors', flush their
 			-- contents so that any objects that have been deleted are
 			-- no longer targeted.
@@ -238,7 +238,7 @@ feature -- Implementation
 			end
 		end
 
-	force_name_change_completion_on_all_editors is
+	force_name_change_completion_on_all_editors
 			-- Force all object editors that are editing an object
 			-- to update their object to use either the newly enterd name
 			-- if valid, or to revert to their old name if not valid.
@@ -263,7 +263,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	new_object_editor_empty is
+	new_object_editor_empty
 			-- Generate a new empty object editor.
 		local
 			window: EV_TITLED_WINDOW
@@ -278,7 +278,7 @@ feature -- Implementation
 			window.show
 		end
 
-	new_object_editor (object: GB_OBJECT) is
+	new_object_editor (object: GB_OBJECT)
 			-- Generate a new object editor containing `object'.
 		local
 			object_editor_window: GB_FLOATING_OBJECT_EDITOR_WINDOW
@@ -315,7 +315,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	remove_floating_object_editor (a_window: EV_WINDOW) is
+	remove_floating_object_editor (a_window: EV_WINDOW)
 			-- Remove object editor contained in `a_window'
 			-- from `floating_object_editors'.
 		require
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			-- Object editor is not in floating object editors.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

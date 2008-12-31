@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_COLORIZABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,10 +27,10 @@ feature -- Access
 	ev_type: EV_COLORIZABLE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_COLORIZABLE"
+	type: STRING = "EV_COLORIZABLE"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -86,7 +86,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -96,7 +96,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	accept_foreground_color_stone (stone: GB_COLOR_STONE) is
+	accept_foreground_color_stone (stone: GB_COLOR_STONE)
 			-- Set foreground color, based on settings of `stone'.
 		require
 			stone_not_void: stone /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			actually_set_foreground_color (stone.color)
 		end
 		
-	accept_background_color_stone (stone: GB_COLOR_STONE) is
+	accept_background_color_stone (stone: GB_COLOR_STONE)
 			-- Set background color, based on settings of `stone'.
 		require
 			stone_not_void: stone /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			actually_set_background_color (stone.color)
 		end
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -122,12 +122,12 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_color, background_color_string)
 		end
 
-	default_object_by_type (a_type: STRING): EV_ANY is
+	default_object_by_type (a_type: STRING): EV_ANY
 			-- `Result' is a default object that corresponds to `a_type'.
 		deferred
 		end
 
-	retrieve_color (label: EV_DRAWING_AREA; is_foreground: BOOLEAN): GB_COLOR_STONE is
+	retrieve_color (label: EV_DRAWING_AREA; is_foreground: BOOLEAN): GB_COLOR_STONE
 			-- `Result' is color for pick and drop, retrieved
 			-- from `background_color' of `label'.
 		do
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	restore_background_color is
+	restore_background_color
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			update_attribute_editor
 		end
 		
-	restore_foreground_color is
+	restore_foreground_color
 			-- Restore `foreground_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			update_attribute_editor
 		end
 
-	update_background_color is
+	update_background_color
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (background_color)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	actually_set_background_color (color: EV_COLOR) is
+	actually_set_background_color (color: EV_COLOR)
 			-- Actually update the background colors.
 		local
 --			container: EV_CONTAINER
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 --			update_background_display
 		end
 
-	update_foreground_color is
+	update_foreground_color
 			-- Update `foreground_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (foreground_color)
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	actually_set_foreground_color (color: EV_COLOR) is
+	actually_set_foreground_color (color: EV_COLOR)
 			-- Actually update the foreground colors.
 		local
 			p: PROCEDURE [EV_ANY, TUPLE]
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	valid_color (a_color: EV_COLOR): BOOLEAN is
+	valid_color (a_color: EV_COLOR): BOOLEAN
 			-- Is `a_color' a valid color?
 		do
 			Result := True
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	
 	background_color_entry: GB_COLOR_INPUT_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

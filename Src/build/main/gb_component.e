@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a component"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_name' to `name' and `a_components' to `components'.
 		require
 			name_not_empty_or_void: a_name /= Void and then not a_name.is_empty
@@ -54,7 +54,7 @@ feature -- Access
 	name: STRING
 		-- Name of `Current'.
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- `Result' is representation of `Current'
 			-- unique each time.
 		local
@@ -157,7 +157,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	root_element_type: STRING is
+	root_element_type: STRING
 			-- `Result' is type of root element.
 		do
 			Result := components.xml_handler.component_root_element_type (name)
@@ -165,7 +165,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		require
 			name_valid: a_name /= Void and then not a_name.is_empty
@@ -175,7 +175,7 @@ feature -- Status Setting
 			name_set: name = a_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

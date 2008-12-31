@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent two state commands%
 		%for display/hiding restorable windows."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	window: EV_DIALOG is
+	window: EV_DIALOG
 			-- Result is window referenced by
 			-- `Current' command.
 		deferred
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status setting
 
-	execute is
+	execute
 			-- Execute command (toggle between show and hide).
 		local
 			iconable_tool: GB_ICONABLE_TOOL
@@ -59,7 +59,7 @@ feature -- Status setting
 			update_controls (is_selected)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide a new attribute editor for EV_WIDGET properties."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,20 +21,20 @@ inherit
 
 feature -- Access
 
-	components: GB_INTERNAL_COMPONENTS is
+	components: GB_INTERNAL_COMPONENTS
 			-- Access to a set of internal components for an EiffelBuild instance.
 		deferred
 		end
 
 	ev_type: EV_WIDGET
 
-	type: STRING is
+	type: STRING
 			-- String representation of object_type modifyable by `Current'.
 		once
 			Result := Ev_widget_string
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
 		do
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -124,7 +124,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_minimum_dimension (?), Minimum_width_string)
 		end
 
-	toggle_visibility is
+	toggle_visibility
 			-- Update is_displayed state.
 		do
 			if is_show_requested_check_button.is_selected then
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_width is
+	reset_width
 			-- Reset minimum width of object referenced by `Current'.
 		local
 			original_id: INTEGER
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 				-- Update `parent_editor' to reflect the change.
 		end
 
-	actual_reset_width (an_object: GB_OBJECT) is
+	actual_reset_width (an_object: GB_OBJECT)
 			-- Reset `minimum_width' of `object' of `an_object'.
 		require
 			object_not_void: an_object /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			components.object_handler.reset_object (an_object)
 		end
 
-	reset_height is
+	reset_height
 			-- Reset minimum width of object referenced by `Current'.
 		local
 			original_id: INTEGER
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 				-- Update `parent_editor' to reflect the change.
 		end
 
-	actual_reset_height (an_object: GB_OBJECT) is
+	actual_reset_height (an_object: GB_OBJECT)
 			-- Reset `minimum_height' of `object' of `an_object'.
 		require
 			object_not_void: an_object /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 	minimum_width_entry, minimum_height_entry: GB_INTEGER_INPUT_FIELD
 		-- Input widgets for `minimum_width' and `minimum_height'.
 
-	set_minimum_width (integer: INTEGER) is
+	set_minimum_width (integer: INTEGER)
 			-- Update property `minimum_width' on the first of `objects'.
 		require
 			first_not_void: first /= Void
@@ -239,13 +239,13 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 
-	valid_minimum_dimension (value: INTEGER): BOOLEAN is
+	valid_minimum_dimension (value: INTEGER): BOOLEAN
 			-- Is `value' a valid minimum_width or minimum_height?
 		do
 			Result := value >= 0
 		end
 
-	set_minimum_height (integer: INTEGER) is
+	set_minimum_height (integer: INTEGER)
 			-- Update property `minimum_height' on first of `objects'.
 		require
 			first_not_void: first /= Void
@@ -254,10 +254,10 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 
-	Minimum_width_string: STRING is "Minimum_width"
-	Minimum_height_string: STRING is "Minimum_height"
+	Minimum_width_string: STRING = "Minimum_width"
+	Minimum_height_string: STRING = "Minimum_height"
 
-	Is_show_requested_string: STRING is "Is_show_requested"
+	Is_show_requested_string: STRING = "Is_show_requested"
 
 	reset_width_button, reset_height_button: EV_TOOL_BAR_BUTTON
 		-- Buttons that allow you to reset the minimum sizes on objects.
@@ -269,7 +269,7 @@ invariant
 	--first.minimum_width_set_by_user implies not reset_width_button.is_sensitive else reset_button.is_sensitive
 	--And other
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

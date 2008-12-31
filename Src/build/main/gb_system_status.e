@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the current status of the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -33,7 +33,7 @@ feature -- Access
 		-- Information regarding the current project in the system.
 		-- `Void' if none.
 
-	project_open: BOOLEAN is
+	project_open: BOOLEAN
 			-- Is there a project currently in the system?
 		do
 			Result := not (current_project_settings = Void)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_loading_project is
+	enable_loading_project
 			-- Ensure `loading_project' is True
 		do
 			loading_project := True
@@ -63,7 +63,7 @@ feature -- Status setting
 			project_loading: loading_project
 		end
 
-	disable_loading_project is
+	disable_loading_project
 			-- Ensure `loading_project' is False
 		do
 			loading_project := False
@@ -71,7 +71,7 @@ feature -- Status setting
 			project_not_loading: not loading_project
 		end
 
-	set_current_project (new_project_settings: GB_PROJECT_SETTINGS) is
+	set_current_project (new_project_settings: GB_PROJECT_SETTINGS)
 			-- Assign `new_project_settings' to `current_project_settings'.
 		require
 			no_project_open: not project_open
@@ -79,7 +79,7 @@ feature -- Status setting
 			current_project_settings := new_project_settings
 		end
 
-	close_current_project is
+	close_current_project
 			-- Assign `Void' to `current_project_settings'.
 		require
 			project_open: project_open
@@ -88,31 +88,31 @@ feature -- Status setting
 			disable_project_modified
 		end
 
-	enable_project_modified is
+	enable_project_modified
 			-- Assign `True' to `project_modified'.
 		do
 			project_modified := True
 		end
 
-	disable_project_modified is
+	disable_project_modified
 			-- Assign `False' to `project_modfied'.
 		do
 			project_modified := False
 		end
 
-	enable_tools_always_on_top is
+	enable_tools_always_on_top
 			-- Assign `True' to `tools_always_on_top'.
 		do
 			tools_always_on_top := True
 		end
 
-	disable_tools_always_on_top is
+	disable_tools_always_on_top
 			-- Assign `False' to `tools_always_on_top'.
 		do
 			tools_always_on_top := False
 		end
 
-	is_object_structure_changing: BOOLEAN is
+	is_object_structure_changing: BOOLEAN
 			-- Are we currently in the process of changing the structure of an object?
 			-- Some assertions may only be checked if we are not currently changing
 			-- the structure.
@@ -120,7 +120,7 @@ feature -- Status setting
 			Result := is_object_structure_changing_cell.item
 		end
 
-	set_object_structure_changing is
+	set_object_structure_changing
 			-- Ensure `is_object_structure_changing' returns `True'.
 		do
 			is_object_structure_changing_cell.put (True)
@@ -128,7 +128,7 @@ feature -- Status setting
 			is_object_structure_changing: is_object_structure_changing
 		end
 
-	set_object_structure_changed is
+	set_object_structure_changed
 			-- Ensure `is_object_structure_changing' returns `False'.
 		do
 			is_object_structure_changing_cell.put (False)
@@ -139,7 +139,7 @@ feature -- Status setting
 	is_in_debug_mode: BOOLEAN
 		-- Is `EiffelBuild' currently enabled for debugging?
 
-	enable_debug_mode is
+	enable_debug_mode
 			-- Ensure `is_in_debug_mode' is `True'.
 		do
 			is_in_debug_mode := True
@@ -147,7 +147,7 @@ feature -- Status setting
 			is_in_debug_mode: is_in_debug_mode
 		end
 
-	set_pick_and_drop_pebble (a_pebble: ANY) is
+	set_pick_and_drop_pebble (a_pebble: ANY)
 			-- Assign `a_pebble' to `pick_and_drop_pebble'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -157,7 +157,7 @@ feature -- Status setting
 			pebble_set: pick_and_drop_pebble = a_pebble
 		end
 
-	remove_pick_and_drop_pebble is
+	remove_pick_and_drop_pebble
 			-- Ensure `pick_and_drop_pebble' = Void
 		do
 			pick_and_drop_pebble := Void
@@ -171,7 +171,7 @@ feature -- Access
 
 feature -- Status setting
 
-	block is
+	block
 			-- Block all further changes to status until `resume' is called.
 		do
 			is_blocked := True
@@ -179,7 +179,7 @@ feature -- Status setting
 			is_blocked: is_blocked
 		end
 
-	resume is
+	resume
 			-- Resume changes to status (undo a call to `block')
 		do
 			is_blocked := False
@@ -187,7 +187,7 @@ feature -- Status setting
 			not_is_blocked: not is_blocked
 		end
 
-	mark_as_dirty is
+	mark_as_dirty
 			-- If not `is_blocked' then mark project as modified.
 		do
 			if not is_blocked then
@@ -197,7 +197,7 @@ feature -- Status setting
 			end
 		end
 
-	mark_as_clean is
+	mark_as_clean
 			-- If not `is_blocked' then mark project as unmodified.
 		do
 			if not is_blocked then
@@ -209,13 +209,13 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	is_object_structure_changing_cell: CELL [BOOLEAN] is
+	is_object_structure_changing_cell: CELL [BOOLEAN]
 			-- A cell to hold the value of `is_object_structure_changing'.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

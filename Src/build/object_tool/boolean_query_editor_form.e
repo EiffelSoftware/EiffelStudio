@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Form containing a set of query properties used to generate %
 			% the corresponding object editor. Used when the returned %
 			% is BOOLEAN."
@@ -28,7 +28,7 @@ create
 
 feature {NONE}
 
-	create_interface (test_preconditions: BOOLEAN) is
+	create_interface (test_preconditions: BOOLEAN)
 			-- Create interface.
 		local
 			v1, v2: EV_VERTICAL_BOX
@@ -144,7 +144,7 @@ feature {NONE}
 			set_values
 		end
 
-	set_values is
+	set_values
 			-- Set values for GUI elements.
 		do
 			true_opt_pull.disable_sensitive
@@ -159,7 +159,7 @@ feature {NONE}
 			menu_false_field.set_text ("No")
 		end
 
-	update_interface is
+	update_interface
 			-- Update the interface after setting `query'.
 		local
 			error_message, label: STRING
@@ -248,7 +248,7 @@ feature -- Option pull used to select the procedure used to set `query'
 
 feature {NONE} -- Heuristic
 
-	update_procedures_list is
+	update_procedures_list
 			-- Display a list of compatible procedures.
 		local
 			menu_entry, menu_entry_bis: APPLICATION_METHOD_PUSH_B
@@ -296,7 +296,7 @@ feature {NONE} -- Heuristic
 
 feature -- Execution
 
-	any_toggle_b_fired is
+	any_toggle_b_fired
 			-- Any of the radio buttons have been selected.
 			-- Update the interface accordingly.
 		do
@@ -332,7 +332,7 @@ feature -- Execution
 			end
 		end
 
-	desactivate_all_fields is
+	desactivate_all_fields
 			-- Desactivate all the fields
 		do
 			radio_true_field.disable_sensitive
@@ -389,7 +389,7 @@ feature -- Command generation
 --		end
 --
 		
-	generate_interface_elements: STRING is
+	generate_interface_elements: STRING
 			-- Generate declarations for user interface widgets.
 		do
 			create Result.make (0)
@@ -400,7 +400,7 @@ feature -- Command generation
 			end
 		end
 		
-	build_interface (parent_name: STRING): STRING is
+	build_interface (parent_name: STRING): STRING
 			-- Generate Eiffel code which builds the widgets
 			-- for the user interface.
 		do
@@ -423,7 +423,7 @@ feature -- Command generation
 			end
 		end
 		
-	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING is
+	generate_eiffel_text (argument_namer: LOCAL_NAMER): STRING
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query corresponding to `query'.
 		do
@@ -455,7 +455,7 @@ feature -- Command generation
 			end
 		end
 
-	eiffel_setting (actual_argument: STRING): STRING is
+	eiffel_setting (actual_argument: STRING): STRING
 			-- Generate the setting of the query using `argument'.
 		local
 			preconditions: LINKED_LIST [APPLICATION_PRECONDITION]
@@ -492,7 +492,7 @@ feature -- Command generation
 			end
 		end
 
-	procedure: APPLICATION_COMMAND is
+	procedure: APPLICATION_COMMAND
 			-- Procedure chosen to set `query'
 		require
 			item_selected: procedure_opt_pull.selected_item /= Void
@@ -503,7 +503,7 @@ feature -- Command generation
 			Result ?= application_method_button.application_method
 		end
 
-	procedure_true: APPLICATION_ROUTINE is
+	procedure_true: APPLICATION_ROUTINE
 			-- Procedure chosen to set true `query'
 		require
 			item_selected: true_opt_pull.selected_item /= Void
@@ -514,7 +514,7 @@ feature -- Command generation
 			Result ?= application_method_button.application_method
 		end
 
-	procedure_false: APPLICATION_ROUTINE is
+	procedure_false: APPLICATION_ROUTINE
 			-- Procedure chosen to set false `query'
 		require
 			item_selected: false_opt_pull.selected_item /= Void
@@ -545,7 +545,7 @@ feature -- Command generation
 			-- Internal name of the option pull holding the value
 			-- used to set `query'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

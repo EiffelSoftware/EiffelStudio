@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_NOTEBOOK."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,10 +22,10 @@ feature -- Access
 	ev_type: EV_NOTEBOOK
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_NOTEBOOK"
+	type: STRING = "EV_NOTEBOOK"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -90,7 +90,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		local
@@ -128,7 +128,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		local
@@ -152,14 +152,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN is
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		do
 			--| No validation is currently performed on pixmaps, so return True
 			Result := True
 		end
 
-	return_pixmap (index: INTEGER): EV_PIXMAP is
+	return_pixmap (index: INTEGER): EV_PIXMAP
 			-- `Result' is pixmap used for `Current'.
 		require
 			index_valid: index <= objects.first.count
@@ -170,19 +170,19 @@ feature {NONE} -- Implementation
 			Result := notebook_tab.pixmap
 		end
 
-	return_pixmap_path (index: INTEGER): STRING_GENERAL is
+	return_pixmap_path (index: INTEGER): STRING_GENERAL
 			-- `Result' is path used to retrieve pixmap.
 		do
 			Result := objects.first.pixmap_paths.item (index)
 		end
 
-	selection_changed is
+	selection_changed
 			-- Selection in `combo_box' changed.
 		do
 			for_all_objects (agent {EV_NOTEBOOK}.set_tab_position (position_from_text (combo_box.selected_item.text)))
 		end
 
-	set_text (a_string: STRING; index: INTEGER) is
+	set_text (a_string: STRING; index: INTEGER)
 			-- Set `a_string' as item text of notebook item indexed by `index'.
 		do
 			actual_set_text (object, a_string, index)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	actual_set_text (an_object: GB_OBJECT; a_string: STRING; index: INTEGER) is
+	actual_set_text (an_object: GB_OBJECT; a_string: STRING; index: INTEGER)
 			-- Perform setting of `a_string' to notebook tab `index' for all
 			-- representations of `an_object'.
 		require
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER) is
+	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER)
 			-- Set `a_pixmap' to notebook tab of item indexed by `index' within notebook.
 			-- If `a_pixmap' is Void, remove the pixmap.
 		do
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	actual_set_pixmap (an_object: GB_OBJECT; a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER) is
+	actual_set_pixmap (an_object: GB_OBJECT; a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER)
 			-- Set `a_pixmap' to notebook tab for `an_object' of item indexed by `index' within notebook.
 			-- If `a_pixmap' is Void, remove the pixmap.
 		require
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	names_from_string (a_string: STRING): ARRAYED_LIST [STRING] is
+	names_from_string (a_string: STRING): ARRAYED_LIST [STRING]
 			-- `Result' is all tab names encoded in `a_string'.
 			-- each is separated by `separator_char'.
 		local
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	position_from_text (text: STRING): INTEGER is
+	position_from_text (text: STRING): INTEGER
 			-- `Result' is integer value corresponding
 			-- to `text' tab style. i.e. "Ev_tab_left_string".
 		do
@@ -329,26 +329,26 @@ feature {NONE} -- Implementation
 	combo_box: EV_COMBO_BOX
 		-- Holds possible tab positions.
 
-	Ev_tab_left_string: STRING is "Left"
-	Ev_tab_right_string: STRING is "Right"
-	Ev_tab_top_string: STRING is "Top"
-	Ev_tab_bottom_string: STRING is "Bottom"
+	Ev_tab_left_string: STRING = "Left"
+	Ev_tab_right_string: STRING = "Right"
+	Ev_tab_top_string: STRING = "Top"
+	Ev_tab_bottom_string: STRING = "Bottom"
 		-- String constants used for different tab_positions
 
-	Tab_position_string: STRING is "Tab_position"
+	Tab_position_string: STRING = "Tab_position"
 		-- String used to represent the tab position in the XML.
 
-	Item_text_string_new: STRING is "Item_texts"
+	Item_text_string_new: STRING = "Item_texts"
 		-- String used to represent the parent node for the texts in the XML.
 		-- This has been added to permit the item texts of notebooks to
 		-- support constants.
 
-	Item_pixmap_string_new: STRING is "Item_pixmaps"
+	Item_pixmap_string_new: STRING = "Item_pixmaps"
 		-- String used to represent the parent node for the pixmaps in the XML.
 		-- This has been added to permit the tab pixmaps of notebooks to
 		-- support constants.
 
-	separator_char: CHARACTER is '^'
+	separator_char: CHARACTER = '^'
 
 	top_item, bottom_item, left_item, right_item: EV_LIST_ITEM
 		-- Selctions for combo box.
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 	pixmap_entry: GB_PIXMAP_INPUT_FIELD;
 		-- Input field for pixmap.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

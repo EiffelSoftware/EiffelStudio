@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide useful utilities for event handling."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic operation.
 
-	action_sequence_info_to_string (info: GB_ACTION_SEQUENCE_INFO): STRING is
+	action_sequence_info_to_string (info: GB_ACTION_SEQUENCE_INFO): STRING
 			-- `Result' is string representation of `info'.
 			-- Reverse operation of `string_to_action_sequence_info'
 		require
@@ -28,7 +28,7 @@ feature -- Basic operation.
 			Result_not_void: Result /= Void
 		end
 		
-	string_to_action_sequence_info (string: STRING): GB_ACTION_SEQUENCE_INFO is
+	string_to_action_sequence_info (string: STRING): GB_ACTION_SEQUENCE_INFO
 			-- `Result' is representation of `string'.
 			-- Reverse operation of `action_sequence_info_to_string'.
 		require
@@ -76,7 +76,7 @@ feature -- Basic operation.
 			Result_not_void: Result /= Void
 		end
 		
-	modified_action_sequence_name (current_type: STRING; action_sequence_info: GB_ACTION_SEQUENCE_INFO): STRING is
+	modified_action_sequence_name (current_type: STRING; action_sequence_info: GB_ACTION_SEQUENCE_INFO): STRING
 			-- `Result' is action sequence name of `action_sequence_info' in class represented by
 			-- `Current_type'. This is necessayr as in some places in the Vision2 interface, the
 			-- events are renamed.
@@ -90,7 +90,7 @@ feature -- Basic operation.
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

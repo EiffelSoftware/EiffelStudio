@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide information about the currently%
 		%supported vision2 classes."
 	legal: "See notice at end of class."
@@ -12,14 +12,14 @@ class
 
 feature -- Access
 
-	containers: ARRAY [STRING] is
+	containers: ARRAY [STRING]
 		once
 			Result := <<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_BOX",
 				"EV_HORIZONTAL_SPLIT_AREA", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA",
 				"EV_TABLE", "EV_VERTICAL_BOX", "EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT", "EV_TITLED_WINDOW", "EV_DIALOG">>
 		end
 
-	primitives: ARRAY [STRING] is
+	primitives: ARRAY [STRING]
 		once
 			Result := <<"EV_BUTTON", "EV_CHECK_BUTTON", "EV_CHECKABLE_LIST", "EV_CHECKABLE_TREE", "EV_COMBO_BOX", "EV_DRAWING_AREA",
 				"EV_GRID", "EV_HEADER",
@@ -31,7 +31,7 @@ feature -- Access
 				>>
 		end
 		
-	items: ARRAY [STRING] is
+	items: ARRAY [STRING]
 		once
 			Result := <<"EV_CHECK_MENU_ITEM", "EV_LIST_ITEM", "EV_MENU", "EV_MENU_BAR",
 				"EV_MENU_ITEM", "EV_MENU_SEPARATOR", "EV_RADIO_MENU_ITEM", "EV_TOOL_BAR_BUTTON",
@@ -42,7 +42,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 		
-	include_all_components is
+	include_all_components
 			-- We must include all the vision2 components that are currently
 			-- supported, otherwise the dynamic creation will fail.
 			-- This feature never needs to be called, but the components are
@@ -126,7 +126,7 @@ invariant
 	primitives_not_void: primitives /= Void
 	items_not_void: items /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

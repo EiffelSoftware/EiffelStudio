@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a boolean tree item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create `Current' and initialize `nodes'
 		do
 			create nodes.make (3)
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_selected is
+	enable_selected
 			-- Ensure `selected' is True
 		do
 			selected := True
@@ -43,7 +43,7 @@ feature -- Status setting
 			state_selected: selected = True
 		end
 		
-	disable_selected is
+	disable_selected
 			-- Ensure `selected' is False
 		do
 			selected := False
@@ -51,7 +51,7 @@ feature -- Status setting
 			state_selected: selected = False
 		end
 
-	enable_state is
+	enable_state
 			-- Ensure `state' = True.
 		do
 			state := True
@@ -59,7 +59,7 @@ feature -- Status setting
 			state_enabled: state = True
 		end
 		
-	disable_state is
+	disable_state
 			-- Ensure `state' = False.
 		do
 			state := False
@@ -69,7 +69,7 @@ feature -- Status setting
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to start of `content'.
 		do
 			nodes.start
@@ -78,7 +78,7 @@ feature -- Cursor movement
 			after_when_empty: nodes.is_empty implies nodes.after
 		end
 		
-	forth is
+	forth
 			-- Move to next item in `content'.
 		require
 			not_after: not nodes.after
@@ -88,7 +88,7 @@ feature -- Cursor movement
 			moved_forth: nodes.index = old nodes.index + 1
 		end
 		
-	item: GB_BOOLEAN_TREE_ITEM is
+	item: GB_BOOLEAN_TREE_ITEM
 			-- Item in `content'.
 		do
 			Result := nodes.item
@@ -96,7 +96,7 @@ feature -- Cursor movement
 			Result_consistent: Result = nodes.item
 		end
 		
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := nodes.off
@@ -106,7 +106,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	extend (an_item: GB_BOOLEAN_TREE_ITEM) is
+	extend (an_item: GB_BOOLEAN_TREE_ITEM)
 			-- Add `an_item' to `nodes'.
 		require
 			an_item_not_void: an_item /= Void
@@ -119,7 +119,7 @@ feature -- Element change
 invariant
 	nodes_not_void: nodes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

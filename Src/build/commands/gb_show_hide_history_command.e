@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a new show project settings command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {GB_COMMAND_HANDLER} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current'.
 		do
 			components := a_components
@@ -26,13 +26,13 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in menus.
 		do
 			Result := Show_hide_history_window_menu_text
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmap representing the item (for buttons)
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_cmd_history
@@ -40,14 +40,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	window: EV_DIALOG is
+	window: EV_DIALOG
 			-- Result is window referenced by
 			-- `Current' command.
 		do
 			Result := components.tools.history_dialog
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

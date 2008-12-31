@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide information about events in Vision2."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 	
 feature -- Access
 	
-	action_sequences_list: ARRAYED_LIST [STRING] is
+	action_sequences_list: ARRAYED_LIST [STRING]
 			-- All action sequence classes in Vision2.
 			-- All action sequences in interface are inherited through
 			-- these classes.
@@ -46,7 +46,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	included_types is
+	included_types
 			-- Need to incluide all types, so we can build
 			-- them dynamically when encountered.
 		local
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

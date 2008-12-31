@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold constants for GB_ABOUT_DIALOG"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	t_version_info: STRING is
+	t_version_info: STRING
 		once
 			Result := "EiffelBuild "
 			Result.append_integer ({EIFFEL_ENVIRONMENT_CONSTANTS}.major_version)
@@ -25,14 +25,14 @@ feature -- Access
 			Result.append ((svn_revision \\ (9999 + 1).as_natural_32).as_natural_16.out)
 		end
 
-	t_Copyright_info: STRING is
+	t_Copyright_info: STRING
 		once
 			Result :=
 				"Copyright (C) 1985-2007 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 
-	t_info: STRING is
+	t_info: STRING
 		once
 			create Result.make (500)
 			Result.append (
@@ -48,7 +48,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	svn_revision: NATURAL_32 is
+	svn_revision: NATURAL_32
 			-- SVN revision that build EiffelBuild.
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

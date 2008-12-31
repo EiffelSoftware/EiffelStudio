@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command for type changing objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (an_object: GB_OBJECT; an_original_type, a_new_type: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make (an_object: GB_OBJECT; an_original_type, a_new_type: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and store necessary information
 			-- required to `execute' and `undo'. Assign `a_components' to `components'.
 		require
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			original_object: GB_OBJECT
@@ -61,7 +61,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	internal_execute (original_object: GB_OBJECT; instance_object: GB_OBJECT) is
+	internal_execute (original_object: GB_OBJECT; instance_object: GB_OBJECT)
 			-- Change type of `original_object' to `new_type', recursively changing all instances.
 			-- If `instance_object' is not Void, then insert the newly created object into `instance_referers'
 			-- of `instance_object'. This ensures that the instance structure of the new objects is identical to
@@ -116,7 +116,7 @@ feature -- Basic Operation
 		end
 
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Must restore state to that before `execute'.
 		local
@@ -151,7 +151,7 @@ feature -- Basic Operation
 
 feature -- Access
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		do
 			Result := original_type + " changed type to " + new_type
@@ -181,7 +181,7 @@ invariant
 	original_ids_not_void: original_ids /= Void
 	original_type_not_void: original_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

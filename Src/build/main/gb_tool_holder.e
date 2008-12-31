@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that surround a tool with a title%
 		%and minimize and maximize buttons."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EV_WIDGET; display_name: STRING) is
+	make_with_tool (a_tool: EV_WIDGET; display_name: STRING)
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
 		local
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 		
 feature -- Basic operation
 
-	add_command_tool_bar (a_tool_bar: EV_TOOL_BAR) is
+	add_command_tool_bar (a_tool_bar: EV_TOOL_BAR)
 			-- Display `a_tool_bar' within header of `Current'.
 		require
 			tool_bar_not_void: a_tool_bar /= Void
@@ -105,7 +105,7 @@ feature -- Access
 	maximized: BOOLEAN
 		-- Is `Current' maximized?
 		
-	disable_minimized is
+	disable_minimized
 			-- Assign `False' to `is_minimized'.
 		do
 			minimized := False
@@ -113,7 +113,7 @@ feature -- Access
 			not_minimized: not minimized
 		end
 		
-	disable_maximized is
+	disable_maximized
 			-- Assign `False' to `is_maximized'.
 		do
 			maximized := False
@@ -121,13 +121,13 @@ feature -- Access
 			not_maximized: not maximized
 		end
 		
-	reset_minimize_button is
+	reset_minimize_button
 			-- Restore original pixmap to `minimize_button'.
 		do
 			minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)			
 		end
 		
-	reset_maximize_button is
+	reset_maximize_button
 			-- Restore original pixmap to `maximize_button'.
 		do
 			maximize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	tool_bar_cell: EV_CELL
 		-- A cell to hold `command_tool_bar'.
 
-	minimize is
+	minimize
 			-- Minimize `Current' if not minimized, restore otherwise.
 		do
 			tool_holder_parent.minimize_tool (Current)
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-	maximize is
+	maximize
 			-- Maximize `Current' if not maxamized, restore otherwise.
 		do
 			tool_holder_parent.maximize_tool (Current)
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	tool_holder_parent: GB_TOOL_HOLDER_PARENT is
+	tool_holder_parent: GB_TOOL_HOLDER_PARENT
 			-- Parent of `Current'.
 		require
 			parent_not_void: parent /= Void
@@ -189,7 +189,7 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	maximize_button, minimize_button: EV_TOOL_BAR_BUTTON;
 		-- Buttons representing minimize and maximize commands.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

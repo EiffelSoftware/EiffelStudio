@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that some very general purpose facilities used in Build2"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Basic operations
 
-	list_from_single_spaced_values (string: STRING): ARRAYED_LIST [INTEGER] is
+	list_from_single_spaced_values (string: STRING): ARRAYED_LIST [INTEGER]
 			-- `Result' is all values contained in `string' which is of the form "1 101 150 35".
 			-- `string' must be single spaced.
 		require
@@ -41,7 +41,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 		
-	single_spaced_values_from_list (list: ARRAYED_LIST [INTEGER]): STRING is
+	single_spaced_values_from_list (list: ARRAYED_LIST [INTEGER]): STRING
 			-- `Result' is single spaced string representation of `list'.
 		require
 			list_not_void: list /= Void
@@ -64,7 +64,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 		
-	remove_leading_and_trailing_spaces (string: STRING): STRING is
+	remove_leading_and_trailing_spaces (string: STRING): STRING
 			-- Remove leading and trailing spaces from `string'.
 			-- i.e. "   a_string   " becomes "a_string"
 		require
@@ -77,7 +77,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 		
-	escape_special_characters (string: STRING): STRING is
+	escape_special_characters (string: STRING): STRING
 			-- Replace all occurances of '"' amd '%' in `string' with
 			-- an escaped version (%N prepended for each).
 			-- Also replace all '%N' characters with '%''N'
@@ -106,7 +106,7 @@ feature -- Basic operations
 			adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"') + string.occurrences ('%N')
 		end
 		
-	directory_of_file (file_name: STRING): STRING is
+	directory_of_file (file_name: STRING): STRING
 			-- `Result' is directory path of `file_name'.
 			-- `file_name' must include full path to file.
 			-- This will work on Linx and Windows, but not VMS.
@@ -118,7 +118,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 		
-	name_and_type_from_object (an_object: GB_OBJECT): STRING is
+	name_and_type_from_object (an_object: GB_OBJECT): STRING
 			-- `Result' is name and type of object as STRING.
 		require
 			object_not_void: an_object /= Void
@@ -135,7 +135,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	replace_final_class_name_comment (class_text, old_name, new_name: STRING) is
+	replace_final_class_name_comment (class_text, old_name, new_name: STRING)
 			-- Replace instance of `old_name' with `new_name' when located in `clas_text'
 			-- after the final "end".
 		require
@@ -158,14 +158,14 @@ feature -- Basic operations
 			count_changed_accordingly: old class_text.count = class_text.count + old_name.count - new_name.count
 		end
 		
-	integer_truncated (original, truncation: INTEGER): INTEGER is
+	integer_truncated (original, truncation: INTEGER): INTEGER
 			-- Truncate `original' to `truncation'.
 			-- For example, if `original' is 453 and `truncation' is 100, return 400.
 		do
 			Result := (original // truncation) * truncation
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a save command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result := components.system_status.project_open and components.system_status.project_modified
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute `Current'.
 		do
 			components.object_editors.force_name_change_completion_on_all_editors
@@ -61,7 +61,7 @@ feature -- Basic operations
 			components.system_status.mark_as_clean
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

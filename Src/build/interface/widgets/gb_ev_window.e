@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate objects of type EV_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,13 +43,13 @@ feature -- Access
 	ev_type: EV_WINDOW
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is
+	type: STRING
 			-- String representation of object_type modifyable by `Current'.
 		once
 			Result := Ev_window_string
 		end
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -77,7 +77,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -98,7 +98,7 @@ feature -- Access
 feature {GB_XML_STORE} -- Output
 
 	
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of `Current' in `element'.
 		local
 			window: EV_WINDOW
@@ -118,7 +118,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			element_info: ELEMENT_INFORMATION
@@ -147,7 +147,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -180,7 +180,7 @@ feature {GB_XML_STORE} -- Output
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 	maximum_width_label, maximum_height_label, title_label: EV_LABEL
 		-- Labels for `attribute_editor'.
 
-	update_user_can_resize is
+	update_user_can_resize
 			-- Update property `user_can_resize' on all items in `objects'.
 		do
 			if user_can_resize.is_selected then
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_maximum_width (integer: INTEGER) is
+	set_maximum_width (integer: INTEGER)
 			-- Update property `maximum_width' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -222,14 +222,14 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	valid_maximum_width (value: INTEGER): BOOLEAN is
+	valid_maximum_width (value: INTEGER): BOOLEAN
 			-- Is `value' a valid maximum_width?
 		do
 			Result := value > 0 and value >= first.minimum_width and
 				value <= first.Maximum_dimension
 		end
 		
-	set_maximum_height (integer: INTEGER) is
+	set_maximum_height (integer: INTEGER)
 			-- Update property `maximum_width' on all items in `objects'.
 		require
 			first_not_void: first /= Void
@@ -238,33 +238,33 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	valid_maximum_height (value: INTEGER): BOOLEAN is
+	valid_maximum_height (value: INTEGER): BOOLEAN
 			-- Is `value' a valid maximum_height?
 		do
 			Result := value > 0 and value >= first.minimum_height and
 				value <= first.Maximum_dimension
 		end
 		
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Update property `title' on all items in `objects'.
 		do
 			for_first_object (agent {EV_WINDOW}.set_title (a_title))
 			update_editors
 		end
 
-	validate_true (s: STRING): BOOLEAN is
+	validate_true (s: STRING): BOOLEAN
 			-- Always return `True', no matter what the contents of `s'
 			-- are. Used when no validation is required on a string.
 		do
 			Result := True
 		end
 
-	User_can_resize_string: STRING is "User_can_resize"
-	Maximum_width_string: STRING is "Maximum_width"
-	Maximum_height_string: STRING is "Maximum_height"
-	Title_string: STRING is "Title";
+	User_can_resize_string: STRING = "User_can_resize"
+	Maximum_width_string: STRING = "Maximum_width"
+	Maximum_height_string: STRING = "Maximum_height"
+	Title_string: STRING = "Title";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

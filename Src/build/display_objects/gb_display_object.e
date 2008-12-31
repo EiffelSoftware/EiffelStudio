@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a visible representation of an%
 		%invisible container in the display window."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make_with_name_and_child (a_name: STRING; a_child: like child) is
+	make_with_name_and_child (a_name: STRING; a_child: like child)
 			-- Create `Current' and assign `a_name' to `text' and `a_child'
 			-- to `child'.
 		require
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
 
-	set_child (a_child: like child) is
+	set_child (a_child: like child)
 			-- Assign `a_child' to `child. This is necessary as we must
 			-- rebuild windows when we reset the objects.
 		do
@@ -52,7 +52,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
 			child_set: child = a_child
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

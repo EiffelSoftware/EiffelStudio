@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent tools that may be stored."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Full name used to represent `Current'.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
-	storable_name: STRING is
+	storable_name: STRING
 			-- Storable version of `name' used in storage.
 		do
 			Result := name.twin
@@ -28,14 +28,14 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: EV_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
-	as_widget: EV_WIDGET is
+	as_widget: EV_WIDGET
 			-- `Result' is `Current' as a widget.
 		do
 			Result ?= Current
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 
 invariant
 	is_widget: as_widget /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

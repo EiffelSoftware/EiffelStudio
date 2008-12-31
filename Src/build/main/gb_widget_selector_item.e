@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent windows in a GB_WIDGET_SELECTOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and associate with `an_object'.
 		require
 			object_not_void: an_object /= Void
@@ -67,7 +67,7 @@ feature -- Access
 	is_destroyed: BOOLEAN
 		-- Is `Current' destroyed?
 
-	file_exists: BOOLEAN is
+	file_exists: BOOLEAN
 			-- Does the interface file corresponding to `object' currently exist on disk?
 		local
 			directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Status setting
 
-	update_to_reflect_name_change is
+	update_to_reflect_name_change
 			-- Update `Current' to reflect a name change of `object'.
 		do
 			tree_item.set_text (object.name.as_upper)
@@ -110,7 +110,7 @@ feature -- Status setting
 
 feature --{NONE} -- Implementation
 
-	retrieve_pebble: ANY is
+	retrieve_pebble: ANY
 			-- Retrieve pebble for transport.
 			-- A convenient was of setting up the drop
 			-- actions for GB_OBJECT.
@@ -127,7 +127,7 @@ feature --{NONE} -- Implementation
 
 feature {GB_OBJECT} -- Implementation
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign `an_object' to `object'
 		require
 			an_object_not_void: an_object /= Void
@@ -137,7 +137,7 @@ feature {GB_OBJECT} -- Implementation
 			object_set: object = an_object
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			is_destroyed := True
@@ -148,7 +148,7 @@ feature {GB_OBJECT} -- Implementation
 invariant
 	object_not_void: not is_destroyed implies object /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

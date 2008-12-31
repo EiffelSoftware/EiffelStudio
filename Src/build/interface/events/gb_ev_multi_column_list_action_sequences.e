@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 		
-	names: ARRAYED_LIST [STRING] is
+	names: ARRAYED_LIST [STRING]
 			-- All names of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -26,7 +26,7 @@ feature -- Access
 		end
 		
 	
-	types: ARRAYED_LIST [STRING] is
+	types: ARRAYED_LIST [STRING]
 			-- All types of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -36,7 +36,7 @@ feature -- Access
 			Result.extend ("EV_COLUMN_ACTION_SEQUENCE")
 		end
 	
-	comments: ARRAYED_LIST [STRING] is
+	comments: ARRAYED_LIST [STRING]
 			-- All comments of action sequences contained in `Current'.
 		once
 			create Result.make (0)
@@ -46,7 +46,7 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when a column is resized.")
 		end
 
-	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
+	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER)
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
 			-- action sequence and all arguments in `textable'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
@@ -89,7 +89,7 @@ feature -- Access
 			end	
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

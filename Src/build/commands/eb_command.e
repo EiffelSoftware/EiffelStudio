@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract notion of a command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,13 +22,13 @@ feature -- Access
 	accelerator: EV_ACCELERATOR
 			-- Key combination that executes `Current'.
 
-	Key_constants: EV_KEY_CONSTANTS is
+	Key_constants: EV_KEY_CONSTANTS
 			-- All key codes.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

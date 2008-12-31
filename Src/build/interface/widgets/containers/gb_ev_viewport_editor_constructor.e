@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_VIEWPORT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_VIEWPORT
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_VIEWPORT"
+	type: STRING = "EV_VIEWPORT"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -47,7 +47,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_item_height (?), Item_height_string)
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -91,27 +91,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_x_offset (integer: INTEGER) is
+	set_x_offset (integer: INTEGER)
 			-- Update property `x_offset' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_VIEWPORT}.set_x_offset (integer))
 			update_editors
 		end
 		
-	set_y_offset (integer: INTEGER) is
+	set_y_offset (integer: INTEGER)
 			-- Update property `y_offset' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_VIEWPORT}.set_y_offset (integer))
 			update_editors
 		end
 		
-	valid_position (integer: INTEGER): BOOLEAN is
+	valid_position (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid coordinate in a viewport.
 		do
 			Result := True
 		end
 		
-	set_item_width (integer: INTEGER) is
+	set_item_width (integer: INTEGER)
 			-- Call `set_item_width' on all items in `objects'.
 		do
 				-- Note that we cannot use `for_all_objects' as we need to check the
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	actual_set_item_width (an_object: GB_OBJECT; width: INTEGER) is
+	actual_set_item_width (an_object: GB_OBJECT; width: INTEGER)
 			-- Set width of widgets contained in representations of `an_object' to `width'.
 		require
 			an_object_not_void: an_object /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_item_height (integer: INTEGER) is
+	set_item_height (integer: INTEGER)
 			-- Call `set_item_height' on all items in `objects'.
 		do
 				-- Note that we cannot use `for_all_objects' as we need to check the
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	actual_set_item_height (an_object: GB_OBJECT; height: INTEGER) is
+	actual_set_item_height (an_object: GB_OBJECT; height: INTEGER)
 			-- Set height of widgets contained in representations of `an_object' to `height'.
 		require
 			an_object_not_void: an_object /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	valid_item_width (integer: INTEGER): BOOLEAN is
+	valid_item_width (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid width for item of `Current'?
 		do
 			if integer >= first.item.minimum_width then
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	valid_item_height (integer: INTEGER): BOOLEAN is
+	valid_item_height (integer: INTEGER): BOOLEAN
 			-- Is `integer' a valid height for item of `Current'?
 		do
 			if integer >= first.item.minimum_height then
@@ -201,15 +201,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	x_offset_string: STRING is "X_offset"
-	y_offset_string: STRING is "Y_offset"
-	item_width_string: STRING is "Item_width"
-	item_height_string: STRING is "Item_height"
+	x_offset_string: STRING = "X_offset"
+	y_offset_string: STRING = "Y_offset"
+	item_width_string: STRING = "Item_width"
+	item_height_string: STRING = "Item_height"
 	
 	x_offset_entry, y_offset_entry, item_width_entry, item_height_entry: GB_INTEGER_INPUT_FIELD;
 		-- Input widgets for `x_offset', `y_offset', `set_item_width' and `set_item_height'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

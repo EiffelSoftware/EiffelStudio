@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Objects that hold information regarding all constants in EiffelBuild.
@@ -37,7 +37,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -66,7 +66,7 @@ feature -- Access
 		-- every time that we wish to determine if a string is
 		-- already in use as a constant.
 
-	supported_types: ARRAYED_LIST [STRING] is
+	supported_types: ARRAYED_LIST [STRING]
 			-- All supported constant types by name.
 		once
 			create Result.make (3)
@@ -105,7 +105,7 @@ feature -- Access
 	deleted_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All constants that are currently flagged as deleted.
 
-	string_is_constant_name (a_string: STRING): BOOLEAN is
+	string_is_constant_name (a_string: STRING): BOOLEAN
 			-- Is `a_string' already used as a constant name?
 		require
 			a_string_not_void: a_string /= Void
@@ -113,7 +113,7 @@ feature -- Access
 			Result :=  all_constant_names.has (a_string)
 		end
 
-	matching_absolute_pixmap_constant (a_file_path: STRING): STRING is
+	matching_absolute_pixmap_constant (a_file_path: STRING): STRING
 			-- `Result' is name of absolute pixmap constant with `value'
 			-- matching `a_file_path'. Case insensitive, and `Void' if
 			-- none.
@@ -140,7 +140,7 @@ feature -- Access
 			end
 		end
 
-	matching_directory_constant_name (a_file_path: STRING): STRING is
+	matching_directory_constant_name (a_file_path: STRING): STRING
 			-- `Result' is name of directory constant with `value'
 			-- matching `a_file_path'. Case insensitive.
 		require
@@ -164,7 +164,7 @@ feature -- Access
 			end
 		end
 
-	matching_directory_constant_names (a_file_path: STRING): ARRAYED_LIST [STRING] is
+	matching_directory_constant_names (a_file_path: STRING): ARRAYED_LIST [STRING]
 			-- `Result' is name of directory constant with `value'
 			-- matching `a_file_path'. Case insensitive.
 		require
@@ -191,7 +191,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	directory_constant_by_name (directory_constant_name: STRING): GB_DIRECTORY_CONSTANT is
+	directory_constant_by_name (directory_constant_name: STRING): GB_DIRECTORY_CONSTANT
 			-- `Result' is directory_constant named `directory_constant_name',
 			-- or `Void' if none.
 		local
@@ -214,7 +214,7 @@ feature -- Access
 
 feature -- Element change
 
-	remove_constant (a_constant: GB_CONSTANT) is
+	remove_constant (a_constant: GB_CONSTANT)
 			-- Remove `a_constant' from all constants in system.
 			-- Flag as deleted. Updates graphical representation
 			-- of `constants_dialog'.
@@ -227,7 +227,7 @@ feature -- Element change
 			constant_deleted: deleted_constants.has (a_constant)
 		end
 
-	remove_constant_no_update (a_constant: GB_CONSTANT) is
+	remove_constant_no_update (a_constant: GB_CONSTANT)
 			-- Remove `a_constant' from all constants in system.
 			-- Flag as deleted. No graphical update of `constants_dialog'
 			-- is performed.
@@ -276,7 +276,7 @@ feature -- Element change
 			constant_deleted: deleted_constants.has (a_constant)
 		end
 
-	add_integer (integer_constant: GB_INTEGER_CONSTANT) is
+	add_integer (integer_constant: GB_INTEGER_CONSTANT)
 			-- Add `integer_constant' to `integer_constants'.
 		require
 			constant_not_void: integer_constant /= Void
@@ -293,7 +293,7 @@ feature -- Element change
 			count_increased: integer_constants.count = old integer_constants.count + 1
 		end
 
-	add_string (string_constant: GB_STRING_CONSTANT) is
+	add_string (string_constant: GB_STRING_CONSTANT)
 			-- Add `string_constant' to `string_constants'
 		require
 			constant_not_void: string_constant /= Void
@@ -310,7 +310,7 @@ feature -- Element change
 			count_increased: string_constants.count = old string_constants.count + 1
 		end
 
-	add_directory (directory_constant: GB_DIRECTORY_CONSTANT) is
+	add_directory (directory_constant: GB_DIRECTORY_CONSTANT)
 			-- Add `directory_constant' to `directory_constants'
 		require
 			constant_not_void: directory_constant /= Void
@@ -327,7 +327,7 @@ feature -- Element change
 			count_increased: directory_constants.count = old directory_constants.count + 1
 		end
 
-	add_color (color_constant: GB_COLOR_CONSTANT) is
+	add_color (color_constant: GB_COLOR_CONSTANT)
 			-- Add `color_constant' to `color_constants'
 		require
 			constant_not_void: color_constant /= Void
@@ -344,7 +344,7 @@ feature -- Element change
 			count_increased: color_constants.count = old color_constants.count + 1
 		end
 
-	add_font (font_constant: GB_FONT_CONSTANT) is
+	add_font (font_constant: GB_FONT_CONSTANT)
 			-- Add `font_constant' to `font_constants'
 		require
 			constant_not_void: font_constant /= Void
@@ -361,7 +361,7 @@ feature -- Element change
 			count_increased: font_constants.count = old font_constants.count + 1
 		end
 
-	add_pixmap (pixmap_constant: GB_PIXMAP_CONSTANT) is
+	add_pixmap (pixmap_constant: GB_PIXMAP_CONSTANT)
 			-- Add `pixmap_constant' to `pixmap_constants'.
 		require
 			constant_not_void: pixmap_constant /= Void
@@ -383,7 +383,7 @@ feature -- Element change
 			count_increased: pixmap_constants.count = old pixmap_constants.count + 1
 		end
 
-	build_constant_from_xml (element: XM_ELEMENT) is
+	build_constant_from_xml (element: XM_ELEMENT)
 			-- Add a constant based on information in `element'.
 		local
 			name, type, value: STRING
@@ -439,7 +439,7 @@ feature -- Element change
 			end
 		end
 
-	flatten_constants (element: XM_ELEMENT) is
+	flatten_constants (element: XM_ELEMENT)
 			-- Recurse through `element', and convert all constant values to manifest values
 			-- in the XML.
 		require
@@ -476,7 +476,7 @@ feature -- Element change
 
 feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 
-	reset is
+	reset
 			-- Reset all constants referenced, back to original settings.
 		do
 			integer_constants.wipe_out
@@ -490,7 +490,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 
 feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
-	build_deferred_elements is
+	build_deferred_elements
 			-- Build all XM_ELEMENT that were deferred for building
 			-- after the others.
 		do
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 		-- If so, actually create the type that will be deferred,
 		-- otherwise defer its building.
 
-	new_constant_from_data (name, type, value: STRING) is
+	new_constant_from_data (name, type, value: STRING)
 			-- Create a new constant based on `name', `type' and `value'.
 		local
 			integer_constant: GB_INTEGER_CONSTANT
@@ -552,7 +552,7 @@ invariant
 	string_constants_not_void: string_constants /= Void
 	deferred_elements_not_void: deferred_elements /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

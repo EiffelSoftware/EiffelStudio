@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_TEXTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,10 +24,10 @@ feature -- Access
 	ev_type: EV_TEXTABLE
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_TEXTABLE"
+	type: STRING = "EV_TEXTABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -70,14 +70,14 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent validate_true (?), text_string)
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
 			text_entry.update_constant_display (first.text)
 		end
 		
-	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
 		do
 			user_event_widget ?= vision2_object
@@ -89,10 +89,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_user_events: BOOLEAN is True
+	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
 	
-	start_timer is
+	start_timer
 			-- Start a timer, which is used as a delay between an event begin
 			-- received by `user_event_widget' and `check_state'.
 		local
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			timer.actions.extend (agent timer.destroy)
 		end
 		
-	check_state is
+	check_state
 			-- Update the display window representation of
 			-- the gauge, to reflect change from user.
 		do
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 	user_event_widget: EV_TEXT_COMPONENT
 		-- Used to handle the events on the builder window.
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `text' of `text_entry' to all objects.
 		do
 			for_all_objects (agent {EV_TEXTABLE}.set_text (a_text))
@@ -127,9 +127,9 @@ feature {NONE} -- Implementation
 	text_entry: GB_STRING_INPUT_FIELD
 		-- Input field for text.
 
-	Text_string: STRING is "Text";
+	Text_string: STRING = "Text";
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

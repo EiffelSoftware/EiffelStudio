@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a user defined component."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_from_object (an_object: GB_OBJECT; a_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_from_object (an_object: GB_OBJECT; a_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' from `an_object' and assign `a_components' to `components'.
 		require
 			an_object_not_void: an_object /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create a new component representation from `a_name'.
 		require
 			a_name_not_void_or_empty: a_name /= Void or not a_name.is_empty
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	generate_pebble: GB_COMPONENT_OBJECT_STONE is
+	generate_pebble: GB_COMPONENT_OBJECT_STONE
 			-- `Result' is used for a pick and drop.
 		local
 			component: GB_COMPONENT
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

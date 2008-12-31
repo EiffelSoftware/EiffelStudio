@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that representa color being transported."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE}
 
-	make_with_properties (a_color: EV_COLOR; foreground: BOOLEAN) is
+	make_with_properties (a_color: EV_COLOR; foreground: BOOLEAN)
 			-- Create `Current' and assign `a_color' to `color' and `foreground' to `is_foreground'.
 		require
 			a_color_not_void: a_color /= Void
@@ -30,7 +30,7 @@ feature -- Access
 	is_foreground: BOOLEAN;
 		-- Does `Current' represent a foreground color?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A GB_OBJECT representing an EV_CELL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Access
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- Is `Current' full?
 		do
 			Result := object.full
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current'.
 		local
 			widget: EV_WIDGET
@@ -68,7 +68,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
-	accepts_child (a_type: STRING):BOOLEAN is
+	accepts_child (a_type: STRING):BOOLEAN
 			-- Does `Current' accept `an_object'?
 			-- Only widgets are accepted.
 		do
@@ -80,7 +80,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {NONE} -- Implementation
 
-	build_display_object is
+	build_display_object
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
 		local
@@ -98,7 +98,7 @@ invariant
 	--has_no_more_than_one_child: children.count <= 1
 	-- Not true if we are a window with a menu bar inserted.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

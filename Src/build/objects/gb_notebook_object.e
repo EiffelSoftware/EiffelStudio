@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EiffelVision2 notebooks"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current' at position `position'.
 		local
 			counter: INTEGER
@@ -75,7 +75,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			Precursor {GB_WIDGET_LIST_OBJECT} (an_object, position)
 		end
 
-	remove_child (an_object: GB_OBJECT) is
+	remove_child (an_object: GB_OBJECT)
 			-- Removed `an_object' and all its representations from `Current'.
 		local
 			position: INTEGER
@@ -129,10 +129,10 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {NONE} -- Implementation
 
-	item_text: STRING is "Item_text";
+	item_text: STRING = "Item_text";
 		-- Constant used for referncing item texts in XML.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

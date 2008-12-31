@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Global preference data."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {GB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,79 +26,79 @@ feature {GB_PREFERENCES} -- Initialization
 
 feature {GB_SHARED_PREFERENCES} -- Value
 
-	show_tip_of_the_day: BOOLEAN is
+	show_tip_of_the_day: BOOLEAN
 			-- 
 		do
 			Result := show_tip_of_the_day_preference.value
 		end
 	
-	number_of_recent_projects: INTEGER is
+	number_of_recent_projects: INTEGER
 			-- 
 		do
 			Result := number_of_recent_projects_preference.value
 		end
 
-	build_window_height: INTEGER is
+	build_window_height: INTEGER
 			-- 
 		do
 			Result := build_window_height_preference.value
 		end
 	
-	build_window_width: INTEGER is
+	build_window_width: INTEGER
 			-- 
 		do
 			Result := build_window_width_preference.value
 		end
 	
-	build_window_x_position: INTEGER is
+	build_window_x_position: INTEGER
 			-- 
 		do
 			Result := build_window_x_position_preference.value
 		end
 	
-	build_window_y_position: INTEGER is
+	build_window_y_position: INTEGER
 			-- 
 		do
 			Result := build_window_y_position_preference.value
 		end
 		
-	main_split_position: INTEGER is
+	main_split_position: INTEGER
 			-- 
 		do
 			Result := main_split_position_preference.value
 		end
 	
-	tip_of_day_index: INTEGER is
+	tip_of_day_index: INTEGER
 			-- 
 		do
 			Result := tip_of_day_index_preference.value
 		end
 	
-	tool_order: ARRAY [STRING] is
+	tool_order: ARRAY [STRING]
 			-- 
 		do
 			Result := tool_order_preference.value
 		end
 	
-	external_tool_order: ARRAY [STRING] is
+	external_tool_order: ARRAY [STRING]
 			-- 
 		do
 			Result := external_tool_order_preference.value
 		end
 
-	recent_projects_string: ARRAY [STRING] is
+	recent_projects_string: ARRAY [STRING]
 			-- 
 		do
 			Result := recent_projects_string_preference.value
 		end
 	
-	tools_on_top: BOOLEAN is
+	tools_on_top: BOOLEAN
 			-- 
 		do
 			Result := tools_on_top_preference.value
 		end
 	
-	type_selector_classic_mode: BOOLEAN is
+	type_selector_classic_mode: BOOLEAN
 			-- 
 		do
 			Result := type_selector_classic_mode_preference.value
@@ -134,35 +134,35 @@ feature -- Preference
 
 feature -- Preference Strings
 
-	show_tip_of_the_day_string: STRING is "global_preferences.show_tip_of_the_day"
+	show_tip_of_the_day_string: STRING = "global_preferences.show_tip_of_the_day"
 	
-	number_of_recent_projects_string: STRING is "global_preferences.number_of_recent_projects"
+	number_of_recent_projects_string: STRING = "global_preferences.number_of_recent_projects"
 
-	build_window_height_string: STRING is "global_preferences.build_window_height"
+	build_window_height_string: STRING = "global_preferences.build_window_height"
 	
-	build_window_width_string: STRING is "global_preferences.build_window_width"
+	build_window_width_string: STRING = "global_preferences.build_window_width"
 	
-	build_window_x_position_string: STRING is "global_preferences.build_window_x_position"
+	build_window_x_position_string: STRING = "global_preferences.build_window_x_position"
 	
-	build_window_y_position_string: STRING is "global_preferences.build_window_y_position"
+	build_window_y_position_string: STRING = "global_preferences.build_window_y_position"
 	
-	main_split_position_string: STRING is "global_preferences.main_split_position"
+	main_split_position_string: STRING = "global_preferences.main_split_position"
 	
-	tip_of_day_index_string: STRING is "global_preferences.tip_of_day_index"
+	tip_of_day_index_string: STRING = "global_preferences.tip_of_day_index"
 	
-	tool_order_string: STRING is "global_preferences.tool_order"
+	tool_order_string: STRING = "global_preferences.tool_order"
 	
-	external_tool_order_string: STRING is "global_preferences.external_tool_order"
+	external_tool_order_string: STRING = "global_preferences.external_tool_order"
 
-	recent_projects_string_string: STRING is "global_preferences.recent_projects"
+	recent_projects_string_string: STRING = "global_preferences.recent_projects"
 	
-	tools_on_top_string:STRING is "global_preferences.tools_on_top"
+	tools_on_top_string:STRING = "global_preferences.tools_on_top"
 	
-	type_selector_classic_mode_string: string is "global_preferences.type_selector_classic_mode"
+	type_selector_classic_mode_string: string = "global_preferences.type_selector_classic_mode"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: GB_PREFERENCE_MANAGER	
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate objects of type EV_WIDGET"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -63,7 +63,7 @@ feature {GB_CODE_GENERATOR} -- Output
 
 feature {GB_XML_STORE} -- Output
 	
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of `Current' in `element'.
 		local
 			notebook_parent: EV_NOTEBOOK
@@ -89,7 +89,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			information: ELEMENT_INFORMATION
@@ -112,7 +112,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

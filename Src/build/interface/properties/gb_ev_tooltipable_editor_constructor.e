@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attrribute editor for modification of objects of type EV_TOOLTIPABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_TOOLTIPABLE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_TOOLTIPABLE"
+	type: STRING = "EV_TOOLTIPABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -38,7 +38,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -47,7 +47,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	tooltip_entry: GB_STRING_INPUT_FIELD
 		-- Holds the text to be used for the tooltip.
 		
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING)
 			-- Assign text of `tooltip_entry' to tooltip of all objects.
 		do
 			if not a_tooltip.is_empty then
@@ -69,9 +69,9 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 
-	Tooltip_string: STRING is "Tooltip";
+	Tooltip_string: STRING = "Tooltip";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

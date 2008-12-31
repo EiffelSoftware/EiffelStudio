@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: "Objects that represent a new project command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 				-- Only can execute if there is no project open.
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
+		execute
 				-- Execute `Current'.
 			local
 				settings: GB_PROJECT_SETTINGS
@@ -131,7 +131,7 @@ feature -- Basic operations
 				end
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

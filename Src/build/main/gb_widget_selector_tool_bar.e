@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the tool bar for a widget_selector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_widget_selector (a_widget_selector: GB_WIDGET_SELECTOR; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_widget_selector (a_widget_selector: GB_WIDGET_SELECTOR; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' associated to `a_widget_selector' and assign `a_components' to `components'.
 		require
 			a_widget_selector_not_void: a_widget_selector /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			create include_directory_button
@@ -117,7 +117,7 @@ feature -- Access
 
 feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WIDGET_SELECTOR} -- Status Setting
 
-	update_select_root_window_command is
+	update_select_root_window_command
 			-- Update status of root window button based on the currently selected window.
 		do
 			if not components.system_status.loading_project then
@@ -133,14 +133,14 @@ feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WIDGET_SELECTOR} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	include_all_directories is
+	include_all_directories
 			-- Include all dirs reachable from the project location, to the current project
 		do
 			widget_selector.internal_include_all_directories (create {DIRECTORY}.make (components.system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))
 			components.status_bar.set_timed_status_text (directories_included_text)
 		end
 
-	expand_subtree_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	expand_subtree_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Expand `widget_selector_common_item' recursively
 		require
 			widget_selector_common_item_not_void: widget_selector_common_item /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			components.status_bar.set_timed_status_text ("All nodes of " + widget_selector_common_item.name + " expanded.")
 		end
 
-	show_hide_all_empty_directories is
+	show_hide_all_empty_directories
 			-- Show/hide all empty directories in project based on state of `show_hide_empty_directories_button'.
 		do
 			if show_hide_empty_directories_button.is_selected then
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_hide_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	internal_hide_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Ensure that `selector_item' is hidden in `Current'.
 		require
 			selector_item_not_void: selector_item /= Void
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_show_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	internal_show_directory (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Ensure that `selector_item' is visible in `Current'.
 		require
 			selector_item_not_void: selector_item /= Void
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 		-- Is `Current' in its default state?
 
 invariant
 	widget_selector_not_void: widget_selector /= Void
 	bi_directional: widget_selector.tool_bar /= Void implies widget_selector.tool_bar = Current
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

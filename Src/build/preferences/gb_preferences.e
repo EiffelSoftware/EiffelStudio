@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to the EiffelBuild resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create `Current' using `a_preferences'
 		do
 			create dialog_data.make (a_preferences)			
@@ -40,7 +40,7 @@ feature -- Access
 	
 feature -- Basic operations
 
-	show_preference_window (a_window: EV_TITLED_WINDOW) is
+	show_preference_window (a_window: EV_TITLED_WINDOW)
 			-- Ensure that `preference_window' is displayed.
 		do				
 			create preference_window.make (preferences, a_window)	
@@ -50,7 +50,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_focus_to_preference_window_left_list is
+	set_focus_to_preference_window_left_list
 			-- Assign keyboard focus to `left_list' of `preference_window'.
 		require
 			preference_window_not_void: preference_window /= Void
@@ -66,7 +66,7 @@ invariant
 	code_generation_data_not_void: code_generation_data /= Void
 	global_data_not_void: global_data /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

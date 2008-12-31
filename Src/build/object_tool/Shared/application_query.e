@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class describing the notion of a query, that is %
 				% either an attribute or a function without argument."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Creation
 
-	make (q_name, q_type: STRING) is
+	make (q_name, q_type: STRING)
 			-- Create a query with name `q_name' and returned
 			-- type `q_type'.
 		require
@@ -49,7 +49,7 @@ feature -- Attributes
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- Value displayed in a scrollable list.
 		do
 			create Result.make (10)
@@ -58,7 +58,7 @@ feature -- Access
 			Result.append (query_type)
 		end
 
-	sort_possible_methods (application: APPLICATION_CLASS) is
+	sort_possible_methods (application: APPLICATION_CLASS)
 			-- Sort application methods and list of compatible methods
 			-- containing the name of the query.
 		local
@@ -106,7 +106,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

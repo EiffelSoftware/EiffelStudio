@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class describing the notion of a command, that is %
 				% a procedure with only one argument."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (cmd_name, arg_name, arg_type: STRING) is
+	make (cmd_name, arg_name, arg_type: STRING)
 			-- Create a command with name `command_name', whose
 			-- argument name is `arg_name' and argument type is
 			-- `arg_type'.
@@ -45,7 +45,7 @@ feature -- Attributes
 	argument_type: STRING;
 			-- Type of the argument
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

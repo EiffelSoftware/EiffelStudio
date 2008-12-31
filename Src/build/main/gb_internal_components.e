@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	default_create is
+	default_create
 			-- Create `Current'.
 		do
 			create digit_checker.make
@@ -79,13 +79,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pick_and_drop_motion (an_x, a_y: INTEGER; target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	pick_and_drop_motion (an_x, a_y: INTEGER; target: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Respond to a global pick and drop motion.
 		do
 			status_bar.clear_status_during_transport (an_x, a_y, target)
 		end
 
-	pick_and_drop_started (pebble: ANY) is
+	pick_and_drop_started (pebble: ANY)
 			-- Respond to a pick and drop starting.
 		require
 			pebble_not_void: pebble /= Void
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			commands.update
 		end
 
-	pick_and_drop_cancelled (pebble: ANY) is
+	pick_and_drop_cancelled (pebble: ANY)
 			-- Respond to the cancelling of a pick and drop.
 		require
 			pebble_not_void: pebble /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			commands.update
 		end
 
-	pick_and_drop_completed (pebble: ANY) is
+	pick_and_drop_completed (pebble: ANY)
 			-- Respond to the successful completion of a pick and drop.
 		require
 			pebble_not_void: pebble /= Void
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_TEXT_COMPONENT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_TEXT_COMPONENT
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_TEXT_COMPONENT"
+	type: STRING = "EV_TEXT_COMPONENT"
 		-- String representation of object_type modifyable by `Current'.
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -42,7 +42,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -59,14 +59,14 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			-- Nothing to perform here.
 		end
 		
-	set_is_editable is
+	set_is_editable
 			-- Update editable status for all objects to reflect `editable_button'.
 		do
 			if editable_button.is_selected then
@@ -79,9 +79,9 @@ feature {NONE} -- Implementation
 	editable_button: EV_CHECK_BUTTON
 		-- Used to control is_editable state.
 	
-	Is_editable_string: STRING is "Is_editable";
+	Is_editable_string: STRING = "Is_editable";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

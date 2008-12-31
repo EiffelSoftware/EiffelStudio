@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate XML for saving/loading and possibly other%
 		%internal uses."
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ feature -- Access
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -56,7 +56,7 @@ feature -- Access
 			components_set: components = a_components
 		end
 
-	components_loaded: BOOLEAN is
+	components_loaded: BOOLEAN
 			-- Are components loaded?
 		do
 			Result := component_document /= Void
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	save is
+	save
 			-- Save the currently built window to XML.
 		local
 			xml_store: GB_XML_STORE
@@ -74,7 +74,7 @@ feature -- Basic operations
 			xml_store.store
 		end
 
-	load is
+	load
 			-- Retrieve the current built window from XML
 		local
 			xml_load: GB_XML_LOAD
@@ -85,7 +85,7 @@ feature -- Basic operations
 			components.system_status.set_object_structure_changed
 		end
 
-	import (file_name: STRING) is
+	import (file_name: STRING)
 			-- Import Build file `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -96,7 +96,7 @@ feature -- Basic operations
 			xml_load.import (file_name)
 		end
 
-	load_components is
+	load_components
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
 		local
@@ -139,7 +139,7 @@ feature -- Basic operations
 			component_doc_not_void: component_document /= Void
 		end
 
-	add_new_component (an_object: GB_OBJECT; component_name: STRING) is
+	add_new_component (an_object: GB_OBJECT; component_name: STRING)
 			-- Add a new component based on `an_object', named `component_name'
 			-- to `component_document'.
 		require
@@ -161,7 +161,7 @@ feature -- Basic operations
 			components.constants.flatten_constants (component_element)
 		end
 
-	save_components is
+	save_components
 			-- Store `component_document' into file
 			-- `component_filename'.
 		local
@@ -193,7 +193,7 @@ feature -- Basic operations
 			end
 		end
 
-	actual_save_components is
+	actual_save_components
 			-- Actually perform saving of components.
 		local
 			file: KL_TEXT_OUTPUT_FILE
@@ -214,7 +214,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_component (component_name: STRING) is
+	remove_component (component_name: STRING)
 			-- Removed component named `name' from `component_document'.
 		require
 			vaid_component_name: component_name /= Void and not component_name.is_empty
@@ -229,7 +229,7 @@ feature -- Basic operations
 
 feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
-	xml_element_representing_named_component (a_name: STRING): XM_ELEMENT is
+	xml_element_representing_named_component (a_name: STRING): XM_ELEMENT
 			-- `Result' is the element representing component `a_name' in
 			-- `component_document'.
 		local
@@ -241,7 +241,7 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	component_root_element_type (a_name: STRING): STRING is
+	component_root_element_type (a_name: STRING): STRING
 			-- `Result' is the type of object representing the root element
 			-- of the component. i.e. "EV_BUTTON".
 		local
@@ -271,7 +271,7 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	display_save_progress (total, written: INTEGER) is
+	display_save_progress (total, written: INTEGER)
 			-- Display current save progress as percentage of `total' based on `written',
 			-- unless Build is running in Wizard mode.
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			environment.application.process_graphical_events
 		end
 
-	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+	pipe_callback: XM_TREE_CALLBACKS_PIPE
 			-- Create unique callback pipe.
 		once
 			create Result.make
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		-- Document which contains representations of all components
 		-- that have been defined by the user.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a cut object command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `a_components'.
 		local
 			acc: EV_ACCELERATOR
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result := (components.tools.layout_constructor.has_focus and components.tools.layout_constructor.selected_item /= Void) or
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
+		execute
 				-- Execute `Current'.
 			local
 				command_delete: GB_DELETE_OBJECT_COMMAND
@@ -78,7 +78,7 @@ feature -- Basic operations
 				components.commands.update
 			end
 
-		execute_with_object (object_stone: GB_STANDARD_OBJECT_STONE) is
+		execute_with_object (object_stone: GB_STANDARD_OBJECT_STONE)
 				-- Execute `Current' directly with object `object_stone'.
 			require
 				object_stone_not_void: object_stone /= Void
@@ -93,7 +93,7 @@ feature -- Basic operations
 				components.commands.update
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

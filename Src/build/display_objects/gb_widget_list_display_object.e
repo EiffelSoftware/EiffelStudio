@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a visible representation of an%
 		%invisible container in the display window."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Access
 
 	child: EV_WIDGET_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

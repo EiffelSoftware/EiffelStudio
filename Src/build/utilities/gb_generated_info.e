@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent information about an object%
 	%retrieved from a generated XML file."
 	legal: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature -- Initialization
 
-	make_root is
+	make_root
 			-- Create `Current' as root node of generated info.
 		do
 			common_make
 		end
 
-	make_child (a_parent: GB_GENERATED_INFO) is
+	make_child (a_parent: GB_GENERATED_INFO)
 			-- Create `Current' as child of `a_parent'.
 		do
 			common_make
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	common_make is
+	common_make
 			-- Initialization common to `make' and `make_child'.
 		do
 			create children.make (50)
@@ -71,26 +71,26 @@ feature -- Access
  	supported_type_elements: ARRAYED_LIST [XM_ELEMENT]
  		-- All xml elements matching `supported_types'.
 
- 	names_by_id: HASH_TABLE [STRING, INTEGER] is
+ 	names_by_id: HASH_TABLE [STRING, INTEGER]
 			-- All names found during prepass, referenced by id.
 		once
 			create Result.make (40)
 		end
 
-	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER] is
+	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER]
 			--  All generated infos referenced by id.
 		once
 			create Result.make (40)
 		end
 
-	fonts_set: STRING is
+	fonts_set: STRING
 			-- Have one or more fonts been set
 			-- in the system?
 		once
 			Result := ""
 		end
 
-	pixmaps_set: STRING is
+	pixmaps_set: STRING
 			-- Have one or more pixmaps been set
 			-- in the system?
 		once
@@ -113,7 +113,7 @@ feature -- Access
 	name: STRING
 		-- Name associated with object.
 
-	actual_name: STRING is
+	actual_name: STRING
 			-- Actual name to be applied to object represented by `Current'
 			-- in the generated code.
 		do
@@ -132,7 +132,7 @@ feature -- Access
 			end
 		end
 
-	actual_name_for_feature_call: STRING is
+	actual_name_for_feature_call: STRING
 			-- Return `actual_name' with a "." appended if not
 			-- empty. Permits a feature call to be appended directly
 			-- for generated code.
@@ -150,7 +150,7 @@ feature -- Access
 	element: XM_ELEMENT
 		-- XML element that was representing object.
 
-	child_names: ARRAYED_LIST [STRING] is
+	child_names: ARRAYED_LIST [STRING]
 			-- `Result' is all `name' of `children'.
 		do
 			if internal_child_names = Void then
@@ -167,7 +167,7 @@ feature -- Access
 			Result := internal_child_names
 		end
 
-	ev_any_access_name: STRING is
+	ev_any_access_name: STRING
 			-- `Result' is the access name for object represented by `Current'.
 		do
 				-- Note that the correct client string for windows is not handled in here as currently, it is not
@@ -178,7 +178,7 @@ feature -- Access
 			end
 		end
 
-	all_children_recursive (list: ARRAYED_LIST [GB_GENERATED_INFO]) is
+	all_children_recursive (list: ARRAYED_LIST [GB_GENERATED_INFO])
 			-- Add all children of `Current' to `list' recursively.
 		require
 			list_not_void: list /= Void
@@ -188,79 +188,79 @@ feature -- Access
 
 feature -- Status setting
 
-	set_type (a_type: STRING) is
+	set_type (a_type: STRING)
 			-- Assign `a_type' to `type'.
 		do
 			type := a_type
 		end
 
-	set_id (an_id: INTEGER) is
+	set_id (an_id: INTEGER)
 			-- Assign `an_id' to `id'.
 		do
 			id := an_id
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
 		end
 
-	set_as_root_object is
+	set_as_root_object
 			-- Assign `True' to `is_root_object'.
 		do
 			is_root_object := True
 		end
 
-	set_associated_root_object_id (an_id: INTEGER) is
+	set_associated_root_object_id (an_id: INTEGER)
 			-- Assign `an_id' to `associated_root_object_id'.
 		do
 			associated_root_object_id := an_id
 		end
 
-	enable_generated_name is
+	enable_generated_name
 			-- Assign `True' to `generated_name'.
 		do
 			generated_name := True
 		end
 
-	set_element (an_element: XM_ELEMENT) is
+	set_element (an_element: XM_ELEMENT)
 			-- Assign `an_element' to `element'.
 		do
 			element := an_element
 		end
 
-	add_new_supported_type (a_type: STRING) is
+	add_new_supported_type (a_type: STRING)
 			-- Add `a_type' to `supported_types'.
 		do
 			supported_types.extend (a_type)
 		end
 
-	add_new_type_element (an_element: XM_ELEMENT) is
+	add_new_type_element (an_element: XM_ELEMENT)
 			-- Add `an_element' to `supported_type_elements'.
 		do
 			supported_type_elements.extend (an_element)
 		end
 
-	add_new_event (event: GB_ACTION_SEQUENCE_INFO) is
+	add_new_event (event: GB_ACTION_SEQUENCE_INFO)
 			-- Add `event' to `events'.
 		do
 			events.extend (event)
 		end
 
-	enable_fonts_set is
+	enable_fonts_set
 			-- Make `fonts_set' not `is_empty'.
 		do
 			fonts_set.append_string ("1")
 		end
 
-	enable_pixmaps_set is
+	enable_pixmaps_set
 			-- Make `pixmaps_set' not `is_empty'.
 		do
 			pixmaps_set.append_string ("1")
 		end
 
-	reset_after_generation is
+	reset_after_generation
 			-- Restore once attributes that need to be reset
 			-- for each generation.
 		do
@@ -268,13 +268,13 @@ feature -- Status setting
 			pixmaps_set.wipe_out
 		end
 
-	enable_generate_as_client is
+	enable_generate_as_client
 			-- Ensure `generate_as_client' is `True'.
 		do
 			generate_as_client := True
 		end
 
-	disable_generate_as_client is
+	disable_generate_as_client
 			-- Ensure `generate_as_client' is `False'.
 		do
 			generate_as_client := False
@@ -282,7 +282,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	new_child: GB_GENERATED_INFO is
+	new_child: GB_GENERATED_INFO
 			-- Create a new GB_GENERATED_INFO as
 			-- child of `Current'.
 		local
@@ -294,7 +294,7 @@ feature -- Element change
 
 feature {GB_GENERATED_INFO} -- Implementation
 
-	add_child (child: GB_GENERATED_INFO) is
+	add_child (child: GB_GENERATED_INFO)
 			-- Add `child' to `children'.
 		require
 			child_exists: child /= Void
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 	internal_child_names: ARRAYED_LIST [STRING]
 		-- Internal representation of all child names.
 
-	all_children_recursive_internal (info: GB_GENERATED_INFO; list: ARRAYED_LIST [GB_GENERATED_INFO]) is
+	all_children_recursive_internal (info: GB_GENERATED_INFO; list: ARRAYED_LIST [GB_GENERATED_INFO])
 			-- Add all children of `Current' to `list' recursively.
 		require
 			info_not_void: info /= Void
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 invariant
 	supported_types_matches_elements: supported_types /= Void implies supported_types.count = supported_type_elements.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

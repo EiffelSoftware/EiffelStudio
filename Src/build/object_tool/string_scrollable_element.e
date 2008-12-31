@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A scrollable list element that represents %
 			% only a string"
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization is
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create `Current' with space for `n' characters.
 		do
 			default_create
@@ -44,20 +44,20 @@ feature -- Initialization is
 
 feature -- Implementation
 
-	value: STRING is
+	value: STRING
 			-- `Result' is `STRING' representing value of `Current'.
 		do
 			create Result.make (count)
 			Result.append (Current)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Test equality based on values of each `value'.
 		do
 			Result := value.is_equal (other.value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

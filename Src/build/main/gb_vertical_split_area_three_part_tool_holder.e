@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a vertical split area which holds%
 		%three objects of type GB_TOOL_HOLDER."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_tools (tool1, tool2, tool3: EV_WIDGET; title1, title2, title3: STRING) is
+	make_with_tools (tool1, tool2, tool3: EV_WIDGET; title1, title2, title3: STRING)
 			-- Create `Current' and extend with `first_tool' and `second_holder'.
 			-- Assign `title1' to `tool1' and `title2' to `tool2'.
 		do
@@ -54,13 +54,13 @@ feature -- Access
 
 feature -- Basic operation
 
-	set_split_position (value: INTEGER) is
+	set_split_position (value: INTEGER)
 			-- Set split position of `split_area' to `value'.
 		do
 			split_area.set_split_position (value)
 		end
 			
-	minimize_tool (tool_holder: GB_TOOL_HOLDER)	 is
+	minimize_tool (tool_holder: GB_TOOL_HOLDER)
 			-- Minimize `tool_holder'.
 		do
 			--| FIXME Implement. The commented code is
@@ -104,7 +104,7 @@ feature -- Basic operation
 --			end
 		end
 		
-	maximize_tool (tool_holder: GB_TOOL_HOLDER) is
+	maximize_tool (tool_holder: GB_TOOL_HOLDER)
 			-- Maximize `tool_holder'.
 		do
 			--| FIXME Implement. The commented code is
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 --				split_area.set_second (second_holder)
 --			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

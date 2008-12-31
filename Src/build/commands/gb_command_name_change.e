@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a renaming of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (child: GB_OBJECT; a_new_name, an_old_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make (child: GB_OBJECT; a_new_name, an_old_name: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		do
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operation
 
-	execute is
+	execute
 			-- Execute `Current'.
 		local
 			object: GB_OBJECT
@@ -64,7 +64,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -88,7 +88,7 @@ feature -- Basic Operation
 			components.commands.update
 		end
 
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		local
 			object: GB_OBJECT
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	old_name: STRING
 		-- Previous name of `object'.
 
-	update_representations_of_all_referers (an_object: GB_OBJECT) is
+	update_representations_of_all_referers (an_object: GB_OBJECT)
 			-- For all `instance_referers' of `an_object recursively, call
 			-- `update_layout_item_text' to reflect the name change in layout representations.
 		require
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that permit expansion of layout items on objects after loading."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {GB_XML_LOAD}-- Status setting
 
-	register_object_as_expanded (an_object: GB_OBJECT) is
+	register_object_as_expanded (an_object: GB_OBJECT)
 			-- Add `an_object' to `expanded_objects'.
 		require
 			an_object_not_void: an_object /= Void
@@ -23,7 +23,7 @@ feature {GB_XML_LOAD}-- Status setting
 		
 feature {GB_XML_LOAD}-- Basic operations
 
-	expand_all_registered_objects is
+	expand_all_registered_objects
 			-- Expand all relevent representations of all objects in
 			-- `expanded_objects', and leave `expanded_objects' empty.
 		local
@@ -46,7 +46,7 @@ feature {GB_XML_LOAD}-- Basic operations
 		
 feature {GB_XML_LOAD} -- Implementation
 
-	expanded_objects: ARRAYED_LIST [GB_OBJECT] is
+	expanded_objects: ARRAYED_LIST [GB_OBJECT]
 			-- `Result' is all objects marked as expanded.
 		once
 			create Result.make (0)
@@ -55,7 +55,7 @@ feature {GB_XML_LOAD} -- Implementation
 invariant
 	expanded_objects_not_void: expanded_objects /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

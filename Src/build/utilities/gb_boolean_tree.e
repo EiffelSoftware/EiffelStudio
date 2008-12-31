@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a tree structure of BOOLEAN."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ feature -- Access
 	
 feature -- Status setting
 
-	set_root_node (node: GB_BOOLEAN_TREE_ITEM) is
+	set_root_node (node: GB_BOOLEAN_TREE_ITEM)
 			-- Assign `node' to `root_node'.
 		require
 			node_not_void: node /= Void
@@ -24,7 +24,7 @@ feature -- Status setting
 			root_node = node
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

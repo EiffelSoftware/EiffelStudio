@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A GB_OBJECT representing an EV_TITLED_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,13 +38,13 @@ feature -- Access
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- Is `Current' full?
 		do
 			Result := object.full
 		end
 
-	add_new_object_wrapper (an_object: GB_OBJECT) is
+	add_new_object_wrapper (an_object: GB_OBJECT)
 			-- If shift pressed then add `an_object' to
 			-- parent of `Current', else add to `Current'.
 		local
@@ -70,7 +70,7 @@ feature -- Access
 			end
 		end
 
-	add_new_component_wrapper (a_component: GB_COMPONENT) is
+	add_new_component_wrapper (a_component: GB_COMPONENT)
 			-- If shift pressed then add `a_component' to
 			-- parent of `Current', else add to `Current'.
 		local
@@ -92,7 +92,7 @@ feature -- Access
 			end
 		end
 
-	can_add_child (object_representation: ANY): BOOLEAN is
+	can_add_child (object_representation: ANY): BOOLEAN
 			-- May an object represented by `object_representation' be added
 			-- to `Current'?
 		local
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	update_objects is
+	update_objects
 			-- Reset `object' and `display_object' to be up to
 			-- date with `display_window' and `builder_window'.
 		do
@@ -124,7 +124,7 @@ feature -- Access
 			display_object.set_child (components.tools.Builder_window)
 		end
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current'.
 		local
 			widget: EV_WIDGET
@@ -174,7 +174,7 @@ feature -- Access
 			end
 		end
 
-	accepts_child (a_type: STRING):BOOLEAN is
+	accepts_child (a_type: STRING):BOOLEAN
 			-- Does `Current' accept `an_object'. By default,
 			-- widgets are accepted. Redefine in primitives
 			-- that must hold items to allow insertion.
@@ -188,7 +188,7 @@ feature -- Access
 			end
 		end
 
-	add_new_menu_bar_component (a_component: GB_COMPONENT) is
+	add_new_menu_bar_component (a_component: GB_COMPONENT)
 			-- Add a new menu bar component to `Current'.
 		local
 			menu_object: GB_MENU_BAR_OBJECT
@@ -200,7 +200,7 @@ feature -- Access
 			add_menu_bar (menu_object)
 		end
 
-	add_menu_bar (menu_object: GB_MENU_BAR_OBJECT) is
+	add_menu_bar (menu_object: GB_MENU_BAR_OBJECT)
 			-- Add `menu_object' to `Current'.
 			-- We have to handle menu bars seperately from
 			-- other objects, which may be added using `add_object'.
@@ -231,7 +231,7 @@ feature -- Access
 
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Basic operation
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of specific attributes of `Current'
 			-- in `element'. For now, only a name needs to be stored.
 			-- (export status {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER})
@@ -242,7 +242,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 			end
 		end
 
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update `Current' based on information held in `element'.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
@@ -259,7 +259,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 
 feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 
-	set_as_root_window is
+	set_as_root_window
 			-- Ensure `Current' is the root window of the project,
 			-- which will be launched by the generated application.
 		do
@@ -272,7 +272,7 @@ feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 			components.object_handler.set_root_window (Current)
 		end
 
-	update_as_root_window_changing is
+	update_as_root_window_changing
 			-- Update `Current' to reflect that fact that it is no longer the main
 			-- window for the system.
 		do
@@ -282,7 +282,7 @@ feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	set_object (a_window: like object) is
+	set_object (a_window: like object)
 			-- Assign `a_window' to `object'.
 		require
 			object_not_void: a_window /= Void
@@ -292,7 +292,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			object_set: object = a_window
 		end
 
-	build_display_object is
+	build_display_object
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
 		local
@@ -304,7 +304,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			connect_display_object_events
 		end
 
-	set_display_object  (display_win: GB_BUILDER_WINDOW) is
+	set_display_object  (display_win: GB_BUILDER_WINDOW)
 			-- Assign `display_win' to `display_object'.
 		require
 			window_not_void: display_win /= Void
@@ -314,7 +314,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			window_set: display_object.child = display_win
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

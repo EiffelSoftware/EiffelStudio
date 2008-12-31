@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow the user to lay out their vision2 components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' and add a root
 			-- item to represent a window.
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	ensure_object_visible (an_object: GB_OBJECT) is
+	ensure_object_visible (an_object: GB_OBJECT)
 			-- Ensure that `an_object' is contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -112,7 +112,7 @@ feature -- Basic operation
 			ensure_item_visible (an_object.layout_item)
 		end
 
-	target_associated_top_object (an_object: GB_OBJECT) is
+	target_associated_top_object (an_object: GB_OBJECT)
 			-- Target associated top level object of `an_object' to `Current'.
 		require
 			an_object_not_void: an_object /= Void
@@ -128,7 +128,7 @@ feature -- Basic operation
 
 feature -- Access
 
-	root_item: GB_LAYOUT_CONSTRUCTOR_ITEM is
+	root_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			-- `Result' is layout constructor item of
 			-- root node or Void if none.
 		do
@@ -139,7 +139,7 @@ feature -- Access
 			not_empty_implies_has_root_object: not is_empty implies Result /= Void
 		end
 
-	view_object_button: EV_TOOL_BAR_BUTTON is
+	view_object_button: EV_TOOL_BAR_BUTTON
 			-- `Result' is a tool bar button that highlights an object in `Current'.
 		local
 			pixmaps: GB_SHARED_PIXMAPS
@@ -154,18 +154,18 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: EV_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
 		do
 			create Result
 		end
 
-	name: STRING is "Layout Constructor"
+	name: STRING = "Layout Constructor"
 			-- Full name used to represent `Current'.
 
 feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
-	update_expanded_state_from_root_object is
+	update_expanded_state_from_root_object
 			-- Update expanded state of root item and all children
 			-- recursively, from information held in each associated object.
 		do
@@ -176,7 +176,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	add_root_item (layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
+	add_root_item (layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM)
 			-- Add `layout_item' as a root item of `Current'.
 		require
 			layout_item_not_void: layout_item /= Void
@@ -188,7 +188,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {GB_WIDGET_SELECTOR, GB_OBJECT} -- Implementation
 
-	set_root_window (a_window: GB_OBJECT) is
+	set_root_window (a_window: GB_OBJECT)
 			-- Ensure that `a_window' is displayed in `Current'.
 		require
 			window_not_void: a_window /= Void
@@ -202,7 +202,7 @@ feature {GB_WIDGET_SELECTOR, GB_OBJECT} -- Implementation
 
 feature {GB_OBJECT} -- Implementation
 
-	highlight_object (object_stone: GB_STANDARD_OBJECT_STONE) is
+	highlight_object (object_stone: GB_STANDARD_OBJECT_STONE)
 			-- Ensure `an_object' is highlighted object in `Current'.
 			-- Only if `an_object' is contained in the structure of `Current', and
 			-- is not a titled window.
@@ -220,7 +220,7 @@ feature {GB_OBJECT} -- Implementation
 
 feature {NONE} -- Implementation	
 
-	object_higlightable (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
+	object_higlightable (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN
 			-- Is `an_object' a valid object for highlighting via
 			-- `highlight_object'.
 		require
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			Result := titled_window_object = Void and an_object.layout_item /= Void
 		end
 
-	expand_layout_item (an_object: GB_OBJECT) is
+	expand_layout_item (an_object: GB_OBJECT)
 			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_for_object_delete (a_key: EV_KEY) is
+	check_for_object_delete (a_key: EV_KEY)
 			-- Respond to keypress of `a_key' and delete selected object.
 		require
 			a_key_not_void: a_key /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_object is
+	delete_object
 			-- Delete selected object.
 		require
 			item_selected: selected_item /= Void
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 invariant
 	has_only_one_root: count <= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

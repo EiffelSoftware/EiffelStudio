@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to show/hide a tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {GB_COMMAND_HANDLER} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -26,19 +26,19 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in menus.
 		do
 			Result := Show_hide_component_viewer_menu_text
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmap representing the item (for buttons)
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_component_viewer
 		end
 
-	window: EV_DIALOG is
+	window: EV_DIALOG
 			-- Result is window referenced by
 			-- `Current' command.
 		do
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	component_dropped (object_stone: GB_COMPONENT_OBJECT_STONE) is
+	component_dropped (object_stone: GB_COMPONENT_OBJECT_STONE)
 			-- Respond to the dropping of `object_stone' on representations of `Current'.
 		do
 			if not is_selected then
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			components.tools.component_viewer.set_component (object_stone.component)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

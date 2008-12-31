@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing arguments of an Eiffel routine"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make (arg_name, arg_type: STRING) is
+	make (arg_name, arg_type: STRING)
 			-- Create object.
 		require
 			arg_name_valid: arg_name /= Void and not arg_name.empty
@@ -34,7 +34,7 @@ feature -- Attributes
 
 feature 
 
-	eiffel_text: STRING is
+	eiffel_text: STRING
 			-- Eiffel text corresponding to the declaration.
 		do
 			create Result.make (0)
@@ -43,7 +43,7 @@ feature
 			Result.append (argument_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

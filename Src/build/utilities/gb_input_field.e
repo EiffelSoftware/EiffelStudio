@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that are a general representation of input fields."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,7 @@ feature -- Access
 	constants_combo_box: EV_COMBO_BOX
 		-- Combo box which will contain all INTEGER constants.
 
-	type: STRING is
+	type: STRING
 			-- Type of constant represented.
 		deferred
 		end
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Status setting
 
-	constant_added (constant: GB_CONSTANT) is
+	constant_added (constant: GB_CONSTANT)
 			-- Update `Current' to reflect addition of `constant' to system.
 		require
 			constant_not_void: constant /= Void
@@ -111,7 +111,7 @@ feature -- Status setting
 			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 		end
 
-	constant_changed (constant: GB_CONSTANT) is
+	constant_changed (constant: GB_CONSTANT)
 			-- `constant' has changed, so update representation in `Current'.
 		require
 			constant_not_void: constant /= Void
@@ -124,7 +124,7 @@ feature -- Status setting
 			end
 		end
 
-	constant_removed (constant: GB_CONSTANT) is
+	constant_removed (constant: GB_CONSTANT)
 			-- Update `Current' to reflect removal of `constant' from system.
 		require
 			constant_not_void: constant /= Void
@@ -146,7 +146,7 @@ feature -- Status setting
 			list_count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
 		end
 
-	list_item_selected (list_item: EV_LIST_ITEM) is
+	list_item_selected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been selected from `constants_combo_box'.
 		require
 			list_item_not_void: list_item /= Void
@@ -154,7 +154,7 @@ feature -- Status setting
 		deferred
 		end
 
-	list_item_deselected (list_item: EV_LIST_ITEM) is
+	list_item_deselected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been deselected from `constants_combo_box'.
 		require
 			list_item_not_void: list_item /= Void
@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	call_default_create (any: ANY) is
+	call_default_create (any: ANY)
 			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
 		require
 			gb_ev_any_not_void: any /= Void
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			default_create
 		end
 
-	add_label (label_text, tooltip: STRING) is
+	add_label (label_text, tooltip: STRING)
 			-- Add a label to `Current' with `text' `label_text' and
 			-- tooltip `tooltip'.
 		require
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			label.align_text_left
 		end
 
-	create_constants_button is
+	create_constants_button
 			-- Create and initialize `constants_button'.
 		do
 			create constants_button
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			constants_button_not_void: constants_button /= Void
 		end
 
-	update_editors_when_unselected is
+	update_editors_when_unselected
 			-- Call `update_editors' only if `constants_button' is not selected.
 		do
 			if not constants_button.is_selected then
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	switch_constants_mode is
+	switch_constants_mode
 			-- Respond to a user press of `constants_button' and
 			-- update the displayed input fields accordingly.
 		do
@@ -223,23 +223,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_constant_mode is
+	enable_constant_mode
 			-- Ensure constant entry fields are displayed.
 		deferred
 		end
 
-	disable_constant_mode is
+	disable_constant_mode
 			-- Ensure constant entry fields are hidden.
 		deferred
 		end
 
-	update_editors is
+	update_editors
 			-- Update editors.
 		do
 			components.object_editors.update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)
 		end
 
-		add_select_item is
+		add_select_item
 			-- Add an initial item to `constants_combo_box' prompting for item selection.
 		require
 			does_not_include_item: constants_combo_box.is_empty or else not has_select_item
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			has_select_item: has_select_item
 		end
 
-	remove_select_item is
+	remove_select_item
 			-- Remove initial item which prompts for item selection from `constants_combo_box'.
 		require
 			has_select_item: has_select_item
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			not_has_select_item: not has_select_item
 		end
 
-	has_select_item: BOOLEAN is
+	has_select_item: BOOLEAN
 			-- Does `constants_combo_box' contain the select item entry?
 		do
 			if not constants_combo_box.is_empty then
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

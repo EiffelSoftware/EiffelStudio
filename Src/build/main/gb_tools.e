@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide components that need to be accessed%
 		%by many different classes."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -68,19 +68,19 @@ feature -- Access
 		end
 
 
-	display_window: GB_DISPLAY_WINDOW is
+	display_window: GB_DISPLAY_WINDOW
 			-- Displays the current window that has been built.
 		do
 			Result := Display_window_cell.item
 		end
 
-	set_display_window (a_display_window: GB_DISPLAY_WINDOW) is
+	set_display_window (a_display_window: GB_DISPLAY_WINDOW)
 			-- Store `a_display_window' in `Display_window_cell'.
 		do
 			Display_window_cell.put (a_display_window)
 		end
 
-	set_main_window (a_main_window: EV_TITLED_WINDOW) is
+	set_main_window (a_main_window: EV_TITLED_WINDOW)
 			-- Assign `a_main_window' to `main_window'.
 		require
 			a_main_window_not_void: a_main_window /= Void
@@ -92,14 +92,14 @@ feature -- Access
 			-- A cell to hold `display_window' which allows the
 			-- window to be replaced.
 
-	builder_window: GB_BUILDER_WINDOW is
+	builder_window: GB_BUILDER_WINDOW
 			-- A representation of the current window that has been built,
 			-- with all containers visible.
 		do
 			Result := builder_window_cell.item
 		end
 
-	set_builder_window (a_builder_window: GB_BUILDER_WINDOW) is
+	set_builder_window (a_builder_window: GB_BUILDER_WINDOW)
 			-- Store `a_builder_window' in `builder_window_cell'.
 		do
 			Builder_window_cell.put (a_builder_Window)
@@ -148,7 +148,7 @@ feature -- Access
 	all_storable_tools: ARRAYED_LIST [GB_STORABLE_TOOL]
 			-- All tools that are storable.
 
-	tool_by_name (name: STRING): GB_STORABLE_TOOL is
+	tool_by_name (name: STRING): GB_STORABLE_TOOL
 			-- `Result' is tool corresponding to `name'.
 		require
 			name_valid: valid_tool_name (name)
@@ -170,7 +170,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	tool_by_widget (a_widget: EV_WIDGET): GB_STORABLE_TOOL is
+	tool_by_widget (a_widget: EV_WIDGET): GB_STORABLE_TOOL
 			-- `Result' is tool with widget `a_widget'.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -190,7 +190,7 @@ feature -- Access
 			end
 		end
 
-	storable_name_by_tool (a_widget: GB_STORABLE_TOOL): STRING is
+	storable_name_by_tool (a_widget: GB_STORABLE_TOOL): STRING
 			-- Result is a string representation of tool `a_widget'.
 			-- Used in the preferences representation.
 		require
@@ -201,16 +201,16 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	Component_selector_name: STRING is "Component selector"
+	Component_selector_name: STRING = "Component selector"
 		-- String representation for component selector.
 
-	Type_selector_name: STRING is "Type selector"
+	Type_selector_name: STRING = "Type selector"
 		-- String representation for type selector.
 
-	Widget_selector_name: STRING is "Widget selector"
+	Widget_selector_name: STRING = "Widget selector"
 		-- String representation for widget selector.
 
-	valid_tool_name (a_name: STRING): BOOLEAN is
+	valid_tool_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid tool name?
 			-- Case sensitive.
 		require
@@ -227,7 +227,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	tool_name_as_storable (a_name: STRING): STRING is
+	tool_name_as_storable (a_name: STRING): STRING
 			-- `Result' is representation of `a_name' without
 			-- spaces, and all lower case.
 		require
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			Result.prune_all (' ')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent stones carrying a GB_OBJECT representing a clipboard object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	object: GB_OBJECT is
+	object: GB_OBJECT
 			-- Object which `Current' is representing.
 			-- Warning this builds new objects, so do not call
 			-- from a veto pebble function, only on the drop.
@@ -43,7 +43,7 @@ feature -- Access
 			Result := components.clipboard.object
 		end
 
-	object_type: STRING is
+	object_type: STRING
 			-- EiffelVision2 Type of object represented.
 		do
 			Result := components.clipboard.object_type
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {GB_CLIPBOARD} -- Implementation
 
-	set_associated_top_level_object (an_id: INTEGER) is
+	set_associated_top_level_object (an_id: INTEGER)
 			-- Assign `an_id' to `associated_top_level_object'.
 		require
 			an_id_positive: an_id > 0
@@ -59,7 +59,7 @@ feature {GB_CLIPBOARD} -- Implementation
 			associated_top_level_object := an_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

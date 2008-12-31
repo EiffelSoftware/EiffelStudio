@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a horizontal split area which holds%
 		%objects of type GB_TOOL_HOLDER."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_tools (tool1, tool2: EV_WIDGET; title2: STRING) is
+	make_with_tools (tool1, tool2: EV_WIDGET; title2: STRING)
 			-- Create `Current', add `tool1' to left side and add
 			-- tool2 to a GB_TOOL_HOLDER with title `title2' and add
 			-- this to right side.
@@ -41,7 +41,7 @@ feature -- Access
 		
 feature -- Basic operation
 
-	minimize_tool (a_tool_holder: GB_TOOL_HOLDER) is
+	minimize_tool (a_tool_holder: GB_TOOL_HOLDER)
 			-- Minimize `tool_holder'.
 		do
 			if a_tool_holder.maximized then
@@ -59,7 +59,7 @@ feature -- Basic operation
 		end
 		
 		
-	maximize_tool (a_tool_holder: GB_TOOL_HOLDER) is
+	maximize_tool (a_tool_holder: GB_TOOL_HOLDER)
 			-- Maximize `tool_holder'.
 		do
 			if a_tool_holder.minimized then
@@ -80,13 +80,13 @@ feature {NONE} -- Implementation
 	restore_position: INTEGER
 		-- Position to restore to.
 		
-	keep_minimized_on_resize is
+	keep_minimized_on_resize
 			-- Adjust splitter to keep tool minimized.
 		do
 			set_split_position (maximum_split_position)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

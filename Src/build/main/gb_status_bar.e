@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent shared status bar features.%
 		%Should only be inherited."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Initialize all action sequences and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	status_text: STRING is
+	status_text: STRING
 			-- `Result' is text of `status_bar_label'.
 		do
 			Result := status_bar_label.text
@@ -39,7 +39,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of `Current'.
 		do
 			Result := status_bar_label
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_status_text (a_text: STRING) is
+	set_status_text (a_text: STRING)
 			-- Assign `a_text' to `status_bar_label'.
 		require
 			a_text_not_void: a_text /= Void
@@ -62,7 +62,7 @@ feature -- Status setting
 			status_bar_label.refresh_now
 		end
 
-	set_timed_status_text (a_text: STRING) is
+	set_timed_status_text (a_text: STRING)
 			-- Assign `a_text' to `status_bar_label' which
 			-- will be displayed for a set period of time.
 		require
@@ -77,7 +77,7 @@ feature -- Status setting
 			timed_text_timer.actions.extend (agent clear_status_bar)
 		end
 
-	clear_status_bar is
+	clear_status_bar
 			-- Clear text of `status_bar_label'.
 		do
 			status_bar_label.remove_text
@@ -87,7 +87,7 @@ feature -- Status setting
 			end
 		end
 
-	clear_status_after_transport (a: ANY) is
+	clear_status_after_transport (a: ANY)
 			-- Clear `status_bar' with an argument of type ANY,
 			-- permitting it to be placed in the application wide pick and
 			-- drop actions.
@@ -97,7 +97,7 @@ feature -- Status setting
 			status_text_empty: status_text.is_empty
 		end
 
-	clear_status_during_transport (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	clear_status_during_transport (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Clear status bar if `a_target' is Void. `an_x' and `a_y' are ignored, but the
 			-- signature is required for the pick and drop action sequences.
 		do
@@ -117,11 +117,11 @@ feature {NONE} -- Implementation
 	timed_text_timer: EV_TIMEOUT
 		-- Timer for removing timed texts.
 
-	timed_text_duration: INTEGER is 1000;
+	timed_text_duration: INTEGER = 1000;
 		-- Length of time for timed texts to be displayed
 		-- on status bar.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the global history of the layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			-- All commands currently referenced by
 			-- the history.
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the history empty?
 		do
 			Result := command_list.is_empty
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	add_command (a_command: GB_COMMAND) is
+	add_command (a_command: GB_COMMAND)
 			-- Add `a_command' to `command_list'.
 		require
 			command_not_void: a_command /= Void
@@ -56,7 +56,7 @@ feature -- Basic operation
 			current_position = (command_list.count)
 		end
 
-	step_from (start, finish: INTEGER) is
+	step_from (start, finish: INTEGER)
 			-- Step through history from position `start' until
 			-- position `finish'.
 		require
@@ -91,7 +91,7 @@ feature -- Basic operation
 			current_position = finish
 		end
 
-	undo is
+	undo
 			-- Undo command in `command_list' at `current_position'.
 			-- Update user interface to reflect these events.
 		do
@@ -108,7 +108,7 @@ feature -- Basic operation
 			components.system_status.mark_as_dirty
 		end
 
-	redo is
+	redo
 			-- Redo command in `command_list' at `current_position'.
 			-- Update user interface to reflace these events.
 		do
@@ -125,7 +125,7 @@ feature -- Basic operation
 			components.system_status.mark_as_dirty
 		end
 
-	cut_off_at_current_position is
+	cut_off_at_current_position
 			-- Remove all items from the history from
 			-- `current_position' onwards.
 		do
@@ -147,7 +147,7 @@ feature -- Basic operation
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear the complete history.
 		do
 			set_current_position (-1)
@@ -175,7 +175,7 @@ feature -- Basic operation
 
 feature {GB_HISTORY_DIALOG} -- Status setting
 
-	set_current_position (a_value: INTEGER) is
+	set_current_position (a_value: INTEGER)
 			-- Assign `a_value' to `current_position'.
 		require
 			position_valid: a_value >= -1 and a_value <= command_list.count
@@ -186,7 +186,7 @@ feature {GB_HISTORY_DIALOG} -- Status setting
 			current_position_set: current_position = a_value
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

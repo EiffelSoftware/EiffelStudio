@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to all Build reserved words."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	build_reserved_words: HASH_TABLE [STRING, STRING] is
+	build_reserved_words: HASH_TABLE [STRING, STRING]
 			-- `Result' is reserved words specific to Build.
 			-- For example, as we may inherit EV_TITLED_WINDOW,
 			-- it is not valid to name an attribute or event that will
@@ -327,7 +327,7 @@ feature -- Access
 			Result.compare_objects
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

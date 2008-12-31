@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_FONTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_FONTABLE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_FONTABLE"
+	type: STRING = "EV_FONTABLE"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
@@ -59,7 +59,7 @@ feature -- Access
 			update_attribute_editor
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -68,7 +68,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			validate_agents.put (agent valid_font, font_string)
 		end
 		
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to all instances of `object'.
 		require
 			a_font_not_void: a_font /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			update_editors
 		end
 		
-	valid_font (a_font: EV_FONT): BOOLEAN is
+	valid_font (a_font: EV_FONT): BOOLEAN
 			-- Is `font' a valid font? Always true as all fonts
 			-- are permitted.
 		require
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	reset_font is
+	reset_font
 			-- Reset font of `object' in `Current' to default, removing
 			-- constant value if set.
 		local
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 	font_entry: GB_FONT_INPUT_FIELD;
 		-- Input field for retrieving font information.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

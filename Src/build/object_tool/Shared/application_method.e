@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a method (same meaning %
 				% as 'routine' i.e. feature with or without %
 				% argument that doesn't return any value)."
@@ -21,7 +21,7 @@ feature -- Attribute
 
 feature -- Setting
 
-	add_precondition (a_precondition: APPLICATION_PRECONDITION) is
+	add_precondition (a_precondition: APPLICATION_PRECONDITION)
 			-- Add `a_precondition'.
 		require
 			valid_list: precondition_list /= Void
@@ -29,7 +29,7 @@ feature -- Setting
 			precondition_list.extend (a_precondition)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

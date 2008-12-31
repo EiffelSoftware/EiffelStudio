@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command with two states%
 		%e.g. hide/show."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current', assign `a_components' to `components' and initialize.
 		require
 			components_not_void: a_components /= Void
@@ -37,42 +37,42 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for Current
 		do
 			Result := description
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description for current command.
 		do
 			Result := menu_name
 		end
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in menus.
 		deferred
 		end
 
-	name: STRING is
+	name: STRING
 		do
 			Result := menu_name.twin
 			Result.prune_all ('&')
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmap representing the item (for buttons)
 		deferred
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command (toggle between show and hide).
 		deferred
 		end
 
-	enable_selected is
+	enable_selected
 			-- Set `is_selected' to True.
 		do
 			is_selected := True
@@ -80,7 +80,7 @@ feature -- Execution
 			--set_selected (True)
 		end
 
-	disable_selected is
+	disable_selected
 			-- Set `is_selected' to False.
 		do
 			is_selected := False
@@ -88,7 +88,7 @@ feature -- Execution
 			--set_selected (False)
 		end
 
-	safe_disable_selected is
+	safe_disable_selected
 			-- Set `is_selected' to False
 			-- only if `is_selected' currently True.
 		do
@@ -97,7 +97,7 @@ feature -- Execution
 			end
 		end
 
-	reverse_is_selected is
+	reverse_is_selected
 			-- Assign not `is_selected' to
 			-- `is_selected'.
 		do
@@ -110,7 +110,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOGGLE_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		local
 			tt: STRING
@@ -149,7 +149,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_menu_item: GB_COMMAND_CHECK_MENU_ITEM is
+	new_menu_item: GB_COMMAND_CHECK_MENU_ITEM
 			-- Create a new menu entry for this command.
 		local
 			mname: STRING
@@ -184,7 +184,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	update_controls (a_selected: BOOLEAN) is
+	update_controls (a_selected: BOOLEAN)
 			-- Set `is_selected' to `a_selected'.
 		local
 			toolbar_items: like managed_toolbar_items
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 	is_selected: BOOLEAN;
 		-- Is current selected?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that store the write an XML representation of%
 		%the window that has been built."
 	legal: "See notice at end of class."
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	store is
+	store
 			-- Store `display_window' and contents in XML format in file `filename'.
 		local
 			generation_settings: GB_GENERATION_SETTINGS
@@ -95,14 +95,14 @@ feature -- Basic operation
 			end
 		end
 
-	system_interface_filename: FILE_NAME is
+	system_interface_filename: FILE_NAME
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
 			Result.extend ("system_interface.xml")
 		end
 
-	register_object_written_agent (an_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]) is
+	register_object_written_agent (an_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]])
 			-- Insert `an_agent' into `object_written_actions'.
 		require
 			agent_not_void: an_agent /= Void
@@ -110,7 +110,7 @@ feature -- Basic operation
 			object_written_action := an_agent
 		end
 
-	store_individual_object (object: GB_OBJECT) is
+	store_individual_object (object: GB_OBJECT)
 			-- Build a representation of `object' as root node within `last_stored_individual_object'
 		require
 			object_not_void: object /= Void
@@ -128,7 +128,7 @@ feature -- Basic operation
 			add_new_object_to_output (object, current_element, create {GB_GENERATION_SETTINGS})
 		end
 
-	last_stored_individual_object: XM_ELEMENT is
+	last_stored_individual_object: XM_ELEMENT
 			-- `Result' is XML representation of last GB_OBJECT passed to
 			-- `store_individual_object'.
 		do
@@ -139,7 +139,7 @@ feature -- Basic operation
 
 feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 
-	add_new_object_to_output (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	add_new_object_to_output (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS)
 			-- Add XML representation of `an_object' to `element'.
 		local
 			new_widget_element: XM_ELEMENT
@@ -177,7 +177,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 			end
 		end
 
-	output_attributes (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	output_attributes (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS)
 			--Output attributes of `an_object' to `element'. If `add_names' then generate
 			-- a unique name for each object that is not named.
 		local
@@ -253,7 +253,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		-- Number of objects currently written.
 		-- Used for calculating percentage of save.
 
-	generate_document (generation_settings: GB_GENERATION_SETTINGS) is
+	generate_document (generation_settings: GB_GENERATION_SETTINGS)
 			-- Generate an XML representation of the
 			-- current system in `document'.
 			-- If `add_names' then generate a name
@@ -298,7 +298,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				-- Store all directories and windows.
 		end
 
-	store_windows (children_holder: GB_WIDGET_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	store_windows (children_holder: GB_WIDGET_SELECTOR_COMMON_ITEM; xml_element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS)
 			-- Store all windows and directoris contained within `children_list' into `xml_settings', using generation
 			-- settings `generation_settings'.
 		require
@@ -349,7 +349,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	generated_names: ARRAYED_LIST [STRING] is
+	generated_names: ARRAYED_LIST [STRING]
 			-- All names generated automatically.
 		once
 			create Result.make (0)
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	last_stored_individual_object_document: XM_DOCUMENT;
 		-- Document used by `store_individual_object'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

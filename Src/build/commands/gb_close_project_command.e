@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a close project command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			--	acc: EV_ACCELERATOR
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result := components.system_status.project_open
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
+		execute
 				-- Execute `Current'.
 			local
 				dialog: EV_QUESTION_DIALOG
@@ -93,7 +93,7 @@ feature -- Basic operations
 				end
 			end
 
-		perform_close is
+		perform_close
 				-- Actually perform the closing of the project.
 			do
 					-- This must be called before we hide the tools,
@@ -153,7 +153,7 @@ feature -- Basic operations
 				components.events.close_project_finish_actions.call (Void)
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

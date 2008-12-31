@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a clipboard command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		local
 			object_stone: GB_OBJECT_STONE
@@ -67,7 +67,7 @@ feature -- Basic operations
 		-- Are the contents of `clipboard_dialog' up to date with the clipboard?
 		-- If not, then they must be rebuilt.
 
-	contents_changed is
+	contents_changed
 			-- Respond to the changing of the clipboard contents.
 		do
 			clipboard_dialog_up_to_date := False
@@ -78,7 +78,7 @@ feature -- Basic operations
 			end
 		end
 
-	update_clipboard_dialog is
+	update_clipboard_dialog
 			-- Update `clipboard_dialog' with a representation of
 			-- the clipboard contents.
 		local
@@ -134,7 +134,7 @@ feature -- Basic operations
 			components.system_status.resume
 		end
 
-	execute is
+	execute
 			-- Execute `Current'.
 		do
 			if not components.tools.clipboard_dialog.is_show_requested then
@@ -150,7 +150,7 @@ feature -- Basic operations
 			end
 		end
 
-	drop_object (object_stone: GB_OBJECT_STONE) is
+	drop_object (object_stone: GB_OBJECT_STONE)
 			-- Place representation of `an_object' within clipboard.
 		require
 			object_stone_not_void: object_stone /= Void
@@ -160,7 +160,7 @@ feature -- Basic operations
 			components.system_status.resume
 		end
 
-	pick_object: GB_CLIPBOARD_OBJECT_STONE is
+	pick_object: GB_CLIPBOARD_OBJECT_STONE
 				-- Execute `Current'.
 			require
 				clipboard_not_empty: not components.clipboard.is_empty
@@ -171,7 +171,7 @@ feature -- Basic operations
 	last_clipboard_object: GB_OBJECT;
 		-- Last clipboard object built into the `clipboard_dialog'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

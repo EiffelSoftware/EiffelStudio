@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provide access to constants, possibly loaded from a files.
 			Each constant is generated into two features: both a query and a storage
@@ -37,7 +37,7 @@ deferred class
 	
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	reload_constants_from_file is
+	reload_constants_from_file
 			-- Re-load all constants from file named `file_name'.
 			-- When used in conjunction with `set_file_name', it enables
 			-- you to load a fresh set of INTEGER and STRING constants
@@ -71,25 +71,25 @@ feature -- Access
 			initialize_constants
 		end
 
-	small_padding: INTEGER is
+	small_padding: INTEGER
 			-- `Result' is INTEGER constant named `small_padding'.
 		do
 			Result := small_padding_cell.item
 		end
 
-	small_padding_cell: CELL [INTEGER] is
+	small_padding_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `small_padding'.
 		once
 			create Result.put (4)
 		end
 
-	lightbulb_png: EV_PIXMAP is
+	lightbulb_png: EV_PIXMAP
 			-- `Result' is EV_PIXMAP constant named `lightbulb_png'.
 		do
 			Result := lightbulb_png_cell.item
 		end
 
-	lightbulb_png_cell: CELL [EV_PIXMAP] is
+	lightbulb_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `lightbulb_png'.
 		local
 			a_file_name: FILE_NAME
@@ -100,13 +100,13 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	icon_component_viewer_color_png: EV_PIXMAP is
+	icon_component_viewer_color_png: EV_PIXMAP
 			-- `Result' is EV_PIXMAP constant named `icon_component_viewer_color_png'.
 		do
 			Result := icon_component_viewer_color_png_cell.item
 		end
 
-	icon_component_viewer_color_png_cell: CELL [EV_PIXMAP] is
+	icon_component_viewer_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_viewer_color_png'.
 		local
 			a_file_name: FILE_NAME
@@ -117,121 +117,121 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	large_padding: INTEGER is
+	large_padding: INTEGER
 			-- `Result' is INTEGER constant named `large_padding'.
 		do
 			Result := large_padding_cell.item
 		end
 
-	large_padding_cell: CELL [INTEGER] is
+	large_padding_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `large_padding'.
 		once
 			create Result.put (12)
 		end
 
-	close_text: STRING is
+	close_text: STRING
 			-- `Result' is STRING constant named `close_text'.
 		do
 			Result := close_text_cell.item
 		end
 
-	close_text_cell: CELL [STRING] is
+	close_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `close_text'.
 		once
 			create Result.put ("Close")
 		end
 
-	modify_pixmap_dialog_title: STRING is
+	modify_pixmap_dialog_title: STRING
 			-- `Result' is STRING constant named `modify_pixmap_dialog_title'.
 		do
 			Result := modify_pixmap_dialog_title_cell.item
 		end
 
-	modify_pixmap_dialog_title_cell: CELL [STRING] is
+	modify_pixmap_dialog_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `modify_pixmap_dialog_title'.
 		once
 			create Result.put ("Modify Pixmap")
 		end
 
-	remove_button_text: STRING is
+	remove_button_text: STRING
 			-- `Result' is STRING constant named `remove_button_text'.
 		do
 			Result := remove_button_text_cell.item
 		end
 
-	remove_button_text_cell: CELL [STRING] is
+	remove_button_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `remove_button_text'.
 		once
 			create Result.put ("Remove")
 		end
 
-	import_project_title: STRING is
+	import_project_title: STRING
 			-- `Result' is STRING constant named `import_project_title'.
 		do
 			Result := import_project_title_cell.item
 		end
 
-	import_project_title_cell: CELL [STRING] is
+	import_project_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `import_project_title'.
 		once
 			create Result.put ("Import Completion Status")
 		end
 
-	new_button_add_text: STRING is
+	new_button_add_text: STRING
 			-- `Result' is STRING constant named `new_button_add_text'.
 		do
 			Result := new_button_add_text_cell.item
 		end
 
-	new_button_add_text_cell: CELL [STRING] is
+	new_button_add_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `new_button_add_text'.
 		once
 			create Result.put ("Add")
 		end
 
-	medium_padding: INTEGER is
+	medium_padding: INTEGER
 			-- `Result' is INTEGER constant named `medium_padding'.
 		do
 			Result := medium_padding_cell.item
 		end
 
-	medium_padding_cell: CELL [INTEGER] is
+	medium_padding_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `medium_padding'.
 		once
 			create Result.put (8)
 		end
 
-	next_tip_text: STRING is
+	next_tip_text: STRING
 			-- `Result' is STRING constant named `next_tip_text'.
 		do
 			Result := next_tip_text_cell.item
 		end
 
-	next_tip_text_cell: CELL [STRING] is
+	next_tip_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `next_tip_text'.
 		once
 			create Result.put ("Next tip")
 		end
 
-	ok_button_text: STRING is
+	ok_button_text: STRING
 			-- `Result' is STRING constant named `ok_button_text'.
 		do
 			Result := ok_button_text_cell.item
 		end
 
-	ok_button_text_cell: CELL [STRING] is
+	ok_button_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `ok_button_text'.
 		once
 			create Result.put ("OK")
 		end
 
-	icon_component_display_view_color_png: EV_PIXMAP is
+	icon_component_display_view_color_png: EV_PIXMAP
 			-- `Result' is EV_PIXMAP constant named `icon_component_display_view_color_png'.
 		do
 			Result := icon_component_display_view_color_png_cell.item
 		end
 
-	icon_component_display_view_color_png_cell: CELL [EV_PIXMAP] is
+	icon_component_display_view_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_display_view_color_png'.
 		local
 			a_file_name: FILE_NAME
@@ -242,49 +242,49 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	system_window_title: STRING is
+	system_window_title: STRING
 			-- `Result' is STRING constant named `system_window_title'.
 		do
 			Result := system_window_title_cell.item
 		end
 
-	system_window_title_cell: CELL [STRING] is
+	system_window_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `system_window_title'.
 		once
 			create Result.put ("Project Configuration")
 		end
 
-	constants_dialog_title: STRING is
+	constants_dialog_title: STRING
 			-- `Result' is STRING constant named `constants_dialog_title'.
 		do
 			Result := constants_dialog_title_cell.item
 		end
 
-	constants_dialog_title_cell: CELL [STRING] is
+	constants_dialog_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `constants_dialog_title'.
 		once
 			create Result.put ("Constants")
 		end
 
-	no_directory_dialog: STRING is
+	no_directory_dialog: STRING
 			-- `Result' is STRING constant named `no_directory_dialog'.
 		do
 			Result := no_directory_dialog_cell.item
 		end
 
-	no_directory_dialog_cell: CELL [STRING] is
+	no_directory_dialog_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `no_directory_dialog'.
 		once
 			create Result.put ("No Matching DIRECTORY Constant")
 		end
 
-	icon_build_window_color_png: EV_PIXMAP is
+	icon_build_window_color_png: EV_PIXMAP
 			-- `Result' is EV_PIXMAP constant named `icon_build_window_color_png'.
 		do
 			Result := icon_build_window_color_png_cell.item
 		end
 
-	icon_build_window_color_png_cell: CELL [EV_PIXMAP] is
+	icon_build_window_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_build_window_color_png'.
 		local
 			a_file_name: FILE_NAME
@@ -295,13 +295,13 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	icon_component_build_view_color_png: EV_PIXMAP is
+	icon_component_build_view_color_png: EV_PIXMAP
 			-- `Result' is EV_PIXMAP constant named `icon_component_build_view_color_png'.
 		do
 			Result := icon_component_build_view_color_png_cell.item
 		end
 
-	icon_component_build_view_color_png_cell: CELL [EV_PIXMAP] is
+	icon_component_build_view_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_build_view_color_png'.
 		local
 			a_file_name: FILE_NAME
@@ -312,109 +312,109 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	tip_of_day_dialog_title: STRING is
+	tip_of_day_dialog_title: STRING
 			-- `Result' is STRING constant named `tip_of_day_dialog_title'.
 		do
 			Result := tip_of_day_dialog_title_cell.item
 		end
 
-	tip_of_day_dialog_title_cell: CELL [STRING] is
+	tip_of_day_dialog_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `tip_of_day_dialog_title'.
 		once
 			create Result.put ("Tip of the Day")
 		end
 
-	negative: INTEGER is
+	negative: INTEGER
 			-- `Result' is INTEGER constant named `negative'.
 		do
 			Result := negative_cell.item
 		end
 
-	negative_cell: CELL [INTEGER] is
+	negative_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `negative'.
 		once
 			create Result.put (-100)
 		end
 
-	default_button_width: INTEGER is
+	default_button_width: INTEGER
 			-- `Result' is INTEGER constant named `default_button_width'.
 		do
 			Result := default_button_width_cell.item
 		end
 
-	default_button_width_cell: CELL [INTEGER] is
+	default_button_width_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `default_button_width'.
 		once
 			create Result.put (80)
 		end
 
-	modify_button_text: STRING is
+	modify_button_text: STRING
 			-- `Result' is STRING constant named `modify_button_text'.
 		do
 			Result := modify_button_text_cell.item
 		end
 
-	modify_button_text_cell: CELL [STRING] is
+	modify_button_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `modify_button_text'.
 		once
 			create Result.put ("Modify")
 		end
 
-	pixmap_location: STRING is
+	pixmap_location: STRING
 			-- `Result' is DIRECTORY constant named `pixmap_location'.
 		do
 			Result := pixmap_location_cell.item
 		end
 
-	pixmap_location_cell: CELL [STRING] is
+	pixmap_location_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `pixmap_location'.
 		once
 			create Result.put ("C:\apps\Eiffel57\build\bitmaps\png")
 		end
 
-	large_spacing_width: INTEGER is
+	large_spacing_width: INTEGER
 			-- `Result' is INTEGER constant named `large_spacing_width'.
 		do
 			Result := large_spacing_width_cell.item
 		end
 
-	large_spacing_width_cell: CELL [INTEGER] is
+	large_spacing_width_cell: CELL [INTEGER]
 			--`Result' is once access to a cell holding vale of `large_spacing_width'.
 		once
 			create Result.put (12)
 		end
 
-	new_button_text: STRING is
+	new_button_text: STRING
 			-- `Result' is STRING constant named `new_button_text'.
 		do
 			Result := new_button_text_cell.item
 		end
 
-	new_button_text_cell: CELL [STRING] is
+	new_button_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `new_button_text'.
 		once
 			create Result.put ("New...")
 		end
 
-	pixmap_settings_dialog_title: STRING is
+	pixmap_settings_dialog_title: STRING
 			-- `Result' is STRING constant named `pixmap_settings_dialog_title'.
 		do
 			Result := pixmap_settings_dialog_title_cell.item
 		end
 
-	pixmap_settings_dialog_title_cell: CELL [STRING] is
+	pixmap_settings_dialog_title_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `pixmap_settings_dialog_title'.
 		once
 			create Result.put ("Pixmap Selection")
 		end
 
-	cancel_button_text: STRING is
+	cancel_button_text: STRING
 			-- `Result' is STRING constant named `cancel_button_text'.
 		do
 			Result := cancel_button_text_cell.item
 		end
 
-	cancel_button_text_cell: CELL [STRING] is
+	cancel_button_text_cell: CELL [STRING]
 			--`Result' is once access to a cell holding vale of `cancel_button_text'.
 		once
 			create Result.put ("Cancel")
@@ -425,13 +425,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -443,7 +443,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
@@ -460,7 +460,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 		
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -471,41 +471,41 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 		
-	file_name: STRING is
+	file_name: STRING
 			-- File name from which constants must be loaded.
 		do
 			Result := file_name_cell.item
 		end
 		
-	file_name_cell: CELL [STRING] is
+	file_name_cell: CELL [STRING]
 		once
 			create Result
 			Result.put ("constants.txt")
 		end
 		
-	set_file_name (a_file_name: STRING) is
+	set_file_name (a_file_name: STRING)
 			-- Assign `a_file_name' to `file_name'.
 		do
 			file_name_cell.put (a_file_name)
 		end
 		
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 	
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 		
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

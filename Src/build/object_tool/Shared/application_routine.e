@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class describing the notion of routine; %
 				% a command (corresponding to APPLICATION_COMMAND) %
 				% is also a routine."
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make (rout_name: STRING; arg_list: LINKED_LIST [APPLICATION_ARGUMENT]) is
+	make (rout_name: STRING; arg_list: LINKED_LIST [APPLICATION_ARGUMENT])
 			-- Create a routine object with name `rout_name'
 			-- whose arguments are `arg_list'.
 		require
@@ -35,7 +35,7 @@ feature -- Creation
 			argument_list := arg_list
 		end
 
-	make_from_command (a_command: APPLICATION_COMMAND) is
+	make_from_command (a_command: APPLICATION_COMMAND)
 			-- Create a routine object using `a_command'.
 		require
 			valid_command: a_command /= Void
@@ -52,7 +52,7 @@ feature -- Creation
 
 feature -- Scrollable element
 
-	value: STRING is
+	value: STRING
 			-- Value displayed in a scrollable list.
 		do
 			create Result.make (0)
@@ -79,7 +79,7 @@ feature -- Attributes
 	argument_list: LINKED_LIST [APPLICATION_ARGUMENT];
 			-- List of arguments
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

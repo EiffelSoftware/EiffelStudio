@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing an Eiffel class of the %
 				% application as described in the common directory %
 				% BUILDGEN\common."
@@ -30,7 +30,7 @@ create
 
 feature -- Creation
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create a class with the name `a_name'.
 		require
 			class_name_not_void: a_name /= Void
@@ -63,7 +63,7 @@ feature -- Attributes
 
 feature -- Access
 
-	add_command (a_command: APPLICATION_COMMAND) is
+	add_command (a_command: APPLICATION_COMMAND)
 			-- Add `a_command' to the list of commands.
 		require
 			valid_command: a_command /= Void
@@ -71,7 +71,7 @@ feature -- Access
 			command_list.extend (a_command)
 		end
 
-	add_query (a_query: APPLICATION_QUERY) is
+	add_query (a_query: APPLICATION_QUERY)
 			-- Add `a_query' to the list of queries.
 		require
 			valid_query: a_query /= Void 
@@ -79,7 +79,7 @@ feature -- Access
 			query_list.extend (a_query)
 		end
 
-	add_routine (a_routine: APPLICATION_ROUTINE) is
+	add_routine (a_routine: APPLICATION_ROUTINE)
 			-- Add `a_routine' to the list of routines.
 		require
 			valid_routine: a_routine /= Void 
@@ -87,7 +87,7 @@ feature -- Access
 			routine_list.extend (a_routine)
 		end
 
-	add_generated_routine (a_routine: APPLICATION_ROUTINE) is
+	add_generated_routine (a_routine: APPLICATION_ROUTINE)
 			-- Add `a_routine' to the list of routines.
 		require
 			valid_routine: a_routine /= Void 
@@ -97,7 +97,7 @@ feature -- Access
 	
 feature -- SCROLLABLE_LIST_ELEMENT
 
-	value: STRING  is
+	value: STRING
 			-- String that appears in a scrollable list.
 		do
 			Result := class_name
@@ -105,19 +105,19 @@ feature -- SCROLLABLE_LIST_ELEMENT
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Equality.
 		do
 			Result := class_name.is_equal (other.class_name)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Less than
 		do
 			Result := class_name < other.class_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

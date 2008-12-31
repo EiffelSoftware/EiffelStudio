@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent tools which have icons."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,31 +21,31 @@ deferred class
 
 feature -- Access
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Standard icon displayed in `Current'.
 		deferred
 		end
 		
 feature -- Basic operations
 
-	restore_icon is
+	restore_icon
 			-- Ensure `icon' is displayed as icon of `Current'.
 		do
 		end
 		
-	set_default_icon is
+	set_default_icon
 			-- Assign a common default icon to `Current'.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	set_icon_pixmap (a_pixmap: EV_PIXMAP) is
+	set_icon_pixmap (a_pixmap: EV_PIXMAP)
 			-- Ensure that `a_pixmap' is displayed as icon of `Current'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

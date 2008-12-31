@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Objects that provide common useful features for file handling.
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic operations
 
-	rename_file_if_exists (directory_path: DIRECTORY; old_name, new_name: STRING) is
+	rename_file_if_exists (directory_path: DIRECTORY; old_name, new_name: STRING)
 			-- Rename file named `old_name' in directory `directory_path' to
 			-- `new_name' in the same directory. Do nothing if the old file does not exist
 			-- or the file names are identical.
@@ -36,7 +36,7 @@ feature -- Basic operations
 			end
 		end
 		
-	move_file_between_directories (original, new: DIRECTORY; file_name: STRING) is
+	move_file_between_directories (original, new: DIRECTORY; file_name: STRING)
 			-- Move file named `file_name' from `original' directory to `new_directory'.
 			-- Do nothing if `original' is equivalent to `new'.
 		require
@@ -59,7 +59,7 @@ feature -- Basic operations
 			end
 		end
 		
-	directory_exists (name: STRING): BOOLEAN is
+	directory_exists (name: STRING): BOOLEAN
 			-- Does a directory named `name' exist?
 		local
 			directory: DIRECTORY
@@ -68,7 +68,7 @@ feature -- Basic operations
 			Result := directory.exists
 		end
 		
-	delete_file (directory: DIRECTORY; a_file_name: STRING) is
+	delete_file (directory: DIRECTORY; a_file_name: STRING)
 			-- Delete file named `a_file_name' from directory `directory'.
 		local
 			file: RAW_FILE
@@ -82,7 +82,7 @@ feature -- Basic operations
 			end
 		end
 		
-	restore_file (directory: DIRECTORY; a_file_name, contents: STRING) is
+	restore_file (directory: DIRECTORY; a_file_name, contents: STRING)
 			-- Restore plain text file file named `a_file_name' in
 			-- `directory' with contents `contents'.
 		local
@@ -98,7 +98,7 @@ feature -- Basic operations
 			file.close
 		end
 
-	delete_directory (directory: DIRECTORY) is
+	delete_directory (directory: DIRECTORY)
 			-- Remove `directory'.
 		require
 			directory_exists: directory.exists
@@ -107,7 +107,7 @@ feature -- Basic operations
 			directory.delete
 		end
 		
-	create_directory (directory: DIRECTORY) is
+	create_directory (directory: DIRECTORY)
 			-- Create `directory'.
 		require
 			directory_not_exists: not directory.exists
@@ -117,7 +117,7 @@ feature -- Basic operations
 			directory_exists: directory.exists
 		end
 		
-	delete_directory_and_content (directory: DIRECTORY) is
+	delete_directory_and_content (directory: DIRECTORY)
 			-- Removed `directory' and all content from disk.
 		do
 			if directory.exists then
@@ -126,7 +126,7 @@ feature -- Basic operations
 			end
 		end
 		
-	directory_with_separator (a_directory: STRING): STRING is
+	directory_with_separator (a_directory: STRING): STRING
 			-- `Result' is directory `a_directory' with directory seperator
 			-- appended if necessary.
 		require
@@ -141,7 +141,7 @@ feature -- Basic operations
 			Result_consistent: Result.count = a_directory.count or Result.count = a_directory.count + 1
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

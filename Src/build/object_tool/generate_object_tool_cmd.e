@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate object tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,14 +26,14 @@ create
 
 feature
 
-	make is
+	make
 			-- Create command.
 		do
 		end
 
 feature -- Execution
 
-	work (arg: ANY) is
+	work (arg: ANY)
 			-- Generate one object tool.
 		local
 			file: PLAIN_TEXT_FILE
@@ -45,21 +45,21 @@ feature -- Execution
 			file.close
 		end
 
-	undo is
+	undo
 		do
 		end
 
-	redo is
+	redo
 		do
 		end
 
 	failed: BOOLEAN
 
-	name: STRING is
+	name: STRING
 		do
 		end
 
-	visual_command_name: STRING is
+	visual_command_name: STRING
 			-- Visual name of the generated command.
 		local
 			cl_name: STRING
@@ -74,18 +74,18 @@ feature -- Execution
 
 feature -- Tool generation
 
-	generate_interface is
+	generate_interface
 			-- Generate the interface elements.
 		do
 		end
 
 
-	generate_command is
+	generate_command
 			-- Generate the associated command.
 		do
 		end
 
-	generated_eiffel_text: STRING is
+	generated_eiffel_text: STRING
 			-- Generated eiffel text for associated command.
 		do
 			create Result.make (0)
@@ -102,7 +102,7 @@ feature -- Tool generation
 
 feature {NONE} -- Code generation
 
-	indexing_clause: STRING is
+	indexing_clause: STRING
 			-- Generate indexing clause.
 		local
 			class_name: STRING
@@ -118,7 +118,7 @@ feature {NONE} -- Code generation
 			Result.append ("%"%N%N")
 		end
 
-	class_declaration: STRING is
+	class_declaration: STRING
 			-- Generate declaration of the class.
 		local
 			class_name: STRING
@@ -131,7 +131,7 @@ feature {NONE} -- Code generation
 			Result.append ("%N%Ninherit%N%N%TEV_TITLED_WINDOW%N%Ncreation%N%N%Tmake%N%Nfeature%N%N")
 		end
 		
-	implementation_clause: STRING is
+	implementation_clause: STRING
 			-- Generate an implementation clause.
 		do
 			create Result.make (0)
@@ -149,7 +149,7 @@ feature {NONE} -- Code generation
 			end
 		end
 		
-	access_clause: STRING is
+	access_clause: STRING
 			-- Generate an access clause.
 		do
 			create Result.make (0)
@@ -164,7 +164,7 @@ feature {NONE} -- Code generation
 		
 
 
-	feature_execute: STRING is
+	feature_execute: STRING
 			-- Generate feature `execute'.
 		local
 			a_query_editor_form: QUERY_EDITOR_FORM
@@ -188,7 +188,7 @@ feature {NONE} -- Code generation
 			Result.append ("%T%Tend%N%N")
 		end
 		
-	feature_display_error_message: STRING is 
+	feature_display_error_message: STRING 
 			-- Display a dialog with the error_message.
 		do
 			create Result.make (0)
@@ -204,7 +204,7 @@ feature {NONE} -- Code generation
 		end
 		
 		
-	initialization_clause: STRING is
+	initialization_clause: STRING
 			-- Generate an Initialization clause.
 		local
 			a_query_editor_form: QUERY_EDITOR_FORM
@@ -231,14 +231,14 @@ feature {NONE} -- Code generation
 			Result.append ("%T%Tend%N%N")
 		end
 
-	invariant_clause: STRING is
+	invariant_clause: STRING
 			-- Generate an Invariant clause.
 		do
 			create Result.make (0)
 			Result.append ("invariant%N%N%Ttarget_exist_if_set: target_set implies (target /= Void)%N%N")
 		end
 
-	end_class_clause: STRING is
+	end_class_clause: STRING
 			-- Generate an End of class.
 		do
 			create Result.make (0)
@@ -258,7 +258,7 @@ feature {NONE} -- Attributes
 			-- List of QUERY_EDITOR_FORM; need to generate interface
 			-- element if corresponding QUERY_EDITOR_FORM is managed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold information about an action%
 	%sequence for an object."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	make_with_details (a_name, a_class_name, a_type, a_feature_name: STRING) is
+	make_with_details (a_name, a_class_name, a_type, a_feature_name: STRING)
 			-- Create `Current', assign `a_name' to `name', `a_class_name' to `class_name',
 			-- `a_type' to `type' and `a_feature_name' to `feature_name'.
 		require
@@ -54,7 +54,7 @@ feature -- Access
 		-- Name selected for associated feature to
 		-- be generated.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

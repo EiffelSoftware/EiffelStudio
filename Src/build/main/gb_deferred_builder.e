@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that are used to defer building of certain components until the%
 		%very end of the load/build cycle."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create `Current' and initialize.
 		do
 			create all_gb_ev.make (0)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		
 feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER, GB_XML_IMPORT, GB_XML_OBJECT_BUILDER} -- Basic operation
 
-	build is
+	build
 			-- For every item in `all_gb_ev', execute the deferred
 			-- building features. Wipe out `all_gb_ev' and
 			-- `all_element' during the process.
@@ -53,7 +53,7 @@ feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER, GB_XML_IMPORT, GB_XML_OBJ
 	
 feature {GB_EV_ANY} -- Basic operation
 
-	defer_building (gb_ev: GB_EV_ANY; element: XM_ELEMENT;) is
+	defer_building (gb_ev: GB_EV_ANY; element: XM_ELEMENT;)
 			-- Add `gb_ev' to `all_gb_ev', `element' to `all_element' and `objects' to `all_object'.
 		require
 			gb_ev_not_void: gb_ev /= Void
@@ -80,7 +80,7 @@ invariant
 	
 	list_count_equal: all_gb_ev /= Void implies all_gb_ev.count = all_element.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

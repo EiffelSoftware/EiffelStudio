@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide action sequence selection for an object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current', build interface appropriate
 			-- to `an_object.
 		local
@@ -225,7 +225,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	show_modal_to_window  (window: EV_WINDOW) is
+	show_modal_to_window  (window: EV_WINDOW)
 			-- Show `Current' modal to `window'.
 		do
 				-- Previous size will be 0 if the dialog has never
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	building_counter: INTEGER
 		-- Current action sequence being built.
 
-	temp_event_string: STRING is "Temporary feature name for comparison purposes."
+	temp_event_string: STRING = "Temporary feature name for comparison purposes."
 		-- Used internally. Cannot be entered by user, as contains spaces.
 
 	all_labels: ARRAYED_LIST [EV_LABEL]
@@ -296,10 +296,10 @@ feature {NONE} -- Implementation
 		-- The largest `minimum_width' of all labels displayed before
 		-- the check buttons.
 
-	right_side_spacing: INTEGER is 30
+	right_side_spacing: INTEGER = 30
 		-- Distance from right hand side of text boxes to scroll bar.
 
-	build_events_for_an_action_sequence (an_action_sequence: GB_EV_ACTION_SEQUENCES) is
+	build_events_for_an_action_sequence (an_action_sequence: GB_EV_ACTION_SEQUENCES)
 			-- Build interface representing events of `an_action_sequence'.
 		require
 			action_sequence_not_void: an_action_sequence /= Void
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	toggle_i_th_check_button (an_x, a_y, a_button, index: INTEGER) is
+	toggle_i_th_check_button (an_x, a_y, a_button, index: INTEGER)
 			-- Toggle `index' check button in `all_check_buttons'.
 		require
 			index_valid: index >= 1 and index <= all_check_buttons.count
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_text_field_minimum_width is
+	update_text_field_minimum_width
 			-- For all text field in `all_text_fields' that are displayed,
 			-- update minimum width relative to the scroll bar
 			-- displayed to their right.
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_name_change (index: INTEGER) is
+	validate_name_change (index: INTEGER)
 			-- text field, `all_text_fields' @ `index' has been modified,
 			-- so validate, and update display accordingly.
 		local
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	feature_name_of_object_event (info: GB_ACTION_SEQUENCE_INFO): STRING is
+	feature_name_of_object_event (info: GB_ACTION_SEQUENCE_INFO): STRING
 			-- Does `object' have an event matching `info'. If so, then
 			-- Result is matching name
 		local
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_button_selected (index: INTEGER) is
+	check_button_selected (index: INTEGER)
 			-- Check button all_check_buttons @ `index' has been selected.
 			-- We must maximize/minimize the feature name entry depending on
 			-- the state of check button corresponding to `index' in
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_single_text_field (current_text_field: EV_TEXT_FIELD )is
+	update_single_text_field (current_text_field: EV_TEXT_FIELD )
 			-- Update `minimum_size' of `current_text_filed' to force it
 			--  to resize correctly.
 		local
@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	update_text_fields is
+	update_text_fields
 			-- Update size of all displayed text fields, to almost "touch"
 			-- the right hand side of the window, less a border.
 		local
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	create_main_box is
+	create_main_box
 			-- Create `main_vertical_box' and initialize.
 		do
 			create main_vertical_box
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 			main_vertical_box.set_background_color (text_background_color)
 		end
 
-	update_scroll_bar is
+	update_scroll_bar
 			-- Update scroll bar to reflect
 			-- current size of the controls.
 		do
@@ -625,14 +625,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	scroll_bar_moved (new_scroll_bar_value: INTEGER) is
+	scroll_bar_moved (new_scroll_bar_value: INTEGER)
 			-- `scroll_bar' value has changed, so updated
 			-- the position of the controls within `viewport'.
 		do
 			viewport.set_y_offset (new_scroll_bar_value)
 		end
 
-	rebuild_controls_minimally is
+	rebuild_controls_minimally
 			-- Rebuild all controls representing action sequences
 			-- into `main_vertical_box' which must be re-created
 			-- during this process. We do this so that the box
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			viewport.extend (main_vertical_box)
 		end
 
-	update_object_and_destroy is
+	update_object_and_destroy
 			-- Update `object' to reflect changes made during lifetime of
 			-- `Current', and then destroy `Current'.
 		local
@@ -770,7 +770,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	repeated_name (current_name: STRING; index: INTEGER): BOOLEAN is
+	repeated_name (current_name: STRING; index: INTEGER): BOOLEAN
 			-- Is `current_name' the text of an expanded feature
 			-- name entry, exluding `index' position?
 		local
@@ -790,7 +790,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_background_color: EV_COLOR is
+	text_background_color: EV_COLOR
 			-- `Result' is EV_COLOR used for
 			-- background of controls.
 			-- This is provided, so all controls can be
@@ -801,21 +801,21 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	previous_size: EV_COORDINATE is
+	previous_size: EV_COORDINATE
 			-- `Result' is previous size of `Current'
 			-- when last displayed.
 		once
 			create Result
 		end
 
-	previous_position: EV_COORDINATE is
+	previous_position: EV_COORDINATE
 			-- `Result' is previous position of `Current'
 			-- when last displayed.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

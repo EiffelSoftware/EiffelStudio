@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an item in a GB_TYPE_SELECTOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current', assign `a_text' to `text'
 			-- , "EV_" + `a_text' to `type' and `a_components' to `components'.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 		-- The real type represented by `Current'.
 		-- i.e. "EV_BUTTON"
 
-	can_drop_object (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
+	can_drop_object (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN
 			-- Can `object' be dropped on `Current'?
 			-- Used as  a veto function to prevent an invalid type from being changed.
 		require
@@ -163,7 +163,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	generate_transportable: GB_OBJECT_STONE is
+	generate_transportable: GB_OBJECT_STONE
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
 		do
 				-- Note that this generates a new id, so if the pnd is cancelled, we
@@ -174,7 +174,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	replace_layout_item (object_stone: GB_STANDARD_OBJECT_STONE) is
+	replace_layout_item (object_stone: GB_STANDARD_OBJECT_STONE)
 			-- Replace `an_object' with a new object of
 			-- type `text'.
 		require
@@ -190,7 +190,7 @@ invariant
 	type_not_void: type /= Void
 	item_not_void: item /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

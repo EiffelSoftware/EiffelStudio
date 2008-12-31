@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow user input of a font value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_FONT]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_FONT], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_FONT]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_FONT], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- If `label_text' `is_empty', do not display a label.
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := font_constant_type
@@ -93,7 +93,7 @@ feature -- Access
 
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
-	update_constant_display (a_value: EV_FONT) is
+	update_constant_display (a_value: EV_FONT)
 			-- Update `Current' to display font `a_value'.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -148,13 +148,13 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 	validate_agent: FUNCTION [ANY, TUPLE [EV_FONT], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
-	execute_agent (new_value: EV_FONT) is
+	execute_agent (new_value: EV_FONT)
 			-- call `execution_agent'.
 		do
 			execution_agent.call ([new_value])
 		end
 
-	disable_constant_mode is
+	disable_constant_mode
 			-- Ensure constant entry fields are hidden.
 		do
 			constants_combo_box.hide
@@ -163,7 +163,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			spacing_cell.show
 		end
 
-	enable_constant_mode is
+	enable_constant_mode
 			-- Ensure constant entry fields are displayed.
 		do
 			select_button.parent.hide
@@ -178,7 +178,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		end
 
 
-	populate_constants is
+	populate_constants
 			-- Populate all constants
 		local
 			font_constants: ARRAYED_LIST [GB_CONSTANT]
@@ -217,7 +217,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			end
 		end
 
-	list_item_selected (list_item: EV_LIST_ITEM) is
+	list_item_selected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been selected from `constants_combo_box'.
 		local
 			constant: GB_FONT_CONSTANT
@@ -254,7 +254,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			end
 		end
 
-	list_item_deselected (list_item: EV_LIST_ITEM) is
+	list_item_deselected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -265,7 +265,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			end
 		end
 
-	select_font is
+	select_font
 			-- Display a font dialog and let a user select the desired font directly.
 		local
 			font_dialog: EV_FONT_DIALOG
@@ -283,7 +283,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

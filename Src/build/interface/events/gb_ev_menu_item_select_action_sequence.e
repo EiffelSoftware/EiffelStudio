@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EV_MENU_ITEM_SELECT_ACTION_SEQUENCE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,21 +14,21 @@ inherit
 
 feature -- Access
 
-	argument_types: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("EV_MENU_ITEM")
 		end
 	
-	argument_names: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("an_item")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

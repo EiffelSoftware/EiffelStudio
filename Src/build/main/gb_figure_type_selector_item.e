@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Figure representations of type selector items"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current', assign `a_text' to `text'
 			-- , "EV_" + `a_text' to `type' and `a_components' to `components'.
 		local
@@ -43,13 +43,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	display_type is
+	display_type
 			-- Display type of `Current' on status bar.
 		do
 			components.status_bar.set_timed_status_text (type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

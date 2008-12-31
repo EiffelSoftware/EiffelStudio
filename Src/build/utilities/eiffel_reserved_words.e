@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to all reserved words of Eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	reserved_words: HASH_TABLE [STRING, STRING] is
+	reserved_words: HASH_TABLE [STRING, STRING]
 			-- All reserved words of Eiffel as specified
 			-- in ETL3. In alphabetical order and all lowercase.
 		once
@@ -84,7 +84,7 @@ feature -- Access
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

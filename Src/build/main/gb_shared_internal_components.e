@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that provide access to the internals of EiffelBuild to be used by clients in GUI's.
 			]"
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	new_build_components: GB_INTERNAL_COMPONENTS is
+	new_build_components: GB_INTERNAL_COMPONENTS
 			-- New instance of EiffelBuild which may be used
 			-- within your interface.
 		do
@@ -34,7 +34,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	initialize_eiffelbuild is
+	initialize_eiffelbuild
 			-- Initialize EiffelBuild for client type access.
 			-- This initializes the preferences, creates any required windows
 			-- and performs any other required initialization. This
@@ -54,7 +54,7 @@ feature -- Access
 			shared_preferences.initialize_preferences (preference_access)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

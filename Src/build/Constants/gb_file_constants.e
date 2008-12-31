@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain constants for file handling."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,14 +39,14 @@ feature -- Generation constants
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	template_file_location: FILE_NAME is
+	template_file_location: FILE_NAME
 			-- Location of templates.
 		do
 			create Result.make_from_string (eiffel_layout.shared_application_path)
 			Result.extend ("templates")
 		end
 
-	window_template_file_name: FILE_NAME is
+	window_template_file_name: FILE_NAME
 			-- `Result' is location of build template file,
 			-- including the name.
 		do
@@ -54,7 +54,7 @@ feature -- Generation constants
 			Result.extend ("build_class_template.e")
 		end
 
-	window_template_imp_file_name: FILE_NAME is
+	window_template_imp_file_name: FILE_NAME
 			-- `Result' is location of build template file,
 			-- including the name.
 		do
@@ -62,7 +62,7 @@ feature -- Generation constants
 			Result.extend ("build_class_template_imp.e")
 		end
 
-	constants_template_imp_file_name: FILE_NAME is
+	constants_template_imp_file_name: FILE_NAME
 			-- `Result' is location of build constants implementation template file,
 			-- including name.
 		do
@@ -70,7 +70,7 @@ feature -- Generation constants
 			Result.extend ("constants_imp.e")
 		end
 
-	constants_template_file_name: FILE_NAME is
+	constants_template_file_name: FILE_NAME
 			-- `Result' is location of build constants template file,
 			-- including name.
 		do
@@ -78,7 +78,7 @@ feature -- Generation constants
 			Result.extend ("constants.e")
 		end
 
-	application_template_file_name: FILE_NAME is
+	application_template_file_name: FILE_NAME
 			-- `Result' is location of build application template file,
 			-- including the name.
 		do
@@ -86,33 +86,33 @@ feature -- Generation constants
 			Result.extend ("build_application_template.e")
 		end
 
-	ecf_file_name: FILE_NAME is
+	ecf_file_name: FILE_NAME
 			-- `Result' is location of windows ace file template.
 		do
 			Result := template_file_location
 			Result.extend ("template.ecf")
 		end
 
-	eiffel_class_extension: STRING is ".e"
+	eiffel_class_extension: STRING = ".e"
 			-- String constant for class file extension to be used.
 
 feature -- XML saving
 
-	ecf_name: STRING is "build_project.ecf"
+	ecf_name: STRING = "build_project.ecf"
 
-	project_filename: STRING is "build_project.bpr"
+	project_filename: STRING = "build_project.bpr"
 		-- File name for project settings.
 
-	project_file_filter: STRING is "*.bpr"
+	project_file_filter: STRING = "*.bpr"
 		-- Filter to be used for file dialogs searching
 		-- for build projects.
 
-	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>";
+	xml_format: STRING = "<?xml version=%"1.0%" encoding=%"UTF-8%"?>";
 		-- XML format type, included at start of `document'.
 
 feature -- Preferences
 
-	default_xml_file: FILE_NAME is
+	default_xml_file: FILE_NAME
 			-- General system level resource specification XML file.			
 		do
 			create Result.make_from_string (eiffel_layout.shared_application_path)
@@ -122,7 +122,7 @@ feature -- Preferences
 			result_not_empty: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a method for checking if a standard digit key is held down."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize all action sequences.
 		do
 			ev_application.key_press_string_actions.extend (agent check_pressed_digit)
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	check_pressed_digit (a_widget: EV_WIDGET; a_str: STRING_32) is
+	check_pressed_digit (a_widget: EV_WIDGET; a_str: STRING_32)
 			-- Check `a_key' to see if a digit is pressed.
 			-- Fired from actions of `timer'.
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_released_digit (a_widget: EV_WIDGET; a_key: EV_KEY) is
+	check_released_digit (a_widget: EV_WIDGET; a_key: EV_KEY)
 			-- Check `a_key' to see if a digit is pressed.
 			-- Fired from actions of `timer'.
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			digit := 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

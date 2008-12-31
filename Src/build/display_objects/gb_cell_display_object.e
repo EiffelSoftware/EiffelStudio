@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a visible representation of an%
 		%EV_CELL."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_as_root_window (window: EV_TITLED_WINDOW) is
+	make_as_root_window (window: EV_TITLED_WINDOW)
 			-- Create `Current' as a root_window.
 			-- Assign `window' to `child'.
 		require
@@ -39,7 +39,7 @@ feature -- Access
 	child: EV_CELL;
 		-- The actual cell that we are representing.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

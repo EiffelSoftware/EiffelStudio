@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to show/hide the builder window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -28,32 +28,32 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is executable?
 		do
 			Result := not components.tools.widget_selector.objects.is_empty
 		end
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in menus.
 		do
 			Result := Show_hide_builder_window_menu_text
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmap representing the item (for buttons)
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_builder_window
 		end
 
-	window: EV_DIALOG is
+	window: EV_DIALOG
 			-- Result is window referenced by
 			-- `Current' command.
 		do
 			Result := components.tools.builder_window
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

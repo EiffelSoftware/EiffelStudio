@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an undo command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result :=  components.history.current_position > 0
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute is
+		execute
 				-- Execute `Current'.
 			do
 				components.object_editors.force_name_change_completion_on_all_editors
@@ -56,7 +56,7 @@ feature -- Basic operations
 				end
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

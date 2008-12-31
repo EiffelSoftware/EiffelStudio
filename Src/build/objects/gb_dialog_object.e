@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A GB_OBJECT representing an EV_DIALOG"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Access
 		-- The vision2 object that `Current' represents.
 		-- This is used in the display window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

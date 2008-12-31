@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_PIXMAPABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,10 +25,10 @@ feature -- Access
 	ev_type: EV_PIXMAPABLE
 		-- Vision2 type represented by `Current'.
 
-	type: STRING is "EV_PIXMAPABLE"
+	type: STRING = "EV_PIXMAPABLE"
 		-- String representation of object_type modifyable by `Current'.
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -37,14 +37,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 			execution_agents.put (agent execute, pixmap_path_string)
 		end
 
-	execute (a_pixmap: EV_PIXMAP;  pixmap_path: STRING_GENERAL) is
+	execute (a_pixmap: EV_PIXMAP;  pixmap_path: STRING_GENERAL)
 			-- Asssign `a_pixmap' located at `pixmap_path' to all representations of `Current'.
 			-- If `a_pixmap' is Void, remove pixmap and path.
 		do
@@ -57,20 +57,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN is
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		do
 			--| No validation is currently performed on pixmaps, so return True
 			Result := True
 		end
 
-	return_pixmap: EV_PIXMAP is
+	return_pixmap: EV_PIXMAP
 			-- `Result' is pixmap used for `Current'.
 		do
 			Result := objects.first.pixmap
 		end
 
-	return_pixmap_path: STRING_GENERAL is
+	return_pixmap_path: STRING_GENERAL
 			-- `Result' is path used to retrieve pixmap.
 		do
 				-- Test is required because `internal_pixmap_path' is of type STRING_32
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

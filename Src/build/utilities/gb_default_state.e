@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that implement is_in_default_state%
 		%to return True for descendents of Vision2 if we do not%
 		%care about the real result."
@@ -19,13 +19,13 @@ inherit
 
 feature {GB_DEFAULT_STATE} -- Contract support
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 		deferred
 		end
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- We do not care about this, so
 			-- return True.
@@ -33,7 +33,7 @@ feature {NONE} -- Contract support
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

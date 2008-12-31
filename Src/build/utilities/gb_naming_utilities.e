@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide useful functions for naming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Basic operations
 
-	valid_class_name (a_name: STRING): BOOLEAN is
+	valid_class_name (a_name: STRING): BOOLEAN
 			-- Check that name `class_name' is a valid class name.
 		local
 			cn: STRING
@@ -40,7 +40,7 @@ feature -- Basic operations
 		end
 
 
-	unique_name_from_array (existing_names: ARRAYED_LIST [STRING]; hint_name: STRING): STRING is
+	unique_name_from_array (existing_names: ARRAYED_LIST [STRING]; hint_name: STRING): STRING
 			-- `Result' is a STRING guaranteed not to be contained in `existing_names',
 			-- which is the value of `hint_name' with an underscore and a number appended to it.
 			-- The algorithm used does not guarantee that this is the first available number.
@@ -97,7 +97,7 @@ feature -- Basic operations
 			end
 		end
 		
-	unique_name_from_hash_table (existing_names: HASH_TABLE [STRING, STRING]; hint_name: STRING): STRING is
+	unique_name_from_hash_table (existing_names: HASH_TABLE [STRING, STRING]; hint_name: STRING): STRING
 			-- `Result' is a STRING guaranteed not to exist in `existing_names', based on `hint_name.
 		require
 			existing_names_not_void: existing_names /= Void
@@ -121,7 +121,7 @@ feature -- Basic operations
 		end
 		
 
-	undo_last_character (text_field: EV_TEXT_FIELD) is
+	undo_last_character (text_field: EV_TEXT_FIELD)
 			-- Remove last character added to `text_field'.
 			-- Dependent on caret position, so this should be called
 			-- immediately after the change, and before anything modifies
@@ -147,7 +147,7 @@ feature -- Basic operations
 				text_field.change_actions.resume
 		end
 		
-	pixmap_file_title_to_constant_name (file_title: STRING): STRING is
+	pixmap_file_title_to_constant_name (file_title: STRING): STRING
 			-- Convert `file_title' which is the title of a file on disk
 			-- to a prompted name for a constant value.
 		require
@@ -163,7 +163,7 @@ feature -- Basic operations
 		
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

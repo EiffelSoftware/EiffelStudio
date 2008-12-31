@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that can be contained in an EB_TOOLBAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 		deferred
@@ -19,20 +19,20 @@ feature -- Access
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EV_TOOL_BAR_ITEM is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EV_TOOL_BAR_ITEM
 			-- Create a new toolbar item for Current
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the item (one for the
 			-- gray version, one for the color version).
 		deferred
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of the command as it appears in the
 			-- "customize" dialog.
 		deferred
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			description_set: Result /= Void and then not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

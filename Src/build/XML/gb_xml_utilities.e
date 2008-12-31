@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide useful utilities for XML."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	new_child_element (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: STRING): XM_ELEMENT is
+	new_child_element (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: STRING): XM_ELEMENT
 			-- `Result' is a new child element with name `a_name' and ns_prexif `a_ns_prefix'.
 		require
 			parent_not_void: a_parent /= Void
@@ -33,7 +33,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	add_attribute_to_element (element: XM_ELEMENT; a_name, a_prefix, a_value: STRING) is
+	add_attribute_to_element (element: XM_ELEMENT; a_name, a_prefix, a_value: STRING)
 			-- Add an atribute with name `a_name', prefix `a_prefix' and value `a_value' to `element'.
 		require
 			element_not_void: element /= Void
@@ -47,7 +47,7 @@ feature -- Access
 			element.force_last (l_attribute)
 		end
 	
-	add_element_containing_integer (element: XM_ELEMENT; element_name: STRING; value: INTEGER) is
+	add_element_containing_integer (element: XM_ELEMENT; element_name: STRING; value: INTEGER)
 			-- Add an element named `element' containing integer data `value' to `element'.
 		require
 			element_not_void: element /= Void
@@ -61,7 +61,7 @@ feature -- Access
 			add_string_data (new_element, value.out)
 		end
 		
-	add_element_containing_integer_constant (element: XM_ELEMENT; element_name: STRING; constant: STRING) is
+	add_element_containing_integer_constant (element: XM_ELEMENT; element_name: STRING; constant: STRING)
 			-- 	Add an element named `element' marked `constant', containing another element named `element_name' with
 			-- constant named `constant'. This is the format used to store integer constants.
 		require
@@ -78,7 +78,7 @@ feature -- Access
 			add_string_data (new_element, constant)
 		end
 
-	add_element_containing_string (element: XM_ELEMENT; element_name, value: STRING) is
+	add_element_containing_string (element: XM_ELEMENT; element_name, value: STRING)
 			-- Add an element named `element' containing string data `value' to `element'.
 		require
 			element_not_void: element /= Void
@@ -93,7 +93,7 @@ feature -- Access
 			add_string_data (new_element, value)
 		end
 
-	add_element_containing_boolean (element: XM_ELEMENT; element_name: STRING; value: BOOLEAN) is
+	add_element_containing_boolean (element: XM_ELEMENT; element_name: STRING; value: BOOLEAN)
 			-- Add an element named `element' containing boolean data `value' to `element'.
 		require
 			element_not_void: element /= Void
@@ -107,7 +107,7 @@ feature -- Access
 			add_boolean_data (new_element, value)
 		end
 
-	add_boolean_data (element: XM_ELEMENT; content: BOOLEAN) is
+	add_boolean_data (element: XM_ELEMENT; content: BOOLEAN)
 			-- Add boolean character data with content `content' to `element'
 		require
 			element_not_void: element /= Void
@@ -122,7 +122,7 @@ feature -- Access
 			add_string_data (element, string_data)
 		end
 
-	add_string_data (element: XM_ELEMENT; content: STRING) is
+	add_string_data (element: XM_ELEMENT; content: STRING)
 			-- Add string character data with content `content' to `element'
 		require
 			element_not_void: element /= Void
@@ -134,7 +134,7 @@ feature -- Access
 			element.force_last (new_element)
 		end
 
-	create_widget_instance (element: XM_ELEMENT; widget_name: STRING): XM_ELEMENT is
+	create_widget_instance (element: XM_ELEMENT; widget_name: STRING): XM_ELEMENT
 			-- Create a new instance of a widget `widget_name' in `element'.
 		require
 			element_not_void: element /= Void
@@ -148,7 +148,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 		
-	get_unique_full_info (element: XM_ELEMENT): HASH_TABLE [ELEMENT_INFORMATION, STRING] is
+	get_unique_full_info (element: XM_ELEMENT): HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			-- `Result' provides access to all child_elements and XML character
 			-- data of `Current' referenced by their unique names.
 			-- Ignores `item'.
@@ -218,7 +218,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	all_child_element_names (element: XM_ELEMENT): ARRAYED_LIST [STRING] is
+	all_child_element_names (element: XM_ELEMENT): ARRAYED_LIST [STRING]
 			-- `Result' is a list of all names of the child elements of `element'
 		require
 			element_not_void: element /= Void
@@ -239,7 +239,7 @@ feature -- Access
 			end
 		end
 		
-	child_element_by_name (element: XM_ELEMENT; a_name: STRING): XM_ELEMENT is
+	child_element_by_name (element: XM_ELEMENT; a_name: STRING): XM_ELEMENT
 			-- `Result' is child element of `element' with name equal to `a_name'.
 		require
 			element_not_void: element /= Void
@@ -267,7 +267,7 @@ feature -- Access
 			cursor_not_moved: old element.index = element.index
 		end
 		
-	string_from_xm_document (a_document: XM_DOCUMENT): STRING is
+	string_from_xm_document (a_document: XM_DOCUMENT): STRING
 			-- Return a string representation of XM document `a_document'.
 		require
 			a_document_not_void: a_document /= Void
@@ -286,7 +286,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end		
 		
-	add_tabs (a_string: STRING; index, count: INTEGER) is
+	add_tabs (a_string: STRING; index, count: INTEGER)
 			-- Add `count' tab characters to `a_string' at index `index'.
 		local
 			counter: INTEGER
@@ -306,7 +306,7 @@ feature -- Access
 			new_count_correct: a_string.count = old a_string.count + count
 		end
 		
-	show_element (element: XM_ELEMENT; window: EV_TITLED_WINDOW) is
+	show_element (element: XM_ELEMENT; window: EV_TITLED_WINDOW)
 			-- Show contents of `element' in a dialog displayed modally to `window'.
 		require
 			element_not_void: element /= Void
@@ -343,7 +343,7 @@ feature -- Access
 			dialog.show_modal_to_window (window)
 		end
 		
-	remove_nodes_recursive (element: XM_ELEMENT; node_name: STRING) is
+	remove_nodes_recursive (element: XM_ELEMENT; node_name: STRING)
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
 			element_not_void: element /= Void
@@ -370,7 +370,7 @@ feature -- Access
 			end
 		end
 		
-	all_elements_by_name (element: XM_ELEMENT; node_name: STRING): ARRAYED_LIST [XM_ELEMENT] is
+	all_elements_by_name (element: XM_ELEMENT; node_name: STRING): ARRAYED_LIST [XM_ELEMENT]
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
 			element_not_void: element /= Void
@@ -380,7 +380,7 @@ feature -- Access
 			all_elements_by_name_internal (element, node_name, Result)
 		end
 		
-	all_elements_by_name_internal (element: XM_ELEMENT; node_name: STRING; elements: ARRAYED_LIST [XM_ELEMENT]) is
+	all_elements_by_name_internal (element: XM_ELEMENT; node_name: STRING; elements: ARRAYED_LIST [XM_ELEMENT])
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
 			element_not_void: element /= Void
@@ -409,7 +409,7 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	data_valid (current_data: STRING):BOOLEAN is
+	data_valid (current_data: STRING):BOOLEAN
 			-- Is `current_data' not empty and valid?
 		require
 			data_not_void: current_data /= Void
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

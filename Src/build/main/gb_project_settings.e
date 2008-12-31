@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent project settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	make_with_default_values (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_default_values (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current', mark as a stand alone Build project,
 			-- and intiailize_to_default_values. Assign `a_components' to `components'.
 		require
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	set_default_values is
+	set_default_values
 			-- Initialize default values.
 		do
 			main_window_class_name := "MAIN_WINDOW"
@@ -135,7 +135,7 @@ feature -- Access
 		-- Location for generation of all files and structure. If empty,
 		-- generation is performed at the current project location.
 
-	actual_generation_location: STRING is
+	actual_generation_location: STRING
 			-- Actual location for generated files.
 		do
 			if generation_location.is_empty then
@@ -149,7 +149,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	save is
+	save
 			-- Save `Current' to `project_location'.
 		local
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
@@ -179,7 +179,7 @@ feature -- Basic operation
 			file_handler.create_file ("Project_settings", file_name, data)
 		end
 
-	load (a_file_name: STRING; file_handler: GB_SIMPLE_XML_FILE_HANDLER) is
+	load (a_file_name: STRING; file_handler: GB_SIMPLE_XML_FILE_HANDLER)
 			-- Load `Current' from file `a_file_name' in location `project_location'.
 		require
 			file_name_not_void: a_file_name /= Void
@@ -234,7 +234,7 @@ feature -- Basic operation
 			end
 		end
 
-	cancel_load is
+	cancel_load
 			-- Assign `true' to `load_cancelled'.
 		do
 			load_cancelled := True
@@ -242,7 +242,7 @@ feature -- Basic operation
 
 feature -- Status Setting
 
-	set_project_type (a_type: INTEGER) is
+	set_project_type (a_type: INTEGER)
 			-- Assign `a_type' to `project_type'.
 		do
 			project_type := a_type
@@ -250,7 +250,7 @@ feature -- Status Setting
 			set: project_type.is_equal (a_type)
 		end
 
-	set_project_location (location: STRING) is
+	set_project_location (location: STRING)
 			-- Assign `location' to `project_location'.
 		require
 			location_not_void: location /= Void
@@ -260,7 +260,7 @@ feature -- Status Setting
 			project_location.is_equal (location)
 		end
 
-	set_main_window_class_name (name: STRING) is
+	set_main_window_class_name (name: STRING)
 			-- Assign `name' to `main_window_class_name'.
 		require
 			name_not_void: name /= Void
@@ -271,7 +271,7 @@ feature -- Status Setting
 			main_window_class_name.is_equal (name)
 		end
 
-	set_application_class_name (name: STRING) is
+	set_application_class_name (name: STRING)
 			-- Assign `name' to `application_class_name'.
 		require
 			name_not_void: name /= Void
@@ -282,7 +282,7 @@ feature -- Status Setting
 			application_class_name.is_equal (name)
 		end
 
-	set_constants_class_name (name: STRING) is
+	set_constants_class_name (name: STRING)
 			-- Assign `name' to `constants_class_name'.
 		require
 			name_not_void: name /= Void
@@ -293,7 +293,7 @@ feature -- Status Setting
 			constants_class_name.is_equal (name)
 		end
 
-	set_project_name (name: STRING) is
+	set_project_name (name: STRING)
 			--  Assign `name' to `project_name'.
 		require
 			name_not_void: name /= Void
@@ -303,43 +303,43 @@ feature -- Status Setting
 			project_name.is_equal (name)
 		end
 
-	enable_complete_project is
+	enable_complete_project
 			-- Assign `True' to `complete_project'.
 		do
 			complete_project := True
 		end
 
-	disable_complete_project is
+	disable_complete_project
 			-- Assign `False' to `complete_project'.
 		do
 			complete_project := False
 		end
 
-	enable_grouped_locals is
+	enable_grouped_locals
 			-- Assign `True' to `grouped_locals'.
 		do
 			grouped_locals := True
 		end
 
-	disable_grouped_locals is
+	disable_grouped_locals
 			-- Assign `False' to `grouped_locals'.
 		do
 			grouped_locals := False
 		end
 
-	enable_debugging_output is
+	enable_debugging_output
 			-- Assign `True' to `debugging_output'.
 		do
 			debugging_output := True
 		end
 
-	disable_debugging_output is
+	disable_debugging_output
 			-- Assign `False' to `debugging_output'.
 		do
 			debugging_output := False
 		end
 
-	set_attributes_locality (locality: STRING) is
+	set_attributes_locality (locality: STRING)
 			-- Assign `locality' to `attributes_local'.
 		require
 			valid_locality: locality.is_equal (True_string) or locality.is_equal (False_string) or
@@ -348,31 +348,31 @@ feature -- Status Setting
 			attributes_local := locality
 		end
 
-	enable_rebuild_ace_file is
+	enable_rebuild_ace_file
 			-- Assign `True' to `rebuild_ace_file'.
 		do
 			rebuild_ace_file := True
 		end
 
-	disable_rebuild_ace_file is
+	disable_rebuild_ace_file
 			-- Assign `False' to `rebuild_ace_file'.
 		do
 			rebuild_ace_file := False
 		end
 
-	enable_constant_loading is
+	enable_constant_loading
 			-- Assign `True' to `load_constants'.
 		do
 			load_constants := True
 		end
 
-	disable_constant_loading is
+	disable_constant_loading
 			-- Assign `False' to `load_constants'.
 		do
 			load_constants := False
 		end
 
-	set_generation_location (location: STRING) is
+	set_generation_location (location: STRING)
 			-- Assign `location' to `generation_location'.
 		do
 			generation_location := location.twin
@@ -382,7 +382,7 @@ feature -- Status Setting
 
 feature {GB_FILE_OPEN_COMMAND}
 
-	set_object_as_client (an_object: GB_OBJECT) is
+	set_object_as_client (an_object: GB_OBJECT)
 			-- Ensure `an_object' is generated as a client.
 		require
 			an_object_not_void: an_object /= Void
@@ -393,39 +393,39 @@ feature {GB_FILE_OPEN_COMMAND}
 feature {NONE} --Implementation
 
 		-- Constants for saving to XML.
-	project_location_string: STRING is "Project_location"
+	project_location_string: STRING = "Project_location"
 
-	main_window_class_name_string: STRING is "Main_window_class_name"
+	main_window_class_name_string: STRING = "Main_window_class_name"
 
-	application_class_name_string: STRING is "Application_class_name"
+	application_class_name_string: STRING = "Application_class_name"
 
-	constants_class_name_string: STRING is "Constants_class_name"
+	constants_class_name_string: STRING = "Constants_class_name"
 
-	complete_project_string: STRING is "Complete_project"
+	complete_project_string: STRING = "Complete_project"
 
-	grouped_locals_string: STRING is "Group_locals"
+	grouped_locals_string: STRING = "Group_locals"
 
-	debugging_output_string: STRING is "Generate_debugging_output"
+	debugging_output_string: STRING = "Generate_debugging_output"
 
-	attributes_local_string: STRING is "Attributes_local"
+	attributes_local_string: STRING = "Attributes_local"
 
-	project_name_string: STRING is "Project_name"
+	project_name_string: STRING = "Project_name"
 
-	client_of_window_string: STRING is "Client_of_window"
+	client_of_window_string: STRING = "Client_of_window"
 
-	rebuild_ace_file_string: STRING is "Rebuild_ace_file"
+	rebuild_ace_file_string: STRING = "Rebuild_ace_file"
 
-	load_constants_string: STRING is "Load_constants_from_file"
+	load_constants_string: STRING = "Load_constants_from_file"
 
-	project_type_string: STRING is "Project_type"
+	project_type_string: STRING = "Project_type"
 
-	generation_location_string: STRING is "Generation_location"
+	generation_location_string: STRING = "Generation_location"
 
 		-- Type of Current project. We must store this information
 		-- in the save file, so we know what sort of processing to perform
 		-- when we double click on the .bpr file.
 
-	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]]) is
+	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]])
 			-- Call `an_agent' with `a_string' converted to an INTEGER.
 		require
 			a_string_not_void: a_string /= Void
@@ -436,7 +436,7 @@ feature {NONE} --Implementation
 		end
 
 
-	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
+	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Call `an_agent' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -445,7 +445,7 @@ feature {NONE} --Implementation
 			an_agent.call ([a_string])
 		end
 
-	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE [ANY, TUPLE]) is
+	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE [ANY, TUPLE])
 			-- If `a_string' is `True_string' then call `true_agent', else call `false_agent'.
 		require
 			a_string_not_void: a_string /= Void
@@ -460,7 +460,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

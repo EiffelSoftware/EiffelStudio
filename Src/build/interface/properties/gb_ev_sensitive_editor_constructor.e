@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builds an attribute editor for modification of objects of type EV_SENSITIVE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ feature -- Access
 	ev_type: EV_SENSITIVE
 		-- Vision2 type represented by `Current'.
 		
-	type: STRING is "EV_SENSITIVE"
+	type: STRING = "EV_SENSITIVE"
 		-- String representation of object_type modifyable by `Current'.
 		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
@@ -38,7 +38,7 @@ feature -- Access
 			update_attribute_editor
 		end
 		
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	check_button: EV_CHECK_BUTTON
 		-- Check button used for setting attribute.
 	
-	toggle_sensitivity is
+	toggle_sensitivity
 			-- Update sensitive state.
 		do
 			if check_button.is_selected then
@@ -75,9 +75,9 @@ feature {NONE} -- Implementation
 
 	-- Constants for XML
 	
-	is_sensitive_string: STRING is "Is_sensitive";
+	is_sensitive_string: STRING = "Is_sensitive";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

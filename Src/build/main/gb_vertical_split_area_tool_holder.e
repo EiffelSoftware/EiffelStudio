@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a vertical split area which holds%
 		%objects of type GB_TOOL_HOLDER."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_tools (tool1, tool2: EV_WIDGET; title1, title2: STRING) is
+	make_with_tools (tool1, tool2: EV_WIDGET; title1, title2: STRING)
 			-- Create `Current' and extend with `first_tool' and `second_tool'.
 			-- Assign `title1' to `tool1' and `title2' to `tool2'.
 		local
@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 		
 feature -- Basic operation
 
-	set_split_position (value: INTEGER) is
+	set_split_position (value: INTEGER)
 			-- Set split position of `split_area' to `value'.
 		do
 			split_area.set_split_position (value)
 		end
 			
-	minimize_tool (tool_holder: GB_TOOL_HOLDER)	 is
+	minimize_tool (tool_holder: GB_TOOL_HOLDER)
 			-- Minimize `tool_holder'.
 		do
 			update_restore_position
@@ -89,7 +89,7 @@ feature -- Basic operation
 			end
 		end
 		
-	maximize_tool (tool_holder: GB_TOOL_HOLDER) is
+	maximize_tool (tool_holder: GB_TOOL_HOLDER)
 			-- Maximize `tool_holder'.
 		do
 			update_restore_position
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 		restore_position: INTEGER
 			-- Position to restore splitter to.
 		
-		update_restore_position is
+		update_restore_position
 				-- If both tools are in `split_area' then assign the split
 				-- position to `restore_position'.
 			do
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-		add_first_cell is
+		add_first_cell
 				-- Create a temporary cell to hold `first_tool_holder'
 				-- while it is minimized.
 			require
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 				a_cell.extend (first_tool_holder)
 			end
 			
-		add_second_cell is
+		add_second_cell
 				-- Create a temporary cell to hold `second_tool_holder'
 				-- while it is minimized.
 			require
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 				a_cell.extend (second_tool_holder)
 			end
 			
-		remove_first_cell is
+		remove_first_cell
 				-- Remove temporary cell holdding `first_tool_holder'
 				-- and restore `first_tool_holder' into `split_area'.
 			local
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 				split_area.set_first (first_tool_holder)
 			end
 			
-		remove_second_cell is
+		remove_second_cell
 				-- Remove temporary cell holdding `second_tool_holder'
 				-- and restore `second_tool_holder' into `split_area'.
 			local
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 				split_area.set_second (second_tool_holder)
 			end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

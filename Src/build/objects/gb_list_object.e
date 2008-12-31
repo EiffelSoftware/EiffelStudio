@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GB_OBJECT representing an EV_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 	display_object: EV_LIST
 		-- The representation of `object' used in `build_window'.
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- Is `Current' full?
 		do
 			Result := False
@@ -35,7 +35,7 @@ feature -- Access
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
-	accepts_child (a_type: STRING): BOOLEAN is
+	accepts_child (a_type: STRING): BOOLEAN
 			-- Does current accept new objects of
 			-- type `a_type'.
 		local
@@ -47,7 +47,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

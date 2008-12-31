@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Recyclable object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,12 +10,12 @@ deferred class
 
 feature {EB_RECYCLER} -- Basic operations
 
-	recycle is
+	recycle
 			-- To be called when the button has became useless.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

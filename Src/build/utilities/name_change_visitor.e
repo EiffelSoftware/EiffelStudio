@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that find the location of the class name in an Eiffel code file.
 		Implemented as an AST_VISITOR.
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE} -- Basic operations
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 			-- Process `l_as'.
 		local
 			parent_as: PARENT_AS
@@ -69,7 +69,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

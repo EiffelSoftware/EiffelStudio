@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a naming dialog"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature -- Initialization
 		
-	make_with_names_and_prompts (names: ARRAYED_LIST [STRING]; an_initial_text, a_title, an_invalid_message: STRING) is
+	make_with_names_and_prompts (names: ARRAYED_LIST [STRING]; an_initial_text, a_title, an_invalid_message: STRING)
 			-- Create `Current' and assign `names' to `all_existing_names' which will be non permitted values for entry.
 			-- Display `a_title' as title of `Current', use `an_intial_text' as initial text in text field. `an_invalid_message'
 			-- will be displayed when the entry is not permitted.
@@ -60,7 +60,7 @@ feature -- Initialization
 			invalid_message := an_invalid_message
 		end
 		
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -90,7 +90,7 @@ feature -- Initialization
 			name := ""
 		end
 		
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 	invalid_message: STRING
 		-- Message displayed if `text' not valid.
 	
-	hide_and_set is
+	hide_and_set
 			-- Hide `Current' and set `name'.
 		local
 			warning: EV_WARNING_DIALOG
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		-- We must ensure that a new name entered by the user
 		-- is not identical to a member of this list.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

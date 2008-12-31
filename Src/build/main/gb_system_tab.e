@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a tab for the project settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 		
 feature -- Basic operation.
 
-	update_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	update_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Update all attributes of `Current' to reflect information
 			-- in `project_settings'.
 		require
@@ -39,14 +39,14 @@ feature -- Basic operation.
 		deferred
 		end
 		
-	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	save_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Save all attributes of `Current' into `project_settings'.
 		require
 			project_settings_not_void: project_settings /= Void
 		deferred
 		end
 		
-	validate is
+	validate
 			-- Check all fields for valid input.
 		require
 			parented: parent /= Void
@@ -58,7 +58,7 @@ feature -- Basic operation.
 		
 feature {NONE} -- Implementation
 
-	select_in_parent is
+	select_in_parent
 			-- Ensure `Current' is the visible
 			-- tab in `parent'.
 		local
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			notebook_parent.select_item (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelBuild STRING constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name, a_value: STRING; a_components: like components) is
+	make_with_name_and_value (a_name, a_value: STRING; a_components: like components)
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_valid: a_name /= Void and then a_value /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := String_constant_type
@@ -44,13 +44,13 @@ feature -- Access
 	value: STRING
 		-- Value of `Current'.
 
-	value_as_string: STRING is
+	value_as_string: STRING
 			-- Value represented by `Current' as a STRING.
 		do
 			Result := value.twin
 		end
 
-	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
+	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
 			-- Representation of `Current' as a multi column list row.
 		do
 			create Result
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_value (a_value: STRING) is
+	set_value (a_value: STRING)
 			-- Assign `a_value' to `value'.
 		require
 			value_ok: a_value /= Void and then not a_value.is_empty
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature {GB_CONSTANTS_DIALOG} -- Implementation
 
-	can_modify_to_value (new_value: STRING): BOOLEAN is
+	can_modify_to_value (new_value: STRING): BOOLEAN
 			-- May `Current' be changed to `new_value' or are certain
 			-- referers not permitted to use `new_value'?
 		local
@@ -101,7 +101,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			end
 		end
 
-	modify_value (new_value: STRING) is
+	modify_value (new_value: STRING)
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -128,7 +128,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 invariant
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that allow multiple strings to be displayed
 		in an EV_LIST.
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_textable (a_list: EV_LIST) is
+	make_with_textable (a_list: EV_LIST)
 			-- Create current with `a_text' assigned
 			-- to `text'.
 		do
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	record_string (new_string: STRING) is
+	record_string (new_string: STRING)
 			-- Add `new_string' to strings held by
 			-- `Current'. If new_string does not end in "%N"
 			-- then append "%N"
@@ -45,7 +45,7 @@ feature -- Status setting
 			internal_count_increased: internal_list.count = old internal_list.count + 1
 		end
 		
-	reset is
+	reset
 			-- Reset `Current'.
 		do
 			internal_list.wipe_out
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_list_not_void: internal_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

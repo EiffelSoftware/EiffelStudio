@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that import an existing EiffelBuild project file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,7 @@ create
 
 feature -- Basic operation
 
-	import (file_name: STRING) is
+	import (file_name: STRING)
 			-- Import EiffelBuild ".bpr" file named `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -125,7 +125,7 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
@@ -137,7 +137,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			internal_build_window (window, parent_common_item)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
@@ -225,7 +225,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			is_processing_window := False
 		end
 
-	retrieve_new_object (element: XM_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT is
+	retrieve_new_object (element: XM_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT
 			-- Build a new object from information in `element', into `object' at position `pos'.
 			-- `Result' is the new object.
 		require
@@ -240,7 +240,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			modify_from_xml (element, new_object)
 		end
 
-	process_names (element: XM_ELEMENT) is
+	process_names (element: XM_ELEMENT)
 			-- Update name stored in `element', if any, and only if
 			-- name has changed.
 		require
@@ -274,7 +274,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	build_new_object (element: XM_ELEMENT; object: GB_OBJECT) is
+	build_new_object (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Build a new object from information in `element' into `object'.
 		require
 			element_not_void: element /= Void
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			components.object_handler.add_object_to_objects (new_object)
 		end
 
-	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
+	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Update properties of `object' based on information in `element'.
 		require
 			element_not_void: element /= Void
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
+	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 		-- All constant names and object names in original project, plus the names of
 		-- all objects in the merged system. Constants in the merged system are not included.
 
-	import_system is
+	import_system
 			-- Import a system from the parsed XML file.
 		local
 			application_element, current_element, constants_element, constant_item_element: XM_ELEMENT
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			components.constants.build_deferred_elements
 		end
 
-	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Create the directory and window structure represented by `an_element' into `parent_node_list'.
 		require
 			an_element_not_void: an_element /= Void
@@ -689,7 +689,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_constant_references_in_xml (element: XM_ELEMENT) is
+	update_constant_references_in_xml (element: XM_ELEMENT)
 			-- Recursively update all constant references (e.g. properties using
 			-- a paticular constant) in `element'.
 		require
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_post_import_names (s: STRING) is
+	add_to_post_import_names (s: STRING)
 			-- Add `s' to `all_names_post_import'.
 		require
 			s_not_void: s /= Void
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			all_names_post_import.has (s)
 		end
 
-	parse_for_names (element: XM_ELEMENT) is
+	parse_for_names (element: XM_ELEMENT)
 			-- Parse `element' recursively to find all names which are inserted in `all_names_post_import'.
 		require
 			element_not_void: element /= Void
@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_names (element: XM_ELEMENT) is
+	retrieve_names (element: XM_ELEMENT)
 			-- Retrieve name if any from `element' and insert in `all_names_post_import'.
 		require
 			element_not_void: element /= Void
@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	load_and_parse_xml_file (a_filename: STRING) is
+	load_and_parse_xml_file (a_filename: STRING)
 			-- Load file `a_filename' and parse.
 		require
 			file_name_not_void: a_filename /= Void
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_file (a_filename: STRING) is
+	parse_file (a_filename: STRING)
 			-- Parse XML file `filename' with `parser'.
 		require
 			file_name_not_void: a_filename /= Void
@@ -827,7 +827,7 @@ feature {NONE} -- Implementation
 			file.close
 		end
 
-	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+	pipe_callback: XM_TREE_CALLBACKS_PIPE
 			-- Create unique callback pipe.
 		once
 			create Result.make
@@ -835,7 +835,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	initialize_load_output is
+	initialize_load_output
 			-- Create `load_timer' and associate an
 			-- action with it.
 		do
@@ -845,7 +845,7 @@ feature {NONE} -- Implementation
 		 	environment.application.process_graphical_events
 		end
 
-	update_status_bar is
+	update_status_bar
 			-- Refresh message displayed on status bar, to show
 			-- that processing is still occurring.
 		local
@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_load_output is
+	remove_load_output
 			--  Destroy `load_timer' and display a final
 			-- timed message on the status bar.
 		do
@@ -886,7 +886,7 @@ feature {NONE} -- Implementation
 	document: XM_DOCUMENT;
 		-- XML document generated from created window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

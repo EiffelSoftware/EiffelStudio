@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent an EiffelBuild constant. Note that `value' is only defined
 		in descendents, as for an INTEGER constant, it is an expanded type, and we cannot
@@ -35,7 +35,7 @@ feature -- Access
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	type: STRING is
+	type: STRING
 			-- Type of `Current'.
 		deferred
 		end
@@ -43,7 +43,7 @@ feature -- Access
 	name: STRING
 			-- Name of `Current'.
 
-	value_as_string: STRING is
+	value_as_string: STRING
 			-- Value represented by `Current' as a STRING.
 		deferred
 		ensure
@@ -54,7 +54,7 @@ feature -- Access
 			-- Representation of `Current' as a small pixmap. Used in representations
 			-- of `Current'. May be Void for some descendents.
 
-	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
+	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
 			-- Representation of `Current' as a multi column list row.
 		deferred
 		ensure
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign  `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -77,7 +77,7 @@ feature -- Element change
 			name_assigned: name = a_name
 		end
 
-	add_referer (referer: GB_CONSTANT_CONTEXT) is
+	add_referer (referer: GB_CONSTANT_CONTEXT)
 			-- Add `referer' to `referers'.
 		require
 			referer_not_void: referer /= Void
@@ -87,7 +87,7 @@ feature -- Element change
 			has_referer: referers.has (referer)
 		end
 
-	remove_referer (referer: GB_CONSTANT_CONTEXT) is
+	remove_referer (referer: GB_CONSTANT_CONTEXT)
 			-- Remove `referer' from `referers'.
 		require
 			referer_not_void: referer /= Void
@@ -99,7 +99,7 @@ feature -- Element change
 
 feature -- Miscellaneous
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XM representation of `Current' in `element'.
 		require
 			element_not_void: element /= Void
@@ -111,7 +111,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	new_gb_ev_any (constant_context: GB_CONSTANT_CONTEXT): GB_EV_ANY is
+	new_gb_ev_any (constant_context: GB_CONSTANT_CONTEXT): GB_EV_ANY
 			-- `Result' is new instance of GB_EV_ANY representing object properties
 			-- referenced by `constant_context'.
 		require
@@ -145,7 +145,7 @@ invariant
 	type_not_void: type /= Void and not type.is_empty
 	referers_not_void: referers /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

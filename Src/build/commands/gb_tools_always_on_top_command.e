@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that modify the display settings for windows%
 		%containing tools, either `modeless' or `show'"
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
@@ -64,20 +64,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in menus.
 		do
 			Result := Show_tool_windows_modeless_text
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmap representing the item (for buttons)
 		do
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		local
 			counter: INTEGER
@@ -113,7 +113,7 @@ feature -- Execution
 			preferences.preferences.save_preference (preferences.global_data.tools_on_top_preference)
 		end
 
-	update_tool (tool_window: EV_DIALOG) is
+	update_tool (tool_window: EV_DIALOG)
 			-- Toggle display status of `tool_window' between
 			-- regular and display relative to `main_window'.
 		local
@@ -132,7 +132,7 @@ feature -- Execution
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow user input of an integer value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- If `label_text' `is_empty', do not display a label.
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `a_text' to text of `text_field'.
 		do
 			text_field.set_text (a_text)
@@ -64,13 +64,13 @@ feature -- Basic operations
 
 feature -- Access
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := integer_constant_type
 		end
 
-	text: STRING is
+	text: STRING
 			-- `Result' is text of `text_field'.
 		do
 			Result := text_field.text
@@ -78,7 +78,7 @@ feature -- Access
 
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
-	update_constant_display (a_value: STRING) is
+	update_constant_display (a_value: STRING)
 			--
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -135,13 +135,13 @@ feature {NONE} -- Implementation
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
-	execute_agent (new_value: INTEGER) is
+	execute_agent (new_value: INTEGER)
 			-- call `execution_agent'.
 		do
 			execution_agent.call ([new_value])
 		end
 
-	set_initial is
+	set_initial
 			-- Assign text of text field to `value_on_entry'.
 		require
 			text_field_not_void: text_field /= Void
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			value_on_entry := text_field.text
 		end
 
-	process is
+	process
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
 		local
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN])
 			-- Initialize text field for entry.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			text_field.focus_out_actions.extend (agent process)
 		end
 
-	disable_constant_mode is
+	disable_constant_mode
 			-- Ensure constant entry fields are hidden.
 		do
 			constants_combo_box.hide
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			constants_combo_box.remove_selection
 		end
 
-	enable_constant_mode is
+	enable_constant_mode
 			-- Ensure constant entry fields are displayed.
 		do
 			text_field.hide
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	populate_constants  is
+	populate_constants
 			-- Populate all
 		local
 			integer_constants: ARRAYED_LIST [GB_CONSTANT]
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	list_item_selected (list_item: EV_LIST_ITEM) is
+	list_item_selected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been selected from `constants_combo_box'.
 		local
 			constant: GB_INTEGER_CONSTANT
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	list_item_deselected (list_item: EV_LIST_ITEM) is
+	list_item_deselected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

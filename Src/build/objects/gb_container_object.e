@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GB_OBJECT representing an EV_CONTAINER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- Is `Current' full?
 		do
 			Result := object.full
@@ -48,7 +48,7 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
+	add_child_object (an_object: GB_OBJECT; position: INTEGER)
 			-- Add `an_object' to `Current' at position `position'.
 			-- This is redefined in descendents as insertion at position `position'
 			-- is different for each type of container.
@@ -66,7 +66,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {GB_OBJECT} -- Delete
 
-	delete is
+	delete
 			-- Perform any necessary processing for
 			-- a deletion of `Current' from the system.
 			-- We must unmerge any radio button groups
@@ -101,7 +101,7 @@ feature {GB_OBJECT} -- Delete
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
 
-	accepts_child (a_type: STRING): BOOLEAN is
+	accepts_child (a_type: STRING): BOOLEAN
 			-- Does `Current' accept `an_object'?
 			-- Only widgets are accepted.
 		do
@@ -113,7 +113,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 
 feature {NONE} -- Implementation
 
-	build_display_object is
+	build_display_object
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
 		local
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			connect_display_object_events
 		end
 
-	connect_display_object_events is
+	connect_display_object_events
 			-- Connect events to `display_object' to permit interactive building.
 		do
 			Precursor {GB_PARENT_OBJECT}
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			display_object.child.drop_actions.extend (agent set_color)
 		end
 
-	unconnect_display_object_pick_events is
+	unconnect_display_object_pick_events
 			-- Unconnect pick events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
 			-- part of a representation of a top level object.
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			display_object.child.remove_pebble
 		end
 
-	unconnect_display_object_drop_events is
+	unconnect_display_object_drop_events
 			-- Unconnect drop events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
 			-- part of a representation of a top level object.
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 
 feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
 
-	update_representations_for_name_or_type_change is
+	update_representations_for_name_or_type_change
 			-- Update all representations of `Current' to reflect a change
 			-- of name or type.
 		do
@@ -178,13 +178,13 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 
 feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
-	real_display_object: EV_ANY is
+	real_display_object: EV_ANY
 			-- `Result' is widget associated with `display_object'.
 		do
 			Result := display_object.child
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

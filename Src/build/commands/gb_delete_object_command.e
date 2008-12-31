@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a new delete object command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 			Result := components.system_status.project_open
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Basic operations
 
-		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
+		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON
 				-- Create a new toolbar item linked to `Current'. This has been redefined as each button
 				-- needs to have its drop actions set.
 			do
@@ -57,7 +57,7 @@ feature -- Basic operations
 				Result.drop_actions.set_veto_pebble_function (agent veto_the_delete)
 			end
 
-		execute is
+		execute
 				-- Execute `Current'.
 				-- Currently does nothing as you must drop
 				-- on the toolbars representation to perform a delete.
@@ -66,7 +66,7 @@ feature -- Basic operations
 
 feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 
-	delete_transported_object (object_stone: GB_OBJECT_STONE) is
+	delete_transported_object (object_stone: GB_OBJECT_STONE)
 			-- Delete object represented by `object_stone'.
 		require
 			object_stone_not_void: object_stone /= Void
@@ -85,7 +85,7 @@ feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 			end
 		end
 
-	delete_object (an_object: GB_OBJECT) is
+	delete_object (an_object: GB_OBJECT)
 			-- Remove `an_object' from the system.
 		require
 			object_not_void: an_object /= Void
@@ -121,7 +121,7 @@ feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 			--| rebuild on the undo. Could be tricky.
 		end
 
-	can_delete_object (an_object: GB_OBJECT): BOOLEAN is
+	can_delete_object (an_object: GB_OBJECT): BOOLEAN
 			-- May `an_object' be deleted? Only if it has no refers.
 		require
 			object_not_void: an_object /= Void
@@ -141,13 +141,13 @@ feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	delete_radio_merge (group_link: GB_RADIO_GROUP_LINK) is
+	delete_radio_merge (group_link: GB_RADIO_GROUP_LINK)
 			-- Unmerge the containers referenced in `group_link'.
 		do
 			group_link.gb_ev_container.unlink_group (group_link)
 		end
 
-	delete_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
+	delete_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM)
 			-- Delete directory represented by `a_directory'.
 		require
 			directory_not_void: a_directory /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			components.tools.widget_selector.remove_directory (a_directory)
 		end
 
-	veto_the_delete (object_stone: GB_OBJECT_STONE): BOOLEAN is
+	veto_the_delete (object_stone: GB_OBJECT_STONE): BOOLEAN
 			-- Do not allow the delete if the object was picked
 			-- from a type of component. The way that we are checking this,
 			-- is by looking at the parent of the object. If it is Void then
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

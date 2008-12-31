@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold both a name, a piece of data%
 		% and an XM_ELEMENT. For use by application generator."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
@@ -36,7 +36,7 @@ feature -- Status setting
 			name_set: name = a_name
 		end
 
-	set_data (a_data: STRING) is
+	set_data (a_data: STRING)
 			-- Assign `a_data' to `data'.
 		do
 			data := a_data
@@ -44,7 +44,7 @@ feature -- Status setting
 			data_set: data = a_data
 		end
 
-	set_element (an_element: XM_ELEMENT) is
+	set_element (an_element: XM_ELEMENT)
 			-- Assign `an_element' to `element'.
 		do
 			element := an_element
@@ -52,7 +52,7 @@ feature -- Status setting
 			element_set: element = an_element
 		end
 		
-	set_as_constant is
+	set_as_constant
 			-- Ensure `Current' represents a constant.
 		do
 			is_constant := True
@@ -60,7 +60,7 @@ feature -- Status setting
 			constant_set: is_constant
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow user input of a pixmap value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL], BOOLEAN];
 		a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
 		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING_GENERAL];
-		a_components: GB_INTERNAL_COMPONENTS) is
+		a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := pixmap_constant_type
@@ -101,7 +101,7 @@ feature -- Access
 
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
-	update_constant_display (a_value: EV_PIXMAP) is
+	update_constant_display (a_value: EV_PIXMAP)
 			-- Update widgets and display based on state of current constant selected.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -168,7 +168,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
 feature {NONE} -- Implementation
 
-	enable_constant_mode is
+	enable_constant_mode
 			-- Ensure constant entry fields are displayed.
 		do
 			if pixmap_container.full then
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	disable_constant_mode is
+	disable_constant_mode
 			-- Ensure constant entry fields are hidden.
 		do
 			filler_label.show
@@ -201,12 +201,12 @@ feature {NONE} -- Implementation
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
-	pixmap_path_string: STRING is "Pixmap_path"
+	pixmap_path_string: STRING = "Pixmap_path"
 
-	Remove_tooltip: STRING is "Remove pixmap"
+	Remove_tooltip: STRING = "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
-	Select_tooltip: STRING is "Select pixmap"
+	Select_tooltip: STRING = "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 
 	pixmap_container: EV_CELL
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
 
-	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
+	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP)
 			-- Add `pixmap' to `pixmap_container'.
 		local
 			x_ratio, y_ratio: REAL
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
 		end
 
-	populate_constants is
+	populate_constants
 			-- Fill `constants_combo_box' with representations
 			-- of all pixmap constants for selection.
 		local
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	modify_pixmap is
+	modify_pixmap
 			-- Display a dialog allowing user input for
 			-- selected pixmap.
 		local
@@ -363,14 +363,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL) is
+	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL)
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do
 			execution_agent.call ([new_value, new_path])
 		end
 
-	remove_constant is
+	remove_constant
 			-- Remove constant represented within `Current' from associated properties.
 		do
 			execute_agent (Void, Void)
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 	filler_label: EV_CELL
 
 
-	list_item_deselected (list_item: EV_LIST_ITEM) is
+	list_item_deselected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	list_item_selected (list_item: EV_LIST_ITEM) is
+	list_item_selected (list_item: EV_LIST_ITEM)
 			-- `list_item' has been selected from `constants_combo_box'.
 --		require
 --			list_item_not_void: list_item /= Void
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the main window for the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	rebuild_recent_projects_menu is
+	rebuild_recent_projects_menu
 			-- Update contents of `recent_projects_menu' with all recent projects.
 		local
 			recent_projects: ARRAY [STRING]
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_tools is
+	show_tools
 			-- Place tools in `Current'.
 		require
 			has_item: item /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			has_item: item /= Void
 		end
 
-	hide_tools is
+	hide_tools
 			-- Remove tools from `Current'.
 		require
 			has_item: item /= Void
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			has_item: item /= Void
 		end
 
-	update_title is
+	update_title
 			-- Update title displayed in `Current' to include project location
 			-- if necessary.
 		local
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_named_project (project_name: STRING) is
+	open_named_project (project_name: STRING)
 			-- Open project named `project_name', which must include full path.
 		require
 			project_name_not_void: project_name /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			--project_open: System_status.project_open
 		end
 
-	initialize_split_areas is
+	initialize_split_areas
 			-- Set splitters to default positions.
 		do
 			if horizontal_split_area.full then
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_menu is
+	initialize_menu
 			-- Initialize menus.
 			-- Create menu items, and place in `menu_items'.
 		require
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			menus_initialized := True
 		end
 
-	build_menu is
+	build_menu
 			-- Generate menu for `Current'.
 		require
 			menus_intitialized : menus_initialized
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			main_menu_bar.extend (help_menu)
 		end
 
-	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
+	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX)
 			-- create and layout "widgets" within `Current'.
 			-- if `a_tool_holder' not Void then build widgets into
 			-- `a_tool_holder', else build widgets into `tool_holder'.
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			vertical_box.disable_item_expand (status_bar)
 		end
 
-	widget_removed_from_multiple_split_area is
+	widget_removed_from_multiple_split_area
 			-- Respond to a widget being removed from `multiple_split_area'
 		local
 			split_area_parent: EV_HORIZONTAL_BOX
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	widget_inserted_into_multiple_split_area is
+	widget_inserted_into_multiple_split_area
 			-- Respond to a widget being inserted into `multiple_split_area'.
 		local
 			layout_constructor_parent: EV_HORIZONTAL_BOX
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	status_bar: EV_VERTICAL_BOX is
+	status_bar: EV_VERTICAL_BOX
 			-- `Result' is status bar displayed in `Current'.
 		local
 			padding_box: EV_HORIZONTAL_BOX
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: EV_TOOL_BAR
 			-- Tool bar of `Current'.
 		local
 			separator: EV_TOOL_BAR_SEPARATOR
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	show_about_dialog is
+	show_about_dialog
 			-- Display an about dialog.
 		local
 			about_dialog: GB_ABOUT_DIALOG
@@ -543,7 +543,7 @@ feature {NONE} -- Implementation
 			about_dialog.show_modal_to_window (Current)
 		end
 
-	disable_menus is
+	disable_menus
 			-- Ensure all items of `main_menu_bar' are disabled.
 		do
 			if main_menu_bar /= Void then
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_menus is
+	enable_menus
 			-- Ensure all items of `main_menu_bar' are enabled.
 		do
 			if main_menu_bar /= Void then
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_interface is
+	build_interface
 			-- Create user interface in `Current'.
 		do
 			set_title (Product_name)
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 			close_request_actions.extend (agent close_requested)
 		end
 
-	smart_disable_sensitive is
+	smart_disable_sensitive
 			-- Disable all contents of `Current', except the status bar.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	smart_enable_sensitive is
+	smart_enable_sensitive
 			-- Enable all contents of `Current', except the status bar.
 		local
 			vertical_box: EV_VERTICAL_BOX
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_menu_sensitivity (a_menu_item: EV_MENU_ITEM; enabled: BOOLEAN) is
+	update_menu_sensitivity (a_menu_item: EV_MENU_ITEM; enabled: BOOLEAN)
 			-- Update sensitive state of `a_menu_item', to `enabled'.
 		require
 			a_menu_item_not_void: a_menu_item /= Void
@@ -647,13 +647,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_tip_of_day is
+	show_tip_of_day
 			-- Display tip of day dialog.
 		do
 			components.tools.tip_of_the_day_dialog.show_modal_and_centered_to_window (components.tools.main_window)
 		end
 
-	initialize_tool_positions (info: ARRAY [STRING]) is
+	initialize_tool_positions (info: ARRAY [STRING])
 			-- Initialize tools in `multiple_split_area', based on `info'.
 		require
 			info_not_void: info /= Void
@@ -747,7 +747,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_external_tool_positions (info: ARRAY [STRING]) is
+	initialize_external_tool_positions (info: ARRAY [STRING])
 			-- Initialize external tools of `multiple_split_area', based on `info'.
 		require
 			info_not_void: info /= Void
@@ -800,7 +800,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_tool_positions is
+	store_tool_positions
 			-- Store positions of all tools in `multiple_split_area'
 			-- into preferences.
 		local
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			preferences.global_data.external_tool_order_preference.set_value (info)
 		end
 
-	assign_command_accelerators_to_window is
+	assign_command_accelerators_to_window
 			-- For all command accelerators,
 			-- add them to the accelerators of `Current'.
 		local
@@ -894,7 +894,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close_requested is
+	close_requested
 			-- End the current application.
 		local
 			question: EV_QUESTION_DIALOG
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Debugging Implementation
 
-	add_debug_shortcuts is
+	add_debug_shortcuts
 			-- Add shortcuts to `Current' for debugging.
 		local
 			accelerator: EV_ACCELERATOR
@@ -999,7 +999,7 @@ feature {NONE} -- Debugging Implementation
 			accelerators.extend (accelerator)
 		end
 
-	check_nesting is
+	check_nesting
 			-- Check the nesting structures of all top level objects in `Current'.
 		local
 			checker: GB_NESTING_CHECKER
@@ -1008,7 +1008,7 @@ feature {NONE} -- Debugging Implementation
 			checker.check_nesting
 		end
 
-	full_garbage_collect is
+	full_garbage_collect
 			-- Perform a full garbage collection
 		do
 			if components.system_status.is_in_debug_mode then
@@ -1017,7 +1017,7 @@ feature {NONE} -- Debugging Implementation
 			end
 		end
 
-	write_all_objects is
+	write_all_objects
 			-- Display memory info to files on disk, named sequentially.
 		local
 			output: STRING
@@ -1068,7 +1068,7 @@ feature {NONE} -- Debugging Implementation
 			end
 		end
 
-	mem_info is
+	mem_info
 			-- Display memory info to files on disk, named sequentially.
 		local
 			objects: ARRAYED_LIST [ANY]
@@ -1103,19 +1103,19 @@ feature {NONE} -- Debugging Implementation
 			end
 		end
 
-	file_count: INTEGER_REF is
+	file_count: INTEGER_REF
 			-- Count used to append to end of file name for `mem_info' output.
 		once
 			create Result
 		end
 
-	objects_file_count: INTEGER_REF is
+	objects_file_count: INTEGER_REF
 			-- Count used to append to end of file name for `write_all_objects' output.
 		once
 			create Result
 		end
 
-	enter_debug_mode (an_x, a_y, a_button: INTEGER) is
+	enter_debug_mode (an_x, a_y, a_button: INTEGER)
 			-- Record mouse input and enter debug mode if buttons pressed in certain order.
 		do
 			if debug_entry_key = Void then
@@ -1130,7 +1130,7 @@ feature {NONE} -- Debugging Implementation
 			end
 		end
 
-	clear_debug_mode_entry is
+	clear_debug_mode_entry
 			-- Reset the current debug entry record.
 		do
 			debug_entry_key := ""
@@ -1144,7 +1144,7 @@ invariant
 	menus_initalized_so_top_level_menu_items_not_void: menus_initialized implies file_menu /= Void
 		and project_menu /= Void and view_menu /= Void and help_menu /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

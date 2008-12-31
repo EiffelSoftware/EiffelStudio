@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preference data for interaction with dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {GB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Initialize with `a_preferences'.
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,25 +26,25 @@ feature {GB_PREFERENCES} -- Initialization
 
 feature {GB_SHARED_PREFERENCES} -- Value
 
-	show_deleting_keyboard_warning: BOOLEAN is
+	show_deleting_keyboard_warning: BOOLEAN
 			-- 
 		do
 			Result := show_deleting_keyboard_warning_preference.value
 		end	
 		
-	show_deleting_directories_warning: BOOLEAN is
+	show_deleting_directories_warning: BOOLEAN
 			-- 
 		do
 			Result := show_deleting_directories_warning_preference.value
 		end	
 		
-	show_deleting_final_directory_warning: BOOLEAN is
+	show_deleting_final_directory_warning: BOOLEAN
 			-- 
 		do
 			Result := show_deleting_final_directory_warning_preference.value
 		end	
 		
-	show_changing_client_type_warning: BOOLEAN is
+	show_changing_client_type_warning: BOOLEAN
 			-- 
 		do
 			Result := show_changing_client_type_warning_preference.value
@@ -62,27 +62,27 @@ feature -- Preference
 
 feature -- Preference Strings
 
-	show_deleting_keyboard_warning_string: STRING is "graphical_elements.dialogs.show_deleting_keyboard_warning"
+	show_deleting_keyboard_warning_string: STRING = "graphical_elements.dialogs.show_deleting_keyboard_warning"
 	
-	show_deleting_directories_warning_string: STRING is "graphical_elements.dialogs.show_deleting_directories_warning"
+	show_deleting_directories_warning_string: STRING = "graphical_elements.dialogs.show_deleting_directories_warning"
 	
-	show_deleting_final_directory_warning_string: STRING is "graphical_elements.dialogs.show_deleting_final_directory_warning"
+	show_deleting_final_directory_warning_string: STRING = "graphical_elements.dialogs.show_deleting_final_directory_warning"
 	
-	show_changing_client_type_warning_string: STRING is "graphical_elements.dialogs.show_changing_client_type_warning"
+	show_changing_client_type_warning_string: STRING = "graphical_elements.dialogs.show_changing_client_type_warning"
 
-	show_repeated_absolute_constant_warning: STRING is "graphical_elements.dialogs.show_repeated_absolute_constant_warning"
+	show_repeated_absolute_constant_warning: STRING = "graphical_elements.dialogs.show_repeated_absolute_constant_warning"
 
-	show_invalid_constant_selection_warning: STRING is "graphical_elements.dialogs.show_invalid_constant_selection_warning"
+	show_invalid_constant_selection_warning: STRING = "graphical_elements.dialogs.show_invalid_constant_selection_warning"
 
-	show_constant_manifest_conversion_warning: STRING is "graphical_elements.dialogs.show_constant_manifest_conversion_warning"
+	show_constant_manifest_conversion_warning: STRING = "graphical_elements.dialogs.show_constant_manifest_conversion_warning"
 
-	show_project_location_changed_warning: STRING is "graphical_elements.dialogs.show_project_location_changed_warning"
+	show_project_location_changed_warning: STRING = "graphical_elements.dialogs.show_project_location_changed_warning"
 
-	show_adding_existing_directory_warning: STRING is "graphical_elements.dialogs.show_adding_existing_directory_warning"
+	show_adding_existing_directory_warning: STRING = "graphical_elements.dialogs.show_adding_existing_directory_warning"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: GB_PREFERENCE_MANAGER	
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

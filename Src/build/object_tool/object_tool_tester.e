@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Object editor."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature
 
-	first_window: EV_TITLED_WINDOW is
+	first_window: EV_TITLED_WINDOW
 			-- Main window.
 		once
 			create Result.make_with_title ("Title")
@@ -37,7 +37,7 @@ feature
 			Result.close_request_actions.extend (agent destroy)
 		end
 
-	start is
+	start
 			-- Launch `Current'.
 			-- executing `prepare' will run the object tool.
 			-- executing `execute_generated_window' shows
@@ -70,7 +70,7 @@ feature
 --				test_window.show
 --			end
 		
-		prepare is
+		prepare
 				-- Build interface of `Current' for the object tool.
 			local
 				import_cmd: IMPORT_APPLICATION_CLASS_CMD
@@ -109,13 +109,13 @@ feature
 			-- `EV_LIST' for displaying classes generated from
 			-- EiffelStudio ready for use in the object tool.
 		
-		generate_tool is
+		generate_tool
 				-- Launch the object tool.
 			do
 				object_tool_generator.display (list.selected_item)
 			end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

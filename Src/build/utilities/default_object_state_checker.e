@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Objects that provide access to widgets in their default state.
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	default_object_by_type (a_type: STRING): EV_ANY is
+	default_object_by_type (a_type: STRING): EV_ANY
 			-- `Result' as a Vision2 object correesponding to `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	all_objects: HASH_TABLE [EV_ANY, STRING] is
+	all_objects: HASH_TABLE [EV_ANY, STRING]
 			-- All objects that have been already queried by `Current'.
 		once
 			create Result.make (20)
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

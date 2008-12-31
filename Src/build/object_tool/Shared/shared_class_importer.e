@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class containing shared structures used to import %
 				% classes of the application in EiffelBuild."
 	legal: "See notice at end of class."
@@ -12,24 +12,24 @@ class
 
 feature
 
-	class_list: ARRAYED_LIST [APPLICATION_CLASS] is
+	class_list: ARRAYED_LIST [APPLICATION_CLASS]
 			-- List of known classes of the application.
 		once
 			create Result.make (0)
 		end
 		
-	class_type_name: STRING is
+	class_type_name: STRING
 		once
 			create Result.make (0)
 		end
 		
-	set_class_type_name (new_string: STRING) is
+	set_class_type_name (new_string: STRING)
 			--
 		do
 			class_type_name.append_string (new_string)
 		end
 		
-	new_name: STRING is
+	new_name: STRING
 			--
 		do
 			Result := "Argument" + acounter.out
@@ -38,7 +38,7 @@ feature
 		
 	acounter: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

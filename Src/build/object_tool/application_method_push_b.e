@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Push_b button containing an application method as %
 					% an attribute"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_application_method: APPLICATION_METHOD; a_parent: EV_COMBO_BOX) is
+	make (an_application_method: APPLICATION_METHOD; a_parent: EV_COMBO_BOX)
 			-- Create a push_b button with `an_application method'
 			-- as identifier, `a_parent' as parent and call `set_default'.
 		require else
@@ -42,7 +42,7 @@ feature -- Attribute
 
 	application_method: APPLICATION_METHOD;	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

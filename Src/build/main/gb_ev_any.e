@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manipulate/have knowledge of Vision2 objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,7 +54,7 @@ feature -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	set_components (a_components: GB_INTERNAL_COMPONENTS) is
+	set_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -64,7 +64,7 @@ feature -- Initialization
 			components_set: components = a_components
 		end
 
-	default_create is
+	default_create
 			-- Create `Current'.
 			-- Create `objects' to hold 2 items.
 		do
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature -- Access
 
-	initialize_agents is
+	initialize_agents
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		deferred
@@ -96,12 +96,12 @@ feature -- Access
 	object: GB_OBJECT
 			-- Object referenced by `Current'. May be Void when generating code.
 
-	type: STRING is
+	type: STRING
 			-- String representation of object_type modifyable by `Current'.
 		deferred
 		end
 
-	first: like ev_type is
+	first: like ev_type
 			-- First entry in `objects'. This corresponds to
 			-- the display component.
 		require
@@ -112,7 +112,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
+	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM)
 			-- Perform necessary initialization on `editor'.
 		require
 			editor_not_void: editor /= Void
@@ -121,7 +121,7 @@ feature -- Access
 			editor.set_creating_class (Current)
 		end
 
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
+	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 			-- Redefined in descendents. For example, see
@@ -137,7 +137,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	update_attribute_editor is
+	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		deferred
@@ -151,7 +151,7 @@ feature -- Access
 
 feature -- Status setting
 
-	add_object (an_object: like ev_type) is
+	add_object (an_object: like ev_type)
 			-- Add `an_object' to `objects'.
 		require
 			an_object_not_void: an_object /= Void
@@ -161,7 +161,7 @@ feature -- Status setting
 			objects.has (an_object)
 		end
 
-	set_object (an_object: GB_OBJECT) is
+	set_object (an_object: GB_OBJECT)
 			-- Assign `an_object' to `object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -172,7 +172,7 @@ feature -- Status setting
 		end
 
 
-	set_parent_editor (an_editor: GB_OBJECT_EDITOR) is
+	set_parent_editor (an_editor: GB_OBJECT_EDITOR)
 			-- Assign `an_editor' to `parent_editor'.
 		require
 			an_editor_not_void: an_editor /= Void
@@ -186,7 +186,7 @@ feature -- Status setting
 feature {GB_XML_STORE} -- Output
 
 
-	generate_xml (element: XM_ELEMENT) is
+	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of `Current' in `element'.
 		require
 			element_not_void: element /= Void
@@ -208,7 +208,7 @@ feature {GB_XML_STORE} -- Output
 
 feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT, GB_OBJECT_HANDLER} -- Status setting
 
-	modify_from_xml (element: XM_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		require
 			element_not_void: element /= Void
@@ -218,7 +218,7 @@ feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT, GB_OBJECT_HANDLER} -
 
 feature {GB_DEFERRED_BUILDER} -- Status setting
 
-	modify_from_xml_after_build (element: XM_ELEMENT) is
+	modify_from_xml_after_build (element: XM_ELEMENT)
 			-- Redefine in any descendents that must perform part of
 			-- their building at the end of the load/build cycle.
 			-- Example  - GB_EV_BOX
@@ -228,7 +228,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_CODE_GENERATOR} -- Status setting
 
-	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
+	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING]
 			-- `Result' is string representation of settings held in `Current' which is
 			-- in a compilable format. Each element is a different setting line.
 			-- `element' is the XML element that contains information about `Current'.
@@ -249,7 +249,7 @@ feature {GB_CODE_GENERATOR} -- Status setting
 
 feature {GB_OBJECT} -- Status setting
 
-	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
 			-- Some objects such as EV_TOGGLE_BUTTON can be modified
 			-- by the user in the display window. We need to set up events
@@ -268,7 +268,7 @@ feature {GB_OBJECT} -- Status setting
 			objects_count_is_two: objects.count = 2 and objects.has (vision2_object) and objects.has (an_object)
 		end
 
-	has_user_events: BOOLEAN is
+	has_user_events: BOOLEAN
 			-- Does `Current' have user events which must be set?
 		once
 			Result := False
@@ -276,14 +276,14 @@ feature {GB_OBJECT} -- Status setting
 
 feature {NONE} -- Implementation
 
-	ev_type: EV_ANY is
+	ev_type: EV_ANY
 			-- Vision2 type represented by `Current'.
 			-- Only used with `like' in descendents.
 			-- Always `Void'.
 		deferred
 		end
 
-	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE]) is
+	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on every item in `objects'.
 		do
 			from
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	for_first_object (p: PROCEDURE [EV_ANY, TUPLE]) is
+	for_first_object (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on the first_item in `objects'.
 		require
 			p_not_void: p /= Void
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	for_one_object (a_object: like ev_type; p: PROCEDURE [EV_ANY, TUPLE]) is
+	for_one_object (a_object: like ev_type; p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on `a_object'.
 		require
 			a_object_not_void: a_object /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			p.call (l_tuple)
 		end
 
-	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]])
 			-- For all instance referers recursively of `an_object', call `p' with the current
 			-- instance referer filled as the open argument. Used in places where `for_all_objects'
 			-- can not be used directly as some level of indirection and/or calculation is required
@@ -360,13 +360,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_editors is
+	update_editors
 			-- Short version for calling everywhere.
 		do
 			components.object_editors.update_editors_for_property_change (objects.first, type, parent_editor)
 		end
 
-	strip_leading_indent (s: STRING): STRING is
+	strip_leading_indent (s: STRING): STRING
 			-- If `s' starts with `indent' then strip this indent.
 			-- This is used in the code generation routines.
 		do
@@ -377,14 +377,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_project_modified is
+	enable_project_modified
 			-- Call enable_project_modified on `system_status' and
 			-- update commands to reflect this.
 		do
 			components.system_status.mark_as_dirty
 		end
 
-	is_type_a_constant (a_type_name: STRING): BOOLEAN is
+	is_type_a_constant (a_type_name: STRING): BOOLEAN
 			-- Is data associated with `a_type_name' in `full_information',
 			-- a constant?
 		require
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is
+	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER
 			-- Result is integer data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_string_setting (a_type_name: STRING): STRING is
+	retrieve_string_setting (a_type_name: STRING): STRING
 			-- Result is string representation of data associated with `a_type_name''.
 		require
 			type_not_not_void: a_type_name /= Void
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	retrieve_integer_setting (a_type_name: STRING): STRING is
+	retrieve_integer_setting (a_type_name: STRING): STRING
 			-- Result is string representation of data associated with `a_type_name''.
 		require
 			type_not_not_void: a_type_name /= Void
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_and_set_string_value (a_type_name: STRING): STRING is
+	retrieve_and_set_string_value (a_type_name: STRING): STRING
 			-- Result is string data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_and_set_color_value (a_type_name: STRING): EV_COLOR is
+	retrieve_and_set_color_value (a_type_name: STRING): EV_COLOR
 			-- Result is string data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER) is
+	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER)
 			-- Add an element containing an INTEGER to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_font_element (element: XM_ELEMENT; name: STRING; font: EV_FONT) is
+	add_font_element (element: XM_ELEMENT; name: STRING; font: EV_FONT)
 			-- Add an element containing an EV_FONT to `element' with value `font'.
 			-- if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_color_element (element: XM_ELEMENT; name: STRING; color: EV_COLOR) is
+	add_color_element (element: XM_ELEMENT; name: STRING; color: EV_COLOR)
 			-- Add an element containing an EV_COLOR to `element' with value `color'.
 			-- if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING) is
+	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING)
 			-- Add an element containing a STRING to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	uses_constant (an_attribute: STRING): BOOLEAN is
+	uses_constant (an_attribute: STRING): BOOLEAN
 			-- Does attribute named `an_attribute' use a constant?
 		require
 			an_attribute_not_void: an_attribute /= Void
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			Result := object.constants.item (type + an_attribute) /= Void
 		end
 
-	attribute_set (an_attribute: STRING): BOOLEAN is
+	attribute_set (an_attribute: STRING): BOOLEAN
 			-- Has attribute named `an_attribute' been set?
 		require
 			an_attribute_not_void: an_attribute /= Void
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 		-- Result of last call to `get_unique_full_info'.
 
-	build_set_code_for_string (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
+	build_set_code_for_string (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING]
 			-- Generate code for a string property represented by `item_text' within `full_information'
 			-- called on an object named `access_string' with the property features call represented by `feature_call'.
 		require
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	build_set_code_for_integer (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
+	build_set_code_for_integer (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING]
 			-- Generate code for an integer property represented by `item_text' within `full_information'
 			-- called on an object named `access_string' with the property features call represented by `feature_call'.
 		require
@@ -662,7 +662,7 @@ invariant
 
 	ev_type_is_void: ev_type = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

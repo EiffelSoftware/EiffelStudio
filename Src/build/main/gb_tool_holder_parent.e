@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,19 +11,19 @@ deferred class
 	
 feature -- Basic operation.
 
-	maximize_tool (a_tool_holder: GB_TOOL_HOLDER) is
+	maximize_tool (a_tool_holder: GB_TOOL_HOLDER)
 			-- Maximize `a_tool_holder'.
 		deferred
 		end
 		
-	minimize_tool (a_tool_holder: GB_TOOL_HOLDER) is
+	minimize_tool (a_tool_holder: GB_TOOL_HOLDER)
 			-- Minimize `a_tool_holder'.
 		deferred
 		end
 		
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

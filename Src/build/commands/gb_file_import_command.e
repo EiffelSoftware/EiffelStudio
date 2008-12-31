@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an import command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		do
 			components := a_components
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- May `execute' be called on `Current'?
 		do
 				-- Only can execute if there is a project open.
@@ -62,7 +62,7 @@ feature -- Basic operations
 			-- Last project settings loaded by `execute' or
 			-- `execute_with_name'.
 
-		execute is
+		execute
 				-- Execute `Current'.
 			local
 				dialog: EV_FILE_OPEN_DIALOG
@@ -126,7 +126,7 @@ feature -- Basic operations
 				end
 			end
 
-	system_interface_filename: FILE_NAME is
+	system_interface_filename: FILE_NAME
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
@@ -135,7 +135,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	valid_file_name (file_name: STRING): BOOLEAN is
+	valid_file_name (file_name: STRING): BOOLEAN
 			-- Is `file_name' the name of an existing file?
 		require
 			file_name_not_void: file_name /= Void
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

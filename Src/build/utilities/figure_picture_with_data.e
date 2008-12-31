@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a figure picture that has data"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Access
 	
 feature -- Status Setting
 
-	set_data (a_data: ANY) is
+	set_data (a_data: ANY)
 			-- Assign `a_data' to `data'.
 		do
 			data := a_data
@@ -31,7 +31,7 @@ feature -- Status Setting
 			data_set: data = a_data
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

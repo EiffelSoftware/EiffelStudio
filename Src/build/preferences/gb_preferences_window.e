@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelStudio preference window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ feature -- Access
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make (a_preferences: like view_preferences; a_parent_window: like parent_window) is
+	make (a_preferences: like view_preferences; a_parent_window: like parent_window)
 			-- New window.  Redefined to register EiffelStudio specific resource widgets for
 			-- special resource types.
 		do
@@ -48,7 +48,7 @@ feature -- Access
 			close_request_actions.extend (agent on_close)
 		end
 
-	on_close is
+	on_close
 			-- Window was closed
 		do
 			clip_recent_projects
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	icon_preference_root: EV_PIXMAP is
+	icon_preference_root: EV_PIXMAP
 			-- Icon for preferences root node
 		local
 			l_filename: FILE_NAME
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			Result.set_with_named_file (l_filename.string)
 		end
 
-	icon_preference_folder: EV_PIXMAP is
+	icon_preference_folder: EV_PIXMAP
 			-- Icon for preferences folder node
 		local
 			l_filename: FILE_NAME
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			Result.set_with_named_file (l_filename.string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

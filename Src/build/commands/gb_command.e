@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ deferred class
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute `Current'.
 		deferred
 		end
 		
-	undo is
+	undo
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
@@ -25,14 +25,14 @@ feature -- Basic operations
 
 feature -- Access
 		
-	textual_representation: STRING is
+	textual_representation: STRING
 			-- Text representation of command exectuted.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

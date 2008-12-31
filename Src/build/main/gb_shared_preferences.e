@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide global resources"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	initialize_preferences (a_preferences: PREFERENCES) is
+	initialize_preferences (a_preferences: PREFERENCES)
 			-- Initialize with `a_preferences'.
 		require
 			preferences_not_void: a_preferences /= Void
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Access
 
-	preferences: GB_PREFERENCES is
+	preferences: GB_PREFERENCES
 			-- All preferences for EiffelBuild.				
 		require
 			initialized: preferences_initialized
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Query
 
-	preferences_initialized: BOOLEAN is
+	preferences_initialized: BOOLEAN
 			-- Have preferences been initialized?
 		do
 			Result := preferences_cell.item /= Void
@@ -53,13 +53,13 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	preferences_cell: CELL [GB_PREFERENCES] is
+	preferences_cell: CELL [GB_PREFERENCES]
 			-- Once cell for global access to preferences.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

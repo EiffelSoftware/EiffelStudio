@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide common routines for pixmap handling."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status report		
 
-	valid_file_extension (extension: STRING): BOOLEAN is
+	valid_file_extension (extension: STRING): BOOLEAN
 			-- Is `extension' a valid file format for
 			-- a pixmap on the current platform?
 		require
@@ -20,7 +20,7 @@ feature -- Status report
 			Result := environment.supported_image_formats.has (extension.as_upper)
 		end
 
-	invalid_type_warning: STRING is
+	invalid_type_warning: STRING
 			-- `Result' is message informing of the valid
 			-- file types supported.
 		local
@@ -65,12 +65,12 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	environment: EV_ENVIRONMENT is
+	environment: EV_ENVIRONMENT
 			-- Access to Vision2 Environment class.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

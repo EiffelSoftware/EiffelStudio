@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the generation tab in the project settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current' and build widget structure.
 		do
 			create local_check_button.make_with_text ("attribute declarations grouped?")
@@ -57,12 +57,12 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	name: STRING is "Generation"
+	name: STRING = "Generation"
 		-- Name to be displayed for `Current'.
 		
 feature -- Status setting
 
-	update_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	update_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Update all attributes of `Current' to reflect information
 			-- in `project_settings'.
 		do
@@ -88,7 +88,7 @@ feature -- Status setting
 			end
 		end
 		
-	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
+	save_attributes (project_settings: GB_PROJECT_SETTINGS)
 			-- Save all attributes of `Current' into `project_settings'.
 		do
 			if local_check_button.is_selected then
@@ -115,7 +115,7 @@ feature -- Status setting
 
 feature {GB_SYSTEM_WINDOW} -- Implementation
 
-	validate is
+	validate
 			-- Validate input fields of `Current'.
 		do
 				-- As we have only check buttons in `Current',
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	client_check_button: EV_CHECK_BUTTON;
 		-- Should generated class be a client of EV_TITLED_WINDOW?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

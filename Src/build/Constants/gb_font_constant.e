@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent constants for fonts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name: STRING; a_value: EV_FONT; a_components: like components) is
+	make_with_name_and_value (a_name: STRING; a_value: EV_FONT; a_components: like components)
 			-- 	Assign `a_name' to `name' and `a_value' to `value'.
 		require
 			a_name_valid: a_name /= Void and then a_value /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	type: STRING is
+	type: STRING
 			-- Type represented by `Current'
 		once
 			Result := Font_constant_type
@@ -49,13 +49,13 @@ feature -- Access
 	value: EV_FONT
 		-- Value of `Current'.
 
-	value_as_string: STRING is
+	value_as_string: STRING
 			-- Value represented by `Current' as a STRING.
 		do
 			Result := build_string_from_font (value)
 		end
 
-	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
+	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
 			-- Representation of `Current' as a multi column list row.
 		do
 			create Result
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_value (a_value: EV_FONT) is
+	set_value (a_value: EV_FONT)
 			-- Assign `a_value' to `value'.
 		require
 			value_not_void: a_value /= Void
@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature {GB_CONSTANTS_DIALOG} -- Implementation
 
-	modify_value (new_value: EV_FONT) is
+	modify_value (new_value: EV_FONT)
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
@@ -106,7 +106,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 invariant
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

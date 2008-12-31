@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a Vision2 action sequence class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,23 +19,23 @@ inherit
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of arguments
 		do
 			Result := argument_types.count
 		end
 		
-	argument_types: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING]
 			-- All argument types of action sequence represented by `Current'.
 		deferred
 		end
 
-	argument_names: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		deferred
 		end
 		
-	argument_types_as_string: STRING is
+	argument_types_as_string: STRING
 			-- `Result' is string representing argument types
 			-- of `Current'. i.e. BOOLEAN INTEGER INTEGER
 			-- Void if `count' = 0 (No arguments).
@@ -59,7 +59,7 @@ feature -- Access
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
 	
-	open_arguments: STRING is
+	open_arguments: STRING
 			--`Result' is string representing open arguments
 			-- of `Current'. i.e. ?, ?, ?
 			-- Void if `count' = 0 (No arguments).
@@ -83,7 +83,7 @@ feature -- Access
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
 		
-	parameter_list: STRING is
+	parameter_list: STRING
 			-- `Result' is string representatiion of paramters.
 			-- i.e. an_x, a_y: INTEGER; count: DOUBLE
 			-- Void if `count' = 0 (No arguments).
@@ -115,7 +115,7 @@ feature -- Access
 			result_not_void_implies_count_valid: Result /= Void implies count > 0
 		end
 		
-	debugging_info: STRING is
+	debugging_info: STRING
 			-- `Result' is a string representation
 			-- which when compiled will generate debugging
 			-- information for `Current'.
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

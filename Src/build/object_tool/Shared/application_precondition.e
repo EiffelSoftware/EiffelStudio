@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a precondition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (an_expression: STRING) is
+	make (an_expression: STRING)
 			-- Create a precondition with 'an_expression'.
 		require
 			valid_precondition_expression: an_expression /= Void
@@ -29,7 +29,7 @@ feature -- Attribute
 
 feature -- Code generation
 
-	generated_text_for_command (formal_arg_name, actual_arg_name: STRING): STRING is
+	generated_text_for_command (formal_arg_name, actual_arg_name: STRING): STRING
 			-- Generate eiffel text for a command.
 			-- * changing formal arguments into actual ones
 			-- * adding before queries the word `target'
@@ -49,7 +49,7 @@ feature -- Code generation
 			Result.append (")")
 		end
 	
-	generated_text_for_routine (formal_args: ARRAYED_LIST [STRING]): STRING is
+	generated_text_for_routine (formal_args: ARRAYED_LIST [STRING]): STRING
 			-- Generate eiffel text for a command.
 			-- * changing formal arguments into actual ones
 			-- * adding before queries the word `target'
@@ -79,7 +79,7 @@ feature {NONE} -- Code generation
 	formal_arguments: ARRAYED_LIST [STRING]
 			-- List of formal argument names
 
-	generate_eiffel_text (precondition_text: STRING): STRING is
+	generate_eiffel_text (precondition_text: STRING): STRING
 			-- Select what kind of expression `precondition_text' is.
 		local
 			i, operator_index: INTEGER
@@ -146,7 +146,7 @@ feature {NONE} -- Code generation
 			end
 		end
 
-	generated_with_operator (precondition_text, operator: STRING; i: INTEGER): STRING is
+	generated_with_operator (precondition_text, operator: STRING; i: INTEGER): STRING
 			-- Generate code for a boolean operation.
 		do
 			create Result.make (0)
@@ -157,7 +157,7 @@ feature {NONE} -- Code generation
 			Result.append (generate_eiffel_text (precondition_text.substring (i + operator.count, precondition_text.count)))
 		end
 
-	generated_from_simple_expression (precondition_text: STRING): STRING is
+	generated_from_simple_expression (precondition_text: STRING): STRING
 			-- Generate text when `precondition_text' is a simple boolean
 			-- expression (no operators).
 		local
@@ -226,7 +226,7 @@ feature {NONE} -- Code generation
 			end
 		end
 
-	next_word (precondition_text: STRING; index: INTEGER): STRING is
+	next_word (precondition_text: STRING; index: INTEGER): STRING
 			-- Return the next word starting at `index' in
 			-- `precondition_text'. 
 		require
@@ -253,40 +253,40 @@ feature {NONE} -- Code generation
 
 feature {NONE} -- Boolean operators
 
-	or_keyword: STRING is " or "
+	or_keyword: STRING = " or "
 			-- Boolean operator `or'
 
-	or_index: INTEGER is unique
+	or_index: INTEGER = unique
 			-- Index for operator `or'
 
-	and_keyword: STRING is " and "
+	and_keyword: STRING = " and "
 			-- Boolean operator `and'
 
-	and_index: INTEGER is unique
+	and_index: INTEGER = unique
 			-- Index for operator `and'
 
-	xor_keyword: STRING is " xor "
+	xor_keyword: STRING = " xor "
 			-- Boolean operator `xor'
 
-	xor_index: INTEGER is unique
+	xor_index: INTEGER = unique
 			-- Index for operator `xor'
 
-	implies_keyword: STRING is " implies "
+	implies_keyword: STRING = " implies "
 			-- Boolean operator `implies'
 
-	implies_index: INTEGER is unique
+	implies_index: INTEGER = unique
 			-- Index for operator `implies'
 
-	or_else_keyword: STRING is " or else "
+	or_else_keyword: STRING = " or else "
 			-- Boolean operator `or else'
 
-	or_else_index: INTEGER is unique
+	or_else_index: INTEGER = unique
 			-- Index for operator `or else'
 
-	and_then_keyword: STRING is " and then "
+	and_then_keyword: STRING = " and then "
 			-- Boolean operator `and then'.
 
-	and_then_index: INTEGER is unique
+	and_then_index: INTEGER = unique
 			-- Index for operator `and then'
 
 feature {NONE} -- Attributes
@@ -294,7 +294,7 @@ feature {NONE} -- Attributes
 	generate_for_routine: BOOLEAN;
 			-- Is the precondition test generated for a routine?
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

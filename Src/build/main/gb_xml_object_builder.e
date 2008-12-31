@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can build a new GB_OBJECT based purely on an xml_element"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,13 +45,13 @@ inherit
 
 feature -- Access
 
-	components: GB_INTERNAL_COMPONENTS is
+	components: GB_INTERNAL_COMPONENTS
 			-- Access to a set of internal components for an EiffelBuild instance.
 		deferred
 		end
 
 
-	new_object (element: XM_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
+	new_object (element: XM_ELEMENT; is_component: BOOLEAN): GB_OBJECT
 			-- `Result' is an object generated from `xml_element'.
 			-- This object has no parent, is not included in the
 			-- objects list and has all representations built.
@@ -117,7 +117,7 @@ feature -- Access
 			Result := a_new_object
 		end
 
-	build_new_object (element: XM_ELEMENT; object: GB_OBJECT; is_component: BOOLEAN) is
+	build_new_object (element: XM_ELEMENT; object: GB_OBJECT; is_component: BOOLEAN)
 			-- Build a new object from information in `element'.
 		require
 			element_not_void: element /= Void
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-	replace_all_instances_with_up_to_date_xml (element: XM_ELEMENT) is
+	replace_all_instances_with_up_to_date_xml (element: XM_ELEMENT)
 			-- For all elements contained within then structure of `element' which represent top
 			-- level objects, replace with a new representation of the associated top level object.
 		require
@@ -277,7 +277,7 @@ feature -- Access
 			end
 		end
 
-	convert_element_to_instance (element: XM_ELEMENT; id, depth: INTEGER) is
+	convert_element_to_instance (element: XM_ELEMENT; id, depth: INTEGER)
 			-- Convert a `element' representing a copy of a top level object `id'
 			-- to a representation of the top level object. `id' must match the
 			-- associated object listed in `element'.
@@ -346,7 +346,7 @@ feature -- Access
 			end
 		end
 
-	update_xml (element: XM_ELEMENT; all_elements: ARRAYED_LIST [XM_ELEMENT]; all_ids: ARRAYED_LIST [INTEGER]) is
+	update_xml (element: XM_ELEMENT; all_elements: ARRAYED_LIST [XM_ELEMENT]; all_ids: ARRAYED_LIST [INTEGER])
 			-- For the representation of a widget structure in `element', return all elements that represent a top level
 			-- instance within `all_elements' and the corresponding id of the top level object within `all_ids'.
 		require
@@ -398,7 +398,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
+	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

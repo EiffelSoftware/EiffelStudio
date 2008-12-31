@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that retrieve an XML representation of the window that%
 		% was built previsouly, and creates it in the system."
 	legal: "See notice at end of class."
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	load is
+	load
 			-- Load the system.
 		do
 				-- Flag to the system that a load is now underway.
@@ -128,7 +128,7 @@ feature -- Basic operation
 			components.system_status.resume
 		end
 
-	system_interface_filename: FILE_NAME is
+	system_interface_filename: FILE_NAME
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
@@ -137,7 +137,7 @@ feature -- Basic operation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Build a new window representing `window', represented in
 			-- directory representation `parent_list'.
 		require
@@ -147,7 +147,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			internal_build_window (window, parent_common_item, Void)
 		end
 
-	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM; object: GB_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM; object: GB_OBJECT)
 			-- Build a window representing `window', represented in
 			-- `window' to directory `parent_common_item' or `widget_selector' if `Void'.
 			-- If `object' is Void we must create it.
@@ -228,7 +228,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 
-	retrieve_new_object (element: XM_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT is
+	retrieve_new_object (element: XM_ELEMENT; object: GB_OBJECT; pos: INTEGER): GB_OBJECT
 			-- Build a new object from information in `element', into `object' at position `pos'.
 			-- `Result' is the new object.
 		require
@@ -245,7 +245,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	build_new_object (element: XM_ELEMENT; object: GB_OBJECT) is
+	build_new_object (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Build a new object from information in `element' into `object'.
 		require
 			element_not_void: element /= Void
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
+	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Update properties of `object' based on information in `element'.
 		local
 			current_element: XM_ELEMENT
@@ -324,7 +324,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
+	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT)
 			-- Generate event information into `object', from `element'.
 		require
 			element_not_void: element /= Void
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_system is
+	create_system
 			-- Create a system from the parsed XML file.
 		local
 			application_element: XM_ELEMENT
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			components.constants.build_deferred_elements
 		end
 
-	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
+	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM)
 			-- Build window represented by `an_element into `parent_common_item'.
 			-- If `parent_common_item' is `Void', build directly into `widget_selector'.
 		require
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	load_and_parse_xml_file (a_filename:STRING) is
+	load_and_parse_xml_file (a_filename:STRING)
 			-- Load file `a_filename' and parse.
 		local
 			temp_window: EV_TITLED_WINDOW
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_file (a_filename: STRING) is
+	parse_file (a_filename: STRING)
 			-- Parse XML file `filename' with `parser'.
 		local
 			file: KL_BINARY_INPUT_FILE
@@ -479,13 +479,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pipe_callback: XM_TREE_CALLBACKS_PIPE is
+	pipe_callback: XM_TREE_CALLBACKS_PIPE
 			-- Create unique callback pipe.
 		once
 			create Result.make
 		end
 
-	initialize_load_output is
+	initialize_load_output
 			-- Create `load_timer' and associate an
 			-- action with it.
 		do
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 		 	environment.application.process_graphical_events
 		end
 
-	update_status_bar is
+	update_status_bar
 			-- Refresh message displayed on status bar, to show
 			-- that processing is still occurring.
 		local
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_load_output is
+	remove_load_output
 			--  Destroy `load_timer' and display a final
 			-- timed message on the status bar.
 		do
@@ -530,7 +530,7 @@ feature {NONE} -- Implementation
 	document: XM_DOCUMENT;
 		-- XML document generated from created window.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

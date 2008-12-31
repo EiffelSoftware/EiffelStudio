@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold code generation settings, for GB_XML_STORE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,31 +21,31 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_generate_names is
+	enable_generate_names
 			-- Assign `True' to `generate_names'.
 		do
 			generate_names := True
 		end
 		
-	disable_generate_names is
+	disable_generate_names
 			-- Assign `False' to `generate_names'.
 		do
 			generate_names := False
 		end
 		
-	enable_is_saving is
+	enable_is_saving
 			-- Assign `True' to `is_saving'.
 		do
 			is_saving := True
 		end
 		
-	disable_is_saving is
+	disable_is_saving
 			-- Assign `False' to `is_saving'.
 		do
 			is_saving := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
